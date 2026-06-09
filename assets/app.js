@@ -1,13 +1,16 @@
-const APP_VERSION="20260609_cloudbase_readonly_v2";
-const PROGRESS_KEY="static_vocab_progress_v8_cloudbase_readonly";
+const APP_VERSION="20260609_cloudbase_sdk2_fix_v1";
+const PROGRESS_KEY="static_vocab_progress_v9_cloudbase_sdk2";
 const OLD_WORDS_KEY="static_vocab_words_v1";
 const OLD_SESSION_KEY="static_vocab_session_v1";
 const AUDIO_CACHE_NAME="static_vocab_audio_"+APP_VERSION;
 const CLOUDBASE_SYNC_CODE_KEY="static_vocab_cloudbase_sync_code_v1";
 const CLOUDBASE_SDK_URLS=[
-  "https://imgcache.qq.com/qcloud/cloudbase-js-sdk/1.8.1/cloudbase.full.js",
-  "https://imgcache.qq.com/qcloud/tcbjs/1.10.0/tcb.js",
-  "https://cdn.jsdelivr.net/npm/@cloudbase/js-sdk/dist/index.umd.js"
+  // CloudBase JS SDK 2.x：旧版 1.x 会触发 ACCESS_TOKEN_DISABLED。
+  "https://static.cloudbase.net/cloudbase-js-sdk/2.12.1/cloudbase.full.js",
+  "https://static.cloudbase.net/cloudbase-js-sdk/2.8.1/cloudbase.full.js",
+  "https://static.cloudbase.net/cloudbase-js-sdk/2.0.0/cloudbase.full.js",
+  "https://cdn.jsdelivr.net/npm/@cloudbase/js-sdk@2.12.1/dist/index.umd.js",
+  "https://unpkg.com/@cloudbase/js-sdk@2.12.1/dist/index.umd.js"
 ];
 
 let words=[];
@@ -373,7 +376,10 @@ function loadScriptOnce(url){
     s.src=url;
     s.async=true;
     s.onload=function(){resolve()};
-    s.onerror=function(){reject(new Error("load failed"))};
+    s.onerror=function(){
+      try{s.remove()}catch(e){}
+      reject(new Error("load failed: "+url));
+    };
     document.head.appendChild(s);
   });
 }
@@ -393,17 +399,34 @@ async function cloudbaseLoginIfNeeded(app){
   try{
     const auth=app.auth({persistence:"local"});
     cloudbaseAuth=auth;
+
+    // SDK 2.x：优先判断登录态。
     if(auth.getLoginState){
       const state=await auth.getLoginState();
       if(state) return true;
     }
+
+    // SDK 2.x 推荐匿名登录方式。
     if(auth.anonymousAuthProvider){
       const provider=auth.anonymousAuthProvider();
-      if(provider&&provider.signIn){await provider.signIn();return true}
+      if(provider&&provider.signIn){
+        await provider.signIn();
+        return true;
+      }
     }
-    if(auth.signInAnonymously){await auth.signInAnonymously();return true}
-    if(auth.signInWithAnonymous){await auth.signInWithAnonymous();return true}
-    return true;
+
+    // 兼容部分 SDK 2.x / UMD 包导出的旧命名。
+    if(auth.signInAnonymously){
+      await auth.signInAnonymously();
+      return true;
+    }
+
+    if(auth.signInWithAnonymous){
+      await auth.signInWithAnonymous();
+      return true;
+    }
+
+    throw new Error("当前 CloudBase SDK 没有可用的匿名登录方法");
   }catch(e){
     throw e;
   }
@@ -421,7 +444,12 @@ async function initCloudBase(){
     cloudbaseReady=true;
     return true;
   }catch(e){
-    setSyncStatus("CloudBase 连接失败："+(e.message||e),false);
+    const msg=String(e&&e.message?e.message:e);
+    if(msg.indexOf("ACCESS_TOKEN_DISABLED")>=0){
+      setSyncStatus("匿名登录未生效或 SDK 版本缓存过旧。请确认匿名登录已开启，并刷新页面。",false);
+    }else{
+      setSyncStatus("CloudBase 连接失败："+msg,false);
+    }
     return false;
   }
 }

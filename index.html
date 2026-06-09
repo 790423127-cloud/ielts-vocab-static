@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>G类保底5分词库</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <button id="prevBtn" class="top-btn">上一个单词</button>
+      <div class="top-actions">
+        <button id="shuffleBtn" class="top-btn">随机</button>
+        <select id="filterSelect" class="top-select" title="词库">
+          <option value="all">全部</option>
+          <option value="unfamiliar">不熟词库</option>
+          <option value="familiar">熟悉词库</option>
+          <option value="favorite">收藏</option>
+        </select>
+      </div>
+    </header>
+
+    <section class="hero">
+      <button id="favoriteBtn" class="star" title="收藏">☆</button>
+      <div id="unfamiliarAlert" class="unfamiliar-alert hidden">你特意标记了不熟，优先复习这个词</div>
+      <button id="wordSoundBtn" class="sound-main" title="播放单词">🔊</button>
+      <div id="word" class="word">Loading</div>
+      <div id="basic" class="basic-line">加载中...</div>
+
+      <div id="formsBox" class="forms-box hidden">
+        <div class="box-title">听力形式 / 重要变形</div>
+        <div id="formsList" class="cards"></div>
+      </div>
+
+      <div id="familyBox" class="forms-box hidden">
+        <div class="box-title">词族 / 派生词</div>
+        <div id="familyList" class="cards"></div>
+      </div>
+
+      <div class="example-card">
+        <div id="example" class="example-en">加载中...</div>
+        <div id="exampleCn" class="example-cn"></div>
+      </div>
+    </section>
+
+    <section class="blocks">
+      <div class="block">
+        <div class="block-title">常见搭配</div>
+        <div id="collocations" class="list"></div>
+      </div>
+      <div class="block">
+        <div class="block-title">短语 / 介词搭配</div>
+        <div id="phraseCollocations" class="list"></div>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      <div class="actions">
+        <button id="knownBtn" class="status known">熟悉 <span>0</span></button>
+        <button id="unknownBtn" class="status unknown">不熟 <span>1</span></button>
+      </div>
+      <div class="progress-row">
+        <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+        <div id="count" class="count">0 / 0</div>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+  </main>
+  <script src="./assets/app.js"></script>
+</body>
+</html>

@@ -1,13 +1,13 @@
-const CACHE_NAME="static_vocab_shell_20260609_cloudbase_sync_v1";
-const AUDIO_CACHE_NAME="static_vocab_audio_20260609_cloudbase_sync_v1";
+const CACHE_NAME="static_vocab_shell_20260609_cloudbase_readonly_v2";
+const AUDIO_CACHE_NAME="static_vocab_audio_20260609_cloudbase_readonly_v2";
 const SHELL=[
   "./",
   "./index.html",
-  "./assets/style.css?v=20260609_cloudbase_sync_v1",
-  "./assets/app.js?v=20260609_cloudbase_sync_v1",
-  "./sync-config.js?v=20260609_cloudbase_sync_v1",
-  "./data/words.json?v=20260609_cloudbase_sync_v1",
-  "./manifest.webmanifest?v=20260609_cloudbase_sync_v1"
+  "./assets/style.css?v=20260609_cloudbase_readonly_v2",
+  "./assets/app.js?v=20260609_cloudbase_readonly_v2",
+  "./sync-config.js?v=20260609_cloudbase_readonly_v2",
+  "./data/words.json?v=20260609_cloudbase_readonly_v2",
+  "./manifest.webmanifest?v=20260609_cloudbase_readonly_v2"
 ];
 
 self.addEventListener("install",function(event){

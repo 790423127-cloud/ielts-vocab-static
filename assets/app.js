@@ -1,5 +1,5 @@
-const APP_VERSION="20260609_cloudbase_sync_v1";
-const PROGRESS_KEY="static_vocab_progress_v7_cloudbase";
+const APP_VERSION="20260609_cloudbase_readonly_v2";
+const PROGRESS_KEY="static_vocab_progress_v8_cloudbase_readonly";
 const OLD_WORDS_KEY="static_vocab_words_v1";
 const OLD_SESSION_KEY="static_vocab_session_v1";
 const AUDIO_CACHE_NAME="static_vocab_audio_"+APP_VERSION;
@@ -17,7 +17,7 @@ let audio=null;
 let mobileMode=false;
 let saveTimer=null;
 let audioUrlCache=new Map();
-let progress={statuses:{},currentWord:"",filter:"all",mobileMode:false,updatedAt:0};
+let progress={statuses:{},currentWord:"",filter:"all",mobileMode:false,updatedAt:0,deviceId:""};
 let cloudbaseApp=null;
 let cloudbaseDb=null;
 let cloudbaseAuth=null;
@@ -80,6 +80,7 @@ function persistNow(){
     progress.filter=filter;
     progress.mobileMode=mobileMode;
     progress.updatedAt=Date.now();
+    progress.deviceId=progress.deviceId||clientId();
     localStorage.setItem(PROGRESS_KEY,JSON.stringify(progress));
   }catch(e){}
 }
@@ -435,33 +436,42 @@ function progressForCloud(){
     currentWord:progress.currentWord||"",
     filter:progress.filter||"all",
     mobileMode:!!progress.mobileMode,
-    updatedAt:Date.now()
+    updatedAt:Date.now(),
+    deviceId:progress.deviceId||clientId()
   };
 }
 
 async function getCloudDoc(){
   if(!cloudbaseDb||!cloudbaseDocId) throw new Error("未连接同步码");
-  const doc=cloudbaseDb.collection("vocab_progress").doc(cloudbaseDocId);
-  const result=await doc.get();
-  const data=result&&Array.isArray(result.data)?result.data[0]:result.data;
-  return data||null;
+
+  // 兼容 CloudBase 免费体验版默认权限：
+  // 读取全部数据，修改本人数据 [READONLY]
+  // 不再要求所有设备修改同一个文档，而是读取同一同步码下最新的一条记录。
+  const result=await cloudbaseDb
+    .collection("vocab_progress")
+    .where({syncCodeHash:cloudbaseDocId})
+    .get();
+
+  const rows=(result&&Array.isArray(result.data)?result.data:[])
+    .filter(function(x){return x&&x.syncCodeHash===cloudbaseDocId})
+    .sort(function(a,b){return (b.updatedAt||0)-(a.updatedAt||0)});
+
+  return rows[0]||null;
 }
 
 async function setCloudDoc(data){
   if(!cloudbaseDb||!cloudbaseDocId) throw new Error("未连接同步码");
-  const doc=cloudbaseDb.collection("vocab_progress").doc(cloudbaseDocId);
-  const payload=Object.assign({_id:cloudbaseDocId,syncCodeHash:cloudbaseDocId},data);
-  try{
-    await doc.set(payload);
-  }catch(e1){
-    try{await doc.set({data:payload})}catch(e2){
-      try{await doc.update(payload)}catch(e3){
-        try{await doc.update({data:payload})}catch(e4){
-          throw e1;
-        }
-      }
-    }
-  }
+
+  // 兼容 [READONLY]：
+  // 每台设备只新增自己创建的进度记录，不去修改别的设备创建的记录。
+  // 手机 / 电脑恢复时读取同一同步码下 updatedAt 最新的一条。
+  const payload=Object.assign({
+    syncCodeHash:cloudbaseDocId,
+    deviceId:progress.deviceId||clientId(),
+    createdAt:Date.now()
+  },data);
+
+  await cloudbaseDb.collection("vocab_progress").add(payload);
 }
 
 function mergeCloudProgress(remote){
@@ -515,7 +525,7 @@ async function connectCloudBase(){
   setSyncStatus("正在连接 CloudBase...",false);
   const ok=await initCloudBase();
   if(!ok)return false;
-  setSyncStatus("已连接，等待同步",true);
+  setSyncStatus("已连接，可上传或恢复",true);
   return true;
 }
 
@@ -555,7 +565,7 @@ async function cloudPush(){
 function scheduleCloudSync(){
   if(!cloudbaseReady||!cloudbaseDocId)return;
   clearTimeout(cloudSyncTimer);
-  cloudSyncTimer=setTimeout(cloudPush,30000);
+  cloudSyncTimer=setTimeout(cloudPush,60000);
 }
 
 

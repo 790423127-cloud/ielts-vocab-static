@@ -9,24 +9,26 @@
 <body>
   <main class="app">
     <header class="top">
-      <button id="prevBtn" class="top-btn">上一个单词</button>
+      <button id="prevBtn" class="top-btn">上一个</button>
       <div class="top-actions">
         <button id="shuffleBtn" class="top-btn">随机</button>
+        <button id="mobileModeBtn" class="top-btn">手机模式</button>
         <select id="filterSelect" class="top-select" title="词库">
           <option value="all">全部</option>
-          <option value="unfamiliar">不熟词库</option>
-          <option value="familiar">熟悉词库</option>
+          <option value="unfamiliar">不熟</option>
+          <option value="familiar">熟悉</option>
           <option value="favorite">收藏</option>
         </select>
       </div>
     </header>
 
-    <section class="hero">
+    <section id="swipeArea" class="hero">
       <button id="favoriteBtn" class="star" title="收藏">☆</button>
       <div id="unfamiliarAlert" class="unfamiliar-alert hidden">你特意标记了不熟，优先复习这个词</div>
       <button id="wordSoundBtn" class="sound-main" title="播放单词">🔊</button>
       <div id="word" class="word">Loading</div>
       <div id="basic" class="basic-line">加载中...</div>
+      <div class="swipe-hint">← 右滑上一个 · 左滑下一个 →</div>
 
       <div id="formsBox" class="forms-box hidden">
         <div class="box-title">听力形式 / 重要变形</div>

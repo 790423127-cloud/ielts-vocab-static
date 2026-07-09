@@ -119,25 +119,29 @@ test("SpellingTrainingPage exposes one-click combined export controls", () => {
 test("personal wrong book lists render the selected batch records", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const dock = fs.readFileSync(path.join(root, "app/components/SpellingPersonalWrongDock.jsx"), "utf8");
+  const helpers = fs.readFileSync(path.join(root, "app/lib/spelling/spelling-training-page-helpers.mjs"), "utf8");
+  const combined = `${source}\n${dock}\n${helpers}`;
 
   assert.match(source, /const personalWrongCurrentBatchRecords = personalWrongBatchSelection\.records \|\| \[\]/);
   assert.match(source, /const personalWrongCurrentBatchWriteCount = Number\(personalWrongBatchSelection\.writeCount/);
   assert.match(source, /const personalWrongTotalWriteCount = personalWrongSourceEntries\.length/);
-  assert.match(source, /function formatPersonalWrongRepeatLabel/);
-  assert.match(source, /return `原形\$\{PERSONAL_WRONG_BOOK_BASE_REPS\}遍`/);
+  assert.match(helpers, /export function formatPersonalWrongRepeatLabel/);
+  assert.match(helpers, /return `原形\$\{PERSONAL_WRONG_BOOK_BASE_REPS\}遍`/);
   assert.match(source, /handleDeletePersonalWrongRecord/);
-  assert.match(source, /spelling-personal-wrong-list__index/);
-  assert.match(source, /spelling-personal-wrong-list__delete/);
+  assert.match(dock, /spelling-personal-wrong-list__index/);
+  assert.match(dock, /spelling-personal-wrong-list__delete/);
   assert.match(source, /practiceSource === "personal_wrong_book" && spelling\.ready/);
-  assert.match(source, /本组练习 \{personalWrongCurrentBatchWriteCount\} 遍/);
-  assert.match(source, /全部练习 \{personalWrongTotalWriteCount\} 遍/);
-  assert.match(source, /personalWrongCurrentBatchRecords\.map/);
-  assert.doesNotMatch(source, /\$\{PERSONAL_WRONG_BOOK_REPETITIONS\}遍`\}/);
-  assert.doesNotMatch(source, /personalWrongCurrentBatchRecords\.slice\(0, 16\)/);
-  assert.doesNotMatch(source, /personalWrongCurrentBatchRecords\.slice\(0, 12\)/);
-  assert.doesNotMatch(source, /personalWrongScopedRecords\.slice\(0, 16\)/);
-  assert.doesNotMatch(source, /personalWrongScopedRecords\.slice\(0, 12\)/);
-  assert.doesNotMatch(source, /本组[^`\\n]*personalWrongSourceEntries\.length/);
+  assert.match(dock, /本组练习 \{personalWrongCurrentBatchWriteCount\} 遍/);
+  assert.match(dock, /全部练习 \{personalWrongTotalWriteCount\} 遍/);
+  assert.match(dock, /personalWrongCurrentBatchRecords/);
+  assert.match(dock, /spelling-personal-wrong-list--virtual/);
+  assert.doesNotMatch(combined, /\$\{PERSONAL_WRONG_BOOK_REPETITIONS\}遍`\}/);
+  assert.doesNotMatch(combined, /personalWrongCurrentBatchRecords\.slice\(0, 16\)/);
+  assert.doesNotMatch(combined, /personalWrongCurrentBatchRecords\.slice\(0, 12\)/);
+  assert.doesNotMatch(combined, /personalWrongScopedRecords\.slice\(0, 16\)/);
+  assert.doesNotMatch(combined, /personalWrongScopedRecords\.slice\(0, 12\)/);
+  assert.doesNotMatch(combined, /本组[^`\\n]*personalWrongSourceEntries\.length/);
 });
 
 test("spelling page does not render placeholder questions before lexicon is ready", () => {

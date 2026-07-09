@@ -95,6 +95,7 @@ test("large word phrase and spelling record lists use VirtualList", () => {
   const wordFlashSource = fs.readFileSync(path.join(root, "app/components/WordFlashcardView.jsx"), "utf8");
   const phrasePanelSource = fs.readFileSync(path.join(root, "app/components/PhraseFlashcardPanel.jsx"), "utf8");
   const spellingSource = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const personalWrongDock = fs.readFileSync(path.join(root, "app/components/SpellingPersonalWrongDock.jsx"), "utf8");
   const virtualListSource = fs.readFileSync(path.join(root, "app/components/VirtualList.jsx"), "utf8");
 
   assert.match(pageSource, /WordFlashcardView/);
@@ -103,7 +104,7 @@ test("large word phrase and spelling record lists use VirtualList", () => {
   assert.match(phrasePanelSource, /import VirtualList/);
   assert.match(phrasePanelSource, /library-list--virtual/);
   assert.match(spellingSource, /import VirtualList/);
-  assert.match(spellingSource, /spelling-personal-wrong-list--virtual/);
+  assert.match(personalWrongDock, /spelling-personal-wrong-list--virtual/);
   assert.match(spellingSource, /spelling-error-bank-list--virtual/);
   assert.match(virtualListSource, /requestAnimationFrame/);
   assert.match(virtualListSource, /scrollRafRef/);
@@ -203,13 +204,15 @@ test("word flashcard playback shortcuts are scoped to word mode only", () => {
 
 test("rapid flashcard navigation coalesces persistence and cancels stale warmup timers", () => {
   const pageSource = fs.readFileSync(path.join(root, "app/page.jsx"), "utf8");
+  const sessionHook = fs.readFileSync(path.join(root, "app/hooks/useWordFlashSession.js"), "utf8");
 
-  assert.match(pageSource, /sessionPersistTimerRef = useRef\(null\)/);
-  assert.match(pageSource, /pendingSessionPersistRef = useRef\(null\)/);
-  assert.match(pageSource, /function queueWordFlashSessionPersist/);
-  assert.match(pageSource, /window\.setTimeout\(\(\) => \{\s*const pending = pendingSessionPersistRef\.current/);
-  assert.match(pageSource, /function flushQueuedWordFlashSessionPersist/);
-  assert.match(pageSource, /queueWordFlashSessionPersist\(\)/);
+  assert.match(sessionHook, /sessionPersistTimerRef = useRef\(null\)/);
+  assert.match(sessionHook, /pendingSessionPersistRef = useRef\(null\)/);
+  assert.match(sessionHook, /function queueWordFlashSessionPersist/);
+  assert.match(sessionHook, /window\.setTimeout\(\(\) => \{\s*const pending = pendingSessionPersistRef\.current/);
+  assert.match(sessionHook, /function flushQueuedWordFlashSessionPersist/);
+  assert.match(sessionHook, /queueWordFlashSessionPersist\(\)/);
+  assert.match(pageSource, /useWordFlashSession/);
   assert.doesNotMatch(pageSource, /function nextWord\(\)[\s\S]*?persistWordFlashSessionNow\(nextIndex, latest\.filter, latest\.words\);[\s\S]*?function prevWord/);
   assert.match(pageSource, /warmTtsTimersRef = useRef\(\[\]\)/);
   assert.match(pageSource, /warmTtsBatchRef = useRef\(0\)/);

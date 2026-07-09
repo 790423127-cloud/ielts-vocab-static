@@ -1,22 +1,16 @@
 "use client";
 
-import { startTransition, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState } from "react";
 import { useHomeWordSpeech } from "./hooks/useHomeWordSpeech.js";
 import { useHomeAudioPrefill } from "./hooks/useHomeAudioPrefill.js";
 import { useHomeLexiconAdmin } from "./hooks/useHomeLexiconAdmin.js";
-import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "./lib/vocab/lexicon-guard-shared.mjs";
-import { PHRASE_FLASH_STUDY_MODE_KEY } from "./lib/vocab/phrase-flashcard-keys.mjs";
+import { useHomeVocabBootstrap } from "./hooks/useHomeVocabBootstrap.js";
+import { useWordFlashSession } from "./hooks/useWordFlashSession.js";
 import {
-  formatOfflineVocabNotice,
-  formatVocabCountLabel,
-  isWordCacheCurrent,
-  mergeWordContentWithUserState
+  formatVocabCountLabel
 } from "./lib/vocab/word-cache-meta.mjs";
 import {
-  loadWordsFromIndexedDB,
-  postExportCache,
-  saveWordUserStateToIndexedDB,
-  saveWordsToIndexedDB
+  postExportCache
 } from "./lib/vocab/word-store.mjs";
 import PhraseFlashcardPanel from "./components/PhraseFlashcardPanel";
 import LrParaphrasePanel from "./components/LrParaphrasePanel";
@@ -31,11 +25,8 @@ import {
 } from "./lib/spelling/idictation-frequency.mjs";
 import {
   effectiveStudyIndex,
-  releaseStudyPersistBlock,
   resolveFilterSwitchIndex,
-  shouldBlockStudyIndexPersist,
-  shouldReResolveStudyIndex,
-  shouldRunFullStudyRestore
+  shouldBlockStudyIndexPersist
 } from "./lib/vocab/study-session.mjs";
 import { buildLearningEntryCounts } from "./lib/vocab/learning-entry-counts.mjs";
 import {
@@ -62,17 +53,8 @@ import {
 } from "./lib/browser-storage.mjs";
 import { cleanupBrowserCachesForVocab } from "./lib/vocab/cache-cleanup.mjs";
 import {
-  IDICTATION_FLASH_INDEX_OFFSET,
-  WORD_FLASHCARD_POSITIONS_KEY,
-  WORD_FLASHCARD_SESSION_KEY,
-  clearWordStudySession,
-  normalizeWordFlashFilter,
-  persistWordFlashSession,
-  readWordFlashEntryPositions,
-  readWordFlashPendingSession,
   resolveCurrentStudyItem,
-  resolveWordStudyIndex,
-  restoreMessageForReason
+  resolveWordStudyIndex
 } from "./lib/vocab/word-flashcard-session.mjs";
 import { SPEECH_WARM_DELAYS_MS } from "./lib/vocab-speech.mjs";
 import {
@@ -80,19 +62,12 @@ import {
   enrichDisplayFamily,
   fallback,
   getDisplayForms,
-  getFormChineseType,
-  getFormExplanation,
-  getFormHint,
-  getPosDisplay,
-  isProbablyFullVocab,
   isSimpleDictionaryWord,
   normalizePhraseItems,
   normalizeWord,
-  runWhenBrowserIdle,
   safeLocalStorageGet,
   safeLocalStorageRemove,
-  safeLocalStorageSet,
-  withTimeout
+  safeLocalStorageSet
 } from "./lib/vocab/page-word-helpers.mjs";
 
 // Source anchors kept for regression tests: AI工具（会扣费）; 听力阅读同义替换; /data/phrases.json; LR_SYNONYM_URL; asSynonymItems(payload).length;
@@ -181,22 +156,6 @@ const TOPIC_OPTIONS = ["教育", "工作", "住房", "交通", "健康", "环境
 const DIFFICULTY_OPTIONS = ["基础高频", "中级核心", "高级加分", "低频认识即可"];
 
 export default function Home() {
-  const [words, setWords] = useState([]);
-
-  function persistWordsImmediately(nextWords) {
-    if (!isProbablyFullVocab(nextWords)) {
-      setToast(`已阻止少量词覆盖大词库：当前只有 ${Array.isArray(nextWords) ? nextWords.length : 0} 个词，请先恢复词库`);
-      return;
-    }
-
-    saveWordsToIndexedDB(nextWords, cacheMetaRef.current).catch(() => {
-      compactBrowserStorageForCurrentWords(nextWords, cacheMetaRef.current)
-        .then(() => setToast("已清理浏览器旧缓存并重新保存大词库"))
-        .catch(() => setToast("本地保存失败：请先恢复词库，再点“清理浏览器存储空间”"));
-    });
-
-  }
-  const [flashStudyMode, setFlashStudyMode] = useState("word");
   const [index, setIndex] = useState(0);
   const [pasteText, setPasteText] = useState("");
   const [search, setSearch] = useState("");
@@ -204,14 +163,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [batchInfo, setBatchInfo] = useState("");
   const [duplicateInfo, setDuplicateInfo] = useState("");
-  const [vocabRuntime, setVocabRuntime] = useState({
-    status: "loading",
-    count: null,
-    version: "",
-    lexiconHash: ""
-  });
-  const [phraseRuntimeCount, setPhraseRuntimeCount] = useState(null);
-  const [lrSynonymCount, setLrSynonymCount] = useState(null);
   const [idictationFlashRevision, setIdictationFlashRevision] = useState(0);
   const [lastLocalChange, setLastLocalChange] = useState(null);
   const [audioMap, setAudioMap] = useState({});
@@ -220,6 +171,19 @@ export default function Home() {
   const [editDraft, setEditDraft] = useState(null);
   const [filter, setFilter] = useState({ type: "all", value: "" });
   const [meaningDetailOpen, setMeaningDetailOpen] = useState(false);
+
+  const {
+    words,
+    setWords,
+    flashStudyMode,
+    setFlashStudyMode,
+    vocabRuntime,
+    phraseRuntimeCount,
+    lrSynonymCount,
+    storageReadyRef,
+    cacheMetaRef,
+    persistWordsImmediately
+  } = useHomeVocabBootstrap({ setToast });
 
   const {
     audioStatusMapRef,
@@ -251,20 +215,6 @@ export default function Home() {
 
   const quickStatusLockRef = useRef(false);
   const markStatusRef = useRef(null);
-  const storageReadyRef = useRef(false);
-  const hydratedWordsRef = useRef(null);
-  const studySessionRef = useRef({
-    restored: false,
-    userAdjusted: false,
-    persistBlocked: true,
-    restoreTargetIndex: null,
-    settling: false,
-    toastShown: false,
-    wordsGeneration: 0
-  });
-  const sessionPersistTimerRef = useRef(null);
-  const pendingSessionPersistRef = useRef(null);
-  const pendingSessionRef = useRef(null);
   const nextWordRef = useRef(() => {});
   const prevWordRef = useRef(() => {});
   const speakWordRef = useRef(() => {});
@@ -272,12 +222,6 @@ export default function Home() {
   const warmTtsTimersRef = useRef([]);
   const warmTtsBatchRef = useRef(0);
   const flashStudyModeRef = useRef(flashStudyMode);
-  const cacheMetaRef = useRef({
-    version: LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES,
-    lexiconHash: "",
-    savedAt: ""
-  });
-  const entryPositionsRef = useRef({});
   const latestStateRef = useRef({
     loading: false,
     isStudyEmpty: false,
@@ -287,37 +231,21 @@ export default function Home() {
     studyWords: []
   });
 
-  useEffect(() => {
-    const savedMode = safeLocalStorageGet(PHRASE_FLASH_STUDY_MODE_KEY);
-    if (savedMode === "word" || savedMode === "phrase" || savedMode === "paraphrase") {
-      setFlashStudyMode(savedMode);
-    }
-  }, []);
-
-  useEffect(() => {
-    safeLocalStorageSet(PHRASE_FLASH_STUDY_MODE_KEY, flashStudyMode);
-  }, [flashStudyMode]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadRuntimeCounts() {
-      const meta = await fetch("/api/catalog-meta", { cache: "no-store" })
-        .then((response) => response.ok ? response.json() : null)
-        .catch(() => null);
-
-      if (cancelled) return;
-
-      setPhraseRuntimeCount(Number.isFinite(meta?.phraseCount) ? meta.phraseCount : null);
-      setLrSynonymCount(Number.isFinite(meta?.lrSynonymCount) ? meta.lrSynonymCount : null);
-    }
-
-    loadRuntimeCounts();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const {
+    studySessionRef,
+    entryPositionsRef,
+    persistWordFlashSessionNow,
+    resetWordStudySessionState
+  } = useWordFlashSession({
+    words,
+    index,
+    setIndex,
+    filter,
+    setFilter,
+    setToast,
+    storageReadyRef,
+    latestStateRef
+  });
 
   useEffect(() => {
     const openAiTools =
@@ -334,374 +262,6 @@ export default function Home() {
         aiToolsRef.current.scrollIntoView({ block: "start", behavior: "smooth" });
       }
     });
-  }, []);
-
-  useEffect(() => {
-    let loadedWords = null;
-    let cancelled = false;
-
-    const saved = safeLocalStorageGet("ielts_vocab_words_deepseek");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length) {
-          loadedWords = parsed;
-          hydratedWordsRef.current = parsed;
-          setWords(parsed);
-          saveWordsToIndexedDB(parsed).catch(() => {});
-        }
-      } catch {
-        safeLocalStorageRemove("ielts_vocab_words_deepseek");
-      }
-
-      // 大词库不适合长期放 localStorage，迁移后清理旧数据，避免 quota 报错。
-      safeLocalStorageRemove("ielts_vocab_words_deepseek");
-    }
-
-    entryPositionsRef.current = readWordFlashEntryPositions(safeLocalStorageGet);
-    pendingSessionRef.current = readWordFlashPendingSession(safeLocalStorageGet);
-    if (pendingSessionRef.current?.filter) {
-      setFilter(normalizeWordFlashFilter(pendingSessionRef.current.filter));
-    }
-
-    async function loadActiveWords() {
-      let cachedWords = loadedWords;
-      let cachedMeta = null;
-
-      try {
-        const stored = await withTimeout(loadWordsFromIndexedDB().catch(() => null), 2500, null);
-        if (stored?.words?.length) {
-          cachedWords = stored.words;
-          cachedMeta = stored.meta || null;
-
-          if (!cancelled) {
-            if (cachedMeta) cacheMetaRef.current = cachedMeta;
-            hydratedWordsRef.current = stored.words;
-            startTransition(() => setWords(stored.words));
-            setVocabRuntime({
-              status: "loading",
-              count: cachedMeta?.count || stored.words.length,
-              version: cachedMeta?.version || "",
-              lexiconHash: cachedMeta?.lexiconHash || "",
-              savedAt: cachedMeta?.savedAt || ""
-            });
-          }
-        }
-
-        const metaResponse = await fetch("/api/vocab-meta", { cache: "no-store" });
-        const apiMeta = metaResponse?.ok ? await metaResponse.json().catch(() => null) : null;
-
-        if (cachedWords?.length && apiMeta?.lexiconHash && isWordCacheCurrent(cachedMeta || {}, apiMeta)) {
-          if (!cancelled) {
-            cacheMetaRef.current = { ...(cachedMeta || {}), ...apiMeta };
-            setVocabRuntime({ status: "online", ...apiMeta });
-          }
-          return;
-        }
-
-        const response = await fetch("/api/vocab-data", { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const payload = await response.json();
-        if (!payload?.words?.length || Number(payload.count) !== payload.words.length) {
-          throw new Error("词库响应数量不一致");
-        }
-        if (!payload.version || !payload.lexiconHash || !payload.savedAt) {
-          throw new Error("词库响应缺少版本元数据");
-        }
-
-        const mergedMeta = {
-          count: payload.count,
-          version: payload.version,
-          lexiconHash: payload.lexiconHash,
-          savedAt: payload.savedAt,
-          fileHash: payload.fileHash || "",
-          wordsHash: payload.wordsHash || ""
-        };
-        const onlineWords = mergeWordContentWithUserState(payload.words, cachedWords || []);
-
-        cacheMetaRef.current = mergedMeta;
-        if (!cancelled) {
-          hydratedWordsRef.current = onlineWords;
-          startTransition(() => setWords(onlineWords));
-          setVocabRuntime({ status: "online", ...mergedMeta });
-        }
-
-        runWhenBrowserIdle(async () => {
-          if (cancelled) return;
-
-          const wordsForCache = mergeWordContentWithUserState(payload.words, cachedWords || onlineWords);
-          if (!isWordCacheCurrent(cachedMeta || {}, mergedMeta) || !stored?.words?.length) {
-            await saveWordsToIndexedDB(wordsForCache, mergedMeta);
-          }
-        });
-      } catch {
-        if (cancelled) return;
-        const stored = await withTimeout(loadWordsFromIndexedDB().catch(() => null), 2500, null);
-        if (stored?.words?.length) {
-          cachedWords = stored.words;
-          cachedMeta = stored.meta || null;
-          if (cachedMeta) cacheMetaRef.current = cachedMeta;
-          hydratedWordsRef.current = stored.words;
-          startTransition(() => setWords(stored.words));
-        }
-
-        if (cachedWords?.length) {
-          const offlineMeta = {
-            count: cachedMeta?.count || cachedWords.length,
-            version: cachedMeta?.version || "未知版本",
-            lexiconHash: cachedMeta?.lexiconHash || "",
-            savedAt: cachedMeta?.savedAt || ""
-          };
-          cacheMetaRef.current = offlineMeta;
-          setVocabRuntime({ status: "offline", ...offlineMeta });
-        } else {
-          setVocabRuntime({ status: "error", count: null, version: "", lexiconHash: "" });
-        }
-      }
-    }
-
-    loadActiveWords();
-
-    // 音频状态表可能非常大，不能放 localStorage；旧版本缓存会导致 quota 报错，启动时清掉。
-    safeLocalStorageRemove("ielts_vocab_audio_status_v1");
-
-    storageReadyRef.current = true;
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!storageReadyRef.current) return;
-
-    // Loading API/IndexedDB content must not be treated as a user edit or rewrite words.json metadata.
-    if (hydratedWordsRef.current === words) {
-      hydratedWordsRef.current = null;
-      return;
-    }
-
-    // Learning actions only update the compact user-state record. Content edits
-    // call persistWordsImmediately explicitly.
-    if (!isProbablyFullVocab(words)) {
-      return;
-    }
-
-    saveWordUserStateToIndexedDB(words).catch(() => {});
-    cleanupOldLargeLocalStorageKeys();
-  }, [words]);
-
-  function resetWordStudySessionState({ resetIndex = true } = {}) {
-    entryPositionsRef.current = {};
-    pendingSessionRef.current = null;
-    clearWordStudySession(safeLocalStorageRemove);
-    studySessionRef.current = {
-      restored: true,
-      userAdjusted: true,
-      persistBlocked: false,
-      restoreTargetIndex: null,
-      settling: false,
-      toastShown: true,
-      wordsGeneration: studySessionRef.current.wordsGeneration
-    };
-    if (resetIndex) {
-      latestStateRef.current.index = 0;
-      setIndex(0);
-    }
-  }
-
-  function persistWordFlashSessionNow(nextIndex = index, nextFilter = filter, nextWords = words) {
-    if (sessionPersistTimerRef.current) {
-      clearTimeout(sessionPersistTimerRef.current);
-      sessionPersistTimerRef.current = null;
-    }
-    pendingSessionPersistRef.current = null;
-
-    if (!storageReadyRef.current || !studySessionRef.current.restored) return false;
-    if (!Array.isArray(nextWords) || !nextWords.length) return false;
-
-    const studyPool = buildStudyPoolForFilter(nextFilter, nextWords);
-    if (isIdictationFlashFilter(nextFilter) && !studyPool?.length) return false;
-
-    const result = persistWordFlashSession({
-      words: nextWords,
-      index: nextIndex,
-      filter: nextFilter,
-      entryPositions: entryPositionsRef.current,
-      filterKey,
-      normalizeWord,
-      studyPool,
-      storageSet: safeLocalStorageSet
-    });
-
-    entryPositionsRef.current = result.entryPositions;
-
-    if (!result.saved) {
-      setToast("学习位置保存失败，请检查浏览器存储空间");
-    }
-
-    return result.saved;
-  }
-
-  function queueWordFlashSessionPersist(nextIndex = index, nextFilter = filter, nextWords = words) {
-    pendingSessionPersistRef.current = {
-      index: nextIndex,
-      filter: nextFilter,
-      words: nextWords
-    };
-
-    if (sessionPersistTimerRef.current) {
-      clearTimeout(sessionPersistTimerRef.current);
-    }
-
-    sessionPersistTimerRef.current = window.setTimeout(() => {
-      const pending = pendingSessionPersistRef.current;
-      if (!pending) return;
-
-      persistWordFlashSessionNow(pending.index, pending.filter, pending.words);
-    }, 280);
-  }
-
-  function flushQueuedWordFlashSessionPersist() {
-    const pending = pendingSessionPersistRef.current;
-    if (!pending) return false;
-
-    return persistWordFlashSessionNow(pending.index, pending.filter, pending.words);
-  }
-
-  useLayoutEffect(() => {
-    if (!storageReadyRef.current || !words.length) return;
-
-    const sessionState = studySessionRef.current;
-    sessionState.wordsGeneration += 1;
-
-    if (sessionState.userAdjusted) {
-      sessionState.restored = true;
-      sessionState.persistBlocked = false;
-      return;
-    }
-
-    const pending = pendingSessionRef.current || readWordFlashPendingSession(safeLocalStorageGet);
-
-    if (!shouldRunFullStudyRestore(sessionState)) {
-      if (!shouldReResolveStudyIndex(sessionState, pending || {})) return;
-
-      const restoreFilter = normalizeWordFlashFilter(pending?.filter || filter);
-      const studyPool = buildStudyPoolForFilter(restoreFilter, words);
-      const result = resolveWordStudyIndex(words, {
-        session: pending,
-        entryPositions: entryPositionsRef.current,
-        filter: restoreFilter,
-        wordMatchesFilter,
-        filterKey,
-        normalizeWord,
-        studyPool
-      });
-
-      if (result.index >= 0 && result.index !== index) {
-        sessionState.restoreTargetIndex = result.index;
-        sessionState.persistBlocked = true;
-        sessionState.settling = true;
-        latestStateRef.current.index = result.index;
-        setIndex(result.index);
-      }
-      return;
-    }
-
-    if (!pending) {
-      sessionState.restored = true;
-      sessionState.persistBlocked = false;
-      sessionState.restoreTargetIndex = null;
-      return;
-    }
-
-    const restoreFilter = normalizeWordFlashFilter(pending?.filter || filter);
-    const studyPool = buildStudyPoolForFilter(restoreFilter, words);
-
-    const result = resolveWordStudyIndex(words, {
-      session: pending,
-      entryPositions: entryPositionsRef.current,
-      filter: restoreFilter,
-      wordMatchesFilter,
-      filterKey,
-      normalizeWord,
-      studyPool
-    });
-
-    if (result.filter) {
-      latestStateRef.current.filter = result.filter;
-      setFilter(result.filter);
-    }
-
-    sessionState.restored = true;
-    sessionState.persistBlocked = true;
-    sessionState.settling = result.index >= 0;
-    sessionState.restoreTargetIndex = result.index >= 0 ? result.index : null;
-
-    if (result.index >= 0) {
-      latestStateRef.current.index = result.index;
-      setIndex(result.index);
-    } else {
-      sessionState.persistBlocked = false;
-      sessionState.settling = false;
-      sessionState.restoreTargetIndex = null;
-    }
-
-    const restoredItem = resolveCurrentStudyItem({
-      words,
-      index: result.index,
-      filter: result.filter || restoreFilter,
-      studyPool
-    });
-
-    if (!sessionState.toastShown) {
-      const message = result.restored
-        ? restoreMessageForReason(result.reason, restoredItem?.word || "")
-        : restoreMessageForReason("notFound");
-
-      if (message) setToast(message);
-      sessionState.toastShown = true;
-    }
-  }, [words]);
-
-  useEffect(() => {
-    if (!storageReadyRef.current || !studySessionRef.current.restored) return;
-    if (shouldBlockStudyIndexPersist(studySessionRef.current, index)) return;
-
-    releaseStudyPersistBlock(studySessionRef.current, index);
-    queueWordFlashSessionPersist();
-  }, [index]);
-
-  useEffect(() => {
-    function handlePageHide() {
-      const latest = latestStateRef.current;
-      if (!storageReadyRef.current || !studySessionRef.current.restored) return;
-      if (!Array.isArray(latest.words) || !latest.words.length) return;
-
-      if (flushQueuedWordFlashSessionPersist()) return;
-
-      const studyPool = buildStudyPoolForFilter(latest.filter, latest.words);
-
-      persistWordFlashSession({
-        words: latest.words,
-        index: latest.index,
-        filter: latest.filter,
-        entryPositions: entryPositionsRef.current,
-        filterKey,
-        normalizeWord,
-        studyPool,
-        storageSet: safeLocalStorageSet
-      });
-    }
-
-    window.addEventListener("pagehide", handlePageHide);
-    return () => {
-      window.removeEventListener("pagehide", handlePageHide);
-      if (sessionPersistTimerRef.current) {
-        clearTimeout(sessionPersistTimerRef.current);
-      }
-      flushQueuedWordFlashSessionPersist();
-    };
   }, []);
 
   useEffect(() => {

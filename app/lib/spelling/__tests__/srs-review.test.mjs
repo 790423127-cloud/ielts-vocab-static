@@ -63,21 +63,23 @@ test("progress and shortcut controls render in the page footer", () => {
 test("stored browser preferences are restored after hydration", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const helpers = fs.readFileSync(path.join(root, "app/lib/spelling/spelling-training-page-helpers.mjs"), "utf8");
   assert.match(source, /const \[prefsHydrated, setPrefsHydrated\] = useState\(false\)/);
   assert.match(source, /useEffect\(\(\) => \{\s*const uxPrefs = readUxPrefs\(scope\)/);
-  assert.match(source, /localStorage\.getItem\(key\)/);
-  assert.match(source, /localStorage\.setItem\(getScopeStorageKey\(scope\), JSON\.stringify\(prefs\)\)/);
+  assert.match(helpers, /localStorage\.getItem\(key\)/);
+  assert.match(helpers, /localStorage\.setItem\(getScopeStorageKey\(scope\), JSON\.stringify\(prefs\)\)/);
   assert.doesNotMatch(source, /useState\(\(\) => readUxPrefs\(scope\)/);
 });
 
 test("spelling page persists and restores the current word for each active batch", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
-  assert.match(source, /function getPositionKey\(scope\)/);
+  const helpers = fs.readFileSync(path.join(root, "app/lib/spelling/spelling-training-page-helpers.mjs"), "utf8");
+  assert.match(helpers, /export function getPositionKey\(scope\)/);
   assert.match(source, /readSpellingPosition\(scope, activeBatchId\)/);
   assert.match(source, /writeSpellingPosition\(scope, \{/);
   assert.match(source, /activeBatchId,\s*wordId,/);
-  assert.match(source, /function resolvePersonalWrongNavigationWordId/);
+  assert.match(helpers, /export function resolvePersonalWrongNavigationWordId/);
   assert.match(source, /navigationWordId/);
   assert.match(source, /saved\?\.navigationWordId \|\| saved\?\.wordId/);
   assert.match(source, /restoringPositionRef\.current/);
@@ -87,8 +89,10 @@ test("spelling page persists and restores the current word for each active batch
 test("batch selection uses an in-page picker instead of a fragile native select", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
-  assert.match(source, /function BatchPicker/);
-  assert.match(source, /className="spelling-batch-picker"/);
+  const chrome = fs.readFileSync(path.join(root, "app/components/SpellingTrainingChrome.jsx"), "utf8");
+  assert.match(chrome, /export function BatchPicker/);
+  assert.match(chrome, /className="spelling-batch-picker"/);
+  assert.match(source, /BatchPicker/);
   assert.doesNotMatch(source, /className="spelling-batch-select/);
 });
 

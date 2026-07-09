@@ -111,265 +111,34 @@ import { isSpellingAnswerCorrect } from "../lib/spelling/state-machine.mjs";
 import { getWordId, normalizeSpellingAnswer } from "../lib/spelling/word-id.mjs";
 import {
   SPELLING_SCOPE_ROUTES,
-  getScopeRangeUiKey,
-  getScopeStorageKey,
   normalizeSpellingScope,
   resolveSpellingScope
 } from "../lib/spelling/spelling-scope.mjs";
 import {
-  readJsonFromLocalStorage,
-  readPersonalWrongBookRecords as readStoredPersonalWrongBookRecords,
-  spellingDailyStatsKey,
-  spellingPositionKey,
-  spellingUxPrefsKey,
-  writeJsonToLocalStorage,
-  writePersonalWrongBookRecords as writeStoredPersonalWrongBookRecords
-} from "../lib/spelling/spelling-training-storage.mjs";
-
-import {
-  DEFAULT_SPELLING_PREFS as DEFAULT_PREFS,
-  readSpellingUxPrefs,
-  writeSpellingUxPrefs
+  DEFAULT_SPELLING_PREFS as DEFAULT_PREFS
 } from "../lib/spelling/spelling-training-prefs.mjs";
 
-function getUxPrefsKey(scope) {
-  return spellingUxPrefsKey(scope);
-}
-
-function getPositionKey(scope) {
-  return spellingPositionKey(scope);
-}
-
-function getDailyStatsKey(scope) {
-  return spellingDailyStatsKey(scope);
-}
-
-function readDailyStats(scope) {
-  return readJsonFromLocalStorage(getDailyStatsKey(scope), null);
-}
-
-function writeDailyStats(scope, stats) {
-  writeJsonToLocalStorage(getDailyStatsKey(scope), stats);
-}
-
-function readPersonalWrongBookRecords() {
-  return readStoredPersonalWrongBookRecords();
-}
-
-function writePersonalWrongBookRecords(records) {
-  writeStoredPersonalWrongBookRecords(records);
-}
-
-function readUxPrefs(scope) {
-  if (typeof localStorage === "undefined") return {};
-  try {
-    const key = getUxPrefsKey(scope);
-    const raw = localStorage.getItem(key) || (typeof sessionStorage !== "undefined" ? sessionStorage.getItem(key) : "");
-    if (raw && typeof sessionStorage !== "undefined") sessionStorage.removeItem(key);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeUxPrefs(scope, prefs) {
-  if (typeof localStorage === "undefined") return;
-  try {
-    localStorage.setItem(getUxPrefsKey(scope), JSON.stringify(prefs));
-  } catch {
-    // ignore
-  }
-}
-
-function readRangeSettingsExpanded(scope) {
-  if (typeof localStorage === "undefined") return false;
-  try {
-    const key = getScopeRangeUiKey(scope);
-    const value = localStorage.getItem(key) || (typeof sessionStorage !== "undefined" ? sessionStorage.getItem(key) : "");
-    if (value && typeof sessionStorage !== "undefined") sessionStorage.removeItem(key);
-    return value === "1";
-  } catch {
-    return false;
-  }
-}
-
-function writeRangeSettingsExpanded(scope, expanded) {
-  if (typeof localStorage === "undefined") return;
-  try {
-    localStorage.setItem(getScopeRangeUiKey(scope), expanded ? "1" : "0");
-  } catch {
-    // ignore
-  }
-}
-
-function readCategoryPrefs(scope) {
-  if (typeof localStorage === "undefined") return null;
-  try {
-    const key = getScopeStorageKey(scope);
-    const raw = localStorage.getItem(key) || (typeof sessionStorage !== "undefined" ? sessionStorage.getItem(key) : "");
-    if (raw && typeof sessionStorage !== "undefined") sessionStorage.removeItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeCategoryPrefs(scope, prefs) {
-  if (typeof localStorage === "undefined") return;
-  try {
-    localStorage.setItem(getScopeStorageKey(scope), JSON.stringify(prefs));
-  } catch {
-    // ignore
-  }
-}
-
-function readSpellingPosition(scope, activeBatchId) {
-  if (typeof localStorage === "undefined" || !activeBatchId) return null;
-  try {
-    const raw = localStorage.getItem(getPositionKey(scope));
-    const parsed = raw ? JSON.parse(raw) : null;
-    return parsed?.activeBatchId === activeBatchId ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeSpellingPosition(scope, position) {
-  if (typeof localStorage === "undefined") return;
-  try {
-    localStorage.setItem(getPositionKey(scope), JSON.stringify(position));
-  } catch {
-    // ignore
-  }
-}
-
-function normalizePrefs(prefs = {}, scope = "word") {
-  const isPhrase = normalizeSpellingScope(scope) === "phrase";
-  const categoryTypes = isPhrase ? SPELLING_PHRASE_CATEGORY_TYPES : SPELLING_CATEGORY_TYPES;
-  const categoryType = categoryTypes.some((item) => item.value === prefs.categoryType)
-    ? prefs.categoryType
-    : DEFAULT_PREFS.categoryType;
-
-  let categoryValue = String(prefs.categoryValue || "").trim();
-  if (categoryType === "difficulty") {
-    const match = SPELLING_DIFFICULTY_OPTIONS.find((item) => item.value === categoryValue);
-    categoryValue = match?.value || DEFAULT_PREFS.categoryValue;
-  } else if (categoryType === "topic") {
-    categoryValue = SPELLING_TOPIC_OPTIONS.includes(categoryValue)
-      ? categoryValue
-      : SPELLING_TOPIC_OPTIONS[0];
-  } else if (categoryType === "ielts_use") {
-    const match = SPELLING_IELTS_USE_OPTIONS.find((item) => item.value === categoryValue);
-    categoryValue = match?.value || SPELLING_IELTS_USE_OPTIONS[0].value;
-  } else if (categoryType === "lr_high_frequency") {
-    const match = SPELLING_LISTENING_READING_OPTIONS.find((item) => item.value === categoryValue);
-    categoryValue = match?.value || SPELLING_LISTENING_READING_OPTIONS[0].value;
-  } else {
-    categoryValue = "";
-  }
-
-  return {
-    categoryType,
-    categoryValue,
-    batchIndex: Math.max(0, Number(prefs.batchIndex) || 0)
-  };
-}
-
-function normalizeStoredPrefs(saved, scope = "word") {
-  const input = saved && typeof saved === "object" ? saved : {};
-  const isPhrase = normalizeSpellingScope(scope) === "phrase";
-  const allowedSources = isPhrase
-    ? SPELLING_PRACTICE_SOURCES
-    : [...SPELLING_PRACTICE_SOURCES, ...IDICTATION_PRACTICE_SOURCES];
-  const practiceSource = allowedSources.some((item) => item.value === input.practiceSource)
-    ? input.practiceSource
-    : "category";
-  const idictationInput = input.idictation && typeof input.idictation === "object" ? input.idictation : {};
-
-  return {
-    practiceSource,
-    category: normalizePrefs(input.category || input, scope),
-    personalWrongBatchIndex: Math.max(0, Number(input.personalWrongBatchIndex) || 0),
-    errorBankBatchIndex: Math.max(0, Number(input.errorBankBatchIndex) || 0),
-    srsBatchIndex: Math.max(0, Number(input.srsBatchIndex) || 0),
-    idictation: {
-      listening: normalizeIdictationPrefs("listening", idictationInput.listening),
-      reading: normalizeIdictationPrefs("reading", idictationInput.reading)
-    }
-  };
-}
-
-function formatWrongTime(timestamp) {
-  const value = Number(timestamp || 0);
-  if (!value) return "—";
-  return new Date(value).toLocaleString("zh-CN", {
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
-function RangeSettingRow({ label, children }) {
-  return (
-    <div className="spelling-range-setting-row">
-      <span className="spelling-control-label">{label}</span>
-      <div className="spelling-range-setting-row__content">{children}</div>
-    </div>
-  );
-}
-
-function formatPersonalWrongRepeatLabel(record = {}) {
-  const repeatTotal = Number(record.targetRepetitions)
-    || (record.hasInflectionPair ? PERSONAL_WRONG_BOOK_REPETITIONS : PERSONAL_WRONG_BOOK_BASE_REPS);
-
-  if (record.hasInflectionPair) {
-    return `原形${PERSONAL_WRONG_BOOK_BASE_REPS}+复数${PERSONAL_WRONG_BOOK_PLURAL_REPS} · 共${repeatTotal}遍`;
-  }
-
-  return `原形${PERSONAL_WRONG_BOOK_BASE_REPS}遍`;
-}
-
-function resolvePersonalWrongNavigationWordId(wordId = "", units = []) {
-  const key = String(wordId || "").trim();
-  if (!key) return "";
-
-  const unit = (Array.isArray(units) ? units : [])
-    .find((item) => Array.isArray(item?.writeWordIds) && item.writeWordIds.includes(key));
-  return String(unit?.writeWordIds?.[0] || key).trim();
-}
-
-function BatchPicker({ value, options = [], onChange, onInteract, ariaLabel = "批次选择" }) {
-  const selected = options.find((option) => Number(option.value) === Number(value)) || options[0];
-
-  return (
-    <details className="spelling-batch-picker" onPointerDownCapture={onInteract}>
-      <summary className="spelling-batch-picker__trigger">
-        <span>{selected?.label || "选择批次"}</span>
-      </summary>
-      <div className="spelling-batch-picker__menu" role="listbox" aria-label={ariaLabel}>
-        {options.map((option) => {
-          const active = Number(option.value) === Number(value);
-          return (
-            <button
-              key={option.value}
-              type="button"
-              role="option"
-              aria-selected={active}
-              className={active ? "active" : ""}
-              onClick={(event) => {
-                onChange?.(Number(option.value));
-                event.currentTarget.closest("details")?.removeAttribute("open");
-              }}
-            >
-              {option.label}
-            </button>
-          );
-        })}
-      </div>
-    </details>
-  );
-}
+import { BatchPicker, RangeSettingRow } from "./SpellingTrainingChrome.jsx";
+import SpellingPersonalWrongDock from "./SpellingPersonalWrongDock.jsx";
+import {
+  formatPersonalWrongRepeatLabel,
+  formatWrongTime,
+  normalizePrefs,
+  normalizeStoredPrefs,
+  readCategoryPrefs,
+  readDailyStats,
+  readPersonalWrongBookRecords,
+  readRangeSettingsExpanded,
+  readSpellingPosition,
+  readUxPrefs,
+  resolvePersonalWrongNavigationWordId,
+  writeCategoryPrefs,
+  writeDailyStats,
+  writePersonalWrongBookRecords,
+  writeRangeSettingsExpanded,
+  writeSpellingPosition,
+  writeUxPrefs
+} from "../lib/spelling/spelling-training-page-helpers.mjs";
 
 export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const scopeConfig = useMemo(() => resolveSpellingScope(scopeProp), [scopeProp]);
@@ -1942,122 +1711,34 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       ) : null}
 
       {personalWrongPanelOpen ? (
-        <section className="spelling-personal-wrong-dock" aria-label="做题错词本管理">
-          <div className="spelling-personal-wrong-dock__head">
-            <div>
-              <h2 className="spelling-personal-wrong-dock__title">做题错词本</h2>
-              <p className="spelling-export-panel__hint">
-                独立记录真题/练习错词；按 {PERSONAL_WRONG_BOOK_BATCH_SIZE} 词一组分类练习。只有原形的词练 {PERSONAL_WRONG_BOOK_BASE_REPS} 遍；原形+复数词练 {PERSONAL_WRONG_BOOK_REPETITIONS} 遍。后续加新词不会重置已练进度，也不会强制从头开始。
-              </p>
-            </div>
-            <button
-              type="button"
-              className="spelling-export-btn"
-              onMouseDown={trainingControls.markSettingsInteraction}
-              onClick={() => setPersonalWrongPanelOpen(false)}
-            >
-              收起
-            </button>
-          </div>
-          <div className="spelling-personal-wrong-dock__body">
-            <div className="spelling-personal-wrong-dock__input">
-              <textarea
-                className="spelling-personal-wrong-input"
-                value={personalWrongInput}
-                onChange={(event) => setPersonalWrongInput(event.target.value)}
-                onMouseDown={trainingControls.markSettingsInteraction}
-                placeholder={`一行一个：\naccommodation | 住宿\nvacancy -> vacancies | 职位空缺\ncity +ies\non the other hand | 另一方面`}
-                rows={5}
-              />
-              <div className="spelling-export-panel__actions spelling-personal-wrong-dock__actions">
-                <button
-                  type="button"
-                  className="spelling-export-btn spelling-export-btn--primary"
-                  onMouseDown={trainingControls.markSettingsInteraction}
-                  onClick={handleAddPersonalWrongWords}
-                >
-                  加入做题错词本
-                </button>
-                <button
-                  type="button"
-                  className="spelling-export-btn"
-                  disabled={!(scope === "phrase" ? personalWrongSummary.phrase : personalWrongSummary.word)}
-                  onMouseDown={trainingControls.markSettingsInteraction}
-                  onClick={handleClearPersonalWrongBook}
-                >
-                  清空当前{scopeConfig.label}
-                </button>
-                <button
-                  type="button"
-                  className="spelling-export-btn"
-                  disabled={!(scope === "phrase" ? personalWrongSummary.phrase : personalWrongSummary.word)}
-                  onMouseDown={trainingControls.markSettingsInteraction}
-                  onClick={() => {
-                    patchStoredPrefs({ practiceSource: "personal_wrong_book", personalWrongBatchIndex: 0 });
-                    setPersonalWrongPanelOpen(false);
-                  }}
-                >
-                  去练习
-                </button>
-              </div>
-            </div>
-            <div className="spelling-personal-wrong-dock__list">
-              <p className="spelling-export-panel__meta">
-                错词本总计：{personalWrongScopedCount} {unit} · 当前{personalWrongCurrentBatchLabel}：{personalWrongBatchSelection.batchEntryCount} {unit} · 本组练习 {personalWrongCurrentBatchWriteCount} 遍 · 全部练习 {personalWrongTotalWriteCount} 遍
-              </p>
-              {showPersonalWrongGroupSelect ? (
-                <div className="spelling-personal-wrong-dock__group-select">
-                  <span className="spelling-control-label">练习组别</span>
-                  <BatchPicker
-                    value={personalWrongBatchSelection.batchIndex}
-                    options={personalWrongBatchOptions}
-                    ariaLabel="做题错词练习组别"
-                    onInteract={trainingControls.markSettingsInteraction}
-                    onChange={(batchIndex) => {
-                      handlePersonalWrongBatchChange(batchIndex);
-                      patchStoredPrefs({ practiceSource: "personal_wrong_book" });
-                    }}
-                  />
-                </div>
-              ) : null}
-              {personalWrongCurrentBatchRecords.length ? (
-                <VirtualList
-                  className="spelling-personal-wrong-list spelling-personal-wrong-list--virtual"
-                  items={personalWrongCurrentBatchRecords}
-                  itemHeight={96}
-                  height={220}
-                  resetKey={`${scope}:personal-wrong:${personalWrongBatchSelection.batchIndex}:${personalWrongCurrentBatchRecords.length}`}
-                  getKey={(record) => record.id}
-                  renderItem={(record, itemIndex) => {
-                    const linked = personalWrongSourceEntries.some((entry) => entry.personalWrong?.recordId === record.id && entry.personalWrong.linkedToLexicon);
-                    const sequence = (personalWrongBatchSelection.batchIndex * PERSONAL_WRONG_BOOK_BATCH_SIZE) + itemIndex + 1;
-                    return (
-                      <div className={`spelling-personal-wrong-record ${linked ? "is-linked" : "is-local"}`}>
-                        <div className="spelling-personal-wrong-list__top">
-                          <span className="spelling-personal-wrong-list__index">{sequence}</span>
-                          <strong>{formatPersonalWrongUnitLabel(record)}</strong>
-                          <button
-                            type="button"
-                            className="spelling-personal-wrong-list__delete"
-                            onMouseDown={trainingControls.markSettingsInteraction}
-                            onClick={() => handleDeletePersonalWrongRecord(record)}
-                            title="从做题错词本删除"
-                          >
-                            删除
-                          </button>
-                        </div>
-                        <span>{record.meaning || (linked ? "已匹配总词库" : "本地补充")}</span>
-                        <em>{formatPersonalWrongRepeatLabel(record)}</em>
-                      </div>
-                    );
-                  }}
-                />
-              ) : (
-                <p className="spelling-error-bank-empty">这里还没有做题错词。添加后可在右侧“来源”切到“做题错词”单独练习。</p>
-              )}
-            </div>
-          </div>
-        </section>
+        <SpellingPersonalWrongDock
+          scope={scope}
+          scopeConfig={scopeConfig}
+          unit={unit}
+          personalWrongInput={personalWrongInput}
+          setPersonalWrongInput={setPersonalWrongInput}
+          personalWrongSummary={personalWrongSummary}
+          personalWrongScopedCount={personalWrongScopedCount}
+          personalWrongCurrentBatchLabel={personalWrongCurrentBatchLabel}
+          personalWrongBatchSelection={personalWrongBatchSelection}
+          personalWrongCurrentBatchWriteCount={personalWrongCurrentBatchWriteCount}
+          personalWrongTotalWriteCount={personalWrongTotalWriteCount}
+          showPersonalWrongGroupSelect={showPersonalWrongGroupSelect}
+          personalWrongBatchOptions={personalWrongBatchOptions}
+          personalWrongCurrentBatchRecords={personalWrongCurrentBatchRecords}
+          personalWrongSourceEntries={personalWrongSourceEntries}
+          trainingControls={trainingControls}
+          onClose={() => setPersonalWrongPanelOpen(false)}
+          onAdd={handleAddPersonalWrongWords}
+          onClear={handleClearPersonalWrongBook}
+          onPractice={() => {
+            patchStoredPrefs({ practiceSource: "personal_wrong_book", personalWrongBatchIndex: 0 });
+            setPersonalWrongPanelOpen(false);
+          }}
+          onBatchChange={handlePersonalWrongBatchChange}
+          onDeleteRecord={handleDeletePersonalWrongRecord}
+          patchStoredPrefs={patchStoredPrefs}
+        />
       ) : null}
 
       <div className="spelling-page-layout">

@@ -233,26 +233,40 @@ test("persistWordFlashSession writes session and positions", () => {
 
 test("word flashcard restore blocks persist until restored index is applied", () => {
   const pageSource = fs.readFileSync(pagePath, "utf8");
+  const sessionHook = fs.readFileSync(
+    path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../hooks/useWordFlashSession.js"),
+    "utf8"
+  );
 
-  assert.match(pageSource, /studySessionRef = useRef\(/);
-  assert.match(pageSource, /useLayoutEffect\(\(\) => \{/);
-  assert.match(pageSource, /shouldBlockStudyIndexPersist\(studySessionRef\.current, index\)/);
-  assert.match(pageSource, /sessionState\.restoreTargetIndex = result\.index >= 0 \? result\.index : null/);
+  assert.match(sessionHook, /studySessionRef = useRef\(/);
+  assert.match(sessionHook, /useLayoutEffect\(\(\) => \{/);
+  assert.match(sessionHook, /shouldBlockStudyIndexPersist\(studySessionRef\.current, index\)/);
+  assert.match(pageSource, /shouldBlockStudyIndexPersist\(sessionState, index\)/);
+  assert.match(sessionHook, /sessionState\.restoreTargetIndex = result\.index >= 0 \? result\.index : null/);
   assert.match(pageSource, /effectiveStudyIndex\(studySessionRef\.current, index\)/);
 });
 
 test("word flashcard restore is not skipped by vocab cache hydration", () => {
   const pageSource = fs.readFileSync(pagePath, "utf8");
+  const sessionHook = fs.readFileSync(
+    path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../hooks/useWordFlashSession.js"),
+    "utf8"
+  );
+  const bootstrapHook = fs.readFileSync(
+    path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../hooks/useHomeVocabBootstrap.js"),
+    "utf8"
+  );
+  const combined = `${pageSource}\n${sessionHook}\n${bootstrapHook}`;
 
   assert.doesNotMatch(
-    pageSource,
+    combined,
     /isWordCacheCurrent\(cachedMeta \|\| \{\}, apiMeta\)\)[\s\S]{0,220}sessionRestoredRef\.current = true/
   );
   assert.match(pageSource, /resolveCurrentStudyItem\(/);
   assert.match(pageSource, /studySessionRef\.current\.userAdjusted/);
-  assert.match(pageSource, /shouldReResolveStudyIndex\(sessionState, pending/);
+  assert.match(sessionHook, /shouldReResolveStudyIndex\(sessionState, pending/);
   assert.doesNotMatch(
-    pageSource,
+    combined,
     /if \(!storageReadyRef\.current \|\| sessionRestoredRef\.current \|\| !words\.length\) return;/
   );
 });

@@ -51,8 +51,9 @@ test("home count formatter displays API counts without fixed totals", () => {
   assert.equal(formatVocabCountLabel("error", null), "词库不可用");
 
   const source = fs.readFileSync(pagePath, "utf8");
+  const bootstrap = fs.readFileSync(path.join(root, "app/hooks/useHomeVocabBootstrap.js"), "utf8");
   assert.match(source, /formatVocabCountLabel\(vocabRuntime\.status, vocabRuntime\.count\)/);
-  assert.match(source, /hydratedWordsRef\.current === words/);
+  assert.match(bootstrap, /hydratedWordsRef\.current === words/);
   assert.doesNotMatch(source, /"9,909"/);
   assert.doesNotMatch(source, /words\.length\s*>=\s*9900\s*\?\s*"9,909"/);
 });

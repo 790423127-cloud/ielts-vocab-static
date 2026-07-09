@@ -1,0 +1,77 @@
+.spellingFeedbackPanel {
+  width: 100%;
+  max-width: 100%;
+  margin: 8px auto 0;
+  align-self: center;
+  border: 1px solid rgba(220, 90, 70, 0.22);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fffdfb;
+  box-sizing: border-box;
+}
+
+.feedbackRow {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  min-height: 56px;
+  align-items: center;
+  border-bottom: 1px solid rgba(40, 70, 90, 0.1);
+}
+
+.feedbackRow:last-child {
+  border-bottom: 0;
+}
+
+.feedbackLabel {
+  padding: 14px 18px;
+  font-size: calc(18px * var(--font-scale));
+  font-weight: 800;
+  color: #64748b;
+  box-sizing: border-box;
+}
+
+.feedbackValueCorrect,
+.feedbackValueWrong,
+.feedbackValueError {
+  padding: 14px 18px;
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+}
+
+.feedbackValueCorrect {
+  color: #176b58;
+}
+
+.feedbackValueWrong {
+  color: #c02a1d;
+}
+
+.feedbackValueError {
+  color: #a83d10;
+}
+
+@media (max-width: 640px) {
+  .feedbackRow {
+    grid-template-columns: 100px minmax(0, 1fr);
+    min-height: 48px;
+  }
+
+  .feedbackLabel,
+  .feedbackValueCorrect,
+  .feedbackValueWrong,
+  .feedbackValueError {
+    padding: 12px 10px;
+  }
+
+  .feedbackLabel {
+    font-size: calc(15px * var(--font-scale));
+  }
+
+  .feedbackValueCorrect,
+  .feedbackValueWrong,
+  .feedbackValueError {
+    font-size: calc(17px * var(--font-scale));
+  }
+}

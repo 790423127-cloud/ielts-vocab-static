@@ -1,0 +1,56 @@
+.spellingContentColumn {
+  width: min(860px, calc(100vw - 32px));
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+.spellingWordTitle {
+  width: 100%;
+  text-align: center;
+}
+
+.spellingInputArea {
+  width: 100%;
+}
+
+.spellingFeedbackWrap {
+  width: min(860px, calc(100vw - 32px));
+  max-width: 100%;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.spellingErrorMessage {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: calc(clamp(20px, 2vw, 32px) * var(--font-scale));
+  font-weight: 700;
+  line-height: 1.4;
+  color: #b42318;
+  visibility: hidden;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.spellingErrorMessageVisible {
+  visibility: visible;
+}
+
+@media (max-width: 640px) {
+  .spellingErrorMessage {
+    min-height: 44px;
+    font-size: calc(20px * var(--font-scale));
+  }
+}

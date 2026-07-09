@@ -1,0 +1,52 @@
+替换说明：修复空格键读成中文“例句”的问题
+
+你指出的问题是对的。
+上一版我把 play() 的参数写反了：
+
+错误：
+play(audioPath, text, "例句")
+
+因为 play(path, label, fallbackText) 的第三个参数 fallbackText 才是真正给浏览器朗读的文字。
+所以旧版会把中文“例句”当成朗读内容。
+
+本版修复为：
+play(audioPath, "英文例句", text)
+
+现在快捷键：
+1. Tab = 发音当前单词
+2. 空格 = 发音当前英文例句
+
+本版还加了保护：
+1. 空格只读取英文例句字段：
+   - example
+   - exampleEn
+   - englishExample
+   - sentence
+   - sentenceEn
+2. 如果候选例句含中文，会跳过，不读中文。
+3. 如果没有英文例句，提示“当前单词没有英文例句”。
+4. 不会朗读 exampleCn 中文例句。
+
+保留功能：
+1. 电脑按住右箭头连续下一个
+2. 电脑按住左箭头连续上一个
+3. 手机长按右半边连续下一个
+4. 手机长按左半边连续上一个
+5. 0 = 熟悉
+6. 1 = 不熟
+7. Delete = 删除
+8. 同步码 + 词库ID = 唯一进度
+9. 云端恢复 currentWord 不再被本机词覆盖
+
+发布步骤：
+1. Ctrl + C 停止本地网站。
+2. 删除项目里的 app 文件夹。
+3. 把压缩包里的 app 文件夹复制进去。
+4. 如果压缩包里有 scripts，也覆盖 scripts。
+5. 删除 .next。
+6. 启动 start-windows.bat。
+7. 打开 http://localhost:3000。
+8. 点“导出静态网站”。
+9. 运行 publish-fast-no-audio.cmd。
+10. 打开：
+    https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/?v=spaceenglish1

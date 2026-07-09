@@ -1,0 +1,41 @@
+# dependencies / build
+node_modules
+.next
+out
+dist
+.vercel
+
+# secrets
+.env
+.env.local
+.env.*.local
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.log
+.next-dev-server.log
+
+# runtime caches (large, regenerable)
+.audio-cache/
+.ai-cache/
+.static-export-cache/*.backup
+.static-export-cache/*.tmp
+.static-export-cache/*.pre-*
+.deploy/
+.static-export-cache/words.json.phase*
+.browser-validation-profile/
+
+# audit / local work products (do not ship)
+reports/
+backups/
+work/
+scripts/archive/
+
+# optional local exports
+static-site.zip
+*.zip
+!public/**
+
+# keep intentional public data; ignore accidental audio dumps under public
+public/audio/

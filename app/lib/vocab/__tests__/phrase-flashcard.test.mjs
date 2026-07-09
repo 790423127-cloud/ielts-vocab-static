@@ -103,9 +103,10 @@ test("large word phrase and spelling record lists use VirtualList", () => {
   assert.match(wordFlashSource, /library-list--virtual/);
   assert.match(phrasePanelSource, /import VirtualList/);
   assert.match(phrasePanelSource, /library-list--virtual/);
-  assert.match(spellingSource, /import VirtualList/);
+  assert.match(spellingSource, /import VirtualList|SpellingStatsSidebar|SpellingPersonalWrongDock/);
   assert.match(personalWrongDock, /spelling-personal-wrong-list--virtual/);
-  assert.match(spellingSource, /spelling-error-bank-list--virtual/);
+  const statsSidebar = fs.readFileSync(path.join(root, "app/components/SpellingStatsSidebar.jsx"), "utf8");
+  assert.match(statsSidebar, /spelling-error-bank-list--virtual/);
   assert.match(virtualListSource, /requestAnimationFrame/);
   assert.match(virtualListSource, /scrollRafRef/);
 });
@@ -119,7 +120,8 @@ test("word flashcard keeps audio status out of React state and uses single-pass 
   assert.match(audioHookSource, /audioStatusMapRef/);
   assert.doesNotMatch(pageSource, /const \[audioStatusMap, setAudioStatusMap\]/);
   assert.match(pageSource, /buildLearningEntryCounts/);
-  assert.match(pageSource, /prev\.toSpliced\(currentOriginalIndex, 1/);
+  const navHook = fs.readFileSync(path.join(root, "app/hooks/useWordFlashNavigation.js"), "utf8");
+  assert.match(navHook, /prev\.toSpliced\(currentOriginalIndex, 1/);
 });
 
 test("home page exposes idictation flash entrances without legacy lr high-frequency filters", () => {
@@ -144,7 +146,8 @@ test("word flashcard study correction uses study queue membership for idictation
   assert.match(pageSource, /isWordFlashActive/);
   assert.match(pageSource, /if \(!isWordFlashActive \|\| !item\?\.word \|\| isStudyEmpty\) return/);
   assert.match(pageSource, /studyWordIndices\.includes\(effectiveIndex\)/);
-  assert.match(pageSource, /flashStudyModeRef\.current !== "word"/);
+  const navHook = fs.readFileSync(path.join(root, "app/hooks/useWordFlashNavigation.js"), "utf8");
+  assert.match(navHook, /flashStudyModeRef\.current !== "word"/);
   assert.match(pageSource, /studySessionRef/);
   assert.match(pageSource, /buildStudyPoolForFilter/);
   assert.match(pageSource, /studyPool/);
@@ -175,12 +178,13 @@ test("phrase flashcard restores before saving and debounces navigation persisten
 test("word flashcard playback shortcuts are scoped to word mode only", () => {
   const pageSource = fs.readFileSync(path.join(root, "app/page.jsx"), "utf8");
   const speechHookSource = fs.readFileSync(path.join(root, "app/hooks/useHomeWordSpeech.js"), "utf8");
-  assert.match(pageSource, /if \(flashStudyMode !== "word"\) return;/);
-  assert.match(pageSource, /speakWordRef\.current\(true\)/);
-  assert.match(pageSource, /speakExampleRef\.current\(\)/);
-  assert.match(pageSource, /\}, \[flashStudyMode\]\);/);
-  assert.match(pageSource, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakWord/);
-  assert.match(pageSource, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakExample/);
+  const navHook = fs.readFileSync(path.join(root, "app/hooks/useWordFlashNavigation.js"), "utf8");
+  assert.match(navHook, /if \(flashStudyMode !== "word"\) return;/);
+  assert.match(navHook, /speakWordRef\.current\(true\)/);
+  assert.match(navHook, /speakExampleRef\.current\(\)/);
+  assert.match(navHook, /\}, \[flashStudyMode\]\);/);
+  assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakWordRef/);
+  assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakExampleRef/);
   assert.match(pageSource, /useHomeWordSpeech/);
   assert.match(pageSource, /\{ text: item\.example, kind: "sentence" \}/);
   assert.match(pageSource, /\{ text: nextItem\?\.example, kind: "sentence" \}/);

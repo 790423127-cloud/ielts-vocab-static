@@ -118,8 +118,9 @@ import {
   DEFAULT_SPELLING_PREFS as DEFAULT_PREFS
 } from "../lib/spelling/spelling-training-prefs.mjs";
 
-import { BatchPicker, RangeSettingRow } from "./SpellingTrainingChrome.jsx";
 import SpellingPersonalWrongDock from "./SpellingPersonalWrongDock.jsx";
+import SpellingFocusCard from "./SpellingFocusCard.jsx";
+import SpellingStatsSidebar from "./SpellingStatsSidebar.jsx";
 import {
   formatPersonalWrongRepeatLabel,
   formatWrongTime,
@@ -1742,788 +1743,142 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       ) : null}
 
       <div className="spelling-page-layout">
-        <section className="spelling-focus-card" aria-label="拼写训练主体">
-          {isSpellingLoading ? (
-            <div className="spelling-empty-state spelling-empty-state--hero">
-              正在读取词库，请稍候…
-            </div>
-          ) : isBatchComplete && !current ? (
-            <section className="spelling-completion-summary" aria-label="本批次学习结果">
-              <p className="spelling-completion-summary__eyebrow">本批次已完成</p>
-              <div className="spelling-completion-summary__rate">
-                <strong>{batchSuccessRate}%</strong>
-                <span>成功率</span>
-              </div>
-              <dl className="spelling-completion-summary__metrics">
-                <div><dt>完成单词</dt><dd>{completedCount}</dd></div>
-                <div><dt>本批错词</dt><dd>{batchWrongWordCount}</dd></div>
-                <div><dt>今日学习</dt><dd>{dailyStats.learnedWordIds.length}</dd></div>
-                <div><dt>有效学习</dt><dd>{formatActiveLearningTime(dailyStats.activeMs)}</dd></div>
-                <div><dt>今日错词</dt><dd>{dailyStats.wrongWordIds.length}</dd></div>
-              </dl>
-              <button
-                type="button"
-                className="spelling-next-round-button"
-                onClick={handleNextRound}
-                disabled={!nextRoundTarget}
-              >
-                {nextRoundTarget ? "进入下一轮" : "今日范围已全部完成"}
-              </button>
-            </section>
-          ) : current ? (
-            <div className={`spelling-focus-stack${spelling.uiState === "correct_feedback" ? " is-correct-settling" : ""}`}>
-              <section className={layoutStyles.spellingContentColumn} data-testid="spelling-content-column">
-              {listenOnlyMode ? (
-                <div className="spelling-listen-only-banner">纯听写模式：请根据发音拼写</div>
-              ) : null}
+        <SpellingFocusCard
+          isSpellingLoading={isSpellingLoading}
+          isBatchComplete={isBatchComplete}
+          current={current}
+          batchSuccessRate={batchSuccessRate}
+          completedCount={completedCount}
+          batchWrongWordCount={batchWrongWordCount}
+          dailyStats={dailyStats}
+          formatActiveLearningTime={formatActiveLearningTime}
+          handleNextRound={handleNextRound}
+          nextRoundTarget={nextRoundTarget}
+          spelling={spelling}
+          listenOnlyMode={listenOnlyMode}
+          prompt={prompt}
+          showExample={showExample}
+          exampleLine={exampleLine}
+          trainingControls={trainingControls}
+          handleInputChange={handleInputChange}
+          submit={submit}
+          handleSkip={handleSkip}
+          isPhrase={isPhrase}
+          errorAnalysisVisible={errorAnalysisVisible}
+          showEnginePreparing={showEnginePreparing}
+          showMeaning={showMeaning}
+          speech={speech}
+          handleReplay={handleReplay}
+          practiceSource={practiceSource}
+          personalWrongSummary={personalWrongSummary}
+          scope={scope}
+          errorBank={errorBank}
+          srsReview={srsReview}
+          scopeConfig={scopeConfig}
+          debugDetails={debugDetails}
+          personalWrongUnitProgress={personalWrongUnitProgress}
+          currentPosition={currentPosition}
+          progressBarPercent={progressBarPercent}
+          sessionTotal={sessionTotal}
+          canBrowseBatchWords={canBrowseBatchWords}
+          isWordNavBlocked={isWordNavBlocked}
+          handleGoToPreviousWord={handleGoToPreviousWord}
+          handleGoToNextWord={handleGoToNextWord}
+          autoNextOnCorrect={autoNextOnCorrect}
+          undoLastSpellingAction={undoLastSpellingAction}
+          actionNotice={actionNotice}
+        />
 
-              {!listenOnlyMode && (prompt.example || prompt.examplePendingReview) ? (
-                prompt.examplePendingReview ? (
-                  <p className="spelling-example-collapsed spelling-example-collapsed--hero">例句待补充</p>
-                ) : showExample && exampleLine ? (
-                  <div className={`spelling-example-panel spelling-example-panel--direct is-open ${layoutStyles.spellingWordTitle}`}>
-                    <p className="spelling-example spelling-example--direct">{exampleLine}</p>
-                    {prompt.exampleCn ? <p className="spelling-example-cn spelling-example-cn--direct">{prompt.exampleCn}</p> : null}
-                  </div>
-                ) : (
-                  <p className="spelling-example-collapsed spelling-example-collapsed--hero">
-                    例句（按 3 或 Space 展开并播放）
-                  </p>
-                )
-              ) : null}
+        <SpellingStatsSidebar
+          statsSidebarOpen={statsSidebarOpen}
+          dailyStats={dailyStats}
+          formatActiveLearningTime={formatActiveLearningTime}
+          sessionMetrics={sessionMetrics}
+          unit={unit}
+          progress={progress}
+          candidateTotal={candidateTotal}
+          rawBatchTotal={rawBatchTotal}
+          errorBank={errorBank}
+          completedCount={completedCount}
+          remainingCount={remainingCount}
+          rangeBarProps={{
+            isPhrase,
+            rangeSettingsExpanded,
+            setRangeSettingsExpanded,
+            trainingControls,
+            availablePracticeSources,
+            practiceSource,
+            patchStoredPrefs,
+            personalWrongSummary,
+            scope,
+            errorBank,
+            srsReview,
+            showPersonalWrongGroupSelect,
+            personalWrongBatchSelection,
+            personalWrongBatchOptions,
+            handlePersonalWrongBatchChange,
+            includeFamiliar,
+            setIncludeFamiliar,
+            autoNextOnCorrect,
+            setAutoNextOnCorrect,
+            turboMode,
+            setTurboMode,
+            listenOnlyMode,
+            setListenOnlyMode,
+            soundEffectsEnabled,
+            setSoundEffectsEnabled,
+            activeRangeLine,
+            spelling,
+            sessionTrainingLine,
+            categoryPrefs,
+            patchCategoryPrefs,
+            categoryTypes,
+            scopeConfig,
+            difficultyCounts,
+            topicCounts,
+            ieltsUseCounts,
+            lrCounts: listeningReadingCounts,
+            batchSelection,
+            batchOptions,
+            idictationSourceKey,
+            idictationGroupOptions,
+            idictationBatchOptions,
+            patchIdictationPrefs,
+            idictationPrefs,
+            srsBatchOptions,
+            srsBatchSelection,
+            errorBankBatchOptions,
+            errorBankBatchSelection
+          }}
+          personalWrongInput={personalWrongInput}
+          setPersonalWrongInput={setPersonalWrongInput}
+          trainingControls={trainingControls}
+          handleAddPersonalWrongWords={handleAddPersonalWrongWords}
+          handleClearPersonalWrongBook={handleClearPersonalWrongBook}
+          personalWrongSummary={personalWrongSummary}
+          scope={scope}
+          scopeConfig={scopeConfig}
+          personalWrongScopedCount={personalWrongScopedCount}
+          personalWrongCurrentBatchLabel={personalWrongCurrentBatchLabel}
+          personalWrongBatchSelection={personalWrongBatchSelection}
+          personalWrongCurrentBatchWriteCount={personalWrongCurrentBatchWriteCount}
+          personalWrongTotalWriteCount={personalWrongTotalWriteCount}
+          personalWrongCurrentBatchRecords={personalWrongCurrentBatchRecords}
+          personalWrongSourceEntries={personalWrongSourceEntries}
+          handleDeletePersonalWrongRecord={handleDeletePersonalWrongRecord}
+          lexicon={lexicon}
+          handleExportCombinedLexicon={handleExportCombinedLexicon}
+          handleExportScopeLexicon={handleExportScopeLexicon}
+          spellingEntries={spellingEntries}
+          handleExportCurrentBatch={handleExportCurrentBatch}
+          practiceSource={practiceSource}
+          currentCategoryEntries={currentCategoryEntries}
+          handleExportCurrentCategory={handleExportCurrentCategory}
+          batchSelection={batchSelection}
+          srsReview={srsReview}
+          srsIntervalText={srsIntervalText}
+        />
 
-              <div className={layoutStyles.spellingInputArea}>
-              <form onSubmit={submit} className="spelling-page-form spelling-page-form--hero spelling-page-form--line">
-                <input
-                  ref={trainingControls.inputRef}
-                  data-testid="spelling-input"
-                  className={`spelling-line-input${spelling.uiState === "correct_feedback" ? " spelling-line-input--correct" : ""}`}
-                  value={spelling.inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={trainingControls.handleInputKeyDown}
-                  onBlur={trainingControls.handleInputBlur}
-                  readOnly={spelling.uiState === "correct_feedback" || spelling.uiState === "inputting"}
-                  disabled={!current}
-                  placeholder={
-                    listenOnlyMode
-                      ? "根据发音输入拼写"
-                      : spelling.uiState === "wrong_feedback"
-                        ? "请重新输入"
-                        : spelling.uiState === "correct_feedback"
-                          ? ""
-                          : isPhrase
-                            ? "输入完整词组"
-                            : "输入英文拼写"
-                  }
-                  autoComplete="off"
-                  autoCapitalize="none"
-                  spellCheck={false}
-                  autoFocus
-                  aria-label="拼写输入框"
-                />
-                <div className="spelling-form-actions" aria-hidden="true">
-                  <button type="submit" tabIndex={-1} disabled={!current || !spelling.inputValue.trim() || spelling.uiState === "inputting"}>
-                    提交
-                  </button>
-                  <button type="button" tabIndex={-1} disabled={!current || spelling.uiState === "inputting"} onClick={handleSkip}>
-                    跳过
-                  </button>
-                  <button type="button" tabIndex={-1} disabled={!current} onClick={() => spelling.getHint()}>
-                    提示
-                  </button>
-                </div>
-              </form>
-              </div>
-
-              <div
-                className={`${layoutStyles.spellingErrorMessage}${spelling.uiState === "wrong_feedback" ? ` ${layoutStyles.spellingErrorMessageVisible}` : ""}`}
-                role="alert"
-                aria-live="polite"
-                aria-atomic="true"
-                data-testid="spelling-error-message"
-              >
-                拼写错误，请重试
-              </div>
-
-              {errorAnalysisVisible ? (
-                <div className={layoutStyles.spellingFeedbackWrap} data-testid="spelling-feedback-wrap">
-                  <SpellingFeedbackPanel
-                    diagnosis={spelling.lastDiagnosis}
-                    expectedAnswer={current?.expectedAnswer || current?.displayText || ""}
-                  />
-                </div>
-              ) : null}
-              </section>
-
-              {spelling.uiState !== "wrong_feedback" ? (
-                <div className={`spelling-page-feedback spelling-page-feedback--compact ${spelling.uiState}${showEnginePreparing ? " is-preparing" : ""}`}>
-                  {showEnginePreparing ? (
-                    <span className="spelling-page-feedback__static">正在初始化拼写引擎…</span>
-                  ) : (
-                    <>
-                      <strong>{spelling.statusText}</strong>
-                      {spelling.hint ? <span>{spelling.hint}</span> : null}
-                    </>
-                  )}
-                </div>
-              ) : null}
-
-              <div className="spelling-answer-reference">
-                {!listenOnlyMode ? (
-                  <span className={`spelling-hero-phonetic${prompt.phoneticMissing ? " is-missing" : ""}`}>
-                    {prompt.phoneticPendingReview ? "音标待核验" : prompt.phonetic || "音标暂缺"}
-                  </span>
-                ) : null}
-                {!listenOnlyMode && showMeaning ? (
-                  <span className="spelling-answer-meaning">{prompt.typeLabel} · {prompt.meaning}</span>
-                ) : (
-                  <span className="spelling-answer-meaning spelling-prompt--hidden">中文释义已隐藏（按 2）</span>
-                )}
-                <span className="spelling-word-error-count" data-testid="spelling-total-wrong-count">
-                  累计错 {spelling.totalWrongCount || 0} 次
-                </span>
-                <button
-                  type="button"
-                  className={`spelling-pronounce-btn spelling-pronounce-btn--reference${speech.playing === "word" ? " is-playing" : ""}`}
-                  onClick={() => {
-                    handleReplay();
-                    trainingControls.focusInput({ force: true });
-                  }}
-                  disabled={!speech.canPlayWord || speech.playing === "word"}
-                  aria-label={speech.wordAriaLabel}
-                  title={speech.wordAriaLabel}
-                >
-                  <span className="spelling-pronounce-btn__icon" aria-hidden="true">🔊</span>
-                </button>
-              </div>
-
-            </div>
-          ) : (
-            <div className="spelling-empty-state spelling-empty-state--hero">
-              {practiceSource === "personal_wrong_book" && !(scope === "phrase" ? personalWrongSummary.phrase : personalWrongSummary.word)
-                ? "做题错词本还是空的。先在右侧添加真题/练习里遇到的错词。"
-                : practiceSource === "error_bank" && !errorBank.count
-                ? "错词本还是空的。先去分类练习，拼错的词会自动出现在这里。"
-                : practiceSource === "srs_review" && !srsReview.count
-                  ? "当前没有到期的 SRS 复习内容。"
-                : spelling.uiState === "done_today"
-                  ? "当前范围的今日拼写已完成。"
-                  : `暂时没有符合条件的${scopeConfig.label}拼写题。`}
-            </div>
-          )}
-
-          {debugDetails ? (
-            <details className="spelling-debug">
-              <summary>拼写调试信息</summary>
-              <pre>{JSON.stringify(debugDetails, null, 2)}</pre>
-            </details>
-          ) : null}
-
-          <footer className="spelling-training-footer">
-            <div className="spelling-progress spelling-progress--hero" aria-label="当前批次进度">
-              <div className="spelling-progress-text">
-                进度：{completedCount} / {sessionTotal || 0} {practiceSource === "personal_wrong_book" ? "词" : ""}
-                <span className="spelling-progress-current">
-                  {practiceSource === "personal_wrong_book"
-                    ? (personalWrongUnitProgress ? ` · ${personalWrongUnitProgress.label}` : ` · 当前第 ${currentPosition || 0} 词`)
-                    : ` · 当前第 ${currentPosition || 0} 题`}
-                </span>
-              </div>
-              <div className="spelling-progress-track" aria-hidden="true">
-                <div className="spelling-progress-fill" style={{ width: `${progressBarPercent}%` }} />
-              </div>
-            </div>
-
-            <div className="spelling-word-nav-group">
-              <button
-                type="button"
-                className="spelling-undo-btn spelling-word-nav-btn"
-                disabled={!current || !canBrowseBatchWords || isWordNavBlocked(spelling)}
-                onClick={() => { void handleGoToPreviousWord(); }}
-                title="上一个单词（快捷键：Ctrl+←）"
-              >
-                上一个
-              </button>
-              <button
-                type="button"
-                className="spelling-undo-btn spelling-word-nav-btn"
-                disabled={!current || !canBrowseBatchWords || isWordNavBlocked(spelling)}
-                onClick={() => { void handleGoToNextWord(); }}
-                title="下一个单词（快捷键：Ctrl+→）"
-              >
-                下一个
-              </button>
-            </div>
-
-            <p className="spelling-shortcuts spelling-shortcuts--hero" aria-label="键盘快捷键">
-              <span className="spelling-shortcut-items">
-                <span><b>1</b> 重播</span>
-                <span><b>2</b> 释义</span>
-                <span><b>3</b> 例句</span>
-                <span><b>4</b> 熟悉</span>
-                <span><b>5</b> 重点复习</span>
-                <button
-                  type="button"
-                  className="spelling-undo-btn"
-                  onClick={() => { void undoLastSpellingAction(); }}
-                  title="撤回刚才操作（快捷键：Ctrl+Z）"
-                >
-                  Ctrl+Z 撤回
-                </button>
-              </span>
-              <span className="spelling-shortcut-items spelling-shortcut-items--secondary">
-                {autoNextOnCorrect
-                  ? "Ctrl+← → 切词 · 拼对自动下一词 · Tab 单词 · Space 例句 · Enter 提交 · Ctrl+Enter 跳过"
-                  : "Ctrl+← → 切词 · Tab 单词 · Space 例句 · Enter 提交/下一词 · Ctrl+Enter 跳过"}
-              </span>
-            </p>
-            <p
-              className={`spelling-action-notice${actionNotice ? "" : " is-empty"}`}
-              role="status"
-              aria-live="polite"
-            >
-              {actionNotice || "\u00A0"}
-            </p>
-          </footer>
-        </section>
-
-        <aside className={`spelling-stats-sidebar${statsSidebarOpen ? " is-open" : ""}`} aria-label="统计与设置">
-          <section className="spelling-sidebar-block" aria-label="今日统计">
-            <h2 className="spelling-sidebar-block__title">今日统计</h2>
-            <dl className="spelling-sidebar-stats spelling-sidebar-stats--daily">
-              <div><dt>学习单词</dt><dd>{dailyStats.learnedWordIds.length}</dd></div>
-              <div><dt>有效学习</dt><dd>{formatActiveLearningTime(dailyStats.activeMs)}</dd></div>
-              <div><dt>错词数量</dt><dd>{dailyStats.wrongWordIds.length}</dd></div>
-            </dl>
-          </section>
-
-          <section className="spelling-sidebar-block" aria-label="训练统计">
-            <h2 className="spelling-sidebar-block__title">训练统计</h2>
-            <dl className="spelling-sidebar-stats">
-              <div><dt>正确率</dt><dd>{sessionMetrics.accuracy}%</dd></div>
-              <div><dt>速度</dt><dd>{sessionMetrics.wordsPerMinute} {unit}/分</dd></div>
-              <div><dt>预计</dt><dd>{sessionMetrics.etaMinutes ? `约 ${sessionMetrics.etaMinutes} 分钟` : "—"}</dd></div>
-              <div><dt>连对</dt><dd>{sessionMetrics.consecutiveCorrect}</dd></div>
-              <div><dt>SRS 到期</dt><dd>{progress.todaySrsDueCount ?? 0}</dd></div>
-              <div><dt>候选池</dt><dd>{candidateTotal}</dd></div>
-              <div><dt>原始批次</dt><dd>{rawBatchTotal}</dd></div>
-              <div><dt>错词本</dt><dd>{errorBank.count}</dd></div>
-              <div><dt>新词通过</dt><dd>{progress.newWordsPassed ?? 0}</dd></div>
-              <div><dt>掌握</dt><dd>{progress.masteredCount ?? completedCount}</dd></div>
-              <div><dt>剩余</dt><dd>{remainingCount}{unit}</dd></div>
-            </dl>
-          </section>
-
-          <section className="spelling-sidebar-block spelling-page-controls" aria-label="学习范围">
-        <div className="spelling-range-bar">
-          <div className="spelling-range-bar__head">
-            <span className="spelling-range-bar__title">学习范围</span>
-            <button
-              type="button"
-              className="spelling-range-expand"
-              aria-expanded={rangeSettingsExpanded}
-              onMouseDown={trainingControls.markSettingsInteraction}
-              onClick={() => setRangeSettingsExpanded((open) => !open)}
-            >
-              {rangeSettingsExpanded ? "收起设置" : "展开设置"}
-            </button>
-          </div>
-
-          {rangeSettingsExpanded ? (
-          <div className="spelling-range-bar__toolbar compact-summary">
-            <div className="spelling-range-bar__group">
-              <span className="spelling-control-label">来源</span>
-              <div className="spelling-mode-tabs spelling-mode-tabs--compact">
-                {availablePracticeSources.map((entry) => (
-                  <button
-                    key={entry.value}
-                    type="button"
-                    className={practiceSource === entry.value ? "active" : ""}
-                    onClick={() => patchStoredPrefs({ practiceSource: entry.value })}
-                  >
-                    {entry.label}
-                    {entry.value === "personal_wrong_book" ? (
-                      <span className="spelling-tab-count">{scope === "phrase" ? personalWrongSummary.phrase : personalWrongSummary.word}</span>
-                    ) : entry.value === "error_bank" ? (
-                      <span className="spelling-tab-count">{errorBank.count}</span>
-                    ) : entry.value === "srs_review" ? (
-                      <span className="spelling-tab-count">{srsReview.count}</span>
-                    ) : isIdictationPracticeSource(entry.value) ? (
-                      <span className="spelling-tab-count">{getIdictationSource(entry.sourceKey)?.uniqueWords || 0}</span>
-                    ) : null}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {practiceSource === "personal_wrong_book" && showPersonalWrongGroupSelect ? (
-              <div className="spelling-range-bar__group spelling-range-bar__group--batch-select">
-                <span className="spelling-control-label">组别</span>
-                <BatchPicker
-                  value={personalWrongBatchSelection.batchIndex}
-                  options={personalWrongBatchOptions}
-                  ariaLabel="做题错词组别选择"
-                  onInteract={trainingControls.markSettingsInteraction}
-                  onChange={handlePersonalWrongBatchChange}
-                />
-              </div>
-            ) : null}
-
-            <label className="spelling-toggle spelling-toggle--compact">
-              <input
-                type="checkbox"
-                checked={includeFamiliar}
-                onChange={(event) => setIncludeFamiliar(event.target.checked)}
-                onMouseDown={trainingControls.markSettingsInteraction}
-              />
-              包含刷词已熟悉内容
-            </label>
-
-            <label className="spelling-toggle spelling-toggle--compact">
-              <input
-                type="checkbox"
-                checked={autoNextOnCorrect}
-                onChange={(event) => setAutoNextOnCorrect(event.target.checked)}
-                onMouseDown={trainingControls.markSettingsInteraction}
-              />
-              拼对自动下一词
-            </label>
-
-            <label className="spelling-toggle spelling-toggle--compact">
-              <input
-                type="checkbox"
-                checked={turboMode}
-                onChange={(event) => setTurboMode(event.target.checked)}
-                onMouseDown={trainingControls.markSettingsInteraction}
-              />
-              极速模式（缩短拼对停留，仍有延迟）
-            </label>
-
-            <label className="spelling-toggle spelling-toggle--compact">
-              <input
-                type="checkbox"
-                checked={listenOnlyMode}
-                onChange={(event) => setListenOnlyMode(event.target.checked)}
-                onMouseDown={trainingControls.markSettingsInteraction}
-              />
-              纯听写模式
-            </label>
-
-            <label className="spelling-toggle spelling-toggle--compact">
-              <input
-                type="checkbox"
-                checked={soundEffectsEnabled}
-                onChange={(event) => setSoundEffectsEnabled(event.target.checked)}
-                onMouseDown={trainingControls.markSettingsInteraction}
-              />
-              答对/答错音效
-            </label>
-          </div>
-          ) : null}
-
-          <div className="spelling-range-summary">
-            <p className="spelling-range-summary__line">
-              <span className="spelling-range-summary__label">当前范围</span>
-              <span className="spelling-range-summary__text">{activeRangeLine}</span>
-            </p>
-            {spelling.ready ? (
-              <p className="spelling-range-summary__line spelling-range-summary__line--session">
-                <span className="spelling-range-summary__label">本次训练</span>
-                <span className="spelling-range-summary__text">{sessionTrainingLine.replace(/^本次训练：/, "")}</span>
-              </p>
-            ) : null}
-          </div>
-
-          <div className={`spelling-range-settings${rangeSettingsExpanded ? " is-open" : ""}`}>
-            {practiceSource === "category" ? (
-              <div className="spelling-range-settings__block">
-                <p className="spelling-range-settings__title">{scopeConfig.label}范围</p>
-                <RangeSettingRow label="分类">
-                  <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-                    {categoryTypes.map((entry) => (
-                      <button
-                        key={entry.value}
-                        type="button"
-                        className={categoryPrefs.categoryType === entry.value ? "active" : ""}
-                        onClick={() => patchCategoryPrefs({
-                          categoryType: entry.value,
-                          categoryValue: entry.value === "difficulty"
-                            ? DEFAULT_PREFS.categoryValue
-                            : entry.value === "topic"
-                              ? SPELLING_TOPIC_OPTIONS[0]
-                              : entry.value === "ielts_use"
-                                ? SPELLING_IELTS_USE_OPTIONS[0].value
-                                : entry.value === "lr_high_frequency"
-                                  ? SPELLING_LISTENING_READING_OPTIONS[0].value
-                                : "",
-                          batchIndex: 0
-                        })}
-                      >
-                        {entry.label.replace("分类", "").replace("全部短语", "全部")}
-                      </button>
-                    ))}
-                  </div>
-                </RangeSettingRow>
-
-                {categoryPrefs.categoryType === "difficulty" ? (
-                  <RangeSettingRow label="难度">
-                    <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-                      {SPELLING_DIFFICULTY_OPTIONS.map((entry) => (
-                        <button
-                          key={entry.value}
-                          type="button"
-                          className={categoryPrefs.categoryValue === entry.value ? "active" : ""}
-                          onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
-                        >
-                          {entry.label}
-                          <span className="spelling-tab-count">{difficultyCounts.get(entry.value) || 0}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </RangeSettingRow>
-                ) : null}
-
-                {categoryPrefs.categoryType === "topic" ? (
-                  <RangeSettingRow label="主题">
-                    <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-                      {SPELLING_TOPIC_OPTIONS.map((topic) => (
-                        <button
-                          key={topic}
-                          type="button"
-                          className={categoryPrefs.categoryValue === topic ? "active" : ""}
-                          onClick={() => patchCategoryPrefs({ categoryValue: topic, batchIndex: 0 })}
-                        >
-                          {topic}
-                          <span className="spelling-tab-count">{topicCounts.get(topic) || 0}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </RangeSettingRow>
-                ) : null}
-
-                {categoryPrefs.categoryType === "lr_high_frequency" ? (
-                  <RangeSettingRow label="训练重点">
-                    <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-                      {SPELLING_LISTENING_READING_OPTIONS.map((entry) => (
-                        <button
-                          key={entry.value}
-                          type="button"
-                          className={categoryPrefs.categoryValue === entry.value ? "active" : ""}
-                          onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
-                        >
-                          {entry.label}
-                          <span className="spelling-tab-count">{listeningReadingCounts.get(entry.value) || 0}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </RangeSettingRow>
-                ) : null}
-
-                {isPhrase && categoryPrefs.categoryType === "ielts_use" ? (
-                  <RangeSettingRow label="场景">
-                    <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-                      {SPELLING_IELTS_USE_OPTIONS.map((entry) => (
-                        <button
-                          key={entry.value}
-                          type="button"
-                          className={categoryPrefs.categoryValue === entry.value ? "active" : ""}
-                          onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
-                        >
-                          {entry.label}
-                          <span className="spelling-tab-count">{ieltsUseCounts.get(entry.value) || 0}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </RangeSettingRow>
-                ) : null}
-
-                {batchOptions.length > 1 ? (
-                  <RangeSettingRow label="批次">
-                    <BatchPicker
-                      value={batchSelection.batchIndex}
-                      options={batchOptions}
-                      onInteract={trainingControls.markSettingsInteraction}
-                      onChange={(batchIndex) => patchCategoryPrefs({ batchIndex })}
-                    />
-                  </RangeSettingRow>
-                ) : null}
-              </div>
-            ) : isIdictationPracticeSource(practiceSource) ? (
-              <div className="spelling-range-settings__block">
-                <p className="spelling-range-settings__title">
-                  {idictationSource?.label || "爱听写"}原表章节
-                </p>
-                <p className="spelling-category-summary">
-                  原始 {idictationBatchSelection.rawRows || 0} 行 · 去重 {idictationBatchSelection.uniqueWords || 0} 词 · 按 Excel 章节分组练习
-                </p>
-                <RangeSettingRow label="章节">
-                  <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-                    {idictationGroupOptions.map((entry) => (
-                      <button
-                        key={entry.value}
-                        type="button"
-                        className={idictationBatchSelection.groupKey === entry.value ? "active" : ""}
-                        onClick={() => patchIdictationPrefs(idictationSourceKey, { groupKey: entry.value, batchIndex: 0 })}
-                      >
-                        {entry.label}
-                      </button>
-                    ))}
-                  </div>
-                </RangeSettingRow>
-                {idictationBatchOptions.length > 1 ? (
-                  <RangeSettingRow label="组别">
-                    <BatchPicker
-                      value={idictationBatchSelection.batchIndex}
-                      options={idictationBatchOptions}
-                      ariaLabel={`${idictationSource?.label || "爱听写"}组别选择`}
-                      onInteract={trainingControls.markSettingsInteraction}
-                      onChange={(batchIndex) => patchIdictationPrefs(idictationSourceKey, { batchIndex })}
-                    />
-                  </RangeSettingRow>
-                ) : null}
-              </div>
-            ) : (
-              <div className="spelling-range-settings__block">
-                <p className="spelling-range-settings__title">
-                  {scopeConfig.label}{practiceSource === "personal_wrong_book" ? " 做题错词练习" : practiceSource === "srs_review" ? " SRS 复习" : "错词本练习"}
-                </p>
-                <p className="spelling-category-summary">
-                  共 {practiceSource === "personal_wrong_book" ? (scope === "phrase" ? personalWrongSummary.phrase : personalWrongSummary.word) : practiceSource === "srs_review" ? srsReview.count : errorBank.count} 条
-                </p>
-                {practiceSource === "personal_wrong_book" && showPersonalWrongGroupSelect ? (
-                  <RangeSettingRow label="组别">
-                    <BatchPicker
-                      value={personalWrongBatchSelection.batchIndex}
-                      options={personalWrongBatchOptions}
-                      ariaLabel="做题错词组别选择"
-                      onInteract={trainingControls.markSettingsInteraction}
-                      onChange={handlePersonalWrongBatchChange}
-                    />
-                  </RangeSettingRow>
-                ) : (practiceSource === "personal_wrong_book" ? personalWrongBatchOptions : practiceSource === "srs_review" ? srsBatchOptions : errorBankBatchOptions).length > 1 ? (
-                  <RangeSettingRow label="批次">
-                    <BatchPicker
-                      value={practiceSource === "srs_review" ? srsBatchSelection.batchIndex : errorBankBatchSelection.batchIndex}
-                      options={practiceSource === "srs_review" ? srsBatchOptions : errorBankBatchOptions}
-                      onInteract={trainingControls.markSettingsInteraction}
-                      onChange={(batchIndex) => patchStoredPrefs(practiceSource === "srs_review"
-                        ? { srsBatchIndex: batchIndex }
-                        : { errorBankBatchIndex: batchIndex })}
-                    />
-                  </RangeSettingRow>
-                ) : null}
-              </div>
-            )}
-          </div>
-        </div>
-
-          {false ? (
-          <section className="spelling-sidebar-block spelling-personal-wrong-panel" aria-label="做题错词本">
-            <h2 className="spelling-sidebar-block__title">做题错词本</h2>
-            <p className="spelling-export-panel__hint">
-              用来记录真题/练习里的错词；只有原形的词练 {PERSONAL_WRONG_BOOK_BASE_REPS} 遍，原形+复数词练 {PERSONAL_WRONG_BOOK_REPETITIONS} 遍。
-            </p>
-            <textarea
-              className="spelling-personal-wrong-input"
-              value={personalWrongInput}
-              onChange={(event) => setPersonalWrongInput(event.target.value)}
-              onMouseDown={trainingControls.markSettingsInteraction}
-              placeholder={`一行一个：\naccommodation | 住宿\nvacancy -> vacancies | 职位空缺\ncity +ies\non the other hand | 另一方面`}
-              rows={4}
-            />
-            <div className="spelling-export-panel__actions">
-              <button
-                type="button"
-                className="spelling-export-btn spelling-export-btn--primary"
-                onMouseDown={trainingControls.markSettingsInteraction}
-                onClick={handleAddPersonalWrongWords}
-              >
-                加入做题错词本
-              </button>
-              <button
-                type="button"
-                className="spelling-export-btn"
-                disabled={!(scope === "phrase" ? personalWrongSummary.phrase : personalWrongSummary.word)}
-                onMouseDown={trainingControls.markSettingsInteraction}
-                onClick={handleClearPersonalWrongBook}
-              >
-                清空当前错词
-              </button>
-            </div>
-            <p className="spelling-export-panel__meta">
-              错词本总计：{personalWrongScopedCount} {unit} · 当前{personalWrongCurrentBatchLabel}：{personalWrongBatchSelection.batchEntryCount} {unit} · 本组练习 {personalWrongCurrentBatchWriteCount} 遍 · 全部练习 {personalWrongTotalWriteCount} 遍
-            </p>
-            {personalWrongCurrentBatchRecords.length ? (
-              <ul className="spelling-personal-wrong-list">
-                {personalWrongCurrentBatchRecords.map((record, index) => {
-                  const linked = personalWrongSourceEntries.some((entry) => entry.personalWrong?.recordId === record.id && entry.personalWrong.linkedToLexicon);
-                  const sequence = (personalWrongBatchSelection.batchIndex * PERSONAL_WRONG_BOOK_BATCH_SIZE) + index + 1;
-                  return (
-                    <li key={record.id} className={linked ? "is-linked" : "is-local"}>
-                      <div className="spelling-personal-wrong-list__top">
-                        <span className="spelling-personal-wrong-list__index">{sequence}</span>
-                        <strong>{formatPersonalWrongUnitLabel(record)}</strong>
-                        <button
-                          type="button"
-                          className="spelling-personal-wrong-list__delete"
-                          onMouseDown={trainingControls.markSettingsInteraction}
-                          onClick={() => handleDeletePersonalWrongRecord(record)}
-                          title="从做题错词本删除"
-                        >
-                          删除
-                        </button>
-                      </div>
-                      <span>{record.meaning || (linked ? "已匹配总词库" : "本地补充")}</span>
-                      <em>{formatPersonalWrongRepeatLabel(record)}</em>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : null}
-          </section>
-          ) : null}
-
-          <section className="spelling-sidebar-block spelling-export-panel" aria-label="导出">
-            <h2 className="spelling-sidebar-block__title">导出</h2>
-            <p className="spelling-export-panel__hint">
-              可导出完整词库、当前批次，或当前所选分类的完整词表。
-            </p>
-            <div className="spelling-export-panel__actions">
-              <button
-                type="button"
-                className="spelling-export-btn spelling-export-btn--primary"
-                data-testid="spelling-export-combined-sidebar"
-                disabled={!lexicon}
-                onMouseDown={trainingControls.markSettingsInteraction}
-                onClick={handleExportCombinedLexicon}
-              >
-                一键导出单词+词组
-              </button>
-              <button
-                type="button"
-                className="spelling-export-btn"
-                disabled={!lexicon}
-                onMouseDown={trainingControls.markSettingsInteraction}
-                onClick={handleExportScopeLexicon}
-              >
-                导出全部{scopeConfig.label}
-              </button>
-              <button
-                type="button"
-                className="spelling-export-btn"
-                data-testid="spelling-export-current-batch"
-                disabled={!spellingEntries.length}
-                onMouseDown={trainingControls.markSettingsInteraction}
-                onClick={() => handleExportCurrentBatch("json")}
-              >
-                导出当前批次 JSON
-              </button>
-              <button
-                type="button"
-                className="spelling-export-btn"
-                disabled={!spellingEntries.length}
-                onMouseDown={trainingControls.markSettingsInteraction}
-                onClick={() => handleExportCurrentBatch("txt")}
-              >
-                导出当前批次 TXT
-              </button>
-              {practiceSource === "category" ? (
-                <>
-                  <button
-                    type="button"
-                    className="spelling-export-btn"
-                    data-testid="spelling-export-current-category-json"
-                    disabled={!currentCategoryEntries.length}
-                    onMouseDown={trainingControls.markSettingsInteraction}
-                    onClick={() => handleExportCurrentCategory("json")}
-                  >
-                    导出当前分类全部 JSON
-                  </button>
-                  <button
-                    type="button"
-                    className="spelling-export-btn"
-                    data-testid="spelling-export-current-category-txt"
-                    disabled={!currentCategoryEntries.length}
-                    onMouseDown={trainingControls.markSettingsInteraction}
-                    onClick={() => handleExportCurrentCategory("txt")}
-                  >
-                    导出当前分类全部 TXT
-                  </button>
-                </>
-              ) : null}
-            </div>
-            <p className="spelling-export-panel__meta">
-              词库：{lexicon?.counts?.headwords || 0} 词 · {lexicon?.counts?.phrases || 0} 组
-              {spellingEntries.length ? ` · 当前批次 ${spellingEntries.length} 条` : ""}
-              {practiceSource === "category" && currentCategoryEntries.length
-                ? ` · 当前分类：${batchSelection.label} ${currentCategoryEntries.length} 条`
-                : ""}
-            </p>
-          </section>
-
-        <details className="spelling-error-bank-panel spelling-aux-panel">
-          <summary>
-            {scopeConfig.label}错词本
-            <span className="spelling-tab-count">{errorBank.count}</span>
-            {errorBank.totalWrongAttempts ? (
-              <span className="spelling-tab-count">累计错 {errorBank.totalWrongAttempts}</span>
-            ) : null}
-          </summary>
-          {errorBank.loading ? (
-            <p className="spelling-error-bank-empty">正在加载错词本…</p>
-          ) : errorBank.count ? (
-            <VirtualList
-              className="spelling-error-bank-list spelling-error-bank-list--virtual"
-              items={errorBank.items}
-              itemHeight={96}
-              height={280}
-              resetKey={`${scope}:error-bank:${errorBank.count}:${errorBank.totalWrongAttempts || 0}`}
-              getKey={(item) => item.errorBank?.dedupeKey || item.wordId}
-              renderItem={(item) => (
-                <div className={`spelling-error-bank-item severity-${item.errorBank?.severity || "low"}`}>
-                  <div className="spelling-error-bank-item__main">
-                    <strong>{item.expectedAnswer || item.word}</strong>
-                    <span>{item.meaning || "—"}</span>
-                  </div>
-                  <div className="spelling-error-bank-item__meta">
-                    <span>{formatErrorBankSeverity(item.errorBank?.severity)}</span>
-                    <span>错 {item.errorBank?.totalWrongCount || 0} 次</span>
-                    <span>最近：{formatWrongTime(item.errorBank?.latestWrongAt)}</span>
-                    {item.errorBank?.lastWrongAnswer ? (
-                      <span className="spelling-error-bank-item__wrong">误填：{item.errorBank.lastWrongAnswer}</span>
-                    ) : null}
-                  </div>
-                </div>
-              )}
-            />
-          ) : (
-            <p className="spelling-error-bank-empty">还没有错词。拼写错误后会自动收录到本页专用错词本。</p>
-          )}
-        </details>
-
-          <details className="spelling-srs-info spelling-sidebar-block">
-            <summary>艾宾浩斯 SRS · 到期 {srsReview.count}</summary>
-            <p>
-              {scopeConfig.label}独立 SRS，复习间隔 <strong>{srsIntervalText}</strong> 天。
-            </p>
-            {srsReview.count ? (
-              <ul className="spelling-error-bank-list">
-                {srsReview.items.slice(0, 10).map((item) => (
-                  <li key={item.wordId} className="spelling-error-bank-item">
-                    <div className="spelling-error-bank-item__main">
-                      <strong>{item.expectedAnswer || item.word}</strong>
-                      <span>{item.meaning || "—"}</span>
-                    </div>
-                    <div className="spelling-error-bank-item__meta">
-                      <span>SRS 第 {item.srs?.stage || 1} 阶段</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </details>
-          </section>
-        </aside>
       </div>
     </main>
   );

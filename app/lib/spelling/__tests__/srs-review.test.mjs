@@ -31,7 +31,10 @@ test("SRS candidates omit queue metadata without mutating source", () => {
 
 test("production spelling page exposes SRS source and current wrong count", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
-  const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const source = [
+    fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8"),
+    fs.readFileSync(path.join(root, "app/components/SpellingFocusCard.jsx"), "utf8")
+  ].join("\n");
   assert.match(source, /practiceSource === "srs_review"/);
   assert.match(source, /data-testid="spelling-total-wrong-count"/);
   assert.match(source, /srsReviewEntriesToSpellingCandidates/);
@@ -39,24 +42,26 @@ test("production spelling page exposes SRS source and current wrong count", () =
 
 test("progress and shortcut controls render in the page footer", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
-  const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
-  const footerStart = source.indexOf('<footer className="spelling-training-footer">');
-  const progressStart = source.indexOf('aria-label="当前批次进度"');
-  const shortcutsStart = source.indexOf('aria-label="键盘快捷键"');
+  const page = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const focus = fs.readFileSync(path.join(root, "app/components/SpellingFocusCard.jsx"), "utf8");
+  const source = `${page}\n${focus}`;
+  const footerStart = focus.indexOf('<footer className="spelling-training-footer">');
+  const progressStart = focus.indexOf('aria-label="当前批次进度"');
+  const shortcutsStart = focus.indexOf('aria-label="键盘快捷键"');
 
-  assert.ok(footerStart > 0);
+  assert.ok(footerStart >= 0);
   assert.ok(progressStart > footerStart);
   assert.ok(shortcutsStart > progressStart);
-  assert.match(source, /<b>1<\/b> 重播/);
-  assert.match(source, /<b>5<\/b> 重点复习/);
-  assert.match(source, /Ctrl\+Z 撤回/);
+  assert.match(focus, /<b>1<\/b> 重播/);
+  assert.match(focus, /<b>5<\/b> 重点复习/);
+  assert.match(focus, /Ctrl\+Z 撤回/);
   assert.match(source, /handleGoToPreviousWord/);
   assert.match(source, /handleGoToNextWord/);
-  assert.match(source, /Ctrl\+← → 切词/);
-  assert.match(source, /batchProgressCurrentNumber/);
-  assert.match(source, /resultBatchProgress\.currentNumber/);
-  assert.match(source, /spelling-action-notice\$\{actionNotice/);
-  assert.match(source, /personalWrongNavigationUnits/);
+  assert.match(focus, /Ctrl\+← → 切词/);
+  assert.match(page, /batchProgressCurrentNumber/);
+  assert.match(page, /resultBatchProgress\.currentNumber/);
+  assert.match(focus, /spelling-action-notice\$\{actionNotice/);
+  assert.match(page, /personalWrongNavigationUnits/);
   assert.match(source, /batchNavigationWordIds/);
 });
 
@@ -92,19 +97,23 @@ test("batch selection uses an in-page picker instead of a fragile native select"
   const chrome = fs.readFileSync(path.join(root, "app/components/SpellingTrainingChrome.jsx"), "utf8");
   assert.match(chrome, /export function BatchPicker/);
   assert.match(chrome, /className="spelling-batch-picker"/);
-  assert.match(source, /BatchPicker/);
+  const rangeBar = fs.readFileSync(path.join(root, "app/components/SpellingRangeBar.jsx"), "utf8");
+  assert.match(rangeBar, /BatchPicker/);
   assert.doesNotMatch(source, /className="spelling-batch-select/);
 });
 
 test("completed batches render success, daily stats, and next-round controls", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
-  assert.match(source, /isBatchComplete && !current/);
-  assert.match(source, /className="spelling-completion-summary"/);
-  assert.match(source, /\{batchSuccessRate\}%/);
-  assert.match(source, /"进入下一轮"/);
-  assert.match(source, />今日统计</);
-  assert.match(source, /formatActiveLearningTime\(dailyStats\.activeMs\)/);
+  const focus = fs.readFileSync(path.join(root, "app/components/SpellingFocusCard.jsx"), "utf8");
+  const sidebar = fs.readFileSync(path.join(root, "app/components/SpellingStatsSidebar.jsx"), "utf8");
+  const combined = `${source}\n${focus}\n${sidebar}`;
+  assert.match(focus, /isBatchComplete && !current/);
+  assert.match(focus, /className="spelling-completion-summary"/);
+  assert.match(focus, /\{batchSuccessRate\}%/);
+  assert.match(focus, /"进入下一轮"/);
+  assert.match(sidebar, />今日统计</);
+  assert.match(combined, /formatActiveLearningTime\(dailyStats\.activeMs\)/);
 });
 
 test("spelling page auto-plays speech only when presenting a question, not on correct feedback", () => {

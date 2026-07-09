@@ -102,7 +102,10 @@ test("export filenames include counts and date", () => {
 
 test("SpellingTrainingPage exposes one-click combined export controls", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
-  const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const source = [
+    fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8"),
+    fs.readFileSync(path.join(root, "app/components/SpellingStatsSidebar.jsx"), "utf8")
+  ].join("\n");
 
   assert.match(source, /buildCombinedLexiconExportPayload/);
   assert.match(source, /data-testid="spelling-export-combined"/);
@@ -147,12 +150,14 @@ test("personal wrong book lists render the selected batch records", () => {
 test("spelling page does not render placeholder questions before lexicon is ready", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const focus = fs.readFileSync(path.join(root, "app/components/SpellingFocusCard.jsx"), "utf8");
+  const combined = `${source}\n${focus}`;
 
   assert.match(source, /if \(!lexicon\) return \[\]/);
   assert.match(source, /const isSpellingLoading = !lexicon \|\| !spelling\.ready/);
   assert.match(source, /const current = !isSpellingLoading \? spelling\.currentWord : null/);
-  assert.match(source, /isSpellingLoading \? \(/);
-  assert.match(source, /正在读取词库，请稍候/);
+  assert.match(focus, /isSpellingLoading \? \(/);
+  assert.match(combined, /正在读取词库，请稍候/);
 });
 
 test("home page can deep-link to the AI tools menu", () => {

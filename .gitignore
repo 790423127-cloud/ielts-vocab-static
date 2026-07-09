@@ -39,3 +39,9 @@ static-site.zip
 
 # keep intentional public data; ignore accidental audio dumps under public
 public/audio/
+
+# python cache
+scripts/**/__pycache__/
+**/__pycache__/
+*.pyc
+

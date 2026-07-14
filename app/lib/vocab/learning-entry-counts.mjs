@@ -1,3 +1,5 @@
+import { IDICTATION_FREQUENCY_META } from "../spelling/idictation-frequency.mjs";
+
 function normalizePhraseItems(value) {
   if (!value) return [];
   if (Array.isArray(value)) return value.filter(Boolean);
@@ -110,6 +112,15 @@ function countFromTallies(filter, tallies) {
   return tallies.all;
 }
 
+function getIdictationEntryCount(sourceKey, getIdictationSource) {
+  const source = getIdictationSource(sourceKey);
+  if (source) return source.uniqueWords || source.entries?.length || 0;
+
+  // The full frequency payload is lazy-loaded. Use its generated metadata so
+  // the entry cards show the correct totals immediately instead of a stale 0.
+  return IDICTATION_FREQUENCY_META.sources?.[sourceKey]?.uniqueWords || 0;
+}
+
 /**
  * Build learning-entry counts in one pass over the lexicon.
  * @param {Array} words
@@ -133,8 +144,7 @@ export function buildLearningEntryCounts(words, learningEntries, {
       const key = filterKey(entry.filter);
 
       if (isIdictationFlashFilter(entry.filter)) {
-        const source = getIdictationSource(entry.filter.value);
-        counts.set(key, source ? source.uniqueWords || source.entries?.length || 0 : 0);
+        counts.set(key, getIdictationEntryCount(entry.filter.value, getIdictationSource));
         continue;
       }
 

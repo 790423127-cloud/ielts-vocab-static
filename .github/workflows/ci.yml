@@ -58,6 +58,7 @@ jobs:
             reports/gt-complete-semantic-review-candidates.json
             reports/gt-complete-semantic-review-candidates.tsv
             reports/gt-complete-vocab-patch-report.json
+            reports/gt-second-semantic-review-report.json
           if-no-files-found: error
           retention-days: 7
 

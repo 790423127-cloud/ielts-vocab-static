@@ -8,9 +8,22 @@ export const metadata = {
   description: "IELTS vocabulary study app"
 };
 
-const fontScaleBootstrapScript = `
+const browserCompatibilityBootstrapScript = `
 (function () {
   try {
+    if (typeof Array.prototype.toSpliced !== "function") {
+      Object.defineProperty(Array.prototype, "toSpliced", {
+        configurable: true,
+        writable: true,
+        value: function (start, deleteCount) {
+          var copy = Array.prototype.slice.call(this);
+          var items = Array.prototype.slice.call(arguments, 2);
+          Array.prototype.splice.apply(copy, [start, deleteCount].concat(items));
+          return copy;
+        }
+      });
+    }
+
     var raw = localStorage.getItem("ielts-vocab-font-scale");
     var value = parseFloat(raw);
     if (!isFinite(value)) return;
@@ -25,7 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: fontScaleBootstrapScript }} />
+        <script dangerouslySetInnerHTML={{ __html: browserCompatibilityBootstrapScript }} />
       </head>
       <body suppressHydrationWarning>
         <FontScaleProvider />

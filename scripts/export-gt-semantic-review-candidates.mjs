@@ -4,22 +4,12 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WORDS_PATH = path.join(ROOT, "public", "data", "words.json");
-const PATCH_REPORT_PATH = path.join(ROOT, "reports", "gt-complete-vocab-patch-report.json");
 const OUTPUT_PATH = path.join(ROOT, "reports", "gt-complete-semantic-review-candidates.json");
 const OUTPUT_TSV_PATH = path.join(ROOT, "reports", "gt-complete-semantic-review-candidates.tsv");
+const MARKERS = ["无中文释义", "（无中文释义)", "(无中文释义)", "；无中文释义", "。无中文释义"];
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
-}
-
-function normalize(value) {
-  return String(value || "")
-    .normalize("NFKC")
-    .trim()
-    .toLowerCase()
-    .replace(/[’‘]/g, "'")
-    .replace(/[‐‑‒–—]/g, "-")
-    .replace(/\s+/g, " ");
 }
 
 function cleanTsv(value) {
@@ -29,38 +19,46 @@ function cleanTsv(value) {
     .trim();
 }
 
-const payload = readJson(WORDS_PATH);
-const words = Array.isArray(payload) ? payload : Array.isArray(payload.words) ? payload.words : [];
-const patchReport = readJson(PATCH_REPORT_PATH);
-const candidates = Array.isArray(patchReport.semanticReviewCandidates)
-  ? patchReport.semanticReviewCandidates
-  : [];
+function issuesFor(entry) {
+  const issues = [];
+  const pos = String(entry?.pos || "").trim().toLowerCase();
+  const meaning = String(entry?.meaning || "").trim();
+  const definition = String(entry?.definition || "").trim();
+  const example = String(entry?.example || "").trim();
+  const tokens = example.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g) || [];
 
-const byId = new Map();
-const byWord = new Map();
-for (const entry of words) {
-  const id = String(entry?.id || entry?.wordId || "");
-  if (id) byId.set(id, entry);
-  const key = normalize(entry?.word);
-  if (key && !byWord.has(key)) byWord.set(key, entry);
+  if (!meaning) issues.push("missing_meaning");
+  if (!definition) issues.push("missing_definition");
+  if (!pos || ["word", "unknown", "n/a"].includes(pos)) issues.push("generic_or_missing_pos");
+  if (tokens.length < 4) issues.push("short_or_broken_example");
+  if (MARKERS.some((marker) => meaning.includes(marker) || definition.includes(marker))) {
+    issues.push("placeholder_meaning_marker");
+  }
+  if (/非标准词形或来源残留|专有名词，需结合原文识别|专有名词、非标准词形或来源残留/.test(meaning)) {
+    issues.push("reference_requires_contextual_review");
+  }
+  return issues;
 }
 
-const enriched = candidates.map((candidate) => {
-  const entry = byId.get(String(candidate.id || "")) || byWord.get(normalize(candidate.word)) || {};
-  return {
-    id: String(entry.id || entry.wordId || candidate.id || ""),
-    word: String(entry.word || candidate.word || ""),
-    issues: Array.isArray(candidate.issues) ? candidate.issues : [],
-    pos: String(entry.pos || candidate.currentPos || ""),
-    meaning: String(entry.meaning || candidate.currentMeaning || ""),
+const payload = readJson(WORDS_PATH);
+const words = Array.isArray(payload) ? payload : Array.isArray(payload.words) ? payload.words : [];
+const enriched = words
+  .map((entry) => ({ entry, issues: issuesFor(entry) }))
+  .filter((item) => item.issues.length)
+  .map(({ entry, issues }) => ({
+    id: String(entry.id || entry.wordId || ""),
+    word: String(entry.word || ""),
+    issues,
+    pos: String(entry.pos || ""),
+    meaning: String(entry.meaning || ""),
     meaningDetailedZh: String(entry.meaningDetailedZh || ""),
     definition: String(entry.definition || ""),
-    example: String(entry.example || candidate.currentExample || ""),
+    example: String(entry.example || ""),
     exampleCn: String(entry.exampleCn || ""),
     difficulty: String(entry.difficulty || ""),
     category: String(entry.category || ""),
-    studyMode: String(entry.studyMode || candidate.studyMode || ""),
-    gtPlanStage: Number(entry.gtPlanStage || candidate.gtPlanStage || 0) || null,
+    studyMode: String(entry.studyMode || ""),
+    gtPlanStage: Number(entry.gtPlanStage || 0) || null,
     ieltsUse: Array.isArray(entry.ieltsUse) ? entry.ieltsUse : [],
     topics: Array.isArray(entry.topics) ? entry.topics : [],
     sourceType: String(entry.sourceType || ""),
@@ -71,15 +69,9 @@ const enriched = candidates.map((candidate) => {
     quizSenses: Array.isArray(entry.quizSenses) ? entry.quizSenses : [],
     collocations: Array.isArray(entry.collocations) ? entry.collocations : [],
     phraseCollocations: Array.isArray(entry.phraseCollocations) ? entry.phraseCollocations : []
-  };
-});
+  }));
 
-enriched.sort((a, b) => {
-  const issueA = a.issues.join(",");
-  const issueB = b.issues.join(",");
-  return issueA.localeCompare(issueB) || a.word.localeCompare(b.word);
-});
-
+enriched.sort((a, b) => a.issues.join(",").localeCompare(b.issues.join(",")) || a.word.localeCompare(b.word));
 const summary = {};
 for (const item of enriched) {
   for (const issue of item.issues) summary[issue] = (summary[issue] || 0) + 1;
@@ -95,7 +87,6 @@ const output = {
 
 fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
 fs.writeFileSync(OUTPUT_PATH, `${JSON.stringify(output, null, 2)}\n`);
-
 const headers = [
   "id", "word", "issues", "pos", "meaning", "meaningDetailedZh", "definition",
   "example", "exampleCn", "difficulty", "category", "studyMode", "gtPlanStage",

@@ -1,0 +1,28 @@
+word	action	reasonCode	set
+regularly	repair	KEEP_REPAIR	{"example":"The equipment must be inspected regularly for safety.","exampleCn":"为了安全，设备必须定期检查。","entryStatus":"second-semantic-review-20260714"}
+ruler	repair	KEEP_REPAIR	{"example":"Use a ruler to measure the width of the box.","exampleCn":"用直尺测量盒子的宽度。","entryStatus":"second-semantic-review-20260714","pos":"noun","meaning":"统治者；直尺","definition":"a person who governs, or a straight measuring tool"}
+seize	repair	KEEP_REPAIR	{"example":"Small businesses should seize the opportunity to expand online.","exampleCn":"小企业应抓住机会拓展线上业务。","entryStatus":"second-semantic-review-20260714"}
+seldom	repair	KEEP_REPAIR	{"example":"She seldom drives because public transport is convenient.","exampleCn":"她很少开车，因为公共交通很方便。","entryStatus":"second-semantic-review-20260714"}
+senate	repair	KEEP_REPAIR	{"example":"The senate passed the bill after a lengthy debate.","exampleCn":"参议院经过长时间辩论后通过了该法案。","entryStatus":"second-semantic-review-20260714"}
+silly	repair	KEEP_REPAIR	{"example":"It would be silly to ignore the safety warning.","exampleCn":"忽视安全警告是愚蠢的。","entryStatus":"second-semantic-review-20260714"}
+so	repair	KEEP_REPAIR	{"example":"The road was closed, so we took another route.","exampleCn":"道路关闭了，所以我们走了另一条路线。","entryStatus":"second-semantic-review-20260714","pos":"adverb/conjunction","meaning":"如此；这么；所以；因此","definition":"to such a degree, or used to introduce a result"}
+soldier	repair	KEEP_REPAIR	{"example":"The soldier helped residents during the emergency.","exampleCn":"这名士兵在紧急情况下帮助了居民。","entryStatus":"second-semantic-review-20260714"}
+speak	repair	KEEP_REPAIR	{"example":"Please speak clearly when leaving a telephone message.","exampleCn":"留言时请说清楚。","entryStatus":"second-semantic-review-20260714"}
+stats	repair	KEEP_REPAIR	{"example":"The report includes the latest employment stats.","exampleCn":"这份报告包含最新的就业统计数据。","entryStatus":"second-semantic-review-20260714","pos":"plural noun/informal abbreviation","meaning":"统计数据；统计资料","definition":"informal plural abbreviation of statistics","difficulty":"中级核心","category":"IELTS G类 · 数据表达","gtPlanStage":2,"studyMode":"active-recognition"}
+sunny	repair	KEEP_REPAIR	{"example":"It will be a sunny day with light winds.","exampleCn":"今天将是晴天，并伴有微风。","entryStatus":"second-semantic-review-20260714"}
+tablespoon	repair	KEEP_REPAIR	{"example":"Add one tablespoon of oil to the mixture.","exampleCn":"在混合物中加入一大匙油。","entryStatus":"second-semantic-review-20260714"}
+terrify	repair	KEEP_REPAIR	{"example":"The sudden explosion terrified nearby residents.","exampleCn":"突如其来的爆炸吓坏了附近居民。","entryStatus":"second-semantic-review-20260714"}
+time	repair	KEEP_REPAIR	{"example":"Please allow enough time to complete the form.","exampleCn":"请留出足够时间填写表格。","entryStatus":"second-semantic-review-20260714"}
+tremendously	repair	KEEP_REPAIR	{"example":"The new system has improved efficiency tremendously.","exampleCn":"新系统极大地提高了效率。","entryStatus":"second-semantic-review-20260714"}
+trickle	repair	KEEP_REPAIR	{"example":"Water trickled from a crack in the pipe.","exampleCn":"水从管道裂缝中滴流出来。","entryStatus":"second-semantic-review-20260714"}
+unity	repair	KEEP_REPAIR	{"example":"The campaign promoted unity within the local community.","exampleCn":"这项活动促进了当地社区的团结。","entryStatus":"second-semantic-review-20260714"}
+up	repair	KEEP_REPAIR	{"example":"House prices are going up in this area.","exampleCn":"这个地区的房价正在上涨。","entryStatus":"second-semantic-review-20260714"}
+user	repair	KEEP_REPAIR	{"example":"The user must enter a valid password.","exampleCn":"用户必须输入有效密码。","entryStatus":"second-semantic-review-20260714"}
+vat	repair	KEEP_REPAIR	{"example":"The advertised price includes VAT and delivery charges.","exampleCn":"标示价格包含增值税和配送费。","entryStatus":"second-semantic-review-20260714","pos":"noun/abbreviation","meaning":"大桶；缸；增值税（VAT）","definition":"a large container for liquid; abbreviation for value-added tax"}
+waste	repair	KEEP_REPAIR	{"example":"Do not waste food or drinking water.","exampleCn":"不要浪费食物或饮用水。","entryStatus":"second-semantic-review-20260714","pos":"noun/verb/adjective","meaning":"浪费；废物；浪费的；废弃的","definition":"unwanted material; to use carelessly; relating to discarded material"}
+wave	repair	KEEP_REPAIR	{"example":"She waved goodbye before boarding the train.","exampleCn":"她上火车前挥手告别。","entryStatus":"second-semantic-review-20260714"}
+weakness	repair	KEEP_REPAIR	{"example":"The review identified a weakness in the booking system.","exampleCn":"评估发现了预订系统中的一个弱点。","entryStatus":"second-semantic-review-20260714"}
+winter	repair	KEEP_REPAIR	{"example":"Winter is the busiest season for this ski resort.","exampleCn":"冬季是这个滑雪度假村最繁忙的季节。","entryStatus":"second-semantic-review-20260714"}
+worry	repair	KEEP_REPAIR	{"example":"Do not worry about the delay; your booking is secure.","exampleCn":"不要担心延误，你的预订是安全的。","entryStatus":"second-semantic-review-20260714"}
+wow	repair	KEEP_REPAIR	{"example":"The final performance wowed the entire audience.","exampleCn":"最后的表演令全场观众惊叹。","entryStatus":"second-semantic-review-20260714","pos":"interjection/verb","meaning":"哇；使惊叹","definition":"an exclamation of surprise or admiration; to impress greatly"}
+yen	repair	KEEP_REPAIR	{"example":"The ticket costs three thousand yen.","exampleCn":"这张票售价三千日元。","entryStatus":"second-semantic-review-20260714","pos":"noun","meaning":"日元；强烈愿望","definition":"the currency of Japan; an informal strong desire"}

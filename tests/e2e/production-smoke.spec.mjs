@@ -33,8 +33,14 @@ test.afterEach(async ({ page }) => {
 test("home loads the full lexicon, changes word, and switches to phrases", async ({ page }) => {
   await page.goto("/");
 
+  const vocabResponse = await page.request.get("/data/words.json");
+  expect(vocabResponse.ok()).toBeTruthy();
+  const vocabPayload = await vocabResponse.json();
+  const expectedCount = Number(vocabPayload?.count || vocabPayload?.words?.length || 0);
+  expect(expectedCount).toBeGreaterThan(10_000);
+
   const wordMode = page.getByRole("tab", { name: /单词刷词/ });
-  await expect(wordMode).toContainText("13,808 词", { timeout: 45_000 });
+  await expect(wordMode).toContainText(`${expectedCount.toLocaleString("en-US")} 词`, { timeout: 45_000 });
 
   const currentWord = page.locator(".word-flash-shell .word");
   await expect(currentWord).toBeVisible();

@@ -1,0 +1,32 @@
+word	action	reasonCode	set
+god	repair	KEEP_REPAIR	{"example":"Many people believe in God and attend religious services.","exampleCn":"许多人信仰上帝并参加宗教活动。","entryStatus":"second-semantic-review-20260714","pos":"noun","meaning":"神；上帝","definition":"a deity; God in a monotheistic religion"}
+guy	repair	KEEP_REPAIR	{"example":"The guy at reception helped me find the meeting room.","exampleCn":"接待处的那个小伙子帮我找到了会议室。","entryStatus":"second-semantic-review-20260714","pos":"noun","meaning":"家伙；小伙子；人（非正式）","definition":"an informal word for a man or person"}
+hormone	repair	KEEP_REPAIR	{"example":"This hormone helps regulate growth and metabolism.","exampleCn":"这种激素有助于调节生长和新陈代谢。","entryStatus":"second-semantic-review-20260714"}
+immediately	repair	KEEP_REPAIR	{"example":"Please contact the emergency service immediately.","exampleCn":"请立即联系紧急服务部门。","entryStatus":"second-semantic-review-20260714"}
+immunity	repair	KEEP_REPAIR	{"example":"Vaccination can provide immunity against certain diseases.","exampleCn":"疫苗接种可以使人对某些疾病产生免疫力。","entryStatus":"second-semantic-review-20260714"}
+independently	repair	KEEP_REPAIR	{"example":"Trainees must complete the final task independently.","exampleCn":"学员必须独立完成最后一项任务。","entryStatus":"second-semantic-review-20260714"}
+inevitably	repair	KEEP_REPAIR	{"example":"Rapid growth inevitably creates pressure on public services.","exampleCn":"快速增长不可避免地会给公共服务带来压力。","entryStatus":"second-semantic-review-20260714"}
+inspire	repair	KEEP_REPAIR	{"example":"Her speech inspired the volunteers to continue their work.","exampleCn":"她的演讲激励志愿者继续工作。","entryStatus":"second-semantic-review-20260714"}
+invoke	repair	KEEP_REPAIR	{"example":"The lawyer invoked a clause in the contract.","exampleCn":"律师援引了合同中的一项条款。","entryStatus":"second-semantic-review-20260714","pos":"verb","meaning":"援引；调用；唤起","definition":"to cite as authority, call on, or cause a response or memory"}
+involuntarily	repair	KEEP_REPAIR	{"example":"He involuntarily stepped back when the alarm sounded.","exampleCn":"警报响起时，他不由自主地后退了一步。","entryStatus":"second-semantic-review-20260714","pos":"adverb","meaning":"不由自主地；无意识地","definition":"without conscious control or intention"}
+irritate	repair	KEEP_REPAIR	{"example":"Strong cleaning chemicals can irritate the skin.","exampleCn":"强力清洁化学品会刺激皮肤。","entryStatus":"second-semantic-review-20260714","pos":"verb","meaning":"刺激；使恼怒","definition":"to cause physical discomfort or make someone annoyed"}
+justice	repair	KEEP_REPAIR	{"example":"The court system should provide justice for every citizen.","exampleCn":"司法系统应当为每位公民伸张正义。","entryStatus":"second-semantic-review-20260714"}
+mathematics	repair	KEEP_REPAIR	{"example":"She studies mathematics at a local college.","exampleCn":"她在当地一所学院学习数学。","entryStatus":"second-semantic-review-20260714"}
+mineral	repair	KEEP_REPAIR	{"example":"The water contains several important minerals.","exampleCn":"这种水含有几种重要矿物质。","entryStatus":"second-semantic-review-20260714"}
+mount	repair	KEEP_REPAIR	{"example":"Pressure is mounting on the council to improve services.","exampleCn":"要求市政委员会改善服务的压力正在增加。","entryStatus":"second-semantic-review-20260714","pos":"verb/noun","meaning":"登上；安装；增加；山","definition":"to climb, attach, or increase; a mountain or support"}
+nest	repair	KEEP_REPAIR	{"example":"The birds built a nest under the roof.","exampleCn":"这些鸟在屋顶下筑了一个巢。","entryStatus":"second-semantic-review-20260714"}
+obey	repair	KEEP_REPAIR	{"example":"All visitors must obey the safety instructions.","exampleCn":"所有访客都必须遵守安全说明。","entryStatus":"second-semantic-review-20260714"}
+oct	repair	KEEP_REPAIR	{"example":"The deadline for applications is 15 Oct.","exampleCn":"申请截止日期是10月15日。","entryStatus":"second-semantic-review-20260714","pos":"abbreviation","meaning":"十月（October的缩写）","definition":"abbreviation for October","difficulty":"低频认识即可","studyMode":"reference","gtPlanStage":4,"category":"IELTS G类 · 日期缩写参考"}
+outright	repair	KEEP_REPAIR	{"example":"The committee rejected the proposal outright.","exampleCn":"委员会彻底否决了这项提议。","entryStatus":"second-semantic-review-20260714"}
+overlap	repair	KEEP_REPAIR	{"example":"The two training sessions overlap by thirty minutes.","exampleCn":"两场培训课程有三十分钟重叠。","entryStatus":"second-semantic-review-20260714"}
+own	repair	KEEP_REPAIR	{"example":"I own a small apartment near the station.","exampleCn":"我在车站附近拥有一套小公寓。","entryStatus":"second-semantic-review-20260714"}
+page	repair	KEEP_REPAIR	{"example":"Please turn to page ten of the handbook.","exampleCn":"请翻到手册第十页。","entryStatus":"second-semantic-review-20260714"}
+paw	repair	KEEP_REPAIR	{"example":"The injured dog could not put weight on its paw.","exampleCn":"受伤的狗无法用那只爪子承重。","entryStatus":"second-semantic-review-20260714"}
+pen	repair	KEEP_REPAIR	{"example":"Please sign the application form with a black pen.","exampleCn":"请用黑色钢笔在申请表上签字。","entryStatus":"second-semantic-review-20260714"}
+perceived	repair	KEEP_REPAIR	{"example":"The perceived risk was greater than the actual danger.","exampleCn":"人们感知到的风险大于实际危险。","entryStatus":"second-semantic-review-20260714","pos":"adjective","meaning":"感知到的；被认为的","definition":"noticed, understood, or regarded in a particular way"}
+personally	repair	KEEP_REPAIR	{"example":"Personally, I prefer the earlier appointment time.","exampleCn":"就我个人而言，我更喜欢较早的预约时间。","entryStatus":"second-semantic-review-20260714"}
+policewoman	repair	KEEP_REPAIR	{"example":"The policewoman helped the lost child find his parents.","exampleCn":"这位女警察帮助迷路的孩子找到了父母。","entryStatus":"second-semantic-review-20260714"}
+practice	repair	KEEP_REPAIR	{"example":"Regular practice will improve your speaking confidence.","exampleCn":"经常练习会提高你的口语自信。","entryStatus":"second-semantic-review-20260714","pos":"noun/verb","meaning":"练习；实践；惯例","definition":"repeated exercise, practical application, or a customary way of doing something"}
+precede	repair	KEEP_REPAIR	{"example":"A short safety briefing will precede the tour.","exampleCn":"参观前会先进行简短的安全说明。","entryStatus":"second-semantic-review-20260714"}
+publicly	repair	KEEP_REPAIR	{"example":"The company publicly apologized for the service failure.","exampleCn":"该公司公开为服务故障道歉。","entryStatus":"second-semantic-review-20260714"}
+puzzle	repair	KEEP_REPAIR	{"example":"The sudden change in the timetable puzzled many passengers.","exampleCn":"时间表的突然变化使许多乘客感到困惑。","entryStatus":"second-semantic-review-20260714"}

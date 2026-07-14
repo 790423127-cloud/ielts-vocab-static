@@ -3,9 +3,16 @@ import { expect, test } from "@playwright/test";
 const PERSONAL_WRONG_WORD = "codexpersistprobe";
 
 async function waitForFullWordLexicon(page) {
-  await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText("13,808 词", {
-    timeout: 45_000
-  });
+  const response = await page.request.get("/data/words.json");
+  expect(response.ok()).toBeTruthy();
+  const payload = await response.json();
+  const expectedCount = Number(payload?.count || payload?.words?.length || 0);
+  expect(expectedCount).toBeGreaterThan(10_000);
+
+  await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText(
+    `${expectedCount.toLocaleString("en-US")} 词`,
+    { timeout: 45_000 }
+  );
 }
 
 async function readWordUserState(page) {

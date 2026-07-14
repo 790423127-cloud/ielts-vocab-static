@@ -47,6 +47,20 @@ jobs:
           # Build must not require real secrets
           DEEPSEEK_API_KEY: ""
 
+      - name: Export semantic review candidates
+        run: node scripts/export-gt-semantic-review-candidates.mjs
+
+      - name: Upload semantic review candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: gt-semantic-review-candidates-${{ github.run_id }}
+          path: |
+            reports/gt-complete-semantic-review-candidates.json
+            reports/gt-complete-semantic-review-candidates.tsv
+            reports/gt-complete-vocab-patch-report.json
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 

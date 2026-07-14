@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { isPollutedMeaning } from "./gt-meaning-zh.mjs";
-import { resolveMeaningV2 } from "./gt-zh-resolve-v2.mjs";
+import { isMeaningPollutedV2, resolveMeaningV2 } from "./gt-zh-resolve-v2.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DETAIL_CACHE_PATH = path.join(__dirname, "../../.ai-cache/grok-detail-meaning-cache.json");

@@ -6,7 +6,7 @@ import { buildRetrievalQuestion, createBuilderCaches, validateRetrievalQuestion 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "../../..");
-const wordBankPath = path.join(projectRoot, "public", "data", "meaning-4500.json");
+const wordBankPath = path.join(projectRoot, "public", "data", "meaning-6000.json");
 const reportDir = path.join(projectRoot, "reports");
 
 export function runMeaningEnAudit(limit = Infinity) {
@@ -101,7 +101,9 @@ function addReview(summary, entry, question, reason) {
 
 function isPromptTooShort(value) {
   const text = String(value || "").replace(/[，。；;、\s]/g, "");
-  return text.length > 0 && text.length <= 2;
+  // Two-character Chinese glosses such as “家庭” and “已经” are complete
+  // vocabulary prompts. Only flag known fragment-like outputs.
+  return text === "来说";
 }
 
 function renderMarkdown(summary) {

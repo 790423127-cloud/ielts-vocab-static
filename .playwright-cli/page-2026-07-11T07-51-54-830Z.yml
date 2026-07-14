@@ -1,0 +1,92 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "IELTS Vocab 首页" [ref=e3] [cursor=pointer]:
+      - /url: /
+      - text: IELTS VOCAB
+    - navigation "主要学习模式" [ref=e5]:
+      - link "刷词" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - link "单词拼写" [ref=e7] [cursor=pointer]:
+        - /url: /spelling-words
+      - link "词组拼写" [ref=e8] [cursor=pointer]:
+        - /url: /spelling-phrases
+      - link "选义" [ref=e9] [cursor=pointer]:
+        - /url: /meaning
+      - link "高频表达" [ref=e10] [cursor=pointer]:
+        - /url: /expressions
+    - group "全站字号" [ref=e11]:
+      - button "减小字号" [ref=e12] [cursor=pointer]: A−
+      - button "当前字号 100%，点击恢复默认" [ref=e13] [cursor=pointer]: 100%
+      - button "增大字号" [ref=e14] [cursor=pointer]: A+
+  - main [ref=e15]:
+    - tablist "刷词模式" [ref=e16]:
+      - tab "单词刷词 加载中" [selected] [ref=e17] [cursor=pointer]:
+        - text: 单词刷词
+        - generic [ref=e18]: 加载中
+      - tab "词组刷词 加载中" [ref=e19] [cursor=pointer]:
+        - text: 词组刷词
+        - generic [ref=e20]: 加载中
+      - tab "听力阅读同义替换 加载中" [ref=e21] [cursor=pointer]:
+        - text: 听力阅读同义替换
+        - generic [ref=e22]: 加载中
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]: 上一个单词
+          - generic [ref=e27]: —
+          - generic [ref=e28]: 等待音标 · 词性 · 释义
+        - generic [ref=e29]:
+          - button "随机" [ref=e30] [cursor=pointer]
+          - link "零基础单词 · 启蒙词库" [ref=e31] [cursor=pointer]:
+            - /url: /basic
+          - link "G类阅读词汇 · 全量单词+词组" [ref=e32] [cursor=pointer]:
+            - /url: /reading-g
+          - group [ref=e33]:
+            - generic "更改范围" [ref=e34]
+          - group [ref=e35]:
+            - generic "工具" [ref=e36]
+            - text: 展开 展开 展开 展开 展开 展开
+          - group [ref=e37]:
+            - generic "词库面板" [ref=e38]
+      - region "刷单词范围" [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]: 刷单词
+          - strong [ref=e42]: 今日任务 / 全部待学
+          - generic [ref=e43]: 0 个词
+        - paragraph [ref=e44]: 正在读取正式词库，请稍候。
+      - generic [ref=e46]:
+        - button "☆" [disabled] [ref=e47]
+        - generic [ref=e48]:
+          - button "播放例句发音，快捷键空格" [ref=e50] [cursor=pointer]:
+            - generic [ref=e51]: 🔊
+            - generic [ref=e52]: 空格·例句
+          - button "词库加载完成后会自动显示当前学习词。 正在准备真实词库。" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]: 词库加载完成后会自动显示当前学习词。
+            - generic [ref=e55]: 正在准备真实词库。
+        - generic [ref=e56]:
+          - button "播放单词发音，快捷键 Tab" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: 🔊
+            - generic [ref=e59]: Tab·单词
+          - button "正在读取词库 等待音标" [ref=e60]:
+            - generic [ref=e61]: 正在读取词库
+            - generic [ref=e62]: 等待音标
+        - generic [ref=e63]: 请稍候，正在读取正式词库
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e67]: 常见搭配
+            - generic [ref=e69]:
+              - button "🔊" [disabled] [ref=e70]
+              - generic [ref=e71]: 正在读取词库
+          - generic [ref=e73]:
+            - generic [ref=e74]: 短语 / 介词搭配
+            - generic [ref=e76]:
+              - button "🔊" [disabled] [ref=e77]
+              - generic [ref=e78]: 正在读取词库
+      - generic [ref=e80]:
+        - button "上一个" [disabled] [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - button "熟悉" [disabled] [ref=e83]
+          - button "不熟" [disabled] [ref=e84]
+        - generic [ref=e85]: 0 / 0
+        - button "下一个" [disabled] [ref=e88] [cursor=pointer]
+  - alert [ref=e89]

@@ -1,4 +1,4 @@
-﻿// meaning-enrich.mjs — Add meaningOriginal, meaningsZh to target words.
+// meaning-enrich.mjs — Add meaningOriginal, meaningsZh to target words.
 // Expand clearly incomplete meanings for high-priority words.
 // Append-only to words.json. Never deletes or reorders.
 //
@@ -12,7 +12,7 @@ import { createHash } from "node:crypto";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..");
 const WORDS_PATH = join(ROOT, ".static-export-cache", "words.json");
-const MEANING_PATH = join(ROOT, "public", "data", "meaning-4500.json");
+const MEANING_PATH = join(ROOT, "public", "data", "meaning-6000.json");
 const BACKUP_DIR = join(ROOT, "reports", "meaning-backups", "master-before-full-upgrade-20260629-000000");
 
 // Load
@@ -21,7 +21,7 @@ const meaningData = JSON.parse(readFileSync(MEANING_PATH, "utf-8"));
 const targetIds = new Set(meaningData.items.map(i => i.wordId));
 
 console.log("Total words in bank:", wordsData.words.length);
-console.log("Target words (4500):", targetIds.size);
+console.log("Target words (6000):", targetIds.size);
 
 // Verify old wordIds from backup
 const oldBackupPath = join(BACKUP_DIR, "_old_wordIds.txt");
@@ -143,7 +143,7 @@ const reportMd = [
   "",
   "## Summary",
   "- Total words in bank: " + wordsData.words.length,
-  "- Target words (4500 set): " + enriched,
+  "- Target words (6000 set): " + enriched,
   "- meaningOriginal added: " + meaningOriginalAdded,
   "- meaningsZh added: " + meaningsZhAdded,
   "- meaning expanded: " + meaningExpanded,

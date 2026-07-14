@@ -1,0 +1,210 @@
+{
+  "ok": true,
+  "version": "20260713_d21_responsive_system_v1",
+  "hashes": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "match": true,
+      "local": "94bf6e95701bd764963add382231e4cd32fbbeefdf277727a06f7489f2cc8411",
+      "cloud": "94bf6e95701bd764963add382231e4cd32fbbeefdf277727a06f7489f2cc8411"
+    },
+    {
+      "file": "basic.html",
+      "status": 200,
+      "match": true,
+      "local": "a6e20aa3a291d32138470ac98341f75899a6327c6f70671c706ed494088aeaac",
+      "cloud": "a6e20aa3a291d32138470ac98341f75899a6327c6f70671c706ed494088aeaac"
+    },
+    {
+      "file": "reading-g.html",
+      "status": 200,
+      "match": true,
+      "local": "1c0c7ddcf24c89a651a7c9a5fd2a4dd2c93297ef6f39ba1da5f6debbac460daa",
+      "cloud": "1c0c7ddcf24c89a651a7c9a5fd2a4dd2c93297ef6f39ba1da5f6debbac460daa"
+    },
+    {
+      "file": "meaning.html",
+      "status": 200,
+      "match": true,
+      "local": "d8db2ea2a88b134cadcbcc67ed66212761914530d404a6d527e61a586e97e73f",
+      "cloud": "d8db2ea2a88b134cadcbcc67ed66212761914530d404a6d527e61a586e97e73f"
+    },
+    {
+      "file": "spelling.html",
+      "status": 200,
+      "match": true,
+      "local": "60403a48e637913f957ee8102b24517e1fa3c5922e69328638f4c401be5d2ec2",
+      "cloud": "60403a48e637913f957ee8102b24517e1fa3c5922e69328638f4c401be5d2ec2"
+    },
+    {
+      "file": "assets/style.css",
+      "status": 200,
+      "match": true,
+      "local": "696a0a7bb347d44815c2dc86b058712c918b403f8bf9836adfeb45f1062550b5",
+      "cloud": "696a0a7bb347d44815c2dc86b058712c918b403f8bf9836adfeb45f1062550b5"
+    },
+    {
+      "file": "assets/spelling.css",
+      "status": 200,
+      "match": true,
+      "local": "dc2ad3015f6ff005c0cca1569409fabe5acb6c49a75ec598fbb3ba7b17a08a95",
+      "cloud": "dc2ad3015f6ff005c0cca1569409fabe5acb6c49a75ec598fbb3ba7b17a08a95"
+    },
+    {
+      "file": "sw.js",
+      "status": 200,
+      "match": true,
+      "local": "2b4c5e228ad143ada420872fe89c66b2788c2d5e55695d5ea973d39313338446",
+      "cloud": "2b4c5e228ad143ada420872fe89c66b2788c2d5e55695d5ea973d39313338446"
+    }
+  ],
+  "rows": [
+    {
+      "width": 390,
+      "file": "index.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/sync-config.js?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/app.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": "static",
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 390,
+      "file": "basic.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/basic.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": "static",
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 390,
+      "file": "reading-g.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/reading-g.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": "static",
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 390,
+      "file": "meaning.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/meaning-static.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": null,
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 390,
+      "file": "spelling.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/spelling.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/spelling.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": null,
+      "sourceColumns": "110.656px 110.672px 110.656px",
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 360,
+      "file": "index.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/sync-config.js?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/app.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": "static",
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 360,
+      "file": "basic.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/basic.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": "static",
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 360,
+      "file": "reading-g.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/reading-g.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": "static",
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 360,
+      "file": "meaning.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/style.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/meaning-static.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": null,
+      "sourceColumns": null,
+      "errors": [],
+      "notFound": []
+    },
+    {
+      "width": 360,
+      "file": "spelling.html",
+      "overflow": 0,
+      "outside": [],
+      "version": [
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/spelling.css?v=20260713_d21_responsive_system_v1",
+        "https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/assets/spelling.js?v=20260713_d21_responsive_system_v1"
+      ],
+      "bottom": null,
+      "sourceColumns": "100.656px 100.672px 100.656px",
+      "errors": [],
+      "notFound": []
+    }
+  ],
+  "cacheKeys": [
+    "static_vocab_audio_20260713_d21_responsive_system_v1",
+    "static_vocab_shell_20260713_d21_responsive_system_v1"
+  ]
+}

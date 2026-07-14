@@ -1,4 +1,4 @@
-﻿// meaning-4500 selector — IELTS-weighted scoring model v2.
+// meaning-6000 selector — IELTS-weighted scoring model v2.
 //
 // FINAL_SCORE =
 //   IELTS_EXAM_WEIGHT * 0.40 +
@@ -387,9 +387,9 @@ export function computeWordScore(entry) {
 }
 
 /**
- * Select top 4500 words with evidence-aware scoring.
+ * Select top 6000 words with evidence-aware scoring.
  */
-export function selectMeaningWords(words, limit = 4500) {
+export function selectMeaningWords(words, limit = 6000) {
   // Score all
   const scored = words
     .map(entry => {
@@ -478,7 +478,7 @@ function normalizeArray(value) {
   return [];
 }
 
-export const SELECTOR_VERSION = "meaning-4500-v2";
+export const SELECTOR_VERSION = "meaning-6000-v2";
 export { DIFFICULTY_SCORE, isPersonName, isGreWord, isBasicWord, BASIC_WORDS,
          computeIeltsExamWeight, computeComprehensionImportance, computeContextFrequency,
          computeCoverageValue, computeNoisePenalty, extractMeaningZh };

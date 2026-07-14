@@ -1,4 +1,4 @@
-﻿// Meaning Mode full-audit.test.mjs — Tests for 4500-word distractor quality audit.
+// Meaning Mode full-audit.test.mjs — Tests for 6000-word distractor quality audit.
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 import { readFileSync } from "node:fs";
@@ -9,7 +9,7 @@ import { MASTER_LEXICON_EXPECTED_COUNT as EXPECTED_MASTER_WORD_COUNT } from "../
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..", ".."); // app/lib/meaning-mode/__tests__ -> root
 const WORDS_PATH = join(ROOT, ".static-export-cache", "words.json");
-const MEANING_PATH = join(ROOT, "public", "data", "meaning-4500.json");
+const MEANING_PATH = join(ROOT, "public", "data", "meaning-6000.json");
 const KNOWN_RETIRED_WORD_IDS = new Set(["word_excel_29d8cda42c88"]);
 
 let wordsData, meaningData, SEMANTIC_INDEX;
@@ -38,15 +38,15 @@ function normalizePosFamily(pos) {
 }
 
 describe("Meaning Mode — Full Audit Tests", () => {
-  it("4500 words present in meaning-4500.json", () => {
-    assert.strictEqual(meaningData.items.length, 4500);
+  it("6000 words present in meaning-6000.json", () => {
+    assert.strictEqual(meaningData.items.length, 6000);
   });
 
   it("current master word count is preserved", () => {
     assert.strictEqual(wordsData.words.length, EXPECTED_MASTER_WORD_COUNT);
   });
 
-  it("All 4500 words match total bank by wordId", () => {
+  it("All 6000 words match total bank by wordId", () => {
     const bankIds = new Set(wordsData.words.map(w => w.wordId));
     let missing = 0;
     for (const item of meaningData.items) {
@@ -55,7 +55,7 @@ describe("Meaning Mode — Full Audit Tests", () => {
     assert.strictEqual(missing, 0, `Missing ${missing} wordIds from bank`);
   });
 
-  it("All 4500 entries have _posFamily and _semanticGroups", () => {
+  it("All 6000 entries have _posFamily and _semanticGroups", () => {
     let missing = 0;
     for (const entry of SEMANTIC_INDEX) {
       if (!entry._posFamily) missing++;
@@ -121,8 +121,8 @@ describe("Meaning Mode — Full Audit Tests", () => {
     }
   });
 
-  it("meaning-4500.json not modified", () => {
-    assert.strictEqual(meaningData.items.length, 4500);
+  it("meaning-6000.json not modified", () => {
+    assert.strictEqual(meaningData.items.length, 6000);
     assert.ok(meaningData.items[0].wordId);
     assert.ok(meaningData.items[0].word);
     assert.ok(meaningData.items[0].meaningZh);
@@ -146,7 +146,7 @@ describe("Spelling System Isolation", () => {
     }
   });
 
-  it("meaning-4500 items all exist in bank", () => {
+  it("meaning-6000 items all exist in bank", () => {
     const meaningIds = new Set(meaningData.items.map(i => i.wordId));
     const bankIds = new Set(wordsData.words.map(w => w.wordId));
     for (const id of meaningIds) {
@@ -172,25 +172,23 @@ describe("Data Integrity Checks", () => {
     assert.strictEqual(missing, 0);
   });
 
-  it("Enriched words have meaningOriginal and meaningsZh", () => {
-    const targetIds = new Set(meaningData.items.map(i => i.wordId));
-    let missingOriginal = 0, missingZh = 0;
-    for (const w of wordsData.words) {
-      if (!targetIds.has(w.wordId)) continue;
-      if (!w.meaningOriginal) missingOriginal++;
-      if (!w.meaningsZh || !Array.isArray(w.meaningsZh) || w.meaningsZh.length === 0) missingZh++;
+  it("Every selected item carries complete training gloss fields", () => {
+    let missingQuiz = 0, missingDetailed = 0, missingSource = 0;
+    for (const item of meaningData.items) {
+      if (!String(item.quizMeaningZh || item.meaningZh || "").trim()) missingQuiz++;
+      if (!String(item.meaningDetailedZh || "").trim()) missingDetailed++;
+      if (!String(item.meaningSource || "").trim()) missingSource++;
     }
-    assert.strictEqual(missingOriginal, 0, `${missingOriginal} target words missing meaningOriginal`);
-    assert.strictEqual(missingZh, 0, `${missingZh} target words missing meaningsZh`);
+    assert.strictEqual(missingQuiz, 0, `${missingQuiz} selected items missing quizMeaningZh`);
+    assert.strictEqual(missingDetailed, 0, `${missingDetailed} selected items missing meaningDetailedZh`);
+    assert.strictEqual(missingSource, 0, `${missingSource} selected items missing meaningSource`);
   });
 
-  it("Old meaning preserved in meaningOriginal", () => {
-    const targetIds = new Set(meaningData.items.map(i => i.wordId));
-    for (const w of wordsData.words) {
-      if (!targetIds.has(w.wordId)) continue;
-      if (w.meaningOriginal) {
-        assert.ok(w.meaningOriginal.length > 0, `Empty meaningOriginal for ${w.wordId}`);
-      }
+  it("Master lexicon remains read-only while selected meanings are stored in meaning-6000", () => {
+    const bankIds = new Set(wordsData.words.map(w => w.wordId));
+    for (const item of meaningData.items) {
+      assert.ok(bankIds.has(item.wordId), `Selected item ${item.wordId} missing from master lexicon`);
+      assert.ok(item.quizMeaningZh || item.meaningZh, `Empty training meaning for ${item.wordId}`);
     }
   });
 });

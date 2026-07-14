@@ -42,9 +42,20 @@ async function parseAudioRequest(req) {
   };
 }
 
+function audioCacheMissResponse() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Cache-Control": "no-store",
+      "X-Audio-Cache": "miss"
+    }
+  });
+}
+
 export async function GET(req) {
   try {
     const parsed = await parseAudioRequest(req);
+    if (parsed.error?.status === 404) return audioCacheMissResponse();
     if (parsed.error) return parsed.error;
 
     const stream = createReadStream(parsed.filepath);
@@ -65,6 +76,7 @@ export async function GET(req) {
 export async function HEAD(req) {
   try {
     const parsed = await parseAudioRequest(req);
+    if (parsed.error?.status === 404) return audioCacheMissResponse();
     if (parsed.error) return parsed.error;
 
     return new Response(null, {

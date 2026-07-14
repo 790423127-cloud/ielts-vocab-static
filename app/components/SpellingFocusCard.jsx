@@ -1,6 +1,7 @@
 "use client";
 
 import SpellingFeedbackPanel from "./SpellingFeedbackPanel.jsx";
+import StableLoadingState from "./StableLoadingState.jsx";
 import layoutStyles from "./SpellingTrainingLayout.module.css";
 
 export default function SpellingFocusCard({
@@ -52,7 +53,13 @@ export default function SpellingFocusCard({
 <section className="spelling-focus-card" aria-label="拼写训练主体">
   {isSpellingLoading ? (
     <div className="spelling-empty-state spelling-empty-state--hero">
-      正在读取词库，请稍候…
+      <StableLoadingState
+        mark="S"
+        eyebrow="拼写训练"
+        title="正在准备本轮训练"
+        note="读取所选词库并恢复批次位置"
+        compact
+      />
     </div>
   ) : isBatchComplete && !current ? (
     <section className="spelling-completion-summary" aria-label="本批次学习结果">
@@ -160,8 +167,6 @@ export default function SpellingFocusCard({
           />
         </div>
       ) : null}
-      </section>
-
       {spelling.uiState !== "wrong_feedback" ? (
         <div className={`spelling-page-feedback spelling-page-feedback--compact ${spelling.uiState}${showEnginePreparing ? " is-preparing" : ""}`}>
           {showEnginePreparing ? (
@@ -203,6 +208,7 @@ export default function SpellingFocusCard({
           <span className="spelling-pronounce-btn__icon" aria-hidden="true">🔊</span>
         </button>
       </div>
+      </section>
 
     </div>
   ) : (

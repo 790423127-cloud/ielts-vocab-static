@@ -10,51 +10,25 @@ import {
   buildLocalOptimizeResult,
   cleanTtsSymbolsInWord,
   collectObscureDerivedCandidates,
-  emergencyDefaultCloudUrl,
   getLocalWrongReasons,
-  hasHeadwordRepair,
-  isCompleteAiWord,
-  isLikelyWrongAiWord,
-  isMissingAiFields,
-  isMissingClassification,
-  isProbablyFullVocab,
-  isSimpleDictionaryWord,
-  mergeWord,
-  normalizePhraseItems,
-  normalizeStringArray,
   normalizeWord,
-  parseImportText,
   repairHeadwordLocally,
   repairObviousWrongWordLocally,
   wordToEditDraft
 } from "../lib/vocab/page-word-helpers.mjs";
 import { buildLocalChangeLog } from "../lib/vocab/local-change-log.mjs";
-import {
-  buildBlankVocabTemplateCsvText,
-  buildBlankVocabTemplateJsonPayload,
-  csvToObjects,
-  mergeBasicTemplateWord,
-  normalizeTemplateWord
-} from "../lib/vocab/vocab-template-io.mjs";
-import {
-  loadWordsFromIndexedDB,
-  postExportCache,
-  saveWordsToIndexedDB
-} from "../lib/vocab/word-store.mjs";
 import { filterKey, isIdictationFlashFilter } from "../lib/vocab/word-flashcard-study-pool.mjs";
-import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "../lib/vocab/lexicon-guard-shared.mjs";
 
 
 export function createLocalOps(ctx) {
   const {
     words, setWords, index, setIndex, filter,
     lastLocalChange, setLastLocalChange,
-    setLoading, setToast, setBatchInfo, setDuplicateInfo,
+    setLoading, setToast, setDuplicateInfo,
     setEditOpen, setEditDraft, editDraft,
-    item, isExternalIdictationItem, pasteText, setPasteText,
+    isExternalIdictationItem,
     persistWordsImmediately, resetWordStudySessionState,
-    cacheMetaRef, latestStateRef, entryPositionsRef, persistWordFlashSessionNow,
-    compactBrowserStorageForCurrentWords
+    latestStateRef, entryPositionsRef, persistWordFlashSessionNow
   } = ctx;
 
   function recordLocalChange(actionName, beforeWords, afterWords) {

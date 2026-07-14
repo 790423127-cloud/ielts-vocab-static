@@ -73,9 +73,17 @@ if errorlevel 1 (
   )
 )
 
+echo Step 2b: Verify master lexicon and publish cache are aligned...
+call npm run lexicon:check
+if errorlevel 1 (
+  echo ERROR: Lexicon consistency check failed. Run npm run lexicon:sync before publishing.
+  pause
+  exit /b 1
+)
+
 echo Step 3: Export static-site.zip...
 if exist "%ZIP_FILE%" del /f /q "%ZIP_FILE%" >nul 2>nul
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Invoke-WebRequest -Uri 'http://localhost:3000/api/export-static' -UseBasicParsing -TimeoutSec 900 -OutFile '%ZIP_FILE%'; exit 0 } catch { Write-Host $_; exit 1 }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Invoke-WebRequest -Uri 'http://localhost:3000/api/export-static?audio=0' -UseBasicParsing -TimeoutSec 900 -OutFile '%ZIP_FILE%'; exit 0 } catch { Write-Host $_; exit 1 }"
 
 if errorlevel 1 (
   echo ERROR: Export failed.
@@ -111,6 +119,21 @@ echo Uploading html/js/css/data only. Remote audio files stay unchanged.
 
 call tcb hosting deploy "%EXPORT_DIR%\index.html" %DEPLOY_PATH%/index.html -e %ENV_ID%
 if errorlevel 1 goto FAIL
+
+if exist "%EXPORT_DIR%\basic.html" (
+  call tcb hosting deploy "%EXPORT_DIR%\basic.html" %DEPLOY_PATH%/basic.html -e %ENV_ID%
+  if errorlevel 1 goto FAIL
+)
+
+if exist "%EXPORT_DIR%\reading-g.html" (
+  call tcb hosting deploy "%EXPORT_DIR%\reading-g.html" %DEPLOY_PATH%/reading-g.html -e %ENV_ID%
+  if errorlevel 1 goto FAIL
+)
+
+if exist "%EXPORT_DIR%\meaning.html" (
+  call tcb hosting deploy "%EXPORT_DIR%\meaning.html" %DEPLOY_PATH%/meaning.html -e %ENV_ID%
+  if errorlevel 1 goto FAIL
+)
 
 if exist "%EXPORT_DIR%\spelling.html" (
   call tcb hosting deploy "%EXPORT_DIR%\spelling.html" %DEPLOY_PATH%/spelling.html -e %ENV_ID%

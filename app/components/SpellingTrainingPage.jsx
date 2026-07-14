@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SpellingAiToolsPanel from "./SpellingAiToolsPanel.jsx";
-import SpellingFeedbackPanel from "./SpellingFeedbackPanel.jsx";
-import VirtualList from "./VirtualList.jsx";
-import layoutStyles from "./SpellingTrainingLayout.module.css";
 import { AUTO_SUBMIT_DEBOUNCE_MS, useSpellingEngine } from "../hooks/useSpellingEngine.js";
 import { useSpellingErrorBank } from "../hooks/useSpellingErrorBank.js";
 import { useSpellingSrsReview } from "../hooks/useSpellingSrsReview.js";
 import { useSpellingTrainingControls } from "../hooks/useSpellingTrainingControls.js";
+import { useSpellingTrainingPreferences } from "../hooks/useSpellingTrainingPreferences.js";
+import {
+  isSpellingWordNavigationBlocked as isWordNavBlocked,
+  resolveSpellingWordKey,
+  useSpellingTrainingSessionNavigation
+} from "../hooks/useSpellingTrainingSessionNavigation.js";
 import { useVocabSpeech } from "../hooks/useVocabSpeech.js";
 import {
   preloadSpellingSpeechTexts,
@@ -34,7 +37,6 @@ import {
 
 import {
   errorBankEntriesToSpellingCandidates,
-  formatErrorBankSeverity,
   shouldExcludeFamiliarSpellingEntries
 } from "../lib/spelling/error-bank.mjs";
 import {
@@ -64,7 +66,6 @@ import {
   isIdictationPracticeSource,
   listIdictationBatchOptions,
   listIdictationGroupOptions,
-  normalizeIdictationPrefs,
   selectIdictationBatch
 } from "../lib/spelling/idictation-frequency.mjs";
 import { syncPersonalWrongRecordsToLocalLexicon } from "../lib/spelling/personal-wrong-lexicon-sync.mjs";
@@ -72,19 +73,16 @@ import { srsReviewEntriesToSpellingCandidates } from "../lib/spelling/srs-review
 import {
   SPELLING_CATEGORY_TYPES,
   SPELLING_DIFFICULTY_OPTIONS,
-  SPELLING_IELTS_USE_OPTIONS,
-  SPELLING_LISTENING_READING_OPTIONS,
   SPELLING_PHRASE_CATEGORY_TYPES,
   SPELLING_PRACTICE_SOURCES,
   SPELLING_SRS_INTERVALS_DAYS,
-  SPELLING_TOPIC_OPTIONS,
   countEntriesBySpellingCategories,
   filterBySpellingCategory,
   listSpellingBatchOptions,
   selectSpellingBatch,
   spellingCategoryLabel
 } from "../lib/spelling/spelling-categories.mjs";
-import { formatCandidateBreakdownSummary, formatSessionTrainingLine } from "../lib/spelling/candidate-breakdown.mjs";
+import { formatSessionTrainingLine } from "../lib/spelling/candidate-breakdown.mjs";
 import {
   resolveSpellingProgressBarPercent,
   resolveSpellingStudyPosition
@@ -108,38 +106,24 @@ import {
   triggerSpellingExportDownload
 } from "../lib/spelling/spelling-export.mjs";
 import { isSpellingAnswerCorrect } from "../lib/spelling/state-machine.mjs";
-import { getWordId, normalizeSpellingAnswer } from "../lib/spelling/word-id.mjs";
 import {
   SPELLING_SCOPE_ROUTES,
-  normalizeSpellingScope,
   resolveSpellingScope
 } from "../lib/spelling/spelling-scope.mjs";
-import {
-  DEFAULT_SPELLING_PREFS as DEFAULT_PREFS
-} from "../lib/spelling/spelling-training-prefs.mjs";
-
 import SpellingPersonalWrongDock from "./SpellingPersonalWrongDock.jsx";
 import SpellingFocusCard from "./SpellingFocusCard.jsx";
 import SpellingStatsSidebar from "./SpellingStatsSidebar.jsx";
 import {
-  formatPersonalWrongRepeatLabel,
-  formatWrongTime,
-  normalizePrefs,
-  normalizeStoredPrefs,
-  readCategoryPrefs,
   readDailyStats,
   readPersonalWrongBookRecords,
-  readRangeSettingsExpanded,
   readSpellingPosition,
-  readUxPrefs,
   resolvePersonalWrongNavigationWordId,
-  writeCategoryPrefs,
   writeDailyStats,
   writePersonalWrongBookRecords,
-  writeRangeSettingsExpanded,
-  writeSpellingPosition,
-  writeUxPrefs
+  writeSpellingPosition
 } from "../lib/spelling/spelling-training-page-helpers.mjs";
+
+const EMPTY_COUNT_MAP = new Map();
 
 export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const scopeConfig = useMemo(() => resolveSpellingScope(scopeProp), [scopeProp]);
@@ -153,22 +137,59 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const [lexicon, setLexicon] = useState(null);
   const [includeFamiliar, setIncludeFamiliar] = useState(false);
   const [loadError, setLoadError] = useState("");
-  const [rangeSettingsExpanded, setRangeSettingsExpanded] = useState(false);
-  const [turboMode, setTurboMode] = useState(false);
-  const [autoNextOnCorrect, setAutoNextOnCorrect] = useState(true);
-  const [listenOnlyMode, setListenOnlyMode] = useState(false);
-  const [showMeaning, setShowMeaning] = useState(true);
-  const [showExample, setShowExample] = useState(false);
-  const [statsSidebarOpen, setStatsSidebarOpen] = useState(false);
   const [personalWrongPanelOpen, setPersonalWrongPanelOpen] = useState(false);
   const [aiToolsPanelOpen, setAiToolsPanelOpen] = useState(false);
-  const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(true);
+
+  // Sidebar global "AI 工具" opens spelling AI dock without leaving this page.
+  useEffect(() => {
+    function onOpenAiTools(event) {
+      if (event?.detail?.page && event.detail.page !== "spelling") return;
+      setAiToolsPanelOpen(true);
+      window.setTimeout(() => {
+        document.querySelector(".spelling-ai-tools-dock")?.scrollIntoView({
+          block: "nearest",
+          behavior: "smooth"
+        });
+      }, 50);
+    }
+
+    // Support deep link: /spelling-words?openAiTools=1
+    if (typeof window !== "undefined") {
+      const q = new URLSearchParams(window.location.search);
+      if (q.get("openAiTools") === "1") {
+        setAiToolsPanelOpen(true);
+      }
+    }
+
+    window.addEventListener("ielts:open-ai-tools", onOpenAiTools);
+    return () => window.removeEventListener("ielts:open-ai-tools", onOpenAiTools);
+  }, []);
   const [sessionStats, setSessionStats] = useState(() => createSpellingSessionStats());
   const [dailyStats, setDailyStats] = useState(() => createSpellingDailyStats({ date: "" }));
   const [dailyStatsHydrated, setDailyStatsHydrated] = useState(false);
   const [errorAnalysisVisible, setErrorAnalysisVisible] = useState(false);
-  const [storedPrefs, setStoredPrefs] = useState(() => normalizeStoredPrefs({}, scope));
-  const [prefsHydrated, setPrefsHydrated] = useState(false);
+  const {
+    rangeSettingsExpanded,
+    setRangeSettingsExpanded,
+    turboMode,
+    setTurboMode,
+    autoNextOnCorrect,
+    setAutoNextOnCorrect,
+    listenOnlyMode,
+    setListenOnlyMode,
+    showMeaning,
+    setShowMeaning,
+    showExample,
+    setShowExample,
+    statsSidebarOpen,
+    setStatsSidebarOpen,
+    soundEffectsEnabled,
+    setSoundEffectsEnabled,
+    storedPrefs,
+    patchStoredPrefs,
+    patchCategoryPrefs,
+    patchIdictationPrefs
+  } = useSpellingTrainingPreferences(scope);
   const [actionNotice, setActionNotice] = useState("");
   const [personalWrongInput, setPersonalWrongInput] = useState("");
   const [personalWrongRecords, setPersonalWrongRecords] = useState(() => readPersonalWrongBookRecords());
@@ -177,8 +198,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const learningActivityRef = useRef(createLearningActivity());
   const sessionStatsRef = useRef(sessionStats);
   const spellingUndoStackRef = useRef([]);
-  const restoredPositionBatchRef = useRef("");
-  const restoringPositionRef = useRef(false);
   const personalWrongLexiconReconciledRef = useRef(false);
 
   const commitLearningActivity = useCallback(() => {
@@ -203,14 +222,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [commitLearningActivity]);
 
-  function resolveSpellingWordKey(word) {
-    return getWordId(word) || String(word?.wordId || word?.id || "").trim();
-  }
-
-  function isWordNavBlocked(spellingState) {
-    return spellingState.uiState === "inputting";
-  }
-
   useEffect(() => {
     sessionStatsRef.current = sessionStats;
   }, [sessionStats]);
@@ -231,20 +242,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   function showActionNotice(message) {
     setActionNotice(message);
   }
-
-  useEffect(() => {
-    const uxPrefs = readUxPrefs(scope);
-    setRangeSettingsExpanded(readRangeSettingsExpanded(scope));
-    setTurboMode(Boolean(uxPrefs.turboMode));
-    setAutoNextOnCorrect(uxPrefs.autoNextOnCorrect !== false);
-    setListenOnlyMode(Boolean(uxPrefs.listenOnlyMode));
-    setShowMeaning(uxPrefs.showMeaning !== false);
-    setShowExample(uxPrefs.showExample === true);
-    setStatsSidebarOpen(uxPrefs.statsSidebarOpen === true);
-    setSoundEffectsEnabled(uxPrefs.soundEffectsEnabled !== false);
-    setStoredPrefs(normalizeStoredPrefs(readCategoryPrefs(scope) || {}, scope));
-    setPrefsHydrated(true);
-  }, [scope]);
 
   useEffect(() => {
     setDailyStatsHydrated(false);
@@ -309,29 +306,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     };
   }, [isPhrase, scope]);
 
-  useEffect(() => {
-    if (!prefsHydrated) return;
-    writeCategoryPrefs(scope, storedPrefs);
-  }, [storedPrefs, scope, prefsHydrated]);
-
-  useEffect(() => {
-    if (!prefsHydrated) return;
-    writeRangeSettingsExpanded(scope, rangeSettingsExpanded);
-  }, [rangeSettingsExpanded, scope, prefsHydrated]);
-
-  useEffect(() => {
-    if (!prefsHydrated) return;
-    writeUxPrefs(scope, {
-      turboMode,
-      autoNextOnCorrect,
-      listenOnlyMode,
-      showMeaning,
-      showExample,
-      statsSidebarOpen,
-      soundEffectsEnabled
-    });
-  }, [scope, turboMode, autoNextOnCorrect, listenOnlyMode, showMeaning, showExample, statsSidebarOpen, soundEffectsEnabled, prefsHydrated]);
-
   const lexiconEntries = useMemo(
     () => (isPhrase ? lexicon?.phrases : lexicon?.headwords) || [],
     [lexicon, isPhrase]
@@ -362,6 +336,8 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   }, [idictationSourceKey]);
   const errorBank = useSpellingErrorBank(lexiconEntries, { scope });
   const srsReview = useSpellingSrsReview(lexiconEntries, { scope, refreshKey: practiceSource });
+  const refreshErrorBank = errorBank.refresh;
+  const refreshSrsReview = srsReview.refresh;
 
   const batchPrefs = useMemo(
     () => ({ ...categoryPrefs, scopeKind: scope }),
@@ -541,10 +517,10 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     [lexiconEntries, isPhrase, scope]
   );
 
-  const difficultyCounts = categoryCounts.difficulty || new Map();
-  const topicCounts = categoryCounts.topic || new Map();
-  const ieltsUseCounts = categoryCounts.ielts_use || new Map();
-  const listeningReadingCounts = categoryCounts.lr_high_frequency || new Map();
+  const difficultyCounts = categoryCounts.difficulty || EMPTY_COUNT_MAP;
+  const topicCounts = categoryCounts.topic || EMPTY_COUNT_MAP;
+  const ieltsUseCounts = categoryCounts.ielts_use || EMPTY_COUNT_MAP;
+  const listeningReadingCounts = categoryCounts.lr_high_frequency || EMPTY_COUNT_MAP;
 
   const activeBatchId = useMemo(() => {
     if (practiceSource === "personal_wrong_book") {
@@ -588,7 +564,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       ? `第${batchSelection.batchIndex + 1}/${batchSelection.batchCount}批`
       : `第${batchSelection.batchIndex + 1}批`;
     return `${batchSelection.label} · ${batchPart} · 原始${batchSelection.batchEntryCount}${unit}`;
-  }, [practiceSource, personalWrongScopedCount, personalWrongBatchSelection, personalWrongCurrentBatchLabel, personalWrongCurrentBatchWriteCount, personalWrongTotalWriteCount, errorBank.count, errorBankBatchSelection, srsReview.count, srsBatchSelection, idictationSource, idictationBatchSelection, batchSelection, unit]);
+  }, [practiceSource, personalWrongScopedCount, personalWrongBatchSelection, personalWrongCurrentBatchLabel, personalWrongCurrentBatchWriteCount, personalWrongTotalWriteCount, errorBank.count, errorBank.totalWrongAttempts, errorBank.summary?.totalWrongAttempts, errorBankBatchSelection, srsReview.count, srsBatchSelection, idictationSource, idictationBatchSelection, batchSelection, unit]);
 
   const categoryScope = useMemo(
     () => ({
@@ -607,7 +583,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       srsReviewTotal: srsReview.count,
       idictationTotal: idictationBatchSelection.uniqueWords || 0
     }),
-    [scope, practiceSource, scopeConfig.entryMode, categoryPrefs, personalWrongBatchIndex, errorBankBatchIndex, srsBatchIndex, activeBatchId, batchSelection.label, personalWrongSummary.total, errorBank.count, srsReview.count, idictationSource, idictationBatchSelection.uniqueWords]
+    [scope, practiceSource, scopeConfig.entryMode, categoryPrefs, personalWrongBatchIndex, errorBankBatchIndex, srsBatchIndex, activeBatchId, batchSelection.label, personalWrongSummary.total, errorBank.count, errorBank.totalWrongAttempts, errorBank.summary?.totalWrongAttempts, srsReview.count, idictationSource, idictationBatchSelection.uniqueWords]
   );
 
   const lexiconMeta = useMemo(
@@ -639,25 +615,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     autoNextOnCorrect,
     soundEffectsEnabled
   });
-
-  const captureNavEntry = useCallback(() => {
-    const checkpoint = spelling.captureCheckpoint();
-    const fallbackWordId = resolveSpellingWordKey(spelling.currentWord);
-    const navigatorWordId = String(checkpoint?.navigator?.currentWordId || "").trim();
-    const wordId = navigatorWordId || fallbackWordId;
-    if (!checkpoint || !wordId) return null;
-
-    return {
-      checkpoint: {
-        ...checkpoint,
-        navigator: {
-          ...(checkpoint.navigator || {}),
-          currentWordId: wordId
-        }
-      },
-      inputValue: spelling.inputValue || ""
-    };
-  }, [spelling]);
 
   const undoLastSpellingAction = useCallback(async () => {
     const entry = spellingUndoStackRef.current.pop();
@@ -700,7 +657,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       errorBank.refresh();
     }
     showActionNotice(`已撤回：${entry.label}`);
-  }, [spelling, errorBank]);
+  }, [spelling, errorBank, setShowExample, setShowMeaning]);
 
   const handleToggleMeaning = useCallback(() => {
     learningActivityRef.current = recordLearningActivity(learningActivityRef.current);
@@ -710,7 +667,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       before: showMeaning
     });
     setShowMeaning((open) => !open);
-  }, [showMeaning]);
+  }, [showMeaning, setShowMeaning]);
 
   const handleToggleExample = useCallback(() => {
     learningActivityRef.current = recordLearningActivity(learningActivityRef.current);
@@ -720,7 +677,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       before: showExample
     });
     setShowExample((open) => !open);
-  }, [showExample]);
+  }, [showExample, setShowExample]);
 
   const handleSkip = useCallback(async () => {
     if (!spelling.ready || spelling.uiState === "inputting") return null;
@@ -789,31 +746,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     }
     return result;
   }, [spelling, errorBank, commitLearningActivity]);
-
-  function patchStoredPrefs(patch) {
-    setStoredPrefs((current) => normalizeStoredPrefs({ ...current, ...patch }, scope));
-  }
-
-  function patchCategoryPrefs(patch) {
-    setStoredPrefs((current) => ({
-      ...current,
-      category: normalizePrefs({ ...current.category, ...patch }, scope)
-    }));
-  }
-
-  function patchIdictationPrefs(sourceKey, patch) {
-    if (!sourceKey) return;
-    setStoredPrefs((current) => ({
-      ...current,
-      idictation: {
-        ...(current.idictation || {}),
-        [sourceKey]: normalizeIdictationPrefs(sourceKey, {
-          ...(current.idictation?.[sourceKey] || {}),
-          ...patch
-        })
-      }
-    }));
-  }
 
   async function handleAddPersonalWrongWords() {
     const parsed = parsePersonalWrongBookInput(personalWrongInput, { scopeHint: scope, now: Date.now() });
@@ -988,68 +920,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     filteredOther: batchProgress.filteredOther,
     currentMode: candidateBreakdown?.currentMode || scopeConfig.entryMode
   });
-  const batchWordIds = useMemo(() => {
-    const engineIds = spelling.ready && typeof spelling.getSessionWordIds === "function"
-      ? spelling.getSessionWordIds()
-      : [];
-    if (Array.isArray(engineIds) && engineIds.length) {
-      return engineIds.map((id) => String(id || "").trim()).filter(Boolean);
-    }
-
-    if (practiceSource === "personal_wrong_book" && spelling.ready) {
-      return [];
-    }
-
-    const breakdownIds = candidateBreakdown?.sessionWordIds;
-    if (Array.isArray(breakdownIds) && breakdownIds.length) {
-      return breakdownIds.map((id) => String(id || "").trim()).filter(Boolean);
-    }
-
-    return spellingEntries.map((entry) => getWordId(entry)).filter(Boolean);
-  }, [practiceSource, spelling.ready, spelling.getSessionWordIds, candidateBreakdown?.sessionWordIds, spellingEntries]);
-
-  const personalWrongNavigationUnits = useMemo(() => {
-    if (practiceSource !== "personal_wrong_book") return [];
-    const units = batchProgress.personalWrongWordUnits || candidateBreakdown?.personalWrongWordUnits || [];
-    return Array.isArray(units)
-      ? units.filter((unit) => Array.isArray(unit?.writeWordIds) && unit.writeWordIds.length)
-      : [];
-  }, [practiceSource, batchProgress.personalWrongWordUnits, candidateBreakdown?.personalWrongWordUnits]);
-
-  const batchNavigationWordIds = useMemo(() => {
-    if (personalWrongNavigationUnits.length) {
-      return personalWrongNavigationUnits
-        .map((unit) => unit.writeWordIds[0])
-        .map((id) => String(id || "").trim())
-        .filter(Boolean);
-    }
-    return batchWordIds;
-  }, [personalWrongNavigationUnits, batchWordIds]);
-
-  const currentBatchIndex = useMemo(() => {
-    if (!current || !batchNavigationWordIds.length) return -1;
-
-    const key = resolveSpellingWordKey(current);
-    if (personalWrongNavigationUnits.length) {
-      return personalWrongNavigationUnits.findIndex((unit) => unit.writeWordIds.includes(key));
-    }
-
-    const byId = batchNavigationWordIds.indexOf(key);
-    if (byId >= 0) return byId;
-
-    const answer = normalizeSpellingAnswer(
-      current.expectedAnswer || current.displayText || current.word || ""
-    );
-    return spellingEntries.findIndex((entry) => {
-      const entryAnswer = normalizeSpellingAnswer(
-        entry.expectedAnswer || entry.word || entry.displayText || ""
-      );
-      return entryAnswer === answer;
-    });
-  }, [current, batchNavigationWordIds, personalWrongNavigationUnits, spellingEntries]);
-
-  const canBrowseBatchWords = batchNavigationWordIds.length > 1 && currentBatchIndex >= 0;
-
   const batchProgressCurrentNumber = Number(batchProgress.currentNumber || 0);
   const currentPosition = batchProgressCurrentNumber > 0
     ? Math.min(sessionTotal || batchProgressCurrentNumber, batchProgressCurrentNumber)
@@ -1064,92 +934,34 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const personalWrongUnitProgress = practiceSource === "personal_wrong_book"
     ? batchProgress.personalWrongUnitProgress || null
     : null;
-
-  const navigateToBatchWord = useCallback(async (targetIndex) => {
-    if (!spelling.ready) return null;
-
-    if (isWordNavBlocked(spelling)) {
-      showActionNotice("请等待拼写判定完成");
-      return null;
-    }
-
-    if (!batchNavigationWordIds.length || currentBatchIndex < 0) {
-      showActionNotice("当前词不在本批次列表中");
-      return null;
-    }
-
-    if (batchNavigationWordIds.length === 1) {
-      showActionNotice("当前批次只有一个单词");
-      return null;
-    }
-
-    const normalizedIndex = ((targetIndex % batchNavigationWordIds.length) + batchNavigationWordIds.length) % batchNavigationWordIds.length;
-    if (normalizedIndex === currentBatchIndex) {
-      showActionNotice("当前批次只有一个可切换单词");
-      return null;
-    }
-
-    const targetWordId = batchNavigationWordIds[normalizedIndex]
-      || getWordId(spellingEntries[normalizedIndex]);
-    if (!targetWordId) {
-      showActionNotice("无法定位目标单词");
-      return null;
-    }
-
-    commitLearningActivity();
-    const result = await spelling.navigateToWord(targetWordId);
-    if (!result?.currentWord) {
-      showActionNotice("切换单词失败");
-      return null;
-    }
-
-    if (activeBatchId) {
-      const currentWordId = resolveSpellingWordKey(result.currentWord) || targetWordId;
-      const navigationWordId = practiceSource === "personal_wrong_book"
-        ? resolvePersonalWrongNavigationWordId(currentWordId, personalWrongNavigationUnits)
-        : currentWordId;
-      writeSpellingPosition(scope, {
-        activeBatchId,
-        wordId: currentWordId,
-        navigationWordId,
-        currentBatchIndex: normalizedIndex,
-        practiceSource,
-        category: categoryPrefs,
-        savedAt: Date.now()
-      });
-    }
-
-    setErrorAnalysisVisible(false);
-    const label = result.currentWord.displayText || result.currentWord.expectedAnswer || "单词";
-    const resultBatchProgress = result.sessionProgress?.batchProgress || {};
-    const noticeTotal = Number(resultBatchProgress.sessionTotal || sessionTotal || batchNavigationWordIds.length) || 0;
-    const noticePosition = Math.max(
-      1,
-      Math.min(noticeTotal || 1, Number(resultBatchProgress.currentNumber || currentPosition || 1))
-    );
-    showActionNotice(`已切换到：${label}（${noticePosition}/${noticeTotal}）`);
-    return result;
-  }, [spelling, batchNavigationWordIds, spellingEntries, currentBatchIndex, commitLearningActivity, currentPosition, sessionTotal, activeBatchId, practiceSource, personalWrongNavigationUnits, scope, categoryPrefs]);
-
-  const handleGoToPreviousWord = useCallback(async () => {
-    if (currentBatchIndex < 0) {
-      showActionNotice("当前词不在本批次列表中");
-      return null;
-    }
-    return navigateToBatchWord(currentBatchIndex - 1);
-  }, [currentBatchIndex, navigateToBatchWord]);
-
-  const handleGoToNextWord = useCallback(async () => {
-    if (currentBatchIndex < 0) {
-      showActionNotice("当前词不在本批次列表中");
-      return null;
-    }
-    return navigateToBatchWord(currentBatchIndex + 1);
-  }, [currentBatchIndex, navigateToBatchWord]);
-
-  useEffect(() => {
-    restoredPositionBatchRef.current = "";
-  }, [activeBatchId]);
+  const personalWrongSessionReady = practiceSource === "personal_wrong_book" && spelling.ready;
+  // The navigation hook reports a successful jump using resultBatchProgress.currentNumber.
+  const {
+    batchNavigationWordIds,
+    personalWrongNavigationUnits,
+    currentBatchIndex,
+    canBrowseBatchWords,
+    handleGoToPreviousWord,
+    handleGoToNextWord,
+    restoredPositionBatchRef,
+    restoringPositionRef
+  } = useSpellingTrainingSessionNavigation({
+    spelling,
+    spellingEntries,
+    current,
+    practiceSource,
+    personalWrongSessionReady,
+    candidateBreakdown,
+    batchProgress,
+    activeBatchId,
+    scope,
+    categoryPrefs,
+    sessionTotal,
+    currentPosition,
+    commitLearningActivity,
+    setErrorAnalysisVisible,
+    setActionNotice
+  });
 
   useEffect(() => {
     if (!spelling.ready || !activeBatchId || !batchNavigationWordIds.length || restoredPositionBatchRef.current === activeBatchId) return;
@@ -1237,6 +1049,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     word: resolveSpellingSpeechText(current),
     example: prompt.example
   });
+  const playCurrentSpellingWord = speech.playWord;
 
   useEffect(() => {
     if (practiceSource !== "personal_wrong_book" || !spellingEntries.length) return undefined;
@@ -1251,7 +1064,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     if (!["show_question", "in_repair", "wrong_feedback"].includes(spelling.uiState)) return undefined;
 
     const timer = window.setTimeout(() => {
-      void speech.playWord();
+      void playCurrentSpellingWord();
     }, 280);
 
     return () => window.clearTimeout(timer);
@@ -1260,7 +1073,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     spelling.uiState,
     current,
     listenOnlyMode,
-    speech.playWord
+    playCurrentSpellingWord
   ]);
 
   const sessionMetrics = useMemo(
@@ -1382,7 +1195,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     learningActivityRef.current = recordLearningActivity(learningActivityRef.current);
     setShowExample(true);
     speech.playExample();
-  }, [speech]);
+  }, [speech, setShowExample]);
 
   const handleReplay = useCallback(() => {
     learningActivityRef.current = recordLearningActivity(learningActivityRef.current);
@@ -1409,25 +1222,25 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       }));
     }
     if (result?.answerMeta && !result.answerMeta.isCorrect) {
-      void errorBank.refresh();
+      void refreshErrorBank();
     }
     if (result?.answerMeta && practiceSource === "srs_review") {
-      void srsReview.refresh();
+      void refreshSrsReview();
     }
     return result;
-  }, [current, spelling, errorBank.refresh, practiceSource, srsReview.refresh]);
+  }, [current, spelling, practiceSource, refreshErrorBank, refreshSrsReview]);
 
   useEffect(() => {
     if (practiceSource === "srs_review" && spelling.uiState === "done_today") {
-      srsReview.refresh();
+      refreshSrsReview();
     }
-  }, [practiceSource, spelling.uiState, srsReview.refresh]);
+  }, [practiceSource, spelling.uiState, refreshSrsReview]);
 
   useEffect(() => {
     if (!spelling.ready) return;
-    errorBank.refresh();
-    srsReview.refresh();
-  }, [spelling.ready, errorBank.refresh, srsReview.refresh]);
+    refreshErrorBank();
+    refreshSrsReview();
+  }, [spelling.ready, refreshErrorBank, refreshSrsReview]);
 
   const handleContinueAfterCorrect = useCallback(async () => {
     if (!spelling.awaitingAdvance || spelling.uiState !== "correct_feedback") return null;
@@ -1700,7 +1513,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       </header>
 
       {loadError ? <p className="spelling-load-error spelling-load-error--inline">{loadError}</p> : null}
-      {!lexicon && !loadError ? <p className="spelling-load-error spelling-load-error--inline">正在读取词库…</p> : null}
 
       {aiToolsPanelOpen ? (
         <SpellingAiToolsPanel
@@ -1742,7 +1554,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
         />
       ) : null}
 
-      <div className="spelling-page-layout">
+      <div className={`spelling-page-layout${statsSidebarOpen ? " is-sidebar-open" : ""}`}>
         <SpellingFocusCard
           isSpellingLoading={isSpellingLoading}
           isBatchComplete={isBatchComplete}
@@ -1791,6 +1603,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
 
         <SpellingStatsSidebar
           statsSidebarOpen={statsSidebarOpen}
+          onClose={() => setStatsSidebarOpen(false)}
           dailyStats={dailyStats}
           formatActiveLearningTime={formatActiveLearningTime}
           sessionMetrics={sessionMetrics}
@@ -1841,6 +1654,8 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
             batchSelection,
             batchOptions,
             idictationSourceKey,
+            idictationSource,
+            idictationBatchSelection,
             idictationGroupOptions,
             idictationBatchOptions,
             patchIdictationPrefs,

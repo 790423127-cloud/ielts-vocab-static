@@ -1,0 +1,11 @@
+- generic [ref=f1e18]:
+  - generic [ref=f1e19]:
+    - generic [ref=f1e23]: 页面访问提示
+    - generic [ref=f1e24]: 当前域名 ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com 是由腾讯云 CloudBase 提供的测试域名，仅供开发测试使用，内容可能处于未审核状态请谨慎浏览，请勿泄露个人信息、账号密码或进行涉及财产的操作
+  - generic [ref=f1e25]:
+    - generic [ref=f1e26]:
+      - generic [ref=f1e27]: 环境ID：ielts-vocab-d1gymoilc5746f67a
+      - generic [ref=f1e28]: 页面路径：/beidanci/index.html?v=20260712_d15_workspace_v4%26cb=1783790206
+    - link "我是开发者，如何去掉当前页面？" [ref=f1e30] [cursor=pointer]:
+      - /url: https://docs.cloudbase.net/service/alias#%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%E4%B8%AD%E9%97%B4%E9%A1%B5
+  - button "确定访问 (3s)" [disabled] [ref=f1e32]

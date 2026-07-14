@@ -1,0 +1,1922 @@
+{
+  "generatedAt": "2026-07-10T15:16:16.731Z",
+  "dataSchemaVersion": 3,
+  "progressSchemaVersion": 3,
+  "datasetVersion": "reading-g-core-v3",
+  "sourceDir": "C:\\Users\\Administrator\\Desktop\\阅读核心",
+  "sourceFiles": {
+    "gt-reading-priority-1500.json": {
+      "bytes": 5737560,
+      "sha256": "af47426fc1ab11dd3872215f142dc1ff95cb0c644297189d29636352822d2f6f",
+      "rawCount": 1500,
+      "role": "layer",
+      "layerId": "priority1500"
+    },
+    "gt-reading-answer-core-250.json": {
+      "bytes": 891799,
+      "sha256": "f4164634e8a95ae3b31ed19eceb67f90209b7079282ac8f2edd0827856e8ba74",
+      "rawCount": 250,
+      "role": "layer",
+      "layerId": "answerCore250"
+    },
+    "gt-reading-logic-connectors-120.json": {
+      "bytes": 255204,
+      "sha256": "e88a19d24d291ede36f76db4bb5679583b7358551127bb5d42bc14c496ab2ca2",
+      "rawCount": 120,
+      "role": "layer",
+      "layerId": "logic120"
+    },
+    "gt-reading-phrases-400.json": {
+      "bytes": 103989,
+      "sha256": "10d663b98252133ffa02e6bd711d96dae792a5887f1e0709268479f39fbee7e3",
+      "rawCount": 400,
+      "role": "layer",
+      "layerId": "phrases400"
+    },
+    "gt-reading-tier-b-1200.json": {
+      "bytes": 4227674,
+      "sha256": "752e355a175b8100651eeae5d538ded9b36dfc86ca5add31e885d94a9695c850",
+      "rawCount": 1200,
+      "role": "layer",
+      "layerId": "tierB1200"
+    },
+    "gt-reading-online-paraphrase-core-600.json": {
+      "bytes": 1063843,
+      "sha256": "4c3439a8b51f75b685531f0f6e2856547a6d24a13e32bd194d5a73241cba6bb1",
+      "rawCount": 600,
+      "role": "layer",
+      "layerId": "paraCore600"
+    },
+    "gt-reading-tier-c-800.json": {
+      "bytes": 2591454,
+      "sha256": "297ec1d0c5659b6dc8cf1a8b4db5d96a56dfc2b3e728aadad4b8920b4c51b7e3",
+      "rawCount": 800,
+      "role": "layer",
+      "layerId": "tierC800"
+    },
+    "gt-reading-online-paraphrase-extension-500.json": {
+      "bytes": 854870,
+      "sha256": "7f264bcfffac7cb23b53531e93326aad717e54b3e694ed0fc80f3bf4676fdd6c",
+      "rawCount": 500,
+      "role": "layer",
+      "layerId": "paraExt500"
+    },
+    "gt-reading-online-paraphrase-reference-701.json": {
+      "bytes": 982004,
+      "sha256": "764c029fd63e61124e0f07be0c4aeb731df686ca7231c791b28431974bcad0dc",
+      "rawCount": 701,
+      "role": "layer",
+      "layerId": "reference701"
+    },
+    "gt-reading-main-enhanced-3592.json": {
+      "bytes": 12792442,
+      "sha256": "5c404b68e886954374a2af5fe9e0c3b3f6b157b7dfd42f7f2760aa9135c7e0cb",
+      "rawCount": 3592,
+      "role": "aux_enrich"
+    },
+    "gt-reading-familiar-words-multiple-senses-150.json": {
+      "bytes": 87620,
+      "sha256": "54eb6c75666326598da6cac308a7a6bf1e717fcbc376e25034e74c0266f79853",
+      "rawCount": 150,
+      "role": "aux_multisense"
+    },
+    "gt-reading-paraphrases-300.json": {
+      "bytes": 104127,
+      "sha256": "c99877caf29bd8930a4f9865c2e5dce5352650f5494ef41614c2cdc2c8db0993",
+      "rawCount": 300,
+      "role": "verified_paraphrases"
+    }
+  },
+  "layerStats": {
+    "priority1500": {
+      "name": "优先核心1500",
+      "rawCount": 1500,
+      "uniqueKeysInLayer": 1500,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 1,
+      "primaryNewCount": 1500,
+      "cumulativePrimary": 1500,
+      "filterCount": 1500
+    },
+    "answerCore250": {
+      "name": "答案词强化250",
+      "rawCount": 250,
+      "uniqueKeysInLayer": 250,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 2,
+      "primaryNewCount": 111,
+      "cumulativePrimary": 1611,
+      "filterCount": 250
+    },
+    "logic120": {
+      "name": "逻辑与限制表达120",
+      "rawCount": 120,
+      "uniqueKeysInLayer": 120,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 3,
+      "primaryNewCount": 114,
+      "cumulativePrimary": 1725,
+      "filterCount": 120
+    },
+    "phrases400": {
+      "name": "高频词组400",
+      "rawCount": 400,
+      "uniqueKeysInLayer": 400,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 4,
+      "primaryNewCount": 373,
+      "cumulativePrimary": 2098,
+      "filterCount": 400
+    },
+    "tierB1200": {
+      "name": "B层核心识别1200",
+      "rawCount": 1200,
+      "uniqueKeysInLayer": 1200,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 5,
+      "primaryNewCount": 1176,
+      "cumulativePrimary": 3274,
+      "filterCount": 1200
+    },
+    "paraCore600": {
+      "name": "网络同义核心600",
+      "rawCount": 600,
+      "uniqueKeysInLayer": 600,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 6,
+      "primaryNewCount": 8,
+      "cumulativePrimary": 3282,
+      "filterCount": 1006
+    },
+    "tierC800": {
+      "name": "C层扩展识别800",
+      "rawCount": 800,
+      "uniqueKeysInLayer": 800,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 7,
+      "primaryNewCount": 792,
+      "cumulativePrimary": 4074,
+      "filterCount": 800
+    },
+    "paraExt500": {
+      "name": "网络同义扩展500",
+      "rawCount": 500,
+      "uniqueKeysInLayer": 500,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 8,
+      "primaryNewCount": 39,
+      "cumulativePrimary": 4113,
+      "filterCount": 500
+    },
+    "reference701": {
+      "name": "参考表达701",
+      "rawCount": 701,
+      "uniqueKeysInLayer": 701,
+      "skippedEmpty": 0,
+      "mode": "reference",
+      "rank": 9,
+      "primaryNewCount": 630,
+      "cumulativePrimary": 4743,
+      "filterCount": 701
+    }
+  },
+  "warnings": [
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_unlike",
+      "field": "primaryMeaningZh",
+      "kept": "不像",
+      "other": "不像；与……不同",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_unlike",
+      "field": "meaning",
+      "kept": "不像",
+      "other": "不像；与……不同",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_unlike",
+      "field": "definition",
+      "kept": "不像",
+      "other": "不像；与……不同",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_initially",
+      "field": "primaryMeaningZh",
+      "kept": "最初；起初",
+      "other": "最初",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_initially",
+      "field": "meaning",
+      "kept": "最初；起初",
+      "other": "最初",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_initially",
+      "field": "definition",
+      "kept": "最初；起初",
+      "other": "最初",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_eventually",
+      "field": "primaryMeaningZh",
+      "kept": "最终；终于",
+      "other": "最终",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_eventually",
+      "field": "meaning",
+      "kept": "最终；终于",
+      "other": "最终",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_eventually",
+      "field": "definition",
+      "kept": "最终；终于",
+      "other": "最终",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_finally",
+      "field": "primaryMeaningZh",
+      "kept": "最终；终于",
+      "other": "最后；终于",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_finally",
+      "field": "meaning",
+      "kept": "最终；终于",
+      "other": "最后；终于",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_finally",
+      "field": "definition",
+      "kept": "最终；终于",
+      "other": "最后；终于",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_overall",
+      "field": "primaryMeaningZh",
+      "kept": "总的来说；整体",
+      "other": "总体上",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_overall",
+      "field": "meaning",
+      "kept": "总的来说；整体",
+      "other": "总体上",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_overall",
+      "field": "definition",
+      "kept": "总的来说；整体",
+      "other": "总体上",
+      "sourceFile": "gt-reading-logic-connectors-120.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_such_as",
+      "field": "primaryMeaningZh",
+      "kept": "例如；像",
+      "other": "例如",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_such_as",
+      "field": "meaning",
+      "kept": "例如；像",
+      "other": "例如",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_such_as",
+      "field": "definition",
+      "kept": "例如；像",
+      "other": "例如",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_as_well_as",
+      "field": "primaryMeaningZh",
+      "kept": "以及；也",
+      "other": "以及；除……之外还",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_as_well_as",
+      "field": "meaning",
+      "kept": "以及；也",
+      "other": "以及；除……之外还",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_as_well_as",
+      "field": "definition",
+      "kept": "以及；也",
+      "other": "以及；除……之外还",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_up_to",
+      "field": "primaryMeaningZh",
+      "kept": "最多；达到",
+      "other": "高达",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_up_to",
+      "field": "meaning",
+      "kept": "最多；达到",
+      "other": "高达",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_up_to",
+      "field": "definition",
+      "kept": "最多；达到",
+      "other": "高达",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_so_that",
+      "field": "primaryMeaningZh",
+      "kept": "以便；因此",
+      "other": "以便",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_so_that",
+      "field": "meaning",
+      "kept": "以便；因此",
+      "other": "以便",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_so_that",
+      "field": "definition",
+      "kept": "以便；因此",
+      "other": "以便",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_because_of",
+      "field": "primaryMeaningZh",
+      "kept": "因为；由于",
+      "other": "因为",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_because_of",
+      "field": "meaning",
+      "kept": "因为；由于",
+      "other": "因为",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_because_of",
+      "field": "definition",
+      "kept": "因为；由于",
+      "other": "因为",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_the_event_of",
+      "field": "primaryMeaningZh",
+      "kept": "如果发生",
+      "other": "如果发生；在……情况下",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_the_event_of",
+      "field": "meaning",
+      "kept": "如果发生",
+      "other": "如果发生；在……情况下",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_the_event_of",
+      "field": "definition",
+      "kept": "如果发生",
+      "other": "如果发生；在……情况下",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_particular",
+      "field": "primaryMeaningZh",
+      "kept": "尤其；特别是",
+      "other": "尤其",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_particular",
+      "field": "meaning",
+      "kept": "尤其；特别是",
+      "other": "尤其",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_particular",
+      "field": "definition",
+      "kept": "尤其；特别是",
+      "other": "尤其",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_along_with",
+      "field": "primaryMeaningZh",
+      "kept": "连同；与……一起",
+      "other": "连同",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_along_with",
+      "field": "meaning",
+      "kept": "连同；与……一起",
+      "other": "连同",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_along_with",
+      "field": "definition",
+      "kept": "连同；与……一起",
+      "other": "连同",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_as_a_result",
+      "field": "primaryMeaningZh",
+      "kept": "结果；因此",
+      "other": "因此",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_as_a_result",
+      "field": "meaning",
+      "kept": "结果；因此",
+      "other": "因此",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_as_a_result",
+      "field": "definition",
+      "kept": "结果；因此",
+      "other": "因此",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_case",
+      "field": "primaryMeaningZh",
+      "kept": "以防；如果发生",
+      "other": "以防",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_case",
+      "field": "meaning",
+      "kept": "以防；如果发生",
+      "other": "以防",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_phrase_in_case",
+      "field": "definition",
+      "kept": "以防；如果发生",
+      "other": "以防",
+      "sourceFile": "gt-reading-phrases-400.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_typically",
+      "field": "primaryMeaningZh",
+      "kept": "通常；典型地",
+      "other": "典型地",
+      "sourceFile": "gt-reading-tier-b-1200.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_typically",
+      "field": "meaning",
+      "kept": "通常；典型地",
+      "other": "典型地",
+      "sourceFile": "gt-reading-tier-b-1200.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_typically",
+      "field": "definition",
+      "kept": "通常；典型地",
+      "other": "典型地",
+      "sourceFile": "gt-reading-tier-b-1200.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_similarly",
+      "field": "primaryMeaningZh",
+      "kept": "类似地",
+      "other": "相似地",
+      "sourceFile": "gt-reading-tier-b-1200.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_similarly",
+      "field": "meaning",
+      "kept": "类似地",
+      "other": "相似地",
+      "sourceFile": "gt-reading-tier-b-1200.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_similarly",
+      "field": "definition",
+      "kept": "类似地",
+      "other": "相似地",
+      "sourceFile": "gt-reading-tier-b-1200.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_need",
+      "field": "phonetic",
+      "kept": "/ˈnid/",
+      "other": "niːd",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_need",
+      "field": "primaryPos",
+      "kept": "verb",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_need",
+      "field": "primaryMeaningZh",
+      "kept": "需要；必须",
+      "other": "v. 需要；\nn. 需要；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_need",
+      "field": "meaning",
+      "kept": "需要；必须",
+      "other": "v. 需要；\nn. 需要；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_need",
+      "field": "definition",
+      "kept": "需要；必须",
+      "other": "v. 需要；\nn. 需要；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_need",
+      "field": "example",
+      "kept": "I need to renew my passport before my trip.",
+      "other": "I need help with my homework.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_need",
+      "field": "exampleCn",
+      "kept": "我需要在旅行前续签护照。",
+      "other": "我需要帮助做作业。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_work",
+      "field": "phonetic",
+      "kept": "/ˈwɝk/",
+      "other": "wɜːk",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_work",
+      "field": "primaryPos",
+      "kept": "noun",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_work",
+      "field": "primaryMeaningZh",
+      "kept": "工作",
+      "other": "n. 工作；活计；作品；制作品；\nv. （使）工作；（使）运转；操作；经营；起作用；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_work",
+      "field": "meaning",
+      "kept": "工作",
+      "other": "n. 工作；活计；作品；制作品；\nv. （使）工作；（使）运转；操作；经营；起作用；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_work",
+      "field": "definition",
+      "kept": "工作",
+      "other": "n. 工作；活计；作品；制作品；\nv. （使）工作；（使）运转；操作；经营；起作用；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_work",
+      "field": "example",
+      "kept": "I work in a hospital.",
+      "other": "He finds his work very meaningful.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_work",
+      "field": "exampleCn",
+      "kept": "我在一家医院工作。",
+      "other": "他觉得他的工作很有意义。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_job",
+      "field": "phonetic",
+      "kept": "/ˈdʒɑb/",
+      "other": "dʒɒb",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_job",
+      "field": "primaryMeaningZh",
+      "kept": "工作；职位",
+      "other": "n. 工作",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_job",
+      "field": "meaning",
+      "kept": "工作；职位",
+      "other": "n. 工作",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_job",
+      "field": "definition",
+      "kept": "工作；职位",
+      "other": "n. 工作",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_job",
+      "field": "example",
+      "kept": "He found a new job as a software engineer.",
+      "other": "He got a new job last week.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_job",
+      "field": "exampleCn",
+      "kept": "他找到了一份软件工程师的新工作。",
+      "other": "他上周找到了一份新工作。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_information",
+      "field": "phonetic",
+      "kept": "/ˌɪnfərˈmeɪʃən/",
+      "other": "ˌɪnfəˈmeɪʃ(ə)n",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_information",
+      "field": "primaryMeaningZh",
+      "kept": "信息",
+      "other": "n. 信息；资料；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_information",
+      "field": "meaning",
+      "kept": "信息",
+      "other": "n. 信息；资料；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_information",
+      "field": "definition",
+      "kept": "信息",
+      "other": "n. 信息；资料；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_information",
+      "field": "example",
+      "kept": "Please provide your personal information on the form.",
+      "other": "The teacher gave us important information about the test.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_information",
+      "field": "exampleCn",
+      "kept": "请在表格上提供您的个人信息。",
+      "other": "老师给了我们关于考试的重要信息。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_build",
+      "field": "phonetic",
+      "kept": "/ˈbɪld/",
+      "other": "bɪld",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_build",
+      "field": "primaryPos",
+      "kept": "verb",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_build",
+      "field": "primaryMeaningZh",
+      "kept": "建造",
+      "other": "v. 建筑；建造；逐步加强；\nn. 体格；体形；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_build",
+      "field": "meaning",
+      "kept": "建造",
+      "other": "v. 建筑；建造；逐步加强；\nn. 体格；体形；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_build",
+      "field": "definition",
+      "kept": "建造",
+      "other": "v. 建筑；建造；逐步加强；\nn. 体格；体形；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_build",
+      "field": "example",
+      "kept": "They plan to build a new school in the area.",
+      "other": "They build a house near the lake.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_build",
+      "field": "exampleCn",
+      "kept": "他们计划在这个地区建一所新学校。",
+      "other": "他们在湖边建了一所房子。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_responsibility",
+      "field": "phonetic",
+      "kept": "/riˌspɑnsəˈbɪləti/",
+      "other": "rɪˌspɒnsəˈbɪləti",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_responsibility",
+      "field": "primaryMeaningZh",
+      "kept": "责任；职责；义务",
+      "other": "n. 责任；职责；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_responsibility",
+      "field": "meaning",
+      "kept": "责任；职责；义务",
+      "other": "n. 责任；职责；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_responsibility",
+      "field": "definition",
+      "kept": "责任",
+      "other": "n. 责任；职责；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_responsibility",
+      "field": "example",
+      "kept": "I have many responsibilities.",
+      "other": "He took responsibility for the mistake.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_responsibility",
+      "field": "exampleCn",
+      "kept": "我有很多责任。",
+      "other": "他承担了这个错误的责任。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_research",
+      "field": "phonetic",
+      "kept": "/riˈsɝtʃ/",
+      "other": "rɪˈsɜːtʃ",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_research",
+      "field": "primaryPos",
+      "kept": "noun",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_research",
+      "field": "primaryMeaningZh",
+      "kept": "研究",
+      "other": "n. 研究；探索；调查；\nv. 研究；调查；探讨；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_research",
+      "field": "meaning",
+      "kept": "研究",
+      "other": "n. 研究；探索；调查；\nv. 研究；调查；探讨；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_research",
+      "field": "definition",
+      "kept": "研究",
+      "other": "n. 研究；探索；调查；\nv. 研究；调查；探讨；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_research",
+      "field": "example",
+      "kept": "Research shows that exercise improves health.",
+      "other": "He did research on climate change.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_research",
+      "field": "exampleCn",
+      "kept": "研究表明锻炼能改善健康。",
+      "other": "他做了关于气候变化的研究。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_travel",
+      "field": "phonetic",
+      "kept": "/ˈtrævəl/",
+      "other": "ˈtræv(ə)l",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_travel",
+      "field": "primaryPos",
+      "kept": "noun",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_travel",
+      "field": "primaryMeaningZh",
+      "kept": "旅行；出行",
+      "other": "n. 旅游；旅行；\nv. 旅游；旅行；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_travel",
+      "field": "meaning",
+      "kept": "旅行；出行",
+      "other": "n. 旅游；旅行；\nv. 旅游；旅行；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_travel",
+      "field": "definition",
+      "kept": "旅行；出行",
+      "other": "n. 旅游；旅行；\nv. 旅游；旅行；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_travel",
+      "field": "example",
+      "kept": "I love to travel abroad.",
+      "other": "His travel to Japan was unforgettable.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_travel",
+      "field": "exampleCn",
+      "kept": "我喜欢出国旅行。",
+      "other": "他去日本的旅游令人难忘。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_impact",
+      "field": "phonetic",
+      "kept": "/ˌɪmˈpækt/",
+      "other": "ˈɪmpækt",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_impact",
+      "field": "primaryPos",
+      "kept": "noun",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_impact",
+      "field": "primaryMeaningZh",
+      "kept": "影响；冲击",
+      "other": "n. 影响力；冲击（力）；\nv. 对…产生影响；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_impact",
+      "field": "meaning",
+      "kept": "影响；冲击",
+      "other": "n. 影响力；冲击（力）；\nv. 对…产生影响；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_impact",
+      "field": "definition",
+      "kept": "影响；冲击",
+      "other": "n. 影响力；冲击（力）；\nv. 对…产生影响；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_impact",
+      "field": "example",
+      "kept": "The new law had a big impact.",
+      "other": "The new law had a big impact on education.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_impact",
+      "field": "exampleCn",
+      "kept": "新法律产生了很大影响。",
+      "other": "这项新法律对教育产生了重大影响。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_contact",
+      "field": "phonetic",
+      "kept": "/ˈkɑnˌtækt/",
+      "other": "ˈkɒntækt",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_contact",
+      "field": "primaryPos",
+      "kept": "noun",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_contact",
+      "field": "primaryMeaningZh",
+      "kept": "联系，接触",
+      "other": "n. 接触；联系；\nv. 接触；联系；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_contact",
+      "field": "meaning",
+      "kept": "联系，接触",
+      "other": "n. 接触；联系；\nv. 接触；联系；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_contact",
+      "field": "definition",
+      "kept": "联系，接触",
+      "other": "n. 接触；联系；\nv. 接触；联系；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_contact",
+      "field": "example",
+      "kept": "Please contact me by email.",
+      "other": "The two balls made contact when they collided.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_contact",
+      "field": "exampleCn",
+      "kept": "请通过电子邮件联系我。",
+      "other": "两个球在碰撞时发生了接触。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_charge",
+      "field": "phonetic",
+      "kept": "/ˈtʃɑrdʒ/",
+      "other": "tʃɑːdʒ",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_charge",
+      "field": "primaryPos",
+      "kept": "noun",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_charge",
+      "field": "primaryMeaningZh",
+      "kept": "收费；充电；指控",
+      "other": "n. 收费；负责；指控；\nv. 收费；充电；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_charge",
+      "field": "meaning",
+      "kept": "收费；充电；指控",
+      "other": "n. 收费；负责；指控；\nv. 收费；充电；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_charge",
+      "field": "definition",
+      "kept": "收费；充电；指控",
+      "other": "n. 收费；负责；指控；\nv. 收费；充电；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_charge",
+      "field": "example",
+      "kept": "They charge $10 for admission.",
+      "other": "The hotel charge is $50 per night.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_charge",
+      "field": "exampleCn",
+      "kept": "他们收10美元入场费。",
+      "other": "酒店的收费是每晚50美元。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_permit",
+      "field": "phonetic",
+      "kept": "/pərˈmɪt/",
+      "other": "pəˈmɪt",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_permit",
+      "field": "primaryPos",
+      "kept": "verb",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_permit",
+      "field": "primaryMeaningZh",
+      "kept": "允许；许可证",
+      "other": "n. 许可证；\nv. 允许；准许；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_permit",
+      "field": "meaning",
+      "kept": "允许；许可证",
+      "other": "n. 许可证；\nv. 允许；准许；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_permit",
+      "field": "definition",
+      "kept": "允许；许可证",
+      "other": "n. 许可证；\nv. 允许；准许；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_permit",
+      "field": "example",
+      "kept": "Smoking is not permitted in the building.",
+      "other": "He showed his fishing permit to the officer.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_permit",
+      "field": "exampleCn",
+      "kept": "楼内禁止吸烟。",
+      "other": "他向官员出示了他的钓鱼许可证。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_issue",
+      "field": "phonetic",
+      "kept": "/ˈɪʃu/",
+      "other": "ˈɪʃuː",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_issue",
+      "field": "primaryPos",
+      "kept": "noun",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_issue",
+      "field": "primaryMeaningZh",
+      "kept": "问题；议题",
+      "other": "n. 问题；重要议题；发行（物）；\nv. 发行；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_issue",
+      "field": "meaning",
+      "kept": "问题；议题",
+      "other": "n. 问题；重要议题；发行（物）；\nv. 发行；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_issue",
+      "field": "definition",
+      "kept": "问题；议题",
+      "other": "n. 问题；重要议题；发行（物）；\nv. 发行；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_issue",
+      "field": "example",
+      "kept": "The main issue is the lack of affordable housing.",
+      "other": "The main issue is lack of money.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_issue",
+      "field": "exampleCn",
+      "kept": "主要问题是缺乏经济适用房。",
+      "other": "主要问题是缺乏资金。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_colleague",
+      "field": "phonetic",
+      "kept": "/ˈkɑliɡ/",
+      "other": "ˈkɒliːɡ",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_colleague",
+      "field": "primaryMeaningZh",
+      "kept": "同事",
+      "other": "n. 同事",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_colleague",
+      "field": "meaning",
+      "kept": "同事",
+      "other": "n. 同事",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_colleague",
+      "field": "definition",
+      "kept": "同事",
+      "other": "n. 同事",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_colleague",
+      "field": "example",
+      "kept": "My colleague helped me with the project.",
+      "other": "My colleague helped me with the report.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_colleague",
+      "field": "exampleCn",
+      "kept": "我的同事帮我做了项目。",
+      "other": "我的同事帮我完成了报告。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_manager",
+      "field": "phonetic",
+      "kept": "/ˈmænədʒər/",
+      "other": "ˈmænɪdʒə(r)",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_manager",
+      "field": "primaryMeaningZh",
+      "kept": "经理，管理人",
+      "other": "n. 经理；管理者；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_manager",
+      "field": "meaning",
+      "kept": "经理，管理人",
+      "other": "n. 经理；管理者；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_manager",
+      "field": "definition",
+      "kept": "经理，管理人",
+      "other": "n. 经理；管理者；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_manager",
+      "field": "example",
+      "kept": "My manager gave me positive feedback.",
+      "other": "The manager approved the new project.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_manager",
+      "field": "exampleCn",
+      "kept": "我的经理给了我很积极的反馈。",
+      "other": "经理批准了新项目。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_make",
+      "field": "phonetic",
+      "kept": "/meɪk/",
+      "other": "meɪk",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_make",
+      "field": "primaryMeaningZh",
+      "kept": "使得；做；制作",
+      "other": "v. 使得；做；制作；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_make",
+      "field": "meaning",
+      "kept": "使得；做；制作",
+      "other": "v. 使得；做；制作；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_make",
+      "field": "definition",
+      "kept": "使得；做；制作",
+      "other": "v. 使得；做；制作；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_different",
+      "field": "phonetic",
+      "kept": "/ˈdɪfərənt/",
+      "other": "ˈdɪfrənt",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_different",
+      "field": "primaryMeaningZh",
+      "kept": "不同的",
+      "other": "adj. 不同的",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_different",
+      "field": "meaning",
+      "kept": "不同的",
+      "other": "adj. 不同的",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_different",
+      "field": "definition",
+      "kept": "不同的",
+      "other": "adj. 不同的",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_different",
+      "field": "example",
+      "kept": "They come from different cultural backgrounds.",
+      "other": "The two apples are different.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_different",
+      "field": "exampleCn",
+      "kept": "他们来自不同的文化背景。",
+      "other": "这两个苹果不一样。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_start",
+      "field": "phonetic",
+      "kept": "/ˈstɑrt/",
+      "other": "stɑːt",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_start",
+      "field": "primaryPos",
+      "kept": "verb",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_start",
+      "field": "primaryMeaningZh",
+      "kept": "开始；启动",
+      "other": "v. 开始；\nn. 开始；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_start",
+      "field": "meaning",
+      "kept": "开始；启动",
+      "other": "v. 开始；\nn. 开始；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_start",
+      "field": "definition",
+      "kept": "开始；启动",
+      "other": "v. 开始；\nn. 开始；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_start",
+      "field": "example",
+      "kept": "Let's start the project.",
+      "other": "He starts his day with coffee.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_start",
+      "field": "exampleCn",
+      "kept": "让我们开始项目。",
+      "other": "他以喝咖啡开始一天。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_use",
+      "field": "phonetic",
+      "kept": "/ˈjus/",
+      "other": "juːz",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_use",
+      "field": "primaryPos",
+      "kept": "verb",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_use",
+      "field": "primaryMeaningZh",
+      "kept": "使用；用途",
+      "other": "v. 使用；利用；\nn. 使用；用途；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_use",
+      "field": "meaning",
+      "kept": "使用；用途",
+      "other": "v. 使用；利用；\nn. 使用；用途；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_use",
+      "field": "definition",
+      "kept": "使用；用途",
+      "other": "v. 使用；利用；\nn. 使用；用途；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_use",
+      "field": "example",
+      "kept": "You can use my laptop if you need.",
+      "other": "I use a pen to write.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_use",
+      "field": "exampleCn",
+      "kept": "如果需要，你可以用我的笔记本电脑。",
+      "other": "我用笔写字。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_help",
+      "field": "phonetic",
+      "kept": "/ˈhɛlp/",
+      "other": "help",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_help",
+      "field": "primaryPos",
+      "kept": "verb",
+      "other": "verb/noun",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_help",
+      "field": "primaryMeaningZh",
+      "kept": "帮助",
+      "other": "v. 帮助；\nn. 帮助；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_help",
+      "field": "meaning",
+      "kept": "帮助",
+      "other": "v. 帮助；\nn. 帮助；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_help",
+      "field": "definition",
+      "kept": "帮助",
+      "other": "v. 帮助；\nn. 帮助；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_help",
+      "field": "example",
+      "kept": "Can you help me carry these bags?",
+      "other": "He helps his sister with her homework.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_help",
+      "field": "exampleCn",
+      "kept": "你能帮我拿这些包吗？",
+      "other": "他帮助妹妹做作业。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_company",
+      "field": "phonetic",
+      "kept": "/ˈkʌmpəˌni/",
+      "other": "ˈkʌmpəni",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_company",
+      "field": "primaryMeaningZh",
+      "kept": "公司；陪伴",
+      "other": "n. 公司；陪伴；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_company",
+      "field": "meaning",
+      "kept": "公司；陪伴",
+      "other": "n. 公司；陪伴；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_company",
+      "field": "definition",
+      "kept": "公司；陪伴",
+      "other": "n. 公司；陪伴；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_company",
+      "field": "example",
+      "kept": "She works for a big company.",
+      "other": "He works for a small company.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_company",
+      "field": "exampleCn",
+      "kept": "她在一家大公司工作。",
+      "other": "他在一家小公司工作。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_staff",
+      "field": "phonetic",
+      "kept": "/ˈstæf/",
+      "other": "stɑːf",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_staff",
+      "field": "primaryMeaningZh",
+      "kept": "员工",
+      "other": "n. 职员；全体职工；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_staff",
+      "field": "meaning",
+      "kept": "员工",
+      "other": "n. 职员；全体职工；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_staff",
+      "field": "definition",
+      "kept": "员工",
+      "other": "n. 职员；全体职工；",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_staff",
+      "field": "exampleCn",
+      "kept": "酒店的员工非常友好。",
+      "other": "酒店的职员非常友好。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_important",
+      "field": "phonetic",
+      "kept": "/ˌɪmˈpɔrtənt/",
+      "other": "ɪmˈpɔːt(ə)nt",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_important",
+      "field": "primaryMeaningZh",
+      "kept": "重要的",
+      "other": "adj. 重要的",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_important",
+      "field": "meaning",
+      "kept": "重要的",
+      "other": "adj. 重要的",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_important",
+      "field": "definition",
+      "kept": "重要的",
+      "other": "adj. 重要的",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_important",
+      "field": "example",
+      "kept": "Education is important for everyone.",
+      "other": "It is important to eat healthy food.",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_important",
+      "field": "exampleCn",
+      "kept": "教育对每个人都很重要。",
+      "other": "吃健康的食物很重要。",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    },
+    {
+      "type": "field_kept_higher_priority",
+      "id": "rg_word_available",
+      "field": "phonetic",
+      "kept": "/əˈveɪləbəl/",
+      "other": "əˈveɪləb(ə)l",
+      "sourceFile": "gt-reading-online-paraphrase-core-600.json"
+    }
+  ],
+  "errors": [],
+  "mainEnhancedEnriched": 2,
+  "multiSenseTagged": 150,
+  "summary": {
+    "itemCount": 4978,
+    "wordCount": 4310,
+    "phraseCount": 668,
+    "activeCount": 4348,
+    "referenceOnlyCount": 630,
+    "multiSenseCount": 1161,
+    "paraphraseHighCount": 300,
+    "networkCandidateExpressions": 2187,
+    "emptyWord": 0,
+    "emptyMeaning": 0,
+    "conflictSamples": 7114,
+    "mergeMapSize": 4978
+  },
+  "updatedAt": "2026-07-12T06:21:55.238Z",
+  "completionV3": {
+    "safeParaphraseQuizGroupCount": 300,
+    "skippedParaphraseQuizGroupCount": 0,
+    "skippedGroupReasons": {},
+    "meaningStatusCounts": {
+      "note": "runtime localStorage"
+    },
+    "phraseStatusCounts": {
+      "note": "runtime localStorage"
+    },
+    "paraphraseStatusCounts": {
+      "note": "runtime localStorage"
+    },
+    "phraseStage1Count": 200,
+    "phraseStage2Count": 200,
+    "phrases400Count": 400,
+    "stageUniqueCounts": {
+      "stage1": 1900,
+      "stage2": 1400,
+      "stage3": 2201,
+      "stage4": 701
+    },
+    "missingWordPhonetics": 65,
+    "missingPhrasePhonetics": 585,
+    "migrationMatchedCount": null,
+    "migrationAmbiguousCount": null,
+    "cloudExportFiles": [
+      "data/reading-g-vocab.json",
+      "data/reading-g-paraphrases.json",
+      "data/reading-g-import-report.json",
+      "reading-g.html",
+      "assets/reading-g.js"
+    ],
+    "itemCount": 4978,
+    "activeCount": 4348,
+    "referenceCount": 630
+  },
+  "safeParaphraseQuizGroupCount": 233,
+  "skippedParaphraseQuizGroupCount": 67,
+  "skippedGroupReasons": {},
+  "phraseStage1Count": 200,
+  "phraseStage2Count": 200,
+  "missingWordPhonetics": 65,
+  "missingPhrasePhonetics": 585,
+  "cloudExportFiles": [
+    "data/reading-g-vocab.json",
+    "data/reading-g-paraphrases.json",
+    "data/reading-g-import-report.json",
+    "reading-g.html",
+    "assets/reading-g.js"
+  ],
+  "finalAudit": {
+    "at": "2026-07-12T06:29:56.251Z",
+    "stageExact": {
+      "stage1": 1900,
+      "stage2": 1400,
+      "stage3": 2201,
+      "stage4": 701,
+      "stage4PureReference701": 630,
+      "phraseStage1": 200,
+      "phraseStage2": 200,
+      "phrases400": 400,
+      "phraseStageNoOverlap": true,
+      "highParaphraseGroupsSeparate": 300
+    },
+    "highCanQuiz": 278,
+    "exhaustive": {
+      "groupsQuizReady": 278,
+      "groupsSkipped": 0,
+      "totalQuestionVariants": 556,
+      "invalidQuestionCount": 0
+    },
+    "missingWordPhonetics": 65,
+    "stress": {
+      "built": 1000,
+      "positionPct": [
+        25.2,
+        25.6,
+        24.2,
+        25
+      ],
+      "failureRate": 0
+    }
+  },
+  "stageUniqueCounts": {
+    "stage1": 1900,
+    "stage2": 1400,
+    "stage3": 2201,
+    "stage4": 701
+  },
+  "finalSelfCheck": {
+    "at": "2026-07-12T06:32:43.266Z",
+    "highGroups": 300,
+    "canAutoQuizWithCommonMeaning": 233,
+    "disabledAutoQuiz": 67,
+    "stage1": 1900,
+    "stage2": 1400,
+    "stage3": 2201,
+    "stage4": 701,
+    "phraseStage1": 200,
+    "phraseStage2": 200,
+    "exhaustiveVariants": 466,
+    "invalid": 0,
+    "stressBuilt": 1000,
+    "positionPct": [
+      24.6,
+      24.5,
+      25,
+      25.9
+    ]
+  }
+}

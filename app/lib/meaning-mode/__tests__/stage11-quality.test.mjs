@@ -1,4 +1,4 @@
-﻿import { describe, it } from "node:test";
+import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -11,7 +11,7 @@ import { MEANING_POS_INDEX } from "../meaning-pos-index.generated.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..", "..");
-const DATA_PATH = join(ROOT, "public", "data", "meaning-4500.json");
+const DATA_PATH = join(ROOT, "public", "data", "meaning-6000.json");
 const PAGE_PATH = join(ROOT, "app", "meaning", "page.jsx");
 
 const wordBank = JSON.parse(readFileSync(DATA_PATH, "utf-8")).items.map(item => ({

@@ -55,6 +55,8 @@ export default function SpellingRangeBar({
   batchSelection,
   batchOptions,
   idictationSourceKey,
+  idictationSource,
+  idictationBatchSelection,
   idictationGroupOptions,
   idictationBatchOptions,
   patchIdictationPrefs,

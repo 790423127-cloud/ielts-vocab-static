@@ -204,6 +204,13 @@ export function migrateFromV1() {
   const existing = loadAdaptiveState();
   if (existing) return existing;
 
+  // User explicitly cleared progress — do not resurrect from v1 leftovers.
+  try {
+    if (window.localStorage.getItem("ielts_meaning_4500_cleared_at")) {
+      return { version: VERSION, migratedFrom: null, migratedAt: null, words: {} };
+    }
+  } catch { /* ignore */ }
+
   // Try to read v1
   let v1Data = null;
   try {

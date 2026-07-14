@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f6f5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="IELTS Vocab" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>IELTS Vocab 静态学习版</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=20260714_d25_responsive_audio_v1" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260714_d25_responsive_audio_v1" />
+</head>
+<body>
+  <header class="static-brand-bar">
+    <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
+    <div class="static-session-context"><strong>主词库刷词</strong><span>专注学习</span></div>
+    <nav class="static-brand-nav" aria-label="主要学习模式">
+      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./reading-g.html">G类阅读提升</a>
+    </nav>
+  </header>
+  <aside class="static-shell-sidebar" aria-label="学习导航">
+    <nav><a class="active" href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav>
+    <div class="static-shell-divider"></div>
+    <span class="static-shell-label">专项学习</span>
+    <nav><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
+    <nav class="static-shell-bottom"><a href="./index.html">设置</a></nav>
+  </aside>
+  <main class="app">
+    <header class="top">
+      <button id="prevBtn" class="top-btn">上一个</button>
+      <button id="topToolsToggle" class="top-tools-toggle" type="button" aria-expanded="true" aria-controls="topActions">工具与词库</button>
+      <div id="topActions" class="top-actions">
+        <button id="shuffleBtn" class="top-btn">随机</button>
+        <button id="entryBtn" class="top-btn">入口</button>
+        <button id="editWordBtn" class="top-btn">修改</button>
+        <button id="deleteWordBtn" class="top-btn danger-top">删除</button>
+        <button id="syncBtn" class="top-btn sync-top">云同步</button>
+        <a href="./basic.html" class="top-btn">零基础单词</a>
+        <a href="./reading-g.html" class="top-btn">G类阅读提升</a>
+        <a href="./meaning.html" class="top-btn">看词选意思·6000</a>
+        <a href="./spelling.html" class="top-btn">拼写训练</a>
+        <select id="filterSelect" class="top-select" title="词库"></select>
+      </div>
+    </header>
+
+    <section id="swipeArea" class="hero">
+      <button id="favoriteBtn" class="star" title="收藏">☆</button>
+      <div id="unfamiliarAlert" class="unfamiliar-alert hidden">你特意标记了不熟，优先复习这个词</div>
+      <button id="wordSoundBtn" class="sound-main" title="播放单词">🔊</button>
+      <div id="word" class="word">Loading</div>
+      <div id="basic" class="basic-line">正在加载词库...</div>
+      <div id="loadInfo" class="load-info">第一次打开会稍慢，之后会自动缓存。</div>
+      <div class="swipe-hint">← 右滑上一个 · 左滑下一个 →　Tab 发音单词 · 空格发音英文例句 · 按住 ←/→ 连续切词</div>
+
+      <div id="formsBox" class="forms-box hidden">
+        <div class="box-title">听力形式 / 重要变形</div>
+        <div id="formsList" class="cards"></div>
+      </div>
+
+      <div id="familyBox" class="forms-box hidden">
+        <div class="box-title">词族 / 派生词</div>
+        <div id="familyList" class="cards"></div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-head">
+          <button id="exampleSoundBtn" class="mini-sound example-sound" title="播放例句">🔊</button>
+          <div id="example" class="example-en">加载中...</div>
+        </div>
+        <div id="exampleCn" class="example-cn"></div>
+      </div>
+    </section>
+
+    <section class="blocks">
+      <div class="block">
+        <div class="block-title">常见搭配</div>
+        <div id="collocations" class="list"></div>
+      </div>
+      <div class="block">
+        <div class="block-title">短语 / 介词搭配</div>
+        <div id="phraseCollocations" class="list"></div>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      <div class="actions">
+        <button id="knownBtn" class="status known">熟悉 <span>0</span></button>
+        <button id="unknownBtn" class="status unknown">不熟 <span>0</span></button>
+      </div>
+      <div class="progress-row">
+        <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+        <div id="count" class="count">0 / 0</div>
+      </div>
+    </footer>
+
+
+
+
+    <div id="editPanel" class="edit-panel hidden">
+      <div class="edit-card">
+        <div class="sync-head">
+          <div>
+            <div class="sync-title">修改当前单词</div>
+            <div class="sync-status">保存后当前设备立即生效；电脑端重新导出静态站会带上正式修改。</div>
+          </div>
+          <button id="editCloseBtn" class="sync-close">×</button>
+        </div>
+
+        <div class="edit-grid">
+          <label>英文<input id="editWord" /></label>
+          <label>音标<input id="editPhonetic" /></label>
+          <label>词性<input id="editPos" /></label>
+          <label>难度<input id="editDifficulty" /></label>
+          <label class="wide-field">中文释义<textarea id="editMeaning"></textarea></label>
+          <label class="wide-field">例句<textarea id="editExample"></textarea></label>
+          <label class="wide-field">例句中文<textarea id="editExampleCn"></textarea></label>
+          <label class="wide-field">常见搭配（一行一个，格式：public transport = 公共交通）<textarea id="editCollocations"></textarea></label>
+          <label class="wide-field">短语 / 介词搭配（一行一个，格式：in public = 公开地）<textarea id="editPhraseCollocations"></textarea></label>
+          <label class="wide-field">听力形式 / 重要变形（一行一个，格式：experienced | 过去式 / 过去分词 | 规则过去式）<textarea id="editForms"></textarea></label>
+          <label class="wide-field">词族 / 派生词（一行一个，格式：experience | noun 名词 | 经验）<textarea id="editWordFamily"></textarea></label>
+          <label>IELTS 用途（逗号分隔）<input id="editIeltsUse" /></label>
+          <label>主题（逗号分隔）<input id="editTopics" /></label>
+        </div>
+
+        <div class="sync-actions">
+          <button id="editCancelBtn" class="sync-light">取消</button>
+          <button id="editSaveBtn" class="sync-primary">保存修改</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="entryPanel" class="entry-panel hidden">
+      <div class="entry-card">
+        <div class="sync-head">
+          <div>
+            <div class="sync-title">学习入口</div>
+            <div id="entryStatus" class="sync-status">每个入口单独记当前位置</div>
+          </div>
+          <button id="entryCloseBtn" class="sync-close">×</button>
+        </div>
+        <div class="entry-help">总词库不拆开；入口只是筛选队列。熟悉词默认隐藏，“全部单词”除外。</div>
+        <div id="entryList" class="entry-list"></div>
+      </div>
+    </div>
+
+    <div id="syncPanel" class="sync-panel hidden">
+      <div class="sync-card">
+        <div class="sync-head">
+          <div>
+            <div class="sync-title">云同步</div>
+            <div id="syncStatus" class="sync-status">未连接</div>
+          </div>
+          <button id="syncCloseBtn" class="sync-close">×</button>
+        </div>
+
+        <div class="sync-section">
+          <div class="sync-label">同步码</div>
+          <input id="syncCodeInput" class="sync-input" type="text" autocomplete="off" placeholder="例如 wenyao-vocab-2026" />
+          <div class="sync-help">电脑和手机输入同一个同步码，就同步同一份学习进度。同步码不要太简单。</div>
+        </div>
+
+        <div class="sync-section">
+          <div class="sync-grid">
+            <button id="syncConnectBtn" class="sync-action">连接云端</button>
+            <button id="syncPullBtn" class="sync-action secondary">从云端恢复</button>
+          </div>
+          <div class="sync-grid">
+            <button id="syncPushBtn" class="sync-action secondary">上传本机进度</button>
+            <button id="syncDisconnectBtn" class="sync-action danger">断开同步</button>
+          </div>
+          <div class="sync-help">第一次用：先在旧设备点“上传本机进度”，新设备点“从云端恢复”。之后会自动同步。</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </main>
+  <script src="./sync-config.js?v=20260714_d25_responsive_audio_v1"></script>
+  <script src="./assets/app.js?v=20260714_d25_responsive_audio_v1"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+- generic [active] [ref=f9e1]:
+  - banner [ref=f9e2]:
+    - link "IELTS VOCAB" [ref=f9e3] [cursor=pointer]:
+      - /url: ./index.html
+    - generic [ref=f9e5]:
+      - strong [ref=f9e6]: 看词选意思
+      - generic [ref=f9e7]: 核心 6000
+    - navigation "主要学习模式" [ref=f9e8]:
+      - link "选义" [ref=f9e9] [cursor=pointer]:
+        - /url: ./meaning.html
+      - link "拼写" [ref=f9e10] [cursor=pointer]:
+        - /url: ./spelling.html
+  - main [ref=f9e11]:
+    - generic [ref=f9e12]:
+      - generic [ref=f9e13]:
+        - link "← 主词库" [ref=f9e14] [cursor=pointer]:
+          - /url: ./index.html
+        - link "零基础单词" [ref=f9e15] [cursor=pointer]:
+          - /url: ./basic.html
+        - link "拼写训练" [ref=f9e16] [cursor=pointer]:
+          - /url: ./spelling.html
+      - generic [ref=f9e17]: 核心6000 · 已做 0 · 正确 0（0%）
+    - generic [ref=f9e18]:
+      - generic [ref=f9e19]: 正在加载核心6000词库…
+      - generic [ref=f9e22]:
+        - button "🔊 发音" [ref=f9e23] [cursor=pointer]
+        - generic "点击发音" [ref=f9e24] [cursor=pointer]: —
+      - generic [ref=f9e25]:
+        - button "开始训练" [ref=f9e26] [cursor=pointer]
+        - button "清空进度" [ref=f9e27] [cursor=pointer]
+      - generic [ref=f9e28]: 键盘：1–4 选答案 · Tab 发音 · 空格/回车 下一题 · 答对自动跳转

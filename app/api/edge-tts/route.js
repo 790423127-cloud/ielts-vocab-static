@@ -12,13 +12,15 @@ import {
   contentTypeFromExtension,
   ensureEdgeAudio,
   ensureReadableSpeechCacheEntry,
-  ensureRealVoiceAudio,
   normalizeAudioKey,
   readJson,
   safeSpeechText,
-  shouldRetryRealAudio,
   writeJson
 } from "../../lib/vocab-audio-source.mjs";
+
+/** Single Edge TTS policy for words / phrases / example sentences. */
+const EDGE_VOICE = "en-US-AriaNeural";
+const EDGE_RATE = "-10%";
 
 function streamAudio(filepath, extraHeaders = {}, contentType = "audio/mpeg") {
   const stream = createReadStream(filepath);
@@ -41,12 +43,14 @@ function resolveIndexedContentType(indexed = {}) {
 function streamIndexed(indexed = {}, source = "") {
   const filepath = path.join(cacheDir(), indexed.filename || "");
   if (!indexed?.filename || !existsSync(filepath)) return null;
+  // Never stream real-person entries from this route.
+  if (indexed.realAudio) return null;
 
   const cacheToken = indexed.audioEnhanceVersion || String(indexed.updatedAt || "") || REAL_AUDIO_CACHE_VERSION;
   return streamAudio(filepath, {
-    "X-Audio-Source": source || indexed.source || "cache",
-    "X-Audio-Provider": indexed.provider || "",
-    "X-Audio-Real": indexed.realAudio ? "1" : "0",
+    "X-Audio-Source": source || indexed.source || "edge-cache",
+    "X-Audio-Provider": indexed.provider || "edge-tts",
+    "X-Audio-Real": "0",
     "X-Audio-Enhanced": indexed.audioEnhanceVersion === REAL_AUDIO_ENHANCE_VERSION ? "1" : "0",
     "X-Audio-Enhance-Version": indexed.audioEnhanceVersion || "",
     "X-Audio-Cache-Token": cacheToken,
@@ -73,55 +77,25 @@ export async function POST(req) {
     const index = readJson(indexFile, {});
     let indexed = index[key];
 
-    if (indexed?.hasAudio) {
+    // Only refresh / serve existing *edge* cache.
+    if (indexed?.hasAudio && !indexed?.realAudio) {
       const refreshed = await ensureReadableSpeechCacheEntry(text, index, { kind });
       if (refreshed.changed) {
         writeJson(indexFile, index);
       }
-      if (refreshed.entry) {
+      if (refreshed.entry && !refreshed.entry.realAudio) {
         indexed = refreshed.entry;
       }
-    }
 
-    if (indexed?.realAudio && indexed?.hasAudio) {
-      const cachedReal = streamIndexed(indexed, indexed.source || "real-cache");
-      if (cachedReal) return cachedReal;
-    }
-
-    if (body.preferReal !== false && shouldRetryRealAudio(indexed, kind)) {
-      try {
-        const real = await ensureRealVoiceAudio(text, index, { kind });
-        writeJson(indexFile, index);
-        if (real.ok) {
-          const fresh = index[key];
-          const realResponse = streamIndexed(fresh, real.source);
-          if (realResponse) return realResponse;
-        }
-      } catch {
-        writeJson(indexFile, index);
-      }
-    }
-
-    const latest = index[key];
-    if (latest?.realAudio && latest?.hasAudio) {
-      const cachedReal = streamIndexed(latest, latest.source || "real-cache");
-      if (cachedReal) return cachedReal;
-    }
-
-    if (
-      latest?.hasAudio &&
-      latest?.filename &&
-      !latest.realAudio &&
-      latest.realAudioVersion === REAL_AUDIO_CACHE_VERSION
-    ) {
-      const cachedEdge = streamIndexed(latest, latest.source || "edge-cache");
+      const cachedEdge = streamIndexed(indexed, indexed.source || "edge-cache");
       if (cachedEdge) return cachedEdge;
     }
 
+    // Always generate Edge TTS (ignore preferReal / real cache).
     const edge = await ensureEdgeAudio(text, index, {
       kind,
-      voice: body.voice || "en-US-AriaNeural",
-      rate: body.rate || (kind === "sentence" ? "-8%" : "-12%")
+      voice: body.voice || EDGE_VOICE,
+      rate: body.rate || EDGE_RATE
     });
     writeJson(indexFile, index);
 
@@ -140,7 +114,9 @@ export async function POST(req) {
         error: "Audio generation failed",
         detail: error instanceof Error ? error.message : String(error)
       },
-      { status: 500 }
+      {
+        status: 500
+      }
     );
   }
 }

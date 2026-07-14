@@ -25,6 +25,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Dependency audit
+        run: npm run audit:dependencies
+
+      - name: ESLint errors
+        run: npm run lint:errors
+
+      - name: ESLint warning budget
+        run: npm run lint:budget
+
       - name: Quality gates
         run: npm run quality:all
 

@@ -7,6 +7,10 @@
 export default function VocabAdminToolsPanel({
   toolsMenuRef,
   aiToolsRef,
+  toolsOpen = false,
+  aiToolsOpen = false,
+  onToolsOpenChange,
+  onAiToolsOpenChange,
   loading = false,
   pasteText = "",
   onPasteTextChange,
@@ -21,7 +25,14 @@ export default function VocabAdminToolsPanel({
   const a = actions;
 
   return (
-              <details className="menu" ref={toolsMenuRef}>
+              <details
+                className="menu"
+                ref={toolsMenuRef}
+                open={toolsOpen}
+                onToggle={(event) => {
+                  onToolsOpenChange?.(event.currentTarget.open);
+                }}
+              >
                 <summary className="top-pill">工具</summary>
                 <div className="menu-panel">
                   <h2 className="panel-title">工具</h2>
@@ -172,19 +183,17 @@ export default function VocabAdminToolsPanel({
                   <details className="ai-tools-box">
                     <summary>音频工具</summary>
                     <p className="ai-warning">
-                      不调用 DeepSeek，不扣 AI 费用。播放时真人发音优先；兜底发音只是临时缓存，可随时删除。
+                      当前全站只使用 <strong>Edge 兜底发音</strong>（单词/词组/例句同一规则）。真人发音已停用，避免规则混乱。
                     </p>
                     <div className="ai-tool-explain">
-                      <p><strong>继续批量补全真人发音：</strong>只拉 Lingua Libre WAV 真人源，dictionary MP3 已剔除；支持断点续跑，已有真人缓存的单词会自动跳过。</p>
-                      <p><strong>继续补全全部音频：</strong>真人优先，缺失时再补 Edge 兜底；包含例句和词组，支持断点续跑。</p>
+                      <p><strong>继续补全兜底音频：</strong>仅生成 Edge TTS 缓存，包含例句和词组，支持断点续跑。</p>
+                      <p><strong>删除兜底发音缓存：</strong>清空临时 Edge 缓存；下次播放会重新生成。</p>
                     </div>
                     <div className="duplicate-box">
-                      <div><strong>真人缓存：</strong>{audioCacheStats ? `${audioCacheStats.files?.real || 0} 个文件 / 索引 ${audioCacheStats.index?.real || 0} 条` : "未读取"}</div>
                       <div><strong>兜底缓存：</strong>{audioCacheStats ? `${audioCacheStats.files?.fallback || 0} 个文件 / 索引 ${audioCacheStats.index?.fallback || 0} 条` : "未读取"}</div>
-                      <div><strong>真人不可用：</strong>{audioCacheStats ? `${audioCacheStats.index?.realUnavailable || 0} 条` : "未读取"}</div>
                       <div className="muted">
                         {audioCacheStats
-                          ? `占用：真人 ${Math.round((audioCacheStats.bytes?.real || 0) / 1024)} KB，兜底 ${Math.round((audioCacheStats.bytes?.fallback || 0) / 1024)} KB`
+                          ? `占用：兜底 ${Math.round((audioCacheStats.bytes?.fallback || 0) / 1024)} KB（遗留真人缓存不再用于播放）`
                           : "点击“刷新缓存统计”查看当前 .audio-cache 状态。"}
                       </div>
                     </div>
@@ -195,23 +204,14 @@ export default function VocabAdminToolsPanel({
                       <button className="small-btn danger" disabled={loading} onClick={a.cleanupFallbackAudioCache}>
                         删除兜底发音缓存
                       </button>
-                      <button className="small-btn warm" disabled={loading} onClick={a.retryRealAudioForCurrentLibrary}>
-                        继续批量补全真人发音
-                      </button>
                       <button className="small-btn" disabled={loading} onClick={a.prefillWordAudio}>
-                        继续补全全部音频
-                      </button>
-                      <button className="small-btn warm" disabled={loading} onClick={a.rebuildRealAudioFromStart}>
-                        从头批量补全真人发音
+                        继续补全兜底音频
                       </button>
                       <button className="small-btn warm" disabled={loading} onClick={a.rebuildMissingAudioFromStart}>
-                        从头补全全部音频
-                      </button>
-                      <button className="small-btn ghost" disabled={loading} onClick={() => a.clearRealAudioPrefillCursor?.(true)}>
-                        重置真人发音补全进度
+                        从头补全兜底音频
                       </button>
                       <button className="small-btn ghost" disabled={loading} onClick={() => a.clearAudioPrefillCursor?.(true)}>
-                        重置全部音频补全进度
+                        重置兜底音频补全进度
                       </button>
                       <button className="small-btn" disabled={loading} onClick={a.dedupeLocalAudio}>
                         本地清理重复音频
@@ -252,7 +252,15 @@ export default function VocabAdminToolsPanel({
                     </div>
                   </details>
     
-                  <details className="ai-tools-box" id="ai-tools" ref={aiToolsRef}>
+                  <details
+                    className="ai-tools-box"
+                    id="ai-tools"
+                    ref={aiToolsRef}
+                    open={aiToolsOpen}
+                    onToggle={(event) => {
+                      onAiToolsOpenChange?.(event.currentTarget.open);
+                    }}
+                  >
                     <summary>AI工具（会扣费）</summary>
                     <div className="ai-warning">
                       AI 分成四个实用入口：快速补全 100×5、慢速补全+修错字 10×1、逐个补全+查错词 1×1、稳定修错 10×2。所有按钮都会调用 DeepSeek API，可能扣费。

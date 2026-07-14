@@ -1,5 +1,5 @@
 .page {
-  min-height: 100dvh;
+  min-height: calc(100dvh - var(--study-header-height, 76px));
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -177,9 +177,11 @@
 .promptText {
   max-width: 760px;
   margin: 0;
-  font-size: calc(clamp(24px, 4vw, 38px) * var(--font-scale));
-  line-height: 1.25;
-  letter-spacing: 0;
+  font-size: calc(clamp(28px, 4.4vw, 42px) * var(--font-scale));
+  font-weight: 850;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: #1c3344;
   overflow-wrap: anywhere;
 }
 
@@ -487,5 +489,318 @@
 
   .resultWrap .optionResult {
     min-height: 48px;
+  }
+}
+
+/* Stable study tracks for large displays and enlarged text. */
+@media (min-width: 1100px) {
+  .topbar {
+    width: min(100%, 1100px);
+  }
+
+  .centerWrap {
+    width: min(100%, 680px);
+  }
+
+  .cardWrap,
+  .bottomBar {
+    width: min(100%, 960px);
+  }
+}
+
+@media (min-width: 1100px) and (min-height: 800px) {
+  .centerWrap {
+    justify-content: flex-start;
+    padding-top: clamp(64px, 9vh, 104px);
+  }
+
+  .questionWrap {
+    padding-top: clamp(38px, 5vh, 64px);
+    padding-bottom: 24px;
+  }
+}
+
+.pillLink,
+.linkBtn,
+.ghostBtn,
+.primaryBtn,
+.smallBtn,
+.audioBtn,
+.optionBtn,
+.optionResult {
+  height: auto;
+  min-height: 40px;
+}
+
+.exampleText {
+  font-size: calc(clamp(18px, var(--example-en-size), 30px) * var(--font-scale));
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+}
+
+/* C2 Mature Immersive */
+.page {
+  --c2-bg: #f4f6f5;
+  --c2-surface: #ffffff;
+  --c2-green: #1f5e50;
+  --c2-green-strong: #225f52;
+  --c2-text: #213a4d;
+  --c2-muted: #75827d;
+  --c2-accent: #d76538;
+  --c2-border: #d7dfdb;
+  --c2-green-soft: #e8f0ed;
+  --c2-danger: #a94738;
+  min-height: calc(100dvh - var(--study-header-height, 76px));
+  padding: clamp(14px, 2vw, 24px) clamp(16px, 4vw, 48px) clamp(12px, 2vw, 20px);
+  gap: clamp(8px, 1.2vh, 14px);
+  background: var(--c2-bg);
+  color: var(--c2-text);
+}
+
+.topbar {
+  width: min(100%, 1120px);
+  min-height: 42px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--c2-border);
+}
+
+.pillLink {
+  min-width: 0;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--c2-green);
+  font-weight: 700;
+}
+
+.pillLink:hover {
+  color: var(--c2-green-strong);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.topTitle,
+.title,
+.promptText,
+.answerWord,
+.optionWord {
+  color: var(--c2-text);
+}
+
+.topMeta,
+.subtitle,
+.muted,
+.hint,
+.optionMeaning,
+.exampleCn,
+.detailBox p,
+.bottomInfo {
+  color: var(--c2-muted);
+}
+
+.cardWrap {
+  width: min(100%, 1040px);
+}
+
+.questionWrap {
+  justify-content: center;
+  padding-block: clamp(28px, 8vh, 96px);
+}
+
+.card {
+  gap: clamp(16px, 2.4vh, 24px);
+  padding: clamp(18px, 3vw, 34px) 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.promptLabel {
+  color: var(--c2-green);
+  letter-spacing: .06em;
+}
+
+.optionsGrid,
+.resultWrap .optionsGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.optionBtn,
+.optionResult {
+  min-width: 0;
+  min-height: 62px;
+  border: 1px solid var(--c2-border);
+  border-radius: 7px;
+  background: var(--c2-surface);
+  color: var(--c2-text);
+  box-shadow: none;
+}
+
+.optionBtn:hover {
+  border-color: var(--c2-green);
+  background: var(--c2-green-soft);
+  transform: none;
+}
+
+.optionKey,
+.posPill {
+  border: 1px solid #cbd9d4;
+  border-radius: 6px;
+  background: var(--c2-green-soft);
+  color: var(--c2-green);
+}
+
+.optionCorrect,
+.correct {
+  border-color: #7ea99c;
+  background: var(--c2-green-soft);
+  color: var(--c2-green);
+}
+
+.optionWrong,
+.wrong {
+  border-color: #d59b90;
+  background: #f8ebe8;
+  color: var(--c2-danger);
+}
+
+.resultBadge {
+  height: auto;
+  min-height: 34px;
+  border-radius: 6px;
+}
+
+.exampleCard,
+.detailBox {
+  border-color: var(--c2-border);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .7);
+}
+
+.audioBtn,
+.smallBtn,
+.ghostBtn {
+  border-color: var(--c2-border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--c2-green);
+}
+
+.primaryBtn,
+.linkBtn {
+  border-radius: 7px;
+  background: var(--c2-accent);
+}
+
+.primaryBtn:hover,
+.linkBtn:hover {
+  background: #bd5630;
+}
+
+.bottomBar {
+  flex: 0 0 auto;
+  width: min(100%, 1040px);
+  margin-top: auto;
+  padding: 10px 0 2px;
+  border-top: 1px solid var(--c2-border);
+  background: var(--c2-bg);
+}
+
+.progressBarWrap {
+  height: 4px;
+  border-radius: 2px;
+  background: #dce3e0;
+}
+
+.progressBarFill {
+  border-radius: 2px;
+  background: var(--c2-accent);
+}
+
+@media (min-width: 1440px) {
+  .topbar,
+  .cardWrap,
+  .bottomBar {
+    width: min(100%, 1180px);
+  }
+
+  .questionWrap {
+    padding-top: clamp(52px, 8vh, 112px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .topbar,
+  .cardWrap,
+  .bottomBar {
+    width: min(100%, 1320px);
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 12px 16px calc(72px + env(safe-area-inset-bottom));
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+  }
+
+  .topTitle {
+    grid-column: 1 / -1;
+    order: initial;
+    min-width: 0;
+  }
+
+  .questionWrap {
+    padding-block: clamp(20px, 5vh, 48px);
+  }
+
+  .card {
+    padding-block: 14px;
+  }
+
+  .optionsGrid,
+  .resultWrap .optionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .optionBtn,
+  .optionResult {
+    width: 100%;
+  }
+
+  .actions {
+    align-items: stretch;
+  }
+
+  .primaryBtn,
+  .linkBtn,
+  .ghostBtn {
+    flex: 1 1 160px;
+  }
+
+  .bottomInfo {
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressBarFill,
+  .optionBtn,
+  .primaryBtn,
+  .linkBtn {
+    transition: none;
   }
 }

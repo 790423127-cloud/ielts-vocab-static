@@ -1,0 +1,36 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - link "IELTS VOCAB" [ref=f1e3] [cursor=pointer]:
+      - /url: ./index.html
+    - generic [ref=f1e5]:
+      - strong [ref=f1e6]: G类阅读提升
+      - generic [ref=f1e7]: 静态便携版
+    - navigation "主要学习模式" [ref=f1e8]:
+      - link "选义" [ref=f1e9] [cursor=pointer]:
+        - /url: ./meaning.html
+      - link "拼写" [ref=f1e10] [cursor=pointer]:
+        - /url: ./spelling.html
+  - main [ref=f1e11]:
+    - button "上一个" [ref=f1e13] [cursor=pointer]
+    - region "G类阅读学习设置" [ref=f1e14]:
+      - generic [ref=f1e15]:
+        - generic [ref=f1e16]:
+          - strong [ref=f1e17]: 当前范围
+          - text: · 阶段1 · 1900个词条
+        - button "展开设置" [ref=f1e18] [cursor=pointer]
+    - generic [ref=f1e19]:
+      - button "☆" [ref=f1e20] [cursor=pointer]
+      - button "🔊" [ref=f1e21] [cursor=pointer]
+      - generic [ref=f1e22] [cursor=pointer]: ability
+      - generic [ref=f1e23]: /əˈbɪləˌti/ · noun · 能力
+      - generic [ref=f1e24]: 静态便携版 · data/reading-g-vocab.json + paraphrases · 进度本机 · 与正式站核心能力对齐
+      - generic [ref=f1e25]:
+        - generic [ref=f1e26]:
+          - button "🔊" [ref=f1e27] [cursor=pointer]
+          - generic [ref=f1e28]: He has the ability to solve complex problems.
+        - generic [ref=f1e29]: 他有解决复杂问题的能力。
+    - generic [ref=f1e30]:
+      - generic [ref=f1e31]:
+        - button "熟悉" [ref=f1e32] [cursor=pointer]
+        - button "不熟" [ref=f1e33] [cursor=pointer]
+      - generic [ref=f1e34]: 1 / 1900

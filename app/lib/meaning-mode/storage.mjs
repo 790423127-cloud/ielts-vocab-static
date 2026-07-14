@@ -121,13 +121,19 @@ export function getProgressStats() {
 }
 
 /**
- * Clear all progress.
+ * Clear all progress (v2 + legacy v1).
+ * Must remove v1 as well: createEngine() calls migrateFromV1(), which would
+ * otherwise rebuild v2 from leftover v1 data and make "重置" a no-op.
  */
 export function clearProgress() {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.removeItem("ielts_meaning_4500_adaptive_v2");
-    // Do NOT delete v1 key
+    window.localStorage.removeItem(V1_KEY);
+    window.localStorage.setItem(
+      "ielts_meaning_4500_cleared_at",
+      String(Date.now())
+    );
   } catch { /* ignore */ }
 }
 

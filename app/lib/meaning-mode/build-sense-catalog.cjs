@@ -1,11 +1,11 @@
-﻿// build-sense-catalog.mjs — Build micro-semantic sense catalog for Meaning Mode.
+// build-sense-catalog.mjs — Build micro-semantic sense catalog for Meaning Mode.
 // Replaces broad-domain classification with fine-grained micro-categories.
 // Outputs: app/lib/meaning-mode/sense-catalog.generated.mjs
 const fs = require("fs");
 const path = require("path");
-const ROOT = "C:/Users/Administrator/Desktop/ielts-vocab-deepseek-edge-tts";
+const ROOT = path.resolve(__dirname, "../../..");
 const wordsData = JSON.parse(fs.readFileSync(path.join(ROOT,".static-export-cache/words.json"),"utf-8"));
-const meaningData = JSON.parse(fs.readFileSync(path.join(ROOT,"public/data/meaning-4500.json"),"utf-8"));
+const meaningData = JSON.parse(fs.readFileSync(path.join(ROOT,"public/data/meaning-6000.json"),"utf-8"));
 const allById = new Map();
 for (const w of wordsData.words) allById.set(w.wordId, w);
 
@@ -261,11 +261,11 @@ const MICRO_CATEGORIES = {
 };
 
 // Build reverse map: Chinese keyword -> (macro, micro, ambiguityKeys)
-function extractSenses(entry) {
+function extractSenses(entry, forcedPosFamily) {
   const meaning = (entry.meaning || "").trim();
   const qs = entry.quizSenses && entry.quizSenses[0];
   const quizMeaning = qs ? qs.quizMeaningZh : meaning;
-  const posFamily = npf(entry.pos);
+  const posFamily = forcedPosFamily || npf(entry.pos);
 
   const macros = new Set();
   const micros = new Set();
@@ -297,7 +297,7 @@ function extractSenses(entry) {
   };
 }
 
-// Build catalog for all 4500 words
+// Build catalog for all 6000 words
 const catalog = [];
 let total = 0, withMicro = 0, withAmbiguity = 0;
 
@@ -305,7 +305,7 @@ for (const item of meaningData.items) {
   const w = allById.get(item.wordId);
   if (!w) continue;
   total++;
-  const senses = extractSenses(w);
+  const senses = extractSenses(w, item.posFamily);
 
   if (senses.micros.length > 0 && senses.micros[0] !== "general") withMicro++;
   if (senses.ambiguityKeys.length > 0) withAmbiguity++;
@@ -331,7 +331,7 @@ const outLines = [
   "// Auto-generated sense catalog for Meaning Mode — micro-semantic categories.",
   "// Generated: " + new Date().toISOString(),
   "// Replaces broad-domain classification with fine-grained micro-categories.",
-  "// DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-sense-catalog.mjs",
+  "// DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-sense-catalog.cjs",
   "",
   "export const SENSE_CATALOG = " + JSON.stringify(catalog, null, 2) + ";",
   "",

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { Bookmark, PanelRightClose, PanelRightOpen, Volume2 } from "lucide-react";
 import StudyRangeSummary from "./StudyRangeSummary";
 import VirtualList from "./VirtualList";
 import VocabAdminToolsPanel from "./VocabAdminToolsPanel";
@@ -21,6 +23,8 @@ import {
  * @param {object} props.chrome - constants + shuffle + status actions
  */
 export default function WordFlashcardView({ model, library, speech, admin, chrome }) {
+  const [detailTab, setDetailTab] = useState("forms");
+  const [showInsight, setShowInsight] = useState(true);
   const {
     prevItem,
     item,
@@ -31,8 +35,6 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     phraseCollocations,
     collocationFallback,
     phraseCollocationFallback,
-    meaningDetailOpen,
-    setMeaningDetailOpen,
     isStudyEmpty,
     isExternalIdictationItem,
     progressPercent,
@@ -71,6 +73,10 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
   const {
     toolsMenuRef,
     aiToolsRef,
+    toolsOpen = false,
+    aiToolsOpen = false,
+    onToolsOpenChange,
+    onAiToolsOpenChange,
     loading,
     pasteText,
     setPasteText,
@@ -88,27 +94,36 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     IELTS_USE_OPTIONS,
     IDICTATION_FLASH_FILTERS,
     shuffleStudyWords,
+    nextWord,
+    prevWord,
     toggleFavorite,
     markStatus
   } = chrome;
 
+  const detailTabs = [
+    { id: "forms", label: "变形" },
+    { id: "family", label: "词族" },
+    { id: "collocations", label: "常见搭配" },
+    { id: "phrases", label: "短语搭配" }
+  ];
+  const libraryTotal = Number(wordLibraryStats.total || 0) || Math.max(1, familiarCount + wordLibraryStats.pending + wordLibraryStats.unfamiliar);
+  const familiarPercent = Math.round((familiarCount / libraryTotal) * 100);
+
   return (
-    <div className="word-flash-shell">
+    <div className={`word-flash-shell${showInsight ? "" : " is-insight-collapsed"}`}>
       <header className="topbar">
         <div className="previous">
           <div className="previous-label">上一个单词</div>
           <div className="previous-word">{prevItem?.word || "—"}</div>
           <div className="previous-meta">
-            {fallback(prevItem?.phonetic, "等待音标")} · {fallback(prevItem?.pos, "词性")} · {fallback(prevItem?.meaning, "释义")}
+            {fallback(prevItem?.phonetic, "等待音标")} · {fallback(getPosDisplay(prevItem?.pos), "词性")} · {fallback(prevItem?.meaning, "释义")}
           </div>
         </div>
 
         <div className="top-actions">
           <button className="top-pill shuffle-pill" onClick={shuffleStudyWords}>随机</button>
-          <a className="top-pill spelling-entry-link" href="/spelling-words">单词拼写训练</a>
-          <a className="top-pill spelling-entry-link" href="/spelling-phrases">词组拼写训练</a>
-          <a className="top-pill spelling-entry-link" href="/meaning">看词选意思 · 核心4500</a>
-          <a className="top-pill spelling-entry-link" href="/expressions">口语写作高频表达 · 700</a>
+          <a className="top-pill spelling-entry-link" href="/basic">零基础单词 · 启蒙词库</a>
+          <a className="top-pill spelling-entry-link" href="/reading-g">G类阅读提升</a>
           <details className="menu">
             <summary className="top-pill">更改范围</summary>
             <div className="menu-panel wide">
@@ -142,6 +157,10 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
           <VocabAdminToolsPanel
             toolsMenuRef={toolsMenuRef}
             aiToolsRef={aiToolsRef}
+            toolsOpen={toolsOpen}
+            aiToolsOpen={aiToolsOpen}
+            onToolsOpenChange={onToolsOpenChange}
+            onAiToolsOpenChange={onAiToolsOpenChange}
             loading={loading}
             pasteText={pasteText}
             onPasteTextChange={setPasteText}
@@ -283,9 +302,17 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
 
       <section className="main">
         <div className="center">
-          <button className="star-mid" disabled={isStudyEmpty || isExternalIdictationItem} onClick={toggleFavorite} title="收藏">
-            {item.favorite ? "⭐" : "☆"}
-          </button>
+          <div className="word-canvas-tools">
+            <span>刷词 · 当前项目</span>
+            <div>
+              <button className={`word-canvas-icon${item.favorite ? " is-active" : ""}`} disabled={isStudyEmpty || isExternalIdictationItem} onClick={toggleFavorite} title="收藏" aria-label="收藏当前单词">
+                <Bookmark aria-hidden="true" />
+              </button>
+              <button className="word-canvas-icon" type="button" onClick={() => setShowInsight((value) => !value)} title={showInsight ? "收起学习概览" : "打开学习概览"} aria-label={showInsight ? "收起学习概览" : "打开学习概览"}>
+                {showInsight ? <PanelRightClose aria-hidden="true" /> : <PanelRightOpen aria-hidden="true" />}
+              </button>
+            </div>
+          </div>
 
           <div className="example-box">
             <div className="example-head">
@@ -296,8 +323,8 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                 title="播放例句发音 (空格)"
                 aria-label="播放例句发音，快捷键空格"
               >
-                <span aria-hidden="true">🔊</span>
-                <span>空格·例句</span>
+                <Volume2 aria-hidden="true" />
+                <span>播放例句</span>
               </button>
             </div>
             <div className="example-clickable" onClick={speakExample} role="button" tabIndex={0} onKeyDown={(event) => {
@@ -323,8 +350,8 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
               title="播放单词发音 (Tab)"
               aria-label="播放单词发音，快捷键 Tab"
             >
-              <span aria-hidden="true">🔊</span>
-              <span>Tab·单词</span>
+              <Volume2 aria-hidden="true" />
+              <span>播放单词</span>
             </button>
             <div
               className="word-clickable"
@@ -348,95 +375,84 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
 
           <div className="meaning-block">
             <div className="meaning-primary">{fallback(item.meaning, "等待 AI 生成中文释义")}</div>
-            <button
-              type="button"
-              className="meaning-toggle"
-              onClick={() => setMeaningDetailOpen((open) => !open)}
-              aria-expanded={meaningDetailOpen}
-            >
-              {meaningDetailOpen ? "收起英文释义" : "展开英文释义"}
-            </button>
-            {meaningDetailOpen ? (
-              <div className="definition meaning-detail">{fallback(item.definition, "等待 AI 生成英文释义")}</div>
-            ) : null}
           </div>
 
-          {displayForms.length ? (
-            <div className="block">
-              <div className="block-title">听力形式 / 重要变形</div>
-              <div className="list">
-                {displayForms.map((form) => (
-                  <div className="item with-sound family-item" key={`${form.word}-${form.type}`}>
-                    <button className="mini-sound family-sound" type="button" onClick={() => speakSmallText(form.word, "变形")} title="播放变形发音">
-                      🔊
-                    </button>
-                    <div className="pair-text">
-                      <div className="en">{form.word}</div>
-                      <div className="zh">{getFormChineseType(form.type)} · {getFormHint(form)}</div>
-                      <div className="muted">{getFormExplanation(item.word, item.meaning, form)}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          {displayFamily.length ? (
-            <div className="block">
-              <div className="block-title">词族 / 派生词</div>
-              <div className="list">
-                {displayFamily.map((family) => (
-                  <div className="item with-sound family-item" key={`${family.word}-${family.pos}`}>
-                    <button className="mini-sound family-sound" type="button" onClick={() => speakSmallText(family.word, "词族")} title="播放词族单词发音">
-                      🔊
-                    </button>
-                    <div className="pair-text">
-                      <div className="en">{family.word}</div>
-                      <div className="zh">{getPosDisplay(family.pos)}{family.meaning ? ` · ${family.meaning}` : ""}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          <div className="block">
-            <div className="block-title">常见搭配</div>
-            <div className="list">
-              {(commonCollocations.length ? commonCollocations : collocationFallback).slice(0, 3).map((pair) => (
-                <div className="item with-sound" key={`${pair.phrase}-${pair.chinese}`}>
-                  <button className="mini-sound" type="button" disabled={!pair.phrase || pair.phrase.startsWith("等待 AI")} onClick={() => speakSmallText(pair.phrase, "搭配")} title="播放搭配发音">
-                    🔊
-                  </button>
-                  <div className="pair-text">
-                    <div className="en">{pair.phrase}</div>
-                    {pair.chinese ? <div className="zh">{pair.chinese}</div> : null}
-                  </div>
-                </div>
+          <section className="word-dictionary-panel" aria-label="词典详情">
+            <div className="word-dictionary-tabs" role="tablist" aria-label="词典详情分类">
+              {detailTabs.map((tab) => (
+                <button key={tab.id} type="button" role="tab" aria-selected={detailTab === tab.id} className={detailTab === tab.id ? "is-active" : ""} onClick={() => setDetailTab(tab.id)}>
+                  {tab.label}
+                </button>
               ))}
             </div>
-          </div>
-
-          <div className="block">
-            <div className="block-title">短语 / 介词搭配</div>
-            <div className="list">
-              {(phraseCollocations.length ? phraseCollocations : phraseCollocationFallback).slice(0, 3).map((pair) => (
-                <div className="item with-sound" key={`${pair.phrase}-${pair.chinese}`}>
-                  <button className="mini-sound" type="button" disabled={!pair.phrase || pair.phrase.startsWith("等待 AI")} onClick={() => speakSmallText(pair.phrase, "短语")} title="播放短语发音">
-                    🔊
-                  </button>
-                  <div className="pair-text">
-                    <div className="en">{pair.phrase}</div>
-                    {pair.chinese ? <div className="zh">{pair.chinese}</div> : null}
+            <div className="word-dictionary-content" role="tabpanel">
+              {detailTab === "forms" ? (
+                displayForms.length ? displayForms.map((form) => (
+                  <div className="word-dictionary-row" key={`${form.word}-${form.type}`}>
+                    <span>{getFormChineseType(form.type)}</span>
+                    <button type="button" onClick={() => speakSmallText(form.word, "变形")}><Volume2 aria-hidden="true" />{form.word}</button>
+                    <small>{getFormHint(form)} · {getFormExplanation(item.word, item.meaning, form)}</small>
                   </div>
-                </div>
-              ))}
+                )) : <p className="word-dictionary-empty">当前词暂无重要变形。</p>
+              ) : null}
+              {detailTab === "family" ? (
+                displayFamily.length ? displayFamily.map((family) => (
+                  <div className="word-dictionary-row" key={`${family.word}-${family.pos}`}>
+                    <span>{getPosDisplay(family.pos)}</span>
+                    <button type="button" onClick={() => speakSmallText(family.word, "词族")}><Volume2 aria-hidden="true" />{family.word}</button>
+                    <small>{family.meaning || "同词族词条"}</small>
+                  </div>
+                )) : <p className="word-dictionary-empty">当前词暂无词族信息。</p>
+              ) : null}
+              {detailTab === "collocations" ? (
+                (commonCollocations.length ? commonCollocations : collocationFallback).slice(0, 4).map((pair) => (
+                  <div className="word-dictionary-row" key={`${pair.phrase}-${pair.chinese}`}>
+                    <span>常见搭配</span>
+                    <button type="button" disabled={!pair.phrase || pair.phrase.startsWith("等待 AI")} onClick={() => speakSmallText(pair.phrase, "搭配")}><Volume2 aria-hidden="true" />{pair.phrase}</button>
+                    <small>{pair.chinese || ""}</small>
+                  </div>
+                ))
+              ) : null}
+              {detailTab === "phrases" ? (
+                (phraseCollocations.length ? phraseCollocations : phraseCollocationFallback).slice(0, 4).map((pair) => (
+                  <div className="word-dictionary-row" key={`${pair.phrase}-${pair.chinese}`}>
+                    <span>短语搭配</span>
+                    <button type="button" disabled={!pair.phrase || pair.phrase.startsWith("等待 AI")} onClick={() => speakSmallText(pair.phrase, "短语")}><Volume2 aria-hidden="true" />{pair.phrase}</button>
+                    <small>{pair.chinese || ""}</small>
+                  </div>
+                ))
+              ) : null}
             </div>
-          </div>
+          </section>
         </div>
       </section>
 
-      <footer className="bottombar">
+      <aside className="word-insight-panel" aria-label="学习概览">
+        <div className="word-insight-head">
+          <h2>学习概览</h2>
+          <button type="button" className="word-canvas-icon" onClick={() => setShowInsight(false)} aria-label="收起学习概览" title="收起学习概览"><PanelRightClose aria-hidden="true" /></button>
+        </div>
+        <div className="word-insight-section-title">当前词库</div>
+        <div className="word-mastery-line"><strong>{familiarPercent}%</strong><span>已熟悉</span></div>
+        <div className="word-mastery-track"><span style={{ width: `${Math.min(100, familiarPercent)}%` }} /></div>
+        <div className="word-insight-metrics">
+          <div><span>待学习</span><strong>{wordLibraryStats.pending}</strong></div>
+          <div><span>不熟词</span><strong>{wordLibraryStats.unfamiliar}</strong></div>
+        </div>
+        <div className="word-insight-section-title">本词状态</div>
+        <dl className="word-insight-records">
+          <div><dt>当前状态</dt><dd>{item.status || "待学习"}</dd></div>
+          <div><dt>学习范围</dt><dd>{getFilterName(filter)}</dd></div>
+          <div><dt>当前位置</dt><dd>{isStudyEmpty ? "0 / 0" : `${safeStudyPosition + 1} / ${studyWords.length}`}</dd></div>
+          <div><dt>收藏</dt><dd>{item.favorite ? "已收藏" : "未收藏"}</dd></div>
+        </dl>
+        <p className="word-insight-note">标记为不熟的词会优先进入后续复习队列。完成当前范围后，可到拼写训练继续巩固。</p>
+      </aside>
+
+      <footer className="bottom bottombar">
+        <button className="study-step-button study-step-button--previous" type="button" disabled={isStudyEmpty} onClick={prevWord}>
+          上一个
+        </button>
         <div className="actions">
           <button className="status known" disabled={isStudyEmpty} onClick={() => markStatus("熟悉")} title="快捷键：0">
             {isExternalIdictationItem ? "下一个" : "熟悉"}
@@ -452,6 +468,9 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
           </div>
           <div className="count">{isStudyEmpty ? "0 / 0" : `${safeStudyPosition + 1} / ${studyWords.length}`}</div>
         </div>
+        <button className="study-step-button study-step-button--next" type="button" disabled={isStudyEmpty} onClick={nextWord}>
+          下一个
+        </button>
       </footer>
     </div>
   );

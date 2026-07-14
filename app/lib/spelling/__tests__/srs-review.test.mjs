@@ -68,9 +68,12 @@ test("progress and shortcut controls render in the page footer", () => {
 test("stored browser preferences are restored after hydration", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const hook = fs.readFileSync(path.join(root, "app/hooks/useSpellingTrainingPreferences.js"), "utf8");
   const helpers = fs.readFileSync(path.join(root, "app/lib/spelling/spelling-training-page-helpers.mjs"), "utf8");
-  assert.match(source, /const \[prefsHydrated, setPrefsHydrated\] = useState\(false\)/);
-  assert.match(source, /useEffect\(\(\) => \{\s*const uxPrefs = readUxPrefs\(scope\)/);
+  assert.match(source, /useSpellingTrainingPreferences\(scope\)/);
+  assert.match(hook, /const \[hydratedScope, setHydratedScope\] = useState\(""\)/);
+  assert.match(hook, /loadSpellingTrainingPreferences\(normalizedScope\)/);
+  assert.match(hook, /writeCategoryPrefs\(normalizedScope, storedPrefs\)/);
   assert.match(helpers, /localStorage\.getItem\(key\)/);
   assert.match(helpers, /localStorage\.setItem\(getScopeStorageKey\(scope\), JSON\.stringify\(prefs\)\)/);
   assert.doesNotMatch(source, /useState\(\(\) => readUxPrefs\(scope\)/);

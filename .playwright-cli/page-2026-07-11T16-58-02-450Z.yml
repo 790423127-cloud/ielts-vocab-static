@@ -1,0 +1,136 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "IELTS Vocab 首页" [ref=e3] [cursor=pointer]:
+      - /url: /
+      - text: IELTS VOCAB
+    - generic "当前训练" [ref=e5]:
+      - strong [ref=e6]: 主词库刷词
+      - generic [ref=e7]: 专注学习
+    - generic [ref=e8]:
+      - button "搜索" [ref=e9] [cursor=pointer]
+      - group "全站字号" [ref=e13]:
+        - button "减小字号" [ref=e14] [cursor=pointer]: A−
+        - button "当前字号 100%，点击恢复默认" [ref=e15] [cursor=pointer]: 100%
+        - button "增大字号" [ref=e16] [cursor=pointer]: A+
+      - button "更多" [ref=e17] [cursor=pointer]
+  - complementary "全站学习导航" [ref=e22]:
+    - navigation [ref=e23]:
+      - link "刷词" [ref=e24] [cursor=pointer]:
+        - /url: /
+      - link "拼写" [ref=e28] [cursor=pointer]:
+        - /url: /spelling-words
+      - link "选义" [ref=e33] [cursor=pointer]:
+        - /url: /meaning
+      - link "高频表达" [ref=e38] [cursor=pointer]:
+        - /url: /expressions
+    - generic [ref=e43]: 专项学习
+    - navigation [ref=e44]:
+      - link "零基础词库" [ref=e45] [cursor=pointer]:
+        - /url: /basic
+      - link "G 类阅读" [ref=e49] [cursor=pointer]:
+        - /url: /reading-g
+      - link "词组训练" [ref=e53] [cursor=pointer]:
+        - /url: /spelling-phrases
+      - link "SRS 复习" [ref=e59] [cursor=pointer]:
+        - /url: /spelling-words
+    - navigation [ref=e64]:
+      - link "AI 工具" [ref=e65] [cursor=pointer]:
+        - /url: /?panel=ai-tools
+      - link "设置" [ref=e69] [cursor=pointer]:
+        - /url: /
+  - main [ref=e74]:
+    - tablist "刷词模式" [ref=e75]:
+      - tab "单词刷词 加载中" [selected] [ref=e76] [cursor=pointer]:
+        - text: 单词刷词
+        - generic [ref=e77]: 加载中
+      - tab "词组刷词 加载中" [ref=e78] [cursor=pointer]:
+        - text: 词组刷词
+        - generic [ref=e79]: 加载中
+      - tab "听力阅读同义替换 加载中" [ref=e80] [cursor=pointer]:
+        - text: 听力阅读同义替换
+        - generic [ref=e81]: 加载中
+    - generic [ref=e82]:
+      - generic [ref=e84]:
+        - button "随机" [ref=e85] [cursor=pointer]
+        - link "零基础单词 · 启蒙词库" [ref=e86] [cursor=pointer]:
+          - /url: /basic
+        - link "G类阅读词汇 · 全量单词+词组" [ref=e87] [cursor=pointer]:
+          - /url: /reading-g
+        - group [ref=e88]:
+          - generic "更改范围" [ref=e89]
+        - group [ref=e90]:
+          - generic "工具" [ref=e91]
+          - text: 展开 展开 展开 展开 展开 展开
+        - group [ref=e92]:
+          - generic "词库面板" [ref=e93]
+      - region "刷单词范围" [ref=e94]:
+        - generic [ref=e95]:
+          - generic [ref=e96]: 刷单词
+          - strong [ref=e97]: 今日任务 / 全部待学
+          - generic [ref=e98]: 0 个词
+        - paragraph [ref=e99]: 正在读取正式词库，请稍候。
+      - generic [ref=e101]:
+        - generic [ref=e102]:
+          - generic [ref=e103]: 刷词 · 当前项目
+          - generic [ref=e104]:
+            - button "收藏当前单词" [disabled] [ref=e105] [cursor=pointer]
+            - button "收起学习概览" [ref=e108] [cursor=pointer]
+        - generic [ref=e112]:
+          - button "播放例句发音，快捷键空格" [ref=e114] [cursor=pointer]:
+            - generic [ref=e119]: 播放例句
+          - button "词库加载完成后会自动显示当前学习词。 正在准备真实词库。" [ref=e120] [cursor=pointer]:
+            - generic [ref=e121]: 词库加载完成后会自动显示当前学习词。
+            - generic [ref=e122]: 正在准备真实词库。
+        - generic [ref=e123]:
+          - button "播放单词发音，快捷键 Tab" [ref=e124] [cursor=pointer]:
+            - generic [ref=e129]: 播放单词
+          - button "正在读取词库 等待音标" [ref=e130]:
+            - generic [ref=e131]: 正在读取词库
+            - generic [ref=e132]: 等待音标
+        - generic [ref=e133]: 请稍候，正在读取正式词库
+        - region "词典详情" [ref=e135]:
+          - tablist "词典详情分类" [ref=e136]:
+            - tab "变形" [selected] [ref=e137] [cursor=pointer]
+            - tab "词族" [ref=e138] [cursor=pointer]
+            - tab "常见搭配" [ref=e139] [cursor=pointer]
+            - tab "短语搭配" [ref=e140] [cursor=pointer]
+          - tabpanel [ref=e141]:
+            - paragraph [ref=e142]: 当前词暂无重要变形。
+      - complementary "学习概览" [ref=e143]:
+        - generic [ref=e144]:
+          - heading "学习概览" [level=2] [ref=e145]
+          - button "收起学习概览" [ref=e146] [cursor=pointer]
+        - generic [ref=e150]: 当前词库
+        - generic [ref=e151]:
+          - strong [ref=e152]: 0%
+          - generic [ref=e153]: 已熟悉
+        - generic [ref=e155]:
+          - generic [ref=e156]:
+            - generic [ref=e157]: 待学习
+            - strong [ref=e158]: "0"
+          - generic [ref=e159]:
+            - generic [ref=e160]: 不熟词
+            - strong [ref=e161]: "0"
+        - generic [ref=e162]: 本词状态
+        - generic [ref=e163]:
+          - generic [ref=e164]:
+            - term [ref=e165]: 当前状态
+            - definition [ref=e166]: 待学习
+          - generic [ref=e167]:
+            - term [ref=e168]: 学习范围
+            - definition [ref=e169]: 今日任务 / 全部待学
+          - generic [ref=e170]:
+            - term [ref=e171]: 当前位置
+            - definition [ref=e172]: 0 / 0
+          - generic [ref=e173]:
+            - term [ref=e174]: 收藏
+            - definition [ref=e175]: 未收藏
+        - paragraph [ref=e176]: 标记为不熟的词会优先进入后续复习队列。完成当前范围后，可到拼写训练继续巩固。
+      - generic [ref=e177]:
+        - button "上一个" [disabled] [ref=e178] [cursor=pointer]
+        - generic [ref=e179]:
+          - button "熟悉" [disabled] [ref=e180]
+          - button "不熟" [disabled] [ref=e181]
+        - generic [ref=e182]: 0 / 0
+        - button "下一个" [disabled] [ref=e185] [cursor=pointer]
+  - alert [ref=e186]

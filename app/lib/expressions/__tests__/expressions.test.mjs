@@ -5,7 +5,14 @@ import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { createEngine, nextQuestion, submitAnswer, getSessionStats } from "../engine.mjs";
+import {
+  buildExpressionSessionQueue,
+  createEngine,
+  EXPRESSIONS_SESSION_SIZE,
+  nextQuestion,
+  submitAnswer,
+  getSessionStats
+} from "../engine.mjs";
 import { buildQuestion, buildQuestionWithValidation, validateQuestion } from "../builder.mjs";
 import { pickDistractors, seededShuffle, hashOptionSet, AntiMemorizationCache, heuristicSimilarityScore } from "../options.mjs";
 import { createSessionState, recordQuestion, wouldRepeatThreeConsecutive } from "../session-state.mjs";
@@ -186,6 +193,58 @@ describe("engine", () => {
     const ids = [];
     for (let i = 0; i < 50; i++) { const q = nextQuestion(engine); if (!q) break; ids.push(q.phraseId); }
     for (let i = 1; i < ids.length; i++) assert.notEqual(ids[i], ids[i-1]);
+  });
+  it("uses a 20-question session instead of treating all 700 as one round", () => {
+    assert.equal(EXPRESSIONS_SESSION_SIZE, 20);
+    assert.equal(engine.queue.length, 20);
+    assert.equal(new Set(engine.queue).size, 20);
+  });
+  it("finishes after the current session queue instead of wrapping to index zero", () => {
+    const ids = [];
+    for (let i = 0; i < EXPRESSIONS_SESSION_SIZE; i++) {
+      const question = nextQuestion(engine);
+      assert.ok(question);
+      ids.push(question.phraseId);
+    }
+    assert.equal(nextQuestion(engine), null);
+    assert.equal(new Set(ids).size, EXPRESSIONS_SESSION_SIZE);
+    const stats = getSessionStats(engine);
+    assert.equal(stats.sessionPosition, EXPRESSIONS_SESSION_SIZE);
+    assert.equal(stats.sessionRemaining, 0);
+  });
+  it("prioritizes unseen expressions while limiting wrong-item review to one quarter", () => {
+    const progress = {};
+    for (const item of phraseBank.items.slice(0, 10)) progress[item.id] = "unknown";
+    for (const item of phraseBank.items.slice(10, 40)) progress[item.id] = "known";
+    const queue = buildExpressionSessionQueue(phraseBank.items, {
+      progress,
+      random: () => 0.42
+    });
+    const wrongCount = queue.filter((id) => progress[id] === "unknown").length;
+    const unseenCount = queue.filter((id) => !progress[id]).length;
+    assert.ok(wrongCount <= 5);
+    assert.ok(unseenCount >= 15);
+  });
+});
+
+describe("system navigation and UI parity", () => {
+  it("marks mobile more routes active and removes the duplicate desktop home link", () => {
+    const root = join(__dirname, "..", "..", "..", "components");
+    const source = readFileSync(join(root, "GlobalStudyHeader.jsx"), "utf-8");
+    assert.match(source, /const mobileMoreActive = MOBILE_MORE_NAV\.some/);
+    assert.match(source, /训练模式/);
+    assert.doesNotMatch(source, /<House aria-hidden=/);
+    assert.ok((source.match(/prefetch=\{false\}/g) || []).length >= 5);
+  });
+
+  it("shows total-pool and per-round counts with the shared high-visibility progress", () => {
+    const page = readFileSync(join(__dirname, "..", "..", "..", "expressions", "page.jsx"), "utf-8");
+    const css = readFileSync(join(__dirname, "..", "..", "..", "expressions", "expressions.module.css"), "utf-8");
+    assert.match(page, /总题库 \{engine\.phraseBank\.length\} 条 · 本轮 \{engine\.queue\.length\} 题/);
+    assert.match(page, /sessionPosition/);
+    assert.match(page, /<Volume2 aria-hidden="true" \/>/);
+    assert.doesNotMatch(page, /<svg width="18"/);
+    assert.match(css, /\.progressBarWrap \{\s*height: 9px;/);
   });
 });
 

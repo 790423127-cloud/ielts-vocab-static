@@ -1,4 +1,4 @@
-﻿// Meaning Mode question builder v7 -- sense-relation distractor selection + audit snapshot.
+// Meaning Mode question builder v7 -- sense-relation distractor selection + audit snapshot.
 // Every question carries a questionAuditSnapshot for traceability and feedback.
 
 import { hashOptionSet } from "./options.mjs";
@@ -6,10 +6,10 @@ import { generateDistractorCombinations, selectBestCombination } from "./distrac
 import { getQuizMeaning, getPosLabel } from "./collision-check.mjs";
 import { getTargetQuizMeaning, getTargetMeaningDetailed, getTargetGlossEntry } from "./meaning-target-gloss.mjs";
 
-function splitGlossParts(value) {
+export function splitGlossParts(value) {
   return String(value || "")
     .trim()
-    .split(/[;锛涖€?锛?]+/g)
+    .split(/[;；、，,]+/g)
     .map(p => p.trim())
     .filter(Boolean);
 }
@@ -74,7 +74,7 @@ export function buildQuestion(wordEntry, wordBank, sessionId, questionIndex, qua
 
   const seed = hashString(wordEntry.wordId + (sessionId || "") + String(questionIndex || 0));
   const { combinations, totalAvailable, reason } = generateDistractorCombinations(
-    wordBank, wordEntry.wordId, wordEntry.meaningZh, 7, qualityCache
+    wordBank, wordEntry.wordId, getTargetQuizMeaning(wordEntry), 7, qualityCache
   );
   if (!combinations || combinations.length === 0) {
     return { qualityDeferred: true, wordId: wordEntry.wordId, word: wordEntry.word, reason: reason || "insufficient-candidates", totalAvailable };
@@ -90,7 +90,7 @@ export function buildQuestion(wordEntry, wordBank, sessionId, questionIndex, qua
       sourceWordId: wordEntry.wordId,
       sourceHeadword: wordEntry.word,
       displayEnglish: wordEntry.word,
-      posFamily: wordEntry._posFamily || "unknown",
+      posFamily: wordEntry._posFamily || wordEntry.posFamily || "unknown",
       isCorrect: true,
       relationType: "correct-answer",
       relationToTarget: "correct-answer",
@@ -132,13 +132,13 @@ export function buildQuestion(wordEntry, wordBank, sessionId, questionIndex, qua
   const finalCorrectIdx = shuffled.findIndex(o => o.isCorrect);
   const optionHash = hashOptionSet(shuffled);
 
-  // 鈹€鈹€ Build audit snapshot 鈹€鈹€
+  // Build the audit snapshot used by quality reports and feedback.
   const auditSnapshot = {
     generatedAt: new Date().toISOString(),
     target: {
       wordId: wordEntry.wordId,
       word: wordEntry.word,
-      posFamily: wordEntry._posFamily || "unknown",
+      posFamily: wordEntry._posFamily || wordEntry.posFamily || "unknown",
       senseKey: getTargetSenseMeta(wordEntry).senseKey,
       senseKeySource: getTargetSenseMeta(wordEntry).senseKeySource,
       quizMeaningZh: getTargetQuizMeaning(wordEntry),

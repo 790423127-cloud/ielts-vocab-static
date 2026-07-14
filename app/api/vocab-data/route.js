@@ -1,12 +1,20 @@
 export const runtime = "nodejs";
 
 import { readFile, stat } from "fs/promises";
+import { promisify } from "node:util";
+import { brotliCompress, constants, gzip } from "node:zlib";
 import { requireLocalRead } from "../../lib/api/local-admin-guard.mjs";
 import { buildVocabDataPayload } from "../../lib/vocab/vocab-data-meta.mjs";
 import { listVocabWordsFileCandidates, resolveVocabWordsFile } from "../../lib/vocab/vocab-file-meta.mjs";
 
 let cachedSignature = "";
 let cachedPayload = null;
+let cachedJson = "";
+let cachedBrotliPromise = null;
+let cachedGzipPromise = null;
+
+const compressBrotli = promisify(brotliCompress);
+const compressGzip = promisify(gzip);
 
 async function resolveReadableWordsFile() {
   const preferred = resolveVocabWordsFile();
@@ -26,8 +34,11 @@ async function readCachedPayload() {
   const resolved = await resolveReadableWordsFile();
   if (!resolved) {
     cachedSignature = "";
-    cachedPayload = null;
-    return buildVocabDataPayload("{}");
+    cachedPayload = buildVocabDataPayload("{}");
+    cachedJson = JSON.stringify(cachedPayload);
+    cachedBrotliPromise = null;
+    cachedGzipPromise = null;
+    return cachedPayload;
   }
 
   const { file, stats } = resolved;
@@ -36,8 +47,29 @@ async function readCachedPayload() {
 
   const raw = await readFile(file, "utf-8");
   cachedPayload = buildVocabDataPayload(raw || "{}");
+  cachedJson = JSON.stringify(cachedPayload);
+  cachedBrotliPromise = null;
+  cachedGzipPromise = null;
   cachedSignature = signature;
   return cachedPayload;
+}
+
+async function encodePayload(encoding) {
+  const input = Buffer.from(cachedJson, "utf8");
+
+  if (encoding === "br") {
+    if (!cachedBrotliPromise) {
+      cachedBrotliPromise = compressBrotli(input, {
+        params: { [constants.BROTLI_PARAM_QUALITY]: 5 }
+      });
+    }
+    return cachedBrotliPromise;
+  }
+
+  if (!cachedGzipPromise) {
+    cachedGzipPromise = compressGzip(input, { level: 6 });
+  }
+  return cachedGzipPromise;
 }
 
 export async function GET(req) {
@@ -45,8 +77,33 @@ export async function GET(req) {
   if (guard) return guard;
 
   try {
-    return Response.json(await readCachedPayload(), {
-      headers: { "Cache-Control": "no-store" }
+    const payload = await readCachedPayload();
+    const accepted = req.headers.get("accept-encoding") || "";
+    const encoding = /\bbr\b/i.test(accepted)
+      ? "br"
+      : /\bgzip\b/i.test(accepted)
+        ? "gzip"
+        : "";
+
+    if (!encoding) {
+      return new Response(cachedJson || JSON.stringify(payload), {
+        headers: {
+          "Cache-Control": "no-store",
+          "Content-Type": "application/json; charset=utf-8",
+          "Vary": "Accept-Encoding"
+        }
+      });
+    }
+
+    const body = await encodePayload(encoding);
+    return new Response(body, {
+      headers: {
+        "Cache-Control": "no-store",
+        "Content-Encoding": encoding,
+        "Content-Length": String(body.byteLength),
+        "Content-Type": "application/json; charset=utf-8",
+        "Vary": "Accept-Encoding"
+      }
     });
   } catch (error) {
     return Response.json({ ok: false, error: String(error?.message || error), words: [] }, { status: 500 });

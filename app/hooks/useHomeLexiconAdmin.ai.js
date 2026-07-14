@@ -3,59 +3,38 @@
  * Ai ops factory — split from useHomeLexiconAdmin (v2026-07-10.3)
  */
 import {
-  applyEditDraftToWord,
-  buildLocalCleanResult,
-  buildLocalExactDedupeResult,
-  buildLocalFormFamilyResult,
-  buildLocalOptimizeResult,
-  cleanTtsSymbolsInWord,
-  collectObscureDerivedCandidates,
-  emergencyDefaultCloudUrl,
-  getLocalWrongReasons,
   hasHeadwordRepair,
   isCompleteAiWord,
   isLikelyWrongAiWord,
-  isMissingAiFields,
-  isMissingClassification,
-  isProbablyFullVocab,
-  isSimpleDictionaryWord,
   mergeWord,
   normalizePhraseItems,
   normalizeStringArray,
   normalizeWord,
-  parseImportText,
-  repairHeadwordLocally,
-  repairObviousWrongWordLocally,
-  wordToEditDraft
+  repairHeadwordLocally
 } from "../lib/vocab/page-word-helpers.mjs";
-import { buildLocalChangeLog } from "../lib/vocab/local-change-log.mjs";
 import {
-  buildBlankVocabTemplateCsvText,
-  buildBlankVocabTemplateJsonPayload,
-  csvToObjects,
-  mergeBasicTemplateWord,
-  normalizeTemplateWord
-} from "../lib/vocab/vocab-template-io.mjs";
-import {
-  loadWordsFromIndexedDB,
-  postExportCache,
-  saveWordsToIndexedDB
-} from "../lib/vocab/word-store.mjs";
-import { filterKey, isIdictationFlashFilter } from "../lib/vocab/word-flashcard-study-pool.mjs";
-import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "../lib/vocab/lexicon-guard-shared.mjs";
+  buildClassificationPlan,
+  buildCleanWordsPlan,
+  buildFastCompletionPlan,
+  buildGenerateMissingPlan,
+  buildOneByOneCompletionPlan,
+  buildSlowCompletionPlan,
+  buildWrongRepairPlan
+} from "../lib/vocab/admin-ai-batch-plan.mjs";
+import { runAdminAiBatch } from "../lib/vocab/admin-ai-batch-runner.mjs";
 
+function retryableBatchError(message) {
+  const error = new Error(message);
+  error.retryable = true;
+  return error;
+}
 
 export function createAiOps(ctx) {
   const {
-    words, setWords, index, setIndex, filter,
-    lastLocalChange, setLastLocalChange,
+    words, setWords, index,
     setLoading, setToast, setBatchInfo, setDuplicateInfo,
-    setEditOpen, setEditDraft, editDraft,
-    item, isExternalIdictationItem, pasteText, setPasteText,
     persistWordsImmediately, resetWordStudySessionState,
-    cacheMetaRef, latestStateRef, entryPositionsRef, persistWordFlashSessionNow,
-    compactBrowserStorageForCurrentWords,
-    applyLocalResult, recordLocalChange, localOptimizeWordList
+    prefillWordAudio, recordLocalChange
   } = ctx;
 
   async function cleanWordList() {
@@ -63,86 +42,57 @@ export function createAiOps(ctx) {
       setLoading(true);
       setBatchInfo("");
 
-      const targets = words
-        .map((w, i) => ({ id: String(i), text: w.word, i }))
-        .filter((item) => item.text && item.text.trim());
+      const { targets, chunks, workerCount: concurrency } = buildCleanWordsPlan(words);
 
       if (!targets.length) {
         setToast("没有可整理的词条");
         return;
       }
 
-      const batchSize = 100;
-      const concurrency = 5;
-      const chunks = [];
-
-      for (let start = 0; start < targets.length; start += batchSize) {
-        chunks.push(targets.slice(start, start + batchSize));
-      }
-
-      let nextChunkIndex = 0;
-      let completedWords = 0;
       let failedWords = [];
       const cleanResults = new Map();
 
-      async function runOneChunk(chunk, workerId, retry = 0) {
-        const preview = chunk.map(({ text }) => text).slice(0, 6).join(", ");
+      await runAdminAiBatch({
+        chunks,
+        workerCount: concurrency,
+        maxRetries: 1,
+        shouldRetry: ({ error }) => error?.retryable === true,
+        onChunkStart({ chunk, workerId, completedItems }) {
+          const preview = chunk.map(({ text }) => text).slice(0, 6).join(", ");
+          setBatchInfo(
+            `AI深度整理词表：${completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${chunk.length > 6 ? "..." : ""}`
+          );
+        },
+        async executeChunk({ chunk }) {
+          const res = await fetch("/api/clean-words", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              items: chunk.map(({ id, text }) => ({ id, text }))
+            })
+          });
+          const data = await res.json();
 
-        setBatchInfo(
-          `AI深度整理词表：${completedWords} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${chunk.length > 6 ? "..." : ""}`
-        );
-
-        const res = await fetch("/api/clean-words", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            items: chunk.map(({ id, text }) => ({ id, text }))
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          if (retry < 1) {
-            return runOneChunk(chunk, workerId, retry + 1);
+          if (!res.ok) {
+            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
           }
 
+          (data.items || []).forEach((entry) => {
+            cleanResults.set(String(entry.id), entry);
+          });
+        },
+        onChunkError({ chunk }) {
           failedWords.push(...chunk.map(({ text }) => text));
-          return;
+        },
+        onChunkSettled({ completedItems, remainingChunks }) {
+          setBatchInfo(
+            `AI深度整理词表：${Math.min(completedItems, targets.length)} / ${targets.length} ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${remainingChunks}`
+          );
         }
-
-        (data.items || []).forEach((entry) => {
-          cleanResults.set(String(entry.id), entry);
-        });
-      }
-
-      async function worker(workerId) {
-        while (nextChunkIndex < chunks.length) {
-          const chunkIndex = nextChunkIndex;
-          nextChunkIndex += 1;
-          const chunk = chunks[chunkIndex];
-
-          try {
-            await runOneChunk(chunk, workerId);
-          } catch {
-            failedWords.push(...chunk.map(({ text }) => text));
-          } finally {
-            completedWords += chunk.length;
-            setBatchInfo(
-              `AI深度整理词表：${Math.min(completedWords, targets.length)} / ${targets.length} ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${Math.max(0, chunks.length - nextChunkIndex)}`
-            );
-          }
-        }
-      }
-
-      const workerCount = Math.min(concurrency, chunks.length);
-      await Promise.all(
-        Array.from({ length: workerCount }, (_, i) => worker(i + 1))
-      );
+      });
 
       let cleanedCount = 0;
       let changedCount = 0;
-      let removedCount = 0;
       let mergedCount = 0;
 
       setWords((prev) => {
@@ -154,7 +104,6 @@ export function createAiOps(ctx) {
             const clean = String(entry.clean || "").trim();
 
             if (!clean) {
-              removedCount += 1;
               return null;
             }
 
@@ -356,45 +305,16 @@ export function createAiOps(ctx) {
     try {
       setLoading(true);
 
-      const wrongTargets = words
-        .map((w, i) => ({
-          w,
-          i,
-          missing: !isCompleteAiWord(w),
-          wrong: repairWrong && isLikelyWrongAiWord(w)
-        }))
-        .filter(({ wrong }) => wrong);
-
-      const missingTargets = words
-        .map((w, i) => ({
-          w,
-          i,
-          missing: !isCompleteAiWord(w),
-          wrong: repairWrong && isLikelyWrongAiWord(w)
-        }))
-        .filter(({ missing, wrong }) => missing && !wrong);
-
-      const targets = onlyWrong ? wrongTargets : [...wrongTargets, ...missingTargets];
+      const { targets, chunks, workerCount: concurrency } = buildGenerateMissingPlan(words, {
+        repairWrong,
+        onlyWrong
+      });
 
       if (!targets.length) {
         setToast(onlyWrong ? "没有发现确定错词" : repairWrong ? "没有发现缺失资料或明显错词" : "没有发现缺失资料");
         return { total: 0, failed: 0, repaired: 0 };
       }
 
-      const batchSize = 20;
-      const concurrency = 5;
-      const chunks = [];
-
-      for (let start = 0; start < targets.length; start += batchSize) {
-        const chunk = targets.slice(start, start + batchSize);
-        chunks.push({
-          items: chunk,
-          force: chunk.some((item) => item.wrong) || onlyWrong
-        });
-      }
-
-      let nextChunkIndex = 0;
-      let completedWords = 0;
       let failedWords = [];
       let repairedWords = 0;
       let completedMissing = 0;
@@ -437,71 +357,56 @@ export function createAiOps(ctx) {
         });
       }
 
-      async function runOneChunk(chunk, workerId, retry = 0) {
-        const wordList = chunk.items.map(({ w }) => w.word);
-        const preview = wordList.slice(0, 5).join(", ");
+      await runAdminAiBatch({
+        chunks,
+        workerCount: concurrency,
+        maxRetries: 1,
+        getChunkSize: (chunk) => chunk.items.length,
+        shouldRetry: ({ error }) => error?.retryable === true,
+        onChunkStart({ chunk, workerId, completedItems }) {
+          const wordList = chunk.items.map(({ w }) => w.word);
+          const preview = wordList.slice(0, 5).join(", ");
+          setBatchInfo(
+            `${modeName} 20×5：${completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${wordList.length > 5 ? "..." : ""}`
+          );
+        },
+        async executeChunk({ chunk, workerId }) {
+          const wordList = chunk.items.map(({ w }) => w.word);
+          const res = await fetch("/api/generate-words", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              words: wordList,
+              force: chunk.force
+            })
+          });
+          const data = await res.json();
 
-        setBatchInfo(
-          `${modeName} 20×5：${completedWords} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${wordList.length > 5 ? "..." : ""}`
-        );
-
-        const res = await fetch("/api/generate-words", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            words: wordList,
-            force: chunk.force
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          const reason = data?.detail || data?.error || `HTTP ${res.status}`;
-
-          if (retry < 1) {
-            setBatchInfo(`第 ${workerId} 路失败，正在重试：${reason}`);
-            return runOneChunk(chunk, workerId, retry + 1);
+          if (!res.ok) {
+            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
           }
 
-          failedWords.push(...wordList);
-          setBatchInfo(`第 ${workerId} 路失败：${reason}`);
-          return;
-        }
-
-        if (!Array.isArray(data.items) || !data.items.length) {
-          failedWords.push(...wordList);
-          setBatchInfo(`第 ${workerId} 路没有返回有效词条`);
-          return;
-        }
-
-        applyGeneratedItems(chunk, data.items || []);
-      }
-
-      async function worker(workerId) {
-        while (nextChunkIndex < chunks.length) {
-          const chunkIndex = nextChunkIndex;
-          nextChunkIndex += 1;
-          const chunk = chunks[chunkIndex];
-
-          try {
-            await runOneChunk(chunk, workerId);
-          } catch {
-            failedWords.push(...chunk.items.map(({ w }) => w.word));
-          } finally {
-            completedWords += chunk.items.length;
-            setBatchInfo(
-              `${modeName} 20×5：${Math.min(completedWords, targets.length)} / ${targets.length} ｜ 已修错 ${repairedWords} 个 ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${Math.max(0, chunks.length - nextChunkIndex)}`
-            );
+          if (!Array.isArray(data.items) || !data.items.length) {
+            failedWords.push(...wordList);
+            setBatchInfo(`第 ${workerId} 路没有返回有效词条`);
+            return;
           }
+
+          applyGeneratedItems(chunk, data.items);
+        },
+        onRetry({ workerId, error }) {
+          setBatchInfo(`第 ${workerId} 路失败，正在重试：${error.message}`);
+        },
+        onChunkError({ chunk, workerId, error }) {
+          failedWords.push(...chunk.items.map(({ w }) => w.word));
+          if (error?.retryable) setBatchInfo(`第 ${workerId} 路失败：${error.message}`);
+        },
+        onChunkSettled({ completedItems, remainingChunks }) {
+          setBatchInfo(
+            `${modeName} 20×5：${Math.min(completedItems, targets.length)} / ${targets.length} ｜ 已修错 ${repairedWords} 个 ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${remainingChunks}`
+          );
         }
-      }
-
-      const workerCount = Math.min(concurrency, chunks.length);
-
-      await Promise.all(
-        Array.from({ length: workerCount }, (_, i) => worker(i + 1))
-      );
+      });
 
       setBatchInfo("");
 
@@ -526,16 +431,7 @@ export function createAiOps(ctx) {
     try {
       setLoading(true);
 
-      const targets = words
-        .map((w, i) => ({
-          w,
-          i,
-          missing: isMissingAiFields(w),
-          unclassified: isMissingClassification(w),
-          wrong: isLikelyWrongAiWord(w),
-          truncated: hasHeadwordRepair(w.word)
-        }))
-        .filter(({ missing, unclassified, wrong, truncated }) => missing || unclassified || wrong || truncated);
+      const { targets } = buildOneByOneCompletionPlan(words);
 
       if (!targets.length) {
         setToast("没有发现待补全、未归类或可修复错词");
@@ -665,20 +561,11 @@ export function createAiOps(ctx) {
     try {
       setLoading(true);
 
-      const targets = words
-        .map((w, i) => ({ w, i }))
-        .filter(({ w }) => isMissingAiFields(w) || isLikelyWrongAiWord(w) || hasHeadwordRepair(w.word));
+      const { targets, chunks } = buildSlowCompletionPlan(words);
 
       if (!targets.length) {
         setToast("没有发现缺失资料或可修复错字，不需要调用 AI");
         return { total: 0, failed: 0 };
-      }
-
-      const batchSize = 10;
-      const chunks = [];
-
-      for (let start = 0; start < targets.length; start += batchSize) {
-        chunks.push(targets.slice(start, start + batchSize));
       }
 
       let completed = 0;
@@ -863,21 +750,11 @@ export function createAiOps(ctx) {
     try {
       setLoading(true);
 
-      const targets = words
-        .map((w, i) => ({ w, i }))
-        .filter(({ w }) => isLikelyWrongAiWord(w));
+      const { targets, chunks, workerCount: concurrency } = buildWrongRepairPlan(words);
 
       if (!targets.length) {
         setToast("没有发现确定错词");
         return { total: 0, failed: 0 };
-      }
-
-      const batchSize = 10;
-      const concurrency = 2;
-      const chunks = [];
-
-      for (let start = 0; start < targets.length; start += batchSize) {
-        chunks.push(targets.slice(start, start + batchSize));
       }
 
       let nextChunkIndex = 0;
@@ -1039,25 +916,13 @@ export function createAiOps(ctx) {
       if (!keepLoading) setLoading(true);
       setBatchInfo("");
 
-      const targets = words
-        .map((w, i) => ({ w, i }))
-        .filter(({ w }) => isMissingAiFields(w));
+      const { targets, chunks, workerCount: concurrency } = buildFastCompletionPlan(words);
 
       if (!targets.length) {
         if (!quiet) setToast("没有发现缺失资料，不需要调用 AI");
         return { total: 0, failed: 0 };
       }
 
-      const batchSize = 100;
-      const concurrency = 5;
-      const chunks = [];
-
-      for (let start = 0; start < targets.length; start += batchSize) {
-        chunks.push(targets.slice(start, start + batchSize));
-      }
-
-      let nextChunkIndex = 0;
-      let completedWords = 0;
       let failedWords = [];
 
       let filledWords = 0;
@@ -1115,67 +980,52 @@ export function createAiOps(ctx) {
         });
       }
 
-      async function runOneChunk(chunk, workerId, retry = 0) {
-        const wordList = chunk.map(({ w }) => w.word);
-        const preview = wordList.slice(0, 5).join(", ");
+      await runAdminAiBatch({
+        chunks,
+        workerCount: concurrency,
+        maxRetries: 1,
+        shouldRetry: ({ error }) => error?.retryable === true,
+        onChunkStart({ chunk, workerId, completedItems }) {
+          const wordList = chunk.map(({ w }) => w.word);
+          const preview = wordList.slice(0, 5).join(", ");
+          setBatchInfo(
+            `AI快速补全缺失资料 100×5：${completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${wordList.length > 5 ? "..." : ""}`
+          );
+        },
+        async executeChunk({ chunk, workerId }) {
+          const wordList = chunk.map(({ w }) => w.word);
+          const res = await fetch("/api/generate-words", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ words: wordList })
+          });
+          const data = await res.json();
 
-        setBatchInfo(
-          `AI快速补全缺失资料 100×5：${completedWords} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${wordList.length > 5 ? "..." : ""}`
-        );
-
-        const res = await fetch("/api/generate-words", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ words: wordList })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          const reason = data?.detail || data?.error || `HTTP ${res.status}`;
-
-          if (retry < 1) {
-            setBatchInfo(`第 ${workerId} 路失败，正在重试：${reason}`);
-            return runOneChunk(chunk, workerId, retry + 1);
+          if (!res.ok) {
+            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
           }
 
-          failedWords.push(...wordList);
-          setBatchInfo(`第 ${workerId} 路失败：${reason}`);
-          return;
-        }
-
-        if (!Array.isArray(data.items) || !data.items.length) {
-          failedWords.push(...wordList);
-          setBatchInfo(`第 ${workerId} 路没有返回有效词条`);
-          return;
-        }
-
-        applyGeneratedItems(chunk, data.items || []);
-      }
-
-      async function worker(workerId) {
-        while (nextChunkIndex < chunks.length) {
-          const chunkIndex = nextChunkIndex;
-          nextChunkIndex += 1;
-          const chunk = chunks[chunkIndex];
-
-          try {
-            await runOneChunk(chunk, workerId);
-          } catch {
-            failedWords.push(...chunk.map(({ w }) => w.word));
-          } finally {
-            completedWords += chunk.length;
-            setBatchInfo(
-              `AI快速补全缺失资料 100×5：${Math.min(completedWords, targets.length)} / ${targets.length} ｜ 已补全 ${filledWords} 个 ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${Math.max(0, chunks.length - nextChunkIndex)}`
-            );
+          if (!Array.isArray(data.items) || !data.items.length) {
+            failedWords.push(...wordList);
+            setBatchInfo(`第 ${workerId} 路没有返回有效词条`);
+            return;
           }
-        }
-      }
 
-      const workerCount = Math.min(concurrency, chunks.length);
-      await Promise.all(
-        Array.from({ length: workerCount }, (_, i) => worker(i + 1))
-      );
+          applyGeneratedItems(chunk, data.items);
+        },
+        onRetry({ workerId, error }) {
+          setBatchInfo(`第 ${workerId} 路失败，正在重试：${error.message}`);
+        },
+        onChunkError({ chunk, workerId, error }) {
+          failedWords.push(...chunk.map(({ w }) => w.word));
+          if (error?.retryable) setBatchInfo(`第 ${workerId} 路失败：${error.message}`);
+        },
+        onChunkSettled({ completedItems, remainingChunks }) {
+          setBatchInfo(
+            `AI快速补全缺失资料 100×5：${Math.min(completedItems, targets.length)} / ${targets.length} ｜ 已补全 ${filledWords} 个 ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${remainingChunks}`
+          );
+        }
+      });
 
       setBatchInfo("");
 
@@ -1228,25 +1078,13 @@ export function createAiOps(ctx) {
       setLoading(true);
       setBatchInfo("");
 
-      const targets = words
-        .map((w, i) => ({ w, i }))
-        .filter(({ w }) => isMissingClassification(w));
+      const { targets, chunks, workerCount: concurrency } = buildClassificationPlan(words);
 
       if (!targets.length) {
         setToast("没有需要归纳的单词");
         return;
       }
 
-      const batchSize = 20;
-      const concurrency = 5;
-      const chunks = [];
-
-      for (let start = 0; start < targets.length; start += batchSize) {
-        chunks.push(targets.slice(start, start + batchSize));
-      }
-
-      let nextChunkIndex = 0;
-      let completedWords = 0;
       let failedWords = [];
 
       function applyCategorizedItems(chunk, items) {
@@ -1279,63 +1117,47 @@ export function createAiOps(ctx) {
         });
       }
 
-      async function runOneChunk(chunk, workerId, retry = 0) {
-        const preview = chunk.map(({ w }) => w.word).slice(0, 6).join(", ");
+      await runAdminAiBatch({
+        chunks,
+        workerCount: concurrency,
+        maxRetries: 1,
+        shouldRetry: ({ error }) => error?.retryable === true,
+        onChunkStart({ chunk, workerId, completedItems }) {
+          const preview = chunk.map(({ w }) => w.word).slice(0, 6).join(", ");
+          setBatchInfo(
+            `AI归纳分类：${completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${chunk.length > 6 ? "..." : ""}`
+          );
+        },
+        async executeChunk({ chunk }) {
+          const res = await fetch("/api/categorize-words", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              words: chunk.map(({ w }) => ({
+                word: w.word,
+                pos: w.pos,
+                meaning: w.meaning,
+                example: w.example
+              }))
+            })
+          });
+          const data = await res.json();
 
-        setBatchInfo(
-          `AI归纳分类：${completedWords} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${chunk.length > 6 ? "..." : ""}`
-        );
-
-        const res = await fetch("/api/categorize-words", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            words: chunk.map(({ w }) => ({
-              word: w.word,
-              pos: w.pos,
-              meaning: w.meaning,
-              example: w.example
-            }))
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          if (retry < 1) {
-            return runOneChunk(chunk, workerId, retry + 1);
+          if (!res.ok) {
+            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
           }
 
+          applyCategorizedItems(chunk, data.items || []);
+        },
+        onChunkError({ chunk }) {
           failedWords.push(...chunk.map(({ w }) => w.word));
-          return;
+        },
+        onChunkSettled({ completedItems, remainingChunks }) {
+          setBatchInfo(
+            `AI归纳分类：${Math.min(completedItems, targets.length)} / ${targets.length} ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${remainingChunks}`
+          );
         }
-
-        applyCategorizedItems(chunk, data.items || []);
-      }
-
-      async function worker(workerId) {
-        while (nextChunkIndex < chunks.length) {
-          const chunkIndex = nextChunkIndex;
-          nextChunkIndex += 1;
-          const chunk = chunks[chunkIndex];
-
-          try {
-            await runOneChunk(chunk, workerId);
-          } catch {
-            failedWords.push(...chunk.map(({ w }) => w.word));
-          } finally {
-            completedWords += chunk.length;
-            setBatchInfo(
-              `AI归纳分类：${Math.min(completedWords, targets.length)} / ${targets.length} ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${Math.max(0, chunks.length - nextChunkIndex)}`
-            );
-          }
-        }
-      }
-
-      const workerCount = Math.min(concurrency, chunks.length);
-      await Promise.all(
-        Array.from({ length: workerCount }, (_, i) => worker(i + 1))
-      );
+      });
 
       setBatchInfo("");
 

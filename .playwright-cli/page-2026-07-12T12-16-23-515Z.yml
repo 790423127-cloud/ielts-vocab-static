@@ -1,0 +1,257 @@
+- generic [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - link "IELTS Vocab 首页" [ref=f4e3] [cursor=pointer]:
+      - /url: /
+      - text: IELTS VOCAB
+    - generic "当前训练" [ref=f4e5]:
+      - strong [ref=f4e6]: G类阅读提升
+      - generic [ref=f4e7]: 独立进度
+    - group "全站字号" [ref=f4e9]:
+      - button "减小字号" [ref=f4e10] [cursor=pointer]: A−
+      - button "当前字号 100%，点击恢复默认" [ref=f4e11] [cursor=pointer]: 100%
+      - button "增大字号" [ref=f4e12] [cursor=pointer]: A+
+  - complementary "全站学习导航" [ref=f4e13]:
+    - navigation [ref=f4e14]:
+      - link "刷词" [ref=f4e15] [cursor=pointer]:
+        - /url: /
+      - link "拼写" [ref=f4e19] [cursor=pointer]:
+        - /url: /spelling-words
+      - link "选义" [ref=f4e24] [cursor=pointer]:
+        - /url: /meaning
+      - link "高频表达" [ref=f4e29] [cursor=pointer]:
+        - /url: /expressions
+    - generic [ref=f4e34]: 专项学习
+    - navigation [ref=f4e35]:
+      - link "零基础词库" [ref=f4e36] [cursor=pointer]:
+        - /url: /basic
+      - link "G类阅读提升" [ref=f4e40] [cursor=pointer]:
+        - /url: /reading-g
+      - link "词组训练" [ref=f4e44] [cursor=pointer]:
+        - /url: /spelling-phrases
+      - link "错词本" [ref=f4e49] [cursor=pointer]:
+        - /url: /spelling-words?source=error_bank
+      - link "SRS 复习" [ref=f4e55] [cursor=pointer]:
+        - /url: /spelling-words?source=srs_review
+    - navigation [ref=f4e60]:
+      - button "AI 工具" [ref=f4e61] [cursor=pointer]
+      - link "首页" [ref=f4e65] [cursor=pointer]:
+        - /url: /
+  - alert [ref=f4e75]
+  - main [ref=f4e76]:
+    - generic [ref=f4e77]:
+      - generic [ref=f4e79]:
+        - button "随机" [ref=f4e80] [cursor=pointer]
+        - link "← 主词库" [ref=f4e81] [cursor=pointer]:
+          - /url: /
+        - link "零基础单词" [ref=f4e82] [cursor=pointer]:
+          - /url: /basic
+        - link "单词拼写训练" [ref=f4e83] [cursor=pointer]:
+          - /url: /spelling-words
+        - link "看词选意思 · 核心6000" [ref=f4e84] [cursor=pointer]:
+          - /url: /meaning
+        - group [ref=f4e85]:
+          - generic "词库面板" [ref=f4e86]
+      - generic [ref=f4e87]:
+        - generic [ref=f4e88]:
+          - generic [ref=f4e89]: G类阅读提升
+          - generic [ref=f4e90]: 同义替换训练
+        - generic [ref=f4e91]:
+          - generic [ref=f4e92]: 1 / 80
+          - group [ref=f4e93]:
+            - generic "筛选" [active] [ref=f4e94] [cursor=pointer]
+            - generic [ref=f4e141]:
+              - heading "筛选" [level=2] [ref=f4e142]
+              - paragraph [ref=f4e143]: 选择学习范围。完整路线见面板底部说明。
+              - generic [ref=f4e144]: 当前：同义替换训练 · 80 个词
+              - paragraph [ref=f4e145]: 词义熟悉 0 · 短语熟悉 0 · 同义替换掌握 10
+              - generic [ref=f4e146]:
+                - generic [ref=f4e147]: 学习模式
+                - generic [ref=f4e148]:
+                  - button "词义学习 普通单词 · 只写 meaningStatus 3713 个" [ref=f4e149] [cursor=pointer]:
+                    - generic [ref=f4e150]: 词义学习
+                    - generic [ref=f4e151]: 普通单词 · 只写 meaningStatus
+                    - generic [ref=f4e152]: 3713 个
+                  - button "短语学习 固定词组 · 只写 phraseStatus 635 个" [ref=f4e153] [cursor=pointer]:
+                    - generic [ref=f4e154]: 短语学习
+                    - generic [ref=f4e155]: 固定词组 · 只写 phraseStatus
+                    - generic [ref=f4e156]: 635 个
+                  - button "同义替换训练 高可信四选一 · 只写 paraphraseStatus 233 个" [ref=f4e157] [cursor=pointer]:
+                    - generic [ref=f4e158]: 同义替换训练
+                    - generic [ref=f4e159]: 高可信四选一 · 只写 paraphraseStatus
+                    - generic [ref=f4e160]: 233 个
+              - generic [ref=f4e161]:
+                - generic [ref=f4e162]: 阶段路径
+                - generic [ref=f4e163]:
+                  - button "阶段1：基础保分 1500+250+120+词组前200 1900 个" [ref=f4e164] [cursor=pointer]:
+                    - generic [ref=f4e165]: 阶段1：基础保分
+                    - generic [ref=f4e166]: 1500+250+120+词组前200
+                    - generic [ref=f4e167]: 1900 个
+                  - button "阶段2：扩大覆盖 B层1200+词组后200（同义另训） 1400 个" [ref=f4e168] [cursor=pointer]:
+                    - generic [ref=f4e169]: 阶段2：扩大覆盖
+                    - generic [ref=f4e170]: B层1200+词组后200（同义另训）
+                    - generic [ref=f4e171]: 1400 个
+                  - button "阶段3：同义与Section3 网络同义600+C层800+扩展500 2201 个" [ref=f4e172] [cursor=pointer]:
+                    - generic [ref=f4e173]: 阶段3：同义与Section3
+                    - generic [ref=f4e174]: 网络同义600+C层800+扩展500
+                    - generic [ref=f4e175]: 2201 个
+                  - button "阶段4：参考查阅 reference701 只查阅 701 个" [ref=f4e176] [cursor=pointer]:
+                    - generic [ref=f4e177]: 阶段4：参考查阅
+                    - generic [ref=f4e178]: reference701 只查阅
+                    - generic [ref=f4e179]: 701 个
+              - generic [ref=f4e180]:
+                - generic [ref=f4e181]: 推荐 / 状态
+                - generic [ref=f4e182]:
+                  - button "默认待学 全部 studyMode=active 4348 个" [ref=f4e183] [cursor=pointer]:
+                    - generic [ref=f4e184]: 默认待学
+                    - generic [ref=f4e185]: 全部 studyMode=active
+                    - generic [ref=f4e186]: 4348 个
+                  - button "不熟 当前模式下的不熟 0 个" [ref=f4e187] [cursor=pointer]:
+                    - generic [ref=f4e188]: 不熟
+                    - generic [ref=f4e189]: 当前模式下的不熟
+                    - generic [ref=f4e190]: 0 个
+                  - button "熟悉 当前模式下的熟悉 0 个" [ref=f4e191] [cursor=pointer]:
+                    - generic [ref=f4e192]: 熟悉
+                    - generic [ref=f4e193]: 当前模式下的熟悉
+                    - generic [ref=f4e194]: 0 个
+                  - button "收藏 收藏重点 0 个" [ref=f4e195] [cursor=pointer]:
+                    - generic [ref=f4e196]: 收藏
+                    - generic [ref=f4e197]: 收藏重点
+                    - generic [ref=f4e198]: 0 个
+                  - button "全部（含参考） 含 reference701 4978 个" [ref=f4e199] [cursor=pointer]:
+                    - generic [ref=f4e200]: 全部（含参考）
+                    - generic [ref=f4e201]: 含 reference701
+                    - generic [ref=f4e202]: 4978 个
+              - generic [ref=f4e203]:
+                - generic [ref=f4e204]: 分层类目
+                - generic [ref=f4e205]:
+                  - button "优先核心1500 第一优先。 1500 个" [ref=f4e206] [cursor=pointer]:
+                    - generic [ref=f4e207]: 优先核心1500
+                    - generic [ref=f4e208]: 第一优先。
+                    - generic [ref=f4e209]: 1500 个
+                  - button "答案词强化250 答案敏感词。 250 个" [ref=f4e210] [cursor=pointer]:
+                    - generic [ref=f4e211]: 答案词强化250
+                    - generic [ref=f4e212]: 答案敏感词。
+                    - generic [ref=f4e213]: 250 个
+                  - button "逻辑连接120 转折/条件。 120 个" [ref=f4e214] [cursor=pointer]:
+                    - generic [ref=f4e215]: 逻辑连接120
+                    - generic [ref=f4e216]: 转折/条件。
+                    - generic [ref=f4e217]: 120 个
+                  - button "高频词组400 整层400（阶段用前后200）。 400 个" [ref=f4e218] [cursor=pointer]:
+                    - generic [ref=f4e219]: 高频词组400
+                    - generic [ref=f4e220]: 整层400（阶段用前后200）。
+                    - generic [ref=f4e221]: 400 个
+                  - button "B层1200 扩大覆盖。 1200 个" [ref=f4e222] [cursor=pointer]:
+                    - generic [ref=f4e223]: B层1200
+                    - generic [ref=f4e224]: 扩大覆盖。
+                    - generic [ref=f4e225]: 1200 个
+                  - button "网络同义核心600 识别为主，不自动配对出题。 1006 个" [ref=f4e226] [cursor=pointer]:
+                    - generic [ref=f4e227]: 网络同义核心600
+                    - generic [ref=f4e228]: 识别为主，不自动配对出题。
+                    - generic [ref=f4e229]: 1006 个
+                  - button "C层800 Section3 扩展。 800 个" [ref=f4e230] [cursor=pointer]:
+                    - generic [ref=f4e231]: C层800
+                    - generic [ref=f4e232]: Section3 扩展。
+                    - generic [ref=f4e233]: 800 个
+                  - button "网络同义扩展500 识别扩展。 500 个" [ref=f4e234] [cursor=pointer]:
+                    - generic [ref=f4e235]: 网络同义扩展500
+                    - generic [ref=f4e236]: 识别扩展。
+                    - generic [ref=f4e237]: 500 个
+                  - button "参考701 只查阅。 630 个" [ref=f4e238] [cursor=pointer]:
+                    - generic [ref=f4e239]: 参考701
+                    - generic [ref=f4e240]: 只查阅。
+                    - generic [ref=f4e241]: 630 个
+              - generic [ref=f4e242]:
+                - generic [ref=f4e243]: 形态
+                - generic [ref=f4e244]:
+                  - button "仅单词 entryType=word 4310 个" [ref=f4e245] [cursor=pointer]:
+                    - generic [ref=f4e246]: 仅单词
+                    - generic [ref=f4e247]: entryType=word
+                    - generic [ref=f4e248]: 4310 个
+                  - button "仅词组 entryType=phrase 668 个" [ref=f4e249] [cursor=pointer]:
+                    - generic [ref=f4e250]: 仅词组
+                    - generic [ref=f4e251]: entryType=phrase
+                    - generic [ref=f4e252]: 668 个
+                  - button "真题高可信同义300 关系浏览（非MCQ） 233 个" [ref=f4e253] [cursor=pointer]:
+                    - generic [ref=f4e254]: 真题高可信同义300
+                    - generic [ref=f4e255]: 关系浏览（非MCQ）
+                    - generic [ref=f4e256]: 233 个
+              - generic [ref=f4e257]:
+                - generic [ref=f4e258]: 模式
+                - generic [ref=f4e259]:
+                  - button "词义学习" [ref=f4e260] [cursor=pointer]
+                  - button "短语学习" [ref=f4e261] [cursor=pointer]
+                  - button "同义替换训练" [ref=f4e262] [cursor=pointer]
+              - generic [ref=f4e263]:
+                - generic [ref=f4e264]: 阶段
+                - generic [ref=f4e265]:
+                  - button "阶段1" [ref=f4e266] [cursor=pointer]
+                  - button "阶段2" [ref=f4e267] [cursor=pointer]
+                  - button "阶段3" [ref=f4e268] [cursor=pointer]
+                  - button "阶段4" [ref=f4e269] [cursor=pointer]
+              - generic [ref=f4e270]:
+                - generic [ref=f4e271]: 路径
+                - generic [ref=f4e272]:
+                  - button "默认待学" [ref=f4e273] [cursor=pointer]
+                  - button "全部含参考" [ref=f4e274] [cursor=pointer]
+                  - button "不熟" [ref=f4e275] [cursor=pointer]
+                  - button "熟悉" [ref=f4e276] [cursor=pointer]
+                  - button "收藏" [ref=f4e277] [cursor=pointer]
+              - generic [ref=f4e278]:
+                - generic [ref=f4e279]: 分层
+                - generic [ref=f4e280]:
+                  - button "优先核心1500" [ref=f4e281] [cursor=pointer]
+                  - button "答案词强化250" [ref=f4e282] [cursor=pointer]
+                  - button "逻辑连接120" [ref=f4e283] [cursor=pointer]
+                  - button "高频词组400" [ref=f4e284] [cursor=pointer]
+                  - button "B层1200" [ref=f4e285] [cursor=pointer]
+                  - button "真题同义300" [ref=f4e286] [cursor=pointer]
+                  - button "网络同义核心600" [ref=f4e287] [cursor=pointer]
+                  - button "C层800" [ref=f4e288] [cursor=pointer]
+                  - button "网络同义扩展500" [ref=f4e289] [cursor=pointer]
+                  - button "参考701" [ref=f4e290] [cursor=pointer]
+              - generic [ref=f4e291]:
+                - generic [ref=f4e292]: 形态
+                - generic [ref=f4e293]:
+                  - button "仅单词" [ref=f4e294] [cursor=pointer]
+                  - button "仅词组" [ref=f4e295] [cursor=pointer]
+              - paragraph [ref=f4e296]: 阶段1 保分 → 阶段2 覆盖(+同义训练) → 阶段3 Section3/网络同义识别 → 阶段4 参考查阅。网络600/500/701不进自动同义题。
+      - generic [ref=f4e96]:
+        - button "☆" [ref=f4e97] [cursor=pointer]
+        - generic [ref=f4e98]:
+          - button "播放例句发音，快捷键空格" [ref=f4e100] [cursor=pointer]:
+            - generic [ref=f4e101]: 🔊
+            - generic [ref=f4e102]: 空格·例句
+          - button "暂无例句 暂无例句中文" [ref=f4e297] [cursor=pointer]:
+            - generic [ref=f4e104]: 暂无例句
+            - generic [ref=f4e105]: 暂无例句中文
+        - generic [ref=f4e298]: 当前词标记为不熟，复习时会优先出现
+        - generic [ref=f4e299]:
+          - generic [ref=f4e301]:
+            - generic [ref=f4e302]: because
+            - generic [ref=f4e303]: 选择最接近的替换表达
+          - generic [ref=f4e304]:
+            - button "A. client" [disabled] [ref=f4e305] [cursor=pointer]:
+              - generic [ref=f4e306]: A.
+              - text: client
+            - button "B. a number of" [disabled] [ref=f4e307] [cursor=pointer]:
+              - generic [ref=f4e308]: B.
+              - text: a number of
+            - button "C. since" [disabled] [ref=f4e309] [cursor=pointer]:
+              - generic [ref=f4e310]: C.
+              - text: since
+            - button "D. accommodation" [disabled] [ref=f4e311] [cursor=pointer]:
+              - generic [ref=f4e312]: D.
+              - text: accommodation
+          - generic [ref=f4e315]:
+            - generic [ref=f4e316]:
+              - text: 正确答案：
+              - strong [ref=f4e317]: since
+            - generic [ref=f4e318]: 共同中文义：因为
+            - generic [ref=f4e319]: 关系：near_synonym
+            - generic [ref=f4e320]: 差别：两者在本题语境中意义接近，语体或搭配可能不同。
+            - generic [ref=f4e321]: 题干「because」与「since」在当前语境中最接近。
+      - generic [ref=f4e133]:
+        - generic [ref=f4e134]:
+          - button "掌握" [ref=f4e313] [cursor=pointer]
+          - button "取消未掌握" [ref=f4e314] [cursor=pointer]
+        - generic [ref=f4e137]: 1 / 80

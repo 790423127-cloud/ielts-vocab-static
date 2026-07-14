@@ -1,10 +1,19 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { createEngine, nextQuestion, submitAnswer, getSessionStats } from "../lib/expressions/engine.mjs";
+import Link from "next/link";
+import { Volume2 } from "lucide-react";
+import {
+  createEngine,
+  nextQuestion,
+  submitAnswer,
+  getSessionStats,
+  EXPRESSIONS_SESSION_SIZE
+} from "../lib/expressions/engine.mjs";
 import { getLearnedCount } from "../lib/expressions/storage.mjs";
 import { speakPhrase, speakExample, stopAudio } from "../lib/expressions/audio.mjs";
 import StudyRangeSummary from "../components/StudyRangeSummary.jsx";
+import StableLoadingState from "../components/StableLoadingState.jsx";
 import styles from "./expressions.module.css";
 
 const DATA_URL = "/data/speaking-writing-phrases-700.json";
@@ -23,7 +32,6 @@ export default function ExpressionsPage() {
   const [result, setResult] = useState(null);
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
-  const [loadingPct, setLoadingPct] = useState(0);
   const [learnedCount, setLearnedCount] = useState(0);
   const loadAttempted = useRef(false);
   const cardRef = useRef(null);
@@ -36,18 +44,15 @@ export default function ExpressionsPage() {
 
     async function load() {
       try {
-        const timer = setInterval(() => { if (!cancelled) setLoadingPct(p => Math.min(p + 5, 90)); }, 80);
         const res = await fetch(DATA_URL);
         if (!res.ok) throw new Error("Failed to load: " + res.status);
         const data = await res.json();
-        clearInterval(timer);
         if (cancelled) return;
         if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
           setError("Phrase bank is empty.");
           setPhase("error");
           return;
         }
-        setLoadingPct(100);
         const eng = createEngine(data.items);
         setEngine(eng);
         setLearnedCount(getLearnedCount());
@@ -105,15 +110,20 @@ export default function ExpressionsPage() {
     stopAudio();
     lastPhraseRef.current = question?.phrase || null;
     return () => { stopAudio(); };
-  }, [question?.phraseId]);
+  }, [question?.phrase, question?.phraseId]);
 
   const startSession = useCallback(() => {
     if (!engine) return;
-    const q = nextQuestion(engine);
+    const activeEngine = engine.queueIndex >= engine.queue.length
+      ? createEngine(engine.phraseBank)
+      : engine;
+    if (activeEngine !== engine) setEngine(activeEngine);
+    const q = nextQuestion(activeEngine);
     if (!q) { setPhase("done"); return; }
     setQuestion(q);
     setSelected(null);
     setResult(null);
+    setStats(getSessionStats(activeEngine));
     setPhase("question");
     if (cardRef.current) cardRef.current.focus();
   }, [engine]);
@@ -166,11 +176,12 @@ export default function ExpressionsPage() {
   // Loading
   if (phase === "loading") {
     return (
-      <main className={styles.page}>
-        <div className={styles.centerWrap}>
-          <div className={styles.progressBarWrap}><div className={styles.progressBarFill} style={{ width: loadingPct + "%" }} /></div>
-          <p className={styles.loadingText}>正在加载口语写作高频表达 700…</p>
-        </div>
+      <main className={`${styles.page} system-loading-page`}>
+        <StableLoadingState
+          mark="E"
+          eyebrow="高频表达训练"
+          note="读取口语写作表达并恢复学习记录"
+        />
       </main>
     );
   }
@@ -178,11 +189,16 @@ export default function ExpressionsPage() {
   // Error
   if (phase === "error") {
     return (
-      <main className={styles.page}>
-        <div className={styles.centerWrap}>
-          <p className={styles.errorText}>{error}</p>
-          <a href="/" className={styles.pillLink}>← 返回首页</a>
-        </div>
+      <main className={`${styles.page} system-loading-page`}>
+        <StableLoadingState
+          mark="E"
+          eyebrow="高频表达训练"
+          title="表达题库暂时无法读取"
+          note={error}
+          variant="error"
+          actionHref="/"
+          actionLabel="返回刷词"
+        />
       </main>
     );
   }
@@ -195,14 +211,14 @@ export default function ExpressionsPage() {
         <StudyRangeSummary
           mode="选择题"
           title="口语写作表达"
-          meta={`${engine.phraseBank.length} 条`}
-          detail="看英文词组选中文释义；答题后再看例句和正确表达。"
+          meta={`总题库 ${engine.phraseBank.length} 条`}
+          detail={`每轮 ${engine.queue.length} 题，优先未学习表达并穿插不熟题。`}
           className="quiz-study-range"
         />
         <div className={styles.centerWrap}>
-          <h2 className={styles.readyTitle}>口语写作高频表达</h2>
-          <p className={styles.readyDesc}>看英文词组，从 4 个选项中选出正确的中文意思</p>
-          <button className={styles.startBtn} onClick={startSession}>开始练习</button>
+          <h2 className={styles.readyTitle}>高频表达训练</h2>
+          <p className={styles.readyDesc}>总题库 {engine.phraseBank.length} 条 · 本轮 {engine.queue.length} 题</p>
+          <button className={styles.startBtn} onClick={startSession}>开始本轮</button>
         </div>
       </main>
     );
@@ -216,14 +232,14 @@ export default function ExpressionsPage() {
         <StudyRangeSummary
           mode="选择题"
           title="口语写作表达"
-          meta={stats ? `${stats.answered || 0} 已答` : "作答中"}
-          detail={`当前词组：${question.phrase || "—"}`}
+          meta={stats ? `本轮 ${stats.sessionPosition || 0} / ${stats.sessionTotal || EXPRESSIONS_SESSION_SIZE}` : "作答中"}
+          detail={`累计覆盖 ${learnedCount} / ${engine.phraseBank.length} · 当前表达：${question.phrase || "—"}`}
           className="quiz-study-range"
         />
         <div className={styles.cardWrap} ref={cardRef} tabIndex={-1}>
           <QuestionCard question={question} onSelect={handleSelect} onSkip={handleSkip} />
         </div>
-        <BottomBar stats={stats} total={engine.phraseBank.length} />
+        <BottomBar stats={stats} />
       </main>
     );
   }
@@ -236,14 +252,14 @@ export default function ExpressionsPage() {
         <StudyRangeSummary
           mode="选择题"
           title="口语写作表达"
-          meta={result.correct ? "答对" : "答错"}
-          detail={`当前词组：${question.phrase || "—"}`}
+          meta={`${result.correct ? "答对" : "答错"} · 本轮 ${stats?.sessionPosition || 0} / ${stats?.sessionTotal || EXPRESSIONS_SESSION_SIZE}`}
+          detail={`累计覆盖 ${learnedCount} / ${engine.phraseBank.length} · 当前表达：${question.phrase || "—"}`}
           className="quiz-study-range"
         />
         <div className={styles.cardWrap} ref={cardRef} tabIndex={-1}>
           <ResultCard question={question} selected={selected} result={result} onNext={handleNext} />
         </div>
-        <BottomBar stats={stats} total={engine.phraseBank.length} />
+        <BottomBar stats={stats} />
       </main>
     );
   }
@@ -254,9 +270,10 @@ export default function ExpressionsPage() {
       <main className={styles.page}>
         <TopBar learnedCount={learnedCount} total={engine.phraseBank.length} />
         <div className={styles.centerWrap}>
-          <h2 className={styles.readyTitle}>本轮完成！</h2>
-          <button className={styles.startBtn} onClick={startSession}>重新开始</button>
-          <a href="/" className={styles.pillLink}>返回首页</a>
+          <h2 className={styles.readyTitle}>本轮完成</h2>
+          <p className={styles.readyDesc}>累计覆盖 {learnedCount} / {engine.phraseBank.length}</p>
+          <button className={styles.startBtn} onClick={startSession}>开始下一轮</button>
+          <Link href="/" className={styles.pillLink}>返回刷词</Link>
         </div>
       </main>
     );
@@ -270,9 +287,10 @@ export default function ExpressionsPage() {
 function TopBar({ learnedCount, total, stats }) {
   return (
     <div className={styles.topbar}>
-      <a href="/" className={styles.pillLink}>← 首页</a>
-      <span className={styles.topTitle}>口语写作高频表达 · 700</span>
-      <span className={styles.topMeta}>已学习 {learnedCount} / {total}</span>
+      <span className={styles.topTitle}>高频表达训练</span>
+      <span className={styles.topMeta}>
+        {stats ? `本轮 ${stats.sessionPosition} / ${stats.sessionTotal} · ` : ""}累计覆盖 {learnedCount} / {total}
+      </span>
     </div>
   );
 }
@@ -299,10 +317,9 @@ function QuestionCard({ question, onSelect, onSkip }) {
       <div className={styles.phraseDisplay}>
         <span className={styles.phraseText}>{question.phrase}</span>
         <button className={styles.audioBtn} onClick={handlePhraseSpeak} aria-label="Play phrase" title="播放词组发音 (Tab)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <Volume2 aria-hidden="true" />
         </button>
       </div>
-      <p className={styles.audioHint}>Tab：播放词组发音</p>
 
       {/* 4 option buttons — 2x2 grid */}
       <div className={styles.optionsGrid}>
@@ -341,10 +358,9 @@ function ResultCard({ question, selected, result, onNext }) {
       <div className={styles.phraseDisplay}>
         <span className={styles.phraseText}>{question.phrase}</span>
         <button className={styles.audioBtn} onClick={handlePhraseSpeak} aria-label="Play phrase" title="播放词组发音 (Tab)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <Volume2 aria-hidden="true" />
         </button>
       </div>
-      <p className={styles.audioHint}>Tab：播放词组发音</p>
 
       {/* 4 options with English display */}
       <div className={styles.optionsGrid}>
@@ -368,11 +384,10 @@ function ResultCard({ question, selected, result, onNext }) {
           <div className={styles.exampleHeader}>
             <div className={styles.exampleLabel}>Example</div>
             <button className={styles.audioBtnSm} onClick={handleExampleSpeak} aria-label="Play example" title="播放例句发音 (Space)">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <Volume2 aria-hidden="true" />
             </button>
           </div>
           <div className={styles.exampleText}>{question.example}</div>
-          <p className={styles.audioHint}>Space：播放例句发音</p>
         </div>
       )}
 
@@ -395,9 +410,10 @@ function ResultCard({ question, selected, result, onNext }) {
   );
 }
 
-function BottomBar({ stats, total }) {
+function BottomBar({ stats }) {
   if (!stats) return null;
-  const answered = stats.total || 0;
+  const answered = stats.sessionPosition || 0;
+  const total = stats.sessionTotal || EXPRESSIONS_SESSION_SIZE;
   const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
 
   return (

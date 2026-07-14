@@ -82,6 +82,14 @@ if errorlevel 1 (
   )
 )
 
+echo Step 2b: Verify master lexicon and publish cache are aligned...
+call npm run lexicon:check
+if errorlevel 1 (
+  echo ERROR: Lexicon consistency check failed. Run npm run lexicon:sync before publishing.
+  pause
+  exit /b 1
+)
+
 echo Step 3: Export static-site.zip...
 if exist "%ZIP_FILE%" del /f /q "%ZIP_FILE%" >nul 2>nul
 

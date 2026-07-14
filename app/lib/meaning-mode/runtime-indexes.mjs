@@ -60,7 +60,7 @@ function assertReady() {
 export function hydrateMeaningWordBank(wordBank) {
   assertReady();
   for (const item of wordBank) {
-    item._posFamily = MEANING_POS_INDEX[item.wordId] || item._posFamily || "unknown";
+    item._posFamily = MEANING_POS_INDEX[item.wordId] || item._posFamily || item.posFamily || "unknown";
 
     const semantic = _semanticByWordId.get(item.wordId);
     if (semantic) {
@@ -103,7 +103,7 @@ export function getWordBankIndex(wordBank) {
   for (const item of wordBank) {
     if (!item?.wordId) continue;
     byWordId.set(item.wordId, item);
-    const family = item._posFamily || "unknown";
+    const family = item._posFamily || item.posFamily || "unknown";
     if (!byPosFamily.has(family)) byPosFamily.set(family, []);
     byPosFamily.get(family).push(item);
   }

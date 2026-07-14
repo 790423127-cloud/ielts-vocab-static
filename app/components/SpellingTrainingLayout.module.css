@@ -1,9 +1,11 @@
 .spellingContentColumn {
-  width: min(860px, calc(100vw - 32px));
+  width: min(860px, 100%);
+  max-width: 100%;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  gap: 12px;
   box-sizing: border-box;
 }
 
@@ -17,7 +19,7 @@
 }
 
 .spellingFeedbackWrap {
-  width: min(860px, calc(100vw - 32px));
+  width: min(860px, 100%);
   max-width: 100%;
   align-self: center;
   display: flex;

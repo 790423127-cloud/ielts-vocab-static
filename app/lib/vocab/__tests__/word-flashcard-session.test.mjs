@@ -8,14 +8,32 @@ import {
   resolveWordStudyIndex,
   persistWordFlashSession
 } from "../word-flashcard-session.mjs";
+import {
+  safeLocalStorageGet,
+  safeLocalStorageRemove,
+  safeLocalStorageSet
+} from "../page-word-helpers.mjs";
 
 const pagePath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../page.jsx");
+const pageSource = fs.readFileSync(pagePath, "utf8");
 
 const words = [
   { word: "alpha", status: "" },
   { word: "beta", status: "熟悉" },
   { word: "gamma", status: "" }
 ];
+
+test("page word storage wrappers are safe before browser hydration", () => {
+  assert.equal(safeLocalStorageGet("test-key"), null);
+  assert.equal(safeLocalStorageSet("test-key", "value"), false);
+  assert.doesNotThrow(() => safeLocalStorageRemove("test-key"));
+});
+
+test("home page imports the runtime quality helpers used after vocab hydration", () => {
+  const helperImport = pageSource.match(/import\s*\{([\s\S]*?)\}\s*from\s*["']\.\/lib\/vocab\/page-word-helpers\.mjs["']/)?.[1] || "";
+  assert.match(helperImport, /\bisMissingAiFields\b/);
+  assert.match(helperImport, /\bisMissingClassification\b/);
+});
 
 function wordMatchesFilter(word, filter) {
   if (filter.type === "everything") return true;

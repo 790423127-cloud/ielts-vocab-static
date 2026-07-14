@@ -1,0 +1,75 @@
+- generic [active] [ref=f5e1]:
+  - banner [ref=f5e2]:
+    - link "C2 Mature Immersive 首页" [ref=f5e3] [cursor=pointer]:
+      - /url: ./index.html
+      - generic [ref=f5e4]: C2
+      - generic [ref=f5e5]: Mature Immersive
+    - navigation "页面导航" [ref=f5e6]:
+      - link "返回刷单词" [ref=f5e7] [cursor=pointer]:
+        - /url: ./index.html
+      - generic [ref=f5e8]: 拼写训练
+  - main [ref=f5e9]:
+    - paragraph [ref=f5e10]:
+      - strong [ref=f5e11]: 静态版
+      - text: 可独立使用；练习偏好与进度保存在当前浏览器中。
+    - generic [ref=f5e12]:
+      - generic [ref=f5e13]:
+        - generic [ref=f5e14]:
+          - paragraph [ref=f5e15]: C2 MATURE IMMERSIVE
+          - heading "拼写训练" [level=1] [ref=f5e16]
+        - generic [ref=f5e17]:
+          - generic [ref=f5e18]: 训练类型
+          - tablist "词条类型" [ref=f5e19]:
+            - button "混合" [ref=f5e20] [cursor=pointer]
+            - button "单词" [ref=f5e21] [cursor=pointer]
+            - button "短语" [ref=f5e22] [cursor=pointer]
+      - region [ref=f5e23]:
+        - generic [ref=f5e24]:
+          - heading "练习设置" [level=2] [ref=f5e25]
+          - generic [ref=f5e26]: 选择来源与范围
+        - tablist "练习来源" [ref=f5e28]:
+          - button "词库分类" [ref=f5e29] [cursor=pointer]
+          - button "爱听写听力" [ref=f5e30] [cursor=pointer]
+          - button "爱听写阅读" [ref=f5e31] [cursor=pointer]
+          - button "错词本" [ref=f5e32] [cursor=pointer]
+          - button "做题错词" [ref=f5e33] [cursor=pointer]
+          - button "SRS复习" [ref=f5e34] [cursor=pointer]
+        - generic [ref=f5e35]:
+          - generic "常用词库分类"
+          - generic [ref=f5e36]:
+            - text: 分类类型
+            - combobox "分类类型" [ref=f5e37]:
+              - option "难度分类"
+              - option "训练重点"
+              - option "主题分类"
+              - option "全部单词" [selected]
+          - generic [ref=f5e38]:
+            - text: 分类选项
+            - combobox "分类选项" [ref=f5e39]
+          - generic "当前分类选项"
+          - generic [ref=f5e40]:
+            - text: 批次
+            - combobox "批次" [ref=f5e41]
+          - generic "批次切换" [ref=f5e42]:
+            - button "上一批" [ref=f5e43] [cursor=pointer]
+            - generic [ref=f5e44]: 第 1 批
+            - button "下一批" [ref=f5e45] [cursor=pointer]
+        - generic [ref=f5e48]:
+          - checkbox "包含刷单词已熟悉内容（分类模式）" [ref=f5e49]
+          - text: 包含刷单词已熟悉内容（分类模式）
+      - region "拼写作答区" [ref=f5e50]:
+        - generic [ref=f5e51]: 正在读取所选词库…
+        - generic [ref=f5e52]:
+          - button "播放单词发音" [ref=f5e53] [cursor=pointer]:
+            - generic [ref=f5e54]: 🔊
+            - generic [ref=f5e55]: 单词
+          - button "播放例句发音" [ref=f5e56] [cursor=pointer]:
+            - generic [ref=f5e57]: 🔊
+            - generic [ref=f5e58]: 例句
+          - button "跳过" [ref=f5e59] [cursor=pointer]
+        - generic [ref=f5e60]:
+          - textbox "输入英文拼写" [disabled] [ref=f5e61]
+          - button "提交" [disabled] [ref=f5e62]
+          - button "提示" [disabled] [ref=f5e63]
+        - generic "当前批次进度"
+        - paragraph [ref=f5e65]: Tab 播放单词，Space 播放例句，Enter 提交，Ctrl+Enter 跳过。拼错的词会自动进入错词本。

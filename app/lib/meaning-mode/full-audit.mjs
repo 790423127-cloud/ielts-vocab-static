@@ -1,4 +1,4 @@
-﻿// full-audit.mjs — Full 4500-word distractor quality audit for Meaning Mode.
+// full-audit.mjs — Full 6000-word distractor quality audit for Meaning Mode.
 // Classifies each word: A / B / C / trueSemanticDeferred
 // Outputs: reports/meaning-full-distractor-audit-after.json and .md
 //
@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..");
 
 const WORDS_PATH = join(ROOT, ".static-export-cache", "words.json");
-const MEANING_PATH = join(ROOT, "public", "data", "meaning-4500.json");
+const MEANING_PATH = join(ROOT, "public", "data", "meaning-6000.json");
 const INDEX_PATH = join(__dirname, "semantic-distractor-index.mjs");
 
 // Load data
@@ -207,7 +207,7 @@ console.log("JSON report written.");
 
 // Write MD report
 const md = [
-  "# Meaning Mode — Full 4500-Word Distractor Quality Audit",
+  "# Meaning Mode — Full 6000-Word Distractor Quality Audit",
   "",
   "**Generated:** " + new Date().toISOString(),
   "",
@@ -243,7 +243,7 @@ const md = [
   "",
   "## Source Files",
   "- words.json: " + wordsData.words.length + " words",
-  "- meaning-4500.json: " + meaningData.items.length + " items",
+  "- meaning-6000.json: " + meaningData.items.length + " items",
   "- semantic-distractor-index.mjs: " + SEMANTIC_INDEX.length + " entries",
   ""
 ].join("\n");

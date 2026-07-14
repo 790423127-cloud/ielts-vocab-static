@@ -1,0 +1,62 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "IELTS Vocab 首页" [ref=e3] [cursor=pointer]:
+      - /url: /
+      - text: IELTS VOCAB
+    - generic "当前训练" [ref=e5]:
+      - strong [ref=e6]: 高频表达
+      - generic [ref=e7]: 口语与写作
+    - group "全站字号" [ref=e9]:
+      - button "减小字号" [ref=e10] [cursor=pointer]: A−
+      - button "当前字号 100%，点击恢复默认" [ref=e11] [cursor=pointer]: 100%
+      - button "增大字号" [ref=e12] [cursor=pointer]: A+
+  - complementary "全站学习导航" [ref=e13]:
+    - generic [ref=e14]: 训练模式
+    - navigation [ref=e15]:
+      - link "刷词" [ref=e16] [cursor=pointer]:
+        - /url: /
+      - link "拼写" [ref=e20] [cursor=pointer]:
+        - /url: /spelling-words
+      - link "选义" [ref=e25] [cursor=pointer]:
+        - /url: /meaning
+      - link "高频表达" [ref=e30] [cursor=pointer]:
+        - /url: /expressions
+    - generic [ref=e35]: 专项学习
+    - navigation [ref=e36]:
+      - link "零基础词库" [ref=e37] [cursor=pointer]:
+        - /url: /basic
+      - link "G类阅读提升" [ref=e41] [cursor=pointer]:
+        - /url: /reading-g
+      - link "词组训练" [ref=e45] [cursor=pointer]:
+        - /url: /spelling-phrases
+      - link "错词本" [ref=e50] [cursor=pointer]:
+        - /url: /spelling-words?source=error_bank
+      - link "SRS 复习" [ref=e56] [cursor=pointer]:
+        - /url: /spelling-words?source=srs_review
+    - navigation [ref=e61]:
+      - button "AI 工具" [ref=e62] [cursor=pointer]
+  - main [ref=e66]:
+    - generic [ref=e70]:
+      - generic [ref=e71]: 高频表达训练
+      - generic [ref=e72]: 本轮 1 / 20 · 累计覆盖 0 / 700
+    - region "选择题范围" [ref=e112]:
+      - generic [ref=e113]:
+        - generic [ref=e114]: 选择题
+        - strong [ref=e115]: 口语写作表达
+        - generic [ref=e116]: 本轮 1 / 20
+      - paragraph [ref=e117]: 累计覆盖 0 / 700 · 当前表达：find attached
+    - generic [ref=e119]:
+      - generic [ref=e120]: Task 1
+      - generic [ref=e122]:
+        - generic [ref=e123]: find attached
+        - button "Play phrase" [ref=e124] [cursor=pointer]
+      - generic [ref=e129]:
+        - button "附上" [ref=e130] [cursor=pointer]
+        - button "寻求建议" [ref=e131] [cursor=pointer]
+        - button "为……道歉" [ref=e132] [cursor=pointer]
+        - button "由于" [ref=e133] [cursor=pointer]
+      - button "跳过 →" [ref=e134] [cursor=pointer]
+    - generic [ref=e136]:
+      - generic [ref=e137]: 1 / 20
+      - generic [ref=e138]: 5%
+  - alert [ref=e69]

@@ -1,6 +1,7 @@
+import { Suspense } from "react";
 import "./globals.css";
-import FontScaleControl from "./components/FontScaleControl";
 import FontScaleProvider from "./components/FontScaleProvider";
+import GlobalStudyHeader from "./components/GlobalStudyHeader";
 
 export const metadata = {
   title: "IELTS Vocab",
@@ -28,9 +29,9 @@ export default function RootLayout({ children }) {
       </head>
       <body suppressHydrationWarning>
         <FontScaleProvider />
-        <div className="font-scale-dock" aria-hidden="false">
-          <FontScaleControl />
-        </div>
+        <Suspense fallback={null}>
+          <GlobalStudyHeader />
+        </Suspense>
         {children}
       </body>
     </html>

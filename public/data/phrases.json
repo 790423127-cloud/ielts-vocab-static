@@ -1,5 +1,5 @@
 {
-  "version": "phrase-layer-v2-2971-excel-speaking-writing-v1",
+  "version": "phrase-layer-v2-2971-excel-speaking-writing-v1-editorial-20260710",
   "generatedAt": "2026-06-27T15:45:09.960Z",
   "count": 2971,
   "source": "public/data/phrases.json + Excel speaking/writing phrase import",
@@ -61710,11 +61710,11 @@
       "meaningDetailSource": "deepseek-spelling-completion"
     },
     {
-      "word": "as a result (of",
+      "word": "as a result (of)",
       "phonetic": "/æz ə rɪˈzʌlt ɒv/",
       "pos": "phrase",
-      "meaning": "由于...的结果",
-      "definition": "Indicating consequence.",
+      "meaning": "因此；由于……",
+      "definition": "used to introduce a consequence, or with 'of' to state its cause",
       "example": "As a result of the rain, the event was cancelled.",
       "exampleCn": "由于下雨，活动取消了。",
       "collocations": [
@@ -61761,9 +61761,10 @@
       "wordId": "phrase_0f74d343388a",
       "entryType": "phrase",
       "isPhrase": true,
-      "answer": "as a result (of",
+      "answer": "as a result (of)",
       "acceptedAnswers": [
-        "as a result (of"
+        "as a result",
+        "as a result of"
       ],
       "phraseSource": "restored_from_v1_cleanup_report",
       "phraseOrder": 1048,
@@ -61771,8 +61772,8 @@
       "pronunciationVerified": true,
       "pronunciationSourceTier": "D",
       "pronunciationVariant": "en-GB",
-      "meaningDetailZh": "“as a result (of”的核心意思是“由于...的结果”。本词条按“phrase”使用。",
-      "meaningDetailSource": "deepseek-spelling-completion"
+      "meaningDetailZh": "“as a result”表示“因此”；后接“of + 名词或动名词”构成“as a result of”，表示“由于……”。",
+      "meaningDetailSource": "manual-editorial-review-2026-07-10"
     },
     {
       "word": "result(s) in",
@@ -66240,11 +66241,11 @@
       "phraseOrder": 1122
     },
     {
-      "word": "is/are/be) associated with",
+      "word": "(is/are/be) associated with",
       "phonetic": "/ɪz/ɑːr/biː əˈsəʊsieɪtɪd wɪð/",
       "pos": "phrase",
-      "meaning": "与...相关",
-      "definition": "connected with something",
+      "meaning": "与……有关；与……相关",
+      "definition": "to be connected with something",
       "example": "Stress is associated with health problems.",
       "exampleCn": "压力与健康问题相关。",
       "collocations": [
@@ -66291,12 +66292,16 @@
       "wordId": "phrase_6981f0438102",
       "entryType": "phrase",
       "isPhrase": true,
-      "answer": "is/are/be) associated with",
+      "answer": "(is/are/be) associated with",
       "acceptedAnswers": [
-        "is/are/be) associated with"
+        "is associated with",
+        "are associated with",
+        "be associated with"
       ],
       "phraseSource": "restored_from_v1_cleanup_report",
-      "phraseOrder": 1123
+      "phraseOrder": 1123,
+      "meaningDetailZh": "括号内为按主语和句法选择的系动词形式：is/are associated with 表示“与……相关”，be associated with 是原形结构。",
+      "meaningDetailSource": "manual-editorial-review-2026-07-10"
     },
     {
       "word": "i suppose so",
@@ -71589,7 +71594,7 @@
       "phraseOrder": 1207
     },
     {
-      "word": "beyond the scope of (this book/article/chapter",
+      "word": "beyond the scope of (this book/article/chapter)",
       "phonetic": "/bɪˈjɒnd ðə skəʊp ɒv/",
       "pos": "phrase",
       "meaning": "超出（本书/文章/章）的范围",
@@ -71644,19 +71649,23 @@
       "wordId": "phrase_f1bbf1fcbcf8",
       "entryType": "phrase",
       "isPhrase": true,
-      "answer": "beyond the scope of (this book/article/chapter",
+      "answer": "beyond the scope of (this book/article/chapter)",
       "acceptedAnswers": [
-        "beyond the scope of (this book/article/chapter"
+        "beyond the scope of this book",
+        "beyond the scope of this article",
+        "beyond the scope of this chapter"
       ],
       "phraseSource": "restored_from_v1_cleanup_report",
-      "phraseOrder": 1208
+      "phraseOrder": 1208,
+      "meaningDetailZh": "“beyond the scope of”表示“超出……的范围”；括号内的 this book、this article、this chapter 是可替换的学术语境宾语。",
+      "meaningDetailSource": "manual-editorial-review-2026-07-10"
     },
     {
-      "word": "it is important (to",
+      "word": "it is important (to)",
       "phonetic": "/ɪt ɪz ɪmˈpɔːrtnt tuː/",
       "pos": "phrase",
-      "meaning": "重要的是",
-      "definition": "used to emphasize the significance of something",
+      "meaning": "重要的是；做某事很重要",
+      "definition": "used to emphasize significance, optionally followed by 'to' and an infinitive",
       "example": "It is important to save money for emergencies.",
       "exampleCn": "为紧急情况存钱很重要。",
       "collocations": [
@@ -71708,12 +71717,15 @@
       "wordId": "phrase_4ba2a7abd016",
       "entryType": "phrase",
       "isPhrase": true,
-      "answer": "it is important (to",
+      "answer": "it is important (to)",
       "acceptedAnswers": [
-        "it is important (to"
+        "it is important",
+        "it is important to"
       ],
       "phraseSource": "restored_from_v1_cleanup_report",
-      "phraseOrder": 1209
+      "phraseOrder": 1209,
+      "meaningDetailZh": "“it is important”表示“重要的是”；后接“to + 动词原形”时构成“it is important to do”，表示“做某事很重要”。",
+      "meaningDetailSource": "manual-editorial-review-2026-07-10"
     },
     {
       "word": "it is important to recognize/be aware of/bear in mind",
@@ -71850,11 +71862,11 @@
       "meaningDetailSource": "deepseek-spelling-completion"
     },
     {
-      "word": "to) take into account",
+      "word": "(to) take into account",
       "phonetic": "/teɪk ˈɪntuː əˈkaʊnt/",
       "pos": "phrase",
-      "meaning": "考虑到",
-      "definition": "To consider a factor.",
+      "meaning": "考虑到；把……考虑在内",
+      "definition": "to consider a factor when making a decision or judgment",
       "example": "We must take into account the budget.",
       "exampleCn": "我们必须考虑到预算。",
       "collocations": [
@@ -71896,9 +71908,10 @@
       "wordId": "phrase_f5ce0d76a93a",
       "entryType": "phrase",
       "isPhrase": true,
-      "answer": "to) take into account",
+      "answer": "(to) take into account",
       "acceptedAnswers": [
-        "to) take into account"
+        "take into account",
+        "to take into account"
       ],
       "phraseSource": "restored_from_v1_cleanup_report",
       "phraseOrder": 1212,
@@ -71906,9 +71919,9 @@
       "pronunciationVerified": true,
       "pronunciationSourceTier": "D",
       "pronunciationVariant": "en-GB",
-      "meaningZh": "考虑到",
-      "meaningDetailZh": "“to) take into account”的核心意思是“考虑到”。本词条按“phrase”使用。",
-      "meaningDetailSource": "deepseek-spelling-completion"
+      "meaningZh": "考虑到；把……考虑在内",
+      "meaningDetailZh": "“take into account”表示“考虑到、把……考虑在内”；括号中的 to 是在不定式结构中使用的可选标记。",
+      "meaningDetailSource": "manual-editorial-review-2026-07-10"
     },
     {
       "word": "this is mainly because",

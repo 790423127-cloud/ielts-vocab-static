@@ -25,6 +25,9 @@ Thumbs.db
 .deploy/
 .static-export-cache/words.json.phase*
 .browser-validation-profile/
+playwright-report/
+test-results/
+blob-report/
 
 # audit / local work products (do not ship)
 reports/

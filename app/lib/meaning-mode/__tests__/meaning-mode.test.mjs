@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 // Core modules
 import { createEngine, nextQuestion, submitAnswer, getSessionStats } from "../engine.mjs";
-import { buildQuestion, buildQuestionWithValidation, validateQuestion } from "../builder.mjs";
+import { buildQuestion, buildQuestionWithValidation, splitGlossParts, validateQuestion } from "../builder.mjs";
 import { pickDistractors, seededShuffle, hashOptionSet, AntiMemorizationCache, heuristicSimilarityScore } from "../options.mjs";
 import { createQualityCache, recordDistractorsUsed } from "../distractor-quality.mjs";
 import { SEMANTIC_INDEX } from "../semantic-distractor-index.mjs";
@@ -21,10 +21,17 @@ import { selectNextWord, createSessionState as createSchedulerSession } from "..
 import { MASTER_LEXICON_EXPECTED_COUNT } from "../../vocab/master-lexicon-baseline.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_PATH = join(__dirname, "..", "..", "..", "..", "public", "data", "meaning-4500.json");
+const DATA_PATH = join(__dirname, "..", "..", "..", "..", "public", "data", "meaning-6000.json");
 const WORDS_PATH = join(__dirname, "..", "..", "..", "..", ".static-export-cache", "words.json");
 
 let wordBank, originalWords;
+
+it("splits Chinese and English gloss punctuation consistently", () => {
+  assert.deepEqual(
+    splitGlossParts("主要；首要、关键，必要,重要;核心"),
+    ["主要", "首要", "关键", "必要", "重要", "核心"]
+  );
+});
 
 before(() => {
   const raw = JSON.parse(readFileSync(DATA_PATH, "utf-8"));
@@ -42,12 +49,12 @@ before(() => {
 });
 
 // ═══════════════════════════════════════
-// 4500 Word Bank
+// 6000 Word Bank
 // ═══════════════════════════════════════
 
-describe("meaning-4500 word bank", () => {
-  it("has exactly 4500 items", () => {
-    assert.equal(wordBank.items.length, 4500);
+describe("meaning-6000 word bank", () => {
+  it("has exactly 6000 items", () => {
+    assert.equal(wordBank.items.length, 6000);
   });
 
   it("every item has wordId, word, meaningZh", () => {
@@ -246,7 +253,7 @@ describe("anti-memorization", () => {
   it("1. every question has exactly 4 unique options", () => {
     const cache = new AntiMemorizationCache();
     for (let i = 0; i < 50; i++) {
-      const entry = wordBank.items[i * 89 % 4500];
+      const entry = wordBank.items[i * 89 % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "test-session", i, cache);
       const validation = validateQuestion(q);
       assert.ok(validation.valid, "Invalid question at " + i + ": " + (validation.reason || ""));
@@ -256,7 +263,7 @@ describe("anti-memorization", () => {
   it("2. correct answer exists in options", () => {
     let checked = 0;
     for (let i = 0; i < 50; i++) {
-      const entry = wordBank.items[i * 89 % 4500];
+      const entry = wordBank.items[i * 89 % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "test-" + i, i);
       if (q.qualityDeferred) continue;
       const meanings = q.options.map(o => o.meaningZh);
@@ -287,7 +294,7 @@ describe("anti-memorization", () => {
     let built = 0;
     let deferred = 0;
     for (let i = 0; i < 400 && built < 300; i++) {
-      const entry = wordBank.items[i % 4500];
+      const entry = wordBank.items[i % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "hash-" + Math.floor(i / 50), i, cache, qc);
       if (q.qualityDeferred) continue;
       if (!validateQuestion(q).valid) continue;
@@ -303,7 +310,7 @@ describe("anti-memorization", () => {
     const qc = createQualityCache();
     let built = 0;
     for (let i = 0; i < 400 && built < 300; i++) {
-      const entry = wordBank.items[i % 4500];
+      const entry = wordBank.items[i % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "pos-" + Math.floor(i / 50), i, cache, qc);
       if (q.qualityDeferred) continue;
       if (!validateQuestion(q).valid) continue;
@@ -323,7 +330,7 @@ describe("anti-memorization", () => {
     const qc = createQualityCache();
     let built = 0;
     for (let i = 0; i < 400 && built < 300; i++) {
-      const entry = wordBank.items[i % 4500];
+      const entry = wordBank.items[i % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "dist-" + Math.floor(i / 50), i, cache, qc);
       if (q.qualityDeferred) continue;
       if (!validateQuestion(q).valid) continue;
@@ -344,12 +351,12 @@ describe("anti-memorization", () => {
     }
   });
 
-  it("7. all distractors come from meaning-4500.json", () => {
+  it("7. all distractors come from meaning-6000.json", () => {
     const allWordIds = new Set(wordBank.items.map(i => i.wordId));
     const cache = new AntiMemorizationCache();
     let checked = 0;
     for (let i = 0; i < 100; i++) {
-      const entry = wordBank.items[i * 43 % 4500];
+      const entry = wordBank.items[i * 43 % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "source-" + i, i, cache);
       if (q.qualityDeferred) continue;
       for (const opt of q.options) {
@@ -377,7 +384,7 @@ describe("anti-memorization", () => {
     const cache = new AntiMemorizationCache();
     let checked = 0;
     for (let i = 0; i < 50; i++) {
-      const entry = wordBank.items[i * 89 % 4500];
+      const entry = wordBank.items[i * 89 % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "display-" + i, i, cache);
       if (q.qualityDeferred) continue;
       const correctOpt = q.options.find(o => o.isCorrect);
@@ -392,7 +399,7 @@ describe("anti-memorization", () => {
     const cache = new AntiMemorizationCache();
     let checked = 0;
     for (let i = 0; i < 50; i++) {
-      const entry = wordBank.items[i * 89 % 4500];
+      const entry = wordBank.items[i * 89 % wordBank.items.length];
       const q = buildQuestionWithValidation(entry, wordBank.items, "trace-" + i, i, cache);
       if (q.qualityDeferred) continue;
       for (const opt of q.options) {
@@ -492,10 +499,10 @@ describe("example index", () => {
     exampleIndex = mod.MEANING_EXAMPLE_INDEX;
   });
 
-  it("1. example index only contains meaning-4500 words", () => {
+  it("1. example index only contains meaning-6000 words", () => {
     const meaningWordIds = new Set(wordBank.items.map(i => i.wordId));
     for (const key of Object.keys(exampleIndex)) {
-      assert.ok(meaningWordIds.has(key), "Index key " + key + " not in meaning-4500");
+      assert.ok(meaningWordIds.has(key), "Index key " + key + " not in meaning-6000");
     }
   });
 
@@ -523,12 +530,12 @@ describe("example index", () => {
     }
   });
 
-  it("4. words.json and meaning-4500.json unchanged", () => {
+  it("4. words.json and meaning-6000.json unchanged", () => {
     const wordsData = JSON.parse(readFileSync(WORDS_PATH, "utf-8"));
     assert.equal(wordsData.words.length, MASTER_LEXICON_EXPECTED_COUNT);
 
     const meaningData = JSON.parse(readFileSync(DATA_PATH, "utf-8"));
-    assert.equal(meaningData.items.length, 4500);
+    assert.equal(meaningData.items.length, 6000);
   });
 
   it("5. exampleCn is null when no real Chinese translation", () => {
@@ -546,7 +553,7 @@ describe("example index", () => {
     assert.ok(hasCnCount > 0, "No entries have exampleCn");
   });
 
-  it("6. index is keyed by meaning-4500 wordId", () => {
+  it("6. index is keyed by meaning-6000 wordId", () => {
     const sampleItem = wordBank.items[0];
     assert.ok(exampleIndex[sampleItem.wordId], "Sample wordId " + sampleItem.wordId + " not in index");
   });

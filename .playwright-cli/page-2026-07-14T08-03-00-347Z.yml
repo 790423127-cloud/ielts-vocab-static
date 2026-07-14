@@ -1,0 +1,72 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "IELTS VOCAB" [ref=e3] [cursor=pointer]:
+      - /url: ./index.html
+    - generic [ref=e5]:
+      - strong [ref=e6]: 主词库刷词
+      - generic [ref=e7]: 专注学习
+    - navigation "主要学习模式" [ref=e8]:
+      - link "选义" [ref=e9] [cursor=pointer]:
+        - /url: ./meaning.html
+      - link "拼写" [ref=e10] [cursor=pointer]:
+        - /url: ./spelling.html
+      - link "G类阅读提升" [ref=e11] [cursor=pointer]:
+        - /url: ./reading-g.html
+  - complementary "学习导航" [ref=e12]:
+    - navigation [ref=e13]:
+      - link "刷词" [ref=e14] [cursor=pointer]:
+        - /url: ./index.html
+      - link "拼写" [ref=e15] [cursor=pointer]:
+        - /url: ./spelling.html
+      - link "选义" [ref=e16] [cursor=pointer]:
+        - /url: ./meaning.html
+    - generic [ref=e18]: 专项学习
+    - navigation [ref=e19]:
+      - link "零基础词库" [ref=e20] [cursor=pointer]:
+        - /url: ./basic.html
+      - link "G类阅读提升" [ref=e21] [cursor=pointer]:
+        - /url: ./reading-g.html
+      - link "错词本" [ref=e22] [cursor=pointer]:
+        - /url: ./spelling.html?source=error_bank
+      - link "SRS 复习" [ref=e23] [cursor=pointer]:
+        - /url: ./spelling.html?source=srs_review
+    - navigation [ref=e24]:
+      - link "设置" [ref=e25] [cursor=pointer]:
+        - /url: ./index.html
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - button "上一个" [ref=e28] [cursor=pointer]
+      - button "工具与词库收起" [expanded] [ref=e29] [cursor=pointer]
+      - generic [ref=e30]:
+        - button "随机" [ref=e31] [cursor=pointer]
+        - button "入口" [ref=e32] [cursor=pointer]
+        - button "修改" [ref=e33] [cursor=pointer]
+        - button "删除" [ref=e34] [cursor=pointer]
+        - button "云同步" [ref=e35] [cursor=pointer]
+        - link "零基础单词" [ref=e36] [cursor=pointer]:
+          - /url: ./basic.html
+        - link "G类阅读提升" [ref=e37] [cursor=pointer]:
+          - /url: ./reading-g.html
+        - link "看词选意思·6000" [ref=e38] [cursor=pointer]:
+          - /url: ./meaning.html
+        - link "拼写训练" [ref=e39] [cursor=pointer]:
+          - /url: ./spelling.html
+        - combobox "词库" [ref=e40] [cursor=pointer]
+    - generic [ref=e41]:
+      - button "☆" [ref=e42] [cursor=pointer]
+      - button "🔊" [ref=e43] [cursor=pointer]
+      - generic [ref=e44] [cursor=pointer]: Loading
+      - generic [ref=e45]: 正在加载词库...
+      - generic [ref=e46]: 第一次打开会稍慢，之后会自动缓存。
+      - generic [ref=e47]: ← 右滑上一个 · 左滑下一个 → Tab 发音单词 · 空格发音英文例句 · 按住 ←/→ 连续切词
+      - generic [ref=e49]:
+        - button "🔊" [ref=e50] [cursor=pointer]
+        - generic [ref=e51]: 加载中...
+    - generic [ref=e52]:
+      - generic [ref=e53]: 常见搭配
+      - generic [ref=e55]: 短语 / 介词搭配
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - button "熟悉 0" [ref=e59] [cursor=pointer]
+        - button "不熟 0" [ref=e60] [cursor=pointer]
+      - generic [ref=e61]: 0 / 0

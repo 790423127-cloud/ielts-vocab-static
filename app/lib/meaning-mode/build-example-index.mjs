@@ -1,5 +1,5 @@
 // Build Meaning Mode example index from main word bank.
-// Reads: .static-export-cache/words.json, public/data/meaning-4500.json
+// Reads: .static-export-cache/words.json, public/data/meaning-6000.json
 // Outputs: app/lib/meaning-mode/example-index.generated.mjs, reports/meaning-example-*
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -10,7 +10,7 @@ import { createHash } from "node:crypto";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..");
 const WORDS_PATH = join(ROOT, ".static-export-cache", "words.json");
-const MEANING_PATH = join(ROOT, "public", "data", "meaning-4500.json");
+const MEANING_PATH = join(ROOT, "public", "data", "meaning-6000.json");
 const OUTPUT_IDX = join(__dirname, "example-index.generated.mjs");
 const REPORTS_DIR = join(ROOT, "reports");
 
@@ -45,7 +45,7 @@ const allWords = wordsData.words;
 const meaningItems = meaningData.items;
 
 console.log("Main word bank:", allWords.length, "words");
-console.log("Meaning-4500:", meaningItems.length, "words");
+console.log("Meaning-6000:", meaningItems.length, "words");
 
 // Build lookup maps
 const byWordId = new Map();
@@ -134,7 +134,7 @@ const indexJSON = JSON.stringify(index, null, 2);
 const output = [
   "// Auto-generated Meaning Mode example index.",
   "// Source: .static-export-cache/words.json (READ-ONLY, never modified)",
-  "// Matched against: public/data/meaning-4500.json (READ-ONLY, never modified)",
+  "// Matched against: public/data/meaning-6000.json (READ-ONLY, never modified)",
   "// Generated: " + new Date().toISOString(),
   "// Stats: " + matched + "/" + meaningItems.length + " matched (" + coverage + "% coverage)",
   "// DO NOT EDIT MANUALLY — regenerate with: node app/lib/meaning-mode/build-example-index.mjs",
@@ -180,7 +180,7 @@ const reportMD = [
   "## Match Results",
   "| Metric | Count |",
   "|--------|-------|",
-  "| Total meaning-4500 words | " + meaningItems.length + " |",
+  "| Total meaning-6000 words | " + meaningItems.length + " |",
   "| Successfully matched | **" + matched + "** |",
   "| Coverage | **" + coverage + "%** |",
   "| wordId exact match | " + stats.wordIdMatch + " |",
@@ -190,7 +190,7 @@ const reportMD = [
   "| Invalid/missing example | " + stats.invalidExample + " |",
   "",
   "## Match Rules",
-  "1. wordId exact match (meaning-4500.wordId ↔ words.json.wordId)",
+  "1. wordId exact match (meaning-6000.wordId ↔ words.json.wordId)",
   "2. word exact match (normalized, case-insensitive)",
   "3. No fuzzy matching, no stemming, no synonym matching",
   "",
@@ -206,7 +206,7 @@ const reportMD = [
   "",
   "## File Integrity (SHA-256)",
   "- words.json: " + wordsHashBefore + "",
-  "- meaning-4500.json: " + meaningHashBefore + "",
+  "- meaning-6000.json: " + meaningHashBefore + "",
   ""
 ].join("\n");
 
@@ -228,7 +228,7 @@ const reportJSON = {
   },
   fileIntegrity: {
     wordsJsonSha256: wordsHashBefore,
-    meaning4500JsonSha256: meaningHashBefore
+    meaning6000JsonSha256: meaningHashBefore
   },
   sampleEntries: samples
 };

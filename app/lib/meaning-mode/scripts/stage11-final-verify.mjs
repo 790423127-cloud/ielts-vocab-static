@@ -9,7 +9,7 @@ import { _BROAD_AXES } from "../sense-relation-engine.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..", "..");
-const DATA_PATH = join(ROOT, "public", "data", "meaning-4500.json");
+const DATA_PATH = join(ROOT, "public", "data", "meaning-6000.json");
 const REPORTS_DIR = join(ROOT, "reports");
 
 function pct(count, total) {

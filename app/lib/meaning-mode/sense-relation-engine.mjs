@@ -154,6 +154,15 @@ function qualityPayload({
   };
 }
 
+function findWordPairContrast(t, c) {
+  if (!t || !c) return { hasContrast: false };
+  const byStableId = checkWordPairContrast(t.wordId, c.wordId);
+  if (byStableId.hasContrast) return byStableId;
+  // Early curated rows used headwords as identifiers. Preserve those audited
+  // pairs while newer rows continue to use stable master-lexicon wordIds.
+  return checkWordPairContrast(t.word, c.word);
+}
+
 function classifyQuality(t, c, base) {
   if (!t || !c) {
     return qualityPayload({
@@ -168,7 +177,7 @@ function classifyQuality(t, c, base) {
     });
   }
 
-  const contrast = checkWordPairContrast(t.wordId, c.wordId);
+  const contrast = findWordPairContrast(t, c);
   if (contrast.hasContrast && contrast.entry && contrast.entry.allowInSameQuestion) {
     const distinction = cleanText(contrast.entry.learnerDistinctionZh);
     return qualityPayload({
@@ -282,7 +291,7 @@ export function classifyRelation(targetWordId, candidateWordId) {
     }
     // Different value on same axis -- quality depends on axis specificity
     if (isBroadAxis(tA)) {
-      const cc2 = checkWordPairContrast(t.wordId, c.wordId);
+      const cc2 = findWordPairContrast(t, c);
       if (cc2.hasContrast && cc2.entry.allowInSameQuestion) {
         return { relation: RELATION.CLOSE_SYNONYM_WITH_CONTRAST,
           reason: 'broad axis ' + tA + ' + contrast: ' + cc2.entry.pairId,

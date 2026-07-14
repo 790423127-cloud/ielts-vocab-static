@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f6f5" />
+  <title>零基础单词 · 静态版</title>
+  <link rel="stylesheet" href="./assets/style.css?v=20260714_d27_action_dock_stability_v1" />
+  <style>
+    .hidden{display:none!important}
+    .module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+    .module-nav a{text-decoration:none}
+    .topic-bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;max-width:720px}
+    .topic-chip{border:1px solid #dce3df;border-radius:6px;padding:6px 10px;background:#fff;color:#225f52;font-weight:800;font-size:12px;cursor:pointer}
+    .topic-chip.active{border-color:#225f52;background:#225f52;color:#fff}
+    .meta-pill{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:6px;background:#e5f2ed;color:#225f52;font-size:12px;font-weight:800}
+  </style>
+</head>
+<body>
+  <header class="static-brand-bar">
+    <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
+    <div class="static-session-context"><strong>零基础词库</strong><span>独立进度</span></div>
+    <nav class="static-brand-nav" aria-label="主要学习模式">
+      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a>
+    </nav>
+  </header>
+  <aside class="static-shell-sidebar" aria-label="学习导航"><nav><a href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav><div class="static-shell-divider"></div><span class="static-shell-label">专项学习</span><nav><a class="active" href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav></aside>
+  <main class="app">
+    <header class="top">
+      <button id="prevBtn" class="top-btn" type="button">上一个</button>
+      <div class="top-actions">
+        <a href="./index.html" class="top-btn">← 主词库</a>
+        <a href="./meaning.html" class="top-btn">看词选意思</a>
+        <a href="./spelling.html" class="top-btn">拼写训练</a>
+        <button id="shuffleBtn" class="top-btn" type="button">随机</button>
+        <button id="nextBtn" class="top-btn" type="button">下一个</button>
+      </div>
+    </header>
+
+    <div class="module-nav">
+      <span class="meta-pill" id="bankMeta">零基础单词</span>
+    </div>
+
+    <div class="topic-bar" id="topicBar" aria-label="主题筛选"></div>
+
+    <section id="swipeArea" class="hero">
+      <button id="favoriteBtn" class="star" title="收藏" type="button">☆</button>
+      <div id="unfamiliarAlert" class="unfamiliar-alert hidden">已标记不熟，优先复习</div>
+      <button id="wordSoundBtn" class="sound-main" title="播放单词" type="button">🔊</button>
+      <div id="word" class="word">Loading</div>
+      <div id="basic" class="basic-line">正在准备学习内容</div>
+      <div id="loadInfo" class="load-info">独立词库 data/basic-words.json · 进度仅存本机</div>
+
+      <div class="example-card">
+        <div class="example-head">
+          <button id="exampleSoundBtn" class="mini-sound example-sound" title="播放例句" type="button">🔊</button>
+          <div id="example" class="example-en">读取独立词库并恢复学习位置</div>
+        </div>
+        <div id="exampleCn" class="example-cn"></div>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      <div class="actions">
+        <button id="knownBtn" class="status known" type="button">熟悉</button>
+        <button id="unknownBtn" class="status unknown" type="button">不熟</button>
+      </div>
+      <div class="progress-row">
+        <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+        <div id="count" class="count">0 / 0</div>
+      </div>
+    </footer>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="./assets/basic.js?v=20260714_d28_load_performance_v1"></script>
+</body>
+</html>

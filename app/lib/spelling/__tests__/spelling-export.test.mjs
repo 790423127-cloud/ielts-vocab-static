@@ -157,20 +157,62 @@ test("spelling page does not render placeholder questions before lexicon is read
   assert.match(source, /const isSpellingLoading = !lexicon \|\| !spelling\.ready/);
   assert.match(source, /const current = !isSpellingLoading \? spelling\.currentWord : null/);
   assert.match(focus, /isSpellingLoading \? \(/);
-  assert.match(combined, /正在读取词库，请稍候/);
+  assert.match(combined, /正在准备本轮训练/);
+  assert.match(focus, /StableLoadingState/);
 });
 
 test("home page can deep-link to the AI tools menu", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/page.jsx"), "utf8");
+  const wordFlashcardView = fs.readFileSync(path.join(root, "app/components/WordFlashcardView.jsx"), "utf8");
   const adminPanel = fs.readFileSync(path.join(root, "app/components/VocabAdminToolsPanel.jsx"), "utf8");
+  const adminHook = fs.readFileSync(path.join(root, "app/hooks/useHomeLexiconAdmin.js"), "utf8");
 
   assert.match(source, /openAiTools/);
   assert.match(source, /toolsMenuRef/);
   assert.match(source, /aiToolsRef/);
-  assert.match(source, /VocabAdminToolsPanel/);
+  assert.match(wordFlashcardView, /VocabAdminToolsPanel/);
+  assert.match(adminHook, /import\("\.\/useHomeLexiconAdmin\.ai\.js"\)/);
+  assert.match(adminHook, /import\("\.\/useHomeLexiconAdmin\.io\.js"\)/);
   // AI tools markup lives in the extracted admin panel component.
   assert.match(adminPanel, /id="ai-tools"/);
   assert.match(adminPanel, /AI工具（会扣费）/);
   assert.match(source, /AI工具（会扣费）/);
+});
+
+test("static learning pages expose working reading, error-bank, and SRS navigation", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const staticFiles = ["basic.html", "meaning.html", "reading-g.html", "spelling.html"];
+  const sources = staticFiles.map((name) => fs.readFileSync(path.join(root, "public", name), "utf8"));
+  const spellingScript = fs.readFileSync(path.join(root, "public/assets/spelling.js"), "utf8");
+  const exportRoute = fs.readFileSync(path.join(root, "app/api/export-static/route.js"), "utf8");
+
+  for (const source of sources) {
+    assert.match(source, /reading-g\.html/);
+    assert.match(source, /spelling\.html\?source=error_bank/);
+    assert.match(source, /spelling\.html\?source=srs_review/);
+    assert.doesNotMatch(source, /href="#"/);
+    assert.match(source, /20260714_d27_action_dock_stability_v1/);
+  }
+
+  assert.match(spellingScript, /const query = new URLSearchParams\(window\.location\.search\)/);
+  assert.match(spellingScript, /query\.get\("source"\)/);
+  assert.match(spellingScript, /VALID_PRACTICE_SOURCES\.has\(requestedSource\)/);
+  assert.match(spellingScript, /VALID_ENTRY_MODES\.has\(requestedMode\)/);
+  assert.match(sources.at(-1), /id="settingsToggle"/);
+  assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
+  assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
+  assert.doesNotMatch(sources.at(-1), /href="\/spelling-(?:words|phrases)"/);
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260714_d27_action_dock_stability_v1"/);
+  assert.match(exportRoute, /id="topToolsToggle"/);
+  assert.match(exportRoute, /topToolsCollapsed=saved===null\?viewport==="mobile"/);
+  assert.match(exportRoute, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(exportRoute, /classList\.toggle\("mobile-mode",narrow&&mobileMode\)/);
+  assert.doesNotMatch(exportRoute, /<button id="mobileModeBtn"/);
+  assert.match(fs.readFileSync(path.join(root, "public/assets/spelling.css"), "utf8"), /D2\.1 responsive system/);
+  assert.match(exportRoute, /static_vocab_audio_\$\{STATIC_EXPORT_VERSION\}/);
+  assert.match(exportRoute, /function audioFor\(text\) \{\s*if \(!includeAudioFiles\) return "";/);
+  assert.match(exportRoute, /D2\.3 high-visibility study action dock/);
+  assert.match(exportRoute, /\.status\{min-width:112px;min-height:50px/);
+  assert.match(exportRoute, /\.progress\{height:9px/);
 });

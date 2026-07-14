@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import StableLoadingState from "./StableLoadingState.jsx";
 import { readJsonStorage, writeJsonStorage } from "../lib/browser-storage.mjs";
 import { loadLrSynonyms } from "../lib/vocab/load-lr-synonyms.mjs";
 import { loadParaphrasesWithCache } from "../lib/vocab/lr-paraphrase-store.mjs";
@@ -343,7 +344,17 @@ export default function LrParaphrasePanel() {
   }, [loadState, mark, nextItem, prevItem, speakBaseWord, speakExample]);
 
   if (loadState === "loading") {
-    return <div className="lr-panel lr-panel--loading">正在加载同义替换训练库...</div>;
+    return (
+      <div className="lr-panel lr-panel--loading">
+        <StableLoadingState
+          mark="S"
+          eyebrow="听力阅读同义替换"
+          title="正在准备同义替换训练"
+          note="读取训练库并恢复学习位置"
+          compact
+        />
+      </div>
+    );
   }
 
   if (loadState === "error") {

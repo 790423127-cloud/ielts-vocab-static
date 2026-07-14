@@ -1,4 +1,4 @@
-﻿// Meaning Mode v4 quality tests — pos-enforced distractors, impression regression.
+// Meaning Mode v4 quality tests — pos-enforced distractors, impression regression.
 import { describe, it, before } from "node:test";
 import { strict as assert } from "node:assert";
 import { readFileSync } from "node:fs";
@@ -12,7 +12,7 @@ import { resetGlobalFrequency } from "../distractor-ranking.mjs";
 import { SEMANTIC_INDEX } from "../semantic-distractor-index.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_PATH = join(__dirname, "..", "..", "..", "..", "public", "data", "meaning-4500.json");
+const DATA_PATH = join(__dirname, "..", "..", "..", "..", "public", "data", "meaning-6000.json");
 
 let wordBank;
 
@@ -115,7 +115,7 @@ describe("quality gates", () => {
     let crossPos = 0;
 
     for (let i = 0; i < 100; i++) {
-      const entry = wordBank[i * 43 % 4500];
+      const entry = wordBank[i * 43 % wordBank.length];
       const { distractors, qualitySufficient } = pickDistractors(wordBank, entry.wordId, entry.meaningZh, 3);
       if (!qualitySufficient) continue;
 
@@ -141,7 +141,7 @@ describe("quality gates", () => {
     let sameOrAdjacent = 0;
 
     for (let i = 0; i < 200; i++) {
-      const entry = wordBank[i * 23 % 4500];
+      const entry = wordBank[i * 23 % wordBank.length];
       const { distractors, qualitySufficient } = pickDistractors(wordBank, entry.wordId, entry.meaningZh, 3);
       if (!qualitySufficient) continue;
 
@@ -168,7 +168,7 @@ describe("quality gates", () => {
     let deferred = 0;
 
     for (let i = 0; i < 500 && built < 500; i++) {
-      const entry = wordBank[i % 4500];
+      const entry = wordBank[i % wordBank.length];
       const q = buildQuestionWithValidation(entry, wordBank, "q-500", i, cache, qualityCache);
 
       if (q.qualityDeferred) { deferred++; continue; }
@@ -208,7 +208,7 @@ describe("quality gates", () => {
     let built = 0;
 
     for (let i = 0; i < 600 && built < 500; i++) {
-      const entry = wordBank[i % 4500];
+      const entry = wordBank[i % wordBank.length];
       const q = buildQuestionWithValidation(entry, wordBank, "pos-500", i, cache, qualityCache);
       if (q.qualityDeferred) continue;
       const v = validateQuestion(q);
@@ -231,7 +231,7 @@ describe("quality gates", () => {
     const usageMap = {};
 
     for (let i = 0; i < 500; i++) {
-      const entry = wordBank[i % 4500];
+      const entry = wordBank[i % wordBank.length];
       const q = buildQuestionWithValidation(entry, wordBank, "freq-" + i, i, cache, qualityCache);
       if (q.qualityDeferred) continue;
       const v = validateQuestion(q);
@@ -287,24 +287,18 @@ describe("quality gates", () => {
 
   it("qualityDeferred words not answered, no state change", () => {
     const qualityCache = createQualityCache();
+    const tinyBank = wordBank
+      .filter(entry => entry._posFamily === "noun")
+      .slice(0, 3)
+      .map(entry => ({ ...entry }));
+    assert.equal(tinyBank.length, 3);
 
-    // Find a word that might be quality-deferred
-    let deferredWord = null;
-    for (const entry of wordBank) {
-      const { qualitySufficient } = pickDistractors(wordBank, entry.wordId, entry.meaningZh, 3, qualityCache);
-      if (!qualitySufficient) {
-        deferredWord = entry;
-        break;
-      }
-    }
-
-    if (deferredWord) {
-      const q = buildQuestion(deferredWord, wordBank, "def", 0, qualityCache);
-      assert.ok(q.qualityDeferred, "Should be qualityDeferred");
-      console.log("Deferred word:", deferredWord.word, "reason:", q.reason);
-    } else {
-      console.log("No quality-deferred word found in first pass — all words have sufficient distractors");
-    }
+    // Three total nouns leave only two possible distractors, so the builder must
+    // defer instead of weakening the same-POS / four-option quality contract.
+    const target = tinyBank[0];
+    const q = buildQuestion(target, tinyBank, "def", 0, qualityCache);
+    assert.ok(q.qualityDeferred, "Should be qualityDeferred");
+    assert.ok(q.reason === "insufficient-candidates" || q.reason === "insufficient-after-relation-filter");
   });
 });
 

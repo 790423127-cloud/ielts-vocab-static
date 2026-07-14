@@ -1,15 +1,24 @@
 import { isAudioInterruptedError } from "./vocab-speech.mjs";
 
-/** Edge TTS clips are roughly 7dB quieter than normalized real-voice audio. */
-export const EDGE_SENTENCE_PLAYBACK_GAIN = 2.25;
-export const EDGE_WORD_PLAYBACK_GAIN = 2.1;
-export const REAL_AUDIO_PLAYBACK_GAIN = 1.3;
+/**
+ * Single Edge-only playback gain for words, phrases, and example sentences.
+ * Real-person audio path is disabled product-wide.
+ */
+export const EDGE_PLAYBACK_GAIN = 2.15;
+/** @deprecated use EDGE_PLAYBACK_GAIN — kept for tests/imports */
+export const EDGE_SENTENCE_PLAYBACK_GAIN = EDGE_PLAYBACK_GAIN;
+/** @deprecated use EDGE_PLAYBACK_GAIN — kept for tests/imports */
+export const EDGE_WORD_PLAYBACK_GAIN = EDGE_PLAYBACK_GAIN;
+/** @deprecated real audio disabled */
+export const REAL_AUDIO_PLAYBACK_GAIN = EDGE_PLAYBACK_GAIN;
 export const NORMALIZED_PLAYBACK_GAIN = 1;
 
 let sharedContext = null;
 let masterGainNode = null;
 let activeHtmlAudio = null;
 let activeWebAudioSource = null;
+const decodedAudioBufferCache = new Map();
+const MAX_DECODED_AUDIO_BUFFERS = 80;
 
 function getAudioContext() {
   if (typeof window === "undefined") return null;
@@ -34,27 +43,36 @@ function getMasterGain(context) {
   return masterGainNode;
 }
 
-export function resolveSpeechPlaybackOptions(result = {}, kind = "word") {
-  const audioEnhanced = Boolean(result.audioEnhanced);
-  const realAudio = Boolean(result.realAudio);
-  const source = String(result.source || "");
-
-  if (audioEnhanced || realAudio) {
-    return {
-      kind,
-      source,
-      realAudio,
-      audioEnhanced: audioEnhanced || realAudio,
-      gain: REAL_AUDIO_PLAYBACK_GAIN
-    };
+export function primeSpeechAudioPlayback() {
+  const context = getAudioContext();
+  if (context?.state === "suspended") {
+    void context.resume().catch(() => {});
   }
+  return Boolean(context);
+}
 
+function installSpeechPlaybackPrimer() {
+  if (typeof window === "undefined" || window.__ieltsSpeechPlaybackPrimer) return;
+  window.__ieltsSpeechPlaybackPrimer = true;
+  const prime = () => {
+    primeSpeechAudioPlayback();
+    window.removeEventListener("pointerdown", prime);
+    window.removeEventListener("keydown", prime);
+  };
+  window.addEventListener("pointerdown", prime, { passive: true });
+  window.addEventListener("keydown", prime, { passive: true });
+}
+
+installSpeechPlaybackPrimer();
+
+export function resolveSpeechPlaybackOptions(result = {}, kind = "word") {
+  const source = String(result.source || "edge-cache");
   return {
     kind,
     source,
     realAudio: false,
-    audioEnhanced: false,
-    gain: kind === "sentence" ? EDGE_SENTENCE_PLAYBACK_GAIN : EDGE_WORD_PLAYBACK_GAIN
+    audioEnhanced: Boolean(result.audioEnhanced),
+    gain: EDGE_PLAYBACK_GAIN
   };
 }
 
@@ -63,16 +81,7 @@ export function resolvePlaybackGain(options = {}) {
   if (Number.isFinite(gain) && gain > 0) {
     return Math.min(3, Math.max(0.5, gain));
   }
-
-  if (options.audioEnhanced || options.realAudio) {
-    return REAL_AUDIO_PLAYBACK_GAIN;
-  }
-
-  if (options.kind === "sentence") {
-    return EDGE_SENTENCE_PLAYBACK_GAIN;
-  }
-
-  return EDGE_WORD_PLAYBACK_GAIN;
+  return EDGE_PLAYBACK_GAIN;
 }
 
 export function stopSpeechAudioPlayback() {
@@ -104,11 +113,17 @@ async function playWithWebAudio(url, options = {}) {
     } catch {}
   }
 
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) return false;
-
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBuffer = await context.decodeAudioData(arrayBuffer.slice(0));
+  let audioBuffer = decodedAudioBufferCache.get(url);
+  if (!audioBuffer) {
+    const response = await fetch(url, { cache: "force-cache" });
+    if (!response.ok) return false;
+    const arrayBuffer = await response.arrayBuffer();
+    audioBuffer = await context.decodeAudioData(arrayBuffer.slice(0));
+    decodedAudioBufferCache.set(url, audioBuffer);
+    if (decodedAudioBufferCache.size > MAX_DECODED_AUDIO_BUFFERS) {
+      decodedAudioBufferCache.delete(decodedAudioBufferCache.keys().next().value);
+    }
+  }
 
   const source = context.createBufferSource();
   source.buffer = audioBuffer;
@@ -120,28 +135,24 @@ async function playWithWebAudio(url, options = {}) {
   gainNode.connect(getMasterGain(context));
   activeWebAudioSource = source;
 
-  return await new Promise((resolve) => {
-    let settled = false;
-    const finish = (played) => {
-      if (settled) return;
-      settled = true;
-      if (activeWebAudioSource === source) {
-        activeWebAudioSource = null;
-      }
-      resolve(played);
-    };
-
-    source.onended = () => finish(true);
-    try {
-      source.start(0);
-    } catch {
-      finish(false);
-    }
-  });
+  source.onended = () => {
+    if (activeWebAudioSource === source) activeWebAudioSource = null;
+  };
+  try {
+    source.start(0);
+    return true;
+  } catch {
+    if (activeWebAudioSource === source) activeWebAudioSource = null;
+    return false;
+  }
 }
 
 async function playWithHtmlAudio(url, options = {}) {
-  const bustUrl = url.includes("?") ? `${url}&_ts=${Date.now()}` : `${url}?_ts=${Date.now()}`;
+  const bustUrl = url.startsWith("blob:")
+    ? url
+    : url.includes("?")
+      ? `${url}&_ts=${Date.now()}`
+      : `${url}?_ts=${Date.now()}`;
   const audio = new Audio(bustUrl);
   audio.volume = Math.min(1, resolvePlaybackGain(options) / EDGE_SENTENCE_PLAYBACK_GAIN);
   activeHtmlAudio = audio;

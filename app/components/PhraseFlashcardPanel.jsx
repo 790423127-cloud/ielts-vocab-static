@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import StableLoadingState from "./StableLoadingState.jsx";
 import {
   readJsonStorage,
   writeJsonStorage
@@ -66,16 +67,8 @@ function fallback(value, text) {
 }
 
 function formatSpeechSourceLabel(result = {}) {
-  if (result.realAudio || String(result.source || "").startsWith("real-")) {
-    if (String(result.source || "") === "real-commons" || /lingua|commons|wiktionary/i.test(String(result.provider || ""))) {
-      return "真人发音：Lingua Libre WAV";
-    }
-    return result.provider ? `真人发音：${result.provider}` : "真人发音：Lingua Libre WAV";
-  }
-  if (String(result.source || "").startsWith("edge-")) {
-    return "兜底发音";
-  }
-  return "发音";
+  if (!result || result.source === "empty") return "发音";
+  return "兜底发音";
 }
 
 function todayKey() {
@@ -148,7 +141,7 @@ export default function PhraseFlashcardPanel() {
   const safeStudyPosition = currentStudyPosition >= 0 ? currentStudyPosition : 0;
   const isStudyEmpty = !studyPhrases.length;
   const resolvedPhrase = phrases[effectiveIndex] || null;
-  const item = isStudyEmpty
+  const item = useMemo(() => isStudyEmpty
     ? {
         word: "完成",
         phonetic: "",
@@ -156,7 +149,7 @@ export default function PhraseFlashcardPanel() {
         example: "可以切换筛选条件，或标记更多词组为待复习。",
         exampleCn: ""
       }
-    : resolvedPhrase || studyPhrases[0]?.entry || {};
+    : resolvedPhrase || studyPhrases[0]?.entry || {}, [isStudyEmpty, resolvedPhrase, studyPhrases]);
 
   const prevInStudy = studyPhrases.length
     ? studyPhrases[(safeStudyPosition - 1 + studyPhrases.length) % studyPhrases.length]
@@ -475,14 +468,9 @@ export default function PhraseFlashcardPanel() {
     warmTtsTimersRef.current.forEach((timer) => clearTimeout(timer));
     warmTtsTimersRef.current = [];
 
-    const next = studyPhrases.length
-      ? studyPhrases[(safeStudyPosition + 1) % studyPhrases.length]?.entry
-      : null;
     const targets = [
       { text: item.word, kind: "phrase" },
-      { text: item.example, kind: "sentence" },
-      { text: next?.word, kind: "phrase" },
-      { text: next?.example, kind: "sentence" }
+      { text: item.example, kind: "sentence" }
     ]
       .map((entry) => ({ ...entry, text: String(entry.text || "").trim() }))
       .filter((entry) => entry.text && entry.text !== "完成")
@@ -498,7 +486,7 @@ export default function PhraseFlashcardPanel() {
       timers.forEach((timer) => clearTimeout(timer));
       if (warmTtsBatchRef.current === batch) warmTtsTimersRef.current = [];
     };
-  }, [loadState, isStudyEmpty, item.word, item.example, studyPhrases, safeStudyPosition, warmSpeechAudio]);
+  }, [loadState, isStudyEmpty, item.word, item.example, warmSpeechAudio]);
 
   const shouldIgnoreDuplicateSpeech = useCallback((text, kind) => {
     const cleanText = String(text || "").trim();
@@ -721,7 +709,13 @@ export default function PhraseFlashcardPanel() {
   if (loadState === "loading") {
     return (
       <div className="phrase-flashcard phrase-flashcard--loading">
-        <p>正在加载词组库...</p>
+        <StableLoadingState
+          mark="P"
+          eyebrow="词组刷词"
+          title="正在准备词组训练"
+          note="读取独立词组库并恢复学习位置"
+          compact
+        />
       </div>
     );
   }

@@ -24,10 +24,15 @@ const LOG_FILE = path.join(root, "reports", "prefill-all-audio.log");
 
 const args = new Set(process.argv.slice(2));
 const REAL_ONLY = args.has("--real-only");
+// Product default: Edge fallback only (words + sentences share one rule).
+const EDGE_ONLY = !REAL_ONLY && (args.has("--edge-only") || !args.has("--real-first"));
 const WORDS_ONLY = args.has("--words-only");
 const RESET = args.has("--reset");
 const FORCE = args.has("--force");
 const CONCURRENCY = Math.max(1, Math.min(Number(process.env.AUDIO_PREFILL_CONCURRENCY || 4) || 4, 6));
+
+const EDGE_VOICE = "en-US-AriaNeural";
+const EDGE_RATE = "-10%";
 
 function log(message) {
   const line = `[${new Date().toISOString()}] ${message}`;
@@ -118,6 +123,15 @@ function hasCachedAudio(indexed = {}) {
   return existsSync(path.join(cacheDir(), indexed.filename));
 }
 
+function hasValidEdgeCache(indexed = {}) {
+  return Boolean(
+    indexed?.hasAudio &&
+    indexed?.filename &&
+    !indexed?.realAudio &&
+    hasCachedAudio(indexed)
+  );
+}
+
 function hasValidLlWavCache(indexed = {}, text = "", kind = "word") {
   return Boolean(
     indexed?.realAudio &&
@@ -128,7 +142,34 @@ function hasValidLlWavCache(indexed = {}, text = "", kind = "word") {
   );
 }
 
+async function ensureEdgeOnlyAudio(text, audioIndex, options = {}) {
+  const kind = options.kind || "word";
+  const key = normalizeAudioKey(text);
+  const indexed = audioIndex[key];
+
+  if (hasValidEdgeCache(indexed)) {
+    return { ok: true, source: indexed.source || "edge-cache", realAudio: false, cacheHit: true };
+  }
+
+  const edge = await ensureEdgeAudio(text, audioIndex, {
+    kind,
+    voice: EDGE_VOICE,
+    rate: EDGE_RATE
+  });
+
+  return {
+    ok: edge.ok,
+    source: edge.source,
+    realAudio: false,
+    cacheHit: false
+  };
+}
+
 async function ensureRealFirstAudio(text, audioIndex, options = {}) {
+  if (EDGE_ONLY) {
+    return ensureEdgeOnlyAudio(text, audioIndex, options);
+  }
+
   const kind = options.kind || "word";
   const key = normalizeAudioKey(text);
   const indexed = audioIndex[key];
@@ -158,22 +199,11 @@ async function ensureRealFirstAudio(text, audioIndex, options = {}) {
     return { ok: true, source: latest.source || "real-cache", realAudio: true, cacheHit: true };
   }
 
-  if (
-    latest?.hasAudio &&
-    !latest.realAudio &&
-    latest.realAudioVersion === REAL_AUDIO_CACHE_VERSION &&
-    hasCachedAudio(latest)
-  ) {
+  if (hasValidEdgeCache(latest)) {
     return { ok: true, source: latest.source || "edge-cache", realAudio: false, cacheHit: true };
   }
 
-  const edge = await ensureEdgeAudio(text, audioIndex, { kind });
-  return {
-    ok: edge.ok,
-    source: edge.source,
-    realAudio: false,
-    cacheHit: false
-  };
+  return ensureEdgeOnlyAudio(text, audioIndex, options);
 }
 
 function summarizeIndex(index = {}) {
@@ -204,12 +234,20 @@ async function main() {
   const before = summarizeIndex(audioIndex);
 
   function targetNeedsWork(target) {
-    if (hasValidLlWavCache(audioIndex[normalizeAudioKey(target.text)], target.text, target.kind || "word")) {
+    const indexed = audioIndex[normalizeAudioKey(target.text)];
+
+    // Edge-only: only skip when a valid Edge (non-real) cache file exists.
+    if (EDGE_ONLY) {
+      if (FORCE) return true;
+      return !hasValidEdgeCache(indexed);
+    }
+
+    if (hasValidLlWavCache(indexed, target.text, target.kind || "word")) {
       return false;
     }
 
     if (FORCE) return true;
-    return !hasCachedAudio(audioIndex[normalizeAudioKey(target.text)]);
+    return !hasCachedAudio(indexed);
   }
 
   const pendingTargets = finalTargets.filter((target) => targetNeedsWork(target));
@@ -220,6 +258,7 @@ async function main() {
     pendingTotal: pendingTargets.length,
     scope,
     realOnly: REAL_ONLY,
+    edgeOnly: EDGE_ONLY,
     force: FORCE,
     concurrency: CONCURRENCY,
     startedAt: new Date().toISOString()
@@ -227,7 +266,7 @@ async function main() {
   saveProgress(progress);
 
   log(
-    `Start prefill: words=${words.length} targets=${finalTargets.length} pending=${pendingTargets.length} alreadyCached=${alreadyCached} scope=${scope} realOnly=${REAL_ONLY} force=${FORCE} concurrency=${CONCURRENCY} source=${source}`
+    `Start prefill: words=${words.length} targets=${finalTargets.length} pending=${pendingTargets.length} alreadyCached=${alreadyCached} scope=${scope} edgeOnly=${EDGE_ONLY} realOnly=${REAL_ONLY} force=${FORCE} concurrency=${CONCURRENCY} source=${source}`
   );
 
   const stats = {
@@ -311,6 +350,7 @@ async function main() {
     elapsedMinutes: Math.round((elapsedMs / 60000) * 10) / 10,
     mode: {
       scope,
+      edgeOnly: EDGE_ONLY,
       realOnly: REAL_ONLY,
       wordsOnly: WORDS_ONLY,
       force: FORCE

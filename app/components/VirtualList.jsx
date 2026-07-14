@@ -18,7 +18,7 @@ export default function VirtualList({
   const [scrollTop, setScrollTop] = useState(0);
   const scrollRafRef = useRef(0);
   const pendingScrollTopRef = useRef(0);
-  const safeItems = Array.isArray(items) ? items : [];
+  const safeItems = useMemo(() => (Array.isArray(items) ? items : []), [items]);
   const rowHeight = Math.max(1, Number(itemHeight) || 56);
   const maxHeight = Math.max(rowHeight, Number(height) || 300);
   const viewportHeight = Math.min(maxHeight, Math.max(rowHeight, safeItems.length * rowHeight));

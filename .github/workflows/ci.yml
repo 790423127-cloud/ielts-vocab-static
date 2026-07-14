@@ -26,6 +26,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Dependency audit
+        run: npm run audit:dependencies
+
+      - name: ESLint errors
+        run: npm run lint:errors
+
+      - name: ESLint warning budget
+        run: npm run lint:budget
+
       - name: Quality gates
         run: npm run quality:all
 
@@ -36,4 +45,12 @@ jobs:
         run: npm run build
         env:
           # Build must not require real secrets
+          DEEPSEEK_API_KEY: ""
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Production browser E2E and performance budgets
+        run: npm run test:e2e
+        env:
           DEEPSEEK_API_KEY: ""

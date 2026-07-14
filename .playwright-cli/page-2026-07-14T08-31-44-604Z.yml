@@ -1,0 +1,49 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "IELTS Vocab 首页" [ref=e3] [cursor=pointer]:
+      - /url: /
+      - text: IELTS VOCAB
+    - generic "当前训练" [ref=e5]:
+      - strong [ref=e6]: 高频表达
+      - generic [ref=e7]: 口语与写作
+    - group "全站字号" [ref=e9]:
+      - button "减小字号" [ref=e10] [cursor=pointer]: A−
+      - button "增大字号" [ref=e12] [cursor=pointer]: A+
+  - navigation "移动端学习导航" [ref=e70]:
+    - link "刷词" [ref=e71] [cursor=pointer]:
+      - /url: /
+    - link "拼写" [ref=e75] [cursor=pointer]:
+      - /url: /spelling-words
+    - link "选义" [ref=e80] [cursor=pointer]:
+      - /url: /meaning
+    - link "错词" [ref=e85] [cursor=pointer]:
+      - /url: /spelling-words?source=error_bank
+    - group [ref=e91]:
+      - generic "更多" [ref=e92] [cursor=pointer]
+  - main [ref=e66]:
+    - generic [ref=e95]:
+      - generic [ref=e96]: 高频表达训练
+      - generic [ref=e97]: 本轮 1 / 20 · 累计覆盖 0 / 700
+    - region "选择题范围" [ref=e98]:
+      - generic [ref=e99]:
+        - generic [ref=e100]: 选择题
+        - strong [ref=e101]: 口语写作表达
+        - generic [ref=e102]: 本轮 1 / 20
+      - paragraph [ref=e103]: 累计覆盖 0 / 700 · 当前表达：cause of unemployment
+    - generic [ref=e108]:
+      - generic [ref=e109]:
+        - generic [ref=e110]: Task 2
+        - generic [ref=e111]: cause-effect
+      - generic [ref=e112]:
+        - generic [ref=e113]: cause of unemployment
+        - button "Play phrase" [ref=e114] [cursor=pointer]
+      - generic [ref=e119]:
+        - button "主要是因为" [ref=e120] [cursor=pointer]
+        - button "其原因是" [ref=e121] [cursor=pointer]
+        - button "失业的原因" [ref=e122] [cursor=pointer]
+        - button "另一个原因" [ref=e123] [cursor=pointer]
+      - button "跳过 →" [ref=e124] [cursor=pointer]
+    - generic [ref=e126]:
+      - generic [ref=e127]: 1 / 20
+      - generic [ref=e128]: 5%
+  - alert [ref=e69]

@@ -14,7 +14,12 @@ import {
   SPEECH_WARM_OPTIONS,
   withAudioCacheToken
 } from "../../vocab-speech.mjs";
-import { getReadableRealAudioEntry, normalizeAudioKey } from "../../vocab-audio-source.mjs";
+import {
+  cacheDir,
+  getReadableRealAudioEntry,
+  lookupCachedAudioEntry,
+  normalizeAudioKey
+} from "../../vocab-audio-source.mjs";
 import { resolveRealVoiceAudioSource } from "../../vocab-audio-source.mjs";
 import {
   buildPersonalWrongBookCandidates,
@@ -30,7 +35,7 @@ function mockSpeechFetch() {
     fetchCount += 1;
     await new Promise((resolve) => setTimeout(resolve, 5));
 
-    if (options.method === "HEAD") {
+    if (String(url).includes("/api/audio-file")) {
       return new Response(null, { status: 404 });
     }
 
@@ -48,6 +53,10 @@ function mockSpeechFetch() {
     getCount: () => fetchCount
   };
 }
+
+test("normalizeAudioKey normalizes curly quotation marks", () => {
+  assert.equal(normalizeAudioKey("  DON’T  “STOP”  "), "don't \"stop\"");
+});
 
 test("concurrent speech preload requests share one generated audio response", async () => {
   const originalFetch = globalThis.fetch;
@@ -72,61 +81,55 @@ test("concurrent speech preload requests share one generated audio response", as
   }
 });
 
-test("resolveSpeechFetchOptions keeps real-first playback for words and warm edge-only preload", () => {
-  assert.deepEqual(resolveSpeechFetchOptions("word", "play"), { preferReal: true });
-  assert.deepEqual(resolveSpeechFetchOptions("phrase", "play"), { preferReal: true });
+test("resolveSpeechFetchOptions is edge-only for word phrase sentence and warm", () => {
+  assert.deepEqual(resolveSpeechFetchOptions("word", "play"), { preferReal: false });
+  assert.deepEqual(resolveSpeechFetchOptions("phrase", "play"), { preferReal: false });
   assert.deepEqual(resolveSpeechFetchOptions("sentence", "play"), { preferReal: false });
   assert.deepEqual(resolveSpeechFetchOptions("word", "warm"), SPEECH_WARM_OPTIONS);
+  assert.equal(SPEECH_WARM_OPTIONS.preferReal, false);
 });
 
-test("play requests send preferReal for dictionary words", async () => {
+test("play requests always send preferReal false for words and sentences", async () => {
   const originalFetch = globalThis.fetch;
   const requests = [];
   globalThis.fetch = async (url, options = {}) => {
     requests.push({ url: String(url), options });
-    if (options.method === "HEAD") {
+    if (String(url).includes("/api/audio-file")) {
       return new Response(null, { status: 404 });
     }
     return new Response(new Blob(["audio"]), {
       status: 200,
       headers: {
-        "X-Audio-Source": "real-dictionary",
-        "X-Audio-Real": "1",
-        "X-Audio-Provider": "dictionaryapi.dev"
+        "X-Audio-Source": "edge-generated",
+        "X-Audio-Real": "0",
+        "X-Audio-Provider": "edge-tts"
       }
     });
   };
 
   try {
     await fetchSpeechAudioUrl("dictionary-playback", "word");
-    const post = requests.find((entry) => entry.url.endsWith("/api/edge-tts"));
-    assert.ok(post);
-    assert.equal(JSON.parse(post.options.body).preferReal, true);
+    await fetchSpeechAudioUrl("sentence playback example.", "sentence");
+    const posts = requests.filter((entry) => entry.url.endsWith("/api/edge-tts"));
+    assert.equal(posts.length, 2);
+    for (const post of posts) {
+      assert.equal(JSON.parse(post.options.body).preferReal, false);
+    }
   } finally {
     globalThis.fetch = originalFetch;
   }
 });
 
-test("real-first playback ignores cached edge-only HEAD hits", async () => {
+test("edge-only playback reuses the body from a cached edge GET", async () => {
   const originalFetch = globalThis.fetch;
-  const directUrl = buildAudioFileUrl("edge-only-cache", "word", { preferReal: true });
+  const directUrl = buildAudioFileUrl("edge-only-cache", "word", { preferReal: false });
   globalThis.fetch = async (url, options = {}) => {
-    if (options.method === "HEAD" && String(url) === directUrl) {
-      return new Response(null, {
+    if ((options.method || "GET") === "GET" && String(url) === directUrl) {
+      return new Response(new Blob(["audio"]), {
         status: 200,
         headers: {
           "X-Audio-Source": "edge-cache",
           "X-Audio-Real": "0"
-        }
-      });
-    }
-
-    if (String(url).endsWith("/api/edge-tts")) {
-      return new Response(new Blob(["audio"]), {
-        status: 200,
-        headers: {
-          "X-Audio-Source": "real-dictionary",
-          "X-Audio-Real": "1"
         }
       });
     }
@@ -136,8 +139,43 @@ test("real-first playback ignores cached edge-only HEAD hits", async () => {
 
   try {
     const result = await fetchSpeechAudioUrl("edge-only-cache", "word");
-    assert.match(result, /^\/api\/audio-file\?/);
-    assert.match(result, /text=edge-only-cache/);
+    assert.match(result, /^blob:/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("edge-only playback rejects cached real-person GET hits", async () => {
+  const originalFetch = globalThis.fetch;
+  const directUrl = buildAudioFileUrl("real-cached-word", "word", { preferReal: false });
+  const requests = [];
+  globalThis.fetch = async (url, options = {}) => {
+    requests.push({ url: String(url), method: options.method || "GET" });
+    if ((options.method || "GET") === "GET" && String(url) === directUrl) {
+      return new Response(new Blob(["real-audio"]), {
+        status: 200,
+        headers: {
+          "X-Audio-Source": "real-commons",
+          "X-Audio-Real": "1"
+        }
+      });
+    }
+    if (String(url).endsWith("/api/edge-tts")) {
+      return new Response(new Blob(["audio"]), {
+        status: 200,
+        headers: {
+          "X-Audio-Source": "edge-generated",
+          "X-Audio-Real": "0"
+        }
+      });
+    }
+    throw new Error(`unexpected fetch: ${String(url)} ${options.method || "GET"}`);
+  };
+
+  try {
+    const result = await fetchSpeechAudioUrl("real-cached-word", "word");
+    assert.match(result, /^blob:/);
+    assert.ok(requests.some((entry) => entry.url.endsWith("/api/edge-tts")));
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -146,14 +184,15 @@ test("real-first playback ignores cached edge-only HEAD hits", async () => {
 test("speech audio urls include cache token to bypass stale browser audio cache", () => {
   const url = withAudioCacheToken("/api/audio-file?text=land&kind=word", "enhance-v2");
   assert.match(url, /[?&]v=enhance-v2/);
+  assert.equal(withAudioCacheToken("blob:http://localhost/audio-id", "enhance-v2"), "blob:http://localhost/audio-id");
 });
 
-test("cached speech audio uses direct GET url after HEAD hit", async () => {
+test("cached speech audio is materialized once as an object URL", async () => {
   const originalFetch = globalThis.fetch;
   const directUrl = buildAudioFileUrl("cached-audio-hit", "word", SPEECH_WARM_OPTIONS);
   globalThis.fetch = async (url, options = {}) => {
-    if (options.method === "HEAD" && String(url) === directUrl) {
-      return new Response(null, {
+    if ((options.method || "GET") === "GET" && String(url) === directUrl) {
+      return new Response(new Blob(["cached-audio"]), {
         status: 200,
         headers: {
           "X-Audio-Source": "edge-cache",
@@ -167,7 +206,7 @@ test("cached speech audio uses direct GET url after HEAD hit", async () => {
 
   try {
     const url = await fetchSpeechAudioUrl("cached-audio-hit", "word", SPEECH_WARM_OPTIONS);
-    assert.equal(url, directUrl);
+    assert.match(url, /^blob:/);
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -271,6 +310,28 @@ test("getReadableRealAudioEntry requires indexed real audio with an existing fil
   assert.equal(getReadableRealAudioEntry(normalizeAudioKey("absent"), audioIndex), null);
 });
 
+test("lookupCachedAudioEntry reuses legacy Edge cache versions", () => {
+  const text = "legacy edge cache test";
+  const key = normalizeAudioKey(text);
+  const filename = `test-legacy-edge-cache-${process.pid}.mp3`;
+  const filepath = path.join(cacheDir(), filename);
+  const entry = {
+    text,
+    filename,
+    hasAudio: true,
+    realAudio: false,
+    realAudioVersion: "real-first-v1",
+    source: "edge-generated"
+  };
+
+  fs.writeFileSync(filepath, "test-audio");
+  try {
+    assert.equal(lookupCachedAudioEntry(text, { [key]: entry }, { kind: "sentence" }), entry);
+  } finally {
+    fs.rmSync(filepath, { force: true });
+  }
+});
+
 test("preloadSpellingSpeechTexts deduplicates personal wrong write targets", async () => {
   const originalFetch = globalThis.fetch;
   const mock = mockSpeechFetch();
@@ -297,7 +358,7 @@ test("speech preload queue limits concurrent network work to two tasks", async (
     await new Promise((resolve) => setTimeout(resolve, 10));
     active -= 1;
 
-    if (options.method === "HEAD") {
+    if (String(url).includes("/api/audio-file")) {
       return new Response(null, { status: 404 });
     }
     return new Response(new Blob(["audio"]), { status: 200 });

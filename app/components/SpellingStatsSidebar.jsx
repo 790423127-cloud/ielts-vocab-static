@@ -2,6 +2,7 @@
 
 import VirtualList from "./VirtualList.jsx";
 import SpellingRangeBar from "./SpellingRangeBar.jsx";
+import FontScaleControl from "./FontScaleControl.jsx";
 import {
   PERSONAL_WRONG_BOOK_BASE_REPS,
   PERSONAL_WRONG_BOOK_BATCH_SIZE,
@@ -16,6 +17,7 @@ import {
 
 export default function SpellingStatsSidebar({
   statsSidebarOpen,
+  onClose,
   dailyStats,
   formatActiveLearningTime,
   sessionMetrics,
@@ -57,6 +59,15 @@ export default function SpellingStatsSidebar({
 }) {
   return (
 <aside className={`spelling-stats-sidebar${statsSidebarOpen ? " is-open" : ""}`} aria-label="统计与设置">
+  <div className="spelling-sidebar-header">
+    <strong>统计与设置</strong>
+    <button type="button" className="spelling-sidebar-close" onClick={onClose} aria-label="关闭统计与设置">
+      ×
+    </button>
+  </div>
+  <div className="spelling-sidebar-font-scale">
+    <FontScaleControl />
+  </div>
   <section className="spelling-sidebar-block" aria-label="今日统计">
     <h2 className="spelling-sidebar-block__title">今日统计</h2>
     <dl className="spelling-sidebar-stats spelling-sidebar-stats--daily">

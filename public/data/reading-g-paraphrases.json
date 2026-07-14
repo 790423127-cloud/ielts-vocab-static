@@ -1,0 +1,6512 @@
+{
+  "version": "reading-g-core-v3-paraphrases",
+  "dataSchemaVersion": 3,
+  "generatedAt": "2026-07-10T15:16:16.731Z",
+  "count": 300,
+  "highConfidenceCount": 300,
+  "policy": {
+    "networkListsAreNotAutomaticPairs": true,
+    "canAutoQuizOnlyWhen": "confidence===high && sourceType===verified"
+  },
+  "groups": [
+    {
+      "groupId": "rg_para_book_in_advance_001",
+      "anchor": "book in advance",
+      "members": [
+        "Bookings are essential"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅10",
+          "test": "Test A",
+          "part": "Passage 1",
+          "question": 13,
+          "answerSentence": "To purchase: Bookings are essential."
+        },
+        {
+          "book": "剑雅10",
+          "test": "Test A",
+          "part": "Passage 1",
+          "question": 13,
+          "answerSentence": "To purchase: Bookings are essential."
+        }
+      ],
+      "rank": 1,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_gain_the_maximum_impact_002",
+      "anchor": "gain the maximum impact",
+      "members": [
+        "make as much impact as possible"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅10",
+          "test": "Test A",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "you also need to gain the maximum impact from your sales letter."
+        },
+        {
+          "book": "剑雅10",
+          "test": "Test A",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "you also need to gain the maximum impact from your sales letter."
+        }
+      ],
+      "rank": 2,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_assess_your_response_rate_003",
+      "anchor": "assess your response rate",
+      "members": [
+        "calculate the response rate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅10",
+          "test": "Test A",
+          "part": "Passage 2",
+          "question": 21,
+          "answerSentence": "When you receive your replies, assess your response rate and monitor the sales."
+        },
+        {
+          "book": "剑雅10",
+          "test": "Test A",
+          "part": "Passage 2",
+          "question": 21,
+          "answerSentence": "When you receive your replies, assess your response rate and monitor the sales."
+        }
+      ],
+      "rank": 3,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_read_through_any_documents_004",
+      "anchor": "read through any documents",
+      "members": [
+        "read any materials"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅11",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "Visit the website and read any materials that you have been sent."
+        },
+        {
+          "book": "剑雅11",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "Visit the website and read any materials that you have been sent."
+        }
+      ],
+      "rank": 4,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_not_aware_of_005",
+      "anchor": "not aware of",
+      "members": [
+        "didn't know you had"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅15",
+          "test": "Test 3",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "In a small business you're likely to have considerable variety in your workload, including opportunities to work in different areas of the company, which will allow you to identify abilities that you didn't know you had."
+        },
+        {
+          "book": "剑雅15",
+          "test": "Test 3",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "In a small business you're likely to have considerable variety in your workload, including opportunities to work in different areas of the company, which will allow you to identify abilities that you didn't know you had."
+        }
+      ],
+      "rank": 5,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_maintain_a_database_006",
+      "anchor": "maintain a database",
+      "members": [
+        "keep a database up-to-date"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅16",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 19,
+          "answerSentence": "You will need to improve systems for ensuring that the records of the Service's activities are accurate, and maintain a database of all music teachers, students, and instruments belonging to the Service."
+        },
+        {
+          "book": "剑雅16",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 19,
+          "answerSentence": "You will need to improve systems for ensuring that the records of the Service's activities are accurate, and maintain a database of all music teachers, students, and instruments belonging to the Service."
+        }
+      ],
+      "rank": 6,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_not_aware_of_their_responsibilities_007",
+      "anchor": "not aware of their responsibilities",
+      "members": [
+        "may not fully understand their responsibilities"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅16",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 23,
+          "answerSentence": "Many managers are simply not aware of their responsibilities."
+        },
+        {
+          "book": "剑雅16",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 23,
+          "answerSentence": "Many managers are simply not aware of their responsibilities."
+        }
+      ],
+      "rank": 7,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_wrapped_in_padding_008",
+      "anchor": "wrapped in padding",
+      "members": [
+        "covered with padding"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅18",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 23,
+          "answerSentence": "If there are obstacles overhead, these should be wrapped in padding to avoid risk of injury."
+        },
+        {
+          "book": "剑雅18",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 23,
+          "answerSentence": "If there are obstacles overhead, these should be wrapped in padding to avoid risk of injury."
+        }
+      ],
+      "rank": 8,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_different_leader_009",
+      "anchor": "different leader",
+      "members": [
+        "a new leader"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅20",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 27,
+          "answerSentence": "Many companies in this situation bring in a new leader at this stage, to face the new challenges."
+        },
+        {
+          "book": "剑雅20",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 27,
+          "answerSentence": "Many companies in this situation bring in a new leader at this stage, to face the new challenges."
+        }
+      ],
+      "rank": 9,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_without_payment_010",
+      "anchor": "without payment",
+      "members": [
+        "no actual payment"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅20",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 20,
+          "answerSentence": "It is not steady and it is not always profitable."
+        },
+        {
+          "book": "剑雅20",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 20,
+          "answerSentence": "It is not steady and it is not always profitable."
+        }
+      ],
+      "rank": 10,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_all_new_houses_011",
+      "anchor": "all new houses",
+      "members": [
+        "any recently built properties"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅10",
+          "test": "Test A",
+          "part": "Passage 1",
+          "question": 1,
+          "answerSentence": "Smoke alarms are now a standard feature in Australian homes and are required by the National Building Code in any recently built properties."
+        }
+      ],
+      "rank": 11,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_views_of_the_golf_course_012",
+      "anchor": "views of the golf course",
+      "members": [
+        "overlooks a golf course"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅11",
+          "test": "Test 1",
+          "part": "Passage 1",
+          "question": 6,
+          "answerSentence": "Situated in a peaceful location on the edge of an inland village,with attractive views of the golf course."
+        }
+      ],
+      "rank": 12,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_discover_the_most_effective_places_013",
+      "anchor": "discover the most effective places",
+      "members": [
+        "advertising in the right places"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅12",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 15,
+          "answerSentence": "That's why it pays to do a bit of research."
+        }
+      ],
+      "rank": 13,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_show_its_recognition_014",
+      "anchor": "show its recognition",
+      "members": [
+        "acknowledge"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "承认；确认",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅12",
+          "test": "Test 3",
+          "part": "Passage 2",
+          "question": 15,
+          "answerSentence": "Our attractive benefits package is one of the ways we acknowledge the contribution they all make in the provision of high quality patient care."
+        }
+      ],
+      "rank": 14,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_details_015",
+      "anchor": "details",
+      "members": [
+        "information about"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "细节；详情",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅13",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 15,
+          "answerSentence": "When using this you need to provide information about your shipment, and you also need to send proof of a current annual inspection for your vehicle, tractor and trailer."
+        }
+      ],
+      "rank": 15,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_nicely_designed_016",
+      "anchor": "nicely designed",
+      "members": [
+        "well-presented visuals"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅13",
+          "test": "Test 2",
+          "part": "Passage 1",
+          "question": 10,
+          "answerSentence": "Although you naturally get more features if you pay for the 'pro' version, the free release gets you GPS tracking, a nicely designed map view, your training history, music, and cheering."
+        }
+      ],
+      "rank": 16,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_uncertain_and_dynamic_017",
+      "anchor": "uncertain and dynamic",
+      "members": [
+        "unpredictable"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "不可预测的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅13",
+          "test": "Test 4",
+          "part": "Passage 3",
+          "question": 35,
+          "answerSentence": "Jazz groups and their members often operate in uncertain and dynamic environments, characterised by rapid change."
+        }
+      ],
+      "rank": 17,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_shows_the_dates_of_term_time_018",
+      "anchor": "shows the dates of term time",
+      "members": [
+        "as published in the academic calendar"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅14",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "All permits/tickets must be clearly displayed in the windscreen of vehicles during the dates of term time, as published in the academic calendar."
+        }
+      ],
+      "rank": 18,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_expert_instructors_019",
+      "anchor": "expert instructors",
+      "members": [
+        "golf professionals"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅14",
+          "test": "Test 3",
+          "part": "Passage 1",
+          "question": 2,
+          "answerSentence": "three golf professionals can give affordable coaching."
+        }
+      ],
+      "rank": 19,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_lessons_020",
+      "anchor": "lessons",
+      "members": [
+        "coaching"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "课程",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅14",
+          "test": "Test 3",
+          "part": "Passage 1",
+          "question": 2,
+          "answerSentence": "three golf professionals can give affordable coaching."
+        }
+      ],
+      "rank": 20,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_immediately_outside_their_units_021",
+      "anchor": "immediately outside their units",
+      "members": [
+        "drive your vehicle right next to your storage unit"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅15",
+          "test": "Test 2",
+          "part": "Passage 1",
+          "question": 4,
+          "answerSentence": "Tarmac roadways allow customers to park cars and lorries immediately outside their units, minimising the effort required to collect or drop items off."
+        }
+      ],
+      "rank": 21,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_become_familiar_022",
+      "anchor": "become familiar",
+      "members": [
+        "become part of it"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅15",
+          "test": "Test 3",
+          "part": "Passage 2",
+          "question": 15,
+          "answerSentence": "Working in a small organisation with a small workforce means it's likely to be easy to become part of it."
+        }
+      ],
+      "rank": 22,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_sooner_023",
+      "anchor": "sooner",
+      "members": [
+        "faster"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "更快地",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅15",
+          "test": "Test 3",
+          "part": "Passage 2",
+          "question": 19,
+          "answerSentence": "The result is very likely to be that promotion comes to you faster."
+        }
+      ],
+      "rank": 23,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_not_learnt_which_qualities_024",
+      "anchor": "not learnt which qualities",
+      "members": [
+        "not knowing how to highlight their most relevant strengths"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅16",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 15,
+          "answerSentence": "Although many people can write their own CVs, and do it well, others struggle with a variety of problems initially, such as not knowing how to structure a CV or how to highlight their most relevant strengths."
+        }
+      ],
+      "rank": 24,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_consideration_of_themselves_025",
+      "anchor": "consideration of themselves",
+      "members": [
+        "see yourself"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅17",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 18,
+          "answerSentence": "It involves the ability to see yourself from different people's viewpoints."
+        }
+      ],
+      "rank": 25,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_dependable_026",
+      "anchor": "dependable",
+      "members": [
+        "trust"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可靠的，可信赖的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅17",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 19,
+          "answerSentence": "Asking a colleague that you trust is also a good way to find out how others see your strengths."
+        }
+      ],
+      "rank": 26,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_minimum_amount_of_necessary_027",
+      "anchor": "minimum amount of necessary",
+      "members": [
+        "bare essentials"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅17",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 21,
+          "answerSentence": "Cut down documents and stationery to the bare essentials."
+        }
+      ],
+      "rank": 27,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_identified_by_028",
+      "anchor": "identified by",
+      "members": [
+        "add clear labels"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅17",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 24,
+          "answerSentence": "add clear labels such as 'In', 'Out', For Action', 'Current Projects’ or other relevant categories."
+        }
+      ],
+      "rank": 28,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_important_tasks_029",
+      "anchor": "important tasks",
+      "members": [
+        "key tasks"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅17",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 27,
+          "answerSentence": "Near the close of each work day, implement a 10- to 15-minute routine to wrap up loose ends and prioritise key tasks."
+        }
+      ],
+      "rank": 29,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_start_work_immediately_030",
+      "anchor": "start work immediately",
+      "members": [
+        "straight into the workplace"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅17",
+          "test": "Test 4",
+          "part": "Passage 1",
+          "question": 8,
+          "answerSentence": "In the sixth form we provide a strong programme of guidance for students, whether they are planning on going to university, into training or straight into the workplace."
+        }
+      ],
+      "rank": 30,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_walk_under_the_load_031",
+      "anchor": "walk under the load",
+      "members": [
+        "pass over anyone's head"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅18",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 20,
+          "answerSentence": "Firstly, if a load needs to be moved where workers or members of the public are present, the area must have barriers or other means to ensure no one is allowed to walk under the load while it is moving."
+        }
+      ],
+      "rank": 31,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_substitute_soda_032",
+      "anchor": "substitute soda",
+      "members": [
+        "replace"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "替换",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅18",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 16,
+          "answerSentence": "A simple thing to do is substitute soda in any on-site vending machines with water or juice."
+        }
+      ],
+      "rank": 32,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_overly_crowded_033",
+      "anchor": "overly crowded",
+      "members": [
+        "uncomfortably busy"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅18",
+          "test": "Test 3",
+          "part": "Passage 1",
+          "question": 3,
+          "answerSentence": "Please note that Shelly Beach gets overly crowded at times, so avoid it on a sunny weekend afternoon."
+        }
+      ],
+      "rank": 33,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_fitted_034",
+      "anchor": "fitted",
+      "members": [
+        "install"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "安装",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅18",
+          "test": "Test 4",
+          "part": "Passage 2",
+          "question": 24,
+          "answerSentence": "Handrails should also be fitted."
+        }
+      ],
+      "rank": 34,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_focus_on_gaining_035",
+      "anchor": "focus on gaining",
+      "members": [
+        "work hard to earn"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅19",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 15,
+          "answerSentence": "The first few weeks is when people develop their perceptions of you,so work hard to earn their trust."
+        }
+      ],
+      "rank": 35,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_when_necessary_036",
+      "anchor": "when necessary",
+      "members": [
+        "if the situation calls for it"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅19",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 20,
+          "answerSentence": "Leaders need to accept that some risk may be required if the situation calls for it."
+        }
+      ],
+      "rank": 36,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_improve_037",
+      "anchor": "improve",
+      "members": [
+        "develop"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "改善；提高",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅19",
+          "test": "Test 1",
+          "part": "Passage 2",
+          "question": 27,
+          "answerSentence": "Mention any particular career-building projects you worked on or opportunities to develop skills and contribute to the employer's goals and successes."
+        }
+      ],
+      "rank": 37,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_resembles_038",
+      "anchor": "resembles",
+      "members": [
+        "more like"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "像…",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅19",
+          "test": "Test 4",
+          "part": "Passage 3",
+          "question": 29,
+          "answerSentence": "Neat fields of maize have been replaced with a landscape that resembles the typical grasslands of Africa."
+        }
+      ],
+      "rank": 38,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_keeping_a_record_of_039",
+      "anchor": "keeping a record of",
+      "members": [
+        "input the number of"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅20",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 15,
+          "answerSentence": "For example, in a consulting business, technical training might be used so the consultant knows how to operate the system to input the number of hours that should be charged to a client."
+        }
+      ],
+      "rank": 39,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_affect_040",
+      "anchor": "affect",
+      "members": [
+        "have an impact"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "影响",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅20",
+          "test": "Test 2",
+          "part": "Passage 2",
+          "question": 23,
+          "answerSentence": "Many believe this is the riskiest stage of the entire lifecycle, since mistakes made then can have an impact many years later."
+        }
+      ],
+      "rank": 40,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_wet_swimwear_041",
+      "anchor": "wet swimwear",
+      "members": [
+        "damp gear"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅20",
+          "test": "Test 4",
+          "part": "Passage 1",
+          "question": 1,
+          "answerSentence": "a separate smaller waterproof compartment at one of the ends is ideal for putting damp gear in so that everything else is unaffected by it."
+        }
+      ],
+      "rank": 41,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_recorded_the_transport_of_042",
+      "anchor": "recorded the transport of",
+      "members": [
+        "concern the movement of"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅20",
+          "test": "Test 4",
+          "part": "Passage 3",
+          "question": 37,
+          "answerSentence": "These include lists of different personnel, but most concern the movement of barley."
+        }
+      ],
+      "rank": 42,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_available_from_043",
+      "anchor": "available from",
+      "members": [
+        "Contact"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "联系，接触",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [
+        {
+          "book": "剑雅21（G类）",
+          "test": "Test 3",
+          "part": "Section 2",
+          "question": 16,
+          "answerSentence": "Further information on transport options is available from the Environment Team or can be found in the Travel Options leaflet."
+        }
+      ],
+      "rank": 43,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_go_to_044",
+      "anchor": "go to",
+      "members": [
+        "collect from"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅21（G类）",
+          "test": "Test 3",
+          "part": "Section 2",
+          "question": 20,
+          "answerSentence": "To obtain your card, please go to the Security Lodge, where a photo will be taken and the card produced immediately."
+        }
+      ],
+      "rank": 44,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_underneath_the_counter_045",
+      "anchor": "underneath the counter",
+      "members": [
+        "below the"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [
+        {
+          "book": "剑雅21（G类）",
+          "test": "Test 3",
+          "part": "Section 2",
+          "question": 23,
+          "answerSentence": "this can be done by pressing the power button located underneath the counter on the top of a small black unit."
+        }
+      ],
+      "rank": 45,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_buy_046",
+      "anchor": "buy",
+      "members": [
+        "purchase"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "购买",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 46,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_get_047",
+      "anchor": "get",
+      "members": [
+        "obtain"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "得到；获得；使；变得；收到",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 47,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_provide_048",
+      "anchor": "provide",
+      "members": [
+        "supply"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "提供",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 48,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_help_049",
+      "anchor": "help",
+      "members": [
+        "assist"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "帮助",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 49,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_show_050",
+      "anchor": "show",
+      "members": [
+        "demonstrate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "显示；展示",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 50,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_say_051",
+      "anchor": "say",
+      "members": [
+        "state"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "说；讲",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 51,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_tell_052",
+      "anchor": "tell",
+      "members": [
+        "inform"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "告诉",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 52,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_ask_053",
+      "anchor": "ask",
+      "members": [
+        "request"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "问；请求",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 53,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_answer_054",
+      "anchor": "answer",
+      "members": [
+        "respond"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "回答；答案",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 54,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_start_055",
+      "anchor": "start",
+      "members": [
+        "begin"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "开始；启动",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 55,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_start_056",
+      "anchor": "start",
+      "members": [
+        "commence"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "开始；启动",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 56,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_end_057",
+      "anchor": "end",
+      "members": [
+        "finish"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "结束，终点；结束",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 57,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_end_058",
+      "anchor": "end",
+      "members": [
+        "terminate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "结束，终点；结束",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 58,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_stop_059",
+      "anchor": "stop",
+      "members": [
+        "cease"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "停止，车站",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 59,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_continue_060",
+      "anchor": "continue",
+      "members": [
+        "carry on"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "继续",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 60,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_delay_061",
+      "anchor": "delay",
+      "members": [
+        "postpone"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "延迟，延误",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 61,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_cancel_062",
+      "anchor": "cancel",
+      "members": [
+        "call off"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "取消；撤销",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 62,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_choose_063",
+      "anchor": "choose",
+      "members": [
+        "select"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "选择",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 63,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_find_064",
+      "anchor": "find",
+      "members": [
+        "locate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "找到；发现",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 64,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_look_for_065",
+      "anchor": "look for",
+      "members": [
+        "search for"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 65,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_use_066",
+      "anchor": "use",
+      "members": [
+        "utilise"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "使用；用途",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 66,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_need_067",
+      "anchor": "need",
+      "members": [
+        "require"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "需要；必须",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 67,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_keep_068",
+      "anchor": "keep",
+      "members": [
+        "maintain"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "保持；保留",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 68,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_make_069",
+      "anchor": "make",
+      "members": [
+        "produce"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "使得；做；制作",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 69,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_build_070",
+      "anchor": "build",
+      "members": [
+        "construct"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "建造",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 70,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_fix_071",
+      "anchor": "fix",
+      "members": [
+        "repair"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "修理；固定",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 71,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_check_072",
+      "anchor": "check",
+      "members": [
+        "inspect"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "检查；核对",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 72,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_check_073",
+      "anchor": "check",
+      "members": [
+        "verify"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "检查；核对",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 73,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_change_074",
+      "anchor": "change",
+      "members": [
+        "alter"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "改变；变化",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 74,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_improve_075",
+      "anchor": "improve",
+      "members": [
+        "enhance"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "改善；提高",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 75,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_reduce_076",
+      "anchor": "reduce",
+      "members": [
+        "decrease"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "减少；降低",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 76,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_increase_077",
+      "anchor": "increase",
+      "members": [
+        "rise"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "增加",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 77,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_increase_078",
+      "anchor": "increase",
+      "members": [
+        "grow"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "增加",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 78,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_cause_079",
+      "anchor": "cause",
+      "members": [
+        "lead to"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "原因；导致",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 79,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_result_from_080",
+      "anchor": "result from",
+      "members": [
+        "be caused by"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 80,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_prevent_081",
+      "anchor": "prevent",
+      "members": [
+        "stop"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "防止；阻止",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 81,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_protect_082",
+      "anchor": "protect",
+      "members": [
+        "safeguard"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "保护",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 82,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_allow_083",
+      "anchor": "allow",
+      "members": [
+        "permit"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "允许",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 83,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_ban_084",
+      "anchor": "ban",
+      "members": [
+        "prohibit"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "禁止；禁令",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 84,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_join_085",
+      "anchor": "join",
+      "members": [
+        "take part in"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "加入；连接",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 85,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_include_086",
+      "anchor": "include",
+      "members": [
+        "contain"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "包括",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 86,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_cover_087",
+      "anchor": "cover",
+      "members": [
+        "include"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "覆盖；涵盖；封面",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 87,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_deal_with_088",
+      "anchor": "deal with",
+      "members": [
+        "handle"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "处理；把手",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 88,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_carry_out_089",
+      "anchor": "carry out",
+      "members": [
+        "conduct"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "进行",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 89,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_set_up_090",
+      "anchor": "set up",
+      "members": [
+        "establish"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "建立",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 90,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_arrange_091",
+      "anchor": "arrange",
+      "members": [
+        "organise"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "安排；整理",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 91,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_book_092",
+      "anchor": "book",
+      "members": [
+        "reserve"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "书；预订",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 92,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_pay_093",
+      "anchor": "pay",
+      "members": [
+        "make a payment"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "支付，工资",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 93,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_charge_094",
+      "anchor": "charge",
+      "members": [
+        "ask for payment"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "收费；充电；指控",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 94,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_return_095",
+      "anchor": "return",
+      "members": [
+        "give back"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "返回，归还",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 95,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_refund_096",
+      "anchor": "refund",
+      "members": [
+        "give money back"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "退款；退还",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 96,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_replace_097",
+      "anchor": "replace",
+      "members": [
+        "substitute"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "替换",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 97,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_move_098",
+      "anchor": "move",
+      "members": [
+        "relocate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "移动；搬家；步骤",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 98,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_live_099",
+      "anchor": "live",
+      "members": [
+        "reside"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "居住；生活；活的；现场的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 99,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_travel_100",
+      "anchor": "travel",
+      "members": [
+        "make a journey"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "旅行；出行",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 100,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_arrive_101",
+      "anchor": "arrive",
+      "members": [
+        "reach"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "到达",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 101,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_leave_102",
+      "anchor": "leave",
+      "members": [
+        "depart"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "离开；休假",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 102,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_collect_103",
+      "anchor": "collect",
+      "members": [
+        "pick up"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "收集；领取",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 103,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_deliver_104",
+      "anchor": "deliver",
+      "members": [
+        "bring to"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "递送；交付",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 104,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_must_105",
+      "anchor": "must",
+      "members": [
+        "be required to"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "必须",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 105,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_should_106",
+      "anchor": "should",
+      "members": [
+        "be advised to"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "应该",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 106,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_necessary_107",
+      "anchor": "necessary",
+      "members": [
+        "required"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "必要的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 107,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_compulsory_108",
+      "anchor": "compulsory",
+      "members": [
+        "mandatory"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "强制性的；必修的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 108,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_optional_109",
+      "anchor": "optional",
+      "members": [
+        "not compulsory"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可选的；非强制的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 109,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_allowed_110",
+      "anchor": "allowed",
+      "members": [
+        "permitted"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "允许；准许",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 110,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_not_allowed_111",
+      "anchor": "not allowed",
+      "members": [
+        "prohibited"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 111,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_according_to_112",
+      "anchor": "according to",
+      "members": [
+        "in accordance with"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 112,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_follow_rules_113",
+      "anchor": "follow rules",
+      "members": [
+        "comply with regulations"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 113,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_be_responsible_for_114",
+      "anchor": "be responsible for",
+      "members": [
+        "be in charge of"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 114,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_qualify_115",
+      "anchor": "qualify",
+      "members": [
+        "be eligible"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "取得资格；合格",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 115,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_suitable_116",
+      "anchor": "suitable",
+      "members": [
+        "appropriate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "合适的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 116,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_enough_117",
+      "anchor": "enough",
+      "members": [
+        "sufficient"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "足够的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 117,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_insufficient_118",
+      "anchor": "insufficient",
+      "members": [
+        "not enough"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "不足的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 118,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_valid_119",
+      "anchor": "valid",
+      "members": [
+        "officially acceptable"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "有效的；合理的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 119,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_valid_until_120",
+      "anchor": "valid until",
+      "members": [
+        "expires on"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 120,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_subject_to_121",
+      "anchor": "subject to",
+      "members": [
+        "dependent on"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 121,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_exempt_from_122",
+      "anchor": "exempt from",
+      "members": [
+        "not required to"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 122,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_restricted_123",
+      "anchor": "restricted",
+      "members": [
+        "limited"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "受限的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 123,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_unlimited_124",
+      "anchor": "unlimited",
+      "members": [
+        "without restriction"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "无限的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 124,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_maximum_125",
+      "anchor": "maximum",
+      "members": [
+        "no more than"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "最大值/最大的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 125,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_minimum_126",
+      "anchor": "minimum",
+      "members": [
+        "at least"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "最小值；最低的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 126,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_prior_to_127",
+      "anchor": "prior to",
+      "members": [
+        "before"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "在……之前",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 127,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_no_later_than_128",
+      "anchor": "no later than",
+      "members": [
+        "by"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "通过；在...旁边",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 128,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_in_advance_129",
+      "anchor": "in advance",
+      "members": [
+        "beforehand"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "提前，事先",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 129,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_immediately_130",
+      "anchor": "immediately",
+      "members": [
+        "straight away"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "立即",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 130,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_at_short_notice_131",
+      "anchor": "at short notice",
+      "members": [
+        "with little warning"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 131,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_available_on_request_132",
+      "anchor": "available on request",
+      "members": [
+        "provided when asked"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 132,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_proof_of_identity_133",
+      "anchor": "proof of identity",
+      "members": [
+        "identification"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "鉴定，身份证明",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 133,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_terms_and_conditions_134",
+      "anchor": "terms and conditions",
+      "members": [
+        "rules of the agreement"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 134,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_job_135",
+      "anchor": "job",
+      "members": [
+        "position"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "工作；职位",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 135,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_vacancy_136",
+      "anchor": "vacancy",
+      "members": [
+        "available job"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "空缺；空位",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 136,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_work_137",
+      "anchor": "work",
+      "members": [
+        "employment"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "工作",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 137,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_staff_138",
+      "anchor": "staff",
+      "members": [
+        "employees"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "员工",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 138,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_employer_139",
+      "anchor": "employer",
+      "members": [
+        "company"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "雇主",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 139,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_applicant_140",
+      "anchor": "applicant",
+      "members": [
+        "candidate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "申请人",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 140,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_apply_for_141",
+      "anchor": "apply for",
+      "members": [
+        "submit an application for"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 141,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_experience_142",
+      "anchor": "experience",
+      "members": [
+        "background"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "经验；体验；经历；感受",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 142,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_skills_143",
+      "anchor": "skills",
+      "members": [
+        "abilities"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "技能；技巧；技术",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 143,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_training_144",
+      "anchor": "training",
+      "members": [
+        "instruction"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "训练；培训",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 144,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_qualification_145",
+      "anchor": "qualification",
+      "members": [
+        "certificate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "资格；学历",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 145,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_pay_146",
+      "anchor": "pay",
+      "members": [
+        "salary"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "支付，工资",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 146,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_wage_147",
+      "anchor": "wage",
+      "members": [
+        "pay"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "工资；薪水",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 147,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_annual_leave_148",
+      "anchor": "annual leave",
+      "members": [
+        "paid holiday"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 148,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_working_hours_149",
+      "anchor": "working hours",
+      "members": [
+        "hours of work"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 149,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_full-time_150",
+      "anchor": "full-time",
+      "members": [
+        "working all normal hours"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "全职的；全职地",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 150,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_part-time_151",
+      "anchor": "part-time",
+      "members": [
+        "working fewer hours"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "兼职的；部分时间",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 151,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_temporary_152",
+      "anchor": "temporary",
+      "members": [
+        "short-term"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "暂时的；临时的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 152,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_permanent_153",
+      "anchor": "permanent",
+      "members": [
+        "long-term"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "永久的；长期的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 153,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_promotion_154",
+      "anchor": "promotion",
+      "members": [
+        "move to a higher position"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "晋升；促销",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 154,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_resign_155",
+      "anchor": "resign",
+      "members": [
+        "leave a job voluntarily"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "辞职",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 155,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_dismiss_156",
+      "anchor": "dismiss",
+      "members": [
+        "remove from a job"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "解雇；驳回；解散",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 156,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_recruit_157",
+      "anchor": "recruit",
+      "members": [
+        "hire"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "招募；新成员",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 157,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_supervisor_158",
+      "anchor": "supervisor",
+      "members": [
+        "manager"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "主管",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 158,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_colleague_159",
+      "anchor": "colleague",
+      "members": [
+        "co-worker"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "同事",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 159,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_duty_160",
+      "anchor": "duty",
+      "members": [
+        "responsibility"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "责任；税",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 160,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_task_161",
+      "anchor": "task",
+      "members": [
+        "assignment"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "任务",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 161,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_meet_a_target_162",
+      "anchor": "meet a target",
+      "members": [
+        "achieve a goal"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 162,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_performance_163",
+      "anchor": "performance",
+      "members": [
+        "how well someone works"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "表现；性能；表演；业绩",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 163,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_appraisal_164",
+      "anchor": "appraisal",
+      "members": [
+        "performance review"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "评估，评价",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 164,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_accommodation_165",
+      "anchor": "accommodation",
+      "members": [
+        "place to stay"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "住宿；住处",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 165,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_rent_166",
+      "anchor": "rent",
+      "members": [
+        "payment for accommodation"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "租金",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 166,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_deposit_167",
+      "anchor": "deposit",
+      "members": [
+        "money paid in advance"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "押金；存款；存放",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 167,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_fee_168",
+      "anchor": "fee",
+      "members": [
+        "charge"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "费用；酬金",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 168,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_cost_169",
+      "anchor": "cost",
+      "members": [
+        "expense"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "成本；花费",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 169,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_free_170",
+      "anchor": "free",
+      "members": [
+        "at no cost"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "免费的；自由的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 170,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_discount_171",
+      "anchor": "discount",
+      "members": [
+        "price reduction"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "折扣",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 171,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_cheap_172",
+      "anchor": "cheap",
+      "members": [
+        "inexpensive"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "便宜的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 172,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_expensive_173",
+      "anchor": "expensive",
+      "members": [
+        "costly"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "昂贵的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 173,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_book_174",
+      "anchor": "book",
+      "members": [
+        "make a reservation"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "书；预订",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 174,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_cancel_175",
+      "anchor": "cancel",
+      "members": [
+        "withdraw a booking"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "取消；撤销",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 175,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_available_176",
+      "anchor": "available",
+      "members": [
+        "vacant"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可用的；有空的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 176,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_fully_booked_177",
+      "anchor": "fully booked",
+      "members": [
+        "no places available"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 177,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_opening_hours_178",
+      "anchor": "opening hours",
+      "members": [
+        "times when open"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 178,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_close_to_179",
+      "anchor": "close to",
+      "members": [
+        "near"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "在……附近；近的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 179,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_within_walking_distance_180",
+      "anchor": "within walking distance",
+      "members": [
+        "close enough to walk"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 180,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_on_site_181",
+      "anchor": "on site",
+      "members": [
+        "at the location"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 181,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_entrance_182",
+      "anchor": "entrance",
+      "members": [
+        "way in"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "入口；进入",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 182,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_exit_183",
+      "anchor": "exit",
+      "members": [
+        "way out"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "出口；退出",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 183,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_accessible_184",
+      "anchor": "accessible",
+      "members": [
+        "easy to enter or use"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可进入的，易接近的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 184,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_facilities_185",
+      "anchor": "facilities",
+      "members": [
+        "services and equipment"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "设施",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 185,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_customer_186",
+      "anchor": "customer",
+      "members": [
+        "client"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "顾客；客户",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 186,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_product_187",
+      "anchor": "product",
+      "members": [
+        "item for sale"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "产品；产物",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 187,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_receipt_188",
+      "anchor": "receipt",
+      "members": [
+        "proof of purchase"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "收据",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 188,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_guarantee_189",
+      "anchor": "guarantee",
+      "members": [
+        "warranty"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "保证；保修",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 189,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_refund_190",
+      "anchor": "refund",
+      "members": [
+        "repayment"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "退款；退还",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 190,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_damaged_191",
+      "anchor": "damaged",
+      "members": [
+        "broken"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "受损的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 191,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_in_good_condition_192",
+      "anchor": "in good condition",
+      "members": [
+        "not damaged"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 192,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_additional_charge_193",
+      "anchor": "additional charge",
+      "members": [
+        "extra fee"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 193,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_route_194",
+      "anchor": "route",
+      "members": [
+        "way to travel"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "路线",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 194,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_fare_195",
+      "anchor": "fare",
+      "members": [
+        "cost of a journey"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "票价；费用",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 195,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_timetable_196",
+      "anchor": "timetable",
+      "members": [
+        "schedule"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "时间表；时刻表",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 196,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_arrival_197",
+      "anchor": "arrival",
+      "members": [
+        "time of reaching"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "到达",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 197,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_delay_198",
+      "anchor": "delay",
+      "members": [
+        "late arrival"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "延迟，延误",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 198,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_destination_199",
+      "anchor": "destination",
+      "members": [
+        "place you are travelling to"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "目的地",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 199,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_public_transport_200",
+      "anchor": "public transport",
+      "members": [
+        "buses and trains"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 200,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_return_ticket_201",
+      "anchor": "return ticket",
+      "members": [
+        "round trip ticket"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 201,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_single_ticket_202",
+      "anchor": "single ticket",
+      "members": [
+        "one-way ticket"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 202,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_luggage_203",
+      "anchor": "luggage",
+      "members": [
+        "baggage"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "行李",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 203,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_hand_luggage_204",
+      "anchor": "hand luggage",
+      "members": [
+        "carry-on baggage"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 204,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_drop_off_205",
+      "anchor": "drop off",
+      "members": [
+        "leave someone at a place"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 205,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_transfer_206",
+      "anchor": "transfer",
+      "members": [
+        "change from one service to another"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "转移；调动",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 206,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_nearby_207",
+      "anchor": "nearby",
+      "members": [
+        "close by"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "附近",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 207,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_located_208",
+      "anchor": "located",
+      "members": [
+        "situated"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "位于；坐落于",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 208,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_entrance_fee_209",
+      "anchor": "entrance fee",
+      "members": [
+        "admission charge"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 209,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_guided_tour_210",
+      "anchor": "guided tour",
+      "members": [
+        "tour with a guide"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 210,
+      "differenceSource": "default_near_synonym_template",
+      "autoQuizDisabledReason": "empty_commonMeaningZh_unreliable_placeholder"
+    },
+    {
+      "groupId": "rg_para_duration_211",
+      "anchor": "duration",
+      "members": [
+        "length of time"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "持续时间",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 211,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_annual_212",
+      "anchor": "annual",
+      "members": [
+        "yearly"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "每年的；年度的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 212,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_monthly_213",
+      "anchor": "monthly",
+      "members": [
+        "every month"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "每月一次的；月度的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 213,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_fortnightly_214",
+      "anchor": "fortnightly",
+      "members": [
+        "every two weeks"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "每两周的；每两周一次",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 214,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_daily_215",
+      "anchor": "daily",
+      "members": [
+        "every day"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "每日的；每天",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 215,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_currently_216",
+      "anchor": "currently",
+      "members": [
+        "at present"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "目前",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 216,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_recently_217",
+      "anchor": "recently",
+      "members": [
+        "in recent times"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "最近",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 217,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_formerly_218",
+      "anchor": "formerly",
+      "members": [
+        "in the past"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "以前，原先",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 218,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_soon_219",
+      "anchor": "soon",
+      "members": [
+        "in a short time"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "很快；不久",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 219,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_eventually_220",
+      "anchor": "eventually",
+      "members": [
+        "in the end"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "最终；终于",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 220,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_approximately_221",
+      "anchor": "approximately",
+      "members": [
+        "about"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "大约",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 221,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_nearly_222",
+      "anchor": "nearly",
+      "members": [
+        "almost"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "几乎，将近",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 222,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_more_than_223",
+      "anchor": "more than",
+      "members": [
+        "over"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "在...上方；超过",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 223,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_less_than_224",
+      "anchor": "less than",
+      "members": [
+        "under"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "在...下面",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 224,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_a_number_of_225",
+      "anchor": "a number of",
+      "members": [
+        "several"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "几个",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 225,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_a_large_number_of_226",
+      "anchor": "a large number of",
+      "members": [
+        "many"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "许多",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 226,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_the_majority_of_227",
+      "anchor": "the majority of",
+      "members": [
+        "most"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "最多的；大多数",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 227,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_a_small_number_of_228",
+      "anchor": "a small number of",
+      "members": [
+        "few"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "很少的；几个",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 228,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_twice_229",
+      "anchor": "twice",
+      "members": [
+        "two times"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "两次",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 229,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_frequently_230",
+      "anchor": "frequently",
+      "members": [
+        "often"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "频繁地",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 230,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_rarely_231",
+      "anchor": "rarely",
+      "members": [
+        "seldom"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "很少；难得",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 231,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_permanent_232",
+      "anchor": "permanent",
+      "members": [
+        "lasting indefinitely"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "永久的；长期的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 232,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_temporary_233",
+      "anchor": "temporary",
+      "members": [
+        "lasting a short time"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "暂时的；临时的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 233,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_throughout_234",
+      "anchor": "throughout",
+      "members": [
+        "during the whole of"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "遍及；贯穿整个时期",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 234,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_from_time_to_time_235",
+      "anchor": "from time to time",
+      "members": [
+        "occasionally"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "偶尔",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 235,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_no_longer_236",
+      "anchor": "no longer",
+      "members": [
+        "not anymore"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 236,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_at_the_same_time_237",
+      "anchor": "at the same time",
+      "members": [
+        "simultaneously"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "同时地",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 237,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_in_advance_238",
+      "anchor": "in advance",
+      "members": [
+        "ahead of time"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 238,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_immediately_after_239",
+      "anchor": "immediately after",
+      "members": [
+        "as soon as"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 239,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_previous_240",
+      "anchor": "previous",
+      "members": [
+        "earlier"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "先前的，以前的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 240,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_subsequent_241",
+      "anchor": "subsequent",
+      "members": [
+        "later"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "随后的；后来的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 241,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_because_242",
+      "anchor": "because",
+      "members": [
+        "since"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "因为",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 242,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_because_of_243",
+      "anchor": "because of",
+      "members": [
+        "due to"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 243,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_therefore_244",
+      "anchor": "therefore",
+      "members": [
+        "as a result"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "因此",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 244,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_however_245",
+      "anchor": "however",
+      "members": [
+        "nevertheless"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "然而",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 245,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_although_246",
+      "anchor": "although",
+      "members": [
+        "despite the fact that"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "虽然，尽管",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 246,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_in_addition_247",
+      "anchor": "in addition",
+      "members": [
+        "furthermore"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "此外",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 247,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_also_248",
+      "anchor": "also",
+      "members": [
+        "as well"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "也；同样",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 248,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_for_example_249",
+      "anchor": "for example",
+      "members": [
+        "for instance"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "例如",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 249,
+      "commonMeaningSource": "vocab-member-primaryMeaningZh",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_in_contrast_250",
+      "anchor": "in contrast",
+      "members": [
+        "on the other hand"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": false,
+      "sources": [],
+      "rank": 250,
+      "autoQuizDisabledReason": "empty_commonMeaningZh_no_reliable_source",
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_similar_251",
+      "anchor": "similar",
+      "members": [
+        "comparable"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "相似的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 251,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_different_252",
+      "anchor": "different",
+      "members": [
+        "distinct"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "不同的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 252,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_difference_253",
+      "anchor": "difference",
+      "members": [
+        "distinction"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "差异；不同",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 253,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_main_254",
+      "anchor": "main",
+      "members": [
+        "principal"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "主要的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 254,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_important_255",
+      "anchor": "important",
+      "members": [
+        "significant"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "重要的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 255,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_common_256",
+      "anchor": "common",
+      "members": [
+        "widespread"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "常见的；共同的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 256,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_rare_257",
+      "anchor": "rare",
+      "members": [
+        "uncommon"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "稀有的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 257,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_clear_258",
+      "anchor": "clear",
+      "members": [
+        "obvious"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "清晰的；清楚的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 258,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_unclear_259",
+      "anchor": "unclear",
+      "members": [
+        "ambiguous"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "不清楚的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 259,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_likely_260",
+      "anchor": "likely",
+      "members": [
+        "probable"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可能的，很可能",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 260,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_unlikely_261",
+      "anchor": "unlikely",
+      "members": [
+        "improbable"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "不太可能的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 261,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_possible_262",
+      "anchor": "possible",
+      "members": [
+        "feasible"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可能的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 262,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_impossible_263",
+      "anchor": "impossible",
+      "members": [
+        "not feasible"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "不可能的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 263,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_method_264",
+      "anchor": "method",
+      "members": [
+        "approach"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "方法",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 264,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_reason_265",
+      "anchor": "reason",
+      "members": [
+        "cause"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "理由；原因",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 265,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_result_266",
+      "anchor": "result",
+      "members": [
+        "outcome"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "结果；导致",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 266,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_effect_267",
+      "anchor": "effect",
+      "members": [
+        "impact"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "效果；影响",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 267,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_aim_268",
+      "anchor": "aim",
+      "members": [
+        "purpose"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "目标；瞄准",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 268,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_view_269",
+      "anchor": "view",
+      "members": [
+        "opinion"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "视野；观点",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 269,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_evidence_270",
+      "anchor": "evidence",
+      "members": [
+        "proof"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "证据；迹象",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 270,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_research_271",
+      "anchor": "research",
+      "members": [
+        "study"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "研究",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 271,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_data_272",
+      "anchor": "data",
+      "members": [
+        "information"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "数据",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 272,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_assess_273",
+      "anchor": "assess",
+      "members": [
+        "evaluate"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "评估；评定",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 273,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_measure_274",
+      "anchor": "measure",
+      "members": [
+        "quantify"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "测量；措施",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 274,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_compare_275",
+      "anchor": "compare",
+      "members": [
+        "examine similarities and differences"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "比较；对比",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 275,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_identify_276",
+      "anchor": "identify",
+      "members": [
+        "recognise"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "识别，确认",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 276,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_indicate_277",
+      "anchor": "indicate",
+      "members": [
+        "show"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "表明；指示",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 277,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_suggest_278",
+      "anchor": "suggest",
+      "members": [
+        "imply"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "建议；表明",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 278,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_claim_279",
+      "anchor": "claim",
+      "members": [
+        "state without proof"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "声称；要求；索赔",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 279,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_maintain_280",
+      "anchor": "maintain",
+      "members": [
+        "continue to argue"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "保持；维护",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 280,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_issue_281",
+      "anchor": "issue",
+      "members": [
+        "problem"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "问题；议题",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 281,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_safe_282",
+      "anchor": "safe",
+      "members": [
+        "not dangerous"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "安全的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 282,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_dangerous_283",
+      "anchor": "dangerous",
+      "members": [
+        "hazardous"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "危险的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 283,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_healthy_284",
+      "anchor": "healthy",
+      "members": [
+        "good for health"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "健康的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 284,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_harmful_285",
+      "anchor": "harmful",
+      "members": [
+        "damaging"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "有害的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 285,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_effective_286",
+      "anchor": "effective",
+      "members": [
+        "successful"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "有效的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 286,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_ineffective_287",
+      "anchor": "ineffective",
+      "members": [
+        "not successful"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "无效的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 287,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_reliable_288",
+      "anchor": "reliable",
+      "members": [
+        "dependable"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可靠的；可信赖的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 288,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_accurate_289",
+      "anchor": "accurate",
+      "members": [
+        "correct"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "准确的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 289,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_inaccurate_290",
+      "anchor": "inaccurate",
+      "members": [
+        "incorrect"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "不准确的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 290,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_suitable_291",
+      "anchor": "suitable",
+      "members": [
+        "fit for purpose"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "合适的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 291,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_convenient_292",
+      "anchor": "convenient",
+      "members": [
+        "easy to use or reach"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "方便的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 292,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_flexible_293",
+      "anchor": "flexible",
+      "members": [
+        "able to change"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "灵活的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 293,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_fixed_294",
+      "anchor": "fixed",
+      "members": [
+        "not changeable"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "固定的；不变的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 294,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_available_295",
+      "anchor": "available",
+      "members": [
+        "ready for use"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可用的；有空的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 295,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_essential_296",
+      "anchor": "essential",
+      "members": [
+        "necessary"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "基本的；本质的；必需品",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 296,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_optional_297",
+      "anchor": "optional",
+      "members": [
+        "voluntary"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "可选的；非强制的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 297,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_adequate_298",
+      "anchor": "adequate",
+      "members": [
+        "enough"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "足够的；适当的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 298,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_excessive_299",
+      "anchor": "excessive",
+      "members": [
+        "too much"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "过度的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 299,
+      "differenceSource": "default_near_synonym_template"
+    },
+    {
+      "groupId": "rg_para_rapid_300",
+      "anchor": "rapid",
+      "members": [
+        "fast"
+      ],
+      "relationType": "near_synonym",
+      "commonMeaningZh": "迅速的",
+      "differenceZh": "两者在本题语境中意义接近，语体或搭配可能不同。",
+      "posConstraint": "",
+      "confidence": "high",
+      "sourceType": "verified",
+      "sourceFiles": [
+        "gt-reading-paraphrases-300.json"
+      ],
+      "canAutoQuiz": true,
+      "sources": [],
+      "rank": 300,
+      "differenceSource": "default_near_synonym_template"
+    }
+  ],
+  "updatedAt": "2026-07-12T06:31:08.626Z"
+}

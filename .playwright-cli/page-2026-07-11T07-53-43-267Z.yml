@@ -1,0 +1,23 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - link "IELTS Vocab 首页" [ref=f2e3] [cursor=pointer]:
+      - /url: /
+      - text: IELTS VOCAB
+    - navigation "主要学习模式" [ref=f2e5]:
+      - link "刷词" [ref=f2e6] [cursor=pointer]:
+        - /url: /
+      - link "单词拼写" [ref=f2e7] [cursor=pointer]:
+        - /url: /spelling-words
+      - link "词组拼写" [ref=f2e8] [cursor=pointer]:
+        - /url: /spelling-phrases
+      - link "选义" [ref=f2e9] [cursor=pointer]:
+        - /url: /meaning
+      - link "高频表达" [ref=f2e10] [cursor=pointer]:
+        - /url: /expressions
+    - group "全站字号" [ref=f2e11]:
+      - button "减小字号" [ref=f2e12] [cursor=pointer]: A−
+      - button "当前字号 100%，点击恢复默认" [ref=f2e13] [cursor=pointer]: 100%
+      - button "增大字号" [ref=f2e14] [cursor=pointer]: A+
+  - main [ref=f2e15]:
+    - paragraph [ref=f2e17]: 正在加载 IELTS 核心 6000 词库…
+  - alert [ref=f2e18]

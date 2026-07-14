@@ -4,7 +4,8 @@ import fs from "node:fs";
 import { buildRetrievalQuestion, createBuilderCaches, validateRetrievalQuestion } from "../builder.mjs";
 import { createEngine } from "../engine.mjs";
 
-const wordBank = JSON.parse(fs.readFileSync(new URL("../../../../public/data/meaning-4500.json", import.meta.url), "utf8")).items;
+const wordBank = JSON.parse(fs.readFileSync(new URL("../../../../public/data/meaning-6000.json", import.meta.url), "utf8")).items;
+const pageSource = fs.readFileSync(new URL("../../../meaning-en/page.jsx", import.meta.url), "utf8");
 
 test("builds valid Chinese-to-English retrieval questions from existing audited candidates", () => {
   const caches = createBuilderCaches();
@@ -54,4 +55,13 @@ test("engine hydration preserves public word-bank shape and indexed metadata", a
     assert.ok(Array.isArray(entry._semanticGroups));
     assert.ok(entry._confidence);
   }
+});
+
+test("meaning-en prevents correct-answer auto advance from consuming a second question", () => {
+  assert.match(pageSource, /const advanceTimerRef = useRef\(null\)/);
+  assert.match(pageSource, /const advanceTokenRef = useRef\(0\)/);
+  assert.match(pageSource, /if \(token !== advanceTokenRef\.current\) return/);
+  assert.match(pageSource, /clearAdvanceTimer\(\);\s*applyNextQuestion\(\)/);
+  assert.match(pageSource, /if \(result\?\.correct\) return/);
+  assert.match(pageSource, /nextDisabled=\{Boolean\(result\?\.correct\)\}/);
 });

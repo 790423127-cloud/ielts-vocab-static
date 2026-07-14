@@ -104,7 +104,7 @@ export function selectNextWord(allWordIds, wordBank, adaptiveState, sessionState
     );
     selectedBecause = "fallback-learning";
   } else {
-    // Truly no candidates (shouldn't happen with 4500 words)
+    // Truly no candidates (shouldn't happen with 6000 words)
     return null;
   }
 

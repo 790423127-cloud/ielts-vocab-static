@@ -1,4 +1,4 @@
-﻿// real-distractor-audit.cjs — READ-ONLY audit of actual Meaning Mode distractor quality.
+// real-distractor-audit.cjs — READ-ONLY audit of actual Meaning Mode distractor quality.
 // Uses the REAL builder/distractor-ranking/options pipeline via dynamic import.
 // Modifies NOTHING. Run with: node app/lib/meaning-mode/real-distractor-audit.cjs
 
@@ -10,7 +10,7 @@ fs.mkdirSync(REPORT_DIR, { recursive: true });
 
 async function main() {
   const wordsData = JSON.parse(fs.readFileSync(path.join(ROOT, ".static-export-cache", "words.json"), "utf-8"));
-  const meaningData = JSON.parse(fs.readFileSync(path.join(ROOT, "public", "data", "meaning-4500.json"), "utf-8"));
+  const meaningData = JSON.parse(fs.readFileSync(path.join(ROOT, "public", "data", "meaning-6000.json"), "utf-8"));
   const idxMod = await import("file:///" + path.join(__dirname, "semantic-distractor-index.mjs").replace(/\\/g, "/"));
   const SEMANTIC_INDEX = idxMod.SEMANTIC_INDEX;
   const rankingMod = await import("file:///" + path.join(__dirname, "distractor-ranking.mjs").replace(/\\/g, "/"));
@@ -389,7 +389,7 @@ async function main() {
     "6. **Increase combination diversity**: Current strategies (top/spread/mid/tail) don't explore enough of the 8,000+ same-pos candidates.",
     "",
     "---",
-    "Source code modified: 0 | words.json modified: 0 | meaning-4500.json modified: 0 | New words: 0",
+    "Source code modified: 0 | words.json modified: 0 | meaning-6000.json modified: 0 | New words: 0",
     ""
   ].join("\n");
   fs.writeFileSync(path.join(REPORT_DIR, "meaning-real-distractor-audit.md"), md, "utf-8");

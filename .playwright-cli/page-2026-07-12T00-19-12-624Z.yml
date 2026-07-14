@@ -1,0 +1,98 @@
+- generic [ref=e1]:
+  - banner [ref=e115]:
+    - link "IELTS Vocab 首页" [ref=e116] [cursor=pointer]:
+      - /url: /
+      - text: IELTS VOCAB
+    - generic "当前训练" [ref=e118]:
+      - strong [ref=e119]: 主词库刷词
+      - generic [ref=e120]: 专注学习
+    - group "全站字号" [ref=e122]:
+      - button "减小字号" [ref=e123] [cursor=pointer]: A−
+      - button "增大字号" [ref=e124] [cursor=pointer]: A+
+  - navigation "移动端学习导航" [ref=e125]:
+    - link "刷词" [ref=e126] [cursor=pointer]:
+      - /url: /
+    - link "拼写" [ref=e130] [cursor=pointer]:
+      - /url: /spelling-words
+    - link "选义" [ref=e135] [cursor=pointer]:
+      - /url: /meaning
+    - link "错词" [ref=e140] [cursor=pointer]:
+      - /url: /spelling-words?source=error_bank
+    - group [ref=e146]:
+      - generic "更多" [active] [ref=e147] [cursor=pointer]
+      - navigation "更多学习入口" [ref=e164]:
+        - link "零基础词库" [ref=e165] [cursor=pointer]:
+          - /url: /basic
+        - link "G类阅读提升" [ref=e166] [cursor=pointer]:
+          - /url: /reading-g
+        - link "高频表达" [ref=e167] [cursor=pointer]:
+          - /url: /expressions
+        - link "词组训练" [ref=e168] [cursor=pointer]:
+          - /url: /spelling-phrases
+        - link "SRS 复习" [ref=e169] [cursor=pointer]:
+          - /url: /spelling-words?source=srs_review
+  - main [ref=e2]:
+    - tablist "刷词模式" [ref=e3]:
+      - tab "单词刷词 13,808 词" [selected] [ref=e150] [cursor=pointer]:
+        - text: 单词刷词
+        - generic [ref=e5]: 13,808 词
+      - tab "词组刷词 2,971 词组" [ref=e151] [cursor=pointer]:
+        - text: 词组刷词
+        - generic [ref=e7]: 2,971 词组
+      - tab "听力阅读同义替换 2,026 组" [ref=e152] [cursor=pointer]:
+        - text: 听力阅读同义替换
+        - generic [ref=e9]: 2,026 组
+    - generic [ref=e10]:
+      - generic [ref=e12]:
+        - button "随机" [ref=e13] [cursor=pointer]
+        - group [ref=e16]:
+          - generic "更改范围" [ref=e17]
+        - group [ref=e18]:
+          - generic "工具" [ref=e19]
+          - text: 展开 展开 展开 展开 展开 展开
+        - group [ref=e20]:
+          - generic "词库面板" [ref=e21]
+      - region "刷单词范围" [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 刷单词
+          - strong [ref=e25]: 今日任务 / 全部待学
+          - generic [ref=e26]: 13805 个词
+        - paragraph [ref=e27]: 当前位置：1 / 13805 · 当前词：vacancy
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]: 刷词 · 当前项目
+          - generic [ref=e32]:
+            - button "收藏当前单词" [ref=e33] [cursor=pointer]
+            - button "收起学习概览" [ref=e36] [cursor=pointer]
+        - generic [ref=e40]:
+          - button "播放例句发音，快捷键空格" [ref=e42] [cursor=pointer]:
+            - generic [ref=e47]: 播放例句
+          - button "There is a vacancy for a receptionist. 有一个接待员的职位空缺。" [ref=e153] [cursor=pointer]:
+            - generic [ref=e49]: There is a vacancy for a receptionist.
+            - generic [ref=e50]: 有一个接待员的职位空缺。
+        - generic [ref=e51]:
+          - button "播放单词发音，快捷键 Tab" [ref=e52] [cursor=pointer]:
+            - generic [ref=e57]: 播放单词
+          - button "vacancy /ˈveɪkənsi/noun 名词" [ref=e154]:
+            - generic [ref=e59]: vacancy
+            - generic [ref=e60]: /ˈveɪkənsi/noun 名词
+        - generic [ref=e61]: 空缺；空位
+        - region "词典详情" [ref=e63]:
+          - tablist "词典详情分类" [ref=e64]:
+            - tab "变形" [selected] [ref=e65] [cursor=pointer]
+            - tab "词族" [ref=e66] [cursor=pointer]
+            - tab "常见搭配" [ref=e67] [cursor=pointer]
+            - tab "短语搭配" [ref=e68] [cursor=pointer]
+          - tabpanel [ref=e69]:
+            - generic [ref=e155]:
+              - generic [ref=e156]: 复数形式
+              - button "vacancies" [ref=e157] [cursor=pointer]
+              - generic [ref=e162]: 注意复数形式 · vacancies 是 vacancy（空缺；空位） 的复数形式
+      - generic [ref=e105]:
+        - button "上一个" [ref=e106] [cursor=pointer]
+        - generic [ref=e107]:
+          - button "熟悉" [ref=e108] [cursor=pointer]
+          - button "不熟" [ref=e109] [cursor=pointer]
+        - generic [ref=e110]: 1 / 13805
+        - button "下一个" [ref=e113] [cursor=pointer]
+  - alert [ref=e114]

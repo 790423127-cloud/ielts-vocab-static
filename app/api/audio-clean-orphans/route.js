@@ -104,7 +104,8 @@ export async function POST(req) {
   try {
     const body = await req.json().catch(() => ({}));
     const words = ensureArray(body.words);
-    const dryRun = !!body.dryRun;
+    // Destructive cleanup requires an explicit opt-in. A missing flag is preview-only.
+    const dryRun = body.dryRun !== false;
 
     if (!words.length) {
       return Response.json(

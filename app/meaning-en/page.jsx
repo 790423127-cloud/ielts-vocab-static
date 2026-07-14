@@ -6,9 +6,10 @@ import { clearRetrievalState } from "../lib/meaning-en/adaptive-state.mjs";
 import { speakWord, speakExample, stop } from "../lib/meaning-en/audio.mjs";
 import { createDiagnosticPayload } from "../lib/meaning-en/diagnostics.mjs";
 import StudyRangeSummary from "../components/StudyRangeSummary.jsx";
+import StableLoadingState from "../components/StableLoadingState.jsx";
 import styles from "./meaning-en.module.css";
 
-const WORD_BANK_URL = "/data/meaning-4500.json";
+const WORD_BANK_URL = "/data/meaning-6000.json";
 
 let meaningEnExampleRuntime = null;
 let meaningEnExampleRuntimePromise = null;
@@ -38,11 +39,23 @@ export default function MeaningEnPage() {
   const [result, setResult] = useState(null);
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
-  const [loadingPct, setLoadingPct] = useState(5);
   const [copyOk, setCopyOk] = useState(false);
   const loadAttempted = useRef(false);
   const startedAt = useRef(0);
   const cardRef = useRef(null);
+  const advanceTimerRef = useRef(null);
+  const advanceTokenRef = useRef(0);
+  const advancingRef = useRef(false);
+  const answeringRef = useRef(false);
+
+  const clearAdvanceTimer = useCallback(() => {
+    if (advanceTimerRef.current !== null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => () => clearAdvanceTimer(), [clearAdvanceTimer]);
 
   useEffect(() => {
     if (loadAttempted.current) return;
@@ -51,9 +64,6 @@ export default function MeaningEnPage() {
 
     async function load() {
       try {
-        const timer = setInterval(() => {
-          if (!cancelled) setLoadingPct(value => Math.min(value + 5, 90));
-        }, 80);
         const [engineRuntime] = await Promise.all([
           import("../lib/meaning-en/engine.mjs"),
           loadMeaningEnExampleRuntime()
@@ -61,15 +71,13 @@ export default function MeaningEnPage() {
         const response = await fetch(WORD_BANK_URL);
         if (!response.ok) throw new Error("词库加载失败: " + response.status);
         const data = await response.json();
-        clearInterval(timer);
         if (cancelled) return;
         if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
-          setError("词库为空，请先生成 meaning-4500 数据。");
+          setError("词库为空，请先生成 meaning-6000 数据。");
           setPhase("error");
           return;
         }
         const eng = await engineRuntime.createEngine(data.items);
-        setLoadingPct(100);
         setRuntime(engineRuntime);
         setEngine(eng);
         setStats(engineRuntime.getSessionStats(eng));
@@ -89,51 +97,76 @@ export default function MeaningEnPage() {
     };
   }, []);
 
-  const startQuestion = useCallback(() => {
-    if (!engine || !runtime) return;
+  const applyNextQuestion = useCallback(() => {
+    if (!engine || !runtime || advancingRef.current) return;
+    advancingRef.current = true;
+    clearAdvanceTimer();
     const q = runtime.nextQuestion(engine);
     if (!q) {
       setStats(runtime.getSessionStats(engine));
       setPhase("done");
+      setQuestion(null);
+      setSelected(null);
+      setResult(null);
+      answeringRef.current = false;
+      advancingRef.current = false;
       return;
     }
     setQuestion(q);
     setSelected(null);
     setResult(null);
+    answeringRef.current = false;
     startedAt.current = Date.now();
     setStats(runtime.getSessionStats(engine));
     setPhase("question");
     requestAnimationFrame(() => cardRef.current && cardRef.current.focus());
-  }, [engine, runtime]);
+    window.setTimeout(() => {
+      advancingRef.current = false;
+    }, 0);
+  }, [engine, runtime, clearAdvanceTimer]);
+
+  const startQuestion = useCallback(() => {
+    advanceTokenRef.current += 1;
+    advancingRef.current = false;
+    answeringRef.current = false;
+    clearAdvanceTimer();
+    applyNextQuestion();
+  }, [applyNextQuestion, clearAdvanceTimer]);
+
+  const handleNext = useCallback(() => {
+    advanceTokenRef.current += 1;
+    clearAdvanceTimer();
+    applyNextQuestion();
+  }, [applyNextQuestion, clearAdvanceTimer]);
 
   const handleSelect = useCallback((option) => {
-    if (!engine || !runtime || !question || phase !== "question") return;
+    if (!engine || !runtime || !question || phase !== "question" || answeringRef.current) return;
+    answeringRef.current = true;
     const responseTime = Date.now() - startedAt.current;
     const res = runtime.submitAnswer(engine, option, responseTime);
     setSelected(option);
     setResult(res);
     setStats(runtime.getSessionStats(engine));
     setPhase("result");
-  }, [engine, runtime, question, phase]);
 
-  const handleNext = useCallback(() => {
-    if (!engine || !runtime) return;
-    const q = runtime.nextQuestion(engine);
-    if (!q) {
-      setStats(runtime.getSessionStats(engine));
-      setPhase("done");
-      return;
+    // 答对：短暂停顿后自动下一题（答错停在结果页）
+    if (res?.correct) {
+      advanceTokenRef.current += 1;
+      const token = advanceTokenRef.current;
+      clearAdvanceTimer();
+      advanceTimerRef.current = window.setTimeout(() => {
+        advanceTimerRef.current = null;
+        if (token !== advanceTokenRef.current) return;
+        applyNextQuestion();
+      }, 450);
     }
-    setQuestion(q);
-    setSelected(null);
-    setResult(null);
-    startedAt.current = Date.now();
-    setStats(runtime.getSessionStats(engine));
-    setPhase("question");
-    requestAnimationFrame(() => cardRef.current && cardRef.current.focus());
-  }, [engine, runtime]);
+  }, [engine, runtime, question, phase, applyNextQuestion, clearAdvanceTimer]);
 
   const handleReset = useCallback(() => {
+    advanceTokenRef.current += 1;
+    clearAdvanceTimer();
+    advancingRef.current = false;
+    answeringRef.current = false;
     clearRetrievalState();
     if (!engine || !runtime) return;
     Promise.resolve(runtime.createEngine(engine.wordBank)).then((fresh) => {
@@ -144,7 +177,7 @@ export default function MeaningEnPage() {
       setResult(null);
       setPhase("ready");
     });
-  }, [engine, runtime]);
+  }, [engine, runtime, clearAdvanceTimer]);
 
   const handleCopyDiagnostic = useCallback(() => {
     const payload = createDiagnosticPayload(question, selected, result);
@@ -178,6 +211,7 @@ export default function MeaningEnPage() {
       if (phase === "result" && question) {
         if (event.key === "Enter") {
           event.preventDefault();
+          if (result?.correct) return;
           handleNext();
         } else if (event.key === "Tab" && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
           event.preventDefault();
@@ -194,29 +228,31 @@ export default function MeaningEnPage() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [phase, question, handleSelect, handleNext]);
+  }, [phase, question, result, handleSelect, handleNext]);
 
   if (phase === "loading") {
     return (
-      <main className={styles.page}>
-        <div className={styles.centerWrap}>
-          <div className={styles.progressBarWrap}>
-            <div className={styles.progressBarFill} style={{ width: loadingPct + "%" }} />
-          </div>
-          <p className={styles.muted}>正在加载中文选英文题库...</p>
-        </div>
+      <main className={`${styles.page} system-loading-page`}>
+        <StableLoadingState
+          mark="M"
+          eyebrow="看中文选英文"
+          note="读取核心 6000 题库并恢复学习记录"
+        />
       </main>
     );
   }
 
   if (phase === "error") {
     return (
-      <main className={styles.page}>
-        <div className={styles.centerWrap}>
-          <h1 className={styles.title}>中文选英文</h1>
-          <p className={styles.error}>{error}</p>
-          <Link className={styles.linkBtn} href="/">返回首页</Link>
-        </div>
+      <main className={`${styles.page} system-loading-page`}>
+        <StableLoadingState
+          mark="M"
+          eyebrow="看中文选英文"
+          title="训练题库暂时无法读取"
+          note={error}
+          variant="error"
+          actionHref="/"
+        />
       </main>
     );
   }
@@ -228,7 +264,7 @@ export default function MeaningEnPage() {
         <StudyRangeSummary
           mode="选择题"
           title="看中文选英文"
-          meta="核心 4500"
+          meta="核心 6000"
           detail="答题前只看中文义项；答题后再显示英文、发音和例句。"
           className="quiz-study-range"
         />
@@ -281,6 +317,7 @@ export default function MeaningEnPage() {
             }}
             onCopyDiagnostic={handleCopyDiagnostic}
             copyOk={copyOk}
+            nextDisabled={Boolean(result?.correct)}
           />
         )}
       </div>
@@ -329,7 +366,7 @@ function QuestionCard({ question, onSelect }) {
   );
 }
 
-function ResultCard({ question, selected, result, onNext, onPlayWord, onPlayExample, onCopyDiagnostic, copyOk }) {
+function ResultCard({ question, selected, result, onNext, onPlayWord, onPlayExample, onCopyDiagnostic, copyOk, nextDisabled }) {
   const correctOption = question.options.find(option => option.isCorrect);
   const example = getExampleText(question);
   const exampleCn = getExampleCn(question);
@@ -345,7 +382,7 @@ function ResultCard({ question, selected, result, onNext, onPlayWord, onPlayExam
           <div className={styles.promptLabel}>正确答案</div>
           <h1 className={styles.answerWord}>{question.canonicalAnswer}</h1>
         </div>
-        <span className={styles.posPill}>{question.posFamily}</span>
+        <span className={styles.posPill}>{posFamilyPill(question.posFamily)}</span>
         <button className={styles.audioBtn} onClick={onPlayWord} title="播放单词发音 (Tab)">播放单词</button>
       </div>
 
@@ -395,7 +432,7 @@ function ResultCard({ question, selected, result, onNext, onPlayWord, onPlayExam
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.primaryBtn} onClick={onNext}>下一题</button>
+        <button className={styles.primaryBtn} onClick={onNext} disabled={nextDisabled}>下一题</button>
         <button className={styles.ghostBtn} onClick={onCopyDiagnostic}>{copyOk ? "已复制" : "复制诊断 JSON"}</button>
       </div>
       <div className={styles.hint}>Tab 播放单词，Space 播放例句，Enter 下一题。</div>
@@ -440,11 +477,22 @@ function withPos(prompt, posFamily) {
 }
 
 function posLabel(posFamily) {
-  return {
+  // Keep Chinese-only for prompt suffix: "…（名词）"
+  const map = {
     noun: "名词",
     verb: "动词",
     adjective: "形容词",
     adverb: "副词",
     phrase: "短语"
-  }[posFamily] || posFamily || "";
+  };
+  return map[posFamily] || posFamily || "";
+}
+
+function posFamilyPill(posFamily) {
+  const f = String(posFamily || "").trim();
+  if (!f || f === "unknown") return "";
+  const zh = posLabel(f);
+  if (!zh) return f;
+  if (f === zh || f.includes(zh)) return f;
+  return `${f} ${zh}`;
 }

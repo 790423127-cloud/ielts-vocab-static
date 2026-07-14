@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { loadAdaptiveState, clearProgress, migrateFromV1 } from "../lib/meaning-mode/storage.mjs";
+import { loadAdaptiveState, clearProgress, migrateFromV1, getAdaptiveStats } from "../lib/meaning-mode/storage.mjs";
 import { speakWord, speakExample, stop, getVoiceInfo } from "../lib/meaning-mode/audio.mjs";
 import { FEEDBACK_REASONS, saveFeedback, createFeedbackPayload } from "../lib/meaning-mode/quality-feedback.mjs";
 import StudyRangeSummary from "../components/StudyRangeSummary.jsx";
+import StableLoadingState from "../components/StableLoadingState.jsx";
 import styles from "./meaning.module.css";
+import { getPosFamilyDisplay } from "../lib/vocab/pos-display.mjs";
 
-// 训练子集（4500），与主词库 13808 分开计数。见 PRODUCT.md。
-const WORD_BANK_URL = "/data/meaning-4500.json";
+// 训练子集（6000），与主词库 13808 分开计数。见 PRODUCT.md。
+const WORD_BANK_URL = "/data/meaning-6000.json";
 
 let meaningExampleRuntime = null;
 let meaningExampleRuntimePromise = null;
@@ -35,12 +37,12 @@ export default function MeaningPage() {
   const [phase, setPhase] = useState("loading");
   const [runtime, setRuntime] = useState(null);
   const [engine, setEngine] = useState(null);
+  const [wordBank, setWordBank] = useState([]);
   const [question, setQuestion] = useState(null);
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
-  const [loadingPct, setLoadingPct] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackReason, setFeedbackReason] = useState("");
   const [feedbackNote, setFeedbackNote] = useState("");
@@ -49,6 +51,17 @@ export default function MeaningPage() {
   const loadAttempted = useRef(false);
   const cardRef = useRef(null);
   const feedbackRef = useRef(null);
+  const advanceTimerRef = useRef(null);
+  const advanceTokenRef = useRef(0);
+  const advancingRef = useRef(false);
+  const runtimePreparationRef = useRef(null);
+
+  function clearAdvanceTimer() {
+    if (advanceTimerRef.current != null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  }
 
   // Load word bank and init engine
   useEffect(() => {
@@ -58,26 +71,18 @@ export default function MeaningPage() {
 
     async function load() {
       try {
-        const timer = setInterval(() => { if (!cancelled) setLoadingPct(p => Math.min(p + 5, 90)); }, 80);
-        const [engineRuntime] = await Promise.all([
-          import("../lib/meaning-mode/engine.mjs"),
-          loadMeaningExampleRuntime()
-        ]);
         const res = await fetch(WORD_BANK_URL);
         if (!res.ok) throw new Error("Failed to load word bank: " + res.status);
         const data = await res.json();
-        clearInterval(timer);
         if (cancelled) return;
         if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
-          setError("Word bank is empty. Please run build-meaning-4500 first.");
+          setError("Word bank is empty. Please run build-meaning-6000 first.");
           setPhase("error");
           return;
         }
-        setLoadingPct(100);
-        const eng = await engineRuntime.createEngine(data.items);
-        setRuntime(engineRuntime);
-        setEngine(eng);
-        setStats(engineRuntime.getSessionStats(eng));
+        setWordBank(data.items);
+        const progressState = loadAdaptiveState() || migrateFromV1() || { version: 2, words: {} };
+        setStats(getAdaptiveStats(progressState));
         setPhase("ready");
       } catch (err) {
         if (!cancelled) {
@@ -91,6 +96,10 @@ export default function MeaningPage() {
     return () => {
       cancelled = true;
       stop();
+      if (advanceTimerRef.current != null) {
+        window.clearTimeout(advanceTimerRef.current);
+        advanceTimerRef.current = null;
+      }
     };
   }, [])
   
@@ -210,21 +219,86 @@ export default function MeaningPage() {
     }
   }, [phase, result]);
 
-  const startQuestion = useCallback(() => {
-    if (!engine || !runtime) return;
-    const q = runtime.nextQuestion(engine);
-    if (!q) {
+  const applyNextQuestion = useCallback(() => {
+    if (!engine || !runtime || advancingRef.current) return;
+    advancingRef.current = true;
+    clearAdvanceTimer();
+    try {
+      const q = runtime.nextQuestion(engine);
+      if (!q) {
+        setStats(runtime.getSessionStats(engine));
+        setPhase("done");
+        setQuestion(null);
+        setSelected(null);
+        setResult(null);
+        return;
+      }
+      setQuestion(q);
+      setSelected(null);
+      setResult(null);
+      setPhase("question");
       setStats(runtime.getSessionStats(engine));
-      setPhase("done");
+      if (cardRef.current) cardRef.current.focus();
+    } finally {
+      // Release after paint so double-click / auto+click cannot double-consume.
+      window.setTimeout(() => {
+        advancingRef.current = false;
+      }, 0);
+    }
+  }, [engine, runtime]);
+
+  const prepareRuntime = useCallback(async () => {
+    if (runtime) return runtime;
+    if (!runtimePreparationRef.current) {
+      runtimePreparationRef.current = Promise.all([
+        import("../lib/meaning-mode/engine.mjs"),
+        loadMeaningExampleRuntime()
+      ])
+        .then(async ([engineRuntime]) => {
+          await engineRuntime.ensureMeaningRuntimeIndexes();
+          return engineRuntime;
+        })
+        .catch((error) => {
+          runtimePreparationRef.current = null;
+          throw error;
+        });
+    }
+    return runtimePreparationRef.current;
+  }, [runtime]);
+
+  const startQuestion = useCallback(async () => {
+    if (engine && runtime) {
+      advancingRef.current = false;
+      applyNextQuestion();
       return;
     }
-    setQuestion(q);
-    setSelected(null);
-    setResult(null);
-    setPhase("question");
-    // Focus the card for keyboard shortcuts
-    if (cardRef.current) cardRef.current.focus();
-  }, [engine, runtime]);
+
+    if (!wordBank.length) return;
+    setPhase("preparing");
+
+    try {
+      const engineRuntime = await prepareRuntime();
+      const nextEngine = await engineRuntime.createEngine(wordBank);
+      const nextQuestion = engineRuntime.nextQuestion(nextEngine);
+      setRuntime(engineRuntime);
+      setEngine(nextEngine);
+      setStats(engineRuntime.getSessionStats(nextEngine));
+      setQuestion(nextQuestion);
+      setSelected(null);
+      setResult(null);
+      setPhase(nextQuestion ? "question" : "done");
+    } catch (err) {
+      setError(err?.message || "Failed to prepare meaning practice");
+      setPhase("error");
+    }
+  }, [applyNextQuestion, engine, prepareRuntime, runtime, wordBank]);
+
+  const handleNext = useCallback(() => {
+    // Cancel pending auto-advance so correct + click cannot consume two questions.
+    advanceTokenRef.current += 1;
+    clearAdvanceTimer();
+    applyNextQuestion();
+  }, [applyNextQuestion]);
 
   const handleSelect = useCallback((option) => {
     if (!engine || !runtime || !question || result) return;
@@ -243,27 +317,26 @@ export default function MeaningPage() {
         keyboardTrigger: null
       });
     }
-  }, [engine, runtime, question, result]);
 
-  const handleNext = useCallback(() => {
-    if (!engine || !runtime) return;
-    const q = runtime.nextQuestion(engine);
-    if (!q) {
-      setStats(runtime.getSessionStats(engine));
-      setPhase("done");
-      return;
+    // 答对：短暂停顿后自动下一题（答错仍停在结果页便于看辨析）
+    if (res?.correct) {
+      advanceTokenRef.current += 1;
+      const token = advanceTokenRef.current;
+      clearAdvanceTimer();
+      advanceTimerRef.current = window.setTimeout(() => {
+        advanceTimerRef.current = null;
+        if (token !== advanceTokenRef.current) return;
+        applyNextQuestion();
+      }, 450);
     }
-    setQuestion(q);
-    setSelected(null);
-    setResult(null);
-    setPhase("question");
-    if (cardRef.current) cardRef.current.focus();
-  }, [engine, runtime]);
+  }, [engine, runtime, question, result, applyNextQuestion]);
 
   const handleReset = useCallback(() => {
+    advanceTokenRef.current += 1;
+    clearAdvanceTimer();
     clearProgress();
-    if (engine && runtime) {
-      Promise.resolve(runtime.createEngine(engine.wordBank)).then((fresh) => {
+    if (runtime && wordBank.length) {
+      Promise.resolve(runtime.createEngine(wordBank)).then((fresh) => {
         setEngine(fresh);
         setPhase("ready");
         setQuestion(null);
@@ -271,8 +344,15 @@ export default function MeaningPage() {
         setResult(null);
         setStats(runtime.getSessionStats(fresh));
       });
+      return;
     }
-  }, [engine, runtime]);
+    setEngine(null);
+    setQuestion(null);
+    setSelected(null);
+    setResult(null);
+    setStats(getAdaptiveStats({ version: 2, words: {} }));
+    setPhase("ready");
+  }, [runtime, wordBank]);
 
   const handlePlayWord = useCallback(() => {
     if (question) {
@@ -286,15 +366,15 @@ export default function MeaningPage() {
   }, [question]);
 
   // ─── RENDER: Loading ───
-  if (phase === "loading") {
+  if (phase === "loading" || phase === "preparing") {
     return (
-      <main className={styles.page}>
-        <div className={styles.centerWrap}>
-          <div className={styles.progressBarWrap}>
-            <div className={styles.progressBarFill} style={{ width: loadingPct + "%" }} />
-          </div>
-          <p className={styles.loadingText}>正在加载 IELTS 核心 4500 词库…</p>
-        </div>
+      <main className={`${styles.page} system-loading-page`}>
+        <StableLoadingState
+          mark="M"
+          eyebrow="看英文选中文"
+          title={phase === "preparing" ? "正在准备本轮题目" : "正在准备学习内容"}
+          note={phase === "preparing" ? "加载训练规则与选项关系" : "读取核心 6000 词库并恢复学习记录"}
+        />
       </main>
     );
   }
@@ -302,11 +382,15 @@ export default function MeaningPage() {
   // ─── RENDER: Error ───
   if (phase === "error") {
     return (
-      <main className={styles.page}>
-        <div className={styles.centerWrap}>
-          <p className={styles.errorText}>{error}</p>
-          <a href="/" className={styles.pillLink}>← 返回首页</a>
-        </div>
+      <main className={`${styles.page} system-loading-page`}>
+        <StableLoadingState
+          mark="M"
+          eyebrow="看英文选中文"
+          title="训练题库暂时无法读取"
+          note={error}
+          variant="error"
+          actionHref="/"
+        />
       </main>
     );
   }
@@ -320,7 +404,7 @@ export default function MeaningPage() {
         <StudyRangeSummary
           mode="选择题"
           title="看英文选中文"
-          meta="核心 4500"
+          meta="核心 6000"
           detail="答题前只显示题干和选项；答题后再看释义、例句和辨析。"
           className="quiz-study-range"
         />
@@ -328,7 +412,14 @@ export default function MeaningPage() {
           <h2 className={styles.readyTitle}>看词选意思</h2>
           <p className={styles.readyDesc}>看英文单词，从 4 个选项中选出正确的中文意思</p>
           <CompactStats stats={prog} engine={engine} />
-          <button className={styles.startBtn} onClick={startQuestion}>开始练习</button>
+          <button
+            className={styles.startBtn}
+            onClick={startQuestion}
+            onPointerEnter={() => { prepareRuntime().catch(() => {}); }}
+            onFocus={() => { prepareRuntime().catch(() => {}); }}
+          >
+            开始练习
+          </button>
           {prog && prog.total > 0 && (
             <button className={styles.resetBtn} onClick={handleReset}>重置进度</button>
           )}
@@ -345,7 +436,7 @@ export default function MeaningPage() {
         <StudyRangeSummary
           mode="选择题"
           title="看英文选中文"
-          meta={stats ? `${stats.done || 0} / ${stats.total || 0}` : "核心 4500"}
+          meta={stats ? `${stats.correct || 0} / ${stats.total || 0} 题` : "核心 6000"}
           detail={`当前词：${question.word || "—"}`}
           className="quiz-study-range"
         />
@@ -383,6 +474,8 @@ export default function MeaningPage() {
             onPlayWord={handlePlayWord}
             onPlayExample={handlePlayExample}
             onNext={handleNext}
+            nextDisabled={false}
+            nextLabel={result?.correct ? "下一题（可提前） →" : "下一题 →"}
             feedbackRef={feedbackRef}
             showFeedback={showFeedback}
             setShowFeedback={setShowFeedback}
@@ -432,7 +525,7 @@ function TopBar({ stats, engine, question, result }) {
     <div className={styles.topbar}>
       <a href="/" className={styles.pillLink}>← 首页</a>
       <a href="/meaning-en" className={styles.pillLink}>中文选英文</a>
-      <span className={styles.topTitle}>看词选意思 · IELTS 核心4500</span>
+      <span className={styles.topTitle}>看词选意思 · IELTS 核心6000</span>
       {stats && (
         <span className={styles.topMeta}>
           {stats.totalAnswered || 0} 题 · {stats.accuracy || 0}%
@@ -459,7 +552,7 @@ function QuestionCard({ question, onSelect, onPlayWord }) {
       <div className={styles.wordDisplay}>
         <span className={styles.wordText}>{question.word}</span>
         {question.posFamily && question.posFamily !== "unknown" && (
-          <span className={styles.posPill}>{question.posFamily}</span>
+          <span className={styles.posPill}>{getPosFamilyDisplay(question.posFamily) || question.posFamily}</span>
         )}
         <button
           className={styles.audioBtn}
@@ -488,7 +581,7 @@ function QuestionCard({ question, onSelect, onPlayWord }) {
   );
 }
 
-function ResultCard({ question, selected, result, example, onPlayWord, onPlayExample, onNext, feedbackRef, showFeedback, setShowFeedback, feedbackReason, setFeedbackReason, feedbackNote, setFeedbackNote, feedbackSent, setFeedbackSent, copySuccess, setCopySuccess, handleSubmitFeedback, handleCopyDiagnostic }) {
+function ResultCard({ question, selected, result, example, onPlayWord, onPlayExample, onNext, nextDisabled = false, nextLabel = "下一题 →", feedbackRef, showFeedback, setShowFeedback, feedbackReason, setFeedbackReason, feedbackNote, setFeedbackNote, feedbackSent, setFeedbackSent, copySuccess, setCopySuccess, handleSubmitFeedback, handleCopyDiagnostic }) {
   const selMeaning = typeof selected === "string" ? selected : selected.meaningZh;
   const selOption = question.options ? question.options.find(o => o.meaningZh === selMeaning) : null;
 
@@ -503,7 +596,7 @@ function ResultCard({ question, selected, result, example, onPlayWord, onPlayExa
       <div className={styles.wordDisplay}>
         <span className={styles.wordText}>{question.word}</span>
         {question.posFamily && question.posFamily !== "unknown" && (
-          <span className={styles.posPill}>{question.posFamily}</span>
+          <span className={styles.posPill}>{getPosFamilyDisplay(question.posFamily) || question.posFamily}</span>
         )}
         <button
           className={styles.audioBtn}
@@ -580,7 +673,7 @@ function ResultCard({ question, selected, result, example, onPlayWord, onPlayExa
           <div className={styles.feedbackDetail}>
             <div className={styles.feedbackSection}>
               <div className={styles.feedbackLabel}>正确答案</div>
-              <div className={styles.feedbackEnWord}>{question.word} <span className={styles.posPill}>{question.posFamily}</span></div>
+              <div className={styles.feedbackEnWord}>{question.word} <span className={styles.posPill}>{getPosFamilyDisplay(question.posFamily) || question.posFamily}</span></div>
               <div className={styles.feedbackSenseTitle}>本题义项：</div>
               <div className={styles.feedbackSenseText}>{question.correctAnswer}</div>
               {question.options?.find(o => o.isCorrect)?.learnerDistinctionZh && (
@@ -601,7 +694,7 @@ function ResultCard({ question, selected, result, example, onPlayWord, onPlayExa
           <div className={styles.feedbackDetail}>
             <div className={styles.feedbackSection}>
               <div className={styles.feedbackLabel}>正确答案</div>
-              <div className={styles.feedbackEnWord}>{question.word} <span className={styles.posPill}>{question.posFamily}</span></div>
+              <div className={styles.feedbackEnWord}>{question.word} <span className={styles.posPill}>{getPosFamilyDisplay(question.posFamily) || question.posFamily}</span></div>
               <div className={styles.feedbackSenseTitle}>本题义项：</div>
               <div className={styles.feedbackSenseText}>{question.correctAnswer}</div>
               {question.options?.find(o => o.isCorrect)?.learnerDistinctionZh && (
@@ -619,7 +712,7 @@ function ResultCard({ question, selected, result, example, onPlayWord, onPlayExa
             </div>
             <div className={styles.feedbackSection}>
               <div className={styles.feedbackLabel}>你选择的是</div>
-              <div className={styles.feedbackEnWord}>{selOption?.displayEnglish || ""} <span className={styles.posPill}>{selOption?.posFamily || ""}</span></div>
+              <div className={styles.feedbackEnWord}>{selOption?.displayEnglish || ""} <span className={styles.posPill}>{getPosFamilyDisplay(selOption?.posFamily) || selOption?.posFamily || ""}</span></div>
               <div className={styles.feedbackSenseTitle}>具体义项：</div>
               <div className={styles.feedbackSenseText}>{selMeaning}</div>
               {selOption?.meaningDetailedZh && selOption.meaningDetailedZh !== selMeaning && (
@@ -693,8 +786,10 @@ function ResultCard({ question, selected, result, example, onPlayWord, onPlayExa
         </button>
       </div>
 
-      {/* Next button */}
-      <button className={styles.nextBtn} onClick={onNext}>下一题 →</button>
+      {/* Next button — disabled while correct auto-advance is pending to avoid double nextQuestion */}
+      <button className={styles.nextBtn} type="button" onClick={onNext} disabled={nextDisabled}>
+        {nextLabel}
+      </button>
     </div>
   );
 }

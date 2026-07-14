@@ -144,7 +144,8 @@ test("home page exposes idictation flash entrances without legacy lr high-freque
 test("word flashcard study correction uses study queue membership for idictation indices", () => {
   const pageSource = fs.readFileSync(path.join(root, "app/page.jsx"), "utf8");
   assert.match(pageSource, /isWordFlashActive/);
-  assert.match(pageSource, /if \(!isWordFlashActive \|\| !item\?\.word \|\| isStudyEmpty\) return/);
+  assert.match(pageSource, /item\.word === "完成"/);
+  assert.match(pageSource, /isStudyEmpty \|\| isWordLexiconLoading/);
   assert.match(pageSource, /studyWordIndices\.includes\(effectiveIndex\)/);
   const navHook = fs.readFileSync(path.join(root, "app/hooks/useWordFlashNavigation.js"), "utf8");
   assert.match(navHook, /flashStudyModeRef\.current !== "word"/);
@@ -187,7 +188,7 @@ test("word flashcard playback shortcuts are scoped to word mode only", () => {
   assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakExampleRef/);
   assert.match(pageSource, /useHomeWordSpeech/);
   assert.match(pageSource, /\{ text: item\.example, kind: "sentence" \}/);
-  assert.match(pageSource, /\{ text: nextItem\?\.example, kind: "sentence" \}/);
+  assert.doesNotMatch(pageSource, /nextItem\?\.example/);
   // Speech implementation lives in the extracted home speech hook.
   assert.match(speechHookSource, /shouldIgnoreDuplicateSpeech\(cleanText, kind\)/);
   assert.match(speechHookSource, /if \(kind === "sentence"\) return;/);
@@ -201,7 +202,7 @@ test("word flashcard playback shortcuts are scoped to word mode only", () => {
   assert.match(phrasePanelSource, /shouldIgnoreDuplicateSpeech\(text, "sentence"\)/);
   assert.match(phrasePanelSource, /const warmSpeechAudio = useCallback/);
   assert.match(phrasePanelSource, /\{ text: item\.example, kind: "sentence" \}/);
-  assert.match(phrasePanelSource, /\{ text: next\?\.example, kind: "sentence" \}/);
+  assert.doesNotMatch(phrasePanelSource, /next\?\.example/);
   assert.match(phrasePanelSource, /resolveSpeechPlaybackOptions\(result, "sentence"\)/);
   assert.match(phrasePanelSource, /播放例句 \$\{formatSpeechSourceLabel\(result\)\}/);
 });

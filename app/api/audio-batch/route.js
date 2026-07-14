@@ -9,50 +9,40 @@ import {
   audioIndexPath,
   cacheDir,
   ensureEdgeAudio,
-  ensureRealVoiceAudio,
   normalizeAudioKey,
   pronunciationCachePath,
   readJson,
   safeSpeechText,
-  shouldRetryRealAudio,
   writeJson
 } from "../../lib/vocab-audio-source.mjs";
 
-function hasCachedAudio(indexed = {}) {
-  return Boolean(indexed?.hasAudio && indexed?.filename && existsSync(path.join(cacheDir(), indexed.filename)));
+const EDGE_VOICE = "en-US-AriaNeural";
+const EDGE_RATE = "-10%";
+
+function hasCachedEdgeAudio(indexed = {}) {
+  return Boolean(
+    indexed?.hasAudio &&
+    indexed?.filename &&
+    !indexed?.realAudio &&
+    existsSync(path.join(cacheDir(), indexed.filename))
+  );
 }
 
-async function ensureRealFirstAudio(text, audioIndex, options = {}) {
+async function ensureEdgeOnlyAudio(text, audioIndex, options = {}) {
   const kind = options.kind || "word";
   const key = normalizeAudioKey(text);
   const indexed = audioIndex[key];
 
-  if (indexed?.realAudio && hasCachedAudio(indexed)) {
-    return { ok: true, source: indexed.source || "real-cache", realAudio: true, cacheHit: true };
+  if (hasCachedEdgeAudio(indexed)) {
+    return { ok: true, source: indexed.source || "edge-cache", realAudio: false, cacheHit: true };
   }
 
-  if (shouldRetryRealAudio(indexed, kind)) {
-    const real = await ensureRealVoiceAudio(text, audioIndex, { kind });
-    if (real.ok) {
-      return { ok: true, source: real.source, realAudio: true, cacheHit: false };
-    }
-  }
+  const edge = await ensureEdgeAudio(text, audioIndex, {
+    kind,
+    voice: EDGE_VOICE,
+    rate: EDGE_RATE
+  });
 
-  const latest = audioIndex[key];
-  if (latest?.realAudio && hasCachedAudio(latest)) {
-    return { ok: true, source: latest.source || "real-cache", realAudio: true, cacheHit: true };
-  }
-
-  if (
-    latest?.hasAudio &&
-    !latest.realAudio &&
-    latest.realAudioVersion === REAL_AUDIO_CACHE_VERSION &&
-    hasCachedAudio(latest)
-  ) {
-    return { ok: true, source: latest.source || "edge-cache", realAudio: false, cacheHit: true };
-  }
-
-  const edge = await ensureEdgeAudio(text, audioIndex, { kind });
   return {
     ok: edge.ok,
     source: edge.source,
@@ -107,15 +97,15 @@ export async function POST(req) {
       const key = normalizeAudioKey(word);
       const indexed = audioIndex[key];
 
-      if (indexed?.realAudio && hasCachedAudio(indexed)) {
+      if (hasCachedEdgeAudio(indexed)) {
         items.push({
           word,
           hasAudio: true,
           audioUrl: "",
           phonetic: indexed.phonetic || pronunciationCache[key]?.phonetic || "",
-          source: indexed.source || "real-cache",
-          provider: indexed.provider || "",
-          realAudio: true,
+          source: indexed.source || "edge-cache",
+          provider: indexed.provider || "edge-tts",
+          realAudio: false,
           kind,
           cacheHit: true
         });
@@ -124,22 +114,23 @@ export async function POST(req) {
 
       if (!generate) {
         const cachedPronunciation = pronunciationCache[key];
+        const edgeCached = hasCachedEdgeAudio(indexed);
         items.push({
           word,
-          hasAudio: hasCachedAudio(indexed) || Boolean(cachedPronunciation?.audioUrl),
+          hasAudio: edgeCached || Boolean(cachedPronunciation?.audioUrl),
           audioUrl: cachedPronunciation?.audioUrl || "",
           phonetic: indexed?.phonetic || cachedPronunciation?.phonetic || "",
-          source: indexed?.source || cachedPronunciation?.source || "not-generated",
-          provider: indexed?.provider || "",
-          realAudio: Boolean(indexed?.realAudio),
+          source: edgeCached ? (indexed?.source || "edge-cache") : (cachedPronunciation?.source || "not-generated"),
+          provider: indexed?.provider || "edge-tts",
+          realAudio: false,
           kind,
-          cacheHit: Boolean(indexed || cachedPronunciation)
+          cacheHit: Boolean(edgeCached || cachedPronunciation)
         });
         continue;
       }
 
       try {
-        const result = await ensureRealFirstAudio(word, audioIndex, { kind });
+        const result = await ensureEdgeOnlyAudio(word, audioIndex, { kind });
         const latest = audioIndex[key] || {};
 
         items.push({
@@ -148,8 +139,8 @@ export async function POST(req) {
           audioUrl: "",
           phonetic: latest.phonetic || pronunciationCache[key]?.phonetic || "",
           source: result.source,
-          provider: latest.provider || "",
-          realAudio: Boolean(result.realAudio),
+          provider: latest.provider || "edge-tts",
+          realAudio: false,
           realAudioVersion: latest.realAudioVersion || REAL_AUDIO_CACHE_VERSION,
           kind,
           cacheHit: Boolean(result.cacheHit)

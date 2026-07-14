@@ -1,6 +1,6 @@
-﻿// Build semantic distractor index for Meaning Mode � v2 rich micro-domain classification.
+// Build semantic distractor index for Meaning Mode � v2 rich micro-domain classification.
 // Reads: .static-export-cache/words.json
-// Matches against: public/data/meaning-4500.json
+// Matches against: public/data/meaning-6000.json
 // Outputs: app/lib/meaning-mode/semantic-distractor-index.mjs
 // NEVER modifies source files.
 
@@ -12,7 +12,7 @@ import { createHash } from "node:crypto";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..");
 const WORDS_PATH = join(ROOT, ".static-export-cache", "words.json");
-const MEANING_PATH = join(ROOT, "public", "data", "meaning-4500.json");
+const MEANING_PATH = join(ROOT, "public", "data", "meaning-6000.json");
 const OUTPUT = join(__dirname, "semantic-distractor-index.mjs");
 
 const wordsData = JSON.parse(readFileSync(WORDS_PATH, "utf-8"));
@@ -138,7 +138,7 @@ const posFamilyCounts = {}, domainCounts = {};
 for (const item of meaningData.items) {
   const mw = byWordId.get(item.wordId);
   if (!mw) continue;
-  const posFamily = normalizePosFamily(mw.pos);
+  const posFamily = item.posFamily || normalizePosFamily(mw.pos);
   posFamilyCounts[posFamily] = (posFamilyCounts[posFamily] || 0) + 1;
   const domains = extractSemanticDomains(mw);
   if (domains.length > 1) multiDomain++;
@@ -164,7 +164,7 @@ const outputJSON = JSON.stringify(meaningData.items, null, 2);
 const outLines = [
   "// Auto-generated semantic distractor index for Meaning Mode — v2 rich micro-domain.",
   "// Source: .static-export-cache/words.json (READ-ONLY)",
-  "// Matched against: public/data/meaning-4500.json (READ-ONLY)",
+  "// Matched against: public/data/meaning-6000.json (READ-ONLY)",
   "// Generated: " + new Date().toISOString(),
   "// Fields: _posFamily, _semanticGroups, _confidence, _sourceFields",
   "// DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-semantic-distractor-index.mjs",
@@ -181,7 +181,20 @@ const outLines = [
 ];
 writeFileSync(OUTPUT, outLines.join("\n"), "utf-8");
 
+const posOutput = [
+  "// Auto-generated: meaning-6000 wordId -> posFamily mapping",
+  "// Generated " + new Date().toISOString(),
+  "export const MEANING_POS_INDEX = Object.freeze(" + JSON.stringify(
+    Object.fromEntries(meaningData.items.map(item => [item.wordId, item._posFamily || item.posFamily || "other"])),
+    null,
+    2
+  ) + ");",
+  ""
+].join("\n");
+writeFileSync(join(__dirname, "meaning-pos-index.generated.mjs"), posOutput, "utf-8");
+
 console.log("Index written:", OUTPUT);
+console.log("POS index written:", join(__dirname, "meaning-pos-index.generated.mjs"));
 console.log("Entries:", entryCount);
 console.log("Multi-domain:", multiDomain);
 console.log("General-only:", generalOnly);
@@ -215,7 +228,7 @@ const md = [
   "",
   "## File Integrity",
   "- words.json SHA-256: " + createHash("sha256").update(readFileSync(WORDS_PATH)).digest("hex").toUpperCase(),
-  "- meaning-4500.json SHA-256: " + createHash("sha256").update(readFileSync(MEANING_PATH)).digest("hex").toUpperCase(),
+  "- meaning-6000.json SHA-256: " + createHash("sha256").update(readFileSync(MEANING_PATH)).digest("hex").toUpperCase(),
   ""
 ].join("\n");
 writeFileSync(join(ROOT, "reports", "meaning-semantic-index-report-v2.md"), md, "utf-8");

@@ -3,32 +3,12 @@
  * Io ops factory — split from useHomeLexiconAdmin (v2026-07-10.3)
  */
 import {
-  applyEditDraftToWord,
-  buildLocalCleanResult,
-  buildLocalExactDedupeResult,
-  buildLocalFormFamilyResult,
-  buildLocalOptimizeResult,
-  cleanTtsSymbolsInWord,
-  collectObscureDerivedCandidates,
   emergencyDefaultCloudUrl,
-  getLocalWrongReasons,
-  hasHeadwordRepair,
-  isCompleteAiWord,
-  isLikelyWrongAiWord,
-  isMissingAiFields,
-  isMissingClassification,
   isProbablyFullVocab,
-  isSimpleDictionaryWord,
   mergeWord,
-  normalizePhraseItems,
-  normalizeStringArray,
   normalizeWord,
-  parseImportText,
-  repairHeadwordLocally,
-  repairObviousWrongWordLocally,
-  wordToEditDraft
+  parseImportText
 } from "../lib/vocab/page-word-helpers.mjs";
-import { buildLocalChangeLog } from "../lib/vocab/local-change-log.mjs";
 import {
   buildBlankVocabTemplateCsvText,
   buildBlankVocabTemplateJsonPayload,
@@ -37,25 +17,20 @@ import {
   normalizeTemplateWord
 } from "../lib/vocab/vocab-template-io.mjs";
 import {
-  loadWordsFromIndexedDB,
   postExportCache,
   saveWordsToIndexedDB
 } from "../lib/vocab/word-store.mjs";
-import { filterKey, isIdictationFlashFilter } from "../lib/vocab/word-flashcard-study-pool.mjs";
-import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "../lib/vocab/lexicon-guard-shared.mjs";
 
 
 export function createIoOps(ctx) {
   const {
-    words, setWords, index, setIndex, filter,
-    lastLocalChange, setLastLocalChange,
+    words, setWords,
     setLoading, setToast, setBatchInfo, setDuplicateInfo,
-    setEditOpen, setEditDraft, editDraft,
-    item, isExternalIdictationItem, pasteText, setPasteText,
-    persistWordsImmediately, resetWordStudySessionState,
-    cacheMetaRef, latestStateRef, entryPositionsRef, persistWordFlashSessionNow,
+    pasteText, setPasteText,
+    resetWordStudySessionState,
+    cacheMetaRef,
     compactBrowserStorageForCurrentWords,
-    applyLocalResult, recordLocalChange, localOptimizeWordList, generateCurrent, confirmAiCost
+    demoWords, setFilter
   } = ctx;
 
   function importWords(newWords) {
@@ -123,7 +98,7 @@ export function createIoOps(ctx) {
   }
 
   function clearAll() {
-    setWords(DEMO_WORDS);
+    setWords(demoWords);
     setPasteText("");
     setDuplicateInfo("");
     setFilter({ type: "all", value: "" });

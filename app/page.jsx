@@ -1,6 +1,7 @@
 "use client";
 
-import { startTransition, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useHomeWordSpeech } from "./hooks/useHomeWordSpeech.js";
 import { useHomeAudioPrefill } from "./hooks/useHomeAudioPrefill.js";
 import { useHomeLexiconAdmin } from "./hooks/useHomeLexiconAdmin.js";
@@ -8,18 +9,14 @@ import { useHomeVocabBootstrap } from "./hooks/useHomeVocabBootstrap.js";
 import { useWordFlashSession } from "./hooks/useWordFlashSession.js";
 import { useWordFlashNavigation } from "./hooks/useWordFlashNavigation.js";
 import {
+  formatOfflineVocabNotice,
   formatVocabCountLabel
 } from "./lib/vocab/word-cache-meta.mjs";
-import {
-  postExportCache
-} from "./lib/vocab/word-store.mjs";
 import PhraseFlashcardPanel from "./components/PhraseFlashcardPanel";
 import LrParaphrasePanel from "./components/LrParaphrasePanel";
-import StudyRangeSummary from "./components/StudyRangeSummary";
-import VirtualList from "./components/VirtualList";
-import VocabAdminToolsPanel from "./components/VocabAdminToolsPanel";
 import WordEditModal from "./components/WordEditModal";
 import WordFlashcardView from "./components/WordFlashcardView";
+import StableLoadingState from "./components/StableLoadingState";
 import {
   ensureIdictationFrequencyData,
   getIdictationSource
@@ -39,20 +36,12 @@ import {
   buildStudyPoolForFilter,
   buildStudyWordIndices,
   filterKey,
-  findIdictationLibraryWord,
   getFilterName,
   isIdictationFlashFilter,
-  isLifeWorkWord,
   isSameFilter,
   resolveStudyWordEntry,
   wordMatchesFilter
 } from "./lib/vocab/word-flashcard-study-pool.mjs";
-import {
-  safeLocalStorageGet as sharedLocalStorageGet,
-  safeLocalStorageRemove as sharedLocalStorageRemove,
-  safeLocalStorageSet as sharedLocalStorageSet
-} from "./lib/browser-storage.mjs";
-import { cleanupBrowserCachesForVocab } from "./lib/vocab/cache-cleanup.mjs";
 import {
   resolveCurrentStudyItem,
   resolveWordStudyIndex
@@ -63,16 +52,15 @@ import {
   enrichDisplayFamily,
   fallback,
   getDisplayForms,
+  isMissingAiFields,
+  isMissingClassification,
   isSimpleDictionaryWord,
   normalizePhraseItems,
   normalizeWord,
-  safeLocalStorageGet,
-  safeLocalStorageRemove,
-  safeLocalStorageSet
 } from "./lib/vocab/page-word-helpers.mjs";
 
 // Source anchors kept for regression tests: AI工具（会扣费）; 听力阅读同义替换; /data/phrases.json; LR_SYNONYM_URL; asSynonymItems(payload).length;
-// lrSynonymCount == null ? "加载中" : `${lrSynonymCount.toLocaleString()} 组`
+// Runtime mode counts display an em dash until catalog metadata is ready.
 
 const DEMO_WORDS = [
   {
@@ -156,7 +144,19 @@ const IELTS_USE_OPTIONS = ["Listening", "Speaking", "Reading", "G类书信", "Ta
 const TOPIC_OPTIONS = ["教育", "工作", "住房", "交通", "健康", "环境", "科技", "政府", "社会", "消费", "旅行", "社区", "法律", "家庭", "公共服务"];
 const DIFFICULTY_OPTIONS = ["基础高频", "中级核心", "高级加分", "低频认识即可"];
 
-export default function Home() {
+export default function HomePage() {
+  return (
+    <Suspense fallback={(
+      <main className="page page--word-flash system-loading-page">
+        <StableLoadingState mark="V" eyebrow="主词库刷词" />
+      </main>
+    )}>
+      <Home />
+    </Suspense>
+  );
+}
+
+function Home() {
   const [index, setIndex] = useState(0);
   const [pasteText, setPasteText] = useState("");
   const [search, setSearch] = useState("");
@@ -171,7 +171,6 @@ export default function Home() {
   const [editOpen, setEditOpen] = useState(false);
   const [editDraft, setEditDraft] = useState(null);
   const [filter, setFilter] = useState({ type: "all", value: "" });
-  const [meaningDetailOpen, setMeaningDetailOpen] = useState(false);
 
   const {
     words,
@@ -213,6 +212,10 @@ export default function Home() {
   const toolsMenuRef = useRef(null);
   const aiToolsRef = useRef(null);
   const pronunciationInFlightRef = useRef(new Map());
+  const searchParams = useSearchParams();
+  const wantOpenAiToolsQuery = searchParams?.get("openAiTools") === "1";
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const [aiToolsOpen, setAiToolsOpen] = useState(false);
 
   const warmTtsTimersRef = useRef([]);
   const warmTtsBatchRef = useRef(0);
@@ -242,22 +245,54 @@ export default function Home() {
     latestStateRef
   });
 
+  // Open AI tools in-place (sidebar event or ?openAiTools=1). Never requires leaving other pages.
   useEffect(() => {
-    const openAiTools =
-      window.location.hash === "#ai-tools" ||
-      new URLSearchParams(window.location.search).get("openAiTools") === "1";
+    let pollTimer = 0;
 
-    if (!openAiTools) return;
-
-    setFlashStudyMode("word");
-    window.requestAnimationFrame(() => {
-      if (toolsMenuRef.current) toolsMenuRef.current.open = true;
-      if (aiToolsRef.current) {
-        aiToolsRef.current.open = true;
-        aiToolsRef.current.scrollIntoView({ block: "start", behavior: "smooth" });
+    function openHomeAiTools() {
+      if (flashStudyMode !== "word") {
+        setFlashStudyMode("word");
       }
-    });
-  }, []);
+      setToolsOpen(true);
+      setAiToolsOpen(true);
+
+      if (pollTimer) window.clearInterval(pollTimer);
+      let tries = 0;
+      pollTimer = window.setInterval(() => {
+        tries += 1;
+        const ai = aiToolsRef.current || document.getElementById("ai-tools");
+        if (ai) {
+          ai.scrollIntoView({ block: "nearest", behavior: tries <= 2 ? "smooth" : "auto" });
+          window.clearInterval(pollTimer);
+          pollTimer = 0;
+          return;
+        }
+        if (tries >= 30) {
+          window.clearInterval(pollTimer);
+          pollTimer = 0;
+        }
+      }, 100);
+    }
+
+    function onOpenAiToolsEvent(event) {
+      if (event?.detail?.page && event.detail.page !== "home") return;
+      openHomeAiTools();
+    }
+
+    window.addEventListener("ielts:open-ai-tools", onOpenAiToolsEvent);
+
+    const wantOpenAiTools =
+      wantOpenAiToolsQuery ||
+      (typeof window !== "undefined" && window.location.hash === "#ai-tools");
+    if (wantOpenAiTools) {
+      openHomeAiTools();
+    }
+
+    return () => {
+      window.removeEventListener("ielts:open-ai-tools", onOpenAiToolsEvent);
+      if (pollTimer) window.clearInterval(pollTimer);
+    };
+  }, [wantOpenAiToolsQuery, flashStudyMode]);
 
   useEffect(() => {
     if (!toast) return;
@@ -268,9 +303,14 @@ export default function Home() {
   useEffect(() => {
     function closeOtherMenus(openMenu) {
       document.querySelectorAll("details.menu").forEach((menu) => {
-        if (menu !== openMenu) {
-          menu.open = false;
+        if (menu === openMenu) return;
+        // Controlled tools panel must close via React state, not only DOM.
+        if (toolsMenuRef.current && menu === toolsMenuRef.current) {
+          setToolsOpen(false);
+          setAiToolsOpen(false);
+          return;
         }
+        menu.open = false;
       });
     }
 
@@ -283,11 +323,23 @@ export default function Home() {
     }
 
     function handlePointerDown(event) {
-      if (!event.target.closest(".top-actions")) {
-        document.querySelectorAll("details.menu").forEach((menu) => {
-          menu.open = false;
-        });
+      const t = event.target;
+      // Don't fight sidebar "AI 工具" navigation / open intent.
+      if (t.closest?.('a[href*="openAiTools"]') || t.closest?.('a[href*="#ai-tools"]')) {
+        return;
       }
+      // Clicks inside the tools/top action area keep menus usable.
+      if (t.closest?.(".top-actions") || t.closest?.("details.menu")) {
+        return;
+      }
+      document.querySelectorAll("details.menu").forEach((menu) => {
+        if (toolsMenuRef.current && menu === toolsMenuRef.current) {
+          setToolsOpen(false);
+          setAiToolsOpen(false);
+          return;
+        }
+        menu.open = false;
+      });
     }
 
     const menus = Array.from(document.querySelectorAll("details.menu"));
@@ -316,7 +368,7 @@ export default function Home() {
   const activeWordPool = useMemo(() => {
     if (!isWordFlashActive) return [];
     if (idictationFlashSourceKey) return buildIdictationFlashWords(idictationFlashSourceKey, words, libraryWordMap);
-    return words.map((word, originalIndex) => ({ ...word, originalIndex }));
+    return words;
   }, [isWordFlashActive, idictationFlashSourceKey, idictationFlashRevision, words, libraryWordMap]);
 
   useEffect(() => {
@@ -334,9 +386,9 @@ export default function Home() {
     };
   }, [idictationFlashSourceKey]);
   const activeWordByIndex = useMemo(() => {
-    if (!isWordFlashActive) return new Map();
+    if (!isWordFlashActive || !idictationFlashSourceKey) return null;
     return new Map(activeWordPool.map((word) => [word.originalIndex, word]));
-  }, [isWordFlashActive, activeWordPool]);
+  }, [isWordFlashActive, idictationFlashSourceKey, activeWordPool]);
   const studyWordIndices = useMemo(
     () => (isWordFlashActive
       ? buildStudyWordIndices(activeWordPool, filter, { idictation: Boolean(idictationFlashSourceKey) })
@@ -393,13 +445,13 @@ export default function Home() {
       sessionState.settling = false;
       return;
     }
-    if (!studyWords.some((word) => word.originalIndex === targetIndex)) {
+    if (!studyWordIndices.includes(targetIndex)) {
       sessionState.settling = false;
       return;
     }
 
     sessionState.settling = false;
-  }, [studyWords, index]);
+  }, [studyWords, studyWordIndices, index]);
 
   const isWordLexiconLoading = vocabRuntime.status === "loading";
   const emptyItem = {
@@ -431,8 +483,10 @@ export default function Home() {
   const phraseCollocationFallback = isWordLexiconLoading
     ? [{ phrase: "", chinese: "正在读取词库" }]
     : [{ phrase: "等待 AI 生成短语搭配", chinese: "" }];
-  const prevInStudy = studyWords.length ? studyWords[(safeStudyPosition - 1 + studyWords.length) % studyWords.length] : null;
-  const prevItem = prevInStudy ? activeWordByIndex.get(prevInStudy.originalIndex) : null;
+  const prevPoolIndex = studyWordIndices.length
+    ? studyWordIndices[(safeStudyPosition - 1 + studyWordIndices.length) % studyWordIndices.length]
+    : null;
+  const prevItem = resolveStudyWordEntry(activeWordPool, prevPoolIndex, activeWordByIndex);
 
   const {
     audioRef,
@@ -467,12 +521,7 @@ export default function Home() {
   }, [isWordFlashActive, studyWordIndices, effectiveIndex, index, words, resolvedStudyItem?.word]);
 
   useEffect(() => {
-    if (!isWordFlashActive) return;
-    setMeaningDetailOpen(false);
-  }, [isWordFlashActive, index, item?.id, item?.word]);
-
-  useEffect(() => {
-    if (!isWordFlashActive || !item?.word || isStudyEmpty) return;
+    if (!isWordFlashActive || !item?.word || item.word === "完成" || isStudyEmpty || isWordLexiconLoading) return;
     const batch = warmTtsBatchRef.current + 1;
     warmTtsBatchRef.current = batch;
 
@@ -480,18 +529,11 @@ export default function Home() {
     warmTtsTimersRef.current = [];
 
     // 极速音频：不再自动查 pronunciation。
-    // 当前词、例句和下一个词只预热发音音频本地缓存，点击时直接播放。
+  // 当前词和例句只预热发音音频本地缓存，点击时直接播放。
     const currentText = item.word;
-    const nextStudyIndex = studyWordIndices.length
-      ? studyWordIndices[(safeStudyPosition + 1) % studyWordIndices.length]
-      : null;
-    const nextItem = resolveStudyWordEntry(activeWordPool, nextStudyIndex, activeWordByIndex);
-
     const candidates = [
       { text: currentText, kind: isSimpleDictionaryWord(currentText) ? "word" : "phrase" },
-      { text: item.example, kind: "sentence" },
-      { text: nextItem?.word, kind: isSimpleDictionaryWord(nextItem?.word) ? "word" : "phrase" },
-      { text: nextItem?.example, kind: "sentence" }
+      { text: item.example, kind: "sentence" }
     ]
       .map((entry) => ({ ...entry, text: String(entry.text || "").trim() }))
       .filter((entry) => entry.text && entry.text !== "完成")
@@ -512,7 +554,7 @@ export default function Home() {
         warmTtsTimersRef.current = [];
       }
     };
-  }, [isWordFlashActive, item?.word, item?.example, index, currentStudyPosition, studyWordIndices.length, isStudyEmpty, activeWordPool, activeWordByIndex]);
+  }, [isWordFlashActive, item?.word, item?.example, index, currentStudyPosition, studyWordIndices.length, isStudyEmpty, isWordLexiconLoading]);
 
   const commonCollocations = normalizePhraseItems(item.collocations);
   const phraseCollocations = normalizePhraseItems(item.phraseCollocations);
@@ -661,7 +703,10 @@ export default function Home() {
     latestStateRef,
     entryPositionsRef,
     persistWordFlashSessionNow,
-    compactBrowserStorageForCurrentWords
+    compactBrowserStorageForCurrentWords,
+    demoWords: DEMO_WORDS,
+    setFilter,
+    prefillWordAudio
   });
 
   const {
@@ -748,7 +793,7 @@ export default function Home() {
     const studyPool = buildStudyPoolForFilter(nextFilter, words);
     const targetPool = isIdictationFlashFilter(nextFilter)
       ? buildIdictationFlashWords(nextFilter.value, words, libraryWordMap)
-      : words.map((word, originalIndex) => ({ ...word, originalIndex }));
+      : words;
 
     const result = resolveFilterSwitchIndex(resolveWordStudyIndex, {
       words,
@@ -759,6 +804,10 @@ export default function Home() {
       normalizeWord,
       studyPool,
       findFirstInFilter: () => {
+        if (!isIdictationFlashFilter(nextFilter)) {
+          return targetPool.findIndex((word) => wordMatchesFilter(word, nextFilter));
+        }
+
         const first = targetPool.find((word) => wordMatchesFilter(word, nextFilter));
         return Number.isInteger(first?.originalIndex) ? first.originalIndex : -1;
       }
@@ -772,6 +821,18 @@ export default function Home() {
       setIndex(result.index);
       persistWordFlashSessionNow(result.index, nextFilter);
     }
+  }
+
+  if (vocabRuntime.status === "loading") {
+    return (
+      <main className="page page--word-flash system-loading-page">
+        <StableLoadingState
+          mark="V"
+          eyebrow="主词库刷词"
+          note="读取主词库并恢复上次学习位置"
+        />
+      </main>
+    );
   }
 
   return (
@@ -799,7 +860,7 @@ export default function Home() {
         >
           词组刷词
           <span className="flash-mode-meta">
-            {phraseRuntimeCount == null ? "加载中" : `${phraseRuntimeCount.toLocaleString()} 词组`}
+            {phraseRuntimeCount == null ? "—" : `${phraseRuntimeCount.toLocaleString()} 词组`}
             <span className="flash-mode-sub">短语层·独立计数</span>
           </span>
         </button>
@@ -812,17 +873,11 @@ export default function Home() {
         >
           听力阅读同义替换
           <span className="flash-mode-meta">
-            {lrSynonymCount == null ? "加载中" : `${lrSynonymCount.toLocaleString()} 组`}
+            {lrSynonymCount == null ? "—" : `${lrSynonymCount.toLocaleString()} 组`}
             <span className="flash-mode-sub">同义组·非词条</span>
           </span>
         </button>
       </div>
-      <p className="product-scope-note" style={{ margin: "8px 12px 0", fontSize: 12, opacity: 0.75, lineHeight: 1.45 }}>
-        各模式独立计数，勿相加。主词库 / 短语层 / 同义组 / 训练子集口径见项目根目录 <code>PRODUCT.md</code>。
-        拼写正式入口：<a href="/spelling-words">/spelling-words</a> · <a href="/spelling-phrases">/spelling-phrases</a>
-        （<code>spelling.html</code> 为遗留静态页）。
-      </p>
-
       {vocabRuntime.status === "offline" ? (
         <div className="vocab-runtime-notice" role="status">
           {formatOfflineVocabNotice(vocabRuntime)}
@@ -851,8 +906,6 @@ export default function Home() {
             phraseCollocations,
             collocationFallback: commonCollocationFallback,
             phraseCollocationFallback,
-            meaningDetailOpen,
-            setMeaningDetailOpen,
             isStudyEmpty,
             isExternalIdictationItem,
             progressPercent,
@@ -892,6 +945,10 @@ export default function Home() {
           admin={{
             toolsMenuRef,
             aiToolsRef,
+            toolsOpen,
+            aiToolsOpen,
+            onToolsOpenChange: setToolsOpen,
+            onAiToolsOpenChange: setAiToolsOpen,
             loading,
             pasteText,
             setPasteText,
@@ -924,6 +981,8 @@ export default function Home() {
             IELTS_USE_OPTIONS,
             IDICTATION_FLASH_FILTERS,
             shuffleStudyWords,
+            nextWord,
+            prevWord,
             toggleFavorite,
             markStatus
           }}
@@ -943,4 +1002,3 @@ export default function Home() {
     </main>
   );
 }
-

@@ -12,7 +12,8 @@
   const PERSONAL_WRONG_KEY = "ielts_static_personal_wrong_v1";
   const PREFS_KEY = "ielts_static_spelling_prefs_v1";
   const POSITION_KEY = "ielts_static_spelling_position_v1";
-  const AUDIO_CACHE_NAME = "static_vocab_audio_20260704_position_memory_v5";
+  const SETTINGS_PANEL_PREF_PREFIX = "ielts_static_spelling_settings_collapsed_v1_";
+  const AUDIO_CACHE_NAME = "static_vocab_audio_20260712_d15_audit_fix_v1";
 
   const CATEGORY_TYPES = [
     { value: "difficulty", label: "难度分类" },
@@ -55,6 +56,8 @@
     personal_wrong_book: "做题错词",
     srs_review: "SRS复习"
   };
+  const VALID_PRACTICE_SOURCES = new Set(Object.keys(SOURCE_LABELS));
+  const VALID_ENTRY_MODES = new Set(["all", "headwords", "phrases"]);
 
   const POS_LABELS = {
     noun: "名词",
@@ -94,6 +97,30 @@
   const dataRequests = new Map();
   const audioUrlCache = new Map();
   let audioPlayer = null;
+  let settingsViewport = "";
+  let settingsCollapsed = false;
+
+  function settingsViewportKey() {
+    return window.matchMedia && window.matchMedia("(max-width: 900px)").matches ? "mobile" : "desktop";
+  }
+
+  function applySettingsPanelState() {
+    const section = document.querySelector(".settings-section");
+    const toggle = $("settingsToggle");
+    if (!section || !toggle) return;
+    section.classList.toggle("is-collapsed", settingsCollapsed);
+    toggle.setAttribute("aria-expanded", settingsCollapsed ? "false" : "true");
+    toggle.textContent = settingsCollapsed ? "展开" : "收起";
+  }
+
+  function syncSettingsPanelMode(force = false) {
+    const viewport = settingsViewportKey();
+    if (!force && viewport === settingsViewport) return;
+    settingsViewport = viewport;
+    const saved = localStorage.getItem(SETTINGS_PANEL_PREF_PREFIX + viewport);
+    settingsCollapsed = saved === null ? viewport === "mobile" : saved === "1";
+    applySettingsPanelState();
+  }
 
   function readPrefs() {
     try {
@@ -1094,6 +1121,16 @@
     return "";
   }
 
+  function updateSettingsSummary() {
+    const summary = $("settingsSummary");
+    if (!summary) return;
+    const source = SOURCE_LABELS[practiceSource] || practiceSource;
+    const detail = practiceSource === "category"
+      ? `${$("categoryValue")?.selectedOptions?.[0]?.textContent || "全部"} · 第 ${Number(batchIndex || 0) + 1} 批`
+      : sourceDetailLabel();
+    summary.textContent = `${modeLabel(mode)} · ${source}${detail ? ` · ${detail}` : ""}`;
+  }
+
   function render(feedback = "", kind = "") {
     refreshPracticeEntries();
     const candidateSet = buildCandidateSet();
@@ -1111,6 +1148,7 @@
       `<span>SRS：${s.due}</span>`
     ].filter(Boolean).join("");
     if ($("stats").innerHTML !== statsMarkup) $("stats").innerHTML = statsMarkup;
+    updateSettingsSummary();
 
     renderProgress(s.progress);
     $("feedback").className = "feedback " + kind;
@@ -1160,8 +1198,6 @@
     }
     $("answer").placeholder = r.repairState === "must_repair" ? "必须先拼对当前内容" : normalized.entryType === "phrase" ? "输入完整短语" : "输入英文单词";
     persistCurrentPosition(normalized);
-    prewarmAudio(resolveEntryAudioPath(normalized, "word"));
-    prewarmAudio(resolveEntryAudioPath(normalized, "example"));
     focusAnswer();
   }
 
@@ -1258,11 +1294,16 @@
 
   function restorePrefs() {
     const prefs = readPrefs();
-    practiceSource = prefs.practiceSource || "category";
+    const query = new URLSearchParams(window.location.search);
+    const requestedSource = query.get("source") || "";
+    const requestedMode = query.get("mode") || "";
+    practiceSource = VALID_PRACTICE_SOURCES.has(requestedSource)
+      ? requestedSource
+      : (prefs.practiceSource || "category");
     categoryType = prefs.categoryType || "all";
     categoryValue = prefs.categoryValue || "";
     batchIndex = Number(prefs.batchIndex || 0) || 0;
-    mode = prefs.mode || "all";
+    mode = VALID_ENTRY_MODES.has(requestedMode) ? requestedMode : (prefs.mode || "all");
     idictationPrefs = {
       listening: normalizeIdictationPrefs("listening", prefs.idictation?.listening || {}),
       reading: normalizeIdictationPrefs("reading", prefs.idictation?.reading || {})
@@ -1273,9 +1314,29 @@
     writePrefs({ practiceSource, categoryType, categoryValue, batchIndex, mode, idictation: idictationPrefs });
   }
 
+  function syncPracticeSourceUrl() {
+    const url = new URL(window.location.href);
+    if (practiceSource === "category") url.searchParams.delete("source");
+    else url.searchParams.set("source", practiceSource);
+    window.history.replaceState(null, "", url);
+  }
+
+  function syncEntryModeUrl() {
+    const url = new URL(window.location.href);
+    if (mode === "all") url.searchParams.delete("mode");
+    else url.searchParams.set("mode", mode);
+    window.history.replaceState(null, "", url);
+  }
+
+  const STATIC_DATA_VERSION = "20260714_d28_load_performance_v1";
+
+  function versionedDataPath(requestPath) {
+    return requestPath + (requestPath.includes("?") ? "&" : "?") + "v=" + STATIC_DATA_VERSION;
+  }
+
   async function fetchFirstOk(paths) {
     for (const requestPath of paths) {
-      const response = await fetch(requestPath, { cache: "no-store" }).catch(() => null);
+      const response = await fetch(versionedDataPath(requestPath), { cache: "default" }).catch(() => null);
       if (response?.ok) return response;
     }
     return null;
@@ -1334,7 +1395,7 @@
     };
   }
 
-  function showLoading(message = "正在读取所选词库…") {
+  function showLoading(message = "正在准备本轮训练") {
     $("question").textContent = message;
     $("answer").disabled = true;
     $("submit").disabled = true;
@@ -1370,6 +1431,7 @@
 
   async function load() {
     try {
+      syncSettingsPanelMode(true);
       restorePrefs();
       updatePanels();
       populateCategoryTypeOptions();
@@ -1468,6 +1530,7 @@
       mode = btn.dataset.mode || "all";
       document.querySelectorAll("[data-mode]").forEach((x) => x.classList.toggle("active", x === btn));
       persistPrefs();
+      syncEntryModeUrl();
       try {
         await loadCurrentSelection();
       } catch (e) {
@@ -1476,12 +1539,21 @@
     });
   });
 
+  $("settingsToggle")?.addEventListener("click", () => {
+    settingsCollapsed = !settingsCollapsed;
+    localStorage.setItem(SETTINGS_PANEL_PREF_PREFIX + settingsViewportKey(), settingsCollapsed ? "1" : "0");
+    applySettingsPanelState();
+  });
+
+  window.addEventListener("resize", () => syncSettingsPanelMode(false), { passive: true });
+
   document.querySelectorAll("[data-source]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       practiceSource = btn.dataset.source || "category";
       document.querySelectorAll("[data-source]").forEach((x) => x.classList.toggle("active", x === btn));
       updatePanels();
       persistPrefs();
+      syncPracticeSourceUrl();
       try {
         await loadCurrentSelection();
       } catch (e) {
@@ -1705,13 +1777,6 @@
     } catch {
       browserSpeak(text);
     }
-  }
-
-  function prewarmAudio(path) {
-    if (!path || !("caches" in window)) return;
-    const run = () => cachedAudioUrl(path, 2500).catch(() => {});
-    if ("requestIdleCallback" in window) window.requestIdleCallback(run, { timeout: 2500 });
-    else window.setTimeout(run, 700);
   }
 
   function playCurrentWordAudio() {

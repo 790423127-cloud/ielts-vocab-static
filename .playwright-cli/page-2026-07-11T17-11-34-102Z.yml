@@ -1,0 +1,63 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - link "IELTS VOCAB" [ref=f2e3] [cursor=pointer]:
+      - /url: ./index.html
+    - generic [ref=f2e5]:
+      - strong [ref=f2e6]: 零基础词库
+      - generic [ref=f2e7]: 独立进度
+    - navigation "主要学习模式" [ref=f2e8]:
+      - link "选义" [ref=f2e9] [cursor=pointer]:
+        - /url: ./meaning.html
+      - link "拼写" [ref=f2e10] [cursor=pointer]:
+        - /url: ./spelling.html
+  - main [ref=f2e11]:
+    - generic [ref=f2e12]:
+      - button "上一个" [ref=f2e13] [cursor=pointer]
+      - generic [ref=f2e14]:
+        - link "← 主词库" [ref=f2e15] [cursor=pointer]:
+          - /url: ./index.html
+        - link "看词选意思" [ref=f2e16] [cursor=pointer]:
+          - /url: ./meaning.html
+        - link "拼写训练" [ref=f2e17] [cursor=pointer]:
+          - /url: ./spelling.html
+        - button "随机" [ref=f2e18] [cursor=pointer]
+        - button "下一个" [ref=f2e19] [cursor=pointer]
+    - generic [ref=f2e20]: 零基础 · 1500 词 · basic-zero-v2-1500
+    - generic "主题筛选" [ref=f2e22]:
+      - button "全部待学" [ref=f2e23] [cursor=pointer]
+      - button "全部词" [ref=f2e24] [cursor=pointer]
+      - button "不熟" [ref=f2e25] [cursor=pointer]
+      - button "熟悉" [ref=f2e26] [cursor=pointer]
+      - button "收藏" [ref=f2e27] [cursor=pointer]
+      - button "动词 278" [ref=f2e28] [cursor=pointer]
+      - button "食物 137" [ref=f2e29] [cursor=pointer]
+      - button "形容词 119" [ref=f2e30] [cursor=pointer]
+      - button "学校 99" [ref=f2e31] [cursor=pointer]
+      - button "家 91" [ref=f2e32] [cursor=pointer]
+      - button "时间 68" [ref=f2e33] [cursor=pointer]
+      - button "动物 66" [ref=f2e34] [cursor=pointer]
+      - button "地点 60" [ref=f2e35] [cursor=pointer]
+      - button "兴趣 57" [ref=f2e36] [cursor=pointer]
+      - button "职业 54" [ref=f2e37] [cursor=pointer]
+      - button "副词 48" [ref=f2e38] [cursor=pointer]
+      - button "身体 47" [ref=f2e39] [cursor=pointer]
+      - button "感觉 46" [ref=f2e40] [cursor=pointer]
+      - button "衣服 44" [ref=f2e41] [cursor=pointer]
+      - button "自然 43" [ref=f2e42] [cursor=pointer]
+      - button "交通 43" [ref=f2e43] [cursor=pointer]
+    - generic [ref=f2e44]:
+      - button "☆" [ref=f2e45] [cursor=pointer]
+      - button "🔊" [ref=f2e46] [cursor=pointer]
+      - generic [ref=f2e47] [cursor=pointer]: hello
+      - generic [ref=f2e48]: /həˈləʊ/ · exclamation 感叹词 · 你好；问候；招呼
+      - generic [ref=f2e49]: 独立词库 data/basic-words.json · 进度仅存本机
+      - generic [ref=f2e50]:
+        - generic [ref=f2e51]:
+          - button "🔊" [ref=f2e52] [cursor=pointer]
+          - generic [ref=f2e53]: Hello!
+        - generic [ref=f2e54]: 你好！很高兴认识你。
+    - generic [ref=f2e55]:
+      - generic [ref=f2e56]:
+        - button "熟悉" [ref=f2e57] [cursor=pointer]
+        - button "不熟" [ref=f2e58] [cursor=pointer]
+      - generic [ref=f2e59]: 1 / 1500

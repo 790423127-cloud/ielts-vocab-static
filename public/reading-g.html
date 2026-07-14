@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f6f5" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23225f52'/%3E%3Cpath d='M9 8h14v3H12v4h9v3h-9v4h11v3H9z' fill='white'/%3E%3C/svg%3E" />
+  <title>G类阅读提升 · 静态便携版</title>
+  <link rel="stylesheet" href="./assets/style.css?v=20260714_d27_action_dock_stability_v1" />
+  <style>
+    .hidden{display:none!important}
+    .module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px;align-items:center}
+    .topic-bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;max-width:920px}
+    .topic-chip{border:1px solid #dce3df;border-radius:6px;padding:6px 10px;background:#fff;color:#225f52;font-weight:800;font-size:12px;cursor:pointer}
+    .topic-chip.active{border-color:#225f52;background:#225f52;color:#fff}
+    .meta-pill{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:6px;background:#e5f2ed;color:#225f52;font-size:12px;font-weight:800}
+    .entry-type-pill{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:#fff3ec;color:#a94420;font-size:11px;font-weight:800}
+    .entry-type-pill.word{background:#e5f2ed;color:#225f52}
+    #quizBox{width:min(680px,100%);margin-inline:auto;text-align:left}
+    .para-stage{font-size:12px;font-weight:800;color:#225f52;margin-bottom:12px}
+    .para-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px;text-align:center;font-size:clamp(22px,5vw,36px);overflow-wrap:anywhere}
+    .para-pair span{color:#81786d}.para-meaning{text-align:center;font-size:17px;font-weight:800;margin-top:12px}
+    .para-note{margin-top:10px;padding:11px 13px;border:1px solid #ece3d8;border-radius:8px;background:#f7f5f1;line-height:1.55;overflow-wrap:anywhere}
+    .para-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:14px}
+    .para-recall{display:flex;align-items:center;justify-content:center;gap:12px;font-size:clamp(24px,5vw,38px);text-align:center;overflow-wrap:anywhere}
+    .para-answer{margin-top:12px;padding:14px;border:1px solid #c9ddd5;border-radius:8px;background:#edf6f2;text-align:center;font-size:24px;font-weight:800;overflow-wrap:anywhere}
+    .para-stem{text-align:center;font-size:clamp(26px,5vw,44px);font-weight:850;margin-bottom:12px;overflow-wrap:anywhere}
+    .para-option{display:block;width:100%;text-align:left;margin-bottom:8px;min-height:42px}.para-option.correct{background:#e5f2ed;border-color:#225f52}.para-option.wrong,.topic-chip.danger{background:#fdf0ed;border-color:#c45c4a;color:#953d2f}
+    .para-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;padding:14px;border:1px solid #ece3d8;border-radius:8px;background:#faf8f5}.para-summary span{display:flex;justify-content:space-between;gap:12px}
+    .expression-note{font-size:12px;color:#756d63;line-height:1.5;margin:4px 0 0}
+    .reading-controls-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 0;padding:9px 11px;border:1px solid #dce3df;border-radius:8px;background:#fff}
+    .reading-controls-summary{min-width:0;color:#5f6f68;font-size:12px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .reading-controls-summary strong{color:#225f52}
+    .reading-controls-toggle{flex:0 0 auto;border:1px solid #b9d1c8;border-radius:6px;padding:7px 11px;background:#edf6f2;color:#225f52;font-weight:800;font-size:12px;cursor:pointer}
+    .reading-controls-toggle:hover{border-color:#225f52}
+    .reading-controls.is-collapsed .reading-controls-body{display:none}
+    .reading-controls:not(.is-collapsed) .reading-controls-head{margin-bottom:8px}
+    @media(min-width:901px){.reading-controls{width:min(1480px,100%);margin-inline:auto}.reading-controls-head{display:none}}
+    @media(max-width:900px){.reading-controls{margin-bottom:4px}.reading-controls-body .top-actions{margin-top:8px}.reading-controls-body .expression-note{margin:8px 2px 0}.topic-bar{max-height:42vh;overflow:auto;padding-bottom:2px}}
+    @media(min-width:1600px){.module-nav{margin-top:10px}.meta-pill,.topic-chip{font-size:14px}.topic-chip{padding:8px 12px}.expression-note{font-size:14px}.reading-controls-body .top-actions{gap:10px}}
+    @media(max-width:520px){.para-pair{grid-template-columns:1fr;gap:5px}.para-pair span{transform:rotate(90deg)}.para-summary{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="static-brand-bar">
+    <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
+    <div class="static-session-context"><strong>G类阅读提升</strong><span>静态便携版</span></div>
+    <nav class="static-brand-nav" aria-label="主要学习模式">
+      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a>
+    </nav>
+  </header>
+  <aside class="static-shell-sidebar" aria-label="学习导航">
+    <nav>
+      <a href="./index.html">刷词</a>
+      <a href="./spelling.html">拼写</a>
+      <a href="./meaning.html">选义</a>
+    </nav>
+    <div class="static-shell-divider"></div>
+    <span class="static-shell-label">专项学习</span>
+    <nav>
+      <a href="./basic.html">零基础词库</a>
+      <a class="active" href="./reading-g.html">G类阅读提升</a>
+      <a href="./spelling.html?source=error_bank">错词本</a>
+      <a href="./spelling.html?source=srs_review">SRS 复习</a>
+    </nav>
+  </aside>
+  <main class="app">
+    <header class="top">
+      <button id="prevBtn" class="top-btn" type="button">上一个</button>
+    </header>
+
+    <section id="readingControls" class="reading-controls" aria-label="G类阅读学习设置">
+      <div class="reading-controls-head">
+        <div id="readingControlsSummary" class="reading-controls-summary"><strong>当前范围</strong> · 阶段1</div>
+        <button id="readingControlsToggle" class="reading-controls-toggle" type="button" aria-expanded="true" aria-controls="readingControlsBody">收起设置</button>
+      </div>
+      <div id="readingControlsBody" class="reading-controls-body">
+        <div class="top-actions">
+          <a href="./index.html" class="top-btn">← 主词库</a>
+          <a href="./basic.html" class="top-btn">零基础</a>
+          <a href="./meaning.html" class="top-btn">看词选意思</a>
+          <a href="./spelling.html" class="top-btn">拼写训练</a>
+          <button id="shuffleBtn" class="top-btn" type="button">随机</button>
+          <button id="nextBtn" class="top-btn" type="button">下一个</button>
+        </div>
+        <div class="module-nav">
+          <span class="meta-pill" id="bankMeta">G类阅读提升</span>
+        </div>
+        <div class="topic-bar" id="topicBar" aria-label="学习范围筛选"></div>
+        <p class="expression-note">同义训练仅使用安全题库233组；仅浏览关系67组不进入选择题。表达识别核心1006个表达、扩展500个表达，不代表每个词都已建立可靠同义关系。</p>
+      </div>
+    </section>
+
+    <section id="swipeArea" class="hero">
+      <button id="favoriteBtn" class="star" title="收藏" type="button">☆</button>
+      <div id="unfamiliarAlert" class="unfamiliar-alert hidden">已标记不熟，优先复习</div>
+      <button id="wordSoundBtn" class="sound-main" title="播放单词" type="button">🔊</button>
+      <div id="word" class="word">Loading</div>
+      <div id="basic" class="basic-line">正在准备学习内容</div>
+      <div id="loadInfo" class="load-info">静态便携版 · vocab + paraphrases · 词义/短语/同义三类状态 · 仅存本机</div>
+
+      <div id="quizBox" class="hidden" style="margin-top:12px;max-width:640px">
+        <div id="quizOptions"></div>
+        <div id="quizExplain" class="hidden" style="margin-top:10px;padding:10px 12px;border-radius:10px;background:#f7f5f1;border:1px solid #ece3d8;font-size:13px;line-height:1.5"></div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-head">
+          <button id="exampleSoundBtn" class="mini-sound example-sound" title="播放例句" type="button">🔊</button>
+          <div id="example" class="example-en">读取分层词库并恢复学习位置</div>
+        </div>
+        <div id="exampleCn" class="example-cn"></div>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      <div class="actions">
+        <button id="knownBtn" class="status known" type="button">熟悉</button>
+        <button id="unknownBtn" class="status unknown" type="button">不熟</button>
+      </div>
+      <div class="progress-row">
+        <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+        <div id="count" class="count">0 / 0</div>
+      </div>
+    </footer>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="./assets/reading-g.js?v=20260714_d28_load_performance_v1"></script>
+</body>
+</html>

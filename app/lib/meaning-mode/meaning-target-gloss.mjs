@@ -1,6 +1,6 @@
-﻿// meaning-target-gloss.mjs — Browser-compatible authoritative gloss data for Meaning Mode.
+// meaning-target-gloss.mjs — Browser-compatible authoritative gloss data for Meaning Mode.
 // Provides hydrated quizMeaningZh and meaningDetailedZh from the authoritative words.json.
-// Never falls back to the truncated meaningZh in meaning-4500.json.
+// Never falls back to the truncated meaningZh in meaning-6000.json.
 
 import { TARGET_GLOSS_INDEX } from "./meaning-target-gloss-index.generated.mjs";
 
@@ -17,7 +17,7 @@ function _ensureGlossIndex() {
 
 /**
  * Get the authoritative quizMeaningZh for a target word entry.
- * Uses the full words.json gloss data, never the truncated meaning-4500.json meaningZh.
+ * Uses the full words.json gloss data, never the truncated meaning-6000.json meaningZh.
  */
 function splitAtomicGloss(value) {
   return String(value || "")
@@ -36,10 +36,6 @@ function compactQuizLabel(value) {
     .replace(/\.{2,}|…/g, "")
     .trim();
   if (/或(?!者)/.test(text)) text = text.split(/或(?!者)/)[0].trim();
-  if (text.length > 6 && text.includes("的")) {
-    const tail = text.slice(text.lastIndexOf("的") + 1).trim();
-    if (tail.length >= 2 && tail.length <= 6) text = tail;
-  }
   text = text
     .replace(/人员群体$/g, "人员")
     .replace(/工作制$/g, "工作")
@@ -48,7 +44,8 @@ function compactQuizLabel(value) {
 }
 
 function getSingleQuizSense(gloss, wordEntry) {
-  const source = gloss?.quizMeaningZh || gloss?.meaningOriginal
+  const source = wordEntry?.quizMeaningZh
+    || gloss?.quizMeaningZh || gloss?.meaningOriginal
     || wordEntry?.quizSenses?.[0]?.quizMeaningZh
     || wordEntry?.meaningZh || "";
   const compactSource = compactQuizLabel(source);
@@ -68,6 +65,7 @@ export function getTargetQuizMeaning(wordEntry) {
 export function getTargetMeaningDetailed(wordEntry) {
   _ensureGlossIndex();
   const gloss = _glossById.get(wordEntry.wordId);
+  if (wordEntry?.meaningDetailedZh) return wordEntry.meaningDetailedZh;
   if (gloss && gloss.meaningDetailedZh) return gloss.meaningDetailedZh;
   // Fallback: quizSenses on the entry itself
   if (wordEntry.quizSenses && wordEntry.quizSenses.length > 0) {
@@ -87,7 +85,7 @@ export function getTargetGlossEntry(wordId) {
 }
 
 /**
- * Check if all 4500 words have gloss data.
+ * Check if all 6000 words have gloss data.
  */
 export function getGlossIndexStats() {
   _ensureGlossIndex();

@@ -1,10 +1,10 @@
-﻿// build-sense-relation-catalog.cjs — Build concept axis / value mapping for Meaning Mode.
+// build-sense-relation-catalog.cjs — Build concept axis / value mapping for Meaning Mode.
 // Maps words to meaning dimensions (importance, size, speed, etc.) with specific values.
 const fs = require("fs");
 const path = require("path");
-const ROOT = "C:/Users/Administrator/Desktop/ielts-vocab-deepseek-edge-tts";
+const ROOT = path.resolve(__dirname, "../../..");
 const wordsData = JSON.parse(fs.readFileSync(path.join(ROOT,".static-export-cache/words.json"),"utf-8"));
-const meaningData = JSON.parse(fs.readFileSync(path.join(ROOT,"public/data/meaning-4500.json"),"utf-8"));
+const meaningData = JSON.parse(fs.readFileSync(path.join(ROOT,"public/data/meaning-6000.json"),"utf-8"));
 const allById = new Map();
 for (const w of wordsData.words) allById.set(w.wordId, w);
 
@@ -288,7 +288,7 @@ for (const item of meaningData.items) {
   if (!w) continue;
   stats.total++;
   const m = (w.meaning || "").trim();
-  const pos = npf(w.pos);
+  const pos = item.posFamily || npf(w.pos);
   const qs = w.quizSenses && w.quizSenses[0];
   const quizMeaning = qs ? qs.quizMeaningZh : m;
 

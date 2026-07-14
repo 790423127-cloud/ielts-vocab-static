@@ -4,22 +4,20 @@
  */
 import { cleanupBrowserCachesForVocab } from "./cache-cleanup.mjs";
 import { saveWordsToIndexedDB } from "./word-store.mjs";
+import {
+  safeLocalStorageGet as sharedLocalStorageGet,
+  safeLocalStorageRemove as sharedLocalStorageRemove,
+  safeLocalStorageSet as sharedLocalStorageSet
+} from "../browser-storage.mjs";
 
 export function fallback(value, text) {
   return value && String(value).trim() ? value : text;
 }
 
 export function formatSpeechSourceLabel(result = {}) {
-  if (result.realAudio || String(result.source || "").startsWith("real-")) {
-    if (String(result.source || "") === "real-commons" || /lingua|commons|wiktionary/i.test(String(result.provider || ""))) {
-      return "真人发音：Lingua Libre WAV";
-    }
-    return result.provider ? `真人发音：${result.provider}` : "真人发音：Lingua Libre WAV";
-  }
-  if (String(result.source || "").startsWith("edge-")) {
-    return "兜底发音";
-  }
-  return "发音";
+  // Product policy: only Edge fallback speech is used.
+  if (!result || result.source === "empty") return "发音";
+  return "兜底发音";
 }
 
 export function normalizeWord(word) {
@@ -883,7 +881,7 @@ export function getFormHint(form) {
 
 
 export function enrichDisplayFamily(familyList, wordMap, currentWord) {
-  const lookup = wordMap instanceof Map ? wordMap : buildLibraryWordMap([]);
+  const lookup = wordMap instanceof Map ? wordMap : new Map();
   return normalizeFamilyList(familyList)
     .map((entry) => {
       const repairedWord = repairBaseCandidate(cleanWordForLocalUse(entry.word));
@@ -905,37 +903,12 @@ export function enrichDisplayFamily(familyList, wordMap, currentWord) {
 
 
 
-export function getPosChinese(pos = "") {
-  const text = String(pos || "").trim().toLowerCase();
-
-  if (!text) return "";
-
-  if (/\bnoun\b|^n\.?$/.test(text)) return "名词";
-  if (/\bverb\b|^v\.?$/.test(text)) return "动词";
-  if (/\badjective\b|^adj\.?$/.test(text)) return "形容词";
-  if (/\badverb\b|^adv\.?$/.test(text)) return "副词";
-  if (/\bphrase\b|短语/.test(text)) return "短语";
-  if (/\bpreposition\b|^prep\.?$/.test(text)) return "介词";
-  if (/\bconjunction\b|^conj\.?$/.test(text)) return "连词";
-  if (/\bpronoun\b|^pron\.?$/.test(text)) return "代词";
-  if (/\barticle\b|冠词/.test(text)) return "冠词";
-  if (/\binterjection\b|^int\.?$/.test(text)) return "感叹词";
-
-  return "";
-}
-
-export function getPosDisplay(pos = "") {
-  const raw = String(pos || "").trim();
-
-  if (!raw) return "";
-
-  const chinese = getPosChinese(raw);
-
-  if (!chinese) return raw;
-  if (raw.includes(chinese)) return raw;
-
-  return `${raw} ${chinese}`;
-}
+export {
+  getPosChinese,
+  getPosDisplay,
+  getPosFamilyDisplay,
+  splitPosAtoms
+} from "./pos-display.mjs";
 
 
 export function parseLine(line) {

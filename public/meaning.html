@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f6f5" />
+  <title>看词选意思 · 核心6000 · 静态版</title>
+  <link rel="stylesheet" href="./assets/style.css?v=20260714_d27_action_dock_stability_v1" />
+  <style>
+    .hidden{display:none!important}
+    .meaning-wrap{max-width:720px;margin:0 auto;padding:8px 4px 24px}
+    .meaning-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .meaning-top a,.meaning-top button{text-decoration:none}
+    .meaning-card{background:#fff;border:1px solid #dce3df;border-radius:7px;box-shadow:0 10px 30px rgba(33,52,46,.07);padding:22px 20px;display:flex;flex-direction:column;gap:14px}
+    .meaning-word-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .meaning-word{font-size:40px;font-weight:800;color:#16352f;line-height:1.1;cursor:pointer}
+    .meaning-meta{color:#7a8694;font-weight:700;font-size:13px}
+    .opt-grid{display:grid;gap:10px}
+    .opt-btn{text-align:left;border:1px solid #dce3df;background:#fff;border-radius:7px;padding:14px;font-size:20px;font-weight:800;color:#213a4d;cursor:pointer;line-height:1.4}
+    .opt-btn:hover{border-color:#225f52}
+    .opt-btn.correct{background:#e5f2ed;border-color:#225f52;color:#225f52}
+    .opt-btn.wrong{background:#fff3ec;border-color:#e9bda8;color:#a94420}
+    .opt-btn:disabled{cursor:default;opacity:.95}
+    .result-line{font-weight:800;font-size:15px}
+    .result-line.ok{color:#176b58}
+    .result-line.bad{color:#b42318}
+    .detail{color:#4a5d68;font-size:14px;line-height:1.45}
+    .next-row{display:flex;gap:8px;flex-wrap:wrap}
+    .primary{border:0;border-radius:6px;background:#225f52;color:#fff;font-weight:800;padding:12px 18px;cursor:pointer}
+    .ghost{border:1px solid #dce3df;border-radius:6px;background:#fff;color:#225f52;font-weight:800;padding:12px 18px;cursor:pointer}
+    .stats{color:#7a8694;font-size:13px;font-weight:700}
+    .load-bar{height:8px;border-radius:999px;background:rgba(35,117,103,.12);overflow:hidden;margin-top:4px}
+    .load-fill{height:100%;width:38%;border-radius:999px;background:#237567}
+    .load-fill.is-active{animation:meaning-load-move 1.1s ease-in-out infinite}
+    @keyframes meaning-load-move{from{transform:translateX(-105%)}to{transform:translateX(270%)}}
+    @media(prefers-reduced-motion:reduce){.load-fill.is-active{width:52%;animation:none}}
+    .hint{color:#8a96a3;font-size:12px;font-weight:600;line-height:1.4}
+  </style>
+</head>
+<body>
+  <header class="static-brand-bar">
+    <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
+    <div class="static-session-context"><strong>看词选意思</strong><span>核心 6000</span></div>
+    <nav class="static-brand-nav" aria-label="主要学习模式">
+      <a class="active" href="./meaning.html">选义</a><a href="./spelling.html">拼写</a>
+    </nav>
+  </header>
+  <aside class="static-shell-sidebar" aria-label="学习导航"><nav><a href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a class="active" href="./meaning.html">选义</a></nav><div class="static-shell-divider"></div><span class="static-shell-label">专项学习</span><nav><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav></aside>
+  <main class="app meaning-wrap">
+    <div class="meaning-top">
+      <div>
+        <a href="./index.html" class="top-btn">← 主词库</a>
+        <a href="./basic.html" class="top-btn">零基础单词</a>
+        <a href="./spelling.html" class="top-btn">拼写训练</a>
+      </div>
+      <div class="stats" id="stats">看词选意思 · 核心6000</div>
+    </div>
+
+    <section class="meaning-card" id="card">
+      <div class="meaning-meta" id="phaseText">正在准备学习内容</div>
+      <div id="loadBar" class="load-bar">
+        <div id="loadFill" class="load-fill"></div>
+      </div>
+      <div class="meaning-word-row">
+        <button id="speakBtn" class="top-btn" type="button">🔊 发音</button>
+        <div class="meaning-word" id="word" title="点击发音">—</div>
+      </div>
+      <div class="meaning-meta" id="posLine"></div>
+      <div class="opt-grid" id="options"></div>
+      <div id="resultBox" class="hidden">
+        <div id="resultLine" class="result-line"></div>
+        <div id="detailLine" class="detail"></div>
+        <div class="next-row" style="margin-top:10px">
+          <button id="nextBtn" class="primary" type="button">下一题 →</button>
+        </div>
+      </div>
+      <div class="next-row">
+        <button id="startBtn" class="primary" type="button">开始训练</button>
+        <button id="resetBtn" class="ghost" type="button">清空进度</button>
+      </div>
+      <div class="hint">键盘：1–4 选答案 · Tab 发音 · 空格/回车 下一题 · 答对自动跳转</div>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="./assets/meaning-static.js?v=20260714_d29_stable_loading_v1"></script>
+</body>
+</html>

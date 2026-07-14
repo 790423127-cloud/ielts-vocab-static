@@ -25,9 +25,11 @@ async function readJsonCount(relativePath) {
 
 export async function GET() {
   try {
-    const [phraseCount, lrSynonymCount] = await Promise.all([
+    const [phraseCount, lrSynonymCount, basicWordCount, readingGCount] = await Promise.all([
       readJsonCount("phrases.json"),
-      readJsonCount("listening-reading-synonyms.json")
+      readJsonCount("listening-reading-synonyms.json"),
+      readJsonCount("basic-words.json"),
+      readJsonCount("reading-g-vocab.json")
     ]);
 
     return Response.json(
@@ -35,9 +37,13 @@ export async function GET() {
         ok: true,
         phraseCount,
         lrSynonymCount,
+        basicWordCount,
+        readingGCount,
         sources: {
           phrases: "/data/phrases.json",
-          lrSynonyms: "/data/listening-reading-synonyms.json"
+          lrSynonyms: "/data/listening-reading-synonyms.json",
+          basicWords: "/data/basic-words.json",
+          readingG: "/data/reading-g-vocab.json"
         }
       },
       {

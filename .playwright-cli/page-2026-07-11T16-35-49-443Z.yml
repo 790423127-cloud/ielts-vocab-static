@@ -1,0 +1,63 @@
+- generic [active] [ref=f5e1]:
+  - banner [ref=f5e2]:
+    - generic [ref=f5e3]: IELTS VOCAB
+    - generic [ref=f5e6]:
+      - generic [ref=f5e7]:
+        - strong [ref=f5e8]: 中级核心词汇
+        - generic [ref=f5e9]: 17 / 6506
+      - generic [ref=f5e10]: 今日 24 / 50
+    - generic [ref=f5e14]:
+      - button "搜索" [ref=f5e15] [cursor=pointer]
+      - button "字号" [ref=f5e19] [cursor=pointer]
+      - button "更多" [ref=f5e22] [cursor=pointer]
+  - main [ref=f5e28]:
+    - generic [ref=f5e30]:
+      - generic [ref=f5e31]:
+        - generic [ref=f5e32]: 刷词 · 当前项目
+        - generic [ref=f5e33]:
+          - button "收藏" [ref=f5e34] [cursor=pointer]
+          - button "学习概览" [ref=f5e37] [cursor=pointer]
+          - button "更多" [ref=f5e41] [cursor=pointer]
+      - generic [ref=f5e46]:
+        - button "播放例句" [ref=f5e47] [cursor=pointer]
+        - paragraph [ref=f5e52]:
+          - text: There is a
+          - emphasis [ref=f5e53]: vacancy
+          - text: for a receptionist.
+        - paragraph [ref=f5e54]: 有一个接待员的职位空缺。
+      - generic [ref=f5e56]:
+        - heading "vacancy" [level=1] [ref=f5e57]
+        - generic [ref=f5e58]: /ˈveɪkənsi/ · noun
+        - generic [ref=f5e59]: 空缺；空位
+      - region "词典详情" [ref=f5e60]:
+        - generic [ref=f5e61]:
+          - button "变形" [ref=f5e62] [cursor=pointer]
+          - button "词族" [ref=f5e63] [cursor=pointer]
+          - button "常见搭配" [ref=f5e64] [cursor=pointer]
+          - button "近义辨析" [ref=f5e65] [cursor=pointer]
+          - button "例句" [ref=f5e66] [cursor=pointer]
+        - generic [ref=f5e67]:
+          - generic [ref=f5e68]:
+            - generic [ref=f5e69]: 复数
+            - strong [ref=f5e70]: vacancies
+          - generic [ref=f5e71]:
+            - generic [ref=f5e72]: 形容词
+            - strong [ref=f5e73]: vacant
+          - generic [ref=f5e74]:
+            - generic [ref=f5e75]: 动词
+            - strong [ref=f5e76]: vacate
+          - generic [ref=f5e77]:
+            - generic [ref=f5e78]: 过去式
+            - strong [ref=f5e79]: vacated
+    - generic [ref=f5e80]:
+      - button "上一个" [ref=f5e81] [cursor=pointer]
+      - button "不熟悉" [ref=f5e82] [cursor=pointer]
+      - generic [ref=f5e83]: 17 / 6506
+      - button "熟悉" [ref=f5e87] [cursor=pointer]
+      - button "下一个" [ref=f5e88] [cursor=pointer]
+    - navigation "移动端导航" [ref=f5e89]:
+      - button "刷词" [ref=f5e90] [cursor=pointer]
+      - button "拼写" [ref=f5e94] [cursor=pointer]
+      - button "选义" [ref=f5e99] [cursor=pointer]
+      - button "错词" [ref=f5e104] [cursor=pointer]
+      - button "我的" [ref=f5e110] [cursor=pointer]

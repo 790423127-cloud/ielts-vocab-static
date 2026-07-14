@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import path from "path";
 import { spawn } from "child_process";
 import {
@@ -27,10 +27,42 @@ export function pronunciationCachePath() {
   return path.join(cacheDir(), "pronunciation-cache.json");
 }
 
+let audioIndexMemo = {
+  file: "",
+  mtimeMs: -1,
+  size: -1,
+  value: null
+};
+
+function isAudioIndexFile(file) {
+  return path.resolve(String(file || "")) === path.resolve(audioIndexPath());
+}
+
 export function readJson(file, fallback = {}) {
   try {
     if (!existsSync(file)) return fallback;
-    return JSON.parse(readFileSync(file, "utf-8") || JSON.stringify(fallback));
+    const memoized = isAudioIndexFile(file);
+    const stat = memoized ? statSync(file) : null;
+    if (
+      memoized &&
+      audioIndexMemo.file === file &&
+      audioIndexMemo.mtimeMs === stat.mtimeMs &&
+      audioIndexMemo.size === stat.size &&
+      audioIndexMemo.value
+    ) {
+      return audioIndexMemo.value;
+    }
+
+    const value = JSON.parse(readFileSync(file, "utf-8") || JSON.stringify(fallback));
+    if (memoized) {
+      audioIndexMemo = {
+        file,
+        mtimeMs: stat.mtimeMs,
+        size: stat.size,
+        value
+      };
+    }
+    return value;
   } catch {
     return fallback;
   }
@@ -39,14 +71,23 @@ export function readJson(file, fallback = {}) {
 export function writeJson(file, data) {
   try {
     writeFileSync(file, JSON.stringify(data, null, 2), "utf-8");
+    if (isAudioIndexFile(file)) {
+      const stat = statSync(file);
+      audioIndexMemo = {
+        file,
+        mtimeMs: stat.mtimeMs,
+        size: stat.size,
+        value: data
+      };
+    }
   } catch {}
 }
 
 export function normalizeAudioKey(value) {
   return String(value || "")
     .toLowerCase()
-    .replace(/[鈥欌€榏]/g, "'")
-    .replace(/[鈥溾€漖]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -606,19 +647,14 @@ export function lookupCachedAudioEntry(text, index = {}, options = {}) {
   const filepath = path.join(cacheDir(), indexed.filename);
   if (!existsSync(filepath)) return null;
 
+  // Edge-only: never serve real-person cache through the public audio file API.
   if (indexed.realAudio) {
-    if (isValidCachedRealAudioEntry(indexed, cleanText, kind)) return indexed;
     return null;
   }
 
-  if (
-    !indexed.realAudio &&
-    indexed.realAudioVersion === REAL_AUDIO_CACHE_VERSION
-  ) {
-    return indexed;
-  }
-
-  return null;
+  // realAudioVersion describes the retired real-voice lookup policy, not the
+  // validity of an Edge cache file. Legacy Edge entries remain safe to reuse.
+  return indexed;
 }
 
 export function resolveReadableAudioEntry(text, index = {}, options = {}) {
@@ -729,19 +765,11 @@ export async function ensureEdgeAudio(text, audioIndex, options = {}) {
   if (!cleanText) return { ok: false, source: "none" };
 
   const key = normalizeAudioKey(cleanText);
-  const preservedReal = getReadableRealAudioEntry(key, audioIndex);
 
-  if (preservedReal) {
-    return {
-      ok: true,
-      source: preservedReal.source || "real-cache",
-      filename: preservedReal.filename,
-      contentType: preservedReal.contentType || "audio/mpeg"
-    };
-  }
-
+  // Edge-only product policy: never short-circuit to real-person audio.
+  // Words / phrases / sentences all use the same voice + rate.
   const voice = options.voice || "en-US-AriaNeural";
-  const rate = options.rate || (kind === "sentence" ? "-8%" : "-12%");
+  const rate = options.rate || "-10%";
   const filename = `${hashText("edge", voice, rate, cleanText)}.mp3`;
   const filepath = path.join(cacheDir(), filename);
 

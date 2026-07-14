@@ -26,24 +26,25 @@ export function pickEnglishVoice(voices = []) {
   return englishVoices[0] || voices.find((voice) => /english/i.test(voice.name)) || null;
 }
 
-/** Background warmup/preload: edge fallback only, never block on remote real lookup. */
-export const SPEECH_WARM_OPTIONS = { preferReal: false };
+/**
+ * Single speech policy for the whole product:
+ * Edge TTS fallback only — words, phrases, and example sentences all share it.
+ * Real-person (Lingua Libre / commons) audio is disabled to avoid mixed rules.
+ */
+export const SPEECH_EDGE_ONLY_OPTIONS = Object.freeze({ preferReal: false });
 
-/** Backward-compatible alias used by existing imports/tests. */
-export const SPEECH_FAST_OPTIONS = SPEECH_WARM_OPTIONS;
+/** @deprecated alias — always edge-only */
+export const SPEECH_WARM_OPTIONS = SPEECH_EDGE_ONLY_OPTIONS;
 
-export function resolveSpeechFetchOptions(kind = "word", purpose = "play") {
-  if (purpose === "warm" || purpose === "preload") {
-    return SPEECH_WARM_OPTIONS;
-  }
+/** @deprecated alias — always edge-only */
+export const SPEECH_FAST_OPTIONS = SPEECH_EDGE_ONLY_OPTIONS;
 
-  // Example sentences are long; use edge/commons path instead of dictionary lookup.
-  if (kind === "sentence") {
-    return { preferReal: false };
-  }
-
-  // Words and phrases: real voice first, edge only as fallback.
-  return { preferReal: true };
+/**
+ * Unified fetch options. kind/purpose kept for call-site compatibility;
+ * always edge-only regardless of word vs sentence.
+ */
+export function resolveSpeechFetchOptions(_kind = "word", _purpose = "play") {
+  return SPEECH_EDGE_ONLY_OPTIONS;
 }
 
 const speechAudioCache = new Map();
@@ -58,8 +59,9 @@ function isBlobUrl(url) {
   return typeof url === "string" && url.startsWith("blob:");
 }
 
-function speechCacheKey(cleanText, kind, options = {}) {
-  return `${kind}:${cleanText}:${options.preferReal === false ? "warm" : "real-first"}`;
+function speechCacheKey(cleanText, kind, _options = {}) {
+  // One cache lane for all playback (edge-only).
+  return `${kind}:${cleanText}:edge-only`;
 }
 
 export function resolveAudioCacheToken(headers = {}) {
@@ -96,6 +98,7 @@ export function buildAudioFileUrl(text, kind = "word", options = {}) {
 export function withAudioCacheToken(url, cacheToken = "") {
   const token = String(cacheToken || "").trim();
   if (!url || !token) return url || "";
+  if (isBlobUrl(url)) return url;
 
   const [pathname, search = ""] = String(url).split("?");
   const params = new URLSearchParams(search);
@@ -127,23 +130,32 @@ function buildSpeechResultFromHeaders(url, headers) {
   };
 }
 
+async function responseAudioObjectUrl(response) {
+  const blob = await response.blob();
+  if (!blob.size) return "";
+  return URL.createObjectURL(blob);
+}
+
 async function tryFetchCachedAudioFile(cleanText, kind, options = {}) {
-  const directUrl = buildAudioFileUrl(cleanText, kind, options);
+  const directUrl = buildAudioFileUrl(cleanText, kind, { ...options, preferReal: false });
 
   try {
-    const headRes = await fetch(directUrl, {
-      method: "HEAD",
+    const audioRes = await fetch(directUrl, {
+      cache: "force-cache",
       signal: options.signal
     });
-    if (!headRes.ok) return null;
+    if (audioRes.status === 204 || audioRes.status === 404 || audioRes.headers.get("X-Audio-Cache") === "miss") {
+      return null;
+    }
+    if (!audioRes.ok) return null;
 
-    const realAudio = headRes.headers.get("X-Audio-Real") === "1";
-    if (options.preferReal !== false && !realAudio) {
-      // Warmup may have indexed edge fallback first; playback should still upgrade to real audio.
+    // Never reuse real-person cache for playback.
+    if (audioRes.headers.get("X-Audio-Real") === "1") {
       return null;
     }
 
-    return buildSpeechResultFromHeaders(directUrl, headRes.headers);
+    const objectUrl = await responseAudioObjectUrl(audioRes);
+    return objectUrl ? buildSpeechResultFromHeaders(objectUrl, audioRes.headers) : null;
   } catch {
     return null;
   }
@@ -155,7 +167,11 @@ export async function fetchSpeechAudioResult(text, kind = "word", options) {
     return { url: "", source: "empty", provider: "", realAudio: false, audioEnhanced: false };
   }
 
-  const resolvedOptions = options ?? resolveSpeechFetchOptions(kind, "play");
+  // Force edge-only even if a caller still passes preferReal:true.
+  const resolvedOptions = {
+    ...(options ?? resolveSpeechFetchOptions(kind, "play")),
+    preferReal: false
+  };
   const cacheKey = speechCacheKey(cleanText, kind, resolvedOptions);
   if (speechAudioCache.has(cacheKey)) {
     return speechAudioCache.get(cacheKey);
@@ -182,7 +198,7 @@ export async function fetchSpeechAudioResult(text, kind = "word", options) {
       body: JSON.stringify({
         text: cleanText,
         kind,
-        preferReal: resolvedOptions.preferReal !== false
+        preferReal: false
       })
     });
 
@@ -191,15 +207,21 @@ export async function fetchSpeechAudioResult(text, kind = "word", options) {
       throw new Error(data?.error || data?.detail || "发音音频生成失败");
     }
 
+    // If server still marks real (legacy), treat as unusable and report edge miss.
+    if (res.headers.get("X-Audio-Real") === "1") {
+      throw new Error("服务返回了真人发音缓存，已禁用；请重试生成兜底发音");
+    }
+
     const cacheToken = resolveAudioCacheToken(res.headers);
+    const objectUrl = await responseAudioObjectUrl(res);
     const result = {
-      url: withAudioCacheToken(
-        buildAudioFileUrl(cleanText, kind, resolvedOptions),
-        cacheToken
-      ),
-      source: res.headers.get("X-Audio-Source") || "cache",
-      provider: res.headers.get("X-Audio-Provider") || "",
-      realAudio: res.headers.get("X-Audio-Real") === "1",
+      url: objectUrl || withAudioCacheToken(
+          buildAudioFileUrl(cleanText, kind, { preferReal: false }),
+          cacheToken
+        ),
+      source: res.headers.get("X-Audio-Source") || "edge-cache",
+      provider: res.headers.get("X-Audio-Provider") || "edge-tts",
+      realAudio: false,
       audioEnhanced: res.headers.get("X-Audio-Enhanced") === "1",
       cacheToken
     };

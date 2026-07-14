@@ -2,7 +2,7 @@
    Aligned with main flashcard page visual style. */
 
 .page {
-  min-height: 100dvh;
+  min-height: calc(100dvh - var(--study-header-height, 76px));
   display: flex;
   flex-direction: column;
   padding: clamp(12px, 2.4vw, 24px) clamp(14px, 4vw, 38px) clamp(12px, 2vw, 18px);
@@ -282,8 +282,8 @@
   background: rgba(255, 255, 255, .82);
   border: 1px solid #dde3ea;
   color: #26384b;
-  font-size: calc(15px * var(--font-scale));
-  font-weight: 550;
+  font-size: calc(18px * var(--font-scale));
+  font-weight: 750;
   cursor: pointer;
   transition: all .15s ease;
   text-align: center;
@@ -329,9 +329,10 @@
 }
 
 .optionZh {
-  font-size: calc(15px * var(--font-scale));
-  font-weight: 600;
-  color: #26384b;
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 800;
+  color: #1c3344;
+  line-height: 1.4;
 }
 
 .optionEn {
@@ -743,9 +744,10 @@
 }
 
 .feedbackSenseText {
-  font-size: calc(15px * var(--font-scale));
-  color: #26384b;
-  line-height: 1.5;
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 800;
+  color: #1c3344;
+  line-height: 1.45;
 }
 
 /* ─── Feedback Tools ─── */
@@ -883,5 +885,376 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     align-items: start;
+  }
+}
+
+/* Stable study tracks for large displays and enlarged text. */
+@media (min-width: 1100px) {
+  .topbar {
+    width: min(100%, 1100px);
+  }
+
+  .centerWrap {
+    max-width: 680px;
+  }
+
+  .cardWrap,
+  .bottomBar {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1100px) and (min-height: 800px) {
+  .centerWrap {
+    justify-content: flex-start;
+    padding-top: clamp(64px, 9vh, 104px);
+  }
+
+  .questionWrap {
+    justify-content: flex-start;
+    padding-top: clamp(38px, 5vh, 64px);
+    padding-bottom: 24px;
+  }
+}
+
+.pillLink,
+.startBtn,
+.resetBtn,
+.optionBtn,
+.optionBtnResult,
+.nextBtn,
+.diagnosticBtn {
+  height: auto;
+  min-height: 40px;
+}
+
+.exampleText {
+  font-size: calc(clamp(18px, var(--example-en-size), 30px) * var(--font-scale));
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+}
+
+/* C2 Mature Immersive */
+.page {
+  --c2-bg: #f4f6f5;
+  --c2-surface: #ffffff;
+  --c2-green: #1f5e50;
+  --c2-green-strong: #225f52;
+  --c2-text: #213a4d;
+  --c2-muted: #75827d;
+  --c2-accent: #d76538;
+  --c2-border: #d7dfdb;
+  --c2-green-soft: #e8f0ed;
+  --c2-danger: #a94738;
+  min-height: calc(100dvh - var(--study-header-height, 76px));
+  padding: clamp(14px, 2vw, 24px) clamp(16px, 4vw, 48px) clamp(12px, 2vw, 20px);
+  gap: clamp(8px, 1.2vh, 14px);
+  background: var(--c2-bg);
+  color: var(--c2-text);
+}
+
+.topbar {
+  width: min(100%, 1120px);
+  min-height: 42px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--c2-border);
+}
+
+.pillLink {
+  min-width: 0;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--c2-green);
+  font-weight: 700;
+}
+
+.pillLink:hover {
+  background: transparent;
+  color: var(--c2-green-strong);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.topTitle,
+.readyTitle,
+.wordText,
+.statNum,
+.feedbackEnWord,
+.feedbackSenseText,
+.feedbackFormTitle {
+  color: var(--c2-text);
+}
+
+.topMeta,
+.loadingText,
+.readyDesc,
+.shortcutHint,
+.statLabel,
+.bottomInfo,
+.feedbackHint,
+.optionEn,
+.senseLabel,
+.feedbackLabel,
+.feedbackSenseTitle {
+  color: var(--c2-muted);
+}
+
+.cardWrap {
+  max-width: min(100%, 1040px);
+}
+
+.questionWrap {
+  justify-content: center;
+  padding-block: clamp(28px, 8vh, 96px);
+}
+
+.card {
+  gap: clamp(16px, 2.4vh, 24px);
+  padding: clamp(18px, 3vw, 34px) 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.sourceBadge,
+.posPill {
+  padding: 3px 8px;
+  border: 1px solid #cbd9d4;
+  border-radius: 6px;
+  background: var(--c2-green-soft);
+  color: var(--c2-green);
+}
+
+.wordText {
+  letter-spacing: 0;
+}
+
+.audioBtn,
+.exampleAudioBtn {
+  border-color: var(--c2-border);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--c2-green);
+}
+
+.audioBtn:hover,
+.exampleAudioBtn:hover {
+  background: var(--c2-green-soft);
+}
+
+.optionsGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.optionBtn,
+.optionBtnResult {
+  border: 1px solid var(--c2-border);
+  border-radius: 7px;
+  background: var(--c2-surface);
+  color: var(--c2-text);
+  box-shadow: none;
+}
+
+.optionBtn {
+  min-height: 58px;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.optionBtn:hover {
+  background: var(--c2-green-soft);
+  border-color: var(--c2-green);
+  color: var(--c2-green-strong);
+}
+
+.optionCorrect,
+.resultCorrect {
+  background: var(--c2-green-soft);
+  border-color: #7ea99c;
+  color: var(--c2-green);
+}
+
+.optionWrong,
+.resultWrong {
+  background: #f8ebe8;
+  border-color: #d59b90;
+  color: var(--c2-danger);
+}
+
+.optionNeutral {
+  background: #fafbfa;
+  border-color: var(--c2-border);
+}
+
+.optionZh,
+.optionDetail,
+.optionDistinction,
+.senseText {
+  color: var(--c2-text);
+}
+
+.resultBadge {
+  border-radius: 6px;
+}
+
+.exampleCard,
+.senseDetail,
+.feedbackDetail,
+.feedbackForm {
+  border: 1px solid var(--c2-border);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .7);
+  box-shadow: none;
+}
+
+.exampleLabel,
+.feedbackCorrect,
+.feedbackSentMsg {
+  color: var(--c2-green);
+}
+
+.feedbackWrong {
+  color: var(--c2-danger);
+}
+
+.startBtn,
+.nextBtn {
+  border-radius: 7px;
+  background: var(--c2-accent);
+}
+
+.startBtn:hover,
+.nextBtn:hover {
+  background: #bd5630;
+}
+
+.resetBtn,
+.diagnosticBtn,
+.feedbackTrigger,
+.feedbackCancel {
+  border-color: var(--c2-border);
+  border-radius: 7px;
+  color: var(--c2-muted);
+  background: transparent;
+}
+
+.feedbackSubmit {
+  border-radius: 7px;
+  background: var(--c2-green);
+}
+
+.feedbackNote {
+  border-color: var(--c2-border);
+  border-radius: 7px;
+  color: var(--c2-text);
+  background: var(--c2-surface);
+}
+
+.bottomBar {
+  flex: 0 0 auto;
+  width: min(100%, 1040px);
+  max-width: none;
+  margin-top: auto;
+  padding: 10px 0 2px;
+  border-top: 1px solid var(--c2-border);
+  background: var(--c2-bg);
+}
+
+.progressBarWrap {
+  height: 4px;
+  border-radius: 2px;
+  background: #dce3e0;
+}
+
+.progressBarFill {
+  border-radius: 2px;
+  background: var(--c2-accent);
+}
+
+@media (min-width: 1440px) {
+  .topbar,
+  .cardWrap,
+  .bottomBar {
+    width: min(100%, 1180px);
+    max-width: 1180px;
+  }
+
+  .questionWrap {
+    padding-top: clamp(52px, 8vh, 112px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .topbar,
+  .cardWrap,
+  .bottomBar {
+    width: min(100%, 1320px);
+    max-width: 1320px;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 12px 16px calc(72px + env(safe-area-inset-bottom));
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+  }
+
+  .topTitle {
+    grid-column: 1 / -1;
+    order: initial;
+    min-width: 0;
+  }
+
+  .questionWrap {
+    padding-block: clamp(20px, 5vh, 48px);
+  }
+
+  .card {
+    padding-block: 14px;
+  }
+
+  .optionsGrid,
+  .resultWrap .optionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .optionBtn,
+  .optionBtnResult {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .bottomInfo {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 600px) and (min-resolution: 1dppx) {
+  .feedbackActions {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressBarFill,
+  .optionBtn,
+  .startBtn,
+  .nextBtn {
+    transition: none;
   }
 }

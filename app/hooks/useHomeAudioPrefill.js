@@ -547,7 +547,7 @@ export function useHomeAudioPrefill({
   }
 
   async function cleanupFallbackAudioCache() {
-    if (!confirm("删除所有兜底发音缓存？\n\n真人发音缓存会保留；之后缺失真人源的内容需要播放时才会重新临时生成兜底。")) return;
+    if (!confirm("删除所有兜底发音缓存？\n\n全站仅使用 Edge 兜底发音；删除后下次播放会重新生成。")) return;
 
     setLoading(true);
     setBatchInfo("正在删除兜底发音缓存...");

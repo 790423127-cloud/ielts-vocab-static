@@ -1,4 +1,4 @@
-﻿// session-simulation.test.mjs — 1000-question session simulation for Meaning Mode.
+// session-simulation.test.mjs — 1000-question session simulation for Meaning Mode.
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 import { readFileSync } from "node:fs";
@@ -9,7 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..", ".."); // __tests__ -> meaning-mode -> lib -> app -> root
 
 const wordsData = JSON.parse(readFileSync(join(ROOT, ".static-export-cache", "words.json"), "utf-8"));
-const meaningData = JSON.parse(readFileSync(join(ROOT, "public", "data", "meaning-4500.json"), "utf-8"));
+const meaningData = JSON.parse(readFileSync(join(ROOT, "public", "data", "meaning-6000.json"), "utf-8"));
 const idxMod = await import("file:///" + join(__dirname, "..", "semantic-distractor-index.mjs").replace(/\\/g, "/"));
 const SEMANTIC_INDEX = idxMod.SEMANTIC_INDEX;
 

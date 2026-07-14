@@ -55,7 +55,7 @@ test("homepage count equals valid synonym group count", () => {
   const source = fs.readFileSync(path.join(root, "app/page.jsx"), "utf8");
   assert.match(source, /LR_SYNONYM_URL/);
   assert.match(source, /asSynonymItems\(payload\)\.length/);
-  assert.match(source, /lrSynonymCount == null \? "加载中" : `\$\{lrSynonymCount\.toLocaleString\(\)\} 组`/);
+  assert.match(source, /lrSynonymCount == null \? "—" : `\$\{lrSynonymCount\.toLocaleString\(\)\} 组`/);
 });
 
 test("progress stores known and unknown in localStorage", () => {

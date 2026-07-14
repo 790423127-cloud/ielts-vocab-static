@@ -14,10 +14,15 @@ import {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 
-test("speech playback module balances normalized and edge clip loudness", () => {
-  assert.equal(resolveSpeechPlaybackOptions({ realAudio: true, audioEnhanced: true }, "word").gain, REAL_AUDIO_PLAYBACK_GAIN);
-  assert.equal(resolveSpeechPlaybackOptions({ source: "edge-generated" }, "sentence").gain, EDGE_SENTENCE_PLAYBACK_GAIN);
-  assert.ok(EDGE_SENTENCE_PLAYBACK_GAIN > REAL_AUDIO_PLAYBACK_GAIN);
+test("speech playback module uses one edge gain for word and sentence", () => {
+  const wordGain = resolveSpeechPlaybackOptions({ source: "edge-generated" }, "word").gain;
+  const sentenceGain = resolveSpeechPlaybackOptions({ source: "edge-generated" }, "sentence").gain;
+  const legacyReal = resolveSpeechPlaybackOptions({ realAudio: true, audioEnhanced: true }, "word");
+  assert.equal(wordGain, EDGE_SENTENCE_PLAYBACK_GAIN);
+  assert.equal(sentenceGain, EDGE_SENTENCE_PLAYBACK_GAIN);
+  assert.equal(legacyReal.gain, EDGE_SENTENCE_PLAYBACK_GAIN);
+  assert.equal(legacyReal.realAudio, false);
+  assert.equal(REAL_AUDIO_PLAYBACK_GAIN, EDGE_SENTENCE_PLAYBACK_GAIN);
 });
 
 test("frontend speech callers route playback through the shared playback module", () => {

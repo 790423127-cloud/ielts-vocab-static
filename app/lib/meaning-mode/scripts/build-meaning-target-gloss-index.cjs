@@ -1,6 +1,6 @@
-﻿// build-meaning-target-gloss-index.cjs
-// Reads words.json + meaning-4500.json, generates a browser-compatible gloss index
-// for all 4500 Meaning Mode target words.
+// build-meaning-target-gloss-index.cjs
+// Reads words.json + meaning-6000.json, generates a browser-compatible gloss index
+// for all 6000 Meaning Mode target words.
 // Usage: node app/lib/meaning-mode/scripts/build-meaning-target-gloss-index.cjs
 
 const fs = require("fs");
@@ -8,7 +8,7 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..", "..", "..", "..");
 const WORDS_PATH = path.join(ROOT, ".static-export-cache", "words.json");
-const MEANING_PATH = path.join(ROOT, "public", "data", "meaning-4500.json");
+const MEANING_PATH = path.join(ROOT, "public", "data", "meaning-6000.json");
 const DST = path.join(ROOT, "app", "lib", "meaning-mode", "meaning-target-gloss-index.generated.mjs");
 
 const wordsData = JSON.parse(fs.readFileSync(WORDS_PATH, "utf-8"));
@@ -26,7 +26,7 @@ for (const item of meaningData.items) {
     continue;
   }
   if (full.word !== item.word) {
-    console.error("WORD MISMATCH: " + item.wordId + " 4500=" + item.word + " full=" + full.word);
+    console.error("WORD MISMATCH: " + item.wordId + " 6000=" + item.word + " full=" + full.word);
     process.exit(1);
   }
 
@@ -75,8 +75,8 @@ if (missing > 0) {
 // Verify data quality
 let shortFallbackCount = 0;
 for (const e of entries) {
-  const from4500 = meaningData.items.find(m => m.wordId === e.wordId);
-  if (from4500 && e.quizMeaningZh === from4500.meaningZh && e.quizMeaningZh.length < 6) {
+  const from6000 = meaningData.items.find(m => m.wordId === e.wordId);
+  if (from6000 && e.quizMeaningZh === from6000.meaningZh && e.quizMeaningZh.length < 6) {
     shortFallbackCount++;
   }
 }

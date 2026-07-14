@@ -54,3 +54,14 @@ jobs:
         run: npm run test:e2e
         env:
           DEEPSEEK_API_KEY: ""
+
+      - name: Upload Playwright failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-${{ github.run_id }}
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7

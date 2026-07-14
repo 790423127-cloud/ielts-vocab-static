@@ -1,0 +1,47 @@
+word	action	reasonCode	set
+abolish	repair	KEEP_REPAIR	{"example":"The government abolished the outdated licensing rule.","exampleCn":"政府废除了过时的许可规定。","entryStatus":"second-semantic-review-20260714"}
+absorb	repair	KEEP_REPAIR	{"example":"Plants absorb water and nutrients through their roots.","exampleCn":"植物通过根部吸收水分和养分。","entryStatus":"second-semantic-review-20260714"}
+accumulate	repair	KEEP_REPAIR	{"example":"Dust can accumulate quickly in an unused room.","exampleCn":"灰尘会在无人使用的房间里迅速积聚。","entryStatus":"second-semantic-review-20260714"}
+activist	repair	KEEP_REPAIR	{"example":"Environmental activists protested against the proposed development.","exampleCn":"环保活动人士抗议拟议中的开发项目。","entryStatus":"second-semantic-review-20260714"}
+affect	repair	KEEP_REPAIR	{"example":"Poor air quality can affect people’s health.","exampleCn":"糟糕的空气质量会影响人们的健康。","entryStatus":"second-semantic-review-20260714"}
+alright	repair	KEEP_REPAIR	{"example":"It is alright with me if we leave early.","exampleCn":"我不介意我们早点离开。","entryStatus":"second-semantic-review-20260714","pos":"adjective/adverb/interjection","meaning":"好的；没问题；令人满意的","definition":"satisfactory, acceptable, or used to express agreement"}
+anti	repair	KEEP_REPAIR	{"example":"She is strongly anti-smoking and supports stricter rules.","exampleCn":"她强烈反对吸烟，并支持更严格的规定。","entryStatus":"second-semantic-review-20260714","pos":"adjective/noun/prefix","meaning":"反对的；反对者；反……","definition":"opposed to something; a person who is opposed; a prefix meaning against"}
+anxiety	repair	KEEP_REPAIR	{"example":"Exams can cause anxiety among many students.","exampleCn":"考试会使许多学生感到焦虑。","entryStatus":"second-semantic-review-20260714"}
+anyone	repair	KEEP_REPAIR	{"example":"Is anyone available to help at the reception desk?","exampleCn":"有人能在接待处帮忙吗？","entryStatus":"second-semantic-review-20260714"}
+appal	repair	KEEP_REPAIR	{"example":"The unsafe working conditions appalled the inspectors.","exampleCn":"不安全的工作条件令检查人员震惊。","entryStatus":"second-semantic-review-20260714"}
+arise	repair	KEEP_REPAIR	{"example":"Unexpected problems may arise during the renovation.","exampleCn":"翻修期间可能会出现意外问题。","entryStatus":"second-semantic-review-20260714"}
+austrian	repair	KEEP_REPAIR	{"example":"The Austrian visitor asked for information about the museum.","exampleCn":"这位奥地利游客询问了博物馆的信息。","entryStatus":"second-semantic-review-20260714","pos":"adjective/noun","meaning":"奥地利的；奥地利人","definition":"relating to Austria; a person from Austria"}
+awhile	repair	KEEP_REPAIR	{"example":"Please wait awhile while I check your booking.","exampleCn":"请稍等片刻，我核对一下您的预订。","entryStatus":"second-semantic-review-20260714"}
+barn	repair	KEEP_REPAIR	{"example":"The farmer stores hay and equipment in the barn.","exampleCn":"农民把干草和设备存放在谷仓里。","entryStatus":"second-semantic-review-20260714"}
+battery	repair	KEEP_REPAIR	{"example":"My phone battery needs to be charged tonight.","exampleCn":"我的手机电池今晚需要充电。","entryStatus":"second-semantic-review-20260714"}
+belong	repair	KEEP_REPAIR	{"example":"This suitcase belongs to a passenger on the next flight.","exampleCn":"这个行李箱属于下一班航班的一名乘客。","entryStatus":"second-semantic-review-20260714"}
+belonging	repair	KEEP_REPAIR	{"example":"Joining the club gave her a strong sense of belonging.","exampleCn":"加入俱乐部让她产生了强烈的归属感。","entryStatus":"second-semantic-review-20260714","pos":"noun/verb","meaning":"归属感；属于（belong的现在分词）","definition":"a feeling of being accepted as part of a group; the present participle of belong"}
+bless	repair	KEEP_REPAIR	{"example":"The priest blessed the couple before the ceremony ended.","exampleCn":"仪式结束前，牧师为这对新人祝福。","entryStatus":"second-semantic-review-20260714"}
+cable	repair	KEEP_REPAIR	{"example":"The technician replaced the damaged power cable.","exampleCn":"技术人员更换了损坏的电源线。","entryStatus":"second-semantic-review-20260714"}
+certainly	repair	KEEP_REPAIR	{"example":"I would certainly recommend this course to new staff.","exampleCn":"我肯定会向新员工推荐这门课程。","entryStatus":"second-semantic-review-20260714"}
+cherry	repair	KEEP_REPAIR	{"example":"She added a fresh cherry to the dessert.","exampleCn":"她在甜点上放了一颗新鲜樱桃。","entryStatus":"second-semantic-review-20260714","pos":"noun","meaning":"樱桃；樱桃树","definition":"a small round fruit with a stone, or the tree that produces it"}
+compensation	repair	KEEP_REPAIR	{"example":"Passengers received compensation for the cancelled flight.","exampleCn":"乘客因航班取消获得了赔偿。","entryStatus":"second-semantic-review-20260714"}
+confuse	repair	KEEP_REPAIR	{"example":"The unclear instructions confused several applicants.","exampleCn":"不清楚的说明让几名申请人感到困惑。","entryStatus":"second-semantic-review-20260714"}
+contemplate	repair	KEEP_REPAIR	{"example":"He contemplated changing jobs after the company moved.","exampleCn":"公司搬迁后，他考虑过换工作。","entryStatus":"second-semantic-review-20260714"}
+depress	repair	KEEP_REPAIR	{"example":"The long period of unemployment depressed him.","exampleCn":"长期失业使他感到沮丧。","entryStatus":"second-semantic-review-20260714"}
+discrimination	repair	KEEP_REPAIR	{"example":"The policy protects employees from workplace discrimination.","exampleCn":"该政策保护员工免受职场歧视。","entryStatus":"second-semantic-review-20260714","pos":"noun","meaning":"歧视；区别；辨别","definition":"unfair treatment based on a characteristic; the ability to recognize differences"}
+dissatisfy	repair	KEEP_REPAIR	{"example":"Repeated delays may dissatisfy even loyal customers.","exampleCn":"反复延误可能会让忠实顾客也感到不满。","entryStatus":"second-semantic-review-20260714","pos":"verb","meaning":"使不满意","definition":"to fail to satisfy someone"}
+downtown	repair	KEEP_REPAIR	{"example":"We took the bus downtown to visit the new library.","exampleCn":"我们乘公交车去市中心参观新图书馆。","entryStatus":"second-semantic-review-20260714","pos":"adverb/adjective/noun","meaning":"在市中心；市中心的；市中心","definition":"in, toward, or relating to the central business area of a city"}
+embarrass	repair	KEEP_REPAIR	{"example":"His careless comment embarrassed everyone at the meeting.","exampleCn":"他不谨慎的评论让会议上的所有人都很尴尬。","entryStatus":"second-semantic-review-20260714"}
+empower	repair	KEEP_REPAIR	{"example":"Training can empower employees to make better decisions.","exampleCn":"培训可以使员工有能力作出更好的决定。","entryStatus":"second-semantic-review-20260714"}
+endanger	repair	KEEP_REPAIR	{"example":"Illegal dumping can endanger wildlife and local residents.","exampleCn":"非法倾倒废物会危及野生动物和当地居民。","entryStatus":"second-semantic-review-20260714"}
+enforce	repair	KEEP_REPAIR	{"example":"The council must enforce the new parking regulations.","exampleCn":"市政委员会必须执行新的停车规定。","entryStatus":"second-semantic-review-20260714"}
+environmentalist	repair	KEEP_REPAIR	{"example":"The environmentalist spoke about protecting coastal habitats.","exampleCn":"这位环保人士谈到了保护沿海栖息地。","entryStatus":"second-semantic-review-20260714"}
+equation	repair	KEEP_REPAIR	{"example":"Students used the equation to calculate the total cost.","exampleCn":"学生们用这个方程计算总成本。","entryStatus":"second-semantic-review-20260714"}
+etc	repair	KEEP_REPAIR	{"example":"Please bring pens, paper, identification, etc.","exampleCn":"请携带钢笔、纸张、身份证明等物品。","entryStatus":"second-semantic-review-20260714","pos":"abbreviation","meaning":"等等","definition":"abbreviation of et cetera, meaning and other similar things"}
+evolve	repair	KEEP_REPAIR	{"example":"Public transport systems continue to evolve as cities grow.","exampleCn":"随着城市发展，公共交通系统不断演变。","entryStatus":"second-semantic-review-20260714"}
+excess	repair	KEEP_REPAIR	{"example":"The airline charges a fee for excess baggage.","exampleCn":"航空公司会对超重行李收费。","entryStatus":"second-semantic-review-20260714"}
+explicitly	repair	KEEP_REPAIR	{"example":"The notice explicitly states that refunds are unavailable.","exampleCn":"通知明确说明不提供退款。","entryStatus":"second-semantic-review-20260714"}
+explode	repair	KEEP_REPAIR	{"example":"The damaged battery could explode if it overheats.","exampleCn":"损坏的电池如果过热可能会爆炸。","entryStatus":"second-semantic-review-20260714"}
+fairly	repair	KEEP_REPAIR	{"example":"The manager promised to treat every applicant fairly.","exampleCn":"经理承诺公平对待每一位申请人。","entryStatus":"second-semantic-review-20260714"}
+fascinate	repair	KEEP_REPAIR	{"example":"The documentary fascinated viewers with its rare wildlife footage.","exampleCn":"这部纪录片以罕见的野生动物画面吸引了观众。","entryStatus":"second-semantic-review-20260714"}
+feather	repair	KEEP_REPAIR	{"example":"The bird used soft feathers to line its nest.","exampleCn":"这只鸟用柔软的羽毛铺垫鸟巢。","entryStatus":"second-semantic-review-20260714"}
+flare	repair	KEEP_REPAIR	{"example":"The conflict may flare up again without an agreement.","exampleCn":"如果没有达成协议，冲突可能再次突然加剧。","entryStatus":"second-semantic-review-20260714","pos":"noun/verb","meaning":"闪光；照明弹；突然燃烧；突然加剧","definition":"a sudden bright flame or burst; to burn suddenly or become more intense"}
+forward	repair	KEEP_REPAIR	{"example":"Please move forward when the next counter becomes available.","exampleCn":"下一个柜台空出时请向前移动。","entryStatus":"second-semantic-review-20260714"}
+fuel	repair	KEEP_REPAIR	{"example":"Cheap credit can fuel excessive consumer spending.","exampleCn":"低成本信贷可能会助长过度消费。","entryStatus":"second-semantic-review-20260714","pos":"noun/verb","meaning":"燃料；加油；加剧；推动","definition":"material used to produce energy; to supply fuel or intensify a process"}
+furthermore	repair	KEEP_REPAIR	{"example":"Furthermore, the total cost includes all delivery charges.","exampleCn":"此外，总费用包括所有配送费。","entryStatus":"second-semantic-review-20260714"}

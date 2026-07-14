@@ -14,7 +14,12 @@ export default defineConfig({
   expect: {
     timeout: 15_000
   },
-  reporter: process.env.CI ? "github" : "line",
+  reporter: process.env.CI
+    ? [
+        ["github"],
+        ["json", { outputFile: "test-results/results.json" }]
+      ]
+    : "line",
   use: {
     baseURL,
     trace: "retain-on-failure",

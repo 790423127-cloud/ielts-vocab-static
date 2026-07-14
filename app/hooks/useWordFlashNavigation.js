@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   getFilterName,
   wordMatchesFilter
@@ -42,43 +42,77 @@ export function useWordFlashNavigation({
       return;
     }
 
+    const currentIndex = latestStateRef.current?.index ?? index;
     setWords((prev) => {
+      if (!Number.isInteger(currentIndex) || !prev[currentIndex]) return prev;
       const next = [...prev];
-      next[index] = { ...next[index], ...patch };
+      next[currentIndex] = { ...next[currentIndex], ...patch };
       return next;
     });
   }
 
-  function nextWord() {
+  function navigationIndices(latest) {
+    const visibleStudyWords = Array.isArray(latest?.studyWords) ? latest.studyWords : [];
+
+    // 爱听写使用 10 亿偏移后的虚拟索引，必须保留 studyWords 中的 originalIndex。
+    if (visibleStudyWords.some((word) => word?.__idictationFlash)) {
+      return visibleStudyWords
+        .map((word) => word?.originalIndex)
+        .filter((value) => Number.isInteger(value));
+    }
+
+    // 普通主词库直接由最新 words + filter 生成数字索引队列。
+    // 不依赖派生单词对象上的 originalIndex，避免大词库渲染时索引丢失。
+    const sourceWords = Array.isArray(latest?.words) ? latest.words : [];
+    const activeFilter = latest?.filter || filter;
+    const indices = [];
+
+    for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
+      if (wordMatchesFilter(sourceWords[sourceIndex], activeFilter)) {
+        indices.push(sourceIndex);
+      }
+    }
+
+    if (indices.length) return indices;
+
+    // 兼容极短暂的词库加载阶段。
+    return visibleStudyWords
+      .map((word) => word?.originalIndex)
+      .filter((value) => Number.isInteger(value));
+  }
+
+  function applyNavigationIndex(latest, nextIndex) {
+    if (!Number.isInteger(nextIndex)) return false;
+
     studySessionRef.current.userAdjusted = true;
     studySessionRef.current.restoreTargetIndex = null;
     studySessionRef.current.persistBlocked = false;
-    const latest = latestStateRef.current;
-    if (!latest.studyWords?.length) return;
-
-    let position = latest.studyWords.findIndex((word) => word.originalIndex === latest.index);
-    if (position < 0) position = 0;
-    const next = latest.studyWords[(position + 1) % latest.studyWords.length];
-    const nextIndex = next.originalIndex;
+    studySessionRef.current.settling = false;
 
     latest.index = nextIndex;
-    startTransition(() => setIndex(nextIndex));
+    setIndex(nextIndex);
+    persistWordFlashSessionNow(nextIndex, latest.filter || filter, latest.words || words);
+    return true;
+  }
+
+  function nextWord() {
+    const latest = latestStateRef.current;
+    const queue = navigationIndices(latest);
+    if (!queue.length) return;
+
+    const position = queue.indexOf(latest.index);
+    const nextPosition = position < 0 ? 0 : (position + 1) % queue.length;
+    applyNavigationIndex(latest, queue[nextPosition]);
   }
 
   function prevWord() {
-    studySessionRef.current.userAdjusted = true;
-    studySessionRef.current.restoreTargetIndex = null;
-    studySessionRef.current.persistBlocked = false;
     const latest = latestStateRef.current;
-    if (!latest.studyWords?.length) return;
+    const queue = navigationIndices(latest);
+    if (!queue.length) return;
 
-    let position = latest.studyWords.findIndex((word) => word.originalIndex === latest.index);
-    if (position < 0) position = 0;
-    const prev = latest.studyWords[(position - 1 + latest.studyWords.length) % latest.studyWords.length];
-    const prevIndex = prev.originalIndex;
-
-    latest.index = prevIndex;
-    startTransition(() => setIndex(prevIndex));
+    const position = queue.indexOf(latest.index);
+    const prevPosition = position < 0 ? queue.length - 1 : (position - 1 + queue.length) % queue.length;
+    applyNavigationIndex(latest, queue[prevPosition]);
   }
 
   function markStatus(status) {
@@ -95,51 +129,45 @@ export function useWordFlashNavigation({
 
     const currentStatus = currentWord.status || "";
     const nextStatus = status === "不熟" && currentStatus === "不熟" ? "" : status;
+    const oldQueue = navigationIndices(latest);
+    const oldPosition = Math.max(0, oldQueue.indexOf(currentOriginalIndex));
 
-    const oldStudyWords = latest.studyWords?.length ? latest.studyWords : studyWords;
-    const oldPosition = Math.max(
-      0,
-      oldStudyWords.findIndex((word) => word.originalIndex === currentOriginalIndex)
-    );
+    const simulatedWords = latest.words.map((word, wordIndex) => (
+      wordIndex === currentOriginalIndex ? { ...word, status: nextStatus } : word
+    ));
+    const candidateIndices = [];
 
-    const simulatedStudyWords = oldStudyWords
-      .map((word) => (word.originalIndex === currentOriginalIndex ? { ...word, status: nextStatus } : word))
-      .filter((word) => wordMatchesFilter(word, filter));
-    const stillVisiblePosition = simulatedStudyWords.findIndex(
-      (word) => word.originalIndex === currentOriginalIndex
-    );
-    const candidateStudyWords = nextStatus === "熟悉"
-      ? simulatedStudyWords.filter((word) => word.originalIndex !== currentOriginalIndex)
-      : simulatedStudyWords;
+    for (let wordIndex = 0; wordIndex < simulatedWords.length; wordIndex += 1) {
+      if (nextStatus === "熟悉" && wordIndex === currentOriginalIndex) continue;
+      if (wordMatchesFilter(simulatedWords[wordIndex], filter)) candidateIndices.push(wordIndex);
+    }
 
     let targetIndex = currentOriginalIndex;
-    if (candidateStudyWords.length) {
-      let targetPosition;
-      if (nextStatus === "熟悉" || stillVisiblePosition < 0) {
-        targetPosition = Math.min(oldPosition, candidateStudyWords.length - 1);
-      } else {
-        targetPosition = (stillVisiblePosition + 1) % candidateStudyWords.length;
-      }
-      targetIndex = candidateStudyWords[targetPosition].originalIndex;
+    if (candidateIndices.length) {
+      const currentCandidatePosition = candidateIndices.indexOf(currentOriginalIndex);
+      const targetPosition =
+        nextStatus === "熟悉" || currentCandidatePosition < 0
+          ? Math.min(oldPosition, candidateIndices.length - 1)
+          : (currentCandidatePosition + 1) % candidateIndices.length;
+      targetIndex = candidateIndices[targetPosition];
     }
 
     studySessionRef.current.userAdjusted = true;
     studySessionRef.current.restoreTargetIndex = null;
     studySessionRef.current.persistBlocked = false;
+    studySessionRef.current.settling = false;
 
-    startTransition(() => {
-      setWords((prev) => {
-        const word = prev[currentOriginalIndex];
-        if (!word) return prev;
-        if (word.status === nextStatus) return prev;
-        return prev.toSpliced(currentOriginalIndex, 1, { ...word, status: nextStatus });
-      });
-
-      if (targetIndex !== currentOriginalIndex) {
-        latestStateRef.current.index = targetIndex;
-        setIndex(targetIndex);
-      }
+    setWords((prev) => {
+      const word = prev[currentOriginalIndex];
+      if (!word || word.status === nextStatus) return prev;
+      return prev.toSpliced(currentOriginalIndex, 1, { ...word, status: nextStatus });
     });
+
+    if (targetIndex !== currentOriginalIndex) {
+      latestStateRef.current.index = targetIndex;
+      setIndex(targetIndex);
+      persistWordFlashSessionNow(targetIndex, latest.filter || filter, simulatedWords);
+    }
 
     if (status === "熟悉") {
       setToast("已标记熟悉，并从所有学习词库隐藏");
@@ -166,6 +194,7 @@ export function useWordFlashNavigation({
     studySessionRef.current.userAdjusted = true;
     studySessionRef.current.restoreTargetIndex = null;
     studySessionRef.current.persistBlocked = false;
+    studySessionRef.current.settling = false;
 
     if (idictationFlashSourceKey) {
       if (studyWords.length < 2) {

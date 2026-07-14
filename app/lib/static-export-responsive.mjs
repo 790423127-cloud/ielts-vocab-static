@@ -204,7 +204,7 @@ export function readStoredZipEntries(input) {
 
     entries.push({
       name: buffer.subarray(filenameStart, filenameEnd).toString("utf8"),
-      data: Buffer.from(buffer.subarray(dataStart, dataEnd))
+      data: buffer.subarray(dataStart, dataEnd)
     });
     offset = dataEnd;
   }
@@ -252,18 +252,21 @@ export function createStoredZip(entries) {
 
 function patchEntry(entry) {
   const name = entry.name;
-  const text = entry.data.toString("utf8");
 
   if (name === "assets/style.css") {
+    const text = entry.data.toString("utf8");
     return { ...entry, data: Buffer.from(patchStaticCss(text), "utf8") };
   }
   if (name === "assets/app.js") {
+    const text = entry.data.toString("utf8");
     return { ...entry, data: Buffer.from(patchStaticAppJs(text), "utf8") };
   }
   if (name === "sw.js") {
+    const text = entry.data.toString("utf8");
     return { ...entry, data: Buffer.from(patchStaticServiceWorker(text), "utf8") };
   }
   if (/\.html$/i.test(name)) {
+    const text = entry.data.toString("utf8");
     return { ...entry, data: Buffer.from(patchStaticHtml(text), "utf8") };
   }
 

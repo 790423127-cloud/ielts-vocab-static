@@ -46,3 +46,24 @@ test("buildLearningEntryCounts tallies filters in one pass", () => {
   assert.equal(counts.get("ielts:Speaking"), 1);
   assert.equal(counts.get("everything"), 3);
 });
+
+test("buildLearningEntryCounts uses idictation metadata before the lazy payload loads", () => {
+  const entries = [
+    {
+      group: "爱听写独立入口",
+      items: [
+        { title: "爱听写听力", filter: { type: "idictation", value: "listening" } },
+        { title: "爱听写阅读", filter: { type: "idictation", value: "reading" } }
+      ]
+    }
+  ];
+
+  const counts = buildLearningEntryCounts([], entries, {
+    filterKey,
+    isIdictationFlashFilter: (filter) => filter?.type === "idictation",
+    getIdictationSource: () => null
+  });
+
+  assert.equal(counts.get("idictation:listening"), 3906);
+  assert.equal(counts.get("idictation:reading"), 3396);
+});

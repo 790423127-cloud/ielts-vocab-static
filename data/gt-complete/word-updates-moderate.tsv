@@ -1,0 +1,2 @@
+word	set	addSenses	addCollocations	addPhraseCollocations	addTopics	addIeltsUse	replaceSenses	auditNote
+moderate	"{""pos"":""adjective/verb"",""meaning"":""适度的；中等的；缓和；调节"",""meaningDetailedZh"":""适度的；中等的；缓和；调节""}"	"[{""gloss"":""缓和；调节；使不那么极端"",""posFamily"":""verb"",""label"":""真题语境义"",""confidence"":""high"",""evidence"":[""cambridge-gt-oymyakon""]}]"	"[{""phrase"":""moderating effect"",""chinese"":""调节作用；缓和作用""}]"		"[""G类完整学习计划"",""熟词生义"",""剑雅G类真题补义""]"	"[""Reading""]"		将真题中的moderating归并到词元moderate，不新建分词词条。

@@ -158,7 +158,7 @@ export function wordMatchesFilter(word, filter) {
   if (word.status === "熟悉") return false;
 
   if (filter.type === "custom" && filter.value === "life-work") return isLifeWorkWord(word);
-  if (filter.type === "ielts") return word.ieltsUse?.includes(filter.value);
+  if (filter.type === "ielts" || filter.type === "ieltsUse") return word.ieltsUse?.includes(filter.value);
   if (filter.type === "topic") return word.topics?.includes(filter.value);
   if (filter.type === "difficulty") return word.difficulty === filter.value;
 
@@ -170,7 +170,7 @@ export function getFilterName(filter) {
   if (filter.type === "everything") return "全部单词";
   if (filter.type === "custom" && filter.value === "life-work") return "生活/工作高频";
   if (isIdictationFlashFilter(filter)) return getIdictationSource(filter.value)?.label || "爱听写";
-  if (filter.type === "ielts") return `IELTS 用途：${filter.value}`;
+  if (filter.type === "ielts" || filter.type === "ieltsUse") return `IELTS 用途：${filter.value}`;
   if (filter.type === "topic") return `主题分类：${filter.value}`;
   if (filter.type === "difficulty") return `难度分类：${filter.value}`;
   if (filter.type === "status" && filter.value === "不熟") return "不熟词库";
@@ -268,5 +268,9 @@ export function buildFilteredWordIndices(pool, filter, search, { idictation = fa
 export function resolveStudyWordEntry(pool, poolIndex, wordByIndex) {
   if (poolIndex === undefined || poolIndex === null || poolIndex < 0) return null;
   if (wordByIndex) return wordByIndex.get(poolIndex) || null;
-  return pool[poolIndex] || null;
+
+  const word = pool[poolIndex];
+  if (!word) return null;
+  if (Number.isInteger(word.originalIndex)) return word;
+  return { ...word, originalIndex: poolIndex };
 }

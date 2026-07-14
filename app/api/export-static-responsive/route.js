@@ -1,5 +1,6 @@
 export const runtime = "nodejs";
 
+import { Buffer } from "node:buffer";
 import {
   GET as getOriginalStaticExport,
   POST as postOriginalStaticExport

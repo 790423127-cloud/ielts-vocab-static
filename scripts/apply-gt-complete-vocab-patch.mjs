@@ -22,7 +22,7 @@ const norm=value=>String(value||"").normalize("NFKC").trim().toLowerCase().repla
 const wordId=word=>`word_${hash("sha1",`headword:${norm(word)}`).slice(0,12)}`;
 const phraseId=word=>`phrase_${hash("sha1",norm(word)).slice(0,12)}`;
 const json=file=>JSON.parse(fs.readFileSync(file,"utf8"));
-function maybe(value,fallback){try{return String(value||"").trim()?JSON.parse(value):fallback;}catch{return fallback;}}
+function maybe(value,fallback){try{let text=String(value||"").trim();if(text.startsWith('"')&&text.endsWith('"'))text=text.slice(1,-1).replace(/""/g,'"');return text?JSON.parse(text):fallback;}catch{return fallback;}}
 function tsv(file){const lines=fs.readFileSync(file,"utf8").replace(/^\uFEFF/,"").split(/\r?\n/).filter(Boolean);if(!lines.length)return[];const heads=lines.shift().split("\t");return lines.map(line=>{const cells=line.split("\t");return Object.fromEntries(heads.map((h,i)=>[h,cells[i]??""]));});}
 const uniq=values=>[...new Set(values.map(v=>String(v||"").trim()).filter(Boolean))];
 const mergeStrings=(a,b)=>uniq([...(Array.isArray(a)?a:[]),...(Array.isArray(b)?b:[])]);

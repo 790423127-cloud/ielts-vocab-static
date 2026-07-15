@@ -58,3 +58,10 @@ test("same-part-of-speech senses do not repeat a contained meaning", () => {
   }
   assert.deepEqual(duplicates, []);
 });
+
+test("flashcard keeps only supplemental senses in the compact fixed panel", () => {
+  const source = fs.readFileSync(path.join(root, "app/components/SatelliteLexiconFlashcard.jsx"), "utf8");
+  assert.match(source, /const supplementalSenses = senses\.slice\(1\)/);
+  assert.match(source, /补充义项/);
+  assert.doesNotMatch(source, /完整义项/);
+});

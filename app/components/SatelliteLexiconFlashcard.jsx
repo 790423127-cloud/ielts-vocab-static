@@ -143,7 +143,8 @@ export default function SatelliteLexiconFlashcard({
   const progressLabel = isStudyEmpty
     ? "0 / 0"
     : `${safeStudyPosition + 1} / ${studyCount}`;
-  const senseCount = Array.isArray(item?.senses) ? item.senses.length : 0;
+  const senses = Array.isArray(item?.senses) ? item.senses : [];
+  const supplementalSenses = senses.slice(1);
   const selectFilter = (nextFilter) => {
     onFilter(nextFilter);
     document.querySelectorAll("details.menu[open]").forEach((menu) => {
@@ -757,36 +758,38 @@ export default function SatelliteLexiconFlashcard({
 
                 <div className="meaning-block">
                   <div className="meaning-primary">{fallback(item?.meaning, "等待释义")}</div>
-                  {isReadingG && senseCount > 1 ? (
+                  {isReadingG && supplementalSenses.length ? (
                     <div className={rgStyles.rgSensesWrap}>
-                      <div className={rgStyles.rgSensesLabel}>完整义项 · {senseCount}</div>
-                      <div className={rgStyles.rgSensesPanel} aria-label={`${senseCount} 个完整义项`}>
-                        {(item.senses || []).map((s, i) => {
-                          const repeatedExample = isRepeatedSenseExample(item.senses || [], i);
+                      <div className={rgStyles.rgSensesLabel}>补充义项 · {supplementalSenses.length}</div>
+                      <div
+                        className={rgStyles.rgSensesPanel}
+                        aria-label={`${supplementalSenses.length} 个补充义项`}
+                      >
+                        {supplementalSenses.map((s, i) => {
+                          const sourceIndex = i + 1;
+                          const repeatedExample = isRepeatedSenseExample(senses, sourceIndex);
+                          const example = s.example || s.exampleEn || "";
+                          const exampleZh = s.exampleCn || s.exampleZh || "";
+                          const hasUniqueExample = !repeatedExample && Boolean(example || exampleZh);
                           return (
-                            <div key={s.senseId || i} className={rgStyles.rgSenseRow}>
-                            <div>
-                              <strong>[{getPosDisplay(s.pos) || "—"}]</strong>{" "}
-                              {s.meaningZh || s.meaning || "—"}
-                              {i === 0 || s.isPrimary || s.readingCommon ? (
-                                <span className={rgStyles.rgSenseTag}>阅读常用</span>
+                            <div
+                              key={s.senseId || sourceIndex}
+                              className={rgStyles.rgSenseRow}
+                              data-has-example={hasUniqueExample ? "true" : "false"}
+                            >
+                              <div className={rgStyles.rgSenseMeaning}>
+                                <strong>[{getPosDisplay(s.pos) || "—"}]</strong>{" "}
+                                {s.meaningZh || s.meaning || "—"}
+                                {s.isPrimary || s.readingCommon ? (
+                                  <span className={rgStyles.rgSenseTag}>阅读常用</span>
+                                ) : null}
+                              </div>
+                              {hasUniqueExample ? (
+                                <div className={rgStyles.rgSenseExample}>
+                                  {example ? <div className={rgStyles.rgSenseExampleEn}>{example}</div> : null}
+                                  {exampleZh ? <div className={rgStyles.rgSenseExampleZh}>{exampleZh}</div> : null}
+                                </div>
                               ) : null}
-                            </div>
-                            {!repeatedExample && (s.example || s.exampleEn) ? (
-                              <div className={rgStyles.rgMetaLine}>
-                                {s.example || s.exampleEn}
-                              </div>
-                            ) : null}
-                            {!repeatedExample && (s.exampleCn || s.exampleZh) ? (
-                              <div className={rgStyles.rgMetaLine}>
-                                {s.exampleCn || s.exampleZh}
-                              </div>
-                            ) : null}
-                            {s.source || s.sourceFile ? (
-                              <div className={rgStyles.rgMetaLine}>
-                                来源：{s.source || s.sourceFile}
-                              </div>
-                            ) : null}
                             </div>
                           );
                         })}

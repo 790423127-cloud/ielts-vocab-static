@@ -209,6 +209,26 @@ export const LEARNING_ENTRIES = [
     ]
   },
   {
+    group: "G类完整学习计划",
+    items: [
+      {
+        title: "阶段1 · 核心理解",
+        desc: "G类阅读核心词和本轮真题精补词，目标是1至2秒内认出。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段1" }
+      },
+      {
+        title: "阶段2 · 扩展识别",
+        desc: "Section 2和Section 3扩展词，以阅读识别为主。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段2" }
+      },
+      {
+        title: "阶段4 · 专业参考",
+        desc: "真题专业词、专名和低频词，只需结合原文识别。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段4" }
+      }
+    ]
+  },
+  {
     group: "难度层级",
     items: [
       { title: "基础必会", desc: "必须快速认出，适合每天扫。", filter: { type: "difficulty", value: "基础高频" } },

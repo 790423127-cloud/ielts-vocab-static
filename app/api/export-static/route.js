@@ -258,7 +258,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260714_d27_action_dock_stability_v1";
+const STATIC_EXPORT_VERSION = "20260715_d30_laptop_height_v1";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -571,7 +571,7 @@ body{background:var(--bg)}
 
 /* D2.2 responsive density: tablet collapse + readable wide desktop. */
 @media(min-width:901px){
-  .app{height:calc(100svh - var(--workspace-header));min-height:calc(100svh - var(--workspace-header));overflow:hidden}
+  .app{height:auto;min-height:calc(100svh - var(--workspace-header));overflow:visible}
   .top,.bottom{width:min(1480px,100%);margin-inline:auto}
   .hero{width:min(1280px,100%);margin-inline:auto}
 }
@@ -589,6 +589,37 @@ body{background:var(--bg)}
   :root{--workspace-sidebar:260px}
   .top,.bottom{width:min(1760px,100%)}.hero{width:min(1500px,100%)}
   .word{font-size:128px}.example-en{font-size:46px}.basic-line{font-size:36px}
+}
+
+/* D2.4 laptop-height responsive hotfix.
+ * A desktop workspace may grow and scroll; the action dock must never cover the word.
+ */
+@media (min-width:901px) and (max-height:900px){
+  html,body{min-height:100%;overflow-x:hidden}
+  .app{height:auto;min-height:calc(100svh - var(--workspace-header));overflow:visible;padding-top:10px;padding-bottom:14px}
+  .top{min-height:0;padding-bottom:8px}
+  .hero{flex:0 0 auto;min-height:0;justify-content:flex-start;padding:12px 0 14px}
+  .star{width:30px;height:30px;margin-bottom:2px}
+  .sound-main{width:36px;height:36px;margin:2px 0 5px}
+  .word{font-size:clamp(52px,5.4vw,74px);line-height:.98}
+  .basic-line{margin-top:8px;font-size:clamp(18px,1.7vw,23px);line-height:1.3}
+  .load-info{margin-top:4px}
+  .swipe-hint{margin-top:4px}
+  .example-card{order:0;width:min(820px,100%);margin:14px auto 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:0}
+  .example-en{font-size:clamp(19px,1.75vw,26px);line-height:1.3}
+  .example-cn{margin-top:5px;font-size:14px;line-height:1.35}
+  .forms-box{margin-top:10px;padding:12px 14px}
+  .blocks{margin-bottom:8px}
+  .bottom{min-height:70px;padding:9px 16px}
+  .status{min-height:44px}
+}
+@media (min-width:901px) and (max-height:720px){
+  .app{padding-top:8px}
+  .hero{padding-top:8px}
+  .load-info,.swipe-hint{display:none}
+  .word{font-size:clamp(48px,5vw,64px)}
+  .example-card{margin-top:10px;padding-top:10px}
+  .bottom{min-height:64px}
 }
 
 /* D2.3 high-visibility study action dock. */
@@ -1293,6 +1324,8 @@ function syncResponsiveMode(){
 let topToolsViewport="";
 let topToolsCollapsed=false;
 function topToolsViewportKey(){
+  const compactDesktop=!!(window.matchMedia&&window.matchMedia("(min-width: 901px) and (max-height: 900px)").matches);
+  if(compactDesktop)return"compact-desktop";
   return window.matchMedia&&window.matchMedia("(max-width: 900px)").matches?"mobile":"desktop";
 }
 function applyTopToolsState(){
@@ -1305,7 +1338,7 @@ function syncTopToolsMode(force){
   if(!force&&viewport===topToolsViewport)return;
   topToolsViewport=viewport;
   const saved=localStorage.getItem(TOP_TOOLS_PREF_PREFIX+viewport);
-  topToolsCollapsed=saved===null?viewport==="mobile":saved==="1";
+  topToolsCollapsed=saved===null?(viewport==="mobile"||viewport==="compact-desktop"):saved==="1";
   applyTopToolsState();
 }
 

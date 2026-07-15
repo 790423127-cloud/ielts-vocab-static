@@ -1,7 +1,7 @@
 {
-  "version": "phrase-layer-v2-2971-excel-speaking-writing-v1-editorial-20260710",
+  "version": "phrase-layer-v3-3011-gt-complete-20260714",
   "generatedAt": "2026-06-27T15:45:09.960Z",
-  "count": 2971,
+  "count": 3011,
   "source": "public/data/phrases.json + Excel speaking/writing phrase import",
   "phrases": [
     {
@@ -1757,7 +1757,9 @@
         "04-因果目的影响与结果_93条",
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · vocabulary",
@@ -1781,7 +1783,8 @@
         "excel_aitingxie_writing_phrases",
         "excel_generic_202606271150_xlsx"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "give surname",
@@ -7932,7 +7935,9 @@
         "生活高频",
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · quantity",
@@ -7960,7 +7965,8 @@
       "meaningDetailSource": "deepseek-spelling-completion",
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "give your address",
@@ -8320,7 +8326,9 @@
         "12_写作连接补充与递进_6条",
         "阅读",
         "同义替换",
-        "c1~2"
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · transition",
@@ -8350,7 +8358,8 @@
         "excel_aitingxie_writing_phrases",
         "excel_generic_202606271150_xlsx"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "the cause of loneliness",
@@ -17064,7 +17073,9 @@
         "10_主题关系视角与范围_46条",
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS G类 · 副词短语",
@@ -17088,7 +17099,8 @@
         "excel_aitingxie_writing_phrases",
         "excel_generic_202606271150_xlsx"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "place with friendly people",
@@ -24373,7 +24385,9 @@
         "生活高频",
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · vocabulary",
@@ -24395,7 +24409,8 @@
       "phraseOrder": 411,
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "be based on",
@@ -29019,7 +29034,9 @@
         "阅读",
         "同义替换",
         "剑17 Test 2 下（已修订）",
-        "c9~10"
+        "c9~10",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · conjunction",
@@ -29044,7 +29061,8 @@
         "excel_generic_202606271150_xlsx",
         "excel_generic_202606271150_xlsx_c19_8"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "understanding of",
@@ -29261,7 +29279,9 @@
         "雅思写作词库",
         "10_主题关系视角与范围_46条",
         "阅读",
-        "剑19 Test 4 下（已修订）"
+        "剑19 Test 4 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "高级加分",
       "category": "IELTS G类 · 介词短语",
@@ -29286,7 +29306,8 @@
         "excel_generic_202606271150_xlsx",
         "excel_generic_202606271150_xlsx_c19_8"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "this is why",
@@ -30789,7 +30810,9 @@
         "社会",
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · IELTS General",
@@ -30811,7 +30834,8 @@
       "phraseOrder": 521,
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "deal with",
@@ -30859,7 +30883,9 @@
         "同义替换",
         "c3~4",
         "听力",
-        "p2"
+        "p2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · phrase",
@@ -30886,7 +30912,8 @@
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx",
         "excel_generic_202606271203_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "relationship between",
@@ -32451,7 +32478,9 @@
         "c9~10",
         "听力",
         "p6",
-        "p11"
+        "p11",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "AI整理 · 短语",
@@ -32480,7 +32509,8 @@
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx",
         "excel_generic_202606271203_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "useful measure",
@@ -34214,7 +34244,9 @@
         "教育",
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · vocabulary",
@@ -34236,7 +34268,8 @@
       "phraseOrder": 580,
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "be often said that",
@@ -34628,7 +34661,9 @@
         "01_研究数据证据与例子_93条",
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · IELTS Vocabulary",
@@ -34652,7 +34687,8 @@
         "excel_aitingxie_writing_phrases",
         "excel_generic_202606271150_xlsx"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "change the order",
@@ -36459,7 +36495,9 @@
         "c7~8",
         "听力",
         "p4",
-        "p13"
+        "p13",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · 固定搭配",
@@ -36496,7 +36534,8 @@
         "excel_generic_202606271150_xlsx",
         "excel_generic_202606271203_xlsx"
       ],
-      "speakingPriority": true
+      "speakingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "single room",
@@ -36835,7 +36874,9 @@
         "c1~2",
         "听力",
         "p5",
-        "p7"
+        "p7",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · conjunction",
@@ -36860,7 +36901,8 @@
         "excel_generic_202606271150_xlsx",
         "excel_generic_202606271203_xlsx"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "be a good example of",
@@ -42283,7 +42325,9 @@
         "01_研究数据证据与例子_93条",
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类",
@@ -42307,7 +42351,8 @@
         "excel_aitingxie_writing_phrases",
         "excel_generic_202606271150_xlsx"
       ],
-      "writingPriority": true
+      "writingPriority": true,
+      "gtPlanStage": 3
     },
     {
       "word": "research on research",
@@ -46104,7 +46149,9 @@
         "法律",
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS G类 · 通用",
@@ -46126,7 +46173,8 @@
       "phraseOrder": 786,
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "reserve a place",
@@ -46927,7 +46975,9 @@
         "社会",
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "基础高频",
       "category": "IELTS G类 · preposition",
@@ -46949,7 +46999,8 @@
       "phraseOrder": 800,
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "based on",
@@ -53640,7 +53691,9 @@
         "同义替换",
         "c1~2",
         "听力",
-        "p2"
+        "p2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS G类 · general",
@@ -53663,7 +53716,8 @@
       "excelSourceTags": [
         "excel_generic_202606271150_xlsx",
         "excel_generic_202606271203_xlsx"
-      ]
+      ],
+      "gtPlanStage": 3
     },
     {
       "word": "easy to carry",
@@ -77861,7 +77915,9 @@
         "04-因果目的影响与结果_93条",
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -77892,7 +77948,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 1320
+      "phraseOrder": 1320,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_2c63df82f9b2",
@@ -107027,7 +107084,9 @@
         "environment",
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -107058,7 +107117,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 1825
+      "phraseOrder": 1825,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_6a2fab6801ce",
@@ -112376,7 +112436,9 @@
         "Task 2 - 国际化与发展题材",
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -112407,7 +112469,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 1917
+      "phraseOrder": 1917,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_90a74f47cca7",
@@ -113138,7 +113201,9 @@
         "Task 2 - 政府政策题材",
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -113169,7 +113234,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 1930
+      "phraseOrder": 1930,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_78edbd2fc1cd",
@@ -113787,7 +113853,9 @@
         "Task 2 - 动物题材",
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -113818,7 +113886,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 1941
+      "phraseOrder": 1941,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_7d8e406b0c9d",
@@ -131385,7 +131454,9 @@
         "c1~2",
         "听力",
         "p7",
-        "p12"
+        "p12",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131417,7 +131488,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2247
+      "phraseOrder": 2247,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_0bb6267d560d",
@@ -131445,7 +131517,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c1~2"
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131475,7 +131549,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2248
+      "phraseOrder": 2248,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_e6d5f8f0ca6e",
@@ -131503,7 +131578,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c1~2"
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131533,7 +131610,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2249
+      "phraseOrder": 2249,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_03669909461f",
@@ -131561,7 +131639,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c1~2"
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131591,7 +131671,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2250
+      "phraseOrder": 2250,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_981ffe5faadc",
@@ -131619,7 +131700,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c1~2"
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131649,7 +131732,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2251
+      "phraseOrder": 2251,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_ec153694483b",
@@ -131683,7 +131767,9 @@
         "p6",
         "p7",
         "p8",
-        "p12"
+        "p12",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131715,7 +131801,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2252
+      "phraseOrder": 2252,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_3c2962a230ed",
@@ -131743,7 +131830,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c1~2"
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131773,7 +131862,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2253
+      "phraseOrder": 2253,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_4626fbe0a8dc",
@@ -131801,7 +131891,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c1~2"
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131831,7 +131923,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2254
+      "phraseOrder": 2254,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_cae504ae216e",
@@ -131859,7 +131952,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131889,7 +131984,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2255
+      "phraseOrder": 2255,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_054f0f86bd7f",
@@ -131917,7 +132013,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -131947,7 +132045,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2256
+      "phraseOrder": 2256,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_99a087724094",
@@ -131975,7 +132074,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132005,7 +132106,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2257
+      "phraseOrder": 2257,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_0353699cc1f5",
@@ -132033,7 +132135,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132063,7 +132167,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2258
+      "phraseOrder": 2258,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_bcfea9f848bc",
@@ -132091,7 +132196,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132121,7 +132228,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2259
+      "phraseOrder": 2259,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_9c20be5ecadf",
@@ -132152,7 +132260,9 @@
         "同义替换",
         "c3~4",
         "听力",
-        "p6"
+        "p6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132184,7 +132294,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2260
+      "phraseOrder": 2260,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_5f36c09ea258",
@@ -132212,7 +132323,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132242,7 +132355,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2261
+      "phraseOrder": 2261,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_26b8b592f6ba",
@@ -132270,7 +132384,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132300,7 +132416,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2262
+      "phraseOrder": 2262,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_21ea6bb957c3",
@@ -132328,7 +132445,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132358,7 +132477,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2263
+      "phraseOrder": 2263,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_9d4039fa86f7",
@@ -132386,7 +132506,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132416,7 +132538,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2264
+      "phraseOrder": 2264,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_17ad4b475d69",
@@ -132444,7 +132567,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132474,7 +132599,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2265
+      "phraseOrder": 2265,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_62ed21dfd246",
@@ -132502,7 +132628,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132532,7 +132660,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2266
+      "phraseOrder": 2266,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_4240428e10b5",
@@ -132560,7 +132689,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132590,7 +132721,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2267
+      "phraseOrder": 2267,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_52fa69d2d9ca",
@@ -132618,7 +132750,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132648,7 +132782,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2268
+      "phraseOrder": 2268,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_c9dde8b87fe2",
@@ -132676,7 +132811,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132706,7 +132843,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2269
+      "phraseOrder": 2269,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_7edc81187793",
@@ -132734,7 +132872,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132764,7 +132904,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2270
+      "phraseOrder": 2270,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_f9c3d3f7e8aa",
@@ -132792,7 +132933,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132822,7 +132965,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2271
+      "phraseOrder": 2271,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_2bf562accf5b",
@@ -132853,7 +132997,9 @@
         "同义替换",
         "c3~4",
         "听力",
-        "p2"
+        "p2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132885,7 +133031,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2272
+      "phraseOrder": 2272,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_a38f91217547",
@@ -132913,7 +133060,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -132943,7 +133092,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2273
+      "phraseOrder": 2273,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_d7efa2f7a9e1",
@@ -132971,7 +133121,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c3~4"
+        "c3~4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133001,7 +133153,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2274
+      "phraseOrder": 2274,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_2ce9ca466b77",
@@ -133029,7 +133182,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133059,7 +133214,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2275
+      "phraseOrder": 2275,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_f2f017416400",
@@ -133090,7 +133246,9 @@
         "同义替换",
         "c5~6",
         "听力",
-        "p7"
+        "p7",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133122,7 +133280,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2276
+      "phraseOrder": 2276,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_5ec7f486639b",
@@ -133150,7 +133309,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133180,7 +133341,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2277
+      "phraseOrder": 2277,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_90290ad775ac",
@@ -133208,7 +133370,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133238,7 +133402,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2278
+      "phraseOrder": 2278,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_bf4aa67e0a31",
@@ -133266,7 +133431,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133296,7 +133463,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2279
+      "phraseOrder": 2279,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_8677fcbda33d",
@@ -133324,7 +133492,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133354,7 +133524,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2280
+      "phraseOrder": 2280,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_9ceeccd389c5",
@@ -133381,7 +133552,9 @@
       ],
       "topics": [
         "阅读",
-        "同义替换"
+        "同义替换",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133411,7 +133584,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2281
+      "phraseOrder": 2281,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_b702aca84f82",
@@ -133439,7 +133613,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133469,7 +133645,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2282
+      "phraseOrder": 2282,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_ddf74783a656",
@@ -133498,7 +133675,9 @@
         "阅读",
         "同义替换",
         "剑 18 Test 3 上（已修订）",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133530,7 +133709,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2283
+      "phraseOrder": 2283,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_f28d567cf545",
@@ -133558,7 +133738,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133588,7 +133770,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2284
+      "phraseOrder": 2284,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_fa03720d52e9",
@@ -133622,7 +133805,9 @@
         "听力",
         "p6",
         "p7",
-        "p9"
+        "p9",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133654,7 +133839,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2285
+      "phraseOrder": 2285,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_b5b014b2fc90",
@@ -133682,7 +133868,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133712,7 +133900,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2286
+      "phraseOrder": 2286,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_1678109dd1e1",
@@ -133740,7 +133929,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133770,7 +133961,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2287
+      "phraseOrder": 2287,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_01342c6186b0",
@@ -133798,7 +133990,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133828,7 +134022,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2288
+      "phraseOrder": 2288,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_6e8a7ae34ba6",
@@ -133856,7 +134051,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133886,7 +134083,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2289
+      "phraseOrder": 2289,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_b87a18efd012",
@@ -133914,7 +134112,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -133944,7 +134144,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2290
+      "phraseOrder": 2290,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_ad692c28a560",
@@ -133972,7 +134173,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134002,7 +134205,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2291
+      "phraseOrder": 2291,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_de90c63738c7",
@@ -134030,7 +134234,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134060,7 +134266,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2292
+      "phraseOrder": 2292,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_3a3c8086399c",
@@ -134088,7 +134295,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134118,7 +134327,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2293
+      "phraseOrder": 2293,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_a8d6e6966f37",
@@ -134149,7 +134359,9 @@
         "同义替换",
         "c5~6",
         "听力",
-        "p4"
+        "p4",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134181,7 +134393,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2294
+      "phraseOrder": 2294,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_dc2a9e6da2f5",
@@ -134209,7 +134422,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c5~6"
+        "c5~6",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134239,7 +134454,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2295
+      "phraseOrder": 2295,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_49e2cb2c6e53",
@@ -134267,7 +134483,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134297,7 +134515,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2296
+      "phraseOrder": 2296,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_75d1c6b8dc8b",
@@ -134325,7 +134544,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134355,7 +134576,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2297
+      "phraseOrder": 2297,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_fd9305af828d",
@@ -134383,7 +134605,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134413,7 +134637,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2298
+      "phraseOrder": 2298,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_1ea6dbf5abaf",
@@ -134441,7 +134666,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134471,7 +134698,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2299
+      "phraseOrder": 2299,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_db4170a5e800",
@@ -134499,7 +134727,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134529,7 +134759,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2300
+      "phraseOrder": 2300,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_7106fc2760fb",
@@ -134557,7 +134788,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134587,7 +134820,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2301
+      "phraseOrder": 2301,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_0da71d46889b",
@@ -134615,7 +134849,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134645,7 +134881,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2302
+      "phraseOrder": 2302,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_803b3eb2b6af",
@@ -134673,7 +134910,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134703,7 +134942,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2303
+      "phraseOrder": 2303,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_373e55a6b67d",
@@ -134731,7 +134971,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c7~8"
+        "c7~8",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134761,7 +135003,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2304
+      "phraseOrder": 2304,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_a2c8bc5a8e53",
@@ -134789,7 +135032,9 @@
       "topics": [
         "阅读",
         "同义替换",
-        "c9~10"
+        "c9~10",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134819,7 +135064,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2305
+      "phraseOrder": 2305,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_c8e940c2511e",
@@ -134846,7 +135092,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 2 下（已修订）"
+        "剑19 Test 2 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134878,7 +135126,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2306
+      "phraseOrder": 2306,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_43610cef55cc",
@@ -134905,7 +135154,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 3 下（已修订）"
+        "剑19 Test 3 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134937,7 +135188,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2307
+      "phraseOrder": 2307,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_a925667f596d",
@@ -134964,7 +135216,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 3 下（已修订）"
+        "剑19 Test 3 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -134996,7 +135250,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2308
+      "phraseOrder": 2308,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_51fae022500d",
@@ -135023,7 +135278,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 4 上（已修订）"
+        "剑19 Test 4 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135055,7 +135312,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2309
+      "phraseOrder": 2309,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_25ad62676100",
@@ -135082,7 +135340,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 4 上（已修订）"
+        "剑19 Test 4 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135114,7 +135374,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2310
+      "phraseOrder": 2310,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_26c521a9c9cb",
@@ -135141,7 +135402,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 4 上（已修订）"
+        "剑19 Test 4 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135173,7 +135436,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2311
+      "phraseOrder": 2311,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_0a49a2c130d3",
@@ -135200,7 +135464,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 4 上（已修订）"
+        "剑19 Test 4 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135232,7 +135498,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2312
+      "phraseOrder": 2312,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_b7c6c1f6072a",
@@ -135259,7 +135526,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 4 上（已修订）"
+        "剑19 Test 4 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135291,7 +135560,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2313
+      "phraseOrder": 2313,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_eb72271a9ed0",
@@ -135318,7 +135588,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 4 下（已修订）"
+        "剑19 Test 4 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135350,7 +135622,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2314
+      "phraseOrder": 2314,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_d067915e3b85",
@@ -135377,7 +135650,9 @@
       ],
       "topics": [
         "阅读",
-        "剑19 Test 4 下（已修订）"
+        "剑19 Test 4 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135409,7 +135684,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2315
+      "phraseOrder": 2315,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_c0e5d6d93537",
@@ -135436,7 +135712,9 @@
       ],
       "topics": [
         "阅读",
-        "剑18 Test 2 上（已修订）"
+        "剑18 Test 2 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135468,7 +135746,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2316
+      "phraseOrder": 2316,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_43cb9732a380",
@@ -135495,7 +135774,9 @@
       ],
       "topics": [
         "阅读",
-        "剑18 Test 2 下（已修订）"
+        "剑18 Test 2 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135527,7 +135808,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2317
+      "phraseOrder": 2317,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_baea28534695",
@@ -135554,7 +135836,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 上（已修订）"
+        "剑 18 Test 3 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135586,7 +135870,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2318
+      "phraseOrder": 2318,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_750e6ac805eb",
@@ -135613,7 +135898,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 上（已修订）"
+        "剑 18 Test 3 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135645,7 +135932,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2319
+      "phraseOrder": 2319,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_686233169e40",
@@ -135672,7 +135960,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 上（已修订）"
+        "剑 18 Test 3 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135704,7 +135994,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2320
+      "phraseOrder": 2320,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_005aa7490fad",
@@ -135731,7 +136022,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 上（已修订）"
+        "剑 18 Test 3 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135763,7 +136056,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2321
+      "phraseOrder": 2321,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_60d25ddfa0ef",
@@ -135790,7 +136084,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 上（已修订）"
+        "剑 18 Test 3 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135822,7 +136118,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2322
+      "phraseOrder": 2322,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_e3c14a2879a9",
@@ -135849,7 +136146,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 上（已修订）"
+        "剑 18 Test 3 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135881,7 +136180,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2323
+      "phraseOrder": 2323,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_244f645d1f62",
@@ -135908,7 +136208,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 下（已修订）"
+        "剑 18 Test 3 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135940,7 +136242,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2324
+      "phraseOrder": 2324,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_834e7cf19091",
@@ -135967,7 +136270,9 @@
       ],
       "topics": [
         "阅读",
-        "剑 18 Test 3 下（已修订）"
+        "剑 18 Test 3 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -135999,7 +136304,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2325
+      "phraseOrder": 2325,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_ca1d3a603020",
@@ -136026,7 +136332,9 @@
       ],
       "topics": [
         "阅读",
-        "剑18 Test 4 下（已修订）"
+        "剑18 Test 4 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136058,7 +136366,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2326
+      "phraseOrder": 2326,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_e7956ffb424a",
@@ -136085,7 +136394,9 @@
       ],
       "topics": [
         "阅读",
-        "剑18 Test 4 下（已修订）"
+        "剑18 Test 4 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136117,7 +136428,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2327
+      "phraseOrder": 2327,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_34876e0be454",
@@ -136144,7 +136456,9 @@
       ],
       "topics": [
         "阅读",
-        "剑18 Test 4 下（已修订）"
+        "剑18 Test 4 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136176,7 +136490,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2328
+      "phraseOrder": 2328,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_41e920d33a7f",
@@ -136203,7 +136518,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 1 上（已修订）"
+        "剑17 Test 1 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136235,7 +136552,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2329
+      "phraseOrder": 2329,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_3c3d0c6e1fc9",
@@ -136262,7 +136580,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 上（已修订）"
+        "剑17 Test 2 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136294,7 +136614,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2330
+      "phraseOrder": 2330,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_1cf05f4ccbe3",
@@ -136321,7 +136642,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 上（已修订）"
+        "剑17 Test 2 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136353,7 +136676,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2331
+      "phraseOrder": 2331,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_a02bbdf9ea22",
@@ -136380,7 +136704,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 上（已修订）"
+        "剑17 Test 2 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136412,7 +136738,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2332
+      "phraseOrder": 2332,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_912d3fcb5099",
@@ -136439,7 +136766,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 上（已修订）"
+        "剑17 Test 2 上（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136471,7 +136800,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2333
+      "phraseOrder": 2333,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_5a0457ca6a05",
@@ -136498,7 +136828,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 下（已修订）"
+        "剑17 Test 2 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136530,7 +136862,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2334
+      "phraseOrder": 2334,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_b9ccbcad159c",
@@ -136557,7 +136890,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 下（已修订）"
+        "剑17 Test 2 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136589,7 +136924,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2335
+      "phraseOrder": 2335,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_16395254e6f1",
@@ -136616,7 +136952,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 下（已修订）"
+        "剑17 Test 2 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136648,7 +136986,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2336
+      "phraseOrder": 2336,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_6bea55055f7a",
@@ -136675,7 +137014,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 下（已修订）"
+        "剑17 Test 2 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136707,7 +137048,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2337
+      "phraseOrder": 2337,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_b70da77532f4",
@@ -136734,7 +137076,9 @@
       ],
       "topics": [
         "阅读",
-        "剑17 Test 2 下（已修订）"
+        "剑17 Test 2 下（已修订）",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3"
       ],
       "difficulty": "中级核心",
       "category": "IELTS GT Speaking/Writing Phrase",
@@ -136766,7 +137110,8 @@
       "entryType": "phrase",
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
-      "phraseOrder": 2338
+      "phraseOrder": 2338,
+      "gtPlanStage": 3
     },
     {
       "id": "phrase_excel_4139805ded02",
@@ -173004,8 +173349,1772 @@
       "isPhrase": true,
       "phraseSource": "excel-speaking-writing-import",
       "phraseOrder": 2971
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "教学日历；校历",
+      "definition": "the official schedule of terms, holidays and important dates in an educational institution",
+      "example": "The academic calendar lists the start and end of each term.",
+      "exampleCn": "校历列出了每个学期的开始和结束日期。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "academic calendar",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "academic calendar"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_7251e62f36cb",
+      "wordId": "phrase_7251e62f36cb",
+      "answer": "academic calendar",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2972,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“academic calendar”表示“教学日历；校历”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "社区服务；公益服务",
+      "definition": "unpaid work carried out for the benefit of the community",
+      "example": "Students may take part in community service projects.",
+      "exampleCn": "学生可以参加社区服务项目。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "community service",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "community service"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_33d5350b0a7f",
+      "wordId": "phrase_33d5350b0a7f",
+      "answer": "community service",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2973,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“community service”表示“社区服务；公益服务”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "信用卡",
+      "definition": "a card used to buy goods or services on credit",
+      "example": "Customers who paid by credit card may make a claim.",
+      "exampleCn": "使用信用卡付款的顾客可以提出索赔。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "credit card",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "credit card"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_da7f47127252",
+      "wordId": "phrase_da7f47127252",
+      "answer": "credit card",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2974,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“credit card”表示“信用卡”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "着装规定",
+      "definition": "rules about what people should wear in a particular place",
+      "example": "Employees must follow the company's dress code.",
+      "exampleCn": "员工必须遵守公司的着装规定。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "dress code",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "dress code"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_1a9949887333",
+      "wordId": "phrase_1a9949887333",
+      "answer": "dress code",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2975,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“dress code”表示“着装规定”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "免疫系统",
+      "definition": "the body's system for defending itself against disease",
+      "example": "The parasite can avoid the animal's immune system.",
+      "exampleCn": "这种寄生虫能够躲避动物的免疫系统。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "immune system",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "immune system"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_e3664950c05b",
+      "wordId": "phrase_e3664950c05b",
+      "answer": "immune system",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2976,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“immune system”表示“免疫系统”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "影响评估",
+      "definition": "a formal study of the likely effects of a proposed action or project",
+      "example": "An impact assessment should be completed before construction begins.",
+      "exampleCn": "施工开始前应完成影响评估。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "impact assessment",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "impact assessment"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_d4d21a9af81e",
+      "wordId": "phrase_d4d21a9af81e",
+      "answer": "impact assessment",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2977,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“impact assessment”表示“影响评估”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "停电；断电",
+      "definition": "a period when the electricity supply stops",
+      "example": "The building was closed during the power cut.",
+      "exampleCn": "停电期间，这栋建筑关闭了。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "power cut",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "power cut"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_c9b5855298fe",
+      "wordId": "phrase_c9b5855298fe",
+      "answer": "power cut",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2978,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“power cut”表示“停电；断电”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "回复率；响应率",
+      "definition": "the proportion of people who respond to a survey or request",
+      "example": "The online survey achieved a high response rate.",
+      "exampleCn": "这项在线调查取得了较高的回复率。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "response rate",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "response rate"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_2c2eac45edbd",
+      "wordId": "phrase_2c2eac45edbd",
+      "answer": "response rate",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2979,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“response rate”表示“回复率；响应率”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "网站内容",
+      "definition": "the text, images and other material published on a website",
+      "example": "The organisation regularly updates its website content.",
+      "exampleCn": "该机构定期更新网站内容。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "website content",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "website content"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_9a2c07e00645",
+      "wordId": "phrase_9a2c07e00645",
+      "answer": "website content",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2980,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“website content”表示“网站内容”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "产前诊所；孕期保健诊所",
+      "definition": "a clinic that provides care during pregnancy",
+      "example": "She attended the antenatal clinic for a routine check.",
+      "exampleCn": "她前往产前诊所接受常规检查。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空",
+        "拼写重点"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "antenatal clinic",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "antenatal clinic"
+      ],
+      "spellingPriority": true,
+      "id": "phrase_5f953ef5ddfb",
+      "wordId": "phrase_5f953ef5ddfb",
+      "answer": "antenatal clinic",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2981,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“antenatal clinic”表示“产前诊所；孕期保健诊所”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "保密求助热线",
+      "definition": "a telephone service that provides private advice or support",
+      "example": "The notice gives the number of a confidential helpline.",
+      "exampleCn": "通知上提供了保密求助热线的电话号码。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空",
+        "拼写重点"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "confidential helpline",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "confidential helpline"
+      ],
+      "spellingPriority": true,
+      "id": "phrase_d111f54893e3",
+      "wordId": "phrase_d111f54893e3",
+      "answer": "confidential helpline",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2982,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“confidential helpline”表示“保密求助热线”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "裁剪图；裁剪表",
+      "definition": "a diagram or table showing how material should be cut",
+      "example": "Use the cutting chart before cutting the fabric.",
+      "exampleCn": "裁剪布料前请查看裁剪图。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "真题答案表达",
+        "阅读填空",
+        "拼写重点"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读填空答案",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "cutting chart",
+      "readingPriority": true,
+      "phraseStudyMode": "fill-answer",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "cutting chart"
+      ],
+      "spellingPriority": true,
+      "id": "phrase_88eee3d2d3ab",
+      "wordId": "phrase_88eee3d2d3ab",
+      "answer": "cutting chart",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2983,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“cutting chart”表示“裁剪图；裁剪表”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "适合家庭的；适合有孩子家庭的",
+      "definition": "suitable for families, especially those with children",
+      "example": "The hotel offers family-friendly rooms and activities.",
+      "exampleCn": "这家酒店提供适合家庭的客房和活动。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "family-friendly",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "family-friendly",
+        "family friendly"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_9a258d6c8ee5",
+      "wordId": "phrase_9a258d6c8ee5",
+      "answer": "family-friendly",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2984,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“family-friendly”表示“适合家庭的；适合有孩子家庭的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "自主进行的；自我指导的",
+      "definition": "controlled or organised by the person doing it",
+      "example": "The course includes self-directed study.",
+      "exampleCn": "这门课程包括自主学习。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "self-directed",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "self-directed",
+        "self directed"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_dced73934c5b",
+      "wordId": "phrase_dced73934c5b",
+      "answer": "self-directed",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2985,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“self-directed”表示“自主进行的；自我指导的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "计算机辅助的",
+      "definition": "done with the help of a computer",
+      "example": "The design was produced using computer-aided methods.",
+      "exampleCn": "这项设计采用计算机辅助方法完成。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "computer-aided",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "computer-aided",
+        "computer aided"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_019e8c2ae285",
+      "wordId": "phrase_019e8c2ae285",
+      "answer": "computer-aided",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2986,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“computer-aided”表示“计算机辅助的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "一对一的",
+      "definition": "involving two people dealing directly with each other",
+      "example": "Trainees receive one-on-one support from a tutor.",
+      "exampleCn": "学员会获得导师的一对一支持。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "one-on-one",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "one-on-one",
+        "one on one"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_08ee587f8d77",
+      "wordId": "phrase_08ee587f8d77",
+      "answer": "one-on-one",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2987,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“one-on-one”表示“一对一的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "防水的；耐水的",
+      "definition": "able to resist water but not necessarily completely waterproof",
+      "example": "The case is water-resistant but should not be submerged.",
+      "exampleCn": "这个保护壳耐水，但不应浸入水中。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "water-resistant",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "water-resistant",
+        "water resistant"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_c80984a6e111",
+      "wordId": "phrase_c80984a6e111",
+      "answer": "water-resistant",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2988,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“water-resistant”表示“防水的；耐水的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "世界一流的",
+      "definition": "among the best in the world",
+      "example": "The city has a world-class public transport system.",
+      "exampleCn": "这座城市拥有世界一流的公共交通系统。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "world-class",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "world-class",
+        "world class"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_cf6a066378c2",
+      "wordId": "phrase_cf6a066378c2",
+      "answer": "world-class",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2989,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“world-class”表示“世界一流的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "想要成为……的；未来可能成为……的",
+      "definition": "hoping or trying to become a particular type of person",
+      "example": "The course is designed for would-be managers.",
+      "exampleCn": "这门课程面向有志成为管理者的人。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "would-be",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "would-be",
+        "would be"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_f265323bcb3e",
+      "wordId": "phrase_f265323bcb3e",
+      "answer": "would-be",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2990,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“would-be”表示“想要成为……的；未来可能成为……的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "小规模的",
+      "definition": "limited in size or extent",
+      "example": "The project supports small-scale farmers.",
+      "exampleCn": "该项目支持小规模农户。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "small-scale",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "small-scale",
+        "small scale"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_fb1f94d7bc2e",
+      "wordId": "phrase_fb1f94d7bc2e",
+      "answer": "small-scale",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2991,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“small-scale”表示“小规模的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "日常的；每天的",
+      "definition": "relating to ordinary daily activities",
+      "example": "The guide explains the day-to-day duties of the role.",
+      "exampleCn": "该指南说明了这一岗位的日常职责。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "day-to-day",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "day-to-day",
+        "day to day"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_4932b30b0311",
+      "wordId": "phrase_4932b30b0311",
+      "answer": "day-to-day",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2992,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“day-to-day”表示“日常的；每天的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "自给自足的；无需外界帮助的",
+      "definition": "able to provide what is needed without outside help",
+      "example": "Many residents remain largely self-sufficient.",
+      "exampleCn": "许多居民在很大程度上仍然自给自足。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "self-sufficient",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "self-sufficient",
+        "self sufficient"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_dfef75cc65cd",
+      "wordId": "phrase_dfef75cc65cd",
+      "answer": "self-sufficient",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2993,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“self-sufficient”表示“自给自足的；无需外界帮助的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "专门建造的；专门设计的",
+      "definition": "designed and built for a particular use",
+      "example": "The centre has a purpose-built training room.",
+      "exampleCn": "该中心设有专门建造的培训室。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "purpose-built",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "purpose-built",
+        "purpose built"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_fc2d3fa03e67",
+      "wordId": "phrase_fc2d3fa03e67",
+      "answer": "purpose-built",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2994,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“purpose-built”表示“专门建造的；专门设计的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "明确界定的；定义清晰的",
+      "definition": "clearly described or limited",
+      "example": "The project has a well-defined objective.",
+      "exampleCn": "该项目有一个明确界定的目标。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "阅读复合表达"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "well-defined",
+      "readingPriority": true,
+      "phraseStudyMode": "compound-recognition",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "well-defined",
+        "well defined"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_7eafee6c0d1f",
+      "wordId": "phrase_7eafee6c0d1f",
+      "answer": "well-defined",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2995,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“well-defined”表示“明确界定的；定义清晰的”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "蝠鲼",
+      "definition": "a very large flat sea fish with wing-like fins",
+      "example": "The divers saw a manta ray near the reef.",
+      "exampleCn": "潜水员在珊瑚礁附近看到一条蝠鲼。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段4",
+        "真题专业词",
+        "海洋"
+      ],
+      "difficulty": "低频认识即可",
+      "category": "IELTS G类 · 真题专业参考",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "manta ray",
+      "readingPriority": false,
+      "phraseStudyMode": "reference",
+      "gtPlanStage": 4,
+      "acceptedAnswers": [
+        "manta ray"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_6c872e33587b",
+      "wordId": "phrase_6c872e33587b",
+      "answer": "manta ray",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2996,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“manta ray”表示“蝠鲼”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "梭形细胞",
+      "definition": "a cell that is long and narrow with tapered ends",
+      "example": "The sample contained spindle cells.",
+      "exampleCn": "样本中含有梭形细胞。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段4",
+        "真题专业词",
+        "生物"
+      ],
+      "difficulty": "低频认识即可",
+      "category": "IELTS G类 · 真题专业参考",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "spindle cell",
+      "readingPriority": false,
+      "phraseStudyMode": "reference",
+      "gtPlanStage": 4,
+      "acceptedAnswers": [
+        "spindle cell"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_ade702fb04ab",
+      "wordId": "phrase_ade702fb04ab",
+      "answer": "spindle cell",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2997,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“spindle cell”表示“梭形细胞”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "白颊黑雁",
+      "definition": "a goose with a black neck and white face",
+      "example": "Barnacle geese migrate over long distances.",
+      "exampleCn": "白颊黑雁会进行长距离迁徙。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段4",
+        "真题专业词",
+        "动物"
+      ],
+      "difficulty": "低频认识即可",
+      "category": "IELTS G类 · 真题专业参考",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "barnacle goose",
+      "readingPriority": false,
+      "phraseStudyMode": "reference",
+      "gtPlanStage": 4,
+      "acceptedAnswers": [
+        "barnacle goose"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_138fdd016049",
+      "wordId": "phrase_138fdd016049",
+      "answer": "barnacle goose",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2998,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“barnacle goose”表示“白颊黑雁”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "圆筒旅行袋；行李袋",
+      "definition": "a large cylindrical bag made of strong fabric",
+      "example": "The equipment fits into a single duffel bag.",
+      "exampleCn": "这些设备可以装进一个圆筒旅行袋。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段4",
+        "真题专业词",
+        "旅行"
+      ],
+      "difficulty": "低频认识即可",
+      "category": "IELTS G类 · 真题专业参考",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "duffel bag",
+      "readingPriority": false,
+      "phraseStudyMode": "reference",
+      "gtPlanStage": 4,
+      "acceptedAnswers": [
+        "duffel bag"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_4ec652beeaf6",
+      "wordId": "phrase_4ec652beeaf6",
+      "answer": "duffel bag",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 2999,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“duffel bag”表示“圆筒旅行袋；行李袋”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "经济作物",
+      "definition": "a crop grown mainly to be sold rather than eaten by the grower",
+      "example": "Cabbage has become an important cash crop for local farmers.",
+      "exampleCn": "卷心菜已成为当地农民的重要经济作物。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "农业",
+        "Section 3"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "cash crop",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "cash crop"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_25f8c3395440",
+      "wordId": "phrase_25f8c3395440",
+      "answer": "cash crop",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3000,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“cash crop”表示“经济作物”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "缺氧；氧气耗尽",
+      "definition": "a severe lack of oxygen",
+      "example": "Excess nutrients can cause oxygen starvation in the water.",
+      "exampleCn": "过量营养物质可能导致水体缺氧。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "环境",
+        "Section 3"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "oxygen starvation",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "oxygen starvation"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_a0359abaf03a",
+      "wordId": "phrase_a0359abaf03a",
+      "answer": "oxygen starvation",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3001,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“oxygen starvation”表示“缺氧；氧气耗尽”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "死亡区；缺氧无生物区",
+      "definition": "an area of water where oxygen levels are too low to support most life",
+      "example": "The number of marine dead zones is increasing.",
+      "exampleCn": "海洋死亡区的数量正在增加。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "海洋",
+        "Section 3"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "dead zone",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "dead zone"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_e16b0c107f16",
+      "wordId": "phrase_e16b0c107f16",
+      "answer": "dead zone",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3002,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“dead zone”表示“死亡区；缺氧无生物区”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "自来水；流动水",
+      "definition": "water supplied through pipes to a building",
+      "example": "Some remote homes do not have running water.",
+      "exampleCn": "一些偏远住宅没有自来水。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "住房",
+        "公共服务"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "running water",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "running water"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_7d7b41982594",
+      "wordId": "phrase_7d7b41982594",
+      "answer": "running water",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3003,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“running water”表示“自来水；流动水”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "发电站",
+      "definition": "a building where electricity is produced",
+      "example": "The power station supplies heating to the town.",
+      "exampleCn": "发电站为小镇提供供暖。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "能源",
+        "公共服务"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "power station",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "power station"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_5e4bc740bc6a",
+      "wordId": "phrase_5e4bc740bc6a",
+      "answer": "power station",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3004,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“power station”表示“发电站”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "温泉",
+      "definition": "a natural source of hot water from the ground",
+      "example": "The travellers stopped beside a hot spring.",
+      "exampleCn": "旅行者在一处温泉旁停下。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "旅行",
+        "地理"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "hot spring",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "hot spring"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_860b0706e659",
+      "wordId": "phrase_860b0706e659",
+      "answer": "hot spring",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3005,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“hot spring”表示“温泉”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "树皮",
+      "definition": "the protective outer layer of a tree trunk or branch",
+      "example": "The sap escaped through tears in the tree bark.",
+      "exampleCn": "树液从树皮裂口流出。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "植物",
+        "熟词生义"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "tree bark",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "tree bark"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_b5f8c713a600",
+      "wordId": "phrase_b5f8c713a600",
+      "answer": "tree bark",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3006,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“tree bark”表示“树皮”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "鱼类种群；鱼类资源量",
+      "definition": "the population of a fish species in a particular area",
+      "example": "Several fish stocks have declined.",
+      "exampleCn": "多个鱼类种群已经下降。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "海洋",
+        "熟词生义"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "fish stock",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "fish stock"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_34af2df66045",
+      "wordId": "phrase_34af2df66045",
+      "answer": "fish stock",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3007,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“fish stock”表示“鱼类种群；鱼类资源量”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "宿主动物",
+      "definition": "an animal in or on which another organism lives",
+      "example": "The parasite changes its coat inside the host animal.",
+      "exampleCn": "寄生虫在宿主动物体内改变外层结构。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "生物",
+        "熟词生义"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "host animal",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "host animal"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_7d583c07ff4f",
+      "wordId": "phrase_7d583c07ff4f",
+      "answer": "host animal",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3008,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“host animal”表示“宿主动物”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "植物感染性病毒",
+      "definition": "a virus that infects plants",
+      "example": "Aphids can carry plant-infecting viruses.",
+      "exampleCn": "蚜虫可以传播植物感染性病毒。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "农业",
+        "Section 3"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "plant-infecting virus",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "plant-infecting virus",
+        "plant infecting virus"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_cf14ae3bfe5f",
+      "wordId": "phrase_cf14ae3bfe5f",
+      "answer": "plant-infecting virus",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3009,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“plant-infecting virus”表示“植物感染性病毒”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "小农户；小规模农场主",
+      "definition": "a farmer who owns or manages a small farm",
+      "example": "Researchers worked with smallholder farmers on pest control.",
+      "exampleCn": "研究人员与小农户合作研究害虫防治。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "农业",
+        "Section 3"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "smallholder farmer",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "smallholder farmer"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_2195244ad408",
+      "wordId": "phrase_2195244ad408",
+      "answer": "smallholder farmer",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3010,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“smallholder farmer”表示“小农户；小规模农场主”。"
+    },
+    {
+      "phonetic": "",
+      "pos": "phrase",
+      "meaning": "野外研究站；实地工作站",
+      "definition": "a research base located near the area being studied",
+      "example": "The scientist worked from a field station in Ghana.",
+      "exampleCn": "这位科学家在加纳的一处野外研究站工作。",
+      "collocations": [],
+      "phraseCollocations": [],
+      "ieltsUse": [
+        "Reading",
+        "IELTS G类"
+      ],
+      "topics": [
+        "G类完整学习计划",
+        "G类完整学习计划·阶段3",
+        "研究",
+        "Section 3"
+      ],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 阅读表达",
+      "status": "",
+      "favorite": false,
+      "forms": [],
+      "wordFamily": [],
+      "audio": "",
+      "exampleAudio": "",
+      "word": "field station",
+      "readingPriority": true,
+      "phraseStudyMode": "context-expression",
+      "gtPlanStage": 3,
+      "acceptedAnswers": [
+        "field station"
+      ],
+      "spellingPriority": false,
+      "id": "phrase_d2bcd2166c5d",
+      "wordId": "phrase_d2bcd2166c5d",
+      "answer": "field station",
+      "entryType": "phrase",
+      "isPhrase": true,
+      "phraseOrder": 3011,
+      "phraseSource": "gt-complete-corpus-patch",
+      "meaningDetailZh": "“field station”表示“野外研究站；实地工作站”。"
     }
   ],
-  "qualityRepairedAt": "2026-07-09T18:54:40.514Z",
-  "qualityRepair": "p0-phrase-quality-2026-07-10"
+  "qualityRepairedAt": "2026-07-14T00:00:00.000Z",
+  "qualityRepair": "gt-complete-vocab-patch-20260714-v1"
 }

@@ -4,7 +4,15 @@ import { isAudioInterruptedError } from "./vocab-speech.mjs";
  * Single Edge-only playback gain for words, phrases, and example sentences.
  * Real-person audio path is disabled product-wide.
  */
-export const EDGE_PLAYBACK_GAIN = 2.15;
+// Cached Edge clips are already loudness-normalized and peak near -1 dBFS.
+// A gain above 1 clips those samples at the device output and exaggerates MP3 tail noise.
+export const EDGE_PLAYBACK_GAIN = 1;
+export const PLAYBACK_END_FADE_SECONDS = 0.04;
+export const PLAYBACK_INTERRUPT_FADE_SECONDS = 0.012;
+export const SPEECH_ACTIVITY_RMS_DB = -65;
+export const SPEECH_ANALYSIS_WINDOW_SECONDS = 0.01;
+export const SPEECH_TAIL_PADDING_SECONDS = 0.12;
+export const SPEECH_TAIL_MIN_TRIM_SECONDS = 0.18;
 /** @deprecated use EDGE_PLAYBACK_GAIN — kept for tests/imports */
 export const EDGE_SENTENCE_PLAYBACK_GAIN = EDGE_PLAYBACK_GAIN;
 /** @deprecated use EDGE_PLAYBACK_GAIN — kept for tests/imports */
@@ -16,7 +24,7 @@ export const NORMALIZED_PLAYBACK_GAIN = 1;
 let sharedContext = null;
 let masterGainNode = null;
 let activeHtmlAudio = null;
-let activeWebAudioSource = null;
+let activeWebAudioPlayback = null;
 const decodedAudioBufferCache = new Map();
 const MAX_DECODED_AUDIO_BUFFERS = 80;
 
@@ -84,6 +92,64 @@ export function resolvePlaybackGain(options = {}) {
   return EDGE_PLAYBACK_GAIN;
 }
 
+export function resolveCleanPlaybackWindow(audioBuffer) {
+  const duration = Number(audioBuffer?.duration) || 0;
+  const sampleRate = Number(audioBuffer?.sampleRate) || 0;
+  const length = Number(audioBuffer?.length) || 0;
+  const channelCount = Number(audioBuffer?.numberOfChannels) || 0;
+  const fullWindow = {
+    endTime: duration,
+    fadeStartTime: Math.max(0, duration - PLAYBACK_END_FADE_SECONDS),
+    trimmed: false
+  };
+
+  if (!duration || !sampleRate || !length || !channelCount || typeof audioBuffer.getChannelData !== "function") {
+    return fullWindow;
+  }
+
+  const channels = [];
+  for (let channel = 0; channel < channelCount; channel += 1) {
+    channels.push(audioBuffer.getChannelData(channel));
+  }
+
+  const windowSize = Math.max(1, Math.round(sampleRate * SPEECH_ANALYSIS_WINDOW_SECONDS));
+  const windowCount = Math.ceil(length / windowSize);
+  const activityPowerThreshold = 10 ** (SPEECH_ACTIVITY_RMS_DB / 10);
+  const activeWindows = new Array(windowCount).fill(false);
+
+  for (let windowIndex = 0; windowIndex < windowCount; windowIndex += 1) {
+    const start = windowIndex * windowSize;
+    const end = Math.min(length, start + windowSize);
+    let sumSquares = 0;
+    for (const samples of channels) {
+      for (let index = start; index < end; index += 1) {
+        const sample = samples[index] || 0;
+        sumSquares += sample * sample;
+      }
+    }
+    const sampleCount = Math.max(1, (end - start) * channelCount);
+    activeWindows[windowIndex] = sumSquares / sampleCount >= activityPowerThreshold;
+  }
+
+  let lastSustainedWindow = -1;
+  for (let index = 0; index < activeWindows.length; index += 1) {
+    if (activeWindows[index] && (activeWindows[index - 1] || activeWindows[index + 1])) {
+      lastSustainedWindow = index;
+    }
+  }
+  if (lastSustainedWindow < 0) return fullWindow;
+
+  const meaningfulEndTime = Math.min(duration, ((lastSustainedWindow + 1) * windowSize) / sampleRate);
+  const endTime = Math.min(duration, meaningfulEndTime + SPEECH_TAIL_PADDING_SECONDS);
+  if (duration - endTime < SPEECH_TAIL_MIN_TRIM_SECONDS) return fullWindow;
+
+  return {
+    endTime,
+    fadeStartTime: Math.min(endTime - PLAYBACK_END_FADE_SECONDS, meaningfulEndTime + 0.02),
+    trimmed: true
+  };
+}
+
 export function stopSpeechAudioPlayback() {
   if (activeHtmlAudio) {
     try {
@@ -95,11 +161,17 @@ export function stopSpeechAudioPlayback() {
     activeHtmlAudio = null;
   }
 
-  if (activeWebAudioSource) {
+  if (activeWebAudioPlayback) {
+    const playback = activeWebAudioPlayback;
+    activeWebAudioPlayback = null;
     try {
-      activeWebAudioSource.stop();
+      const now = playback.gainNode.context.currentTime;
+      const currentGain = Math.max(0, playback.gainNode.gain.value);
+      playback.gainNode.gain.cancelScheduledValues(now);
+      playback.gainNode.gain.setValueAtTime(currentGain, now);
+      playback.gainNode.gain.linearRampToValueAtTime(0, now + PLAYBACK_INTERRUPT_FADE_SECONDS);
+      playback.source.stop(now + PLAYBACK_INTERRUPT_FADE_SECONDS);
     } catch {}
-    activeWebAudioSource = null;
   }
 }
 
@@ -129,20 +201,33 @@ async function playWithWebAudio(url, options = {}) {
   source.buffer = audioBuffer;
 
   const gainNode = context.createGain();
-  gainNode.gain.value = resolvePlaybackGain(options);
+  const gain = resolvePlaybackGain(options);
+  const playbackWindow = resolveCleanPlaybackWindow(audioBuffer);
+  const startedAt = context.currentTime;
+  const endsAt = startedAt + playbackWindow.endTime;
+  const fadeStartsAt = startedAt + playbackWindow.fadeStartTime;
+  gainNode.gain.setValueAtTime(gain, startedAt);
+  gainNode.gain.setValueAtTime(gain, fadeStartsAt);
+  gainNode.gain.linearRampToValueAtTime(0, endsAt);
 
   source.connect(gainNode);
   gainNode.connect(getMasterGain(context));
-  activeWebAudioSource = source;
+  const playback = { source, gainNode };
+  activeWebAudioPlayback = playback;
 
   source.onended = () => {
-    if (activeWebAudioSource === source) activeWebAudioSource = null;
+    if (activeWebAudioPlayback === playback) activeWebAudioPlayback = null;
+    try {
+      source.disconnect();
+      gainNode.disconnect();
+    } catch {}
   };
   try {
-    source.start(0);
+    source.start(startedAt);
+    source.stop(endsAt);
     return true;
   } catch {
-    if (activeWebAudioSource === source) activeWebAudioSource = null;
+    if (activeWebAudioPlayback === playback) activeWebAudioPlayback = null;
     return false;
   }
 }
@@ -171,10 +256,7 @@ export async function playSpeechAudio(url, options = {}) {
   try {
     stopSpeechAudioPlayback();
 
-    const gain = resolvePlaybackGain(options);
-    const preferHtmlAudio = gain <= 1.05 && !options.realAudio && !options.audioEnhanced;
-
-    if (!preferHtmlAudio && getAudioContext()) {
+    if (getAudioContext()) {
       const played = await playWithWebAudio(url, options);
       if (!isCurrent()) {
         stopSpeechAudioPlayback();

@@ -49,8 +49,8 @@ function repairEntry(entry, stats, opts = {}) {
   const cleaned = cleanExampleField(example, word, {
     entryType: entry.entryType || (/\s/.test(word) ? "phrase" : "word"),
     meaningZh: entry.primaryMeaningZh || entry.meaning || entry.meaningZh || "",
-    synthesizeIfEmpty: opts.synthesizeIfEmpty !== false,
-    synthesizeIfTruncated: opts.synthesizeIfTruncated !== false,
+    synthesizeIfEmpty: opts.synthesizeIfEmpty === true,
+    synthesizeIfTruncated: opts.synthesizeIfTruncated === true,
     maxWords: opts.maxWords || 36
   });
 
@@ -98,8 +98,8 @@ function repairReadingG() {
   data.items = (data.items || []).map((item) => {
     stats.total += 1;
     return repairEntry(item, stats, {
-      synthesizeIfEmpty: true,
-      synthesizeIfTruncated: true,
+      synthesizeIfEmpty: false,
+      synthesizeIfTruncated: false,
       maxWords: 32
     });
   });
@@ -145,7 +145,7 @@ function repairBasic() {
   data[key] = (data[key] || []).map((item) => {
     stats.total += 1;
     return repairEntry(item, stats, {
-      synthesizeIfEmpty: true,
+      synthesizeIfEmpty: false,
       synthesizeIfTruncated: false,
       maxWords: 28
     });

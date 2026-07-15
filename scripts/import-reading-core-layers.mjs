@@ -15,7 +15,11 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { fileURLToPath } from "url";
-import { cleanExampleField, cleanExampleCnField } from "../app/lib/vocab/example-clean.mjs";
+import {
+  cleanExampleField,
+  cleanExampleCnField,
+  isMetaExamplePlaceholder
+} from "../app/lib/vocab/example-clean.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, "..");
@@ -23,6 +27,11 @@ const projectRoot = path.join(__dirname, "..");
 const DATA_SCHEMA_VERSION = 3;
 const PROGRESS_SCHEMA_VERSION = 3;
 const DATASET_VERSION = "reading-g-core-v3";
+const EXAMPLE_REPAIRS_FILE = path.join(
+  "scripts",
+  "data",
+  "reading-g-example-repairs.json"
+);
 
 const DEFAULT_SOURCE = path.join(
   process.env.USERPROFILE || process.env.HOME || "",
@@ -943,6 +952,40 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
     return a.normalizedKey.localeCompare(b.normalizedKey);
   });
 
+  // Reapply reviewed bilingual examples after every deterministic source import.
+  const exampleRepairsPath = path.join(root, EXAMPLE_REPAIRS_FILE);
+  const exampleRepairRows = fs.existsSync(exampleRepairsPath)
+    ? asArray(readJson(exampleRepairsPath)?.repairs)
+    : [];
+  const exampleRepairs = new Map(
+    exampleRepairRows.map((repair) => [str(repair?.id), repair])
+  );
+  let exampleRepairsApplied = 0;
+  for (const item of items) {
+    const repair = exampleRepairs.get(item.id);
+    if (!repair?.example || !repair?.exampleCn) continue;
+    if (item.example && !isMetaExamplePlaceholder(item.example)) continue;
+    item.example = str(repair.example);
+    item.exampleCn = cleanExampleCnField(repair.exampleCn);
+    item.qualityFlags = [
+      ...new Set([
+        ...asArray(item.qualityFlags).filter((flag) => flag !== "synthetic_example"),
+        "example_editorial_repair_v1"
+      ])
+    ];
+    const firstSense = item.senses?.[0];
+    if (firstSense && (!firstSense.example || isMetaExamplePlaceholder(firstSense.example))) {
+      firstSense.example = item.example;
+      firstSense.exampleZh = item.exampleCn;
+    }
+    exampleRepairsApplied += 1;
+  }
+  report.exampleEditorialRepair = {
+    source: EXAMPLE_REPAIRS_FILE.replace(/\\/g, "/"),
+    available: exampleRepairRows.length,
+    applied: exampleRepairsApplied
+  };
+
   // Fill empty meanings from senses / non-empty placeholder (audit requires 0 empty)
   for (const item of items) {
     if (!item.primaryMeaningZh && item.senses[0]?.meaningZh) {
@@ -967,11 +1010,11 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
     item.pos = item.primaryPos || item.pos || "";
     item.meaningZh = item.primaryMeaningZh;
 
-    // Final example cleanup / synthesize empty (phrase banks often lack examples)
+    // Final cleanup must never turn an empty field into a meta-description.
     const ex = cleanExampleField(item.example || "", item.word, {
       entryType: item.entryType,
       meaningZh: item.primaryMeaningZh,
-      synthesizeIfEmpty: true,
+      synthesizeIfEmpty: false,
       maxWords: 32
     });
     item.example = ex.example;

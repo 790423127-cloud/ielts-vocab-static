@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-07-15T00:00:00.000Z",
+  "sourceVersion": "v9-13758-gt-complete-20260714-v2-second-review",
+  "readOnly": true,
+  "independentlyVerified": true,
+  "summary": {
+    "totalWords": 13758,
+    "rawIssueCount": 63059,
+    "rawP0AlertCount": 622,
+    "rawP0EntryCount": 449,
+    "strictExampleCandidates": 1286,
+    "acceptedByMorphology": 1141,
+    "targetAbsentAfterMorphology": 145,
+    "categoryCounts": {
+      "meaning_without_chinese": 1,
+      "missing_meaning_detailed": 9130,
+      "generic_meaning_detail": 6484,
+      "meaning_detailed_not_expanded": 4602,
+      "multi_meaning_without_structured_senses": 4255,
+      "multi_meaning_without_quiz_senses": 3862,
+      "space_before_punctuation": 385,
+      "generic_example_cn": 28,
+      "unfinished_example_raw": 204,
+      "number_mismatch_raw": 16,
+      "obvious_translation_mismatch": 2,
+      "probable_typo": 1
+    }
+  },
+  "calibration": {
+    "note": "Raw alerts were calibrated before patching: month/date/decade/万/百万 equivalents and closing quotation marks were removed from confirmed P0. The patch ledger, not the raw alert count, is the authoritative repair set.",
+    "paidApiCalls": 0,
+    "externalPerWordLookups": 0
+  }
+}

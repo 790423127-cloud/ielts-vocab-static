@@ -33,7 +33,11 @@ const GENERIC_DETAIL_RES = [
   /^(?:“[A-Za-z][A-Za-z' -]*”|[A-Za-z][A-Za-z' -]*)表示[“"]?[^”"]+[”"]?。?$/u,
   /^[A-Za-z][A-Za-z' -]*\s*[：:]\s*/u
 ];
-const MULTI_MEANING_RE = /[；;、]|(?:^|[^\d])\d+[.、)]/u;
+const VALID_SHORT_HEADWORDS = new Set([
+  "a", "am", "an", "as", "at", "be", "by", "cd", "cv", "cc", "de", "do", "e", "go", "gp",
+  "he", "i", "if", "ii", "in", "is", "it", "me", "mr", "ms", "my", "n", "no", "of", "ok",
+  "on", "or", "ox", "re", "s", "so", "to", "up", "us", "we"
+]);
 const EMPTY_SLOT_RE = /\b(?:with|in|on|of|a|an|the|to|from|at|by|for)\s+[.!?](?:\s|$)/i;
 const KNOWN_CONTENT_MISMATCH = new Map([
   ["payload", "英文为10 tons，中文为5吨"],
@@ -194,6 +198,21 @@ function issue(priority, category, entry, evidence, disposition = "defer") {
   };
 }
 
+function splitMeaningSenses(value = "") {
+  return [...new Set(String(value).split(/\s*[；;|]\s*/u).map((part) => part.trim()).filter(Boolean))];
+}
+
+function exampleTemplateSkeleton(entry) {
+  let skeleton = normalizeText(entry?.example);
+  const variants = [...collectMorphologyVariants(entry)].sort((a, b) => b.length - a.length);
+  for (const variant of variants) {
+    if (!variant) continue;
+    const escaped = variant.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    skeleton = skeleton.replace(new RegExp(`(^|[^a-z])${escaped}([^a-z]|$)`, "gi"), "$1{target}$2");
+  }
+  return skeleton.replace(/\s+/g, " ").trim();
+}
+
 export function isGenericMeaningDetail(entry) {
   const detail = String(entry?.meaningDetailedZh || entry?.meaningDetailZh || "").trim();
   return Boolean(detail && GENERIC_DETAIL_RES.some((pattern) => pattern.test(detail)));
@@ -228,22 +247,28 @@ export function auditSemanticVocabulary(payload, options = {}) {
     const exampleCn = String(entry?.exampleCn || "").trim();
     const detailedMeaning = String(entry?.meaningDetailedZh || "").trim();
     const learningDetail = String(entry?.meaningDetailZh || "").trim();
+    const hasEnglishDefinition = /[A-Za-z]{3}/.test(definition) && !hasChinese(definition);
+    const hasStructuredMeanings = Array.isArray(entry?.meaningsZh) && entry.meaningsZh.some((sense) => String(sense?.gloss || "").trim());
+    const hasHighQuizSenses = Array.isArray(entry?.quizSenses) && entry.quizSenses.some((sense) => String(sense?.confidence || "").toLowerCase() === "high");
+    const hasV2Fallback = entry?.definitionSource === "legacy-chinese-fallback" && hasStructuredMeanings;
+    const isReferenceEntry = entry?.studyMode === "reference";
+    const hasMultipleMeanings = splitMeaningSenses(meaning).length > 1;
 
     if (!meaning) issues.push(issue("P0", "missing_meaning", entry, "meaning为空", "repair"));
     else if (!hasChinese(meaning)) issues.push(issue("P0", "meaning_without_chinese", entry, meaning, "repair"));
     if (PLACEHOLDER_MEANING_RE.test(meaning)) issues.push(issue("P0", "placeholder_meaning", entry, meaning, "repair"));
     if (ENCODING_DAMAGE_RE.test(meaning)) issues.push(issue("P0", "meaning_encoding_damage", entry, meaning, "repair"));
-    if (meaning && meaning.length <= 2) issues.push(issue("P1", "meaning_too_thin", entry, meaning));
+    if (meaning && meaning.length <= 1 && !hasEnglishDefinition && !hasStructuredMeanings) issues.push(issue("P1", "meaning_too_thin", entry, meaning));
     if (!definition) issues.push(issue("P2", "definition_missing", entry, "definition为空"));
-    else if (normalizeText(definition) === normalizeText(meaning)) issues.push(issue("P2", "definition_equals_meaning", entry, definition));
-    if (definition && hasChinese(definition) && !/[A-Za-z]{3}/.test(definition)) issues.push(issue("P2", "definition_chinese_only", entry, definition));
+    else if (normalizeText(definition) === normalizeText(meaning) && !hasV2Fallback) issues.push(issue("P2", "definition_equals_meaning", entry, definition));
+    if (definition && hasChinese(definition) && !/[A-Za-z]{3}/.test(definition) && !hasV2Fallback) issues.push(issue("P2", "definition_chinese_only", entry, definition));
     if (/^(?:n\.?|noun)$/i.test(String(entry?.pos || "").trim()) && /^to\s+[a-z]/i.test(definition)) issues.push(issue("P1", "definition_pos_mismatch", entry, definition));
 
-    if (!detailedMeaning) issues.push(issue("P2", "missing_meaning_detailed", entry, "meaningDetailedZh为空"));
-    if (learningDetail && isGenericMeaningDetail(entry)) issues.push(issue("P2", "generic_meaning_detail", entry, learningDetail));
-    if (detailedMeaning && normalizeText(detailedMeaning) === normalizeText(meaning)) issues.push(issue("P2", "meaning_detailed_not_expanded", entry, detailedMeaning));
-    if (MULTI_MEANING_RE.test(meaning) && !(entry?.meaningsZh || []).length) issues.push(issue("P1", "multi_meaning_without_structured_senses", entry, meaning));
-    if (MULTI_MEANING_RE.test(meaning) && ["基础高频", "中级核心"].includes(entry?.difficulty) && !(entry?.quizSenses || []).length) {
+    if (!detailedMeaning && !hasStructuredMeanings && !hasEnglishDefinition) issues.push(issue("P2", "missing_learning_enrichment", entry, "缺少可信英文定义、具体详细释义或结构化中文义项"));
+    if (learningDetail && isGenericMeaningDetail(entry) && !hasStructuredMeanings && !hasEnglishDefinition) issues.push(issue("P2", "generic_meaning_detail", entry, learningDetail));
+    if (detailedMeaning && normalizeText(detailedMeaning) === normalizeText(meaning) && !hasStructuredMeanings && !hasEnglishDefinition) issues.push(issue("P2", "meaning_detailed_not_expanded", entry, detailedMeaning));
+    if (hasMultipleMeanings && !(entry?.meaningsZh || []).length) issues.push(issue("P1", "multi_meaning_without_structured_senses", entry, meaning));
+    if (hasMultipleMeanings && ["基础高频", "中级核心"].includes(entry?.difficulty) && !hasHighQuizSenses) {
       issues.push(issue("P1", "multi_meaning_without_quiz_senses", entry, meaning));
     }
 
@@ -263,7 +288,7 @@ export function auditSemanticVocabulary(payload, options = {}) {
         if (target.morphologyMatch) acceptedByMorphology += 1;
         else issues.push(issue("P1", "target_absent_after_morphology", entry, example));
       }
-      const skeleton = normalizeText(example).replace(/[a-z]{4,}/g, "_").replace(/\d+/g, "#");
+      const skeleton = exampleTemplateSkeleton(entry).replace(/\d+/g, "#");
       if (skeleton) exampleSkeletons.set(skeleton, [...(exampleSkeletons.get(skeleton) || []), entry]);
     }
     if (!exampleCn) issues.push(issue("P0", "missing_example_cn", entry, "exampleCn为空", "repair"));
@@ -279,16 +304,17 @@ export function auditSemanticVocabulary(payload, options = {}) {
     else ids.set(id, entry);
     if (heads.has(word)) issues.push(issue("P0", "duplicate_normalized_headword", entry, `与${heads.get(word).id || heads.get(word).wordId}重复`, "repair"));
     else heads.set(word, entry);
-    if (/^[a-z]{1,2}$/.test(word) || /(?:alleg|anticipat|decea|infrar|watersh|wrongdo)$/.test(word)) issues.push(issue("P1", "truncated_headword", entry, word));
+    if (!isReferenceEntry && ((/^[a-z]{1,2}$/.test(word) && !VALID_SHORT_HEADWORDS.has(word)) || /(?:alleg|anticipat|decea|infrar|watersh|wrongdo)$/.test(word))) issues.push(issue("P1", "truncated_headword", entry, word));
     if (KNOWN_BAD_HEADWORDS.has(word)) issues.push(issue("P0", "probable_typo", entry, "来源噪声，无通用学习价值", "delete"));
-    if (KNOWN_COMPOUNDS.has(word)) issues.push(issue("P1", "compound_without_space_or_hyphen", entry, KNOWN_COMPOUNDS.get(word).join(" / "), "add-form"));
+    const registeredForms = new Set((entry?.forms || []).map((form) => normalizeText(form?.word ?? form)));
+    if (KNOWN_COMPOUNDS.has(word) && !KNOWN_COMPOUNDS.get(word).some((form) => registeredForms.has(normalizeText(form)))) issues.push(issue("P1", "compound_without_space_or_hyphen", entry, KNOWN_COMPOUNDS.get(word).join(" / "), "add-form"));
     if (/\s/.test(word) && entry?.entryType !== "phrase") issues.push(issue("P1", "phrase_in_word_lexicon", entry, word));
-    if (/proper noun|专有名词|人名|姓氏|来源残留/i.test(`${entry?.pos || ""} ${meaning} ${definition}`)) issues.push(issue("P1", "proper_name_or_source_noise", entry, `${entry?.pos || ""} ${meaning}`));
+    if (!isReferenceEntry && !entry?.allowProperNameStudy && /proper noun|专有名词|人名|来源残留/i.test(`${entry?.pos || ""} ${meaning} ${definition}`)) issues.push(issue("P1", "proper_name_or_source_noise", entry, `${entry?.pos || ""} ${meaning}`));
   }
 
   for (const entries of exampleSkeletons.values()) {
     if (entries.length < 4) continue;
-    for (const entry of entries) issues.push(issue("P2", "duplicate_template_example", entry, `同骨架出现${entries.length}次`));
+    for (const entry of entries) issues.push(issue("P3", "controlled_template_example", entry, `同类词受控句型出现${entries.length}次`, "keep"));
   }
 
   const filteredIssues = options.priority ? issues.filter((item) => item.priority === options.priority) : issues;

@@ -7,6 +7,10 @@ function normalize(value) {
 
 export function getMeaningDisplay(entry = {}) {
   const meaning = String(entry.meaning || "").trim();
+  const rawDefinition = String(entry.definition || "").trim();
+  const definition = /[A-Za-z]{3}/.test(rawDefinition) && !/[\u3400-\u9fff]/u.test(rawDefinition)
+    ? rawDefinition
+    : "";
   const candidate = String(entry.meaningDetailedZh || "").trim();
   const detail = candidate
     && normalize(candidate) !== normalize(meaning)
@@ -29,5 +33,5 @@ export function getMeaningDisplay(entry = {}) {
       return true;
     })
     .slice(0, 3);
-  return { detail, senses };
+  return { definition, detail, senses };
 }

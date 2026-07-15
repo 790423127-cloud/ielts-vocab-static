@@ -21,3 +21,11 @@ test("meaning display returns useful detail and at most three high-confidence se
   assert.match(result.detail, /银行/u);
   assert.deepEqual(result.senses.map((sense) => sense.gloss), ["账户", "说明", "叙述"]);
 });
+
+test("meaning display exposes only a real English definition", () => {
+  assert.equal(getMeaningDisplay({ meaning: "账户", definition: "账户" }).definition, "");
+  assert.equal(
+    getMeaningDisplay({ meaning: "账户", definition: "an arrangement with a bank for keeping money" }).definition,
+    "an arrangement with a bank for keeping money"
+  );
+});

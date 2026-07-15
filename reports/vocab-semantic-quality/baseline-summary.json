@@ -1,34 +1,961 @@
 {
-  "generatedAt": "2026-07-15T00:00:00.000Z",
-  "sourceVersion": "v9-13758-gt-complete-20260714-v2-second-review",
+  "generatedAt": "2026-07-15T06:58:23.658Z",
   "readOnly": true,
-  "independentlyVerified": true,
+  "source": ".static-export-cache/words.json",
+  "sourceFileHash": "c47877263f9cf7c0f476cb575a91ccd8a48bbbe8e8c8757bbbc25356fbc55e6e",
+  "sourceVersion": "v9-13757-semantic-quality-v2",
+  "filters": {
+    "priority": null,
+    "batchSize": null,
+    "onlyGt": false,
+    "onlyCore": false
+  },
   "summary": {
-    "totalWords": 13758,
-    "rawIssueCount": 63059,
-    "rawP0AlertCount": 622,
-    "rawP0EntryCount": 449,
-    "strictExampleCandidates": 1286,
-    "acceptedByMorphology": 1141,
-    "targetAbsentAfterMorphology": 145,
+    "totalWords": 13757,
+    "auditedWords": 13757,
+    "issueCount": 114,
+    "p0IssueCount": 0,
+    "p0EntryCount": 0,
+    "strictExampleCandidates": 1235,
+    "acceptedByMorphology": 1235,
+    "targetAbsentAfterMorphology": 0,
+    "priorityCounts": {
+      "P0": 0,
+      "P1": 0,
+      "P2": 0,
+      "P3": 114
+    },
     "categoryCounts": {
-      "meaning_without_chinese": 1,
-      "missing_meaning_detailed": 9130,
-      "generic_meaning_detail": 6484,
-      "meaning_detailed_not_expanded": 4602,
-      "multi_meaning_without_structured_senses": 4255,
-      "multi_meaning_without_quiz_senses": 3862,
-      "space_before_punctuation": 385,
-      "generic_example_cn": 28,
-      "unfinished_example_raw": 204,
-      "number_mismatch_raw": 16,
-      "obvious_translation_mismatch": 2,
-      "probable_typo": 1
+      "controlled_template_example": 114
     }
   },
-  "calibration": {
-    "note": "Raw alerts were calibrated before patching: month/date/decade/万/百万 equivalents and closing quotation marks were removed from confirmed P0. The patch ledger, not the raw alert count, is the authoritative repair set.",
+  "methodology": {
     "paidApiCalls": 0,
-    "externalPerWordLookups": 0
-  }
+    "externalPerWordLookups": 0,
+    "morphologySources": [
+      "IRREGULAR_VERB_FORMS",
+      "IRREGULAR_PLURAL_FORMS",
+      "detectRegularPlural",
+      "buildRegularPlural",
+      "forms",
+      "wordFamily",
+      "acceptedAnswers"
+    ],
+    "strictCandidateDefinition": "例句未直接出现词头；先接受已登记词形、规则词形、不规则词形及连字符/空格等价形式"
+  },
+  "issues": [
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_133f3bdb7658",
+      "word": "analytical",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_5a69bbb4792d",
+      "word": "managerial",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_57f621509cc1",
+      "word": "organizational",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_924c01c37be2",
+      "word": "entrepreneurial",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_478347f7a6b0",
+      "word": "psychology",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_5cf9dbc99582",
+      "word": "art",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_f10f8dbec615",
+      "word": "biology",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_fda9dc3182d8",
+      "word": "sociology",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_57bcd05c4410",
+      "word": "nursing",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_c68d1f7c8ae6",
+      "word": "red",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_3865ae0617aa",
+      "word": "white",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_ab9151662441",
+      "word": "sexy",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_6fb4f01652f9",
+      "word": "pastel",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_6f679361f4f9",
+      "word": "stylish",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_a8051cc039f7",
+      "word": "seventh",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_6cbb59107de4",
+      "word": "twenty-fourth",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_ef0f027c70f9",
+      "word": "twenty-sixth",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_0efc743ef2b8",
+      "word": "twenty-seventh",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_7f9e2addec8f",
+      "word": "twenty-ninth",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_7e2c2cc29561",
+      "word": "principal",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_569390bee0cc",
+      "word": "mayor",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_53c4c84a5b4c",
+      "word": "executive",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_013d426819a5",
+      "word": "headmaster",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_d27c82b125ae",
+      "word": "dean",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_81db4e6dd8a4",
+      "word": "philosophy",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_52be8f7a2c1a",
+      "word": "journalism",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_5108bad36a11",
+      "word": "anthropology",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_715778e174b8",
+      "word": "archaeology",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_a00ceb243d36",
+      "word": "engineering",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_listening1179_48a0f7e20653",
+      "word": "horticulture",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_557cd26810e8",
+      "word": "kent",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_701392d6e9b9",
+      "word": "wisconsin",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_52c279ad5971",
+      "word": "illinois",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_402eed114f0a",
+      "word": "portland",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_7e8eea5cc609",
+      "word": "california",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_a2470c9d137c",
+      "word": "chicago",
+      "evidence": "同类词受控句型出现6次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_8cbc98a65cb9",
+      "word": "nationality",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_c5d449d5cf9a",
+      "word": "postcode",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_adb2533bd1f5",
+      "word": "occupation",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_36f45f4cac5e",
+      "word": "name",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_50f27de165ff",
+      "word": "china",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_de79376e30f5",
+      "word": "germany",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_1b3bce3b91b9",
+      "word": "mexico",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_98880c04d129",
+      "word": "italy",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_d7049f2e5682",
+      "word": "twenty",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_f39bdaa49874",
+      "word": "fifteen",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_8a3839f937db",
+      "word": "nineteen",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_a69edb489f4e",
+      "word": "twenty-one",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_2a8daa7aac7a",
+      "word": "twenty-two",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_7a78c7548928",
+      "word": "thirty-two",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_2b8de4d500dd",
+      "word": "forty-eight",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_84c4b20b93e4",
+      "word": "seventy-two",
+      "evidence": "同类词受控句型出现8次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_70c3a01ac47e",
+      "word": "kid",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_52d19fa42e88",
+      "word": "children",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_b8701cbf5bf9",
+      "word": "girls",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_2ec716e4dc43",
+      "word": "kids",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_8c26071057a9",
+      "word": "pink",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_a21e4b5e2bad",
+      "word": "plain",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_4eb19624f6ec",
+      "word": "purple",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_69319624c9e3",
+      "word": "gorgeous",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_389214364d5c",
+      "word": "velvet",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_bf811f835a07",
+      "word": "forty",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_dae1a7c50f4c",
+      "word": "fifty",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_49fa6fb4bad9",
+      "word": "thirty-five",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_25102b4dfe05",
+      "word": "fifty-five",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_db3a6068f1db",
+      "word": "sixty-nine",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_f02086f9f5f5",
+      "word": "seventy-one",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_1377c1880450",
+      "word": "seventy-eight",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_dbcb538af292",
+      "word": "eighty-three",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_964899f3dfc0",
+      "word": "eighty-six",
+      "evidence": "同类词受控句型出现9次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_95dc60d770dc",
+      "word": "tasmania",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_4762caacdc26",
+      "word": "bilbao",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_4839625482ad",
+      "word": "greece",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_48a1b7dc93ba",
+      "word": "madagascar",
+      "evidence": "同类词受控句型出现4次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_c1d35cc3471f",
+      "word": "anderson",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_0c081477c9bc",
+      "word": "janet",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_4748d4c802a7",
+      "word": "walter",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_d0c6b8c989dc",
+      "word": "gunther",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_cd879f74c6ff",
+      "word": "natalie",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_328e51fcaeaf",
+      "word": "twenty-three",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_412866d80035",
+      "word": "twenty-seven",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_96c2a8346189",
+      "word": "twenty-eight",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_a0d9676cc598",
+      "word": "twenty-nine",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_dfa5c4c47fb2",
+      "word": "thirty-one",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_ee41e5464eec",
+      "word": "fifty-six",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_dcf2928126cc",
+      "word": "fifty-eight",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_69193cd7186a",
+      "word": "fifty-nine",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_e2a062cc5c47",
+      "word": "sixty-three",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_f63dbf1efd6c",
+      "word": "sixty-six",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_16898b9b8503",
+      "word": "eighty-seven",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_5c64a2202314",
+      "word": "eighty-nine",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_2acfc7ff4195",
+      "word": "ninety-three",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_17901bab2d97",
+      "word": "ninety-four",
+      "evidence": "同类词受控句型出现14次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_518ce854e4d7",
+      "word": "thirty-eight",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_074ec9ddfe44",
+      "word": "forty-one",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_fbcb14038f6b",
+      "word": "forty-three",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_9a56bd594d93",
+      "word": "forty-four",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_0f09c0097e47",
+      "word": "forty-nine",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_6382cd3f5ae1",
+      "word": "fifty-three",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_d376c3658fc4",
+      "word": "fifty-seven",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_ccfe4766f535",
+      "word": "sixty-one",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_e904d40a691e",
+      "word": "sixty-two",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_4a8692d5b7e3",
+      "word": "sixty-five",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_07943fed3e15",
+      "word": "sixty-seven",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_9b9c69560bb2",
+      "word": "seventy-three",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_3ba5ea68a8eb",
+      "word": "seventy-six",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_cffdc28faeaa",
+      "word": "seventy-seven",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_14493e55e60a",
+      "word": "seventy-nine",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_e80f294b0b49",
+      "word": "eighty-two",
+      "evidence": "同类词受控句型出现16次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_8e9fdbaeeb66",
+      "word": "thirteenth",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_922ce70edd4a",
+      "word": "fourteenth",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_4f4570e6f83e",
+      "word": "fifteenth",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_0c358e5e20b1",
+      "word": "twenty-second",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    },
+    {
+      "priority": "P3",
+      "category": "controlled_template_example",
+      "id": "word_excel_35b9aaf1ff82",
+      "word": "twenty-fifth",
+      "evidence": "同类词受控句型出现5次",
+      "disposition": "keep"
+    }
+  ],
+  "allIssueCount": 114
 }

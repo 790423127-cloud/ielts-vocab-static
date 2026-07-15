@@ -23,6 +23,13 @@ const FIXED_TIME = "2026-07-15T00:00:00.000Z";
 const BATCH_FILES = new Map([
   ["p0", ["batch-p0.tsv", "batch-p0-followup.tsv"]], ["example-review", ["batch-example-review.tsv"]], ["meaning-core", ["batch-meaning-core.tsv"]]
 ]);
+const V2_MANAGED_FIELDS = new Set(["definition", "meaningDetailedZh", "meaningDetailZh"]);
+
+function isV2Managed(entry, field) {
+  return Boolean(entry?.semanticQualityV2 && (
+    V2_MANAGED_FIELDS.has(field) || entry?.semanticQualityV2ManagedFields?.includes(field)
+  ));
+}
 
 function parseTsv(filePath) {
   const lines = fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "").split(/\r?\n/).filter(Boolean);
@@ -49,7 +56,7 @@ function desiredState(entry, patch) {
   const forms = parseJson(patch.addFormsJson, []);
   const meanings = parseJson(patch.addMeaningsJson, []);
   const quiz = parseJson(patch.addQuizSensesJson, []);
-  if (!Object.entries(set).every(([key, value]) => JSON.stringify(entry?.[key]) === JSON.stringify(value))) return false;
+  if (!Object.entries(set).every(([key, value]) => isV2Managed(entry, key) || JSON.stringify(entry?.[key]) === JSON.stringify(value))) return false;
   const formKeys = new Set((entry?.forms || []).map((item) => normalizeText(item?.word ?? item)));
   if (!forms.every((item) => formKeys.has(normalizeText(item?.word ?? item)))) return false;
   const meaningKeys = new Set((entry?.meaningsZh || []).map((item) => `${normalizeText(item?.gloss)}::${normalizeText(item?.posFamily)}`));
@@ -70,8 +77,8 @@ function patchHashesMatch(entry, patch, original) {
   const currentExampleMatches = hashExample(entry) === patch.expectedExampleHash;
   const originalMeaningMatches = original?.meaning === patch.expectedMeaningHash;
   const originalExampleMatches = original?.example === patch.expectedExampleHash;
-  if (touchesMeaning && !currentMeaningMatches && !originalMeaningMatches) return false;
-  if (touchesExample && !currentExampleMatches && !originalExampleMatches) return false;
+  if (touchesMeaning && !currentMeaningMatches && !originalMeaningMatches && !entry?.semanticQualityV2) return false;
+  if (touchesExample && !currentExampleMatches && !originalExampleMatches && !isV2Managed(entry, "example")) return false;
   if (!touchesMeaning && !touchesExample) return currentMeaningMatches || originalMeaningMatches || currentExampleMatches || originalExampleMatches;
   return true;
 }
@@ -142,7 +149,7 @@ export function applySemanticPatches({ sourcePath = CACHE, batch = "all", apply 
     const before = JSON.stringify(entry);
     const preserved = Object.fromEntries([...USER_PROGRESS_FIELDS].filter((field) => field in entry).map((field) => [field, structuredClone(entry[field])]));
     const set = parseJson(patch.setJson, {});
-    for (const [field, value] of Object.entries(set)) if (!USER_PROGRESS_FIELDS.has(field)) entry[field] = value;
+    for (const [field, value] of Object.entries(set)) if (!USER_PROGRESS_FIELDS.has(field) && !isV2Managed(entry, field)) entry[field] = value;
     const forms = parseJson(patch.addFormsJson, []);
     const meanings = parseJson(patch.addMeaningsJson, []);
     const quiz = parseJson(patch.addQuizSensesJson, []);

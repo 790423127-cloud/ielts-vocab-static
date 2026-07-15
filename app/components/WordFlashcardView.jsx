@@ -377,6 +377,12 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
 
           <div className="meaning-block">
             <div className="meaning-primary">{fallback(item.meaning, "等待 AI 生成中文释义")}</div>
+            {meaningDisplay.definition ? (
+              <div className="meaning-expanded meaning-definition-en">
+                <span>英文释义</span>
+                <p lang="en">{meaningDisplay.definition}</p>
+              </div>
+            ) : null}
             {meaningDisplay.detail ? (
               <div className="meaning-expanded">
                 <span>详细释义</span>

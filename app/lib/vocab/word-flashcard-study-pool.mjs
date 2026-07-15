@@ -146,6 +146,7 @@ export function isLifeWorkWord(word) {
 export function wordMatchesFilter(word, filter) {
   if (filter.type === "everything") return true;
   if (isIdictationFlashFilter(filter)) return Boolean(word.__idictationFlash);
+  if (word.studyMode === "reference" && !(filter.type === "topic" && filter.value === "G类完整学习计划·阶段4")) return false;
 
   if (filter.type === "status") {
     if (filter.value === "不熟") return word.status === "不熟";

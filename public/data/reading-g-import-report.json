@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T15:16:16.731Z",
+  "generatedAt": "2026-07-15T07:24:36.624Z",
   "dataSchemaVersion": 3,
   "progressSchemaVersion": 3,
   "datasetVersion": "reading-g-core-v3",
@@ -1799,124 +1799,12 @@
     "phraseCount": 668,
     "activeCount": 4348,
     "referenceOnlyCount": 630,
-    "multiSenseCount": 1161,
+    "multiSenseCount": 795,
     "paraphraseHighCount": 300,
     "networkCandidateExpressions": 2187,
     "emptyWord": 0,
     "emptyMeaning": 0,
     "conflictSamples": 7114,
     "mergeMapSize": 4978
-  },
-  "updatedAt": "2026-07-12T06:21:55.238Z",
-  "completionV3": {
-    "safeParaphraseQuizGroupCount": 300,
-    "skippedParaphraseQuizGroupCount": 0,
-    "skippedGroupReasons": {},
-    "meaningStatusCounts": {
-      "note": "runtime localStorage"
-    },
-    "phraseStatusCounts": {
-      "note": "runtime localStorage"
-    },
-    "paraphraseStatusCounts": {
-      "note": "runtime localStorage"
-    },
-    "phraseStage1Count": 200,
-    "phraseStage2Count": 200,
-    "phrases400Count": 400,
-    "stageUniqueCounts": {
-      "stage1": 1900,
-      "stage2": 1400,
-      "stage3": 2201,
-      "stage4": 701
-    },
-    "missingWordPhonetics": 65,
-    "missingPhrasePhonetics": 585,
-    "migrationMatchedCount": null,
-    "migrationAmbiguousCount": null,
-    "cloudExportFiles": [
-      "data/reading-g-vocab.json",
-      "data/reading-g-paraphrases.json",
-      "data/reading-g-import-report.json",
-      "reading-g.html",
-      "assets/reading-g.js"
-    ],
-    "itemCount": 4978,
-    "activeCount": 4348,
-    "referenceCount": 630
-  },
-  "safeParaphraseQuizGroupCount": 233,
-  "skippedParaphraseQuizGroupCount": 67,
-  "skippedGroupReasons": {},
-  "phraseStage1Count": 200,
-  "phraseStage2Count": 200,
-  "missingWordPhonetics": 65,
-  "missingPhrasePhonetics": 585,
-  "cloudExportFiles": [
-    "data/reading-g-vocab.json",
-    "data/reading-g-paraphrases.json",
-    "data/reading-g-import-report.json",
-    "reading-g.html",
-    "assets/reading-g.js"
-  ],
-  "finalAudit": {
-    "at": "2026-07-12T06:29:56.251Z",
-    "stageExact": {
-      "stage1": 1900,
-      "stage2": 1400,
-      "stage3": 2201,
-      "stage4": 701,
-      "stage4PureReference701": 630,
-      "phraseStage1": 200,
-      "phraseStage2": 200,
-      "phrases400": 400,
-      "phraseStageNoOverlap": true,
-      "highParaphraseGroupsSeparate": 300
-    },
-    "highCanQuiz": 278,
-    "exhaustive": {
-      "groupsQuizReady": 278,
-      "groupsSkipped": 0,
-      "totalQuestionVariants": 556,
-      "invalidQuestionCount": 0
-    },
-    "missingWordPhonetics": 65,
-    "stress": {
-      "built": 1000,
-      "positionPct": [
-        25.2,
-        25.6,
-        24.2,
-        25
-      ],
-      "failureRate": 0
-    }
-  },
-  "stageUniqueCounts": {
-    "stage1": 1900,
-    "stage2": 1400,
-    "stage3": 2201,
-    "stage4": 701
-  },
-  "finalSelfCheck": {
-    "at": "2026-07-12T06:32:43.266Z",
-    "highGroups": 300,
-    "canAutoQuizWithCommonMeaning": 233,
-    "disabledAutoQuiz": 67,
-    "stage1": 1900,
-    "stage2": 1400,
-    "stage3": 2201,
-    "stage4": 701,
-    "phraseStage1": 200,
-    "phraseStage2": 200,
-    "exhaustiveVariants": 466,
-    "invalid": 0,
-    "stressBuilt": 1000,
-    "positionPct": [
-      24.6,
-      24.5,
-      25,
-      25.9
-    ]
   }
 }

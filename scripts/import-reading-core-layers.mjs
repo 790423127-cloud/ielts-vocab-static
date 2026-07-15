@@ -140,11 +140,53 @@ function normalizeMeaningZh(text) {
     .replace(/^n\.\s*/i, "")
     .replace(/^adj\.\s*/i, "")
     .replace(/^adv\.\s*/i, "")
+    .replace(/[；;，,、\s]+$/g, "")
     .trim();
 }
 
 function senseKey(pos, meaningZh) {
   return `${normalizePos(pos)}::${normalizeMeaningZh(meaningZh).toLowerCase()}`;
+}
+
+function meaningTokens(meaningZh) {
+  return normalizeMeaningZh(meaningZh)
+    .split(/[；;，,、/]+/)
+    .map((token) => normalizeMeaningZh(token).replace(/\s+/g, "").toLowerCase())
+    .filter(Boolean);
+}
+
+function isTokenSubset(left, right) {
+  const rightSet = new Set(right);
+  return left.length > 0 && left.every((token) => rightSet.has(token));
+}
+
+function mergeSenseEvidence(target, source) {
+  target.sourceFiles = [...new Set([...(target.sourceFiles || []), ...(source.sourceFiles || [])])];
+  if (!target.definition && source.definition) target.definition = source.definition;
+  if (!target.example && source.example) target.example = source.example;
+  if (!target.exampleZh && source.exampleZh) target.exampleZh = source.exampleZh;
+}
+
+function compactSenses(senses) {
+  const compacted = [];
+  for (const sense of senses || []) {
+    const pos = normalizePos(sense.pos);
+    const tokens = meaningTokens(sense.meaningZh);
+    const existing = compacted.find((candidate) => {
+      if (normalizePos(candidate.pos) !== pos) return false;
+      const candidateTokens = meaningTokens(candidate.meaningZh);
+      return isTokenSubset(tokens, candidateTokens) || isTokenSubset(candidateTokens, tokens);
+    });
+    if (!existing) {
+      compacted.push({ ...sense, meaningZh: normalizeMeaningZh(sense.meaningZh) });
+      continue;
+    }
+
+    const existingTokens = meaningTokens(existing.meaningZh);
+    if (tokens.length > existingTokens.length) existing.meaningZh = normalizeMeaningZh(sense.meaningZh);
+    mergeSenseEvidence(existing, sense);
+  }
+  return compacted;
 }
 
 function extractSurface(raw, kind) {
@@ -173,6 +215,26 @@ function extractExample(raw) {
     example: str(raw.example || ""),
     exampleZh: str(raw.exampleCn || raw.exampleZh || "")
   };
+}
+
+function extractLabeledSenses(meaning, fallbackPos = "") {
+  const source = String(meaning || "").trim();
+  const marker = /(^|[\n；;]|\s+)(prep|pron|conj|adj|adv|n|v)\.\s*/gi;
+  const matches = [...source.matchAll(marker)];
+  if (!matches.length) return [];
+
+  const senses = [];
+  const prefix = source.slice(0, matches[0].index).replace(/[\n；;\s]+$/g, "").trim();
+  if (prefix && fallbackPos) senses.push({ pos: fallbackPos, meaningZh: prefix });
+
+  for (let index = 0; index < matches.length; index += 1) {
+    const match = matches[index];
+    const start = match.index + match[0].length;
+    const end = matches[index + 1]?.index ?? source.length;
+    const meaningZh = source.slice(start, end).replace(/^[\n；;\s]+|[\n；;\s]+$/g, "").trim();
+    if (meaningZh) senses.push({ pos: match[2], meaningZh });
+  }
+  return senses;
 }
 
 function guessEntryType(raw, layerKind, surface) {
@@ -359,7 +421,8 @@ function applyRawToEntry(entry, raw, layer, sourceFile, fieldPriority, conflicts
   mergeFieldPreferPriority(entry, "difficulty", str(raw.difficulty || ""), layer.rank, fieldPriority, conflicts, sourceFile);
   mergeFieldPreferPriority(entry, "domain", str(raw.domain || ""), layer.rank, fieldPriority, conflicts, sourceFile);
 
-  if (meaning) {
+  const labeledSenses = extractLabeledSenses(meaning, pos);
+  if (meaning && labeledSenses.length < 2) {
     upsertSense(
       entry,
       {
@@ -374,20 +437,15 @@ function applyRawToEntry(entry, raw, layer, sourceFile, fieldPriority, conflicts
     );
   }
 
-  // multi-pos in online entries meaningZh like "v. 需要；\nn. 需要；"
-  if (Array.isArray(raw.pos) && raw.pos.length > 1 && meaning.includes("\n")) {
-    const parts = meaning.split(/\n+/).map((x) => x.trim()).filter(Boolean);
-    for (const part of parts) {
-      const m = part.match(/^(v|n|adj|adv)\.?\s*(.+)$/i);
-      if (m) {
-        upsertSense(
-          entry,
-          { pos: m[1], meaningZh: m[2], example, exampleZh },
-          sourceFile,
-          conflicts
-        );
-      }
-    }
+  // Multi-POS source rows are already complete senses. Do not also insert the
+  // combined source string, otherwise the UI shows the same meanings twice.
+  for (const labeledSense of labeledSenses) {
+    upsertSense(
+      entry,
+      { ...labeledSense, example, exampleZh },
+      sourceFile,
+      conflicts
+    );
   }
 
   const collocations = asArray(raw.collocations)
@@ -484,6 +542,7 @@ function ensureMemberInMap(map, surface, sourceFile, meaningHint = "") {
 }
 
 function finalizeEntry(entry) {
+  entry.senses = compactSenses(entry.senses);
   if (!entry.primaryMeaningZh && entry.senses[0]) {
     entry.primaryMeaningZh = entry.senses[0].meaningZh;
   }
@@ -675,7 +734,7 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
 
     const seenInLayer = new Set();
     let skippedEmpty = 0;
-    for (const raw of rows) {
+    for (const [rowIndex, raw] of rows.entries()) {
       const surface = extractSurface(raw, layer.kind);
       const nk = normalizeKey(surface);
       if (!nk) {
@@ -692,6 +751,9 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
       }
       const bag = map.get(key);
       applyRawToEntry(bag.entry, raw, layer, layer.file, bag.fieldPriority, conflicts);
+      if (layer.id === "phrases400") {
+        bag.entry.phraseStudyStage = rowIndex < 200 ? 1 : 2;
+      }
     }
 
     report.layerStats[layer.id] = {
@@ -916,6 +978,34 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
     item.exampleCn = cleanExampleCnField(item.exampleCn || "");
   }
 
+  // Fill only missing word phonetics from the bundled, versioned master lexicon.
+  // This keeps a direct import equivalent to the historical enrichment step.
+  const masterVocabPath = path.join(root, "public", "data", "words.json");
+  const masterVocab = fs.existsSync(masterVocabPath) ? readJson(masterVocabPath) : null;
+  const masterPhonetics = new Map(
+    asArray(masterVocab?.words)
+      .map((word) => [normalizeKey(word?.word), str(word?.phonetic || word?.ipa || "")])
+      .filter(([key, phonetic]) => key && phonetic)
+  );
+  let phoneticFilled = 0;
+  for (const item of items) {
+    if (item.entryType !== "word" || item.phonetic) continue;
+    const phonetic = masterPhonetics.get(item.normalizedKey);
+    if (!phonetic) continue;
+    item.phonetic = phonetic;
+    item.phoneticSource = "words.json";
+    phoneticFilled += 1;
+  }
+
+  const phraseStage1Count = items.filter((item) => item.phraseStudyStage === 1).length;
+  const phraseStage2Count = items.filter((item) => item.phraseStudyStage === 2).length;
+  const missingWordPhonetics = items.filter(
+    (item) => item.entryType === "word" && !String(item.phonetic || "").trim()
+  ).length;
+  const missingPhrasePhonetics = items.filter(
+    (item) => item.entryType === "phrase" && !String(item.phonetic || "").trim()
+  ).length;
+
   const audit = auditDataset(items, paraphrases, report.layerStats, warnings);
   report.warnings = warnings.concat(conflicts.slice(0, 200));
   report.errors = audit.errors;
@@ -977,6 +1067,20 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
     referenceCount: audit.referenceOnly,
     multiSenseCount: audit.multiSense,
     layerStats: report.layerStats,
+    enrichedAt: report.generatedAt,
+    enrichment: {
+      phraseStudyStage: {
+        stage1: phraseStage1Count,
+        stage2: phraseStage2Count,
+        usedFallbackOrder: false,
+        source: "gt-reading-phrases-400.json"
+      },
+      phonetics: {
+        filled: phoneticFilled,
+        stillMissingWord: missingWordPhonetics,
+        missingPhrase: missingPhrasePhonetics
+      }
+    },
     note: "G类阅读核心分层词库 v3。默认待学 studyMode=active；reference701 只查阅。同义关系见 reading-g-paraphrases.json。",
     items
   };

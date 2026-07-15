@@ -241,7 +241,9 @@
   margin-top: 10px;
 }
 
-.rgSensesBtn {
+.rgSensesLabel {
+  display: inline-flex;
+  align-items: center;
   border: 1px solid #dce3df;
   background: #fff;
   color: #2f6b5d;
@@ -249,7 +251,6 @@
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 750;
-  cursor: pointer;
 }
 
 .rgSensesPanel {

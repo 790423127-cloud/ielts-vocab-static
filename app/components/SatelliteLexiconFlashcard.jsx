@@ -8,7 +8,7 @@
  * layoutMode="default": original behavior for /basic.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import StudyRangeSummary from "./StudyRangeSummary";
 import VirtualList from "./VirtualList";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
@@ -58,6 +58,14 @@ function displaySatelliteCategory(value, isReadingG) {
   const s = String(value || "").trim();
   if (isReadingG && (/IELTS\s*G类|阅读核心|G类阅读/i.test(s) || !s)) return "G类阅读提升";
   return s || "";
+}
+
+function isRepeatedSenseExample(senses, index) {
+  const current = String(senses[index]?.example || senses[index]?.exampleEn || "").trim();
+  if (!current) return false;
+  return senses.slice(0, index).some((sense) =>
+    String(sense?.example || sense?.exampleEn || "").trim() === current
+  );
 }
 
 /**
@@ -127,7 +135,6 @@ export default function SatelliteLexiconFlashcard({
   sensesExtra = null
 }) {
   const isReadingG = layoutMode === "readingG";
-  const [sensesOpen, setSensesOpen] = useState(false);
   const commonCollocations = normalizePhraseItems(item?.collocations);
   const phraseCollocations = normalizePhraseItems(item?.phraseCollocations);
   const collocationFallback = [{ phrase: "暂无搭配", chinese: "" }];
@@ -752,43 +759,38 @@ export default function SatelliteLexiconFlashcard({
                   <div className="meaning-primary">{fallback(item?.meaning, "等待释义")}</div>
                   {isReadingG && senseCount > 1 ? (
                     <div className={rgStyles.rgSensesWrap}>
-                      <button
-                        type="button"
-                        className={rgStyles.rgSensesBtn}
-                        onClick={() => setSensesOpen((v) => !v)}
-                      >
-                        其他义项 · {senseCount - 1}
-                      </button>
-                      {sensesOpen ? (
-                        <div className={rgStyles.rgSensesPanel}>
-                          {(item.senses || []).map((s, i) => (
+                      <div className={rgStyles.rgSensesLabel}>完整义项 · {senseCount}</div>
+                      <div className={rgStyles.rgSensesPanel} aria-label={`${senseCount} 个完整义项`}>
+                        {(item.senses || []).map((s, i) => {
+                          const repeatedExample = isRepeatedSenseExample(item.senses || [], i);
+                          return (
                             <div key={s.senseId || i} className={rgStyles.rgSenseRow}>
-                              <div>
-                                <strong>[{getPosDisplay(s.pos) || "—"}]</strong>{" "}
-                                {s.meaningZh || s.meaning || "—"}
-                                {i === 0 || s.isPrimary || s.readingCommon ? (
-                                  <span className={rgStyles.rgSenseTag}>阅读常用</span>
-                                ) : null}
-                              </div>
-                              {s.example || s.exampleEn ? (
-                                <div className={rgStyles.rgMetaLine}>
-                                  {s.example || s.exampleEn}
-                                </div>
-                              ) : null}
-                              {s.exampleCn || s.exampleZh ? (
-                                <div className={rgStyles.rgMetaLine}>
-                                  {s.exampleCn || s.exampleZh}
-                                </div>
-                              ) : null}
-                              {s.source || s.sourceFile ? (
-                                <div className={rgStyles.rgMetaLine}>
-                                  来源：{s.source || s.sourceFile}
-                                </div>
+                            <div>
+                              <strong>[{getPosDisplay(s.pos) || "—"}]</strong>{" "}
+                              {s.meaningZh || s.meaning || "—"}
+                              {i === 0 || s.isPrimary || s.readingCommon ? (
+                                <span className={rgStyles.rgSenseTag}>阅读常用</span>
                               ) : null}
                             </div>
-                          ))}
-                        </div>
-                      ) : null}
+                            {!repeatedExample && (s.example || s.exampleEn) ? (
+                              <div className={rgStyles.rgMetaLine}>
+                                {s.example || s.exampleEn}
+                              </div>
+                            ) : null}
+                            {!repeatedExample && (s.exampleCn || s.exampleZh) ? (
+                              <div className={rgStyles.rgMetaLine}>
+                                {s.exampleCn || s.exampleZh}
+                              </div>
+                            ) : null}
+                            {s.source || s.sourceFile ? (
+                              <div className={rgStyles.rgMetaLine}>
+                                来源：{s.source || s.sourceFile}
+                              </div>
+                            ) : null}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   ) : null}
                   {sensesExtra}

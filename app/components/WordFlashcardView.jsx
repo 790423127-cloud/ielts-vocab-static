@@ -11,6 +11,7 @@ import {
   getFormHint,
   getPosDisplay
 } from "../lib/vocab/page-word-helpers.mjs";
+import { getMeaningDisplay } from "../lib/vocab/meaning-display.mjs";
 
 /**
  * Word flashcard shell UI (props grouped v2026-07-10.4).
@@ -108,6 +109,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
   ];
   const libraryTotal = Number(wordLibraryStats.total || 0) || Math.max(1, familiarCount + wordLibraryStats.pending + wordLibraryStats.unfamiliar);
   const familiarPercent = Math.round((familiarCount / libraryTotal) * 100);
+  const meaningDisplay = getMeaningDisplay(item);
 
   return (
     <div className={`word-flash-shell${showInsight ? "" : " is-insight-collapsed"}`}>
@@ -333,8 +335,8 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                 speakExample();
               }
             }}>
-              <div className="example">{fallback(item.example, "等待 AI 生成雅思例句")}</div>
-              <div className="example-cn">{fallback(item.exampleCn, "等待 AI 生成例句中文翻译")}</div>
+              <div className="example">{fallback(item.example, "例句待补全")}</div>
+              <div className="example-cn">{fallback(item.exampleCn, "例句翻译待补全")}</div>
             </div>
           </div>
 
@@ -375,6 +377,22 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
 
           <div className="meaning-block">
             <div className="meaning-primary">{fallback(item.meaning, "等待 AI 生成中文释义")}</div>
+            {meaningDisplay.detail ? (
+              <div className="meaning-expanded">
+                <span>详细释义</span>
+                <p>{meaningDisplay.detail}</p>
+              </div>
+            ) : null}
+            {meaningDisplay.senses.length > 1 ? (
+              <ul className="meaning-senses" aria-label="高置信义项">
+                {meaningDisplay.senses.map((sense) => (
+                  <li key={`${sense.gloss}-${sense.posFamily}`}>
+                    {sense.label ? <span>{sense.label}</span> : null}
+                    <strong>{sense.gloss}</strong>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
 
           <section className="word-dictionary-panel" aria-label="词典详情">

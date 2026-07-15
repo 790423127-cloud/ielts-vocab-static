@@ -23,6 +23,17 @@ jobs:
           node-version: "20"
           cache: npm
 
+      - name: Full vocabulary semantic audit
+        run: node scripts/audit-all-vocab-semantic-quality.mjs
+
+      - name: Upload full vocabulary semantic audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-vocab-semantic-audit-${{ github.run_id }}
+          path: reports/full-vocab-semantic-audit
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Install dependencies
         run: npm ci
 

@@ -1,4 +1,5 @@
 import { IDICTATION_FREQUENCY_META } from "../spelling/idictation-frequency.mjs";
+import { isBrushableWord } from "./word-study-eligibility.mjs";
 
 function normalizePhraseItems(value) {
   if (!value) return [];
@@ -53,10 +54,22 @@ function createFilterTallies() {
 }
 
 function tallyWordForFilters(word, tallies) {
+  if (!isBrushableWord(word)) return;
+
   const status = word?.status || "";
   const isFamiliar = status === "熟悉";
 
   tallies.everything += 1;
+
+  if (word?.studyMode === "reference") {
+    if (!isFamiliar && word?.topics?.includes("G类完整学习计划·阶段4")) {
+      tallies.topic.set(
+        "G类完整学习计划·阶段4",
+        (tallies.topic.get("G类完整学习计划·阶段4") || 0) + 1
+      );
+    }
+    return;
+  }
 
   if (status === "不熟") tallies.status["不熟"] += 1;
   if (isFamiliar) tallies.status["熟悉"] += 1;
@@ -97,7 +110,7 @@ function countFromTallies(filter, tallies) {
     return tallies.lifeWork;
   }
 
-  if (filter.type === "ielts") {
+  if (filter.type === "ielts" || filter.type === "ieltsUse") {
     return tallies.ielts.get(filter.value) || 0;
   }
 

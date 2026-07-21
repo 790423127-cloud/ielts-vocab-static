@@ -38,6 +38,9 @@ jobs:
       - name: Quality gates
         run: npm run quality:all
 
+      - name: Capture semantic test fixture
+        run: node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('.static-export-cache/words.json','utf8'));const e=p.words.find(x=>x.word==='subject');fs.writeFileSync('subject-entry.json',JSON.stringify(e,null,2));console.log(JSON.stringify({word:e?.word,meaning:e?.meaning,meaningDetailedZh:e?.meaningDetailedZh,length:e?.meaningDetailedZh?.length,definition:e?.definition,semanticQualityV2:e?.semanticQualityV2},null,2));"
+
       - name: Unit tests
         shell: bash
         run: |
@@ -49,7 +52,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-failure-${{ github.run_id }}
-          path: unit-test.log
+          path: |
+            unit-test.log
+            subject-entry.json
           if-no-files-found: ignore
           retention-days: 7
 

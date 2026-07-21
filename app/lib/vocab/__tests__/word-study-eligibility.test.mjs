@@ -1,8 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { applyMorphologyCleanup } from "../../../../scripts/apply-vocab-morphology-v1.mjs";
 import {
   buildFilteredWordIndices,
   buildStudyWordIndices,
@@ -19,12 +21,30 @@ import {
 } from "../word-study-eligibility.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
-const payload = JSON.parse(fs.readFileSync(path.join(ROOT, ".static-export-cache", "words.json"), "utf8"));
-const fullWords = Array.isArray(payload) ? payload : payload.words;
+const CACHE = path.join(ROOT, ".static-export-cache", "words.json");
+const AUDIT = path.join(ROOT, "data", "vocab-morphology", "audit");
 const normalizeWord = (value) => String(value || "").trim().toLowerCase();
 const filterKey = (filter) => filter?.type === "all" ? "all" : `${filter?.type}:${filter?.value || ""}`;
 
+function createAppliedWords() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "brushable-words-"));
+  const tempWords = path.join(dir, "words.json");
+  fs.copyFileSync(CACHE, tempWords);
+  const report = applyMorphologyCleanup({
+    sourcePath: tempWords,
+    auditPath: AUDIT,
+    apply: true,
+    writePaths: [tempWords],
+    baselinePath: null
+  });
+  assert.deepEqual(report.errors, []);
+  const payload = JSON.parse(fs.readFileSync(tempWords, "utf8"));
+  fs.rmSync(dir, { recursive: true, force: true });
+  return Array.isArray(payload) ? payload : payload.words;
+}
+
 test("full lexicon exposes the real 13,587-word brushable total", () => {
+  const fullWords = createAppliedWords();
   const physicalTotal = fullWords.length;
   const inflectedReferenceTotal = fullWords.filter(isInflectedReferenceWord).length;
   const brushableTotal = fullWords.filter(isBrushableWord).length;

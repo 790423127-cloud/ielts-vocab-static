@@ -15,14 +15,16 @@ test("word flashcard shows curated meaning detail without responsive overflow", 
   await accountItem.click();
 
   await expect(page.locator(".word")).toHaveText("account");
-  await expect(page.locator(".meaning-expanded")).toContainText("详细释义");
-  await expect(page.locator(".meaning-expanded")).toContainText("银行");
+  const detailedMeaning = page.locator(".meaning-expanded").filter({ hasText: "详细释义" });
+  await expect(detailedMeaning).toHaveCount(1);
+  await expect(detailedMeaning).toContainText("详细释义");
+  await expect(detailedMeaning).toContainText("银行");
   const senseCount = await page.locator(".meaning-senses li").count();
   expect(senseCount).toBeGreaterThanOrEqual(2);
   expect(senseCount).toBeLessThanOrEqual(3);
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.locator(".meaning-expanded")).toBeVisible();
+  await expect(detailedMeaning).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
   expect(consoleErrors).toEqual([]);

@@ -5,6 +5,7 @@ import {
   readWithLegacyFallback,
   writeJsonStorage
 } from "./progress-schema.mjs";
+import { resolveInflectedReferenceIndex } from "./word-study-eligibility.mjs";
 
 export const WORD_FLASHCARD_SESSION_KEY = "ielts_vocab_session_v1";
 export const WORD_FLASHCARD_POSITIONS_KEY = "ielts_vocab_entry_positions_v1";
@@ -94,9 +95,7 @@ function resolveIdictationStudyIndex(studyPool, {
     : toIdictationSourceIndex(savedIndex);
 
   function restoreFromPoolItem(item, reason) {
-    if (!item || !Number.isInteger(item.originalIndex)) {
-      return null;
-    }
+    if (!item || !Number.isInteger(item.originalIndex)) return null;
     return { index: item.originalIndex, restored: true, reason, filter: nextFilter };
   }
 
@@ -113,8 +112,7 @@ function resolveIdictationStudyIndex(studyPool, {
   if (restored) return restored;
 
   if (savedSourceIndex >= 0 && savedSourceIndex < studyPool.length) {
-    const poolItem = studyPool[savedSourceIndex];
-    restored = restoreFromPoolItem(poolItem, "idictationSourceIndex");
+    restored = restoreFromPoolItem(studyPool[savedSourceIndex], "idictationSourceIndex");
     if (restored) return restored;
   }
 
@@ -131,6 +129,7 @@ function resolveIdictationStudyIndex(studyPool, {
 
 /**
  * Resolve a saved word position without falling back to the first study word.
+ * Saved pure inflection positions are migrated to their brushable base word.
  */
 export function resolveWordStudyIndex(words, {
   session = null,
@@ -159,7 +158,7 @@ export function resolveWordStudyIndex(words, {
 
   const list = Array.isArray(words) ? words : [];
   if (!list.length) {
-    return { index: -1, restored: false, reason: "emptyLexicon" };
+    return { index: -1, restored: false, reason: "emptyLexicon", filter: nextFilter };
   }
 
   const filterKeyValue = filterKey(nextFilter);
@@ -167,40 +166,55 @@ export function resolveWordStudyIndex(words, {
   const savedPositionKey = String(entryPositions[filterKeyValue] || "").trim();
   const savedIndex = Number.isInteger(session?.index) ? session.index : -1;
 
-  function findByKey(key, requireFilter) {
+  function findRawIndexByKey(key) {
     if (!key) return -1;
-    return list.findIndex((word) => {
-      if (normalizeWord(word.word) !== key) return false;
-      return requireFilter ? wordMatchesFilter(word, nextFilter) : true;
-    });
+    return list.findIndex((word) => normalizeWord(word?.word) === key);
   }
 
-  let index = findByKey(savedWordKey, true);
-  if (index >= 0) return { index, restored: true, reason: "wordKey", filter: nextFilter };
+  function finalize(rawIndex, reason, requireCurrentFilter) {
+    if (!Number.isInteger(rawIndex) || rawIndex < 0 || rawIndex >= list.length) return null;
+    const resolvedIndex = resolveInflectedReferenceIndex(list, rawIndex, normalizeWord);
+    if (resolvedIndex < 0) return null;
+    const resolvedWord = list[resolvedIndex];
+    if (requireCurrentFilter && !wordMatchesFilter(resolvedWord, nextFilter)) return null;
+    return {
+      index: resolvedIndex,
+      restored: true,
+      reason: resolvedIndex === rawIndex ? reason : "inflectedFormRedirect",
+      filter: nextFilter
+    };
+  }
 
-  index = findByKey(savedPositionKey, true);
-  if (index >= 0) return { index, restored: true, reason: "entryPosition", filter: nextFilter };
+  let restored = finalize(findRawIndexByKey(savedWordKey), "wordKey", true);
+  if (restored) return restored;
+
+  restored = finalize(findRawIndexByKey(savedPositionKey), "entryPosition", true);
+  if (restored) return restored;
 
   if (savedWordKey) {
-    index = findByKey(savedWordKey, false);
-    if (index >= 0) {
-      return { index, restored: true, reason: "wordKeyOutOfFilter", filter: nextFilter };
-    }
+    restored = finalize(findRawIndexByKey(savedWordKey), "wordKeyOutOfFilter", false);
+    if (restored) return restored;
   }
 
   if (savedPositionKey) {
-    index = findByKey(savedPositionKey, false);
-    if (index >= 0) {
-      return { index, restored: true, reason: "entryPositionOutOfFilter", filter: nextFilter };
-    }
+    restored = finalize(findRawIndexByKey(savedPositionKey), "entryPositionOutOfFilter", false);
+    if (restored) return restored;
   }
 
   if (savedIndex >= 0 && savedIndex < list.length) {
-    const word = list[savedIndex];
-    if (wordMatchesFilter(word, nextFilter)) {
-      return { index: savedIndex, restored: true, reason: "savedIndex", filter: nextFilter };
+    const resolvedIndex = resolveInflectedReferenceIndex(list, savedIndex, normalizeWord);
+    if (resolvedIndex >= 0) {
+      const resolvedWord = list[resolvedIndex];
+      const inFilter = wordMatchesFilter(resolvedWord, nextFilter);
+      return {
+        index: resolvedIndex,
+        restored: true,
+        reason: resolvedIndex !== savedIndex
+          ? "inflectedFormRedirect"
+          : inFilter ? "savedIndex" : "savedIndexOutOfFilter",
+        filter: nextFilter
+      };
     }
-    return { index: savedIndex, restored: true, reason: "savedIndexOutOfFilter", filter: nextFilter };
   }
 
   return { index: -1, restored: false, reason: "notFound", filter: nextFilter };
@@ -218,7 +232,9 @@ export function resolveCurrentStudyItem({
     return studyPool.find((item) => item.originalIndex === index) || null;
   }
 
-  return Array.isArray(words) ? words[index] || null : null;
+  const list = Array.isArray(words) ? words : [];
+  const resolvedIndex = resolveInflectedReferenceIndex(list, index);
+  return resolvedIndex >= 0 ? list[resolvedIndex] || null : null;
 }
 
 export function buildWordFlashSessionPayload({
@@ -231,9 +247,13 @@ export function buildWordFlashSessionPayload({
   currentItem = null
 }) {
   const nextFilter = normalizeWordFlashFilter(filter);
+  const resolvedIndex = isIdictationFlashFilter(nextFilter)
+    ? index
+    : resolveInflectedReferenceIndex(words, index, normalizeWord);
+  const safeIndex = resolvedIndex >= 0 ? resolvedIndex : index;
   const item = currentItem || resolveCurrentStudyItem({
     words,
-    index,
+    index: safeIndex,
     filter: nextFilter,
     studyPool
   });
@@ -242,7 +262,7 @@ export function buildWordFlashSessionPayload({
     v: STUDY_SESSION_SCHEMA_VERSION,
     progressSchemaVersion: PROGRESS_SCHEMA_VERSION,
     progressKey: WORD_FLASHCARD_PROGRESS_KEY,
-    index,
+    index: safeIndex,
     wordKey: item?.word && typeof normalizeWord === "function" ? normalizeWord(item.word) : "",
     word: item?.word || "",
     filter: nextFilter,
@@ -251,10 +271,8 @@ export function buildWordFlashSessionPayload({
   };
 
   if (isIdictationFlashFilter(nextFilter)) {
-    const sourceIndex = toIdictationSourceIndex(index);
-    if (sourceIndex >= 0) {
-      payload.idictationSourceIndex = sourceIndex;
-    }
+    const sourceIndex = toIdictationSourceIndex(safeIndex);
+    if (sourceIndex >= 0) payload.idictationSourceIndex = sourceIndex;
   }
 
   return payload;
@@ -272,9 +290,13 @@ export function persistWordFlashSession({
   storageSet = defaultStorageSet
 }) {
   const nextFilter = normalizeWordFlashFilter(filter);
+  const resolvedIndex = isIdictationFlashFilter(nextFilter)
+    ? index
+    : resolveInflectedReferenceIndex(words, index, normalizeWord);
+  const safeIndex = resolvedIndex >= 0 ? resolvedIndex : index;
   const item = currentItem || resolveCurrentStudyItem({
     words,
-    index,
+    index: safeIndex,
     filter: nextFilter,
     studyPool
   });
@@ -287,7 +309,7 @@ export function persistWordFlashSession({
 
   const sessionPayload = buildWordFlashSessionPayload({
     words,
-    index,
+    index: safeIndex,
     filter: nextFilter,
     entryPositions: nextPositions,
     normalizeWord,
@@ -318,6 +340,8 @@ export function restoreMessageForReason(reason, wordLabel = "") {
     case "savedIndex":
     case "idictationSourceIndex":
       return wordLabel ? `已恢复到：${wordLabel}` : "已恢复到上次学习位置";
+    case "inflectedFormRedirect":
+      return wordLabel ? `已从词形恢复到基词：${wordLabel}` : "已从词形恢复到对应基词";
     case "wordKeyOutOfFilter":
     case "entryPositionOutOfFilter":
     case "savedIndexOutOfFilter":

@@ -3,6 +3,11 @@ import {
   IDICTATION_FLASH_INDEX_OFFSET,
   isIdictationFlashFilter as isIdictationFlashSessionFilter
 } from "./word-flashcard-session.mjs";
+import {
+  isBrushableWord,
+  isInflectedReferenceWord,
+  resolveInflectedReferenceIndex
+} from "./word-study-eligibility.mjs";
 
 function normalizePhraseItems(value) {
   if (!Array.isArray(value)) return [];
@@ -144,8 +149,9 @@ export function isLifeWorkWord(word) {
 }
 
 export function wordMatchesFilter(word, filter) {
-  if (filter.type === "everything") return true;
   if (isIdictationFlashFilter(filter)) return Boolean(word.__idictationFlash);
+  if (!isBrushableWord(word)) return false;
+  if (filter.type === "everything") return true;
   if (word.studyMode === "reference" && !(filter.type === "topic" && filter.value === "G类完整学习计划·阶段4")) return false;
 
   if (filter.type === "status") {
@@ -168,7 +174,7 @@ export function wordMatchesFilter(word, filter) {
 
 export function getFilterName(filter) {
   if (filter.type === "all") return "今日任务 / 全部待学";
-  if (filter.type === "everything") return "全部单词";
+  if (filter.type === "everything") return "全部可刷词";
   if (filter.type === "custom" && filter.value === "life-work") return "生活/工作高频";
   if (isIdictationFlashFilter(filter)) return getIdictationSource(filter.value)?.label || "爱听写";
   if (filter.type === "ielts" || filter.type === "ieltsUse") return `IELTS 用途：${filter.value}`;
@@ -235,7 +241,7 @@ export const LEARNING_ENTRIES = [
       { title: "基础必会", desc: "必须快速认出，适合每天扫。", filter: { type: "difficulty", value: "基础高频" } },
       { title: "核心高频", desc: "雅思主力词，优先变熟悉。", filter: { type: "difficulty", value: "中级核心" } },
       { title: "高级认识", desc: "认识即可，不要花太久。", filter: { type: "difficulty", value: "高级加分" } },
-      { title: "全部单词", desc: "总仓库，包含熟悉词。", filter: { type: "everything", value: "" } }
+      { title: "全部可刷词", desc: "包含熟悉词，不包含已归并到基词的纯词形。", filter: { type: "everything", value: "" } }
     ]
   }
 ];
@@ -278,11 +284,28 @@ export function buildFilteredWordIndices(pool, filter, search, { idictation = fa
   }
 
   const indices = [];
+  const seen = new Set();
+  const addIndex = (index) => {
+    if (!Number.isInteger(index) || index < 0 || seen.has(index)) return;
+    seen.add(index);
+    indices.push(index);
+  };
+
   for (let i = 0; i < pool.length; i += 1) {
     const word = pool[i];
-    if (q && !word.word.toLowerCase().includes(q)) continue;
-    if (wordMatchesFilter(word, filter)) indices.push(i);
+    const wordText = String(word?.word || "").toLowerCase();
+    if (q && !wordText.includes(q)) continue;
+
+    if (isInflectedReferenceWord(word)) {
+      if (!q) continue;
+      const baseIndex = resolveInflectedReferenceIndex(pool, i, normalizeStudyWordKey);
+      if (baseIndex >= 0 && wordMatchesFilter(pool[baseIndex], filter)) addIndex(baseIndex);
+      continue;
+    }
+
+    if (wordMatchesFilter(word, filter)) addIndex(i);
   }
+
   return indices;
 }
 

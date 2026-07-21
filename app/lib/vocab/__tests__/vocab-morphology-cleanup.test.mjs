@@ -30,7 +30,7 @@ test("morphology audit has the reviewed five-way classification", () => {
   assert.deepEqual(report.errors, []);
 });
 
-test("safe forms leave the default reading pool while search and independent senses remain", () => {
+test("safe forms leave every brush pool while search and independent senses remain", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "vocab-morphology-"));
   const tempWords = path.join(dir, "words.json");
   fs.copyFileSync(CACHE, tempWords);
@@ -58,7 +58,7 @@ test("safe forms leave the default reading pool while search and independent sen
   assert.equal(cried.redirectToWord, "cry");
   assert.ok(cry.forms.some((form) => form.word === "cried" && form.sourceEntryId === cried.id));
   assert.equal(wordMatchesFilter(cried, { type: "all", value: "" }), false);
-  assert.equal(wordMatchesFilter(cried, { type: "everything", value: "" }), true);
+  assert.equal(wordMatchesFilter(cried, { type: "everything", value: "" }), false);
 
   const meeting = byWord.get("meeting");
   assert.notEqual(meeting.studyMode, "reference");

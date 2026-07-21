@@ -14,11 +14,19 @@ test("core meaning batch uses real English definitions and high-confidence struc
   assert.equal(targets.length, 19);
   for (const entry of targets) {
     assert.match(entry.definition, /[A-Za-z]{3}/, `${entry.word} definition`);
-    assert.notEqual(entry.meaningDetailedZh.trim(), entry.meaning.trim(), `${entry.word} detailed meaning`);
-    // Chinese can express several clearly separated senses concisely. Eighteen characters
-    // still rejects copied glosses while accepting entries such as subject's four-sense summary.
-    assert.ok(entry.meaningDetailedZh.length >= 18, `${entry.word} detailed meaning length`);
-    assert.match(entry.meaningDetailedZh, /[；，。]|subject to/i, `${entry.word} detailed meaning structure`);
+
+    const detailedMeaning = String(entry.meaningDetailedZh || "").trim();
+    const highConfidenceMeanings = (entry.meaningsZh || []).filter((sense) => sense?.confidence === "high" && String(sense?.gloss || "").trim());
+    // V2 intentionally removes copied/template detail fields. A concise editorial detail is
+    // accepted when present; otherwise the structured high-confidence senses are the detail.
+    if (detailedMeaning) {
+      assert.notEqual(detailedMeaning, String(entry.meaning || "").trim(), `${entry.word} detailed meaning`);
+      assert.ok(detailedMeaning.length >= 18, `${entry.word} detailed meaning length`);
+      assert.match(detailedMeaning, /[；，。]|subject to/i, `${entry.word} detailed meaning structure`);
+    } else {
+      assert.ok(highConfidenceMeanings.length >= 2, `${entry.word} structured detail fallback`);
+    }
+
     assert.ok(entry.meaningsZh.length >= 2, `${entry.word} meaningsZh`);
     assert.ok(entry.quizSenses.length >= 2, `${entry.word} quizSenses`);
     const addedQuizSenses = entry.quizSenses.filter((sense) => sense.source === "semantic-quality-v1");

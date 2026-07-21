@@ -9,6 +9,10 @@ import {
   wordMatchesFilter
 } from "../word-flashcard-study-pool.mjs";
 import {
+  persistWordFlashSession,
+  resolveWordStudyIndex
+} from "../word-flashcard-session.mjs";
+import {
   isBrushableWord,
   isInflectedReferenceWord,
   resolveInflectedReferenceIndex
@@ -17,6 +21,8 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 const payload = JSON.parse(fs.readFileSync(path.join(ROOT, ".static-export-cache", "words.json"), "utf8"));
 const fullWords = Array.isArray(payload) ? payload : payload.words;
+const normalizeWord = (value) => String(value || "").trim().toLowerCase();
+const filterKey = (filter) => filter?.type === "all" ? "all" : `${filter?.type}:${filter?.value || ""}`;
 
 test("full lexicon exposes the real 13,587-word brushable total", () => {
   const physicalTotal = fullWords.length;
@@ -81,6 +87,48 @@ test("searching an inflected form opens its base word instead of a standalone ca
     buildStudyWordIndices(pool, { type: "everything", value: "" }),
     [0, 2]
   );
+});
+
+test("old saved sessions on an inflected form restore and persist the base word", () => {
+  const words = [
+    { word: "conduct", entryType: "headword", status: "" },
+    {
+      word: "conducted",
+      entryType: "inflected-form",
+      studyMode: "reference",
+      baseWord: "conduct",
+      redirectToWord: "conduct",
+      relationType: "past_or_participle",
+      status: ""
+    }
+  ];
+
+  const restored = resolveWordStudyIndex(words, {
+    session: { wordKey: "conducted", index: 1, filter: { type: "everything", value: "" } },
+    entryPositions: {},
+    filter: { type: "everything", value: "" },
+    wordMatchesFilter,
+    filterKey,
+    normalizeWord
+  });
+  assert.equal(restored.index, 0);
+  assert.equal(restored.reason, "inflectedFormRedirect");
+
+  const store = new Map();
+  const persisted = persistWordFlashSession({
+    words,
+    index: 1,
+    filter: { type: "everything", value: "" },
+    entryPositions: {},
+    filterKey,
+    normalizeWord,
+    storageSet: (key, value) => {
+      store.set(key, value);
+      return true;
+    }
+  });
+  assert.equal(persisted.session.index, 0);
+  assert.equal(persisted.session.wordKey, "conduct");
 });
 
 test("lexicalized -ing words remain independent brush cards", () => {

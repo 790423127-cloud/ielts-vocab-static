@@ -146,6 +146,7 @@ export function isLifeWorkWord(word) {
 export function wordMatchesFilter(word, filter) {
   if (filter.type === "everything") return true;
   if (isIdictationFlashFilter(filter)) return Boolean(word.__idictationFlash);
+  if (word.studyMode === "reference" && !(filter.type === "topic" && filter.value === "G类完整学习计划·阶段4")) return false;
 
   if (filter.type === "status") {
     if (filter.value === "不熟") return word.status === "不熟";
@@ -206,6 +207,26 @@ export const LEARNING_ENTRIES = [
       { title: "Reading", desc: "阅读识别为主，不要求全会写。", filter: { type: "ielts", value: "Reading" } },
       { title: "Task 2", desc: "社会、教育、环境、科技观点词。", filter: { type: "ielts", value: "Task 2" } },
       { title: "生活/工作高频", desc: "住房、交通、健康、消费、工作。", filter: { type: "custom", value: "life-work" } }
+    ]
+  },
+  {
+    group: "G类完整学习计划",
+    items: [
+      {
+        title: "阶段1 · 核心理解",
+        desc: "G类阅读核心词和本轮真题精补词，目标是1至2秒内认出。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段1" }
+      },
+      {
+        title: "阶段2 · 扩展识别",
+        desc: "Section 2和Section 3扩展词，以阅读识别为主。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段2" }
+      },
+      {
+        title: "阶段4 · 专业参考",
+        desc: "真题专业词、专名和低频词，只需结合原文识别。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段4" }
+      }
     ]
   },
   {

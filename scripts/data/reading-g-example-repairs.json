@@ -1,0 +1,5831 @@
+{
+  "version": 1,
+  "datasetVersion": "reading-g-core-v3",
+  "count": 647,
+  "generatedWith": "deepseek-v4-flash",
+  "repairs": [
+    {
+      "id": "rg_word_cost_effective",
+      "word": "cost-effective",
+      "entryType": "word",
+      "meaningZh": "成本效益高的；划算的",
+      "example": "Buying in bulk is more cost-effective for the office.",
+      "exampleCn": "批量购买对办公室来说更划算。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_crutch",
+      "word": "crutch",
+      "entryType": "word",
+      "meaningZh": "拐杖；依赖物",
+      "example": "He used a crutch to walk after breaking his leg.",
+      "exampleCn": "他腿骨折后用拐杖走路。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_hoodie",
+      "word": "hoodie",
+      "entryType": "word",
+      "meaningZh": "连帽衫",
+      "example": "She bought a grey hoodie from the department store.",
+      "exampleCn": "她从百货商店买了一件灰色连帽衫。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_according_to",
+      "word": "according to",
+      "entryType": "phrase",
+      "meaningZh": "根据",
+      "example": "According to the notice, the train will be delayed by 20 minutes.",
+      "exampleCn": "根据通知，火车将晚点20分钟。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_account_for",
+      "word": "account for",
+      "entryType": "phrase",
+      "meaningZh": "解释；占据",
+      "example": "Travel expenses account for a large part of our budget.",
+      "exampleCn": "差旅费占我们预算的一大部分。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_apart_from",
+      "word": "apart from",
+      "entryType": "phrase",
+      "meaningZh": "除……之外；此外",
+      "example": "Apart from the manager, everyone agreed to the new schedule.",
+      "exampleCn": "除了经理，所有人都同意新时间表。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_arise_from",
+      "word": "arise from",
+      "entryType": "phrase",
+      "meaningZh": "由……引起",
+      "example": "Many health problems arise from poor diet.",
+      "exampleCn": "许多健康问题源于不良饮食。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_as_a_consequence",
+      "word": "as a consequence",
+      "entryType": "phrase",
+      "meaningZh": "因此；结果",
+      "example": "The flight was canceled; as a consequence, we stayed an extra night.",
+      "exampleCn": "航班取消了，结果我们多住了一晚。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_as_long_as",
+      "word": "as long as",
+      "entryType": "phrase",
+      "meaningZh": "只要",
+      "example": "You can use the meeting room as long as you book it in advance.",
+      "exampleCn": "只要你提前预订，就可以使用会议室。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_least",
+      "word": "at least",
+      "entryType": "phrase",
+      "meaningZh": "至少",
+      "example": "You should exercise at least three times a week.",
+      "exampleCn": "你每周至少应该锻炼三次。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_most",
+      "word": "at most",
+      "entryType": "phrase",
+      "meaningZh": "至多",
+      "example": "The repair will cost at most one hundred dollars.",
+      "exampleCn": "修理费最多一百美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_the_same_time",
+      "word": "at the same time",
+      "entryType": "phrase",
+      "meaningZh": "同时",
+      "example": "She was talking on the phone and cooking dinner at the same time.",
+      "exampleCn": "她一边打电话一边做晚饭。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_by_contrast",
+      "word": "by contrast",
+      "entryType": "phrase",
+      "meaningZh": "相比之下",
+      "example": "The north of the city is quiet; by contrast, the south is very busy.",
+      "exampleCn": "城市北部很安静，相比之下，南部非常繁忙。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_by_the_time",
+      "word": "by the time",
+      "entryType": "phrase",
+      "meaningZh": "到……时候",
+      "example": "By the time the bus arrived, I had already walked home.",
+      "exampleCn": "公交车到的时候，我已经走回家了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_compared_to",
+      "word": "compared to",
+      "entryType": "phrase",
+      "meaningZh": "与……相比",
+      "example": "This year's electricity bill is lower compared to last year.",
+      "exampleCn": "与去年相比，今年的电费更低。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_compared_with",
+      "word": "compared with",
+      "entryType": "phrase",
+      "meaningZh": "与……相比",
+      "example": "Compared with other candidates, she has more experience.",
+      "exampleCn": "与其他候选人相比，她经验更丰富。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_depending_on",
+      "word": "depending on",
+      "entryType": "phrase",
+      "meaningZh": "取决于",
+      "example": "The delivery fee varies depending on your location.",
+      "exampleCn": "运费根据您的位置而有所不同。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_even_if",
+      "word": "even if",
+      "entryType": "phrase",
+      "meaningZh": "即使",
+      "example": "Even if the weather is bad, the event will still take place.",
+      "exampleCn": "即使天气不好，活动仍将举行。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_even_though",
+      "word": "even though",
+      "entryType": "phrase",
+      "meaningZh": "即使；尽管",
+      "example": "Even though she was tired, she continued working on the report.",
+      "exampleCn": "尽管她很累，她还是继续写报告。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_except_for",
+      "word": "except for",
+      "entryType": "phrase",
+      "meaningZh": "除了",
+      "example": "The library is open every day except for public holidays.",
+      "exampleCn": "图书馆除了公共假日外每天开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_for_this_reason",
+      "word": "for this reason",
+      "entryType": "phrase",
+      "meaningZh": "因此；由于这个原因",
+      "example": "The train was delayed; for this reason, we missed the meeting.",
+      "exampleCn": "火车晚点了，因此我们错过了会议。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_case",
+      "word": "in case",
+      "entryType": "phrase",
+      "meaningZh": "以防；如果发生",
+      "example": "Take an umbrella in case it rains.",
+      "exampleCn": "带把伞以防下雨。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_comparison_with",
+      "word": "in comparison with",
+      "entryType": "phrase",
+      "meaningZh": "与……比较",
+      "example": "This apartment is small in comparison with the previous one.",
+      "exampleCn": "与前一套相比，这套公寓较小。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_contrast",
+      "word": "in contrast",
+      "entryType": "phrase",
+      "meaningZh": "相比之下",
+      "example": "In contrast, the new system is much more efficient.",
+      "exampleCn": "相比之下，新系统高效得多。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_general",
+      "word": "in general",
+      "entryType": "phrase",
+      "meaningZh": "总的来说",
+      "example": "In general, customers are satisfied with the service.",
+      "exampleCn": "总的来说，顾客对服务满意。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_other_words",
+      "word": "in other words",
+      "entryType": "phrase",
+      "meaningZh": "换句话说",
+      "example": "He is not qualified; in other words, he lacks experience.",
+      "exampleCn": "他不够资格；换句话说，他缺乏经验。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_spite_of",
+      "word": "in spite of",
+      "entryType": "phrase",
+      "meaningZh": "尽管",
+      "example": "In spite of the rain, they continued the outdoor event.",
+      "exampleCn": "尽管下雨，他们还是继续进行了户外活动。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_summary",
+      "word": "in summary",
+      "entryType": "phrase",
+      "meaningZh": "总之",
+      "example": "In summary, the project was a success.",
+      "exampleCn": "总之，项目成功了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_terms_of",
+      "word": "in terms of",
+      "entryType": "phrase",
+      "meaningZh": "就……而言",
+      "example": "In terms of cost, this option is cheaper.",
+      "exampleCn": "就成本而言，这个选项更便宜。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_absence_of",
+      "word": "in the absence of",
+      "entryType": "phrase",
+      "meaningZh": "在缺少……时",
+      "example": "In the absence of evidence, the case was dismissed.",
+      "exampleCn": "在缺少证据的情况下，案件被驳回了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_event_of",
+      "word": "in the event of",
+      "entryType": "phrase",
+      "meaningZh": "如果发生",
+      "example": "In the event of a fire, use the stairs.",
+      "exampleCn": "如果发生火灾，请使用楼梯。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_lastly",
+      "word": "lastly",
+      "entryType": "word",
+      "meaningZh": "最后一点",
+      "example": "Lastly, please remember to sign the form.",
+      "exampleCn": "最后一点，请记得在表格上签字。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_no_less_than",
+      "word": "no less than",
+      "entryType": "phrase",
+      "meaningZh": "不少于",
+      "example": "She donated no less than $500 to charity.",
+      "exampleCn": "她向慈善机构捐赠了不少于500美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_no_more_than",
+      "word": "no more than",
+      "entryType": "phrase",
+      "meaningZh": "不超过；仅仅",
+      "example": "The trip will take no more than two hours.",
+      "exampleCn": "这次旅行不会超过两个小时。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_condition_that",
+      "word": "on condition that",
+      "entryType": "phrase",
+      "meaningZh": "条件是；只要",
+      "example": "He agreed to help on condition that he be paid.",
+      "exampleCn": "他同意帮忙，条件是他得被付钱。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_the_contrary",
+      "word": "on the contrary",
+      "entryType": "phrase",
+      "meaningZh": "恰恰相反",
+      "example": "He is not lazy; on the contrary, he works hard.",
+      "exampleCn": "他不懒；恰恰相反，他很努力。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_the_other_hand",
+      "word": "on the other hand",
+      "entryType": "phrase",
+      "meaningZh": "另一方面",
+      "example": "The job offers a high salary; on the other hand, it requires long hours.",
+      "exampleCn": "这份工作薪水高；另一方面，它需要长时间工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_only_if",
+      "word": "only if",
+      "entryType": "phrase",
+      "meaningZh": "只有在……情况下",
+      "example": "You can enter only if you have a ticket.",
+      "exampleCn": "你只有在有票的情况下才能进入。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_prior_to",
+      "word": "prior to",
+      "entryType": "phrase",
+      "meaningZh": "在……之前",
+      "example": "Please confirm your attendance prior to Friday.",
+      "exampleCn": "请在周五之前确认出席。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_provided_that",
+      "word": "provided that",
+      "entryType": "phrase",
+      "meaningZh": "只要；条件是",
+      "example": "You can borrow the book provided that you return it on time.",
+      "exampleCn": "你可以借这本书，只要你按时归还。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_providing_that",
+      "word": "providing that",
+      "entryType": "phrase",
+      "meaningZh": "只要；条件是",
+      "example": "You can extend the rental contract providing that you give notice two weeks in advance.",
+      "exampleCn": "只要提前两周通知，你就可以延长租赁合同。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_regardless_of",
+      "word": "regardless of",
+      "entryType": "phrase",
+      "meaningZh": "不管；不论",
+      "example": "The workshop is open to all employees regardless of their department.",
+      "exampleCn": "该工作坊对所有员工开放，不论他们属于哪个部门。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_result_from",
+      "word": "result from",
+      "entryType": "phrase",
+      "meaningZh": "由……造成",
+      "example": "The delay may result from a technical issue.",
+      "exampleCn": "延误可能由技术问题造成。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_result_in",
+      "word": "result in",
+      "entryType": "phrase",
+      "meaningZh": "导致",
+      "example": "The new policy may result in higher service fees.",
+      "exampleCn": "新政策可能会导致服务费上涨。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_so_that",
+      "word": "so that",
+      "entryType": "phrase",
+      "meaningZh": "以便；因此",
+      "example": "Please label your luggage clearly so that it can be identified easily.",
+      "exampleCn": "请清晰标注您的行李，以便容易识别。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_subject_to",
+      "word": "subject to",
+      "entryType": "phrase",
+      "meaningZh": "受……限制；须经",
+      "example": "The discount is subject to availability.",
+      "exampleCn": "折扣受库存情况限制。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_that_is",
+      "word": "that is",
+      "entryType": "phrase",
+      "meaningZh": "也就是说",
+      "example": "The meeting is next Monday, that is, the 15th of May.",
+      "exampleCn": "会议在下周一，也就是5月15日。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_this_means_that",
+      "word": "this means that",
+      "entryType": "phrase",
+      "meaningZh": "这意味着",
+      "example": "The bus service is suspended; this means that you need to take the train.",
+      "exampleCn": "公交服务暂停了；这意味着你需要乘火车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_to_sum_up",
+      "word": "to sum up",
+      "entryType": "phrase",
+      "meaningZh": "总而言之",
+      "example": "To sum up, the training session provided useful information.",
+      "exampleCn": "总而言之，这次培训提供了有用的信息。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_under_no_circumstances",
+      "word": "under no circumstances",
+      "entryType": "phrase",
+      "meaningZh": "在任何情况下都不",
+      "example": "Under no circumstances should you leave your luggage unattended.",
+      "exampleCn": "在任何情况下都不应该让行李无人看管。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_up_to",
+      "word": "up to",
+      "entryType": "phrase",
+      "meaningZh": "最多；达到",
+      "example": "The library allows you to borrow up to ten books at a time.",
+      "exampleCn": "图书馆允许你一次最多借十本书。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_with_regard_to",
+      "word": "with regard to",
+      "entryType": "phrase",
+      "meaningZh": "关于",
+      "example": "With regard to your application, we will notify you by email.",
+      "exampleCn": "关于你的申请，我们将通过电子邮件通知你。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_a_bit_of",
+      "word": "a bit of",
+      "entryType": "phrase",
+      "meaningZh": "一点",
+      "example": "I need a bit of help carrying these boxes.",
+      "exampleCn": "我需要一点帮助来搬这些箱子。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_a_little",
+      "word": "a little",
+      "entryType": "phrase",
+      "meaningZh": "少量的",
+      "example": "Add a little salt to the soup.",
+      "exampleCn": "往汤里加少量的盐。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_a_variety_of",
+      "word": "a variety of",
+      "entryType": "phrase",
+      "meaningZh": "各种各样的",
+      "example": "The store offers a variety of fresh fruits.",
+      "exampleCn": "这家店提供各种各样的新鲜水果。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_a_wide_range_of",
+      "word": "a wide range of",
+      "entryType": "phrase",
+      "meaningZh": "广泛的；各种各样的",
+      "example": "The course covers a wide range of topics.",
+      "exampleCn": "这门课程涵盖广泛的主题。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_about_to",
+      "word": "about to",
+      "entryType": "phrase",
+      "meaningZh": "即将",
+      "example": "The train is about to depart.",
+      "exampleCn": "火车即将出发。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_access_to",
+      "word": "access to",
+      "entryType": "phrase",
+      "meaningZh": "使用或进入……的机会",
+      "example": "Employees have access to the gym after hours.",
+      "exampleCn": "员工在下班后可以使用健身房。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_accompanied_by",
+      "word": "accompanied by",
+      "entryType": "phrase",
+      "meaningZh": "由……陪同",
+      "example": "Children must be accompanied by an adult.",
+      "exampleCn": "儿童必须由成人陪同。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_additional_charge",
+      "word": "additional charge",
+      "entryType": "phrase",
+      "meaningZh": "额外费用",
+      "example": "Room service incurs an additional charge.",
+      "exampleCn": "客房服务会产生额外费用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_advice_on",
+      "word": "advice on",
+      "entryType": "phrase",
+      "meaningZh": "关于……的建议",
+      "example": "The manager gave me some useful advice on how to write a cover letter.",
+      "exampleCn": "经理给了我一些关于如何写求职信的有用建议。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_after_that",
+      "word": "after that",
+      "entryType": "phrase",
+      "meaningZh": "之后",
+      "example": "After that, we will discuss the new project timeline.",
+      "exampleCn": "之后，我们将讨论新项目的时间表。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_ahead_of",
+      "word": "ahead of",
+      "entryType": "phrase",
+      "meaningZh": "在...之前",
+      "example": "Please submit your report two days ahead of the deadline.",
+      "exampleCn": "请在截止日期前两天提交报告。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_aim_to",
+      "word": "aim to",
+      "entryType": "phrase",
+      "meaningZh": "旨在",
+      "example": "We aim to complete the report by next Monday.",
+      "exampleCn": "我们旨在下周一前完成报告。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_all_over",
+      "word": "all over",
+      "entryType": "phrase",
+      "meaningZh": "到处",
+      "example": "We have branches all over the city.",
+      "exampleCn": "我们在全城各处都有分支机构。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_almost_all",
+      "word": "almost all",
+      "entryType": "phrase",
+      "meaningZh": "几乎所有",
+      "example": "Almost all employees attended the safety training session.",
+      "exampleCn": "几乎所有员工都参加了安全培训会议。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_alternative_to",
+      "word": "alternative to",
+      "entryType": "phrase",
+      "meaningZh": "…的替代品",
+      "example": "Cycling is a great alternative to driving during peak hours.",
+      "exampleCn": "在高峰时段骑自行车是开车的一个很好的替代选择。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_annual_leave",
+      "word": "annual leave",
+      "entryType": "phrase",
+      "meaningZh": "年假",
+      "example": "You must use your annual leave before the end of December.",
+      "exampleCn": "你必须在十二月底前用完年假。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_any_time",
+      "word": "any time",
+      "entryType": "phrase",
+      "meaningZh": "任何时候",
+      "example": "Feel free to contact us any time if you have questions.",
+      "exampleCn": "如果你有问题，随时联系我们。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_anywhere_else",
+      "word": "anywhere else",
+      "entryType": "phrase",
+      "meaningZh": "其他任何地方",
+      "example": "I can't find this product anywhere else in town.",
+      "exampleCn": "我在镇上的其他任何地方都找不到这个产品。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_application_form",
+      "word": "application form",
+      "entryType": "phrase",
+      "meaningZh": "申请表",
+      "example": "Please fill out the application form and submit it online.",
+      "exampleCn": "请填写申请表并在线提交。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_apply_for",
+      "word": "apply for",
+      "entryType": "phrase",
+      "meaningZh": "申请",
+      "example": "She decided to apply for the position of office manager.",
+      "exampleCn": "她决定申请办公室经理的职位。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_apply_to",
+      "word": "apply to",
+      "entryType": "phrase",
+      "meaningZh": "适用于",
+      "example": "The same rules apply to all employees, regardless of rank.",
+      "exampleCn": "同样的规则适用于所有员工，不论级别。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_around_the_world",
+      "word": "around the world",
+      "entryType": "phrase",
+      "meaningZh": "世界各地",
+      "example": "Our online courses are taken by students around the world.",
+      "exampleCn": "我们的在线课程被世界各地的学生选修。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_as_a_result_of",
+      "word": "as a result of",
+      "entryType": "phrase",
+      "meaningZh": "由于；作为……的结果",
+      "example": "Flights were delayed as a result of the heavy snowfall.",
+      "exampleCn": "由于大雪，航班延误了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_as_much_as",
+      "word": "as much as",
+      "entryType": "phrase",
+      "meaningZh": "多达",
+      "example": "The project will cost as much as two million dollars.",
+      "exampleCn": "这个项目将花费多达两百万美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_as_soon_as",
+      "word": "as soon as",
+      "entryType": "phrase",
+      "meaningZh": "一……就",
+      "example": "I will send you the contract as soon as I receive the signed copy.",
+      "exampleCn": "我一收到签署的副本就会把合同发给你。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_as_well",
+      "word": "as well",
+      "entryType": "phrase",
+      "meaningZh": "也",
+      "example": "The package includes a guidebook as well.",
+      "exampleCn": "包裹里也包含一本指南。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_aspect_of",
+      "word": "aspect of",
+      "entryType": "phrase",
+      "meaningZh": "…的方面",
+      "example": "Customer service is an important aspect of our business.",
+      "exampleCn": "客户服务是我们业务的一个重要方面。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_all",
+      "word": "at all",
+      "entryType": "phrase",
+      "meaningZh": "根本（用于否定句）",
+      "example": "I don't agree with that decision at all.",
+      "exampleCn": "我根本不同意那个决定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_first",
+      "word": "at first",
+      "entryType": "phrase",
+      "meaningZh": "起初",
+      "example": "At first, I found the instructions confusing.",
+      "exampleCn": "起初，我觉得说明令人困惑。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_home",
+      "word": "at home",
+      "entryType": "phrase",
+      "meaningZh": "在家",
+      "example": "I prefer to work at home on Fridays.",
+      "exampleCn": "我更喜欢周五在家工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_night",
+      "word": "at night",
+      "entryType": "phrase",
+      "meaningZh": "在晚上",
+      "example": "The train station is quiet at night.",
+      "exampleCn": "火车站在晚上很安静。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_no_extra_cost",
+      "word": "at no extra cost",
+      "entryType": "phrase",
+      "meaningZh": "无需额外费用",
+      "example": "All guests can use the gym at no extra cost.",
+      "exampleCn": "所有客人可以免费使用健身房，无需额外费用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_present",
+      "word": "at present",
+      "entryType": "phrase",
+      "meaningZh": "目前",
+      "example": "At present, the library is closed for renovation.",
+      "exampleCn": "目前，图书馆因翻新关闭。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_school",
+      "word": "at school",
+      "entryType": "phrase",
+      "meaningZh": "在学校",
+      "example": "Children must stay at school until 3:30 pm.",
+      "exampleCn": "孩子们必须在学校待到下午3:30。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_sea",
+      "word": "at sea",
+      "entryType": "phrase",
+      "meaningZh": "在海上",
+      "example": "The crew spends months at sea each year.",
+      "exampleCn": "船员每年在海上待数月。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_short_notice",
+      "word": "at short notice",
+      "entryType": "phrase",
+      "meaningZh": "临时通知；短时间内通知",
+      "example": "Can you cover the shift at short notice?",
+      "exampleCn": "你能临时顶班吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_the_end",
+      "word": "at the end",
+      "entryType": "phrase",
+      "meaningZh": "在结尾",
+      "example": "Please submit your report at the end of the week.",
+      "exampleCn": "请在周末提交报告。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_the_top",
+      "word": "at the top",
+      "entryType": "phrase",
+      "meaningZh": "在顶端",
+      "example": "Write your name at the top of the form.",
+      "exampleCn": "在表格顶端写上你的名字。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_work",
+      "word": "at work",
+      "entryType": "phrase",
+      "meaningZh": "在工作",
+      "example": "I left my phone at work yesterday.",
+      "exampleCn": "我昨天把手机落在工作地点了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_availability_of",
+      "word": "availability of",
+      "entryType": "phrase",
+      "meaningZh": "…的可用性",
+      "example": "We confirmed the availability of parking spaces.",
+      "exampleCn": "我们确认了停车位的可用性。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_available_for",
+      "word": "available for",
+      "entryType": "phrase",
+      "meaningZh": "可用于",
+      "example": "The training course is available for all staff.",
+      "exampleCn": "培训课程对所有员工开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_available_on_request",
+      "word": "available on request",
+      "entryType": "phrase",
+      "meaningZh": "可按要求提供",
+      "example": "A vegetarian menu is available on request.",
+      "exampleCn": "可按要求提供素食菜单。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_available_to",
+      "word": "available to",
+      "entryType": "phrase",
+      "meaningZh": "对...可用",
+      "example": "The discount is available to senior citizens.",
+      "exampleCn": "折扣对老年人可用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_aware_of",
+      "word": "aware of",
+      "entryType": "phrase",
+      "meaningZh": "意识到",
+      "example": "Are you aware of the new parking regulations?",
+      "exampleCn": "你意识到新的停车规定了吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_based_on",
+      "word": "based on",
+      "entryType": "phrase",
+      "meaningZh": "基于",
+      "example": "The fee is based on the length of your stay.",
+      "exampleCn": "费用基于您的停留时间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_able_to",
+      "word": "be able to",
+      "entryType": "phrase",
+      "meaningZh": "能够",
+      "example": "You will be able to collect your keys after 2 pm.",
+      "exampleCn": "您可以在下午2点后领取钥匙。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_allowed_to",
+      "word": "be allowed to",
+      "entryType": "phrase",
+      "meaningZh": "被允许",
+      "example": "Tenants are allowed to keep small pets in the apartment.",
+      "exampleCn": "租户被允许在公寓里养小宠物。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_available_for",
+      "word": "be available for",
+      "entryType": "phrase",
+      "meaningZh": "可供……使用",
+      "example": "The training manuals will be available for download next week.",
+      "exampleCn": "培训手册下周可供下载。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_aware_of",
+      "word": "be aware of",
+      "entryType": "phrase",
+      "meaningZh": "意识到",
+      "example": "Please be aware of the fire alarm procedure in this building.",
+      "exampleCn": "请留意本大楼的火警程序。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_based_on",
+      "word": "be based on",
+      "entryType": "phrase",
+      "meaningZh": "以……为基础",
+      "example": "The rental price is based on the size of the property.",
+      "exampleCn": "租金价格基于房产面积。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_capable_of",
+      "word": "be capable of",
+      "entryType": "phrase",
+      "meaningZh": "能够",
+      "example": "This machine is capable of processing up to 100 items per minute.",
+      "exampleCn": "这台机器每分钟能处理多达100件物品。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_eligible_for",
+      "word": "be eligible for",
+      "entryType": "phrase",
+      "meaningZh": "有资格获得",
+      "example": "Part-time students are eligible for a discount on public transport.",
+      "exampleCn": "非全日制学生有资格获得公共交通折扣。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_entitled_to",
+      "word": "be entitled to",
+      "entryType": "phrase",
+      "meaningZh": "有权获得",
+      "example": "All employees are entitled to two weeks of paid leave.",
+      "exampleCn": "所有员工有权获得两周带薪休假。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_equipped_with",
+      "word": "be equipped with",
+      "entryType": "phrase",
+      "meaningZh": "配备有",
+      "example": "Each apartment is equipped with a modern kitchen and laundry facilities.",
+      "exampleCn": "每间公寓都配有现代化厨房和洗衣设施。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_exempt_from",
+      "word": "be exempt from",
+      "entryType": "phrase",
+      "meaningZh": "免于",
+      "example": "Some charities are exempt from paying certain taxes.",
+      "exampleCn": "一些慈善机构免于缴纳某些税款。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_fitted_with",
+      "word": "be fitted with",
+      "entryType": "phrase",
+      "meaningZh": "配有；安装有",
+      "example": "The new library will be fitted with solar panels.",
+      "exampleCn": "新图书馆将安装太阳能电池板。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_intended_for",
+      "word": "be intended for",
+      "entryType": "phrase",
+      "meaningZh": "供……使用；旨在",
+      "example": "This course is intended for beginners who have no prior experience.",
+      "exampleCn": "本课程供没有经验的初学者使用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_involved_in",
+      "word": "be involved in",
+      "entryType": "phrase",
+      "meaningZh": "参与；涉及",
+      "example": "Several community groups are involved in the local cleanup project.",
+      "exampleCn": "几个社区团体参与了当地清洁项目。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_likely_to",
+      "word": "be likely to",
+      "entryType": "phrase",
+      "meaningZh": "很可能",
+      "example": "The train is likely to be delayed due to bad weather.",
+      "exampleCn": "火车很可能会因恶劣天气晚点。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_located_in",
+      "word": "be located in",
+      "entryType": "phrase",
+      "meaningZh": "位于",
+      "example": "The main office is located in the city centre.",
+      "exampleCn": "主办公室位于市中心。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_made_from",
+      "word": "be made from",
+      "entryType": "phrase",
+      "meaningZh": "由……制成（原材料发生变化）",
+      "example": "This paper is made from recycled materials.",
+      "exampleCn": "这张纸是由回收材料制成的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_made_of",
+      "word": "be made of",
+      "entryType": "phrase",
+      "meaningZh": "由……制成（可见原材料）",
+      "example": "The fence is made of wood to match the house.",
+      "exampleCn": "围栏是木制的，以与房屋相配。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_prohibited_from",
+      "word": "be prohibited from",
+      "entryType": "phrase",
+      "meaningZh": "被禁止",
+      "example": "Residents are prohibited from parking in the fire lane.",
+      "exampleCn": "居民被禁止在消防通道停车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_required_to",
+      "word": "be required to",
+      "entryType": "phrase",
+      "meaningZh": "被要求；必须",
+      "example": "All visitors are required to sign in at reception.",
+      "exampleCn": "所有访客必须在前台签到。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_responsible_for",
+      "word": "be responsible for",
+      "entryType": "phrase",
+      "meaningZh": "负责",
+      "example": "The caretaker is responsible for maintaining the garden.",
+      "exampleCn": "管理员负责维护花园。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_subject_to",
+      "word": "be subject to",
+      "entryType": "phrase",
+      "meaningZh": "受……约束；取决于",
+      "example": "The offer is subject to availability of stock.",
+      "exampleCn": "此优惠视库存情况而定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_suitable_for",
+      "word": "be suitable for",
+      "entryType": "phrase",
+      "meaningZh": "适合",
+      "example": "This job is suitable for someone with good organisational skills.",
+      "exampleCn": "这份工作适合有良好组织能力的人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_used_to",
+      "word": "be used to",
+      "entryType": "phrase",
+      "meaningZh": "习惯于；被用于",
+      "example": "This device is used to measure temperature.",
+      "exampleCn": "这个设备被用于测量温度。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_valid_for",
+      "word": "be valid for",
+      "entryType": "phrase",
+      "meaningZh": "有效期为",
+      "example": "This voucher is valid for three months from the date of issue.",
+      "exampleCn": "此代金券自签发之日起有效期为三个月。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_valid_until",
+      "word": "be valid until",
+      "entryType": "phrase",
+      "meaningZh": "有效至",
+      "example": "Your membership card is valid until December 31st.",
+      "exampleCn": "您的会员卡有效至12月31日。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_benefit_from",
+      "word": "benefit from",
+      "entryType": "phrase",
+      "meaningZh": "从...中受益",
+      "example": "Employees can benefit from the new training program.",
+      "exampleCn": "员工可以从新培训项目中受益。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_better_than",
+      "word": "better than",
+      "entryType": "phrase",
+      "meaningZh": "比……更好",
+      "example": "This apartment is better than the one we saw yesterday.",
+      "exampleCn": "这套公寓比我们昨天看的那套更好。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_between_and",
+      "word": "between and",
+      "entryType": "phrase",
+      "meaningZh": "在9点到5点之间",
+      "example": "The appointment is between 2 and 4 pm.",
+      "exampleCn": "预约时间在下午2点到4点之间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_booking_fee",
+      "word": "booking fee",
+      "entryType": "phrase",
+      "meaningZh": "预订费",
+      "example": "A non-refundable booking fee is required at checkout.",
+      "exampleCn": "结账时需支付不可退还的预订费。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_bring_in",
+      "word": "bring in",
+      "entryType": "phrase",
+      "meaningZh": "引入；赚取",
+      "example": "The company plans to bring in new software next month.",
+      "exampleCn": "公司计划下个月引入新软件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_by_car",
+      "word": "by car",
+      "entryType": "phrase",
+      "meaningZh": "乘汽车",
+      "example": "You can get to the airport by car in 20 minutes.",
+      "exampleCn": "乘汽车20分钟可到达机场。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_by_hand",
+      "word": "by hand",
+      "entryType": "phrase",
+      "meaningZh": "用手",
+      "example": "Please wash the delicate garment by hand only.",
+      "exampleCn": "请只用手洗这件精细衣物。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_can_do",
+      "word": "can do",
+      "entryType": "phrase",
+      "meaningZh": "能做",
+      "example": "I can do the report by Friday.",
+      "exampleCn": "我周五前能做这份报告。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_cancellation_fee",
+      "word": "cancellation fee",
+      "entryType": "phrase",
+      "meaningZh": "取消费",
+      "example": "A cancellation fee applies if you cancel within 24 hours.",
+      "exampleCn": "如果在24小时内取消，需支付取消费。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_cannot_be",
+      "word": "cannot be",
+      "entryType": "phrase",
+      "meaningZh": "不能是",
+      "example": "The meeting cannot be rescheduled due to conflicts.",
+      "exampleCn": "由于冲突，会议不能被重新安排。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_capable_of",
+      "word": "capable of",
+      "entryType": "phrase",
+      "meaningZh": "能够…",
+      "example": "This machine is capable of processing 500 units per hour.",
+      "exampleCn": "这台机器每小时能够处理500件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_care_for",
+      "word": "care for",
+      "entryType": "phrase",
+      "meaningZh": "照顾；喜欢",
+      "example": "The staff will care for your pets while you are away.",
+      "exampleCn": "您外出时，工作人员会照顾您的宠物。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_carry_out",
+      "word": "carry out",
+      "entryType": "phrase",
+      "meaningZh": "执行；实施",
+      "example": "The technician will carry out the inspection tomorrow.",
+      "exampleCn": "技术员明天将执行检查。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_check_out",
+      "word": "check out",
+      "entryType": "phrase",
+      "meaningZh": "退房；查看",
+      "example": "Guests must check out by 11 am.",
+      "exampleCn": "客人必须在上午11点前退房。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_chief_executive",
+      "word": "chief executive",
+      "entryType": "phrase",
+      "meaningZh": "首席执行官",
+      "example": "The chief executive announced a new company policy.",
+      "exampleCn": "首席执行官宣布了新公司政策。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_choice_of",
+      "word": "choice of",
+      "entryType": "phrase",
+      "meaningZh": "……的选择",
+      "example": "The menu offers a choice of three main courses.",
+      "exampleCn": "菜单提供三道主菜的选择。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_choose_from",
+      "word": "choose from",
+      "entryType": "phrase",
+      "meaningZh": "从……中选择",
+      "example": "You can choose from a variety of insurance plans.",
+      "exampleCn": "您可以从多种保险方案中选择。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_city_of",
+      "word": "city of",
+      "entryType": "phrase",
+      "meaningZh": "……之城",
+      "example": "The city of Sydney is famous for its harbour.",
+      "exampleCn": "悉尼城以其港口闻名。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_close_to",
+      "word": "close to",
+      "entryType": "phrase",
+      "meaningZh": "接近",
+      "example": "The new supermarket is close to the train station.",
+      "exampleCn": "新超市离火车站很近。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_collection_of",
+      "word": "collection of",
+      "entryType": "phrase",
+      "meaningZh": "...的收藏",
+      "example": "The museum has a remarkable collection of ancient pottery.",
+      "exampleCn": "博物馆收藏了一批引人注目的古代陶器。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_combination_of",
+      "word": "combination of",
+      "entryType": "phrase",
+      "meaningZh": "...的组合",
+      "example": "The dish requires a combination of herbs and spices.",
+      "exampleCn": "这道菜需要香草和香料的组合。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_compare_with",
+      "word": "compare with",
+      "entryType": "phrase",
+      "meaningZh": "与……比较",
+      "example": "Please compare the prices with those of last month.",
+      "exampleCn": "请把这些价格与上个月的进行比较。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_comply_with",
+      "word": "comply with",
+      "entryType": "phrase",
+      "meaningZh": "遵守",
+      "example": "All employees must comply with the safety regulations.",
+      "exampleCn": "所有员工必须遵守安全规定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_consist_of",
+      "word": "consist of",
+      "entryType": "phrase",
+      "meaningZh": "由……组成",
+      "example": "The training program will consist of three main modules.",
+      "exampleCn": "培训项目将由三个主要模块组成。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_construction_of",
+      "word": "construction of",
+      "entryType": "phrase",
+      "meaningZh": "…的建设",
+      "example": "The construction of the bridge will start next spring.",
+      "exampleCn": "这座桥的建设将于明年春天开始。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_contribute_to",
+      "word": "contribute to",
+      "entryType": "phrase",
+      "meaningZh": "促成；有助于",
+      "example": "Regular exercise can contribute to better health.",
+      "exampleCn": "定期锻炼有助于改善健康。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_copy_of",
+      "word": "copy of",
+      "entryType": "phrase",
+      "meaningZh": "……的副本",
+      "example": "Please bring a copy of your passport to the appointment.",
+      "exampleCn": "请带一份护照复印件赴约。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_cost_of",
+      "word": "cost of",
+      "entryType": "phrase",
+      "meaningZh": "……的成本",
+      "example": "The cost of living has increased significantly this year.",
+      "exampleCn": "今年生活成本显著上涨。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_credit_card",
+      "word": "credit card",
+      "entryType": "phrase",
+      "meaningZh": "信用卡",
+      "example": "You can pay with a credit card at the checkout.",
+      "exampleCn": "你可以在收银台用信用卡付款。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_customer_service",
+      "word": "customer service",
+      "entryType": "phrase",
+      "meaningZh": "客户服务",
+      "example": "The customer service team will respond within 24 hours.",
+      "exampleCn": "客户服务团队将在24小时内回复。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_damage_to",
+      "word": "damage to",
+      "entryType": "phrase",
+      "meaningZh": "对...的损害",
+      "example": "The storm caused severe damage to the crops.",
+      "exampleCn": "暴风雨对农作物造成了严重损害。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_date_of_birth",
+      "word": "date of birth",
+      "entryType": "phrase",
+      "meaningZh": "出生日期",
+      "example": "Please fill in your date of birth on the form.",
+      "exampleCn": "请在表格上填写您的出生日期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_decline_in",
+      "word": "decline in",
+      "entryType": "phrase",
+      "meaningZh": "在…方面下降",
+      "example": "There has been a decline in public transport usage.",
+      "exampleCn": "公共交通使用量有所下降。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_department_of",
+      "word": "department of",
+      "entryType": "phrase",
+      "meaningZh": "...部门",
+      "example": "She works in the department of human resources.",
+      "exampleCn": "她在人力资源部门工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_description_of",
+      "word": "description of",
+      "entryType": "phrase",
+      "meaningZh": "对……的描述",
+      "example": "The police need a description of the missing person.",
+      "exampleCn": "警方需要失踪人员的描述。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_design_of",
+      "word": "design of",
+      "entryType": "phrase",
+      "meaningZh": "...的设计",
+      "example": "The design of the new office is very modern.",
+      "exampleCn": "新办公室的设计非常现代。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_development_of",
+      "word": "development of",
+      "entryType": "phrase",
+      "meaningZh": "……的发展",
+      "example": "The development of the city center is almost complete.",
+      "exampleCn": "市中心的开发已基本完成。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_differ_from",
+      "word": "differ from",
+      "entryType": "phrase",
+      "meaningZh": "与……不同",
+      "example": "The terms of this contract differ from the previous version.",
+      "exampleCn": "本合同条款与之前的版本不同。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_different_from",
+      "word": "different from",
+      "entryType": "phrase",
+      "meaningZh": "不同于",
+      "example": "My work schedule is different from yours this week.",
+      "exampleCn": "这周我的工作时间表与你的不同。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_different_types",
+      "word": "different types",
+      "entryType": "phrase",
+      "meaningZh": "不同类型",
+      "example": "The store offers different types of insurance policies.",
+      "exampleCn": "这家商店提供不同类型的保险单。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_discovery_of",
+      "word": "discovery of",
+      "entryType": "phrase",
+      "meaningZh": "发现...",
+      "example": "The discovery of a leak led to a building evacuation.",
+      "exampleCn": "发现泄漏导致大楼疏散。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_each_other",
+      "word": "each other",
+      "entryType": "phrase",
+      "meaningZh": "彼此",
+      "example": "The two colleagues helped each other finish the report.",
+      "exampleCn": "两位同事互相帮助完成了报告。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_early_in",
+      "word": "early in",
+      "entryType": "phrase",
+      "meaningZh": "在...初期",
+      "example": "You must apply early in the month to get a discount.",
+      "exampleCn": "你必须在月初尽早申请才能获得折扣。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_effect_of",
+      "word": "effect of",
+      "entryType": "phrase",
+      "meaningZh": "...的影响",
+      "example": "The effect of the new policy is still uncertain.",
+      "exampleCn": "新政策的效果仍不确定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_effect_on",
+      "word": "effect on",
+      "entryType": "phrase",
+      "meaningZh": "对...的影响",
+      "example": "The noise from construction had a negative effect on my sleep.",
+      "exampleCn": "施工噪音对我的睡眠产生了负面影响。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_emergency_contact",
+      "word": "emergency contact",
+      "entryType": "phrase",
+      "meaningZh": "紧急联系人",
+      "example": "Please provide your emergency contact on the form.",
+      "exampleCn": "请在表格上提供你的紧急联系人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_end_up",
+      "word": "end up",
+      "entryType": "phrase",
+      "meaningZh": "最终成为",
+      "example": "If you don't renew your visa, you might end up with a fine.",
+      "exampleCn": "如果你不续签签证，最终可能会被罚款。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_endangered_species",
+      "word": "endangered species",
+      "entryType": "phrase",
+      "meaningZh": "濒危物种",
+      "example": "Many forests are home to endangered species.",
+      "exampleCn": "许多森林是濒危物种的家园。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_ensure_that",
+      "word": "ensure that",
+      "entryType": "phrase",
+      "meaningZh": "确保...",
+      "example": "Please ensure that all windows are locked before leaving.",
+      "exampleCn": "请确保离开前所有窗户都已锁好。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_entitled_to",
+      "word": "entitled to",
+      "entryType": "phrase",
+      "meaningZh": "有权获得",
+      "example": "Employees are entitled to a 30-minute lunch break.",
+      "exampleCn": "员工有权享受30分钟的午餐休息时间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_entry_fee",
+      "word": "entry fee",
+      "entryType": "phrase",
+      "meaningZh": "入场费",
+      "example": "The museum charges an entry fee of ten dollars.",
+      "exampleCn": "博物馆收取十美元入场费。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_every_day",
+      "word": "every day",
+      "entryType": "phrase",
+      "meaningZh": "每天",
+      "example": "The bus to the city center runs every day.",
+      "exampleCn": "前往市中心的巴士每天运行。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_every_year",
+      "word": "every year",
+      "entryType": "phrase",
+      "meaningZh": "每年",
+      "example": "We conduct a safety inspection every year.",
+      "exampleCn": "我们每年进行一次安全检查。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_evidence_of",
+      "word": "evidence of",
+      "entryType": "phrase",
+      "meaningZh": "...的证据",
+      "example": "The report found evidence of fraud in the accounts.",
+      "exampleCn": "报告发现了账目中存在欺诈的证据。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_example_of",
+      "word": "example of",
+      "entryType": "phrase",
+      "meaningZh": "...的例子",
+      "example": "This brochure is an example of our promotional materials.",
+      "exampleCn": "这本小册子是我们宣传材料的一个例子。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_expect_to",
+      "word": "expect to",
+      "entryType": "phrase",
+      "meaningZh": "期待做",
+      "example": "We expect to finish the renovation by next Monday.",
+      "exampleCn": "我们预计下周一前完成翻新。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_experience_in",
+      "word": "experience in",
+      "entryType": "phrase",
+      "meaningZh": "在...方面的经验",
+      "example": "She has three years of experience in customer service.",
+      "exampleCn": "她有三年客户服务经验。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_experience_of",
+      "word": "experience of",
+      "entryType": "phrase",
+      "meaningZh": "...的经历",
+      "example": "My experience of living abroad was very rewarding.",
+      "exampleCn": "我在国外生活的经历非常有收获。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_familiar_with",
+      "word": "familiar with",
+      "entryType": "phrase",
+      "meaningZh": "熟悉",
+      "example": "Are you familiar with the rental agreement terms?",
+      "exampleCn": "你熟悉租赁协议的条款吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_fill_in",
+      "word": "fill in",
+      "entryType": "phrase",
+      "meaningZh": "填写",
+      "example": "Please fill in your name and address on the form.",
+      "exampleCn": "请在表格上填写您的姓名和地址。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_find_out",
+      "word": "find out",
+      "entryType": "phrase",
+      "meaningZh": "查明",
+      "example": "You can find out the bus schedule on the notice board.",
+      "exampleCn": "你可以在公告板上查找到公交车时刻表。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_first_come_first_served",
+      "word": "first come first served",
+      "entryType": "phrase",
+      "meaningZh": "先到先得",
+      "example": "The free tickets are available on a first come first served basis.",
+      "exampleCn": "免费门票先到先得。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_focus_on",
+      "word": "focus on",
+      "entryType": "phrase",
+      "meaningZh": "专注于",
+      "example": "We need to focus on improving customer service.",
+      "exampleCn": "我们需要专注于改善客户服务。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_for_free",
+      "word": "for free",
+      "entryType": "phrase",
+      "meaningZh": "免费地",
+      "example": "You can download the guide for free from our website.",
+      "exampleCn": "你可以从我们的网站免费下载指南。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_for_the_purpose_of",
+      "word": "for the purpose of",
+      "entryType": "phrase",
+      "meaningZh": "为了……目的",
+      "example": "This survey is conducted for the purpose of gathering feedback.",
+      "exampleCn": "本次调查是为了收集反馈意见。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_for_them",
+      "word": "for them",
+      "entryType": "phrase",
+      "meaningZh": "为他们",
+      "example": "We have arranged a shuttle bus for them.",
+      "exampleCn": "我们为他们安排了一辆班车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_free_of_charge",
+      "word": "free of charge",
+      "entryType": "phrase",
+      "meaningZh": "免费",
+      "example": "The museum offers guided tours free of charge.",
+      "exampleCn": "博物馆提供免费导览。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_from_home",
+      "word": "from home",
+      "entryType": "phrase",
+      "meaningZh": "从家",
+      "example": "You can apply for the job from home via our online portal.",
+      "exampleCn": "您可以通过我们的在线门户从家申请职位。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_full_of",
+      "word": "full of",
+      "entryType": "phrase",
+      "meaningZh": "充满",
+      "example": "The park was full of people enjoying the sunshine.",
+      "exampleCn": "公园里到处是享受阳光的人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_go_into",
+      "word": "go into",
+      "entryType": "phrase",
+      "meaningZh": "进入",
+      "example": "Before you go into the building, sign in at reception.",
+      "exampleCn": "进入大楼前，请到前台签到。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_good_idea",
+      "word": "good idea",
+      "entryType": "phrase",
+      "meaningZh": "好主意",
+      "example": "It is a good idea to bring your own lunch.",
+      "exampleCn": "自带午餐是个好主意。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_great_opportunity",
+      "word": "great opportunity",
+      "entryType": "phrase",
+      "meaningZh": "好机会",
+      "example": "This internship is a great opportunity to gain experience.",
+      "exampleCn": "这个实习是获得经验的好机会。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_health_and_safety",
+      "word": "health and safety",
+      "entryType": "phrase",
+      "meaningZh": "健康与安全",
+      "example": "All employees must follow health and safety guidelines.",
+      "exampleCn": "所有员工必须遵守健康与安全准则。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_high_school",
+      "word": "high school",
+      "entryType": "phrase",
+      "meaningZh": "中学",
+      "example": "The program is available to high school students.",
+      "exampleCn": "该项目面向中学生开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_history_of",
+      "word": "history of",
+      "entryType": "phrase",
+      "meaningZh": "……的历史",
+      "example": "The museum displays the history of the town.",
+      "exampleCn": "博物馆展示了该镇的历史。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_how_much",
+      "word": "how much",
+      "entryType": "phrase",
+      "meaningZh": "多少（不可数）",
+      "example": "How much time do we have to complete the test?",
+      "exampleCn": "我们有多少时间完成测试？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_ice_cream",
+      "word": "ice cream",
+      "entryType": "phrase",
+      "meaningZh": "冰淇淋",
+      "example": "The shop sells homemade ice cream in various flavors.",
+      "exampleCn": "这家店出售各种口味的自制冰淇淋。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_ideal_for",
+      "word": "ideal for",
+      "entryType": "phrase",
+      "meaningZh": "对……理想",
+      "example": "This apartment is ideal for a small family.",
+      "exampleCn": "这套公寓适合小家庭居住。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_if_possible",
+      "word": "if possible",
+      "entryType": "phrase",
+      "meaningZh": "如果可能",
+      "example": "Please send the documents by email if possible.",
+      "exampleCn": "如果可能的话，请通过电子邮件发送文件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_impact_on",
+      "word": "impact on",
+      "entryType": "phrase",
+      "meaningZh": "对…的影响",
+      "example": "The new policy will have a direct impact on bus schedules.",
+      "exampleCn": "新政策将直接影响公交车时刻表。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_importance_of",
+      "word": "importance of",
+      "entryType": "phrase",
+      "meaningZh": "...的重要性",
+      "example": "We discussed the importance of regular training sessions.",
+      "exampleCn": "我们讨论了定期培训的重要性。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_improvement_in",
+      "word": "improvement in",
+      "entryType": "phrase",
+      "meaningZh": "在...方面的改进",
+      "example": "There has been a noticeable improvement in customer service.",
+      "exampleCn": "客户服务有了明显的改进。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_accordance_with",
+      "word": "in accordance with",
+      "entryType": "phrase",
+      "meaningZh": "按照；符合",
+      "example": "All repairs were done in accordance with safety regulations.",
+      "exampleCn": "所有维修都按照安全规定进行。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_addition_to",
+      "word": "in addition to",
+      "entryType": "phrase",
+      "meaningZh": "除……之外还",
+      "example": "In addition to rent, you must pay a deposit.",
+      "exampleCn": "除租金外，你还必须支付押金。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_advance",
+      "word": "in advance",
+      "entryType": "phrase",
+      "meaningZh": "提前",
+      "example": "Please book the meeting room in advance.",
+      "exampleCn": "请提前预订会议室。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_all",
+      "word": "in all",
+      "entryType": "phrase",
+      "meaningZh": "总共",
+      "example": "There were fifteen candidates in all.",
+      "exampleCn": "总共有十五位候选人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_britain",
+      "word": "in britain",
+      "entryType": "phrase",
+      "meaningZh": "在英国",
+      "example": "In Britain, you can find many historical museums.",
+      "exampleCn": "在英国，你可以找到许多历史博物馆。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_charge",
+      "word": "in charge",
+      "entryType": "phrase",
+      "meaningZh": "负责",
+      "example": "Who is in charge here?",
+      "exampleCn": "谁在这里负责？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_charge_of",
+      "word": "in charge of",
+      "entryType": "phrase",
+      "meaningZh": "负责",
+      "example": "She is in charge of the training program.",
+      "exampleCn": "她负责培训项目。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_fact",
+      "word": "in fact",
+      "entryType": "phrase",
+      "meaningZh": "事实上",
+      "example": "In fact, the train arrived early.",
+      "exampleCn": "事实上，火车早到了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_front_of",
+      "word": "in front of",
+      "entryType": "phrase",
+      "meaningZh": "在...前面",
+      "example": "The post office is in front of the library.",
+      "exampleCn": "邮局在图书馆前面。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_good_condition",
+      "word": "in good condition",
+      "entryType": "phrase",
+      "meaningZh": "状况良好",
+      "example": "The used car is in good condition.",
+      "exampleCn": "这辆二手车状况良好。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_history",
+      "word": "in history",
+      "entryType": "phrase",
+      "meaningZh": "在历史上",
+      "example": "This is the hottest summer in history.",
+      "exampleCn": "这是历史上最热的夏天。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_order_to",
+      "word": "in order to",
+      "entryType": "phrase",
+      "meaningZh": "为了",
+      "example": "We must leave early in order to catch the flight.",
+      "exampleCn": "我们必须早出发以便赶上航班。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_person",
+      "word": "in person",
+      "entryType": "phrase",
+      "meaningZh": "亲自",
+      "example": "You can collect the tickets in person.",
+      "exampleCn": "你可以亲自领取门票。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_place",
+      "word": "in place",
+      "entryType": "phrase",
+      "meaningZh": "到位",
+      "example": "Make sure the safety measures are in place.",
+      "exampleCn": "确保安全措施到位。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_air",
+      "word": "in the air",
+      "entryType": "phrase",
+      "meaningZh": "在空中",
+      "example": "Birds were flying in the air.",
+      "exampleCn": "鸟儿在空中飞翔。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_city",
+      "word": "in the city",
+      "entryType": "phrase",
+      "meaningZh": "在城市里",
+      "example": "There are many parks in the city.",
+      "exampleCn": "城市里有很多公园。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_field",
+      "word": "in the field",
+      "entryType": "phrase",
+      "meaningZh": "在实地；在领域内",
+      "example": "Our team spent three weeks in the field collecting data.",
+      "exampleCn": "我们团队在实地花了三周收集数据。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_form_of",
+      "word": "in the form of",
+      "entryType": "phrase",
+      "meaningZh": "以……形式",
+      "example": "The discount is offered in the form of a voucher.",
+      "exampleCn": "折扣以代金券形式提供。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_park",
+      "word": "in the park",
+      "entryType": "phrase",
+      "meaningZh": "在公园里",
+      "example": "Children are playing in the park near the library.",
+      "exampleCn": "孩子们在图书馆附近的公园里玩。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_past",
+      "word": "in the past",
+      "entryType": "phrase",
+      "meaningZh": "在过去",
+      "example": "In the past, people relied on letters to communicate.",
+      "exampleCn": "过去，人们依靠信件交流。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_region",
+      "word": "in the region",
+      "entryType": "phrase",
+      "meaningZh": "在该地区",
+      "example": "The population in the region has grown rapidly.",
+      "exampleCn": "该地区的人口增长迅速。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_workplace",
+      "word": "in the workplace",
+      "entryType": "phrase",
+      "meaningZh": "在工作场所",
+      "example": "Safety regulations must be followed in the workplace.",
+      "exampleCn": "在工作场所必须遵守安全规定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_world",
+      "word": "in the world",
+      "entryType": "phrase",
+      "meaningZh": "在世界上",
+      "example": "This museum is one of the largest in the world.",
+      "exampleCn": "这座博物馆是世界上最大的博物馆之一。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_winter",
+      "word": "in winter",
+      "entryType": "phrase",
+      "meaningZh": "在冬天",
+      "example": "Many tourists visit the mountains in winter for skiing.",
+      "exampleCn": "许多游客在冬天去山上滑雪。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_indicate_that",
+      "word": "indicate that",
+      "entryType": "phrase",
+      "meaningZh": "表明",
+      "example": "The survey results indicate that customers prefer online shopping.",
+      "exampleCn": "调查结果表明顾客更喜欢网上购物。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_information_about",
+      "word": "information about",
+      "entryType": "phrase",
+      "meaningZh": "关于...的信息",
+      "example": "Please contact the help desk for information about bus schedules.",
+      "exampleCn": "请联系服务台获取关于公交车时刻表的信息。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_information_on",
+      "word": "information on",
+      "entryType": "phrase",
+      "meaningZh": "关于...的信息",
+      "example": "You can find information on training courses in the brochure.",
+      "exampleCn": "你可以在小册子里找到关于培训课程的信息。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_interest_in",
+      "word": "interest in",
+      "entryType": "phrase",
+      "meaningZh": "对...的兴趣",
+      "example": "Her interest in graphic design led her to take evening classes.",
+      "exampleCn": "她对平面设计的兴趣促使她参加了夜校课程。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_interested_in",
+      "word": "interested in",
+      "entryType": "phrase",
+      "meaningZh": "对...感兴趣",
+      "example": "Are you interested in signing up for the weekly newsletter?",
+      "exampleCn": "你有兴趣注册每周简报吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_island_of",
+      "word": "island of",
+      "entryType": "phrase",
+      "meaningZh": "...岛",
+      "example": "The island of Crete is a popular holiday destination.",
+      "exampleCn": "克里特岛是一个受欢迎的度假胜地。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_its_own",
+      "word": "its own",
+      "entryType": "phrase",
+      "meaningZh": "它自己的",
+      "example": "The department has its own budget for equipment.",
+      "exampleCn": "该部门有自己的设备预算。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_just_as",
+      "word": "just as",
+      "entryType": "phrase",
+      "meaningZh": "正如",
+      "example": "Just as the manual states, press the button firmly.",
+      "exampleCn": "正如手册所述，用力按下按钮。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_keen_to",
+      "word": "keen to",
+      "entryType": "phrase",
+      "meaningZh": "渴望做",
+      "example": "She is keen to learn new skills for the job.",
+      "exampleCn": "她渴望学习新技能以适应工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_key_to",
+      "word": "key to",
+      "entryType": "phrase",
+      "meaningZh": "......的关键",
+      "example": "Regular practice is the key to improving your writing.",
+      "exampleCn": "定期练习是提高写作的关键。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_kind_of",
+      "word": "kind of",
+      "entryType": "phrase",
+      "meaningZh": "有点；种类",
+      "example": "This kind of material is easy to clean.",
+      "exampleCn": "这种材料容易清洁。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_know_about",
+      "word": "know about",
+      "entryType": "phrase",
+      "meaningZh": "了解",
+      "example": "Do you know about the new parking regulations?",
+      "exampleCn": "你了解新的停车规定吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_knowledge_of",
+      "word": "knowledge of",
+      "entryType": "phrase",
+      "meaningZh": "......的知识",
+      "example": "The candidate must have a good knowledge of office procedures.",
+      "exampleCn": "候选人必须熟悉办公室流程。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_known_to",
+      "word": "known to",
+      "entryType": "phrase",
+      "meaningZh": "为……所知",
+      "example": "This brand is known to produce high-quality shoes.",
+      "exampleCn": "这个品牌以生产高品质鞋子而闻名。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_lack_of",
+      "word": "lack of",
+      "entryType": "phrase",
+      "meaningZh": "缺乏",
+      "example": "The lack of parking spaces causes frustration among residents.",
+      "exampleCn": "停车位不足引起居民不满。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_layer_of",
+      "word": "layer of",
+      "entryType": "phrase",
+      "meaningZh": "一层…",
+      "example": "Apply a thin layer of paint to the wall.",
+      "exampleCn": "在墙上涂一层薄漆。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_learn_about",
+      "word": "learn about",
+      "entryType": "phrase",
+      "meaningZh": "了解",
+      "example": "We learned about the new safety regulations during the training.",
+      "exampleCn": "我们在培训中了解了新的安全规定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_learn_to",
+      "word": "learn to",
+      "entryType": "phrase",
+      "meaningZh": "学会",
+      "example": "You need to learn to manage your time effectively.",
+      "exampleCn": "你需要学会有效管理时间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_length_of",
+      "word": "length of",
+      "entryType": "phrase",
+      "meaningZh": "……的长度",
+      "example": "The length of the contract is two years.",
+      "exampleCn": "合同期限为两年。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_less_than",
+      "word": "less than",
+      "entryType": "phrase",
+      "meaningZh": "比...少",
+      "example": "The repair cost less than fifty dollars.",
+      "exampleCn": "维修费用不到五十美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_level_of",
+      "word": "level of",
+      "entryType": "phrase",
+      "meaningZh": "……的水平",
+      "example": "The level of noise in the apartment was unacceptable.",
+      "exampleCn": "公寓里的噪音水平令人无法接受。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_likely_that",
+      "word": "likely that",
+      "entryType": "phrase",
+      "meaningZh": "可能...",
+      "example": "It is likely that the train will be delayed.",
+      "exampleCn": "火车很可能会晚点。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_limited_to",
+      "word": "limited to",
+      "entryType": "phrase",
+      "meaningZh": "限于",
+      "example": "The offer is limited to new customers only.",
+      "exampleCn": "此优惠仅限于新客户。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_line_manager",
+      "word": "line manager",
+      "entryType": "phrase",
+      "meaningZh": "直线经理",
+      "example": "Please discuss the issue with your line manager.",
+      "exampleCn": "请与你的直线经理讨论这个问题。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_list_of",
+      "word": "list of",
+      "entryType": "phrase",
+      "meaningZh": "……的列表",
+      "example": "Check the list of required documents before applying.",
+      "exampleCn": "申请前请检查所需文件清单。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_listen_to",
+      "word": "listen to",
+      "entryType": "phrase",
+      "meaningZh": "听……",
+      "example": "You should listen to the instructions carefully.",
+      "exampleCn": "你应该仔细听指示。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_live_in",
+      "word": "live in",
+      "entryType": "phrase",
+      "meaningZh": "住在……",
+      "example": "Many employees live in the suburbs and commute daily.",
+      "exampleCn": "许多员工住在郊区，每天通勤。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_living_in",
+      "word": "living in",
+      "entryType": "phrase",
+      "meaningZh": "居住在",
+      "example": "Living in a shared apartment can reduce expenses.",
+      "exampleCn": "住在合租公寓可以减少开支。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_long_time",
+      "word": "long time",
+      "entryType": "phrase",
+      "meaningZh": "长时间",
+      "example": "The bus took a long time to arrive.",
+      "exampleCn": "公共汽车过了很久才到。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_look_for",
+      "word": "look for",
+      "entryType": "phrase",
+      "meaningZh": "寻找",
+      "example": "We are looking for a reliable plumber.",
+      "exampleCn": "我们正在寻找一位可靠的水管工。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_loss_of",
+      "word": "loss of",
+      "entryType": "phrase",
+      "meaningZh": "……的损失",
+      "example": "The loss of electricity caused inconvenience to residents.",
+      "exampleCn": "停电给居民带来了不便。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_majority_of",
+      "word": "majority of",
+      "entryType": "phrase",
+      "meaningZh": "大多数...",
+      "example": "The majority of students passed the exam.",
+      "exampleCn": "大多数学生通过了考试。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_make_a_reservation",
+      "word": "make a reservation",
+      "entryType": "phrase",
+      "meaningZh": "预订",
+      "example": "I need to make a reservation for two at the restaurant.",
+      "exampleCn": "我需要为两个人预订餐厅。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_make_sure",
+      "word": "make sure",
+      "entryType": "phrase",
+      "meaningZh": "确保",
+      "example": "Please make sure you lock the door before leaving.",
+      "exampleCn": "请确保离开前锁门。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_maximum_number",
+      "word": "maximum number",
+      "entryType": "phrase",
+      "meaningZh": "最大数量",
+      "example": "The maximum number of people in the lift is eight.",
+      "exampleCn": "电梯内最多容纳八人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_maximum_of",
+      "word": "maximum of",
+      "entryType": "phrase",
+      "meaningZh": "最多",
+      "example": "You can borrow a maximum of three books at a time.",
+      "exampleCn": "你一次最多可以借三本书。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_member_of",
+      "word": "member of",
+      "entryType": "phrase",
+      "meaningZh": "……的成员",
+      "example": "She is a member of the local library.",
+      "exampleCn": "她是当地图书馆的会员。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_might_have",
+      "word": "might have",
+      "entryType": "phrase",
+      "meaningZh": "可能已经",
+      "example": "He might have missed the train due to the delay.",
+      "exampleCn": "他可能因为延误错过了火车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_millions_of",
+      "word": "millions of",
+      "entryType": "phrase",
+      "meaningZh": "数百万的",
+      "example": "Millions of commuters use public transport every day.",
+      "exampleCn": "每天有数百万通勤者使用公共交通。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_minimum_age",
+      "word": "minimum age",
+      "entryType": "phrase",
+      "meaningZh": "最低年龄",
+      "example": "The minimum age to drive a car is eighteen.",
+      "exampleCn": "开车的最低年龄是十八岁。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_move_on",
+      "word": "move on",
+      "entryType": "phrase",
+      "meaningZh": "继续前进",
+      "example": "After the training, we should move on to the next task.",
+      "exampleCn": "培训结束后，我们应该继续下一个任务。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_moving_to",
+      "word": "moving to",
+      "entryType": "phrase",
+      "meaningZh": "搬到",
+      "example": "We are moving to a new office next month.",
+      "exampleCn": "我们下个月搬到新办公室。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_much_more",
+      "word": "much more",
+      "entryType": "phrase",
+      "meaningZh": "更多",
+      "example": "This course offers much more practical experience.",
+      "exampleCn": "这门课程提供更多实践经验。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_much_of",
+      "word": "much of",
+      "entryType": "phrase",
+      "meaningZh": "大部分",
+      "example": "Much of the paperwork has been completed.",
+      "exampleCn": "大部分文书工作已经完成。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_national_park",
+      "word": "national park",
+      "entryType": "phrase",
+      "meaningZh": "国家公园",
+      "example": "The national park is open to visitors all year round.",
+      "exampleCn": "国家公园全年对游客开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_nature_of",
+      "word": "nature of",
+      "entryType": "phrase",
+      "meaningZh": "...的本质",
+      "example": "The nature of the job requires flexible working hours.",
+      "exampleCn": "这份工作的性质要求灵活的工作时间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_need_for",
+      "word": "need for",
+      "entryType": "phrase",
+      "meaningZh": "对…的需求",
+      "example": "There is a growing need for skilled electricians.",
+      "exampleCn": "对熟练电工的需求日益增长。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_next_to",
+      "word": "next to",
+      "entryType": "phrase",
+      "meaningZh": "在……旁边",
+      "example": "The pharmacy is next to the supermarket.",
+      "exampleCn": "药房在超市旁边。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_next_year",
+      "word": "next year",
+      "entryType": "phrase",
+      "meaningZh": "明年",
+      "example": "The company plans to expand next year.",
+      "exampleCn": "公司计划明年扩张。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_nineteenth_century",
+      "word": "nineteenth century",
+      "entryType": "phrase",
+      "meaningZh": "十九世纪",
+      "example": "Many buildings from the nineteenth century still stand.",
+      "exampleCn": "许多十九世纪的建筑仍然矗立。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_no_later_than",
+      "word": "no later than",
+      "entryType": "phrase",
+      "meaningZh": "不迟于",
+      "example": "Please submit your application no later than Friday.",
+      "exampleCn": "请最迟在周五之前提交申请。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_necessarily",
+      "word": "not necessarily",
+      "entryType": "phrase",
+      "meaningZh": "不一定",
+      "example": "A higher price does not necessarily mean better quality.",
+      "exampleCn": "更高的价格不一定意味着更好的质量。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_only",
+      "word": "not only",
+      "entryType": "phrase",
+      "meaningZh": "不仅",
+      "example": "The training not only covers safety but also teamwork.",
+      "exampleCn": "培训不仅涵盖安全，还涵盖团队合作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_notice_period",
+      "word": "notice period",
+      "entryType": "phrase",
+      "meaningZh": "通知期",
+      "example": "The contract requires a one-month notice period.",
+      "exampleCn": "合同要求一个月的通知期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_number_of",
+      "word": "number of",
+      "entryType": "phrase",
+      "meaningZh": "...的数量",
+      "example": "The number of applicants exceeded expectations.",
+      "exampleCn": "申请人数超出了预期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_numbers_of",
+      "word": "numbers of",
+      "entryType": "phrase",
+      "meaningZh": "许多",
+      "example": "Numbers of people attended the free workshop.",
+      "exampleCn": "许多人参加了免费研讨会。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_of_course",
+      "word": "of course",
+      "entryType": "phrase",
+      "meaningZh": "当然",
+      "example": "Of course, you can park in the visitor lot.",
+      "exampleCn": "当然，你可以停在访客停车场。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_a_daily_basis",
+      "word": "on a daily basis",
+      "entryType": "phrase",
+      "meaningZh": "每天",
+      "example": "We update the inventory on a daily basis.",
+      "exampleCn": "我们每天更新库存。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_a_regular_basis",
+      "word": "on a regular basis",
+      "entryType": "phrase",
+      "meaningZh": "定期",
+      "example": "The equipment is inspected on a regular basis.",
+      "exampleCn": "设备定期接受检查。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_behalf_of",
+      "word": "on behalf of",
+      "entryType": "phrase",
+      "meaningZh": "代表",
+      "example": "I am writing on behalf of the residents.",
+      "exampleCn": "我代表居民写信。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_site",
+      "word": "on site",
+      "entryType": "phrase",
+      "meaningZh": "在现场",
+      "example": "The technician will be on site tomorrow.",
+      "exampleCn": "技术人员明天将到现场。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_the_beach",
+      "word": "on the beach",
+      "entryType": "phrase",
+      "meaningZh": "在海滩上",
+      "example": "The hotel is located directly on the beach.",
+      "exampleCn": "酒店直接位于海滩上。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_the_floor",
+      "word": "on the floor",
+      "entryType": "phrase",
+      "meaningZh": "在地板上",
+      "example": "Please leave your shoes on the floor.",
+      "exampleCn": "请把鞋子放在地板上。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_on_the_way",
+      "word": "on the way",
+      "entryType": "phrase",
+      "meaningZh": "在路上",
+      "example": "I will pick up the documents on the way.",
+      "exampleCn": "我会在路上取文件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_one_of_these",
+      "word": "one of these",
+      "entryType": "phrase",
+      "meaningZh": "其中之一",
+      "example": "Please choose one of these options.",
+      "exampleCn": "请选择这些选项中的一个。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_open_for",
+      "word": "open for",
+      "entryType": "phrase",
+      "meaningZh": "为…开放",
+      "example": "The store is open for customers from 9 am.",
+      "exampleCn": "商店从上午9点开始对顾客开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_open_to",
+      "word": "open to",
+      "entryType": "phrase",
+      "meaningZh": "对…开放",
+      "example": "The meeting is open to all employees.",
+      "exampleCn": "会议对所有员工开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_opening_hours",
+      "word": "opening hours",
+      "entryType": "phrase",
+      "meaningZh": "营业时间",
+      "example": "Our opening hours are 8 am to 8 pm.",
+      "exampleCn": "我们的营业时间是上午8点到晚上8点。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_opportunity_to",
+      "word": "opportunity to",
+      "entryType": "phrase",
+      "meaningZh": "做...的机会",
+      "example": "This job offers an opportunity to learn new skills.",
+      "exampleCn": "这份工作提供了学习新技能的机会。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_other_people",
+      "word": "other people",
+      "entryType": "phrase",
+      "meaningZh": "其他人",
+      "example": "Please keep your voice down to avoid disturbing other people in the library.",
+      "exampleCn": "请降低音量，以免打扰图书馆里的其他人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_over_time",
+      "word": "over time",
+      "entryType": "phrase",
+      "meaningZh": "随着时间的推移",
+      "example": "Your skills will improve over time.",
+      "exampleCn": "你的技能会随着时间的推移而提高。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_parking_space",
+      "word": "parking space",
+      "entryType": "phrase",
+      "meaningZh": "停车位",
+      "example": "Each apartment comes with one parking space.",
+      "exampleCn": "每套公寓配有一个停车位。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_part_of",
+      "word": "part of",
+      "entryType": "phrase",
+      "meaningZh": "…的一部分",
+      "example": "This apartment is part of a larger complex.",
+      "exampleCn": "这套公寓是一个较大社区的一部分。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_pay_for",
+      "word": "pay for",
+      "entryType": "phrase",
+      "meaningZh": "为……付款",
+      "example": "You need to pay for the tickets in advance.",
+      "exampleCn": "你需要提前支付票款。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_per_annum",
+      "word": "per annum",
+      "entryType": "phrase",
+      "meaningZh": "每年",
+      "example": "The salary is $50,000 per annum.",
+      "exampleCn": "年薪是50,000美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_percent_of",
+      "word": "percent of",
+      "entryType": "phrase",
+      "meaningZh": "...的百分比",
+      "example": "Only a small percent of applicants are accepted.",
+      "exampleCn": "只有一小部分申请者被录取。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_perfect_for",
+      "word": "perfect for",
+      "entryType": "phrase",
+      "meaningZh": "适合",
+      "example": "This coat is perfect for cold weather.",
+      "exampleCn": "这件外套非常适合寒冷天气。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_period_of",
+      "word": "period of",
+      "entryType": "phrase",
+      "meaningZh": "...期间",
+      "example": "The trial period of three months ends next week.",
+      "exampleCn": "三个月的试用期下周结束。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_piece_of",
+      "word": "piece of",
+      "entryType": "phrase",
+      "meaningZh": "一片/块/件",
+      "example": "I need a piece of paper to write down the address.",
+      "exampleCn": "我需要一张纸来记下地址。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_place_of_work",
+      "word": "place of work",
+      "entryType": "phrase",
+      "meaningZh": "工作地点",
+      "example": "Your place of work is near the train station.",
+      "exampleCn": "你的工作地点靠近火车站。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_plan_to",
+      "word": "plan to",
+      "entryType": "phrase",
+      "meaningZh": "计划做",
+      "example": "We plan to renovate the kitchen next month.",
+      "exampleCn": "我们计划下个月翻新厨房。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_population_of",
+      "word": "population of",
+      "entryType": "phrase",
+      "meaningZh": "...的人口",
+      "example": "The population of this town has grown rapidly.",
+      "exampleCn": "这个城镇的人口增长迅速。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_possibility_of",
+      "word": "possibility of",
+      "entryType": "phrase",
+      "meaningZh": "……的可能性",
+      "example": "There is a possibility of rain later today.",
+      "exampleCn": "今天晚些时候有可能下雨。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_possible_for",
+      "word": "possible for",
+      "entryType": "phrase",
+      "meaningZh": "对……可能",
+      "example": "It is possible for residents to park on the street.",
+      "exampleCn": "居民可以在街上停车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_potential_for",
+      "word": "potential for",
+      "entryType": "phrase",
+      "meaningZh": "……的潜力",
+      "example": "This site has great potential for development.",
+      "exampleCn": "这个地点有很大的开发潜力。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_prevent_from",
+      "word": "prevent from",
+      "entryType": "phrase",
+      "meaningZh": "阻止……做",
+      "example": "The fence prevents animals from entering the garden.",
+      "exampleCn": "篱笆防止动物进入花园。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_primary_school",
+      "word": "primary school",
+      "entryType": "phrase",
+      "meaningZh": "小学",
+      "example": "My daughter attends the local primary school.",
+      "exampleCn": "我女儿在当地的公立小学上学。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_problem_with",
+      "word": "problem with",
+      "entryType": "phrase",
+      "meaningZh": "…的问题",
+      "example": "There is a problem with the heating system.",
+      "exampleCn": "供暖系统有问题。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_process_of",
+      "word": "process of",
+      "entryType": "phrase",
+      "meaningZh": "……的过程",
+      "example": "The process of applying for a visa can be lengthy.",
+      "exampleCn": "申请签证的过程可能很漫长。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_proof_of_identity",
+      "word": "proof of identity",
+      "entryType": "phrase",
+      "meaningZh": "身份证明",
+      "example": "You must show proof of identity when collecting the parcel.",
+      "exampleCn": "取包裹时你必须出示身份证明。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_provided_for",
+      "word": "provided for",
+      "entryType": "phrase",
+      "meaningZh": "为...提供",
+      "example": "Meals are provided for all employees during training.",
+      "exampleCn": "培训期间为所有员工提供餐食。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_public_transport",
+      "word": "public transport",
+      "entryType": "phrase",
+      "meaningZh": "公共交通",
+      "example": "Public transport is convenient in the city centre.",
+      "exampleCn": "市中心公共交通便捷。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_quality_of",
+      "word": "quality of",
+      "entryType": "phrase",
+      "meaningZh": "…的质量",
+      "example": "The quality of this printer is excellent.",
+      "exampleCn": "这台打印机的质量非常好。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_range_of",
+      "word": "range of",
+      "entryType": "phrase",
+      "meaningZh": "……的范围",
+      "example": "The store offers a wide range of organic products.",
+      "exampleCn": "这家店提供各种各样的有机产品。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_reason_for",
+      "word": "reason for",
+      "entryType": "phrase",
+      "meaningZh": "...的原因",
+      "example": "The reason for the delay was the heavy traffic.",
+      "exampleCn": "延误的原因是交通拥堵。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_recent_years",
+      "word": "recent years",
+      "entryType": "phrase",
+      "meaningZh": "最近几年",
+      "example": "In recent years, public transport has improved significantly.",
+      "exampleCn": "最近几年，公共交通有了显著改善。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_record_of",
+      "word": "record of",
+      "entryType": "phrase",
+      "meaningZh": "...的记录",
+      "example": "Please keep a record of all your expenses.",
+      "exampleCn": "请保留所有费用的记录。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_referred_to",
+      "word": "referred to",
+      "entryType": "phrase",
+      "meaningZh": "指的是；参考",
+      "example": "The report referred to the new safety regulations.",
+      "exampleCn": "这份报告提到了新的安全规定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_regular_basis",
+      "word": "regular basis",
+      "entryType": "phrase",
+      "meaningZh": "定期",
+      "example": "You should back up your files on a regular basis.",
+      "exampleCn": "你应该定期备份文件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_related_to",
+      "word": "related to",
+      "entryType": "phrase",
+      "meaningZh": "与...相关",
+      "example": "The seminar was related to workplace health.",
+      "exampleCn": "这次研讨会与工作场所健康有关。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_remains_of",
+      "word": "remains of",
+      "entryType": "phrase",
+      "meaningZh": "…的剩余",
+      "example": "The remains of the old building were cleared away.",
+      "exampleCn": "旧建筑的残余物被清理掉了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_remember_to",
+      "word": "remember to",
+      "entryType": "phrase",
+      "meaningZh": "记得做某事",
+      "example": "Remember to lock the door when you leave.",
+      "exampleCn": "离开时记得锁门。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_replace_with",
+      "word": "replace with",
+      "entryType": "phrase",
+      "meaningZh": "用……替换",
+      "example": "Replace the old filter with a new one every month.",
+      "exampleCn": "每月用新滤芯替换旧的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_requirement_for",
+      "word": "requirement for",
+      "entryType": "phrase",
+      "meaningZh": "对……的要求",
+      "example": "The requirement for the job is a degree in engineering.",
+      "exampleCn": "这份工作的要求是工程学学位。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_respond_to",
+      "word": "respond to",
+      "entryType": "phrase",
+      "meaningZh": "回应",
+      "example": "Please respond to the invitation by Friday.",
+      "exampleCn": "请在周五前回复邀请。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_responsible_for",
+      "word": "responsible for",
+      "entryType": "phrase",
+      "meaningZh": "对……负责",
+      "example": "The manager is responsible for the team's performance.",
+      "exampleCn": "经理负责团队的表现。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_return_to",
+      "word": "return to",
+      "entryType": "phrase",
+      "meaningZh": "回到",
+      "example": "She will return to work after her leave.",
+      "exampleCn": "她休假后会返回工作岗位。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_risk_of",
+      "word": "risk of",
+      "entryType": "phrase",
+      "meaningZh": "…的风险",
+      "example": "There is a high risk of fire in dry conditions.",
+      "exampleCn": "干燥条件下火灾风险很高。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_role_in",
+      "word": "role in",
+      "entryType": "phrase",
+      "meaningZh": "在…中的作用",
+      "example": "Volunteers play a key role in community events.",
+      "exampleCn": "志愿者在社区活动中扮演关键角色。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_room_for",
+      "word": "room for",
+      "entryType": "phrase",
+      "meaningZh": "……的空间",
+      "example": "Is there room for one more chair in the office?",
+      "exampleCn": "办公室里还有空间放一把椅子吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_safety_rules",
+      "word": "safety rules",
+      "entryType": "phrase",
+      "meaningZh": "安全规则",
+      "example": "All employees must follow the safety rules.",
+      "exampleCn": "所有员工必须遵守安全规则。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_sea_turtle",
+      "word": "sea turtle",
+      "entryType": "phrase",
+      "meaningZh": "海龟",
+      "example": "A sea turtle was rescued from the fishing net.",
+      "exampleCn": "一只海龟从渔网中被救出。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_search_for",
+      "word": "search for",
+      "entryType": "phrase",
+      "meaningZh": "搜索",
+      "example": "I need to search for a new apartment online.",
+      "exampleCn": "我需要在线搜索新公寓。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_section_of",
+      "word": "section of",
+      "entryType": "phrase",
+      "meaningZh": "…的部分",
+      "example": "The furniture section of the store is on the second floor.",
+      "exampleCn": "商店的家具部分在二楼。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_seem_to",
+      "word": "seem to",
+      "entryType": "phrase",
+      "meaningZh": "似乎...",
+      "example": "The train schedule seems to have changed.",
+      "exampleCn": "火车时刻表似乎变了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_selection_of",
+      "word": "selection of",
+      "entryType": "phrase",
+      "meaningZh": "…的选择",
+      "example": "The supermarket has a wide selection of organic vegetables.",
+      "exampleCn": "超市有丰富的有机蔬菜选择。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_series_of",
+      "word": "series of",
+      "entryType": "phrase",
+      "meaningZh": "一系列",
+      "example": "We attended a series of training workshops last month.",
+      "exampleCn": "上个月我们参加了一系列培训工作坊。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_seven_days",
+      "word": "seven days",
+      "entryType": "phrase",
+      "meaningZh": "七天",
+      "example": "The rental agreement is valid for seven days.",
+      "exampleCn": "租赁协议有效期为七天。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_should_have",
+      "word": "should have",
+      "entryType": "phrase",
+      "meaningZh": "本应该",
+      "example": "You should have received the confirmation email.",
+      "exampleCn": "你本应该收到确认邮件的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_should_not",
+      "word": "should not",
+      "entryType": "phrase",
+      "meaningZh": "不应该",
+      "example": "Passengers should not leave luggage unattended.",
+      "exampleCn": "乘客不应该让行李无人看管。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_sign_up",
+      "word": "sign up",
+      "entryType": "phrase",
+      "meaningZh": "报名",
+      "example": "You can sign up for the course online.",
+      "exampleCn": "你可以在网上报名这门课程。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_site_of",
+      "word": "site of",
+      "entryType": "phrase",
+      "meaningZh": "...的地点",
+      "example": "The site of the new community center is next to the park.",
+      "exampleCn": "新社区中心的地点靠近公园。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_six_months",
+      "word": "six months",
+      "entryType": "phrase",
+      "meaningZh": "六个月",
+      "example": "The warranty covers repairs for six months.",
+      "exampleCn": "保修期涵盖六个月的维修。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_size_of",
+      "word": "size of",
+      "entryType": "phrase",
+      "meaningZh": "……的大小",
+      "example": "Please check the size of the suitcase before flying.",
+      "exampleCn": "登机前请检查行李箱的大小。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_sleeping_bag",
+      "word": "sleeping bag",
+      "entryType": "phrase",
+      "meaningZh": "睡袋",
+      "example": "Remember to bring a warm sleeping bag for the camping trip.",
+      "exampleCn": "记得为露营旅行带一个温暖的睡袋。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_so_far",
+      "word": "so far",
+      "entryType": "phrase",
+      "meaningZh": "到目前为止",
+      "example": "So far, no complaints have been received about the service.",
+      "exampleCn": "到目前为止，没有收到关于服务的投诉。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_solution_for",
+      "word": "solution for",
+      "entryType": "phrase",
+      "meaningZh": "针对...的解决方案",
+      "example": "The IT department proposed a solution for the network issue.",
+      "exampleCn": "IT部门提出了针对网络问题的解决方案。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_sort_of",
+      "word": "sort of",
+      "entryType": "phrase",
+      "meaningZh": "有点，一种",
+      "example": "This sort of arrangement works well for us.",
+      "exampleCn": "这种安排对我们很合适。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_space_for",
+      "word": "space for",
+      "entryType": "phrase",
+      "meaningZh": "为…的空间",
+      "example": "There is enough space for a desk in the corner.",
+      "exampleCn": "角落里有足够放一张桌子的空间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_speak_to",
+      "word": "speak to",
+      "entryType": "phrase",
+      "meaningZh": "对…说",
+      "example": "Please speak to the receptionist for a room key.",
+      "exampleCn": "请对前台说话以获取房间钥匙。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_species_of",
+      "word": "species of",
+      "entryType": "phrase",
+      "meaningZh": "……的物种",
+      "example": "This species of bird is commonly seen in urban parks.",
+      "exampleCn": "这种鸟类在城市公园常见。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_subject_to_availability",
+      "word": "subject to availability",
+      "entryType": "phrase",
+      "meaningZh": "视供应情况而定",
+      "example": "The upgrade is free but subject to availability.",
+      "exampleCn": "升级是免费的，但视供应情况而定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_such_a",
+      "word": "such a",
+      "entryType": "phrase",
+      "meaningZh": "这样一个",
+      "example": "It was such a beautiful day that we went to the park.",
+      "exampleCn": "那是如此美好的一天，我们去了公园。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_suffer_from",
+      "word": "suffer from",
+      "entryType": "phrase",
+      "meaningZh": "遭受",
+      "example": "Many elderly people suffer from arthritis.",
+      "exampleCn": "许多老年人患有关节炎。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_suggest_that",
+      "word": "suggest that",
+      "entryType": "phrase",
+      "meaningZh": "建议...",
+      "example": "The manager suggested that we extend the deadline.",
+      "exampleCn": "经理建议我们延长截止日期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_suitable_for",
+      "word": "suitable for",
+      "entryType": "phrase",
+      "meaningZh": "适合",
+      "example": "This jacket is suitable for cold weather.",
+      "exampleCn": "这件夹克适合寒冷的天气。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_support_for",
+      "word": "support for",
+      "entryType": "phrase",
+      "meaningZh": "对...的支持",
+      "example": "There is strong support for the new recycling program.",
+      "exampleCn": "对新回收计划有强烈的支持。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_swimming_pool",
+      "word": "swimming pool",
+      "entryType": "phrase",
+      "meaningZh": "游泳池",
+      "example": "The hotel has a heated swimming pool.",
+      "exampleCn": "这家酒店有一个温水游泳池。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_take_into_account",
+      "word": "take into account",
+      "entryType": "phrase",
+      "meaningZh": "把……考虑在内",
+      "example": "We must take into account the traffic delays.",
+      "exampleCn": "我们必须考虑交通延误。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_take_place",
+      "word": "take place",
+      "entryType": "phrase",
+      "meaningZh": "发生；举行",
+      "example": "The meeting will take place in the conference room.",
+      "exampleCn": "会议将在会议室举行。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_talk_about",
+      "word": "talk about",
+      "entryType": "phrase",
+      "meaningZh": "谈论",
+      "example": "Let's talk about your travel plans.",
+      "exampleCn": "我们来谈谈你的旅行计划。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_tend_to",
+      "word": "tend to",
+      "entryType": "phrase",
+      "meaningZh": "倾向于",
+      "example": "People tend to forget their passwords.",
+      "exampleCn": "人们往往忘记他们的密码。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_terms_and_conditions",
+      "word": "terms and conditions",
+      "entryType": "phrase",
+      "meaningZh": "条款与条件",
+      "example": "Please read the terms and conditions before signing.",
+      "exampleCn": "请在签署前阅读条款与条件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_the_best_way",
+      "word": "the best way",
+      "entryType": "phrase",
+      "meaningZh": "最佳方式",
+      "example": "The best way to learn is through practice.",
+      "exampleCn": "学习的最佳方式是通过实践。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_the_rest_of",
+      "word": "the rest of",
+      "entryType": "phrase",
+      "meaningZh": "其余的",
+      "example": "I will finish the rest of the work tomorrow.",
+      "exampleCn": "我明天会完成其余的工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_think_of",
+      "word": "think of",
+      "entryType": "phrase",
+      "meaningZh": "想起",
+      "example": "Can you think of a good idea for the project?",
+      "exampleCn": "你能为这个项目想出一个好主意吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_thousands_of",
+      "word": "thousands of",
+      "entryType": "phrase",
+      "meaningZh": "成千上万",
+      "example": "Thousands of people attended the festival.",
+      "exampleCn": "成千上万的人参加了这个节日。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_time_for",
+      "word": "time for",
+      "entryType": "phrase",
+      "meaningZh": "……的时间",
+      "example": "It's time for the annual staff meeting.",
+      "exampleCn": "是开年度员工会议的时间了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_time_limit",
+      "word": "time limit",
+      "entryType": "phrase",
+      "meaningZh": "时间限制",
+      "example": "You have a time limit of one hour.",
+      "exampleCn": "你有一小时的时间限制。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_to_the_public",
+      "word": "to the public",
+      "entryType": "phrase",
+      "meaningZh": "对公众",
+      "example": "The park is open to the public every day.",
+      "exampleCn": "公园每天对公众开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_too_much",
+      "word": "too much",
+      "entryType": "phrase",
+      "meaningZh": "太多",
+      "example": "Don't drink too much coffee before bed.",
+      "exampleCn": "睡前不要喝太多咖啡。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_touch_with",
+      "word": "touch with",
+      "entryType": "phrase",
+      "meaningZh": "用...触摸",
+      "example": "Do not touch the artwork with your hands.",
+      "exampleCn": "不要用手触摸艺术品。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_training_course",
+      "word": "training course",
+      "entryType": "phrase",
+      "meaningZh": "培训课程",
+      "example": "I enrolled in a training course to improve my computer skills.",
+      "exampleCn": "我报名参加了一个培训课程来提升我的电脑技能。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_travel_to",
+      "word": "travel to",
+      "entryType": "phrase",
+      "meaningZh": "去...旅行",
+      "example": "We plan to travel to Japan next spring.",
+      "exampleCn": "我们计划明年春天去日本旅行。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_type_of",
+      "word": "type of",
+      "entryType": "phrase",
+      "meaningZh": "……的类型",
+      "example": "What type of accommodation are you looking for?",
+      "exampleCn": "你在寻找什么类型的住宿？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_unable_to",
+      "word": "unable to",
+      "entryType": "phrase",
+      "meaningZh": "不能做",
+      "example": "She was unable to attend the interview due to illness.",
+      "exampleCn": "她因病无法参加面试。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_understanding_of",
+      "word": "understanding of",
+      "entryType": "phrase",
+      "meaningZh": "对...的理解",
+      "example": "The course deepened my understanding of sustainable development.",
+      "exampleCn": "这门课程加深了我对可持续发展的理解。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_university_of",
+      "word": "university of",
+      "entryType": "phrase",
+      "meaningZh": "……大学",
+      "example": "He graduated from the University of Sydney last year.",
+      "exampleCn": "他去年从悉尼大学毕业。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_unless_otherwise_stated",
+      "word": "unless otherwise stated",
+      "entryType": "phrase",
+      "meaningZh": "除非另有说明",
+      "example": "Prices are inclusive of tax, unless otherwise stated.",
+      "exampleCn": "除非另有说明，价格已含税。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_up_to_a_maximum_of",
+      "word": "up to a maximum of",
+      "entryType": "phrase",
+      "meaningZh": "最多达到",
+      "example": "The grant covers up to a maximum of $500.",
+      "exampleCn": "补助金最多覆盖500美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_used_by",
+      "word": "used by",
+      "entryType": "phrase",
+      "meaningZh": "被...使用",
+      "example": "This equipment is used by all staff in the lab.",
+      "exampleCn": "这套设备被实验室所有员工使用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_used_for",
+      "word": "used for",
+      "entryType": "phrase",
+      "meaningZh": "用于",
+      "example": "The room is used for training sessions only.",
+      "exampleCn": "这个房间仅用于培训课程。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_used_in",
+      "word": "used in",
+      "entryType": "phrase",
+      "meaningZh": "用于...中",
+      "example": "This method is used in many modern factories.",
+      "exampleCn": "这种方法在许多现代工厂中使用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_used_to",
+      "word": "used to",
+      "entryType": "phrase",
+      "meaningZh": "过去常常",
+      "example": "I used to walk to work, but now I take the bus.",
+      "exampleCn": "我过去常常步行上班，但现在坐公交。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_view_of",
+      "word": "view of",
+      "entryType": "phrase",
+      "meaningZh": "...的景色",
+      "example": "The apartment offers a stunning view of the lake.",
+      "exampleCn": "这套公寓能看到湖的壮丽景色。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_visitors_to",
+      "word": "visitors to",
+      "entryType": "phrase",
+      "meaningZh": "…的访客",
+      "example": "Visitors to the museum can enjoy free entry on Mondays.",
+      "exampleCn": "博物馆的访客周一可免费入场。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_welcome_to",
+      "word": "welcome to",
+      "entryType": "phrase",
+      "meaningZh": "欢迎来到",
+      "example": "Welcome to our neighbourhood, we hope you enjoy living here.",
+      "exampleCn": "欢迎来到我们社区，希望你住得愉快。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_wide_range",
+      "word": "wide range",
+      "entryType": "phrase",
+      "meaningZh": "广泛的范围",
+      "example": "The shop offers a wide range of organic products.",
+      "exampleCn": "这家店提供种类繁多的有机产品。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_with_them",
+      "word": "with them",
+      "entryType": "phrase",
+      "meaningZh": "和他们一起",
+      "example": "They always carry their tools with them.",
+      "exampleCn": "他们总是随身携带工具。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_within_walking_distance",
+      "word": "within walking distance",
+      "entryType": "phrase",
+      "meaningZh": "步行可达",
+      "example": "The hotel is within walking distance of the train station.",
+      "exampleCn": "酒店距离火车站步行可达。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_work_experience",
+      "word": "work experience",
+      "entryType": "phrase",
+      "meaningZh": "工作经验",
+      "example": "She gained valuable work experience during the internship.",
+      "exampleCn": "她在实习期间获得了宝贵的工作经验。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_work_for",
+      "word": "work for",
+      "entryType": "phrase",
+      "meaningZh": "为...工作",
+      "example": "I work for a multinational company in the sales department.",
+      "exampleCn": "我在一家跨国公司销售部工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_work_on",
+      "word": "work on",
+      "entryType": "phrase",
+      "meaningZh": "从事",
+      "example": "I am currently working on a new project.",
+      "exampleCn": "我目前正在从事一个新项目。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_work_life_balance",
+      "word": "work-life balance",
+      "entryType": "phrase",
+      "meaningZh": "工作生活平衡",
+      "example": "The company promotes a healthy work-life balance.",
+      "exampleCn": "公司提倡健康的工作生活平衡。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_working_hours",
+      "word": "working hours",
+      "entryType": "phrase",
+      "meaningZh": "工作时间",
+      "example": "My working hours are from nine to five.",
+      "exampleCn": "我的工作时间是朝九晚五。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_would_have",
+      "word": "would have",
+      "entryType": "phrase",
+      "meaningZh": "本来会",
+      "example": "Without the traffic jam, I would have arrived on time.",
+      "exampleCn": "如果没有交通堵塞，我本来会准时到达。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_years_ago",
+      "word": "years ago",
+      "entryType": "phrase",
+      "meaningZh": "多年前",
+      "example": "I moved to this city years ago.",
+      "exampleCn": "我多年前搬到了这个城市。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_your_application",
+      "word": "your application",
+      "entryType": "phrase",
+      "meaningZh": "你的申请",
+      "example": "We have received your application and will review it soon.",
+      "exampleCn": "我们已收到你的申请，并将尽快审核。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_co_worker",
+      "word": "co-worker",
+      "entryType": "word",
+      "meaningZh": "同事",
+      "example": "My co-worker helped me finish the report.",
+      "exampleCn": "我的同事帮我完成了报告。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_a_large_number_of",
+      "word": "a large number of",
+      "entryType": "phrase",
+      "meaningZh": "许多",
+      "example": "The library has a large number of new books.",
+      "exampleCn": "图书馆有许多新书。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_a_new_leader",
+      "word": "a new leader",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The team is expecting a new leader next month.",
+      "exampleCn": "团队下个月将迎来一位新领导。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_a_small_number_of",
+      "word": "a small number of",
+      "entryType": "phrase",
+      "meaningZh": "很少的；几个",
+      "example": "Only a small number of seats are available.",
+      "exampleCn": "只有很少的几个座位空着。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_abilities",
+      "word": "abilities",
+      "entryType": "word",
+      "meaningZh": "技能；技巧；技术",
+      "example": "This job requires strong communication abilities.",
+      "exampleCn": "这份工作需要很强的沟通技能。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_able_to_change",
+      "word": "able to change",
+      "entryType": "phrase",
+      "meaningZh": "灵活的",
+      "example": "Our schedule is able to change according to needs.",
+      "exampleCn": "我们的日程可以根据需要灵活调整。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_achieve_a_goal",
+      "word": "achieve a goal",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The team worked hard to achieve a goal before the deadline.",
+      "exampleCn": "团队在截止日期前努力实现了目标。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_add_clear_labels",
+      "word": "add clear labels",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please add clear labels to all the folders.",
+      "exampleCn": "请给所有文件夹添加清晰的标签。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_admission_charge",
+      "word": "admission charge",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The admission charge for the museum is ten dollars.",
+      "exampleCn": "博物馆的入场费是10美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_advertising_in_the_right_places",
+      "word": "advertising in the right places",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Advertising in the right places can attract more customers.",
+      "exampleCn": "在正确的场所做广告可以吸引更多顾客。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_ahead_of_time",
+      "word": "ahead of time",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please notify us ahead of time if you cannot attend.",
+      "exampleCn": "如果您无法参加，请提前通知我们。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_all_new_houses",
+      "word": "all new houses",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "All new houses must have energy-efficient windows.",
+      "exampleCn": "所有新房都必须安装节能窗户。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_allowed",
+      "word": "allowed",
+      "entryType": "word",
+      "meaningZh": "允许；准许",
+      "example": "Smoking is not allowed in this building.",
+      "exampleCn": "此建筑内不允许吸烟。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_almost",
+      "word": "almost",
+      "entryType": "word",
+      "meaningZh": "几乎，将近",
+      "example": "The meeting lasted almost three hours.",
+      "exampleCn": "会议几乎持续了三个小时。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_answer",
+      "word": "answer",
+      "entryType": "word",
+      "meaningZh": "回答；答案",
+      "example": "Please write your answer in the space provided.",
+      "exampleCn": "请把你的答案写在提供的空白处。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_any_recently_built_properties",
+      "word": "any recently built properties",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We are only interested in any recently built properties in this area.",
+      "exampleCn": "我们只对这片区域任何新建的房产感兴趣。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_as_published_in_the_academic_calendar",
+      "word": "as published in the academic calendar",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The semester starts on 1st September as published in the academic calendar.",
+      "exampleCn": "学期于9月1日开始，如学术日历所公布。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_ask_for_payment",
+      "word": "ask for payment",
+      "entryType": "phrase",
+      "meaningZh": "收费；充电；指控",
+      "example": "The landlord will ask for payment on the first day of each month.",
+      "exampleCn": "房东会要求每月第一天付款。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_assess_your_response_rate",
+      "word": "assess your response rate",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The survey will assess your response rate to emergency alerts.",
+      "exampleCn": "该调查将评估你对紧急警报的响应率。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_no_cost",
+      "word": "at no cost",
+      "entryType": "phrase",
+      "meaningZh": "免费的；自由的",
+      "example": "All training materials are provided at no cost to employees.",
+      "exampleCn": "所有培训材料免费提供给员工。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_at_the_location",
+      "word": "at the location",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please report to the reception desk at the location specified.",
+      "exampleCn": "请到指定地点的接待处报到。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_available_from",
+      "word": "available from",
+      "entryType": "phrase",
+      "meaningZh": "联系，接触",
+      "example": "The spare keys are available from the building manager.",
+      "exampleCn": "备用钥匙可从楼管处获得。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_available_job",
+      "word": "available job",
+      "entryType": "phrase",
+      "meaningZh": "空缺；空位",
+      "example": "There is an available job in the warehouse this week.",
+      "exampleCn": "这周仓库有一个空缺职位。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_bare_essentials",
+      "word": "bare essentials",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The hostel provides only the bare essentials for a short stay.",
+      "exampleCn": "旅馆只为短期住宿提供最基本的生活用品。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_advised_to",
+      "word": "be advised to",
+      "entryType": "phrase",
+      "meaningZh": "应该",
+      "example": "Residents are advised to lock their doors at night.",
+      "exampleCn": "建议居民夜间锁好房门。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_caused_by",
+      "word": "be caused by",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The delay was caused by a technical fault in the system.",
+      "exampleCn": "延误是由系统技术故障引起的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_eligible",
+      "word": "be eligible",
+      "entryType": "phrase",
+      "meaningZh": "取得资格；合格",
+      "example": "You must be eligible for a work visa to apply.",
+      "exampleCn": "你必须符合工作签证资格才能申请。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_be_in_charge_of",
+      "word": "be in charge of",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Ms. Lee will be in charge of the customer service team.",
+      "exampleCn": "李女士将负责客户服务团队。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_become_familiar",
+      "word": "become familiar",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "New staff should become familiar with the safety procedures.",
+      "exampleCn": "新员工应熟悉安全程序。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_become_part_of_it",
+      "word": "become part of it",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Once you join the club, you become part of it automatically.",
+      "exampleCn": "一旦加入俱乐部，你就自动成为其一部分。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_before",
+      "word": "before",
+      "entryType": "word",
+      "meaningZh": "在……之前",
+      "example": "Please submit your application before the deadline.",
+      "exampleCn": "请在截止日期前提交申请。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_below_the",
+      "word": "below the",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The temperature dropped below the freezing point last night.",
+      "exampleCn": "昨晚温度降到了冰点以下。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_book",
+      "word": "book",
+      "entryType": "word",
+      "meaningZh": "书；预订",
+      "example": "You can book a table for two at the restaurant online.",
+      "exampleCn": "你可以在网上预订餐厅的双人桌。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_book_in_advance",
+      "word": "book in advance",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "It is cheaper to book in advance for train tickets.",
+      "exampleCn": "提前预订火车票更便宜。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_bookings_are_essential",
+      "word": "Bookings are essential",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Bookings are essential for the Saturday workshop.",
+      "exampleCn": "周六工作坊必须提前预约。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_bring_to",
+      "word": "bring to",
+      "entryType": "phrase",
+      "meaningZh": "递送；交付",
+      "example": "Please bring the documents to the reception desk.",
+      "exampleCn": "请把文件送到前台。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_buses_and_trains",
+      "word": "buses and trains",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Buses and trains run less frequently on Sundays.",
+      "exampleCn": "公交车和火车周日班次较少。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_by",
+      "word": "by",
+      "entryType": "word",
+      "meaningZh": "通过；在...旁边",
+      "example": "I usually travel to work by bus.",
+      "exampleCn": "我通常坐公交车上班。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_calculate_the_response_rate",
+      "word": "calculate the response rate",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We need to calculate the response rate from the survey.",
+      "exampleCn": "我们需要计算调查的回复率。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_call_off",
+      "word": "call off",
+      "entryType": "phrase",
+      "meaningZh": "取消；撤销",
+      "example": "They had to call off the meeting due to illness.",
+      "exampleCn": "由于生病，他们不得不取消会议。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_carry_on",
+      "word": "carry on",
+      "entryType": "phrase",
+      "meaningZh": "继续",
+      "example": "Please carry on with your work while I am away.",
+      "exampleCn": "我不在时请继续你的工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_carry_on_baggage",
+      "word": "carry-on baggage",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Carry-on baggage must fit in the overhead locker.",
+      "exampleCn": "手提行李必须能放入头顶行李架。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_change_from_one_service_to_another",
+      "word": "change from one service to another",
+      "entryType": "phrase",
+      "meaningZh": "转移；调动",
+      "example": "You can change from one service to another at the central station.",
+      "exampleCn": "你可以在中央车站从一项服务换到另一项。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_close_by",
+      "word": "close by",
+      "entryType": "phrase",
+      "meaningZh": "附近",
+      "example": "There is a supermarket close by the apartment.",
+      "exampleCn": "公寓附近有一家超市。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_close_enough_to_walk",
+      "word": "close enough to walk",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The office is close enough to walk from the train station.",
+      "exampleCn": "办公室离火车站很近，可以步行过去。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_collect_from",
+      "word": "collect from",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "You can collect your parcel from the post office after 3 pm.",
+      "exampleCn": "下午三点后你可以从邮局领取包裹。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_comply_with_regulations",
+      "word": "comply with regulations",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "All employees must comply with safety regulations.",
+      "exampleCn": "所有员工必须遵守安全规定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_concern_the_movement_of",
+      "word": "concern the movement of",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The new rules concern the movement of goods across borders.",
+      "exampleCn": "新规定涉及货物跨境运输。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_consideration_of_themselves",
+      "word": "consideration of themselves",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "They showed no consideration of themselves when helping others.",
+      "exampleCn": "他们在帮助他人时从不考虑自己。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_continue_to_argue",
+      "word": "continue to argue",
+      "entryType": "phrase",
+      "meaningZh": "保持；维护",
+      "example": "The two sides continue to argue over the contract terms.",
+      "exampleCn": "双方继续就合同条款争论。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_cost_of_a_journey",
+      "word": "cost of a journey",
+      "entryType": "phrase",
+      "meaningZh": "票价；费用",
+      "example": "The cost of a journey by train is often cheaper than by car.",
+      "exampleCn": "乘火车旅行的费用通常比开车便宜。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_covered_with_padding",
+      "word": "covered with padding",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The fragile items were covered with padding for protection.",
+      "exampleCn": "易碎物品包裹了填充物以保护。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_damaging",
+      "word": "damaging",
+      "entryType": "word",
+      "meaningZh": "有害的",
+      "example": "Smoking is damaging to your health.",
+      "exampleCn": "吸烟有害健康。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_damp_gear",
+      "word": "damp gear",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Make sure to dry your damp gear before storing it.",
+      "exampleCn": "存放之前确保弄干潮湿的装备。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_depart",
+      "word": "depart",
+      "entryType": "word",
+      "meaningZh": "离开；休假",
+      "example": "The train will depart from platform 3 at 9:15.",
+      "exampleCn": "火车将于9:15从3号站台出发。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_dependable",
+      "word": "dependable",
+      "entryType": "word",
+      "meaningZh": "可靠的，可信赖的",
+      "example": "Our dependable courier service ensures your package arrives on time.",
+      "exampleCn": "我们可靠的快递服务确保您的包裹准时到达。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_despite_the_fact_that",
+      "word": "despite the fact that",
+      "entryType": "phrase",
+      "meaningZh": "虽然，尽管",
+      "example": "Despite the fact that the store was closed, we left a note.",
+      "exampleCn": "尽管商店关门了，我们还是留了张字条。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_details",
+      "word": "details",
+      "entryType": "word",
+      "meaningZh": "细节；详情",
+      "example": "Please check the rental agreement for payment details.",
+      "exampleCn": "请查看租赁协议中的付款细节。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_didn_t_know_you_had",
+      "word": "didn't know you had",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "I didn't know you had a parking permit.",
+      "exampleCn": "我不知道你有停车许可证。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_different_leader",
+      "word": "different leader",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The company appointed a different leader for the project.",
+      "exampleCn": "公司为该项目任命了不同的负责人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_discover_the_most_effective_places",
+      "word": "discover the most effective places",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Our team will discover the most effective places to advertise.",
+      "exampleCn": "我们的团队将找出最有效的广告投放地点。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_dismiss",
+      "word": "dismiss",
+      "entryType": "word",
+      "meaningZh": "解雇；驳回；解散",
+      "example": "The manager decided to dismiss the employee due to misconduct.",
+      "exampleCn": "经理因行为不当决定解雇该员工。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_drive_your_vehicle_right_next_to_your_storage_unit",
+      "word": "drive your vehicle right next to your storage unit",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "You can drive your vehicle right next to your storage unit for easy loading.",
+      "exampleCn": "您可以将车辆直接开到您的存储单元旁边，方便装载。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_drop_off",
+      "word": "drop off",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "You can drop off your library books at the front desk.",
+      "exampleCn": "您可以在前台归还图书馆书籍。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_during_the_whole_of",
+      "word": "during the whole of",
+      "entryType": "phrase",
+      "meaningZh": "遍及；贯穿整个时期",
+      "example": "The gym is open during the whole of the week.",
+      "exampleCn": "健身房在整个一周都开放。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_easy_to_enter_or_use",
+      "word": "easy to enter or use",
+      "entryType": "phrase",
+      "meaningZh": "可进入的，易接近的",
+      "example": "The new website is easy to enter or use from any device.",
+      "exampleCn": "新网站易于从任何设备进入或使用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_easy_to_use_or_reach",
+      "word": "easy to use or reach",
+      "entryType": "phrase",
+      "meaningZh": "方便的",
+      "example": "The supermarket is easy to use or reach by public transport.",
+      "exampleCn": "这家超市乘坐公共交通很方便去。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_employees",
+      "word": "employees",
+      "entryType": "word",
+      "meaningZh": "员工",
+      "example": "All employees must attend the safety training session.",
+      "exampleCn": "所有员工必须参加安全培训课程。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_entrance_fee",
+      "word": "entrance fee",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The museum charges an entrance fee of $10 per person.",
+      "exampleCn": "博物馆每人收取10美元入场费。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_every_month",
+      "word": "every month",
+      "entryType": "phrase",
+      "meaningZh": "每月一次的；月度的",
+      "example": "The rent is due every month on the first day.",
+      "exampleCn": "租金每月第一天到期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_every_two_weeks",
+      "word": "every two weeks",
+      "entryType": "phrase",
+      "meaningZh": "每两周的；每两周一次",
+      "example": "We get paid every two weeks on Friday.",
+      "exampleCn": "我们每两周周五领一次工资。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_examine_similarities_and_differences",
+      "word": "examine similarities and differences",
+      "entryType": "phrase",
+      "meaningZh": "比较；对比",
+      "example": "The report will examine similarities and differences between the two policies.",
+      "exampleCn": "该报告将比较两项政策之间的异同。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_exempt_from",
+      "word": "exempt from",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Students with a valid ID are exempt from the registration fee.",
+      "exampleCn": "持有效身份证的学生免收注册费。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_expert_instructors",
+      "word": "expert instructors",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Our driving school employs expert instructors with years of experience.",
+      "exampleCn": "我们的驾校聘请了有多年经验的专家教练。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_expires_on",
+      "word": "expires on",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Your membership expires on 31st December.",
+      "exampleCn": "您的会员资格于12月31日到期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_extra_fee",
+      "word": "extra fee",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "There is an extra fee for using the express service.",
+      "exampleCn": "使用快递服务需支付额外费用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_facilities",
+      "word": "facilities",
+      "entryType": "word",
+      "meaningZh": "设施",
+      "example": "The gym has excellent sports facilities.",
+      "exampleCn": "这个健身房拥有极好的运动设施。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_fare",
+      "word": "fare",
+      "entryType": "word",
+      "meaningZh": "票价；费用",
+      "example": "The bus fare is now two dollars.",
+      "exampleCn": "公交车票价现在是两美元。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_faster",
+      "word": "faster",
+      "entryType": "word",
+      "meaningZh": "更快地",
+      "example": "The new train is faster than the old one.",
+      "exampleCn": "新火车比旧火车更快。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_few",
+      "word": "few",
+      "entryType": "word",
+      "meaningZh": "很少的；几个",
+      "example": "Few people attended the meeting.",
+      "exampleCn": "很少人参加了会议。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_find",
+      "word": "find",
+      "entryType": "word",
+      "meaningZh": "找到；发现",
+      "example": "You can find the information on the website.",
+      "exampleCn": "你可以在网站上找到信息。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_fit_for_purpose",
+      "word": "fit for purpose",
+      "entryType": "phrase",
+      "meaningZh": "合适的",
+      "example": "The equipment is fit for purpose.",
+      "exampleCn": "这个设备符合用途。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_fitted",
+      "word": "fitted",
+      "entryType": "word",
+      "meaningZh": "安装",
+      "example": "The technician fitted the new boiler yesterday.",
+      "exampleCn": "技术员昨天安装了新锅炉。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_focus_on_gaining",
+      "word": "focus on gaining",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We must focus on gaining new skills.",
+      "exampleCn": "我们必须专注于获得新技能。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_follow_rules",
+      "word": "follow rules",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "All employees must follow safety rules.",
+      "exampleCn": "所有员工必须遵守安全规定。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_formerly",
+      "word": "formerly",
+      "entryType": "word",
+      "meaningZh": "以前，原先",
+      "example": "He was formerly the manager of this store.",
+      "exampleCn": "他以前是这家商店的经理。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_from_time_to_time",
+      "word": "from time to time",
+      "entryType": "phrase",
+      "meaningZh": "偶尔",
+      "example": "Check the noticeboard from time to time.",
+      "exampleCn": "偶尔查看一下公告板。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_fully_booked",
+      "word": "fully booked",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "All flights are fully booked today.",
+      "exampleCn": "今天所有航班都已预订满。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_gain_the_maximum_impact",
+      "word": "gain the maximum impact",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Advertise early to gain the maximum impact.",
+      "exampleCn": "尽早做广告以获得最大效果。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_give_back",
+      "word": "give back",
+      "entryType": "phrase",
+      "meaningZh": "返回，归还",
+      "example": "Please give back the books by Friday.",
+      "exampleCn": "请周五前归还书籍。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_give_money_back",
+      "word": "give money back",
+      "entryType": "phrase",
+      "meaningZh": "退款；退还",
+      "example": "We will give you your money back if dissatisfied.",
+      "exampleCn": "如果不满意，我们会退款给您。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_go_to",
+      "word": "go to",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Go to the reception desk for keys.",
+      "exampleCn": "去前台拿钥匙。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_golf_professionals",
+      "word": "golf professionals",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The club hires experienced golf professionals.",
+      "exampleCn": "俱乐部雇佣有经验的高尔夫专业教练。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_good_for_health",
+      "word": "good for health",
+      "entryType": "phrase",
+      "meaningZh": "健康的",
+      "example": "Eating vegetables is good for health.",
+      "exampleCn": "吃蔬菜对健康有好处。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_guided_tour",
+      "word": "guided tour",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We booked a guided tour of the museum.",
+      "exampleCn": "我们预订了博物馆的导览游。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_hand_luggage",
+      "word": "hand luggage",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please place your hand luggage in the overhead bin.",
+      "exampleCn": "请将您的手提行李放在头顶行李架内。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_harmful",
+      "word": "harmful",
+      "entryType": "word",
+      "meaningZh": "有害的",
+      "example": "Smoking is harmful to your health.",
+      "exampleCn": "吸烟有害健康。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_have_an_impact",
+      "word": "have an impact",
+      "entryType": "phrase",
+      "meaningZh": "影响",
+      "example": "The new policy will have an impact on our daily commute.",
+      "exampleCn": "新政策将影响我们的日常通勤。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_hours_of_work",
+      "word": "hours of work",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The contract specifies the hours of work per week.",
+      "exampleCn": "合同规定了每周的工作时数。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_how_well_someone_works",
+      "word": "how well someone works",
+      "entryType": "phrase",
+      "meaningZh": "表现；性能；表演；业绩",
+      "example": "The manager evaluates how well someone works under pressure.",
+      "exampleCn": "经理评估一个人在压力下的工作表现。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_identified_by",
+      "word": "identified by",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Each employee is identified by a unique badge number.",
+      "exampleCn": "每位员工通过唯一的工号来识别。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_if_the_situation_calls_for_it",
+      "word": "if the situation calls for it",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We can extend the deadline if the situation calls for it.",
+      "exampleCn": "如果情况需要，我们可以延长截止日期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_immediately_after",
+      "word": "immediately after",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The meeting will start immediately after lunch.",
+      "exampleCn": "午饭后立即开会。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_immediately_outside_their_units",
+      "word": "immediately outside their units",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Residents can park immediately outside their units.",
+      "exampleCn": "居民可以在他们单元门外立即停车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_important_tasks",
+      "word": "important tasks",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please prioritize the important tasks first.",
+      "exampleCn": "请优先处理重要任务。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_improbable",
+      "word": "improbable",
+      "entryType": "word",
+      "meaningZh": "不太可能的",
+      "example": "It is improbable that the package will arrive today.",
+      "exampleCn": "包裹今天到达的可能性不大。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_a_short_time",
+      "word": "in a short time",
+      "entryType": "phrase",
+      "meaningZh": "很快；不久",
+      "example": "The repair team fixed the issue in a short time.",
+      "exampleCn": "维修团队在短时间内解决了问题。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_recent_times",
+      "word": "in recent times",
+      "entryType": "phrase",
+      "meaningZh": "最近",
+      "example": "In recent times, online shopping has become popular.",
+      "exampleCn": "最近，网购变得流行。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_in_the_end",
+      "word": "in the end",
+      "entryType": "phrase",
+      "meaningZh": "最终；终于",
+      "example": "In the end, we chose the cheaper option.",
+      "exampleCn": "最后，我们选择了更便宜的那个选项。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_ineffective",
+      "word": "ineffective",
+      "entryType": "word",
+      "meaningZh": "无效的",
+      "example": "The old security system proved ineffective against intruders.",
+      "exampleCn": "旧的安保系统被证明对入侵者无效。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_inexpensive",
+      "word": "inexpensive",
+      "entryType": "word",
+      "meaningZh": "便宜的",
+      "example": "This restaurant offers inexpensive but tasty meals.",
+      "exampleCn": "这家餐厅提供便宜但美味的餐食。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_input_the_number_of",
+      "word": "input the number of",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please input the number of guests attending the party.",
+      "exampleCn": "请输入参加派对的客人人数。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_insufficient",
+      "word": "insufficient",
+      "entryType": "word",
+      "meaningZh": "不足的",
+      "example": "The budget is insufficient to cover all expenses.",
+      "exampleCn": "预算不足以支付所有开支。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_item_for_sale",
+      "word": "item for sale",
+      "entryType": "phrase",
+      "meaningZh": "产品；产物",
+      "example": "This item for sale is marked down by 20%.",
+      "exampleCn": "这件待售商品标价降低了20%。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_keep_a_database_up_to_date",
+      "word": "keep a database up-to-date",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We must keep a database up-to-date to ensure accuracy.",
+      "exampleCn": "我们必须保持数据库最新以确保准确性。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_keeping_a_record_of",
+      "word": "keeping a record of",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We are keeping a record of all maintenance requests for the building.",
+      "exampleCn": "我们正在记录大楼的所有维修请求。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_key_tasks",
+      "word": "key tasks",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please focus on the key tasks listed in the project plan.",
+      "exampleCn": "请专注于项目计划中列出的关键任务。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_lasting_a_short_time",
+      "word": "lasting a short time",
+      "entryType": "phrase",
+      "meaningZh": "暂时的；临时的",
+      "example": "The internship is a temporary position lasting a short time.",
+      "exampleCn": "这个实习是一个临时职位，持续很短的时间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_lasting_indefinitely",
+      "word": "lasting indefinitely",
+      "entryType": "phrase",
+      "meaningZh": "永久的；长期的",
+      "example": "The council has extended the road closure lasting indefinitely.",
+      "exampleCn": "议会延长了无限期的道路封闭。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_late_arrival",
+      "word": "late arrival",
+      "entryType": "phrase",
+      "meaningZh": "延迟，延误",
+      "example": "The bus service apologized for the late arrival due to traffic.",
+      "exampleCn": "公交服务因交通原因对晚点表示歉意。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_leave_a_job_voluntarily",
+      "word": "leave a job voluntarily",
+      "entryType": "phrase",
+      "meaningZh": "辞职",
+      "example": "She decided to leave a job voluntarily for better opportunities.",
+      "exampleCn": "她决定自愿辞职以寻求更好的机会。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_leave_someone_at_a_place",
+      "word": "leave someone at a place",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The driver can leave someone at a place that is safe and well lit.",
+      "exampleCn": "司机可以把乘客送到一个安全且照明良好的地方。",
+      "source": "human-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_length_of_time",
+      "word": "length of time",
+      "entryType": "phrase",
+      "meaningZh": "持续时间",
+      "example": "The rental contract specifies the length of time for the tenancy.",
+      "exampleCn": "租赁合同规定了租期的长度。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_lessons",
+      "word": "lessons",
+      "entryType": "word",
+      "meaningZh": "课程",
+      "example": "The driving school offers lessons every weekend.",
+      "exampleCn": "驾校每个周末都提供课程。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_locate",
+      "word": "locate",
+      "entryType": "word",
+      "meaningZh": "找到；发现",
+      "example": "Please use the map to locate the nearest fire exit.",
+      "exampleCn": "请使用地图找到最近的消防出口。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_maintain_a_database",
+      "word": "maintain a database",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The library staff maintain a database of all borrowed books.",
+      "exampleCn": "图书馆工作人员维护所有借出书籍的数据库。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_make_a_journey",
+      "word": "make a journey",
+      "entryType": "phrase",
+      "meaningZh": "旅行；出行",
+      "example": "Many commuters make a journey of over two hours each day.",
+      "exampleCn": "许多通勤者每天出行超过两小时。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_make_a_payment",
+      "word": "make a payment",
+      "entryType": "phrase",
+      "meaningZh": "支付，工资",
+      "example": "You can make a payment online using a credit card.",
+      "exampleCn": "你可以使用信用卡在线支付。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_make_as_much_impact_as_possible",
+      "word": "make as much impact as possible",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The campaign aims to make as much impact as possible on public opinion.",
+      "exampleCn": "该运动旨在对公众舆论产生尽可能大的影响。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_mandatory",
+      "word": "mandatory",
+      "entryType": "word",
+      "meaningZh": "强制性的；必修的",
+      "example": "Attendance at the safety training is mandatory for all employees.",
+      "exampleCn": "所有员工必须参加安全培训。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_may_not_fully_understand_their_responsibilities",
+      "word": "may not fully understand their responsibilities",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "New hires may not fully understand their responsibilities at first.",
+      "exampleCn": "新员工起初可能不完全理解他们的职责。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_meet_a_target",
+      "word": "meet a target",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The sales team worked hard to meet a target this quarter.",
+      "exampleCn": "销售团队努力在本季度达到目标。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_minimum_amount_of_necessary",
+      "word": "minimum amount of necessary",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Use the minimum amount of necessary force to open the package.",
+      "exampleCn": "使用最小的必要力量打开包裹。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_money_paid_in_advance",
+      "word": "money paid in advance",
+      "entryType": "phrase",
+      "meaningZh": "押金；存款；存放",
+      "example": "The landlord asked for three months' rent as money paid in advance.",
+      "exampleCn": "房东要求预付三个月的租金作为押金。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_more_like",
+      "word": "more like",
+      "entryType": "phrase",
+      "meaningZh": "像…",
+      "example": "The new building looks more like a museum than a library.",
+      "exampleCn": "新建筑看起来更像博物馆而不是图书馆。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_more_than",
+      "word": "more than",
+      "entryType": "phrase",
+      "meaningZh": "在...上方；超过",
+      "example": "The rent is more than I expected.",
+      "exampleCn": "租金超过我的预期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_move_to_a_higher_position",
+      "word": "move to a higher position",
+      "entryType": "phrase",
+      "meaningZh": "晋升；促销",
+      "example": "She worked hard to move to a higher position in the company.",
+      "exampleCn": "她努力工作以在公司晋升。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_must",
+      "word": "must",
+      "entryType": "word",
+      "meaningZh": "必须",
+      "example": "You must submit the application by Friday.",
+      "exampleCn": "你必须在周五前提交申请。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_nearly",
+      "word": "nearly",
+      "entryType": "word",
+      "meaningZh": "几乎，将近",
+      "example": "The bus was nearly full when I got on.",
+      "exampleCn": "我上车时公交车几乎满了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_nicely_designed",
+      "word": "nicely designed",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The apartment is nicely designed with modern furniture.",
+      "exampleCn": "这套公寓设计精美，配有现代家具。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_no_actual_payment",
+      "word": "no actual payment",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The trial period requires no actual payment.",
+      "exampleCn": "试用期无需实际付款。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_no_places_available",
+      "word": "no places available",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The training course has no places available this month.",
+      "exampleCn": "这个月的培训课程没有名额了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_allowed",
+      "word": "not allowed",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Parking is not allowed in front of the entrance.",
+      "exampleCn": "入口前不允许停车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_anymore",
+      "word": "not anymore",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The discount is not available anymore.",
+      "exampleCn": "折扣不再有效。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_aware_of",
+      "word": "not aware of",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "He was not aware of the meeting time change.",
+      "exampleCn": "他不知道会议时间变更。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_aware_of_their_responsibilities",
+      "word": "not aware of their responsibilities",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Some employees are not aware of their responsibilities regarding safety.",
+      "exampleCn": "一些员工不了解他们在安全方面的责任。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_changeable",
+      "word": "not changeable",
+      "entryType": "phrase",
+      "meaningZh": "固定的；不变的",
+      "example": "The date of the event is not changeable.",
+      "exampleCn": "活动日期不可更改。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_compulsory",
+      "word": "not compulsory",
+      "entryType": "phrase",
+      "meaningZh": "可选的；非强制的",
+      "example": "Attendance at the workshop is not compulsory but recommended.",
+      "exampleCn": "参加研讨会不是强制的，但建议参加。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_damaged",
+      "word": "not damaged",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The package arrived and the contents were not damaged.",
+      "exampleCn": "包裹到达时内容物未受损。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_dangerous",
+      "word": "not dangerous",
+      "entryType": "phrase",
+      "meaningZh": "安全的",
+      "example": "The chemicals are stored safely and are not dangerous.",
+      "exampleCn": "化学品安全存放，不危险。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_enough",
+      "word": "not enough",
+      "entryType": "phrase",
+      "meaningZh": "不足的",
+      "example": "There was not enough time to finish the test.",
+      "exampleCn": "没有足够的时间完成测试。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_feasible",
+      "word": "not feasible",
+      "entryType": "phrase",
+      "meaningZh": "不可能的",
+      "example": "Completing the project by next week is not feasible.",
+      "exampleCn": "下周前完成项目是不可能的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_knowing_how_to_highlight_their_most_relevant_strengths",
+      "word": "not knowing how to highlight their most relevant strengths",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Many job applicants struggle with not knowing how to highlight their most relevant strengths.",
+      "exampleCn": "许多求职者因不知道如何突出自己最相关的优势而苦恼。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_learnt_which_qualities",
+      "word": "not learnt which qualities",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "She has not learnt which qualities employers look for.",
+      "exampleCn": "她还没有学会雇主看重哪些品质。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_required_to",
+      "word": "not required to",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "You are not required to attend the meeting.",
+      "exampleCn": "你不必参加这次会议。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_not_successful",
+      "word": "not successful",
+      "entryType": "phrase",
+      "meaningZh": "无效的",
+      "example": "Your application was not successful.",
+      "exampleCn": "您的申请未成功。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_officially_acceptable",
+      "word": "officially acceptable",
+      "entryType": "phrase",
+      "meaningZh": "有效的；合理的",
+      "example": "This identification is officially acceptable.",
+      "exampleCn": "此身份证明是官方认可的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_often",
+      "word": "often",
+      "entryType": "word",
+      "meaningZh": "频繁地",
+      "example": "Trains are often delayed during peak hours.",
+      "exampleCn": "火车在高峰时段经常晚点。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_one_way_ticket",
+      "word": "one-way ticket",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please buy a one-way ticket to Manchester.",
+      "exampleCn": "请购买一张去曼彻斯特的单程票。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_optional",
+      "word": "optional",
+      "entryType": "word",
+      "meaningZh": "可选的；非强制的",
+      "example": "The training session on Saturday is optional.",
+      "exampleCn": "周六的培训课程是可选的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_over",
+      "word": "over",
+      "entryType": "word",
+      "meaningZh": "在...上方；超过",
+      "example": "The bridge goes over the river.",
+      "exampleCn": "这座桥横跨河流。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_overlooks_a_golf_course",
+      "word": "overlooks a golf course",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "My apartment overlooks a golf course.",
+      "exampleCn": "我的公寓俯瞰着一个高尔夫球场。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_overly_crowded",
+      "word": "overly crowded",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The train was overly crowded this morning.",
+      "exampleCn": "今天早上的火车过于拥挤。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_paid_holiday",
+      "word": "paid holiday",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Employees receive 20 days of paid holiday per year.",
+      "exampleCn": "员工每年有20天带薪假期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_pass_over_anyone_s_head",
+      "word": "pass over anyone's head",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Your suggestion might pass over anyone's head.",
+      "exampleCn": "你的建议可能会让人无法理解。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_payment_for_accommodation",
+      "word": "payment for accommodation",
+      "entryType": "phrase",
+      "meaningZh": "租金",
+      "example": "The payment for accommodation is due on the first of each month.",
+      "exampleCn": "住宿费应于每月1日支付。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_performance_review",
+      "word": "performance review",
+      "entryType": "phrase",
+      "meaningZh": "评估，评价",
+      "example": "Your performance review is scheduled for next week.",
+      "exampleCn": "你的绩效评估安排在下周。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_permitted",
+      "word": "permitted",
+      "entryType": "word",
+      "meaningZh": "允许；准许",
+      "example": "Parking is not permitted here.",
+      "exampleCn": "此处禁止停车。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_pick_up",
+      "word": "pick up",
+      "entryType": "phrase",
+      "meaningZh": "收集；领取",
+      "example": "You can pick up your keys from the reception.",
+      "exampleCn": "你可以从前台领取钥匙。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_place_to_stay",
+      "word": "place to stay",
+      "entryType": "phrase",
+      "meaningZh": "住宿；住处",
+      "example": "We need a place to stay for the night.",
+      "exampleCn": "我们需要一个过夜的地方。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_place_you_are_travelling_to",
+      "word": "place you are travelling to",
+      "entryType": "phrase",
+      "meaningZh": "目的地",
+      "example": "Please inform us of the place you are travelling to.",
+      "exampleCn": "请告知您的旅行目的地。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_price_reduction",
+      "word": "price reduction",
+      "entryType": "phrase",
+      "meaningZh": "折扣",
+      "example": "The store offers a price reduction on clearance items.",
+      "exampleCn": "该店对清仓商品提供折扣。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_probable",
+      "word": "probable",
+      "entryType": "word",
+      "meaningZh": "可能的，很可能",
+      "example": "It is probable that the bus will arrive late.",
+      "exampleCn": "公共汽车很可能会晚点。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_prohibited",
+      "word": "prohibited",
+      "entryType": "word",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Smoking is strictly prohibited in this building.",
+      "exampleCn": "本大楼内严禁吸烟。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_proof_of_purchase",
+      "word": "proof of purchase",
+      "entryType": "phrase",
+      "meaningZh": "收据",
+      "example": "Please keep the proof of purchase for warranty claims.",
+      "exampleCn": "请保留收据以便保修索赔。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_provided_when_asked",
+      "word": "provided when asked",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The document will be provided when asked by the supervisor.",
+      "exampleCn": "文件将在主管要求时提供。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_quantify",
+      "word": "quantify",
+      "entryType": "word",
+      "meaningZh": "测量；措施",
+      "example": "We need to quantify the damage before filing the insurance claim.",
+      "exampleCn": "我们需要在提出保险索赔前量化损失。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_read_any_materials",
+      "word": "read any materials",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Feel free to read any materials from the library during your visit.",
+      "exampleCn": "访问期间请随意阅读图书馆的任何资料。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_read_through_any_documents",
+      "word": "read through any documents",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please read through any documents before signing the contract.",
+      "exampleCn": "请在签署合同前阅读任何文件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_ready_for_use",
+      "word": "ready for use",
+      "entryType": "phrase",
+      "meaningZh": "可用的；有空的",
+      "example": "The new equipment is ready for use starting Monday.",
+      "exampleCn": "新设备从周一开始即可使用。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_recorded_the_transport_of",
+      "word": "recorded the transport of",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The system recorded the transport of goods from warehouse to store.",
+      "exampleCn": "系统记录了货物从仓库到商店的运输。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_relocate",
+      "word": "relocate",
+      "entryType": "word",
+      "meaningZh": "移动；搬家；步骤",
+      "example": "The company decided to relocate its headquarters to a larger city.",
+      "exampleCn": "公司决定将总部迁往一个更大的城市。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_remove_from_a_job",
+      "word": "remove from a job",
+      "entryType": "phrase",
+      "meaningZh": "解雇；驳回；解散",
+      "example": "The manager had to remove the employee from the job due to misconduct.",
+      "exampleCn": "经理因不当行为不得不将该员工从岗位上撤职。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_repayment",
+      "word": "repayment",
+      "entryType": "word",
+      "meaningZh": "退款；退还",
+      "example": "The loan repayment is due on the first of each month.",
+      "exampleCn": "贷款还款在每个月的第一天到期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_resembles",
+      "word": "resembles",
+      "entryType": "word",
+      "meaningZh": "像…",
+      "example": "The new building resembles the old town hall in design.",
+      "exampleCn": "新建筑在设计上类似于旧市政厅。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_reside",
+      "word": "reside",
+      "entryType": "word",
+      "meaningZh": "居住；生活；活的；现场的",
+      "example": "You must reside in the city to apply for this permit.",
+      "exampleCn": "你必须居住在该市才能申请此许可证。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_resign",
+      "word": "resign",
+      "entryType": "word",
+      "meaningZh": "辞职",
+      "example": "She decided to resign from her position after five years.",
+      "exampleCn": "她决定五年后辞去职务。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_return_ticket",
+      "word": "return ticket",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "I need to buy a return ticket for my trip to London.",
+      "exampleCn": "我需要为去伦敦的旅行买一张回程票。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_round_trip_ticket",
+      "word": "round trip ticket",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "A round trip ticket is often cheaper than two one-way tickets.",
+      "exampleCn": "往返票通常比两张单程票便宜。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_rules_of_the_agreement",
+      "word": "rules of the agreement",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Both parties must follow the rules of the agreement strictly.",
+      "exampleCn": "双方必须严格遵守协议规则。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_safeguard",
+      "word": "safeguard",
+      "entryType": "word",
+      "meaningZh": "保护",
+      "example": "The new policy aims to safeguard customer data from breaches.",
+      "exampleCn": "新政策旨在保护客户数据免遭泄露。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_see_yourself",
+      "word": "see yourself",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Can you see yourself working in this office for the next five years?",
+      "exampleCn": "你能想象自己在未来五年里在这间办公室工作吗？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_services_and_equipment",
+      "word": "services and equipment",
+      "entryType": "phrase",
+      "meaningZh": "设施",
+      "example": "The rental fee includes all services and equipment needed.",
+      "exampleCn": "租金包括所有所需服务和设备。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_show_its_recognition",
+      "word": "show its recognition",
+      "entryType": "phrase",
+      "meaningZh": "承认；确认",
+      "example": "The company will show its recognition of your efforts with a bonus.",
+      "exampleCn": "公司将通过奖金来表达对你努力的认可。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_shows_the_dates_of_term_time",
+      "word": "shows the dates of term time",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The timetable shows the dates of term time for all courses.",
+      "exampleCn": "时间表显示了所有课程的学期日期。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_single_ticket",
+      "word": "single ticket",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "I'd like a single ticket to Manchester, please.",
+      "exampleCn": "请给我一张去曼彻斯特的单程票。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_skills",
+      "word": "skills",
+      "entryType": "word",
+      "meaningZh": "技能；技巧；技术",
+      "example": "The training course will improve your communication skills.",
+      "exampleCn": "培训课程将提高你的沟通技巧。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_sooner",
+      "word": "sooner",
+      "entryType": "word",
+      "meaningZh": "更快地",
+      "example": "Please reply sooner rather than later.",
+      "exampleCn": "请尽早回复，不要拖延。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_start_work_immediately",
+      "word": "start work immediately",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We need someone who can start work immediately.",
+      "exampleCn": "我们需要能立即开始工作的人。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_state_without_proof",
+      "word": "state without proof",
+      "entryType": "phrase",
+      "meaningZh": "声称；要求；索赔",
+      "example": "You cannot state without proof in a formal report.",
+      "exampleCn": "在正式报告中不能无证据地陈述。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_straight_away",
+      "word": "straight away",
+      "entryType": "phrase",
+      "meaningZh": "立即",
+      "example": "The manager asked me to come straight away.",
+      "exampleCn": "经理让我马上过来。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_straight_into_the_workplace",
+      "word": "straight into the workplace",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "This apprenticeship takes you straight into the workplace.",
+      "exampleCn": "这个学徒项目让你直接进入工作场所。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_submit_an_application_for",
+      "word": "submit an application for",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please submit an application for the position online.",
+      "exampleCn": "请在线提交该职位的申请。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_substitute_soda",
+      "word": "substitute soda",
+      "entryType": "phrase",
+      "meaningZh": "替换",
+      "example": "You can substitute soda with sparkling water.",
+      "exampleCn": "你可以用苏打水代替汽水。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_terminate",
+      "word": "terminate",
+      "entryType": "word",
+      "meaningZh": "结束，终点；结束",
+      "example": "The contract will terminate at the end of the month.",
+      "exampleCn": "合同将在月底终止。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_the_majority_of",
+      "word": "the majority of",
+      "entryType": "phrase",
+      "meaningZh": "最多的；大多数",
+      "example": "The majority of tenants pay rent on time.",
+      "exampleCn": "大多数租户按时支付租金。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_time_of_reaching",
+      "word": "time of reaching",
+      "entryType": "phrase",
+      "meaningZh": "到达",
+      "example": "What is the estimated time of reaching the airport?",
+      "exampleCn": "预计到达机场的时间是什么？",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_times_when_open",
+      "word": "times when open",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Check the website for times when open during holidays.",
+      "exampleCn": "查看网站了解节假日开放时间。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_tour_with_a_guide",
+      "word": "tour with a guide",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "We offer a tour with a guide every Sunday.",
+      "exampleCn": "我们每周日提供有导游的游览。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_two_times",
+      "word": "two times",
+      "entryType": "phrase",
+      "meaningZh": "两次",
+      "example": "You need to check your email two times a day.",
+      "exampleCn": "你每天需要查看两次邮件。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_uncertain_and_dynamic",
+      "word": "uncertain and dynamic",
+      "entryType": "phrase",
+      "meaningZh": "不可预测的",
+      "example": "The job market is uncertain and dynamic this year.",
+      "exampleCn": "今年的就业市场不确定且变化多端。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_unclear",
+      "word": "unclear",
+      "entryType": "word",
+      "meaningZh": "不清楚的",
+      "example": "The instructions on the form are unclear.",
+      "exampleCn": "表格上的说明不清楚。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_uncomfortably_busy",
+      "word": "uncomfortably busy",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The train was uncomfortably busy during rush hour.",
+      "exampleCn": "高峰时段火车拥挤得令人不适。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_uncommon",
+      "word": "uncommon",
+      "entryType": "word",
+      "meaningZh": "稀有的",
+      "example": "It is uncommon to see such a large discount.",
+      "exampleCn": "看到这么大的折扣是不常见的。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_under",
+      "word": "under",
+      "entryType": "word",
+      "meaningZh": "在...下面",
+      "example": "Please sign your name under the line on the application form.",
+      "exampleCn": "请在申请表上的横线下方签名。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_underneath_the_counter",
+      "word": "underneath the counter",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The spare keys are kept underneath the counter in the kitchen.",
+      "exampleCn": "备用钥匙放在厨房的柜台下面。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_utilise",
+      "word": "utilise",
+      "entryType": "word",
+      "meaningZh": "使用；用途",
+      "example": "We should utilise the conference room for the training session.",
+      "exampleCn": "我们应该使用会议室进行培训。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_vacant",
+      "word": "vacant",
+      "entryType": "word",
+      "meaningZh": "可用的；有空的",
+      "example": "There are three vacant apartments on the fifth floor.",
+      "exampleCn": "五楼有三套空置公寓。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_valid_until",
+      "word": "valid until",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Your travel card is valid until the end of this month.",
+      "exampleCn": "你的旅行卡有效期到本月底。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_views_of_the_golf_course",
+      "word": "views of the golf course",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The hotel room offers stunning views of the golf course.",
+      "exampleCn": "酒店房间可以欣赏到高尔夫球场的壮丽景色。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_walk_under_the_load",
+      "word": "walk under the load",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "He had to walk under the load of his heavy backpack.",
+      "exampleCn": "他不得不背着沉重的背包行走。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_warranty",
+      "word": "warranty",
+      "entryType": "word",
+      "meaningZh": "保证；保修",
+      "example": "The laptop comes with a two-year warranty.",
+      "exampleCn": "这台笔记本电脑附带两年保修。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_way_in",
+      "word": "way in",
+      "entryType": "phrase",
+      "meaningZh": "入口；进入",
+      "example": "The way in is through the side door on the left.",
+      "exampleCn": "入口是通过左侧的侧门。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_way_out",
+      "word": "way out",
+      "entryType": "phrase",
+      "meaningZh": "出口；退出",
+      "example": "In case of fire, use the emergency way out.",
+      "exampleCn": "发生火灾时，请使用紧急出口。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_way_to_travel",
+      "word": "way to travel",
+      "entryType": "phrase",
+      "meaningZh": "路线",
+      "example": "The fastest way to travel is by underground train.",
+      "exampleCn": "最快的旅行方式是乘坐地铁。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_well_presented_visuals",
+      "word": "well-presented visuals",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The report includes well-presented visuals such as graphs and charts.",
+      "exampleCn": "报告包含图表等呈现良好的视觉资料。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_wet_swimwear",
+      "word": "wet swimwear",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Please do not sit on the furniture in wet swimwear.",
+      "exampleCn": "请不要穿着湿泳衣坐在家具上。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_when_necessary",
+      "word": "when necessary",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "You may ask the librarian for assistance when necessary.",
+      "exampleCn": "必要时可以向图书管理员寻求帮助。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_with_little_warning",
+      "word": "with little warning",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The bus schedule changed with little warning.",
+      "exampleCn": "公交车时刻表几乎没有预警就改变了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_withdraw_a_booking",
+      "word": "withdraw a booking",
+      "entryType": "phrase",
+      "meaningZh": "取消；撤销",
+      "example": "You can withdraw a booking up to 24 hours before check-in.",
+      "exampleCn": "你可以在入住前24小时内取消预订。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_without_payment",
+      "word": "without payment",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The first consultation is provided without payment.",
+      "exampleCn": "首次咨询免费提供。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_without_restriction",
+      "word": "without restriction",
+      "entryType": "phrase",
+      "meaningZh": "无限的",
+      "example": "Season ticket holders can travel without restriction on weekends.",
+      "exampleCn": "季票持有者可以在周末无限制地旅行。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_work_hard_to_earn",
+      "word": "work hard to earn",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "Employees work hard to earn their bonuses.",
+      "exampleCn": "员工们努力工作以赚取奖金。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_working_all_normal_hours",
+      "word": "working all normal hours",
+      "entryType": "phrase",
+      "meaningZh": "全职的；全职地",
+      "example": "She is working all normal hours at the local supermarket.",
+      "exampleCn": "她在当地超市全职工作。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_working_fewer_hours",
+      "word": "working fewer hours",
+      "entryType": "phrase",
+      "meaningZh": "兼职的；部分时间",
+      "example": "The company is offering part-time contracts for those interested in working fewer hours.",
+      "exampleCn": "公司为有意愿减少工作时间的员工提供兼职合同。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_wrapped_in_padding",
+      "word": "wrapped in padding",
+      "entryType": "phrase",
+      "meaningZh": "真题同义替换表达（见关系库）",
+      "example": "The fragile vase arrived safely wrapped in padding.",
+      "exampleCn": "那个易碎的花瓶被包裹在衬垫里安全到达了。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_paddle",
+      "word": "paddle",
+      "entryType": "word",
+      "meaningZh": "桨；划桨",
+      "example": "You can rent a kayak and paddle across the lake.",
+      "exampleCn": "你可以租一艘皮划艇，划桨穿过湖面。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_plentiful",
+      "word": "plentiful",
+      "entryType": "word",
+      "meaningZh": "丰富的；充足的",
+      "example": "Fresh fruits are plentiful at the local farmers market.",
+      "exampleCn": "当地农贸市场的新鲜水果很充足。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_repetitive",
+      "word": "repetitive",
+      "entryType": "word",
+      "meaningZh": "重复的；反复单调的",
+      "example": "The job involves repetitive tasks like data entry.",
+      "exampleCn": "这份工作涉及数据录入等重复性任务。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_tidal",
+      "word": "tidal",
+      "entryType": "word",
+      "meaningZh": "潮汐的；受潮汐影响的",
+      "example": "The tidal patterns affect the local fishing schedule.",
+      "exampleCn": "潮汐模式影响当地的捕鱼时间表。",
+      "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_word_year_round",
+      "word": "year-round",
+      "entryType": "word",
+      "meaningZh": "全年的；全年地",
+      "example": "The pool is heated and open year-round.",
+      "exampleCn": "游泳池是恒温的，全年开放。",
+      "source": "deepseek-editorial-v1"
+    }
+  ]
+}

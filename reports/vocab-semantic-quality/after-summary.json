@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-07-15T06:23:04.846Z",
+  "sourceVersion": "v9-13757-semantic-quality-v1",
+  "sourceFileHash": "97f07ee7cc938623fe69b74f942f8118916bdea7486f849ebd6386d591ee6f60",
+  "publicFileHash": "97f07ee7cc938623fe69b74f942f8118916bdea7486f849ebd6386d591ee6f60",
+  "cachePublicIdentical": true,
+  "summary": {
+    "totalWords": 13757,
+    "auditedWords": 13757,
+    "issueCount": 62400,
+    "p0IssueCount": 0,
+    "p0EntryCount": 0,
+    "strictExampleCandidates": 1247,
+    "acceptedByMorphology": 1141,
+    "targetAbsentAfterMorphology": 106,
+    "priorityCounts": {
+      "P0": 0,
+      "P1": 10877,
+      "P2": 51523,
+      "P3": 0
+    },
+    "categoryCounts": {
+      "definition_equals_meaning": 13385,
+      "definition_chinese_only": 13478,
+      "missing_meaning_detailed": 9126,
+      "generic_meaning_detail": 6480,
+      "multi_meaning_without_structured_senses": 4253,
+      "multi_meaning_without_quiz_senses": 3860,
+      "meaning_detailed_not_expanded": 4588,
+      "meaning_too_thin": 2585,
+      "target_absent_after_morphology": 106,
+      "truncated_headword": 28,
+      "proper_name_or_source_noise": 41,
+      "compound_without_space_or_hyphen": 4,
+      "duplicate_template_example": 4466
+    }
+  },
+  "methodology": {
+    "paidApiCalls": 0,
+    "externalPerWordLookups": 0,
+    "morphologySources": [
+      "IRREGULAR_VERB_FORMS",
+      "IRREGULAR_PLURAL_FORMS",
+      "detectRegularPlural",
+      "buildRegularPlural",
+      "forms",
+      "wordFamily",
+      "acceptedAnswers"
+    ],
+    "strictCandidateDefinition": "例句未直接出现词头；先接受已登记词形、规则词形、不规则词形及连字符/空格等价形式"
+  }
+}

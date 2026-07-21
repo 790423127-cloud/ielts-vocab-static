@@ -1,0 +1,20 @@
+id	word	definition	meaningDetailedZh	meaningsZhCount	quizSensesCount	reason
+word_2e60871558f2	issue	an important subject or problem for discussion	作名词常指需要讨论或解决的问题，也可指公共议题；在通知和投诉语境中尤其常见。	3	2	CORE_GT_STAGE_1_2
+word_77f66e6487c8	charge	to ask someone to pay a price, or an amount of money asked for a service	可作动词表示收费或指控，也可作名词表示费用；电子设备语境中还表示充电。	5	4	CORE_GT_STAGE_1_2
+word_b4d6446b72e7	claim	to say that something is true or to ask formally for money or a right	既可表示声称，也常用于保险、福利和退款语境，表示正式索赔或申领。	4	3	CORE_GT_STAGE_1_2
+word_fc721529e7b1	cover	to place something over another thing, include a subject, or protect against a cost	除覆盖外，在课程中可表示涵盖内容，在保险语境中表示承保或承担费用。	4	3	CORE_GT_STAGE_1_2
+word_3c9a3be2e7de	account	an arrangement with a bank or service, or a description of an event	常指银行或网络账户；在阅读中也可表示对事件的叙述或说明。	3	2	CORE_GT_STAGE_1_2
+word_9444d8ec16d7	notice	information or a warning given in writing, or the act of becoming aware of something	作名词常指通知、公告或提前告知期；作动词表示注意到。	4	3	CORE_GT_STAGE_1_2
+word_80f381141d0e	due	expected or required at a particular time, or caused by something	可表示到期、应支付，也用于 due to 表示由于；注意不同结构对应不同词性功能。	3	2	CORE_GT_STAGE_1_2
+word_702c3197ab08	rent	money paid regularly for the use of a room, building or land	通常指按期支付的房租或租金；作动词时表示租用或出租。	2	2	CORE_GT_STAGE_1_2
+word_e8cb890d2735	deposit	money paid in advance as security, or money placed in a bank account	住房语境常指押金，银行语境指存款；作动词可表示存入或放下。	3	2	CORE_GT_STAGE_1_2
+word_4337f95a01f8	shift	a period of work or a change in position, direction or opinion	工作语境中指轮班或班次；阅读中也常表示位置、趋势或观点的转变。	3	2	CORE_GT_STAGE_1_2
+word_c11bf72f48e4	leave	to go away from a place, or permitted time away from work	作动词表示离开或留下；作名词时在工作语境中表示获准休假。	2	2	CORE_GT_STAGE_1_2
+word_df431cfc914a	appeal	a formal request to change a decision, or a quality that attracts people	法律和行政语境中指上诉、申诉；描述产品或地点时可指吸引力。	3	2	CORE_GT_STAGE_1_2
+word_09b203544e57	fine	money paid as a punishment, or of good quality	作名词通常指罚款；作形容词可表示好的、精细的，也可表示身体状况尚可。	2	2	CORE_GT_STAGE_1_2
+word_e9dc7d0e34f5	current	happening or existing now, or a continuous movement of water or electricity	作形容词表示当前的；作名词可指水流、洋流或电流，需依语境判断。	5	4	CORE_GT_STAGE_1_2
+word_f6810715d09f	reserve	to keep something for future use or arrange for it to be available	常表示预订座位或房间，也可表示保留资源；名词还可指储备。	3	2	CORE_GT_STAGE_1_2
+word_38eb8530aa23	address	the details of where someone lives, or to deal with a problem	名词指地址；作动词可表示向某人讲话，也常表示处理问题。	4	3	CORE_GT_STAGE_1_2
+word_15a61b86aa0d	subject	a topic of study or discussion, or something affected by a condition	可指学科、主题或研究对象；subject to 表示受某条件约束或可能发生。	5	5	CORE_GT_STAGE_1_2
+word_99c339d5753a	term	a word used for a particular idea, a school period, or a condition in an agreement	可指术语、学期，也常以复数 terms 表示合同或付款条款。	4	3	CORE_GT_STAGE_1_2
+word_f337fc3297a7	balance	the amount of money remaining in an account, or a state in which things are equal	银行语境指账户余额；一般语境表示平衡，也可作动词表示使两者兼顾。	3	2	CORE_GT_STAGE_1_2

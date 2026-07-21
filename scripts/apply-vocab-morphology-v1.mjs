@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -54,11 +55,15 @@ export function sha256(value) {
 function parseAudit(filePath) {
   const stat = fs.statSync(filePath);
   const files = stat.isDirectory()
-    ? fs.readdirSync(filePath).filter((name) => name.endsWith(".json")).sort().map((name) => path.join(filePath, name))
+    ? fs.readdirSync(filePath).filter((name) => name.endsWith(".json") || name.endsWith(".json.gz.b64")).sort().map((name) => path.join(filePath, name))
     : [filePath];
   const rows = [];
   for (const sourceFile of files) {
-    const payload = JSON.parse(fs.readFileSync(sourceFile, "utf8"));
+    const raw = fs.readFileSync(sourceFile, "utf8");
+    const jsonText = sourceFile.endsWith(".json.gz.b64")
+      ? zlib.gunzipSync(Buffer.from(raw.trim(), "base64")).toString("utf8")
+      : raw;
+    const payload = JSON.parse(jsonText);
     if (!Array.isArray(payload)) throw new Error(`${path.basename(sourceFile)} must be an array`);
     for (const item of payload) {
       if (!Array.isArray(item) || item.length < 4) throw new Error(`${path.basename(sourceFile)} contains an invalid row`);

@@ -63,6 +63,29 @@ test("home loads the full lexicon, changes word, and switches to phrases", async
   await expect(page.locator(".phrase-text")).toBeVisible({ timeout: 30_000 });
 });
 
+test("auto scroll advances without marking a learning status and can pause", async ({ page }) => {
+  await page.goto("/");
+
+  const currentWord = page.locator(".word-flash-shell .word");
+  await expect(currentWord).toBeVisible({ timeout: 45_000 });
+  const firstWord = (await currentWord.textContent())?.trim();
+
+  await page.getByLabel("自动滚动间隔").selectOption("4");
+  const toggle = page.locator(".auto-scroll-toggle");
+  await expect(toggle).toHaveAccessibleName("开启自动滚动");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  await expect(toggle).toHaveAccessibleName("暂停自动滚动");
+  await expect.poll(async () => (await currentWord.textContent())?.trim(), { timeout: 7_000 }).not.toBe(firstWord);
+  await expect(page.locator(".page--word-flash .status.is-selected")).toHaveCount(0);
+
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-pressed", "false");
+  const pausedWord = (await currentWord.textContent())?.trim();
+  await page.waitForTimeout(4_500);
+  await expect(currentWord).toHaveText(pausedWord || "");
+});
+
 test("plural-reference searches open the base card without double plurals", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText("12,324 词", { timeout: 45_000 });

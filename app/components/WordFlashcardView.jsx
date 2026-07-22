@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bookmark, Library, PanelRightOpen, Search, Shuffle } from "lucide-react";
+import { Bookmark, Library, PanelRightOpen, Pause, Play, Search, Shuffle } from "lucide-react";
 import VirtualList from "./VirtualList";
 import VocabAdminToolsPanel from "./VocabAdminToolsPanel";
 import WordDetailGrid from "./WordDetailGrid";
@@ -35,9 +35,12 @@ function getRelatedWords(item, displayFamily, activeWordPool) {
  */
 export default function WordFlashcardView({ model, library, speech, admin, chrome }) {
   const [showInsight, setShowInsight] = useState(true);
+  const [autoScrollActive, setAutoScrollActive] = useState(false);
+  const [autoScrollSeconds, setAutoScrollSeconds] = useState(6);
   const libraryMenuRef = useRef(null);
   const pendingSearchRef = useRef("");
   const initialLibraryIntentHandledRef = useRef(false);
+  const nextWordRef = useRef(() => {});
 
   const {
     item,
@@ -116,6 +119,31 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     () => getRelatedWords(item, displayFamily, activeWordPool),
     [activeWordPool, displayFamily, item]
   );
+
+  nextWordRef.current = nextWord;
+
+  useEffect(() => {
+    if (!autoScrollActive || isStudyEmpty || studyWords.length < 2) return undefined;
+
+    const timer = window.setInterval(() => {
+      const activeElement = document.activeElement;
+      const tagName = activeElement?.tagName?.toLowerCase();
+      if (
+        document.hidden ||
+        document.querySelector("details.menu[open]") ||
+        tagName === "input" ||
+        tagName === "textarea" ||
+        activeElement?.isContentEditable
+      ) return;
+
+      nextWordRef.current();
+      window.requestAnimationFrame(() => {
+        document.querySelector(".word-study-progress")?.scrollIntoView({ block: "start", behavior: "smooth" });
+      });
+    }, autoScrollSeconds * 1000);
+
+    return () => window.clearInterval(timer);
+  }, [autoScrollActive, autoScrollSeconds, isStudyEmpty, studyWords.length]);
 
   useEffect(() => {
     const openLibrary = () => {
@@ -299,6 +327,31 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             actions={(
               <header className="topbar">
                 <button type="button" className="top-pill shuffle-pill" onClick={shuffleStudyWords}><Shuffle aria-hidden="true" />随机</button>
+                <div className={`auto-scroll-control${autoScrollActive ? " is-active" : ""}`}>
+                  <button
+                    type="button"
+                    className="top-pill auto-scroll-toggle"
+                    disabled={isStudyEmpty || studyWords.length < 2}
+                    aria-pressed={autoScrollActive}
+                    aria-label={autoScrollActive ? "暂停自动滚动" : "开启自动滚动"}
+                    title="自动切换到下一个词，不会自动标记熟悉"
+                    onClick={() => setAutoScrollActive((active) => !active)}
+                  >
+                    {autoScrollActive ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+                    {autoScrollActive ? "暂停滚动" : "自动滚动"}
+                  </button>
+                  <select
+                    className="auto-scroll-speed"
+                    value={autoScrollSeconds}
+                    onChange={(event) => setAutoScrollSeconds(Number(event.target.value))}
+                    aria-label="自动滚动间隔"
+                    title="自动滚动间隔"
+                  >
+                    <option value={4}>4秒</option>
+                    <option value={6}>6秒</option>
+                    <option value={10}>10秒</option>
+                  </select>
+                </div>
                 {rangeMenu}
                 {libraryMenu}
                 <VocabAdminToolsPanel

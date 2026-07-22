@@ -6908,6 +6908,38 @@ body > main {
   gap: 5px;
 }
 
+.auto-scroll-control {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.auto-scroll-speed {
+  width: 54px;
+  height: 32px;
+  padding: 0 5px;
+  border: 1px solid var(--study-border);
+  border-radius: 7px;
+  background: var(--study-card);
+  color: var(--study-text);
+  font: inherit;
+  font-size: calc(10px * var(--font-scale));
+  font-weight: 700;
+}
+
+.auto-scroll-control.is-active .auto-scroll-toggle {
+  border-color: color-mix(in srgb, var(--study-green) 45%, var(--study-border));
+  background: var(--study-green-soft);
+  color: var(--study-green);
+}
+
+.auto-scroll-toggle:disabled,
+.auto-scroll-speed:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
 .page--word-flash .top-pill {
   min-height: 32px;
   display: inline-flex;

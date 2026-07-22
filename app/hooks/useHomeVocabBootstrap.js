@@ -172,7 +172,11 @@ export function useHomeVocabBootstrap({ setToast }) {
         const metaResponse = await fetch("/api/vocab-meta", { cache: "no-store" });
         const apiMeta = metaResponse?.ok ? await metaResponse.json().catch(() => null) : null;
 
-        if (cachedWords?.length && apiMeta?.lexiconHash && isWordCacheCurrent(cachedMeta || {}, apiMeta)) {
+        if (
+          cachedWords?.length === Number(apiMeta?.count) &&
+          apiMeta?.lexiconHash &&
+          isWordCacheCurrent(cachedMeta || {}, apiMeta)
+        ) {
           if (!cancelled) {
             cacheMetaRef.current = { ...(cachedMeta || {}), ...apiMeta };
             setVocabRuntime({ status: "online", ...apiMeta });
@@ -199,7 +203,9 @@ export function useHomeVocabBootstrap({ setToast }) {
           wordsHash: payload.wordsHash || ""
         };
         const onlineWords = sanitizeWordsExamples(
-          mergeWordContentWithUserState(payload.words, cachedWords || [])
+          mergeWordContentWithUserState(payload.words, cachedWords || [], {
+            includePersonalSupplements: false
+          })
         );
 
         cacheMetaRef.current = mergedMeta;
@@ -213,7 +219,9 @@ export function useHomeVocabBootstrap({ setToast }) {
           if (cancelled) return;
 
           const wordsForCache = sanitizeWordsExamples(
-            mergeWordContentWithUserState(payload.words, cachedWords || onlineWords)
+            mergeWordContentWithUserState(payload.words, cachedWords || onlineWords, {
+              includePersonalSupplements: false
+            })
           );
           if (!isWordCacheCurrent(cachedMeta || {}, mergedMeta) || !stored?.words?.length) {
             await saveWordsToIndexedDB(wordsForCache, mergedMeta);

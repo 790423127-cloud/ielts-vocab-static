@@ -46,6 +46,11 @@ import {
   resolveCurrentStudyItem,
   resolveWordStudyIndex
 } from "./lib/vocab/word-flashcard-session.mjs";
+import {
+  isBrushableWord,
+  isInflectedReferenceWord,
+  resolveWordSearchTarget
+} from "./lib/vocab/word-study-eligibility.mjs";
 import { SPEECH_WARM_DELAYS_MS } from "./lib/vocab-speech.mjs";
 import {
   compactBrowserStorageForCurrentWords,
@@ -164,7 +169,7 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [batchInfo, setBatchInfo] = useState("");
   const [duplicateInfo, setDuplicateInfo] = useState("");
-  const [idictationFlashRevision, setIdictationFlashRevision] = useState(0);
+  const [idictationFlashReady, setIdictationFlashReady] = useState(false);
   const [lastLocalChange, setLastLocalChange] = useState(null);
   const [audioMap, setAudioMap] = useState({});
   const [audioCacheStats, setAudioCacheStats] = useState(null);
@@ -189,9 +194,7 @@ function Home() {
     audioStatusMapRef,
     audioStatsRevision,
     patchAudioStatusKey,
-    mergeAudioStatusMap,
     prefillWordAudio,
-    batchPrefillRealAudio,
     clearAudioPrefillCursor,
     clearRealAudioPrefillCursor,
     rebuildMissingAudioFromStart,
@@ -211,7 +214,6 @@ function Home() {
   });
   const toolsMenuRef = useRef(null);
   const aiToolsRef = useRef(null);
-  const pronunciationInFlightRef = useRef(new Map());
   const searchParams = useSearchParams();
   const wantOpenAiToolsQuery = searchParams?.get("openAiTools") === "1";
   const [toolsOpen, setToolsOpen] = useState(false);
@@ -292,7 +294,7 @@ function Home() {
       window.removeEventListener("ielts:open-ai-tools", onOpenAiToolsEvent);
       if (pollTimer) window.clearInterval(pollTimer);
     };
-  }, [wantOpenAiToolsQuery, flashStudyMode]);
+  }, [wantOpenAiToolsQuery, flashStudyMode, setFlashStudyMode]);
 
   useEffect(() => {
     if (!toast) return;
@@ -301,7 +303,7 @@ function Home() {
   }, [toast]);
 
   useEffect(() => {
-    function closeOtherMenus(openMenu) {
+    function closeOtherMenus(openMenu = null) {
       document.querySelectorAll("details.menu").forEach((menu) => {
         if (menu === openMenu) return;
         // Controlled tools panel must close via React state, not only DOM.
@@ -315,9 +317,9 @@ function Home() {
     }
 
     function handleToggle(event) {
-      const target = event.currentTarget;
+      const target = event.target;
 
-      if (target?.open) {
+      if (target?.matches?.("details.menu") && target.open) {
         closeOtherMenus(target);
       }
     }
@@ -328,34 +330,27 @@ function Home() {
       if (t.closest?.('a[href*="openAiTools"]') || t.closest?.('a[href*="#ai-tools"]')) {
         return;
       }
-      // Clicks inside the tools/top action area keep menus usable.
-      if (t.closest?.(".top-actions") || t.closest?.("details.menu")) {
+      // Clicks inside the active menu keep it usable; other controls close it.
+      if (t.closest?.("details.menu")) {
         return;
       }
-      document.querySelectorAll("details.menu").forEach((menu) => {
-        if (toolsMenuRef.current && menu === toolsMenuRef.current) {
-          setToolsOpen(false);
-          setAiToolsOpen(false);
-          return;
-        }
-        menu.open = false;
-      });
+      closeOtherMenus();
     }
 
-    const menus = Array.from(document.querySelectorAll("details.menu"));
+    function handleKeyDown(event) {
+      if (event.key === "Escape") closeOtherMenus();
+    }
 
-    menus.forEach((menu) => {
-      menu.addEventListener("toggle", handleToggle);
-    });
-
+    // Menus render after vocabulary hydration, so delegate instead of taking a
+    // one-time snapshot that misses late-mounted <details> elements.
+    document.addEventListener("toggle", handleToggle, true);
     document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      menus.forEach((menu) => {
-        menu.removeEventListener("toggle", handleToggle);
-      });
-
+      document.removeEventListener("toggle", handleToggle, true);
       document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -367,17 +362,22 @@ function Home() {
   );
   const activeWordPool = useMemo(() => {
     if (!isWordFlashActive) return [];
-    if (idictationFlashSourceKey) return buildIdictationFlashWords(idictationFlashSourceKey, words, libraryWordMap);
+    if (idictationFlashSourceKey) {
+      return idictationFlashReady
+        ? buildIdictationFlashWords(idictationFlashSourceKey, words, libraryWordMap)
+        : [];
+    }
     return words;
-  }, [isWordFlashActive, idictationFlashSourceKey, idictationFlashRevision, words, libraryWordMap]);
+  }, [isWordFlashActive, idictationFlashSourceKey, idictationFlashReady, words, libraryWordMap]);
 
   useEffect(() => {
     if (!idictationFlashSourceKey) return;
 
     let cancelled = false;
+    setIdictationFlashReady(false);
     ensureIdictationFrequencyData()
       .then(() => {
-        if (!cancelled) setIdictationFlashRevision((value) => value + 1);
+        if (!cancelled) setIdictationFlashReady(true);
       })
       .catch(() => {});
 
@@ -451,7 +451,7 @@ function Home() {
     }
 
     sessionState.settling = false;
-  }, [studyWords, studyWordIndices, index]);
+  }, [studySessionRef, studyWords, studyWordIndices, index]);
 
   const isWordLexiconLoading = vocabRuntime.status === "loading";
   const emptyItem = {
@@ -473,7 +473,7 @@ function Home() {
   const studyRangeDetail = isWordLexiconLoading
     ? "正在读取正式词库，请稍候。"
     : isStudyEmpty
-      ? "当前范围没有待学内容，可以更改范围或切到全部单词。"
+      ? "当前范围没有待学内容，可以更改范围或切到全部可刷词。"
       : !isIndexInsideStudyQueue && resolvedStudyItem?.word
         ? `已恢复到：${resolvedStudyItem.word}（不在当前待学范围，按 ←/→ 可回到队列）`
         : `当前位置：${safeStudyPosition + 1} / ${studyWords.length} · 当前词：${item.word || "—"}`;
@@ -489,7 +489,6 @@ function Home() {
   const prevItem = resolveStudyWordEntry(activeWordPool, prevPoolIndex, activeWordByIndex);
 
   const {
-    audioRef,
     speakWord,
     speakExample,
     speakSmallText,
@@ -518,7 +517,7 @@ function Home() {
     latestStateRef.current.index = nearest;
     setIndex(nearest);
     persistWordFlashSessionNow(nearest);
-  }, [isWordFlashActive, studyWordIndices, effectiveIndex, index, words, resolvedStudyItem?.word]);
+  }, [isWordFlashActive, studySessionRef, studyWordIndices, effectiveIndex, index, words, resolvedStudyItem?.word, persistWordFlashSessionNow]);
 
   useEffect(() => {
     if (!isWordFlashActive || !item?.word || item.word === "完成" || isStudyEmpty || isWordLexiconLoading) return;
@@ -554,12 +553,12 @@ function Home() {
         warmTtsTimersRef.current = [];
       }
     };
-  }, [isWordFlashActive, item?.word, item?.example, index, currentStudyPosition, studyWordIndices.length, isStudyEmpty, isWordLexiconLoading]);
+  }, [isWordFlashActive, item?.word, item?.example, index, currentStudyPosition, studyWordIndices.length, isStudyEmpty, isWordLexiconLoading, warmSpeechAudio]);
 
   const commonCollocations = normalizePhraseItems(item.collocations);
   const phraseCollocations = normalizePhraseItems(item.phraseCollocations);
   const audioInfo = audioMap[normalizeWord(item.word)] || {};
-  const displayForms = getDisplayForms(item);
+  const displayForms = getDisplayForms(item, { wordMap: libraryWordMap });
   const displayFamily = enrichDisplayFamily(item.wordFamily, libraryWordMap, item.word);
 
   const filteredWordIndices = useMemo(
@@ -569,27 +568,44 @@ function Home() {
     [isWordFlashActive, activeWordPool, filter, search, idictationFlashSourceKey]
   );
 
+  const wordSearchResolution = useMemo(
+    () => resolveWordSearchTarget(words, search),
+    [words, search]
+  );
+
   const wordLibraryStats = useMemo(() => {
     if (!isWordFlashActive) {
-      return { pending: 0, unfamiliar: 0, familiar: 0, missing: 0, classifyMissing: 0 };
+      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0 };
     }
 
+    let total = 0;
+    let references = 0;
     let pending = 0;
+    let blurry = 0;
     let unfamiliar = 0;
     let familiar = 0;
+    let todayReviewed = 0;
     let missing = 0;
     let classifyMissing = 0;
 
     for (const word of words) {
+      if (isInflectedReferenceWord(word)) {
+        references += 1;
+        continue;
+      }
+      if (!isBrushableWord(word)) continue;
+      total += 1;
       if (word.status !== "熟悉") pending += 1;
+      if (word.status === "模糊") blurry += 1;
       if (word.status === "不熟") unfamiliar += 1;
       if (word.status === "熟悉") familiar += 1;
+      if (word.lastReviewedAt && new Date(word.lastReviewedAt).toDateString() === new Date().toDateString()) todayReviewed += 1;
       if (isMissingAiFields(word)) missing += 1;
       if (isMissingClassification(word)) classifyMissing += 1;
     }
 
-    return { pending, unfamiliar, familiar, missing, classifyMissing };
-  }, [isWordFlashActive, words, idictationFlashRevision]);
+    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing };
+  }, [isWordFlashActive, words]);
 
   const familiarCount = wordLibraryStats.familiar;
   const missingCount = wordLibraryStats.missing;
@@ -597,7 +613,7 @@ function Home() {
 
   const audioStats = useMemo(() => {
     if (!isWordFlashActive) {
-      return { total: 0, has: 0, missing: 0, unchecked: 0 };
+      return { revision: audioStatsRevision, total: 0, has: 0, missing: 0, unchecked: 0 };
     }
 
     let has = 0;
@@ -605,6 +621,7 @@ function Home() {
     let unchecked = 0;
 
     words.forEach((word) => {
+      if (!isBrushableWord(word)) return;
       const key = normalizeWord(word.word);
       if (!key) return;
 
@@ -621,20 +638,19 @@ function Home() {
     });
 
     return {
+      revision: audioStatsRevision,
       total: has + missing + unchecked,
       has,
       missing,
       unchecked
     };
-  }, [isWordFlashActive, words, audioMap, audioStatsRevision]);
+  }, [isWordFlashActive, words, audioMap, audioStatsRevision, audioStatusMapRef]);
 
-  const progressPercent = studyWords.length ? Math.max(1, ((safeStudyPosition + 1) / studyWords.length) * 100) : 0;
+  const progressPercent = studyWords.length ? ((safeStudyPosition + 1) / studyWords.length) * 100 : 0;
 
   const {
-    importWords,
     importFromText,
     handleFile,
-    recordLocalChange,
     undoLastLocalChange,
     clearLastLocalChangeLog,
     undoOneLocalChangeItem,
@@ -642,19 +658,14 @@ function Home() {
     localDedupeWords,
     localMergeWordForms,
     localOptimizeWordList,
-    cleanWordList,
     confirmAiCost,
     generateCurrent,
     aiRepairCurrentWordSymbol,
-    generateMissingBatch,
     aiCompletePendingAndUnclassifiedOneByOne,
     aiSlowCompleteMissing10x1,
     aiStableRepairWrongWords10x2,
     generateHundredByFiveBatch,
-    completeMeaningAndAudio,
     categorizeWords,
-    aiDedupe,
-    clearAll,
     exportStaticSite,
     openEditCurrentWord,
     updateEditDraft,
@@ -662,9 +673,7 @@ function Home() {
     recoverWordsFromLocalFiles,
     recoverWordsFromTencentCloud,
     cleanBrowserStorageNow,
-    localCleanCurrentTtsSymbols,
     localScanTtsSymbols,
-    localCleanTtsSymbols,
     localRepairTruncatedHeadwords,
     clearWrongAiRepairFlags,
     localScanObscureDerivedWords,
@@ -714,8 +723,7 @@ function Home() {
     nextWord,
     prevWord,
     toggleFavorite,
-    shuffleStudyWords,
-    updateCurrent
+    shuffleStudyWords
   } = useWordFlashNavigation({
     flashStudyMode,
     flashStudyModeRef,
@@ -766,7 +774,7 @@ function Home() {
 
           if (currentKey) {
             if (isIdictationFlashFilter(entry.filter)) {
-              const source = getIdictationSource(entry.filter.value);
+              const source = idictationFlashReady ? getIdictationSource(entry.filter.value) : null;
               currentWordLabel = source?.entries?.find((word) => normalizeWord(word.word) === currentKey)?.word || "";
             } else {
               currentWordLabel = libraryWordMap.get(currentKey)?.word || "";
@@ -781,7 +789,7 @@ function Home() {
         };
       })
     }));
-  }, [isWordFlashActive, words, filter, index, learningEntryCounts, libraryWordMap, idictationFlashRevision]);
+  }, [isWordFlashActive, words, filter, index, learningEntryCounts, libraryWordMap, idictationFlashReady, entryPositionsRef]);
 
   function setLibraryFilter(type, value) {
     studySessionRef.current.userAdjusted = true;
@@ -823,6 +831,42 @@ function Home() {
     }
   }
 
+  function selectLibraryWord(poolIndex) {
+    studySessionRef.current.userAdjusted = true;
+    studySessionRef.current.restoreTargetIndex = null;
+    studySessionRef.current.persistBlocked = false;
+    latestStateRef.current.index = poolIndex;
+    setIndex(poolIndex);
+    persistWordFlashSessionNow(poolIndex);
+
+    if (wordSearchResolution?.redirected && wordSearchResolution.index === poolIndex) {
+      const typeLabel = wordSearchResolution.relationType || "语法变形";
+      setToast(`${wordSearchResolution.source.word} 是 ${wordSearchResolution.target.word} 的${typeLabel}，已进入基词。`);
+    }
+  }
+
+  function jumpToWordSearchResult() {
+    if (!wordSearchResolution || wordSearchResolution.index < 0) return;
+    const nextFilter = { type: "everything", value: "" };
+    const targetIndex = wordSearchResolution.index;
+
+    studySessionRef.current.userAdjusted = true;
+    studySessionRef.current.restoreTargetIndex = null;
+    studySessionRef.current.persistBlocked = false;
+    latestStateRef.current.index = targetIndex;
+    latestStateRef.current.filter = nextFilter;
+    setFilter(nextFilter);
+    setIndex(targetIndex);
+    persistWordFlashSessionNow(targetIndex, nextFilter);
+
+    if (wordSearchResolution.redirected) {
+      const typeLabel = wordSearchResolution.relationType || "语法变形";
+      setToast(`${wordSearchResolution.source.word} 是 ${wordSearchResolution.target.word} 的${typeLabel}，已进入基词。`);
+    } else {
+      setToast(`已跳转到：${wordSearchResolution.target.word}`);
+    }
+  }
+
   if (vocabRuntime.status === "loading") {
     return (
       <main className="page page--word-flash system-loading-page">
@@ -847,8 +891,8 @@ function Home() {
         >
           单词刷词
           <span className="flash-mode-meta">
-            {formatVocabCountLabel(vocabRuntime.status, vocabRuntime.count)}
-            <span className="flash-mode-sub">主词库</span>
+            {formatVocabCountLabel(vocabRuntime.status, wordLibraryStats.total)}
+            <span className="flash-mode-sub">可刷词</span>
           </span>
         </button>
         <button
@@ -919,6 +963,9 @@ function Home() {
             learningEntryGroups,
             search,
             setSearch,
+            wordSearchResolution,
+            jumpToWordSearchResult,
+            selectLibraryWord,
             setLibraryFilter,
             filteredWordIndices,
             activeWordPool,

@@ -5,8 +5,6 @@
 
 const hasSpeech = typeof speechSynthesis !== "undefined" && typeof SpeechSynthesisUtterance !== "undefined";
 
-let activeUtterance = null;
-
 function getEnglishVoice() {
   if (!hasSpeech) return null;
   const voices = speechSynthesis.getVoices();
@@ -32,7 +30,6 @@ export function speakPhrase(phrase) {
   utterance.pitch = 1.0;
   utterance.lang = "en-GB";
 
-  activeUtterance = utterance;
   speechSynthesis.speak(utterance);
 }
 
@@ -47,7 +44,6 @@ export function speakExample(exampleText) {
   utterance.pitch = 1.0;
   utterance.lang = "en-GB";
 
-  activeUtterance = utterance;
   speechSynthesis.speak(utterance);
 }
 
@@ -55,7 +51,6 @@ export function stopAudio() {
   if (hasSpeech) {
     speechSynthesis.cancel();
   }
-  activeUtterance = null;
 }
 
 export function isSpeaking() {

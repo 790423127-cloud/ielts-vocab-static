@@ -43,7 +43,7 @@ test("vocab API payload exposes complete metadata matching active words", () => 
   assert.equal(payload.wordsHash, crypto.createHash("sha256").update(JSON.stringify(source.words)).digest("hex"));
 });
 
-test("home count formatter displays API counts without fixed totals", () => {
+test("home count formatter displays the computed brushable count without fixed totals", () => {
   assert.equal(formatVocabCountLabel("loading", null), "加载中");
   assert.equal(formatVocabCountLabel("online", 9917), "9,917 词");
   assert.equal(formatVocabCountLabel("online", 10000), "10,000 词");
@@ -52,7 +52,7 @@ test("home count formatter displays API counts without fixed totals", () => {
 
   const source = fs.readFileSync(pagePath, "utf8");
   const bootstrap = fs.readFileSync(path.join(root, "app/hooks/useHomeVocabBootstrap.js"), "utf8");
-  assert.match(source, /formatVocabCountLabel\(vocabRuntime\.status, vocabRuntime\.count\)/);
+  assert.match(source, /formatVocabCountLabel\(vocabRuntime\.status, wordLibraryStats\.total\)/);
   assert.match(bootstrap, /hydratedWordsRef\.current === words/);
   assert.doesNotMatch(source, /"9,909"/);
   assert.doesNotMatch(source, /words\.length\s*>=\s*9900\s*\?\s*"9,909"/);
@@ -122,6 +122,26 @@ test("fresh word merge keeps personal wrong supplemental entries only", () => {
   assert.equal(merged[0].status, "熟悉");
   assert.equal(merged.some((entry) => entry.word === "stale-cache-only"), false);
   assert.equal(merged.some((entry) => entry.word === "unlistedword"), true);
+});
+
+test("main lexicon merge excludes redundant personal-wrong cache supplements", () => {
+  const fresh = [{ id: "word_1", word: "work", meaning: "工作" }];
+  const cached = [
+    { id: "word_1", word: "work", status: "熟悉" },
+    {
+      id: "word_personal_wrong",
+      word: "unlistedword",
+      meaning: "本地补充",
+      addedFromPersonalWrongBook: true,
+      supplemental: true
+    }
+  ];
+
+  const merged = mergeWordContentWithUserState(fresh, cached, {
+    includePersonalSupplements: false
+  });
+  assert.equal(merged.length, 1);
+  assert.equal(merged[0].status, "熟悉");
 });
 
 test("spelling vocab merge treats personal wrong words as additive local vocabulary", () => {

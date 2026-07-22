@@ -41,6 +41,8 @@ export function useSpellingTrainingControls(options = {}) {
     onPreviousWord,
     onNextWord
   } = options;
+  const hasCurrent = Boolean(current);
+  const currentWordId = current?.wordId;
 
   const focusInput = useCallback((options = {}) => {
     if (!enabled || !inputRef.current) return;
@@ -74,7 +76,7 @@ export function useSpellingTrainingControls(options = {}) {
   }, [focusInput]);
 
   const handleInputKeyDown = useCallback((event) => {
-    if (!enabled || !current) return;
+    if (!enabled || !hasCurrent) return;
     const action = resolveSpellingShortcut(event, {
       isPhraseTyping: current.entryType === "phrase"
         && event.target === inputRef.current
@@ -177,6 +179,7 @@ export function useSpellingTrainingControls(options = {}) {
     }
   }, [
     enabled,
+    hasCurrent,
     current,
     speech,
     focusInput,
@@ -280,10 +283,10 @@ export function useSpellingTrainingControls(options = {}) {
   ]);
 
   useEffect(() => {
-    if (!enabled || !current) return;
+    if (!enabled || !hasCurrent) return;
     if (spelling?.uiState === "correct_feedback" || spelling?.uiState === "inputting") return;
     focusInput({ force: true });
-  }, [enabled, current?.wordId, spelling?.uiState, focusInput]);
+  }, [enabled, hasCurrent, currentWordId, spelling?.uiState, focusInput]);
 
   useEffect(() => {
     if (!enabled || !speech?.playing) return;
@@ -292,14 +295,14 @@ export function useSpellingTrainingControls(options = {}) {
   }, [enabled, speech?.playing, focusInput]);
 
   useEffect(() => {
-    if (!enabled || !listenOnlyMode || !current) return;
+    if (!enabled || !listenOnlyMode || !hasCurrent) return;
     if (spelling?.uiState === "wrong_feedback" || spelling?.uiState === "correct_feedback" || spelling?.uiState === "inputting") {
       return undefined;
     }
 
     const timer = window.setTimeout(() => speech?.playWord?.(), 500);
     return () => window.clearTimeout(timer);
-  }, [enabled, listenOnlyMode, current?.wordId, spelling?.uiState, speech]);
+  }, [enabled, listenOnlyMode, hasCurrent, current?.wordId, spelling?.uiState, speech]);
 
   return {
     inputRef,

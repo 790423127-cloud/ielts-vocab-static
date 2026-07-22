@@ -1,0 +1,47 @@
+"use client";
+
+export default function WordStudyActions({
+  item,
+  isStudyEmpty,
+  isExternalIdictationItem,
+  prevWord,
+  nextWord,
+  markStatus
+}) {
+  return (
+    <footer className="bottom bottombar" aria-label="学习操作">
+      <button className="study-step-button study-step-button--previous" type="button" disabled={isStudyEmpty} onClick={prevWord}>
+        上一个
+      </button>
+      <div className="actions">
+        <button
+          className={`status known${item.status === "熟悉" ? " is-selected" : ""}`}
+          disabled={isStudyEmpty}
+          onClick={() => markStatus("熟悉")}
+          title="快捷键：1"
+        >
+          {isExternalIdictationItem ? "下一个" : "认识"}
+        </button>
+        <button
+          className={`status uncertain${item.status === "模糊" ? " is-selected" : ""}`}
+          disabled={isStudyEmpty}
+          onClick={() => markStatus("模糊")}
+          title="快捷键：2"
+        >
+          {isExternalIdictationItem ? "稍后" : "模糊"}
+        </button>
+        <button
+          className={`status unknown${item.status === "不熟" ? " is-selected active-unknown" : ""}`}
+          disabled={isStudyEmpty}
+          onClick={() => markStatus("不熟")}
+          title="快捷键：3"
+        >
+          {isExternalIdictationItem ? "跳过" : item.status === "不熟" ? "取消不熟" : "不熟"}
+        </button>
+      </div>
+      <button className="study-step-button study-step-button--next" type="button" disabled={isStudyEmpty} onClick={nextWord}>
+        下一个
+      </button>
+    </footer>
+  );
+}

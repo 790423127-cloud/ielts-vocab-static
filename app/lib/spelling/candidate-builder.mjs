@@ -2,7 +2,6 @@ import { analyzeCandidateBreakdown } from "./candidate-breakdown.mjs";
 import {
   getAcceptedAnswers,
   getSpellingExpectedAnswer,
-  normalizeSpellingEntry,
   resolveSpellingEntryType
 } from "./normalize-spelling-entry.mjs";
 

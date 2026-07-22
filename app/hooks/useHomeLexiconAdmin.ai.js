@@ -214,7 +214,7 @@ export function createAiOps(ctx) {
 
   function confirmAiCost(actionName) {
     return window.confirm(
-      `${actionName}\n\n这个操作会调用 DeepSeek API，可能产生费用。\n\n建议：平时优先使用“一键本地优化 / 本地归并词形 / 修改当前单词 / 继续补全全部音频”。\n\n确定继续吗？`
+      `${actionName}\n\n这个操作会调用 DeepSeek API，可能产生费用。\n\n建议：平时优先使用“安全本地规整 / 校验人工词形关系 / 修改当前单词 / 继续补全全部音频”。\n\n确定继续吗？`
     );
   }
 

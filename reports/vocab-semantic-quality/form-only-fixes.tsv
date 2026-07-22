@@ -1,6 +1,0 @@
-id	word	forms	reason	evidence
-word_daf66a54040d	dutyfree	[{"word":"duty-free","type":"standard compound form","note":"空格或连字符标准形式","source":"semantic-quality-v1"}]	NORMALIZE_COMPOUND	例句或短语层使用duty-free
-word_9c5767e6817a	claimform	[{"word":"claim form","type":"standard compound form","note":"空格或连字符标准形式","source":"semantic-quality-v1"}]	NORMALIZE_COMPOUND	例句或短语层使用claim form
-word_72c30a68cff3	prestige	[{"word":"prestigious","type":"word family","note":"形容词派生形式","source":"semantic-quality-v1"}]	KEEP_FORM_VARIANT	原例句使用prestigious；主例句已改为prestige
-word_gt10500_10221	dropoff	[{"word":"drop-off","type":"standard compound form","note":"空格或连字符标准形式","source":"semantic-quality-v1"}]	NORMALIZE_COMPOUND	例句或短语层使用drop-off
-word_excel_43ea58897c67	byproduct	[{"word":"by-product","type":"standard compound form","note":"空格或连字符标准形式","source":"semantic-quality-v1"}]	NORMALIZE_COMPOUND	例句或短语层使用by-product

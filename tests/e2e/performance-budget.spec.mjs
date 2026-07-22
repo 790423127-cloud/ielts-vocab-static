@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { isBrushableWord } from "../../app/lib/vocab/word-study-eligibility.mjs";
 
 import {
   PERFORMANCE_BUDGETS,
@@ -21,7 +22,9 @@ test("home stays within production runtime budgets", async ({ page }) => {
   const vocabResponse = await page.request.get("/data/words.json");
   expect(vocabResponse.ok()).toBeTruthy();
   const vocabPayload = await vocabResponse.json();
-  const expectedCount = Number(vocabPayload?.count || vocabPayload?.words?.length || 0);
+  const expectedCount = Array.isArray(vocabPayload?.words)
+    ? vocabPayload.words.filter(isBrushableWord).length
+    : 0;
   expect(expectedCount).toBeGreaterThan(10_000);
 
   await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText(

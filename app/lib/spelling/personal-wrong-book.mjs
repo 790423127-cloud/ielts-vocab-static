@@ -1,8 +1,6 @@
 import { normalizeSpellingEntry } from "./normalize-spelling-entry.mjs";
 import {
   applyPluralShortcut,
-  inferPluralBase,
-  resolvePluralInflectionPair,
   resolveWordUnit
 } from "./plural-forms.mjs";
 import { splitSpellingBatches } from "./spelling-categories.mjs";
@@ -184,8 +182,6 @@ function normalizePersonalWrongLine(line = "", options = {}) {
 
   const displayWord = /\s/.test(first) ? first : (anchor || inflected);
   const scope = resolveScopeForTarget(displayWord, scopeHint);
-  const normalizedAnchor = normalizeHeadword(anchor || displayWord);
-  const normalizedInflected = normalizeHeadword(inflected || displayWord);
   const errorType = scope === "word" && hasInflectionPair ? "plural_form" : "spelling";
 
   return {

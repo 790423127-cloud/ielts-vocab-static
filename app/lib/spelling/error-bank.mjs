@@ -37,7 +37,7 @@ export function formatErrorBankSeverity(severity = "low") {
   return "偶错";
 }
 
-export function mergeErrorBankRecords(errorRecords = [], lexiconEntries = [], options = {}) {
+export function mergeErrorBankRecords(errorRecords = [], lexiconEntries = []) {
   const entryMap = buildLexiconEntryMap(lexiconEntries);
   const { records: recoveredErrors } = recoverErrorBankRecords(errorRecords, lexiconEntries);
   const merged = [];

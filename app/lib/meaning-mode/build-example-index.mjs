@@ -128,7 +128,6 @@ console.log("invalid example:", stats.invalidExample);
 console.log("Total matched:", matched, "/", meaningItems.length, "(" + coverage + "%)");
 
 // Write the generated index
-const indexEntries = Object.entries(index);
 const indexJSON = JSON.stringify(index, null, 2);
 
 const output = [

@@ -172,7 +172,7 @@ function shouldStayOnWrite(wordId, unit, records, options = {}) {
   return true;
 }
 
-function selectPendingWriteFromUnit(unit = {}, records = {}, options = {}, startIndex = 0, source = "personal_wrong_sequential") {
+function selectPendingWriteFromUnit(unit = {}, records = {}, startIndex = 0, source = "personal_wrong_sequential") {
   const writeWordIds = Array.isArray(unit.writeWordIds) ? unit.writeWordIds : [];
   if (!writeWordIds.length) return null;
 
@@ -213,7 +213,6 @@ export function selectNextPersonalWrongWrite(wordUnits = [], records = {}, optio
       const sameUnitNext = selectPendingWriteFromUnit(
         lastUnit,
         records,
-        options,
         lastWriteIndex + 1,
         "personal_wrong_current_unit"
       );
@@ -224,7 +223,6 @@ export function selectNextPersonalWrongWrite(wordUnits = [], records = {}, optio
         const nextUnitWrite = selectPendingWriteFromUnit(
           unit,
           records,
-          options,
           0,
           "personal_wrong_resume_cursor"
         );
@@ -234,7 +232,7 @@ export function selectNextPersonalWrongWrite(wordUnits = [], records = {}, optio
   }
 
   for (const unit of units) {
-    const selected = selectPendingWriteFromUnit(unit, records, options);
+    const selected = selectPendingWriteFromUnit(unit, records);
     if (selected) return selected;
   }
 

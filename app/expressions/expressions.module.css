@@ -259,7 +259,7 @@
   --c2-green-strong: #225f52;
   --c2-text: #213a4d;
   --c2-muted: #75827d;
-  --c2-accent: #d76538;
+  --c2-accent: #0b6b50;
   --c2-border: #d7dfdb;
   --c2-green-soft: #e8f0ed;
   --c2-danger: #a94738;
@@ -427,7 +427,7 @@
 
 .startBtn:hover,
 .nextBtn:hover {
-  background: #bd5630;
+  background: #085440;
 }
 
 .skipBtn {

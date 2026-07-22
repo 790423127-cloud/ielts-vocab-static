@@ -129,11 +129,12 @@ export function useWordFlashNavigation({
 
     const currentStatus = currentWord.status || "";
     const nextStatus = status === "不熟" && currentStatus === "不熟" ? "" : status;
+    const reviewedAt = new Date().toISOString();
     const oldQueue = navigationIndices(latest);
     const oldPosition = Math.max(0, oldQueue.indexOf(currentOriginalIndex));
 
     const simulatedWords = latest.words.map((word, wordIndex) => (
-      wordIndex === currentOriginalIndex ? { ...word, status: nextStatus } : word
+      wordIndex === currentOriginalIndex ? { ...word, status: nextStatus, lastReviewedAt: reviewedAt } : word
     ));
     const candidateIndices = [];
 
@@ -160,7 +161,7 @@ export function useWordFlashNavigation({
     setWords((prev) => {
       const word = prev[currentOriginalIndex];
       if (!word || word.status === nextStatus) return prev;
-      return prev.toSpliced(currentOriginalIndex, 1, { ...word, status: nextStatus });
+      return prev.toSpliced(currentOriginalIndex, 1, { ...word, status: nextStatus, lastReviewedAt: reviewedAt });
     });
 
     if (targetIndex !== currentOriginalIndex) {
@@ -248,7 +249,7 @@ export function useWordFlashNavigation({
   speakWordRef.current = speakWord;
   speakExampleRef.current = speakExample;
 
-  // 0/1 mark status + Delete current word
+  // 1/2/3 mark status + Delete current word
   useEffect(() => {
     function handleQuickStatus(event) {
       if (flashStudyModeRef.current !== "word") return;
@@ -294,10 +295,11 @@ export function useWordFlashNavigation({
         return;
       }
 
-      const isZero = key === "0" || code === "Digit0" || code === "Numpad0";
       const isOne = key === "1" || code === "Digit1" || code === "Numpad1";
+      const isTwo = key === "2" || code === "Digit2" || code === "Numpad2";
+      const isThree = key === "3" || code === "Digit3" || code === "Numpad3";
 
-      if (!isZero && !isOne) {
+      if (!isOne && !isTwo && !isThree) {
         return;
       }
 
@@ -311,7 +313,7 @@ export function useWordFlashNavigation({
       }
 
       quickStatusLockRef.current = true;
-      const quickStatus = isZero ? "熟悉" : "不熟";
+      const quickStatus = isOne ? "熟悉" : isTwo ? "模糊" : "不熟";
 
       if (typeof markStatusRef.current === "function") {
         markStatusRef.current(quickStatus);
@@ -329,7 +331,7 @@ export function useWordFlashNavigation({
     };
   }, [deleteCurrentWord, flashStudyModeRef, latestStateRef]);
 
-  // Tab/Space/arrows
+  // Tab plays the word; Space and arrows navigate.
   useEffect(() => {
     function isTypingTarget(target) {
       const tag = target?.tagName?.toLowerCase();
@@ -349,7 +351,7 @@ export function useWordFlashNavigation({
       if (event.key === " " || event.code === "Space" || event.key === "Spacebar") {
         if (event.repeat) return;
         event.preventDefault();
-        speakExampleRef.current();
+        nextWordRef.current();
       }
 
       if (event.key === "ArrowRight") {

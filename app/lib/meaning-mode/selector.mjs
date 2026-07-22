@@ -232,8 +232,6 @@ function computeIeltsExamWeight(entry) {
 function computeComprehensionImportance(entry) {
   const word = (entry.word || "").toLowerCase();
   const pos = (entry.pos || "").toLowerCase();
-  const meaning = entry.meaning || "";
-
   // Logic/process/cause words
   const logicWords = /\b(however|therefore|despite|although|whereas|nevertheless|moreover|furthermore|consequently|accordingly|hence|thus|nonetheless|regardless|meanwhile|otherwise|alternatively|specifically|particularly|notably|indeed|instead|rather|otherwise)\b/i;
   const processWords = /\b(occur|emerge|arise|decline|diminish|fluctuate|stabilize|peak|plummet|soar|surge|persist|cease|commence|initiate|terminate|undergo|transform|convert|adapt|evolve)\b/i;

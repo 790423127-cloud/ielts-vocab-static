@@ -1,5 +1,5 @@
 import { IDICTATION_FREQUENCY_META } from "../spelling/idictation-frequency.mjs";
-import { isBrushableWord } from "./word-study-eligibility.mjs";
+import { isBrushableWord, isInflectedReferenceWord } from "./word-study-eligibility.mjs";
 
 function normalizePhraseItems(value) {
   if (!value) return [];
@@ -55,7 +55,6 @@ function createFilterTallies() {
 
 function tallyWordForFilters(word, tallies) {
   if (!isBrushableWord(word)) return;
-
   const status = word?.status || "";
   const isFamiliar = status === "熟悉";
 
@@ -125,9 +124,25 @@ function countFromTallies(filter, tallies) {
   return tallies.all;
 }
 
-function getIdictationEntryCount(sourceKey, getIdictationSource) {
+function normalizeWordKey(value) {
+  return String(value || "").normalize("NFKC").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function getIdictationEntryCount(sourceKey, getIdictationSource, words) {
   const source = getIdictationSource(sourceKey);
-  if (source) return source.uniqueWords || source.entries?.length || 0;
+  if (source?.entries?.length) {
+    const referenceKeys = new Set(
+      (Array.isArray(words) ? words : [])
+        .filter(isInflectedReferenceWord)
+        .map((word) => normalizeWordKey(word.word))
+    );
+    return source.entries.filter((entry) => {
+      const candidates = [entry.word, entry.expectedAnswer, ...(entry.acceptedAnswers || [])]
+        .map(normalizeWordKey)
+        .filter(Boolean);
+      return !candidates.some((key) => referenceKeys.has(key));
+    }).length;
+  }
 
   // The full frequency payload is lazy-loaded. Use its generated metadata so
   // the entry cards show the correct totals immediately instead of a stale 0.
@@ -157,7 +172,7 @@ export function buildLearningEntryCounts(words, learningEntries, {
       const key = filterKey(entry.filter);
 
       if (isIdictationFlashFilter(entry.filter)) {
-        counts.set(key, getIdictationEntryCount(entry.filter.value, getIdictationSource));
+        counts.set(key, getIdictationEntryCount(entry.filter.value, getIdictationSource, words));
         continue;
       }
 

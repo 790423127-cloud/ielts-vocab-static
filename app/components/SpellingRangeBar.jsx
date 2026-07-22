@@ -60,7 +60,6 @@ export default function SpellingRangeBar({
   idictationGroupOptions,
   idictationBatchOptions,
   patchIdictationPrefs,
-  idictationPrefs,
   srsBatchOptions,
   srsBatchSelection,
   errorBankBatchOptions,

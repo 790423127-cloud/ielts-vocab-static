@@ -9,6 +9,20 @@ import {
   safeLocalStorageRemove as sharedLocalStorageRemove,
   safeLocalStorageSet as sharedLocalStorageSet
 } from "../browser-storage.mjs";
+import {
+  isBrushableWord,
+  isInflectedReferenceWord
+} from "./word-study-eligibility.mjs";
+
+export const LOCAL_LEXICON_ORGANIZATION_POLICY = Object.freeze({
+  version: "manual-morphology-audit-v3-20260722",
+  relationSource: "stored baseWord/baseWordId/redirectToWord metadata only",
+  suffixGuessing: false,
+  derivedWordAutoDelete: false,
+  headwordRepair: "reviewed exact-match whitelist only",
+  preserveRelationMetadata: true,
+  preserveUserState: true
+});
 
 export function fallback(value, text) {
   return value && String(value).trim() ? value : text;
@@ -97,99 +111,6 @@ export function mergePhraseLists(a = [], b = []) {
   return Array.from(map.values()).slice(0, 3);
 }
 
-export const IRREGULAR_VERB_FORMS = {
-  went: { base: "go", type: "past tense", note: "注意注意不规则过去式" },
-  gone: { base: "go", type: "past participle", note: "注意注意不规则过去分词" },
-  bought: { base: "buy", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  brought: { base: "bring", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  thought: { base: "think", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  taught: { base: "teach", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  caught: { base: "catch", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  made: { base: "make", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  met: { base: "meet", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  felt: { base: "feel", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  found: { base: "find", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  left: { base: "leave", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  lost: { base: "lose", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  kept: { base: "keep", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  slept: { base: "sleep", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  spent: { base: "spend", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  sent: { base: "send", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  lent: { base: "lend", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  built: { base: "build", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  dealt: { base: "deal", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  meant: { base: "mean", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  heard: { base: "hear", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  held: { base: "hold", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  paid: { base: "pay", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  said: { base: "say", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  sold: { base: "sell", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  told: { base: "tell", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  stood: { base: "stand", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  understood: { base: "understand", type: "past tense / past participle", note: "不注意过去式 / 过去分词" },
-  took: { base: "take", type: "past tense", note: "注意不规则过去式" },
-  taken: { base: "take", type: "past participle", note: "注意不规则过去分词" },
-  gave: { base: "give", type: "past tense", note: "注意不规则过去式" },
-  given: { base: "give", type: "past participle", note: "注意不规则过去分词" },
-  wrote: { base: "write", type: "past tense", note: "注意不规则过去式" },
-  written: { base: "write", type: "past participle", note: "注意不规则过去分词" },
-  spoke: { base: "speak", type: "past tense", note: "注意不规则过去式" },
-  spoken: { base: "speak", type: "past participle", note: "注意不规则过去分词" },
-  drove: { base: "drive", type: "past tense", note: "注意不规则过去式" },
-  driven: { base: "drive", type: "past participle", note: "注意不规则过去分词" },
-  chose: { base: "choose", type: "past tense", note: "注意不规则过去式" },
-  chosen: { base: "choose", type: "past participle", note: "注意不规则过去分词" },
-  broke: { base: "break", type: "past tense", note: "注意不规则过去式" },
-  broken: { base: "break", type: "past participle", note: "注意不规则过去分词" },
-  began: { base: "begin", type: "past tense", note: "注意不规则过去式" },
-  begun: { base: "begin", type: "past participle", note: "注意不规则过去分词" },
-  ran: { base: "run", type: "past tense", note: "注意不规则过去式" },
-  seen: { base: "see", type: "past participle", note: "注意不规则过去分词" },
-  saw: { base: "see", type: "past tense", note: "注意不规则过去式" },
-  eaten: { base: "eat", type: "past participle", note: "注意不规则过去分词" },
-  ate: { base: "eat", type: "past tense", note: "注意不规则过去式" },
-  fallen: { base: "fall", type: "past participle", note: "注意不规则过去分词" },
-  fell: { base: "fall", type: "past tense", note: "注意不规则过去式" },
-  flown: { base: "fly", type: "past participle", note: "注意不规则过去分词" },
-  flew: { base: "fly", type: "past tense", note: "注意不规则过去式" },
-  become: { base: "become", type: "past participle", note: "注意不规则过去分词，与原形相同" },
-  became: { base: "become", type: "past tense", note: "注意不规则过去式" }
-};
-
-export const IRREGULAR_PLURAL_FORMS = {
-  children: { base: "child", type: "irregular plural", note: "注意不规则复数" },
-  people: { base: "person", type: "irregular plural", note: "注意不规则复数" },
-  men: { base: "man", type: "irregular plural", note: "注意不规则复数" },
-  women: { base: "woman", type: "irregular plural", note: "注意不规则复数" },
-  feet: { base: "foot", type: "irregular plural", note: "注意不规则复数" },
-  teeth: { base: "tooth", type: "irregular plural", note: "注意不规则复数" },
-  mice: { base: "mouse", type: "irregular plural", note: "注意不规则复数" },
-  geese: { base: "goose", type: "irregular plural", note: "不规则复数" },
-  oxen: { base: "ox", type: "irregular plural", note: "不规则复数" },
-  criteria: { base: "criterion", type: "irregular plural", note: "注意不规则复数" },
-  phenomena: { base: "phenomenon", type: "irregular plural", note: "注意不规则复数" },
-  media: { base: "medium", type: "irregular plural", note: "注意不规则复数" },
-  analyses: { base: "analysis", type: "irregular plural", note: "学术阅读常见不规则复数" },
-  bases: { base: "basis", type: "irregular plural", note: "学术阅读常见不规则复数" },
-  crises: { base: "crisis", type: "irregular plural", note: "学术阅读常见不规则复数" },
-  theses: { base: "thesis", type: "irregular plural", note: "学术阅读常见不规则复数" }
-};
-
-export const PLURAL_FALSE_POSITIVES = new Set([
-  "news",
-  "business",
-  "series",
-  "species",
-  "analysis",
-  "basis",
-  "crisis",
-  "thesis",
-  "physics",
-  "mathematics",
-  "economics",
-  "politics"
-]);
-
 export function normalizeFormList(value) {
   if (!Array.isArray(value)) return [];
 
@@ -200,19 +121,32 @@ export function normalizeFormList(value) {
     if (!word) return;
 
     const type = String(item?.type || "form").trim();
-    const key = `${normalizeWord(word)}::${type}`;
+    const key = `${normalizeWord(word)}::${type.toLowerCase()}`;
+    const source = item && typeof item === "object" ? item : {};
+    const normalized = { ...source, word, type };
 
-    if (!map.has(key)) {
-      map.set(key, {
-        word,
-        type,
-        note: String(item?.note || "").trim(),
-        source: String(item?.source || "local").trim()
-      });
+    if (Object.prototype.hasOwnProperty.call(source, "id")) normalized.id = String(source.id || "").trim();
+    if (Object.prototype.hasOwnProperty.call(source, "note")) normalized.note = String(source.note || "").trim();
+    if (Object.prototype.hasOwnProperty.call(source, "source")) normalized.source = String(source.source || "").trim();
+
+    const existing = map.get(key);
+    if (!existing) {
+      map.set(key, normalized);
+      return;
     }
+
+    // Duplicate relation rows are merged without discarding audited ids or
+    // provenance. The first non-empty value stays authoritative.
+    const merged = { ...existing };
+    Object.entries(normalized).forEach(([field, fieldValue]) => {
+      if ((merged[field] === undefined || merged[field] === null || merged[field] === "") && fieldValue !== "") {
+        merged[field] = fieldValue;
+      }
+    });
+    map.set(key, merged);
   });
 
-  return Array.from(map.values()).slice(0, 12);
+  return Array.from(map.values());
 }
 
 export function mergeFormLists(a = [], b = []) {
@@ -229,18 +163,29 @@ export function normalizeFamilyList(value) {
     if (!word) return;
 
     const key = normalizeWord(word);
+    const source = item && typeof item === "object" ? item : {};
+    const normalized = { ...source, word };
+
+    for (const field of ["id", "pos", "meaning", "relation"]) {
+      if (Object.prototype.hasOwnProperty.call(source, field)) normalized[field] = String(source[field] || "").trim();
+    }
 
     if (!map.has(key)) {
-      map.set(key, {
-        word,
-        pos: String(item?.pos || "").trim(),
-        meaning: String(item?.meaning || "").trim(),
-        relation: String(item?.relation || "word family").trim()
-      });
+      map.set(key, normalized);
+      return;
     }
+
+    const existing = map.get(key);
+    const merged = { ...existing };
+    Object.entries(normalized).forEach(([field, fieldValue]) => {
+      if ((merged[field] === undefined || merged[field] === null || merged[field] === "") && fieldValue !== "") {
+        merged[field] = fieldValue;
+      }
+    });
+    map.set(key, merged);
   });
 
-  return Array.from(map.values()).slice(0, 12);
+  return Array.from(map.values());
 }
 
 export function mergeFamilyLists(a = [], b = []) {
@@ -306,243 +251,14 @@ export function resetAiFieldsForChangedWord(word, clean, label = "本地整理")
   };
 }
 
-export function detectRegularPlural(word) {
-  const lower = String(word || "").toLowerCase();
-
-  if (!lower || PLURAL_FALSE_POSITIVES.has(lower)) return null;
-  if (!/^[a-z][a-z'-]*$/.test(lower)) return null;
-
-  if (lower.endsWith("ies") && lower.length > 4) {
-    return lower.slice(0, -3) + "y";
-  }
-
-  if (/(ches|shes|sses|xes|zes)$/.test(lower) && lower.length > 5) {
-    return lower.slice(0, -2);
-  }
-
-  if (lower.endsWith("ves") && lower.length > 5) {
-    const stem = lower.slice(0, -3);
-    return stem.endsWith("i") ? stem.slice(0, -1) + "ife" : stem + "f";
-  }
-
-  if (lower.endsWith("s") && !/(ss|us|is|ous)$/.test(lower) && lower.length > 4) {
-    return lower.slice(0, -1);
-  }
-
-  return null;
+export function generateInflectedForms(word, { wordMap = null } = {}) {
+  // All displayed forms must come from the audited master lexicon. Runtime
+  // suffix guessing previously created false links such as canva -> canvas.
+  void word;
+  void wordMap;
+  return [];
 }
 
-export function buildRegularPlural(word) {
-  const lower = String(word || "").toLowerCase();
-
-  if (!/^[a-z][a-z'-]*$/.test(lower)) return "";
-
-  if (/(s|x|z|ch|sh)$/.test(lower)) return `${lower}es`;
-  if (/[^aeiou]y$/.test(lower)) return `${lower.slice(0, -1)}ies`;
-  if (/(f)$/.test(lower)) return `${lower.slice(0, -1)}ves`;
-  if (/(fe)$/.test(lower)) return `${lower.slice(0, -2)}ves`;
-
-  return `${lower}s`;
-}
-
-
-export function repairBaseCandidate(stem) {
-  const lower = String(stem || "").toLowerCase().trim();
-
-  const known = {
-    manufactur: "manufacture",
-    creat: "create",
-    relat: "relate",
-    communicat: "communicate",
-    educat: "educate",
-    indicat: "indicate",
-    operat: "operate",
-    participat: "participate",
-    separa: "separate",
-    invit: "invite",
-    decid: "decide",
-    includ: "include",
-    provid: "provide",
-    produc: "produce",
-    reduc: "reduce",
-    introduc: "introduce",
-    achiev: "achieve",
-    receiv: "receive",
-    believ: "believe",
-    improv: "improve",
-    remov: "remove",
-    mov: "move",
-    lov: "love",
-    liv: "live",
-    us: "use",
-    caus: "cause",
-    clos: "close",
-    choos: "choose",
-    manag: "manage",
-    chang: "change"
-  };
-
-  if (known[lower]) return known[lower];
-
-  if (lower.endsWith("ur") && lower.length >= 6) return `${lower}e`;
-
-  return lower;
-}
-
-
-export function detectRegularVerbForm(word) {
-  const lower = String(word || "").toLowerCase();
-
-  if (!/^[a-z][a-z'-]*$/.test(lower)) return null;
-
-  if (lower.endsWith("ied") && lower.length > 5) {
-    return {
-      base: lower.slice(0, -3) + "y",
-      type: "past tense / past participle",
-      note: "注意过去式 / 过去分词"
-    };
-  }
-
-  if (lower.endsWith("ing") && lower.length > 6) {
-    let stem = lower.slice(0, -3);
-
-    if (/([b-df-hj-np-tv-z])\1$/.test(stem)) {
-      stem = stem.slice(0, -1);
-    } else if (/(tak|mak|writ|driv|giv|com|us)$/.test(stem)) {
-      stem = `${stem}e`;
-    }
-
-    stem = repairBaseCandidate(stem);
-
-    return {
-      base: stem,
-      type: "present participle",
-      note: "注意 -ing 形式"
-    };
-  }
-
-  if (lower.endsWith("ed") && lower.length > 5) {
-    let stem = lower.slice(0, -2);
-
-    if (/([b-df-hj-np-tv-z])\1$/.test(stem)) {
-      stem = stem.slice(0, -1);
-    }
-
-    stem = repairBaseCandidate(stem);
-
-    return {
-      base: stem,
-      type: "past tense / past participle",
-      note: "注意过去式 / 过去分词"
-    };
-  }
-
-  return null;
-}
-
-export function getInflectionInfo(value) {
-  const clean = cleanWordForLocalUse(value);
-
-  if (!clean || clean.includes(" ")) {
-    return {
-      clean,
-      base: clean,
-      forms: []
-    };
-  }
-
-  const irregularVerb = IRREGULAR_VERB_FORMS[clean];
-  if (irregularVerb && irregularVerb.base !== clean) {
-    return {
-      clean,
-      base: irregularVerb.base,
-      forms: [
-        {
-          word: clean,
-          type: irregularVerb.type,
-          note: irregularVerb.note,
-          source: "local-irregular-verb"
-        }
-      ]
-    };
-  }
-
-  const irregularPlural = IRREGULAR_PLURAL_FORMS[clean];
-  if (irregularPlural && irregularPlural.base !== clean) {
-    return {
-      clean,
-      base: irregularPlural.base,
-      forms: [
-        {
-          word: clean,
-          type: irregularPlural.type,
-          note: irregularPlural.note,
-          source: "local-irregular-plural"
-        }
-      ]
-    };
-  }
-
-  const pluralBase = detectRegularPlural(clean);
-  if (pluralBase && pluralBase !== clean) {
-    return {
-      clean,
-      base: pluralBase,
-      forms: [
-        {
-          word: clean,
-          type: "plural",
-          note: "注意复数形式",
-          source: "local-plural"
-        }
-      ]
-    };
-  }
-
-  const regularVerb = detectRegularVerbForm(clean);
-  if (regularVerb?.base && regularVerb.base !== clean && regularVerb.base.length >= 3) {
-    return {
-      clean,
-      base: regularVerb.base,
-      forms: [
-        {
-          word: clean,
-          type: regularVerb.type,
-          note: regularVerb.note,
-          source: "local-verb-form"
-        }
-      ]
-    };
-  }
-
-  return {
-    clean,
-    base: clean,
-    forms: []
-  };
-}
-
-export function familyStem(word) {
-  let stem = cleanWordForLocalUse(word);
-
-  if (!stem || stem.includes(" ") || stem.length < 5) return "";
-
-  stem = stem
-    .replace(/(abilities|ibility|ability)$/i, "")
-    .replace(/(ational|ization|isation)$/i, "")
-    .replace(/(ations|ation|ition|tion|sion)$/i, "")
-    .replace(/(ments|ment)$/i, "")
-    .replace(/(iveness|fulness|lessness|ness)$/i, "")
-    .replace(/(ities|ity)$/i, "")
-    .replace(/(ically|ical|ally|ly)$/i, "")
-    .replace(/(ative|itive|ive)$/i, "")
-    .replace(/(able|ible|al|ous|ic|ful|less|er|or|ist|ism)$/i, "")
-    .replace(/(ing|ed)$/i, "");
-
-  if (stem.endsWith("i")) stem = `${stem.slice(0, -1)}y`;
-
-  return stem.length >= 4 ? stem : "";
-}
 
 export function makeCleanWordObject(word, clean, label = "本地整理") {
   const changed = normalizeWord(clean) !== normalizeWord(word.word);
@@ -559,7 +275,7 @@ export function makeCleanWordObject(word, clean, label = "本地整理") {
 }
 
 export function mergeWord(oldItem, newItem) {
-  return {
+  const merged = {
     ...oldItem,
     phonetic: oldItem.phonetic || newItem.phonetic || "",
     pos: oldItem.pos || newItem.pos || "",
@@ -578,6 +294,22 @@ export function mergeWord(oldItem, newItem) {
     forms: mergeFormLists(oldItem.forms, newItem.forms),
     wordFamily: mergeFamilyLists(oldItem.wordFamily, newItem.wordFamily)
   };
+
+  // Exact duplicate consolidation must never throw away local learning state.
+  // Keep the strongest counters/progress and the most recent review timestamp.
+  for (const field of ["reviewCount", "correctCount", "wrongCount", "mastery"]) {
+    const values = [oldItem[field], newItem[field]].map(Number).filter(Number.isFinite);
+    if (values.length) merged[field] = Math.max(...values);
+  }
+
+  const reviewTimes = [oldItem.lastReviewedAt, newItem.lastReviewedAt].filter(Boolean);
+  if (reviewTimes.length) merged.lastReviewedAt = reviewTimes.sort().at(-1);
+
+  if (oldItem.learningProgress !== undefined || newItem.learningProgress !== undefined) {
+    merged.learningProgress = oldItem.learningProgress ?? newItem.learningProgress;
+  }
+
+  return merged;
 }
 
 export function buildLocalCleanResult(sourceWords) {
@@ -619,17 +351,12 @@ export function buildLocalExactDedupeResult(sourceWords) {
 
     if (!key) return;
 
-    const cleanedWord = {
-      ...word,
-      forms: normalizeFormList(word.forms),
-      wordFamily: normalizeFamilyList(word.wordFamily)
-    };
-
     if (map.has(key)) {
       merged += 1;
-      map.set(key, mergeWord(map.get(key), cleanedWord));
+      map.set(key, mergeWord(map.get(key), word));
     } else {
-      map.set(key, cleanedWord);
+      // The dedupe-only action must not silently normalize unrelated rows.
+      map.set(key, word);
     }
   });
 
@@ -642,111 +369,139 @@ export function buildLocalExactDedupeResult(sourceWords) {
 }
 
 export function buildLocalFormFamilyResult(sourceWords) {
-  const output = [];
-  const indexByKey = new Map();
-  let formMerged = 0;
-  let convertedToBase = 0;
+  const stats = {
+    normalizedForms: 0,
+    normalizedFamilies: 0,
+    referenceLinksAdded: 0,
+    referenceLinksUpdated: 0,
+    wrongOwnerLinksRemoved: 0,
+    selfLinksRemoved: 0,
+    danglingReferences: 0,
+    metadataConflicts: 0,
+    suffixGuesses: 0
+  };
+  const words = sourceWords.map((word) => {
+    const forms = normalizeFormList(word.forms);
+    const wordFamily = normalizeFamilyList(word.wordFamily);
+    if (JSON.stringify(forms) !== JSON.stringify(word.forms || [])) stats.normalizedForms += 1;
+    if (JSON.stringify(wordFamily) !== JSON.stringify(word.wordFamily || [])) stats.normalizedFamilies += 1;
+    return { ...word, forms, wordFamily };
+  });
+  const byWord = new Map();
+  const byId = new Map();
 
-  function addOrMerge(word) {
-    const key = normalizeWord(word.word);
-    if (!key) return;
+  words.forEach((word) => {
+    const wordKey = normalizeWord(word.word);
+    const id = String(word.id || word.wordId || "").trim();
+    if (wordKey && !byWord.has(wordKey)) byWord.set(wordKey, word);
+    if (id && !byId.has(id)) byId.set(id, word);
+  });
 
-    if (indexByKey.has(key)) {
-      const idx = indexByKey.get(key);
-      output[idx] = mergeWord(output[idx], word);
-      formMerged += 1;
-    } else {
-      indexByKey.set(key, output.length);
-      output.push(word);
-    }
-  }
+  const references = words.filter(isInflectedReferenceWord);
+  const declaredBase = new Map();
 
-  sourceWords.forEach((word) => {
-    const info = getInflectionInfo(word.word);
+  references.forEach((reference) => {
+    const idTarget = String(reference.baseWordId || "").trim()
+      ? byId.get(String(reference.baseWordId).trim())
+      : null;
+    const wordTargetKey = normalizeWord(reference.redirectToWord || reference.baseWord);
+    const wordTarget = wordTargetKey ? byWord.get(wordTargetKey) : null;
 
-    if (!info.clean) return;
-
-    const baseKey = normalizeWord(info.base);
-    const cleanKey = normalizeWord(info.clean);
-    const forms = normalizeFormList([...(word.forms || []), ...(info.forms || [])]);
-
-    if (info.base && baseKey !== cleanKey && info.forms.length) {
-      if (indexByKey.has(baseKey)) {
-        const baseIndex = indexByKey.get(baseKey);
-        output[baseIndex] = mergeWord(output[baseIndex], {
-          ...word,
-          word: output[baseIndex].word,
-          forms
-        });
-        formMerged += 1;
-        return;
-      }
-
-      convertedToBase += 1;
-      addOrMerge({
-        ...resetAiFieldsForChangedWord(word, info.base, "本地归并词形"),
-        forms
-      });
+    if (idTarget && wordTarget && idTarget !== wordTarget) {
+      stats.metadataConflicts += 1;
+      stats.danglingReferences += 1;
       return;
     }
 
-    addOrMerge({
-      ...word,
-      word: info.clean,
-      forms,
-      wordFamily: normalizeFamilyList(word.wordFamily)
-    });
+    const target = idTarget || wordTarget;
+    if (!target || !isBrushableWord(target) || target === reference) {
+      stats.danglingReferences += 1;
+      return;
+    }
+
+    declaredBase.set(reference, target);
   });
 
-  const deduped = buildLocalExactDedupeResult(output).words;
+  words.forEach((owner) => {
+    const ownerKey = normalizeWord(owner.word);
+    const nextForms = [];
 
-  const groups = new Map();
-
-  deduped.forEach((word, idx) => {
-    const stem = familyStem(word.word);
-
-    if (!stem) return;
-
-    if (!groups.has(stem)) groups.set(stem, []);
-    groups.get(stem).push({ word, idx });
-  });
-
-  let familyLinked = 0;
-  const linked = deduped.map((word) => ({
-    ...word,
-    forms: normalizeFormList(word.forms),
-    wordFamily: normalizeFamilyList(word.wordFamily)
-  }));
-
-  groups.forEach((group) => {
-    if (group.length < 2 || group.length > 10) return;
-
-    group.forEach(({ word, idx }) => {
-      const relatives = group
-        .filter((item) => item.idx !== idx)
-        .map((item) => ({
-          word: item.word.word,
-          pos: item.word.pos || "",
-          meaning: item.word.meaning || "",
-          relation: "同词族 / 派生词"
-        }));
-
-      if (relatives.length) {
-        familyLinked += relatives.length;
-        linked[idx] = {
-          ...linked[idx],
-          wordFamily: mergeFamilyLists(linked[idx].wordFamily, relatives)
-        };
+    owner.forms.forEach((form) => {
+      const formKey = normalizeWord(form.word);
+      if (!formKey || formKey === ownerKey) {
+        stats.selfLinksRemoved += 1;
+        return;
       }
+
+      const idTarget = String(form.id || "").trim() ? byId.get(String(form.id).trim()) : null;
+      const wordTarget = byWord.get(formKey) || null;
+      if (idTarget && wordTarget && idTarget !== wordTarget) {
+        stats.metadataConflicts += 1;
+        nextForms.push(form);
+        return;
+      }
+
+      const target = idTarget || wordTarget;
+      if (!isInflectedReferenceWord(target)) {
+        nextForms.push(form);
+        return;
+      }
+
+      const expectedOwner = declaredBase.get(target);
+      if (expectedOwner && expectedOwner !== owner) {
+        stats.wrongOwnerLinksRemoved += 1;
+        return;
+      }
+
+      if (!expectedOwner) {
+        nextForms.push(form);
+        return;
+      }
+
+      const canonical = {
+        ...form,
+        word: target.word,
+        id: target.id || target.wordId || form.id,
+        type: String(target.relationType || form.type || "inflected form").trim()
+      };
+      if (JSON.stringify(canonical) !== JSON.stringify(form)) stats.referenceLinksUpdated += 1;
+      nextForms.push(canonical);
     });
+
+    owner.forms = normalizeFormList(nextForms);
+  });
+
+  references.forEach((reference) => {
+    const owner = declaredBase.get(reference);
+    if (!owner) return;
+
+    const referenceId = String(reference.id || reference.wordId || "").trim();
+    const referenceKey = normalizeWord(reference.word);
+    const exists = owner.forms.some((form) => {
+      const formId = String(form.id || "").trim();
+      return (referenceId && formId === referenceId) || normalizeWord(form.word) === referenceKey;
+    });
+
+    if (!exists) {
+      owner.forms.push({
+        word: reference.word,
+        id: reference.id || reference.wordId,
+        type: String(reference.relationType || "inflected form").trim(),
+        source: LOCAL_LEXICON_ORGANIZATION_POLICY.version
+      });
+      stats.referenceLinksAdded += 1;
+    }
+  });
+
+  words.forEach((word) => {
+    word.forms = normalizeFormList(word.forms);
   });
 
   return {
-    words: linked,
+    words,
     stats: {
-      formMerged,
-      convertedToBase,
-      familyLinked
+      ...stats,
+      policyVersion: LOCAL_LEXICON_ORGANIZATION_POLICY.version
     }
   };
 }
@@ -763,54 +518,26 @@ export function buildLocalOptimizeResult(sourceWords) {
       changed: cleanResult.stats.changed,
       removed: cleanResult.stats.removed,
       exactMerged: dedupeResult.stats.merged + finalDedupe.stats.merged,
-      formMerged: formResult.stats.formMerged,
-      convertedToBase: formResult.stats.convertedToBase,
-      familyLinked: formResult.stats.familyLinked
+      normalizedForms: formResult.stats.normalizedForms,
+      normalizedFamilies: formResult.stats.normalizedFamilies,
+      referenceLinksAdded: formResult.stats.referenceLinksAdded,
+      referenceLinksUpdated: formResult.stats.referenceLinksUpdated,
+      wrongOwnerLinksRemoved: formResult.stats.wrongOwnerLinksRemoved,
+      selfLinksRemoved: formResult.stats.selfLinksRemoved,
+      danglingReferences: formResult.stats.danglingReferences,
+      metadataConflicts: formResult.stats.metadataConflicts,
+      suffixGuesses: 0,
+      policyVersion: formResult.stats.policyVersion
     }
   };
 }
 
 export function getDisplayForms(word) {
-  const pos = String(word?.pos || "").toLowerCase();
   const baseWord = cleanWordForLocalUse(word?.word);
   const baseKey = normalizeWord(baseWord);
-  const forms = normalizeFormList(word?.forms)
+  return normalizeFormList(word?.forms)
     .filter((form) => normalizeWord(form.word) !== baseKey)
-    .map((form) => {
-      const formWord = cleanWordForLocalUse(form.word);
-      const inferredBase = detectRegularPlural(formWord);
-      const type = String(form.type || "").trim().toLowerCase();
-
-      if (type === "form" && inferredBase && normalizeWord(inferredBase) === baseKey) {
-        return {
-          ...form,
-          type: "plural reminder",
-          note: form.note || "注意复数形式"
-        };
-      }
-
-      return form;
-    });
-
-  if (
-    baseWord &&
-    !baseWord.includes(" ") &&
-    (pos.includes("noun") || pos.includes("n.") || pos === "n")
-  ) {
-    const plural = buildRegularPlural(baseWord);
-    const hasPlural = forms.some((item) => normalizeWord(item.word) === normalizeWord(plural));
-
-    if (plural && plural !== baseWord && !hasPlural) {
-      forms.push({
-        word: plural,
-        type: "plural reminder",
-        note: "注意复数形式",
-        source: "local-listening-reminder"
-      });
-    }
-  }
-
-  return normalizeFormList(forms).slice(0, 6);
+    .slice(0, 6);
 }
 
 
@@ -884,7 +611,7 @@ export function enrichDisplayFamily(familyList, wordMap, currentWord) {
   const lookup = wordMap instanceof Map ? wordMap : new Map();
   return normalizeFamilyList(familyList)
     .map((entry) => {
-      const repairedWord = repairBaseCandidate(cleanWordForLocalUse(entry.word));
+      const repairedWord = repairHeadwordLocally(cleanWordForLocalUse(entry.word));
       const displayWord = repairedWord || entry.word;
       const matched = lookup.get(normalizeWord(displayWord)) || lookup.get(normalizeWord(entry.word));
 
@@ -1451,33 +1178,6 @@ export function repairHeadwordLocally(value) {
 
   if (mapped) return mapped;
 
-  // 非常保守的规则：只修明显“少了 e”的常见动词后缀。
-  // 不处理普通短词，避免误改。
-  if (/^[a-z]{6,}$/.test(lower)) {
-    const suffixes = [
-      ["ivat", "ivate"],
-      ["grat", "grate"],
-      ["trat", "trate"],
-      ["ulat", "ulate"],
-      ["icat", "icate"],
-      ["igat", "igate"],
-      ["erat", "erate"],
-      ["orat", "orate"],
-      ["iat", "iate"],
-      ["iev", "ieve"],
-      ["eiv", "eive"],
-      ["olv", "olve"],
-      ["rov", "rove"],
-      ["mov", "move"]
-    ];
-
-    for (const [bad, good] of suffixes) {
-      if (lower.endsWith(bad)) {
-        return lower.slice(0, -bad.length) + good;
-      }
-    }
-  }
-
   return raw;
 }
 
@@ -1717,23 +1417,23 @@ export const LOCAL_DERIVED_KEEP_WORDS = new Set([
 ]);
 
 export const LOCAL_DERIVED_SUFFIX_RULES = [
-  { suffix: "ization", min: 13, reason: "过度 -ization 派生词" },
-  { suffix: "isation", min: 13, reason: "过度 -isation 派生词" },
-  { suffix: "ification", min: 13, reason: "过度 -ification 派生词" },
-  { suffix: "ational", min: 13, reason: "过度 -ational 派生词" },
-  { suffix: "iveness", min: 12, reason: "过度 -iveness 派生词" },
-  { suffix: "lessness", min: 12, reason: "过度 -lessness 派生词" },
-  { suffix: "fulness", min: 12, reason: "过度 -fulness 派生词" },
-  { suffix: "ological", min: 13, reason: "偏专业 -ological 词" },
-  { suffix: "ologist", min: 12, reason: "偏专业 -ologist 词" },
-  { suffix: "graphical", min: 13, reason: "偏专业 -graphical 词" },
-  { suffix: "istically", min: 13, reason: "过度 -istically 副词" },
-  { suffix: "ariness", min: 12, reason: "过度 -ariness 派生词" },
-  { suffix: "ability", min: 14, reason: "过长 -ability 派生词" },
-  { suffix: "ibility", min: 14, reason: "过长 -ibility 派生词" },
-  { suffix: "ment", min: 16, reason: "过长 -ment 派生词" },
-  { suffix: "ness", min: 15, reason: "过长 -ness 派生词" },
-  { suffix: "ity", min: 16, reason: "过长 -ity 派生词" }
+  { suffix: "ization", min: 13, reason: "人工复核候选：-ization 派生词" },
+  { suffix: "isation", min: 13, reason: "人工复核候选：-isation 派生词" },
+  { suffix: "ification", min: 13, reason: "人工复核候选：-ification 派生词" },
+  { suffix: "ational", min: 13, reason: "人工复核候选：-ational 派生词" },
+  { suffix: "iveness", min: 12, reason: "人工复核候选：-iveness 派生词" },
+  { suffix: "lessness", min: 12, reason: "人工复核候选：-lessness 派生词" },
+  { suffix: "fulness", min: 12, reason: "人工复核候选：-fulness 派生词" },
+  { suffix: "ological", min: 13, reason: "人工复核候选：-ological 词" },
+  { suffix: "ologist", min: 12, reason: "人工复核候选：-ologist 词" },
+  { suffix: "graphical", min: 13, reason: "人工复核候选：-graphical 词" },
+  { suffix: "istically", min: 13, reason: "人工复核候选：-istically 副词" },
+  { suffix: "ariness", min: 12, reason: "人工复核候选：-ariness 派生词" },
+  { suffix: "ability", min: 14, reason: "人工复核候选：较长 -ability 派生词" },
+  { suffix: "ibility", min: 14, reason: "人工复核候选：较长 -ibility 派生词" },
+  { suffix: "ment", min: 16, reason: "人工复核候选：较长 -ment 派生词" },
+  { suffix: "ness", min: 15, reason: "人工复核候选：较长 -ness 派生词" },
+  { suffix: "ity", min: 16, reason: "人工复核候选：较长 -ity 派生词" }
 ];
 
 export function isPlainSingleEnglishWord(value) {
@@ -1790,7 +1490,7 @@ export function getObscureDerivedReason(word, wordSet) {
   const base = stripCommonDerivedSuffix(w);
   const hasBase = base && base.length >= 4 && wordSet.has(base);
 
-  // 有基础词时，派生词更适合删除；没有基础词时只删很长的明显派生词，避免误删。
+  // This is a review queue only. A spelling suffix never authorizes deletion.
   if (hasBase) {
     return `${matchedRule.reason}，词库已有基础词 ${base}`;
   }

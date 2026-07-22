@@ -3,8 +3,6 @@ import {
   REPAIR_STATES,
   getRepairStreak,
   getRepairStreakRequired,
-  isRepairRevisitEligible,
-  isRepairRevisitForced,
   normalizeTodayRepairFields
 } from "./repair-progress.mjs";
 import { normalizeSpellingAnswer } from "./word-id.mjs";

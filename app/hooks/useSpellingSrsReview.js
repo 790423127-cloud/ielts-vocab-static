@@ -35,11 +35,11 @@ export function useSpellingSrsReview(lexiconEntries = [], options = {}) {
     } finally {
       setLoading(false);
     }
-  }, [lexiconEntries, scope, refreshKey]);
+  }, [lexiconEntries, scope]);
 
   useEffect(() => {
     refresh();
-  }, [refresh]);
+  }, [refresh, refreshKey]);
 
   return { items, count: items.length, loading, error, refresh };
 }

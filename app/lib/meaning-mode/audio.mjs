@@ -1,7 +1,6 @@
 // Meaning Mode audio — browser SpeechSynthesis wrapper.
 // Fully independent; no API routes, no shared players, no Edge TTS.
 
-let currentUtterance = null;
 let selectedVoice = null;
 let voicesLoaded = false;
 
@@ -45,7 +44,6 @@ export function speak(text, options = {}) {
   utterance.pitch = options.pitch || 1.0;
   utterance.lang = selectedVoice ? selectedVoice.lang : "en-GB";
 
-  currentUtterance = utterance;
   window.speechSynthesis.speak(utterance);
 
   return true;
@@ -72,7 +70,6 @@ export function stop() {
   if (typeof window !== "undefined" && window.speechSynthesis) {
     window.speechSynthesis.cancel();
   }
-  currentUtterance = null;
 }
 
 /**

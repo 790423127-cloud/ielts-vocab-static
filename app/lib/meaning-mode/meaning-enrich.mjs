@@ -4,7 +4,7 @@
 //
 // Usage: node app/lib/meaning-mode/meaning-enrich.mjs
 
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
+import { readFileSync, writeFileSync, copyFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -79,16 +79,6 @@ const added = [...newIds].filter(id => !oldIds.has(id));
 console.log("Old wordIds preserved:", oldIds.size - lost.length, "/", oldIds.size);
 console.log("Lost wordIds:", lost.length, lost.length > 0 ? lost.slice(0,5) : "");
 console.log("New wordIds (should be 0):", added.length, added.length > 0 ? added.slice(0,5) : "");
-
-// Verify order
-let orderChanged = false;
-for (let i = 0; i < wordsData.words.length; i++) {
-  const expected = [...oldIds][i];
-  if (i < oldIds.size && wordsData.words[i].wordId !== expected) {
-    // Only check first oldIds entries for order match
-    break;
-  }
-}
 
 // Check order using the first 100 old IDs against current
 const oldArr = [...oldIds];

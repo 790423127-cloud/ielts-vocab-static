@@ -1,7 +1,7 @@
 // Expressions Mode — question builder.
 // Output: { phraseId, phrase, correctMeaning, skillTags, example, options: [{...}], ... }
 
-import { pickDistractors, seededShuffle, hashOptionSet, AntiMemorizationCache } from "./options.mjs";
+import { pickDistractors, seededShuffle, hashOptionSet } from "./options.mjs";
 
 export function buildQuestion(phraseEntry, phraseBank, sessionId = "", questionIndex = 0) {
   const seed = hashString(phraseEntry.id + sessionId + String(questionIndex));
@@ -44,7 +44,7 @@ export function buildQuestionWithValidation(phraseEntry, phraseBank, sessionId =
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     const adjustedIndex = questionIndex + attempt * 10000;
     const question = buildQuestion(phraseEntry, phraseBank, sessionId, adjustedIndex);
-    const { valid, issues } = validateQuestion(question);
+    const { valid } = validateQuestion(question);
     if (!valid) continue;
 
     if (cache) {

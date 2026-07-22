@@ -1,7 +1,7 @@
 // Auto-generated semantic distractor index for Meaning Mode — v2 rich micro-domain.
 // Source: .static-export-cache/words.json (READ-ONLY)
 // Matched against: public/data/meaning-6000.json (READ-ONLY)
-// Generated: 2026-07-10T11:29:13.694Z
+// Generated: 2026-07-22T07:23:48.786Z
 // Fields: _posFamily, _semanticGroups, _confidence, _sourceFields
 // DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-semantic-distractor-index.mjs
 
@@ -3764,6 +3764,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
+      "environment-nature",
+      "food-nutrition",
       "society-culture",
       "technology-science",
       "education-academic",
@@ -10615,6 +10617,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "food-nutrition",
       "work-economy",
       "education-academic",
       "communication-language"
@@ -27593,6 +27596,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "society-culture",
       "action-behavior",
       "work-economy",
       "education-academic",
@@ -30349,9 +30353,10 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "education-academic",
+      "technology-science",
       "communication-language"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -31101,6 +31106,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "change-process",
+      "cause-effect",
       "work-economy",
       "education-academic",
       "communication-language"
@@ -46514,10 +46521,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "communication-language",
       "work-economy",
       "education-academic"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -53990,6 +53998,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "work-economy",
+      "relation-possession",
       "time-sequence",
       "action-behavior",
       "movement-travel",
@@ -82448,9 +82458,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "work-economy",
       "cause-effect",
       "technology-science",
-      "work-economy",
       "education-academic",
       "communication-language"
     ],
@@ -84105,10 +84115,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_c634a4601204",
     "word": "married",
-    "quizMeaningZh": "从事相关工作的人",
-    "meaningZh": "从事相关工作的人",
-    "meaningDetailedZh": "从事相关工作的人",
-    "meaningSource": "curated-quiz-sense",
+    "quizMeaningZh": "已婚的；婚姻的",
+    "meaningZh": "已婚的；婚姻的",
+    "meaningDetailedZh": "已婚的；婚姻的",
+    "meaningSource": "master-lexicon",
     "posFamily": "adjective",
     "difficulty": "中级核心",
     "selectionScore": 154.45,
@@ -84152,11 +84162,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "work-economy",
-      "cause-effect",
+      "society-culture",
       "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -144154,10 +144163,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "verb",
     "_semanticGroups": [
+      "time-sequence",
       "education-academic",
       "communication-language"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -149853,10 +149863,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_71391cc5c68d",
     "word": "overwhelming",
-    "quizMeaningZh": "压倒性的",
-    "meaningZh": "压倒性的",
-    "meaningDetailedZh": "压倒性的；巨大的",
-    "meaningSource": "manual-fix",
+    "quizMeaningZh": "压倒性的；势不可挡的",
+    "meaningZh": "压倒性的；势不可挡的",
+    "meaningDetailedZh": "压倒性的；势不可挡的；巨大的",
+    "meaningSource": "master-lexicon",
     "posFamily": "adjective",
     "difficulty": "中级核心",
     "selectionScore": 141.2,
@@ -149900,11 +149910,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "action-behavior",
       "education-academic",
       "communication-language"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -154120,10 +154129,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adjective",
     "_semanticGroups": [
       "cognition-opinion",
-      "abstract-conceptual",
       "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -157731,10 +157739,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_17a4c3a9a873",
     "word": "findings",
-    "quizMeaningZh": "其他的",
-    "meaningZh": "其他的",
-    "meaningDetailedZh": "其他的；制作",
-    "meaningSource": "curated-quiz-sense",
+    "quizMeaningZh": "调查结果；发现",
+    "meaningZh": "调查结果；发现",
+    "meaningDetailedZh": "调查结果；发现（复数）",
+    "meaningSource": "master-lexicon",
     "posFamily": "noun",
     "difficulty": "中级核心",
     "selectionScore": 139.7,
@@ -157774,7 +157782,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "education-academic",
-      "technology-science",
       "change-process",
       "cause-effect"
     ],
@@ -163643,10 +163650,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_f6130e0daa04",
     "word": "adopted",
-    "quizMeaningZh": "采用的",
-    "meaningZh": "采用的",
-    "meaningDetailedZh": "采用的；收养的",
-    "meaningSource": "manual-fix",
+    "quizMeaningZh": "采用；收养",
+    "meaningZh": "采用；收养",
+    "meaningDetailedZh": "采用；收养（过去式/过去分词）",
+    "meaningSource": "master-lexicon",
     "posFamily": "verb",
     "difficulty": "中级核心",
     "selectionScore": 138.65,
@@ -187635,10 +187642,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_21a59bb72ca0",
     "word": "lasting",
-    "quizMeaningZh": "长的",
-    "meaningZh": "长的",
-    "meaningDetailedZh": "长的；时间",
-    "meaningSource": "curated-quiz-sense",
+    "quizMeaningZh": "持久的；长期的",
+    "meaningZh": "持久的；长期的",
+    "meaningDetailedZh": "持久的；长期的",
+    "meaningSource": "master-lexicon",
     "posFamily": "adjective",
     "difficulty": "中级核心",
     "selectionScore": 133.65,
@@ -187677,11 +187684,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "time-sequence",
       "education-academic",
       "communication-language"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -189692,10 +189698,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_53d4d6ff42ff",
     "word": "sales",
-    "quizMeaningZh": "销售额",
-    "meaningZh": "销售额",
-    "meaningDetailedZh": "销售额；销售",
-    "meaningSource": "manual-fix",
+    "quizMeaningZh": "销售；销售额",
+    "meaningZh": "销售；销售额",
+    "meaningDetailedZh": "销售；销售额；出售（复数）",
+    "meaningSource": "master-lexicon",
     "posFamily": "noun",
     "difficulty": "中级核心",
     "selectionScore": 133.3,
@@ -189736,11 +189742,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "work-economy",
-      "time-sequence",
-      "quantity-measurement",
       "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -212020,10 +212024,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_25a053bf003e",
     "word": "developed",
-    "quizMeaningZh": "发达的",
-    "meaningZh": "发达的",
-    "meaningDetailedZh": "发达的；先进的",
-    "meaningSource": "manual-fix",
+    "quizMeaningZh": "发达的；成熟的",
+    "meaningZh": "发达的；成熟的",
+    "meaningDetailedZh": "发达的；成熟的；开发完成的",
+    "meaningSource": "master-lexicon",
     "posFamily": "adjective",
     "difficulty": "中级核心",
     "selectionScore": 128.25,
@@ -212060,13 +212064,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "society-culture",
-      "time-sequence",
-      "cause-effect",
-      "relation-possession",
+      "technology-science",
       "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -214714,9 +214715,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "verb",
     "_semanticGroups": [
+      "education-academic",
       "society-culture",
-      "environment-nature",
-      "education-academic"
+      "environment-nature"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -221491,6 +221492,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "verb",
     "_semanticGroups": [
+      "emotion-affect",
       "health-body",
       "education-academic",
       "communication-language"
@@ -227934,8 +227936,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "relation-possession",
       "work-economy",
+      "relation-possession",
+      "movement-travel",
+      "clothing-appearance",
       "education-academic",
       "communication-language"
     ],
@@ -236839,10 +236843,10 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_578188e5c7a4",
     "word": "seating",
-    "quizMeaningZh": "座位",
-    "meaningZh": "座位",
+    "quizMeaningZh": "座位；座位安排",
+    "meaningZh": "座位；座位安排",
     "meaningDetailedZh": "座位；座位安排",
-    "meaningSource": "manual-fix",
+    "meaningSource": "master-lexicon",
     "posFamily": "noun",
     "difficulty": "中级核心",
     "selectionScore": 122.55,
@@ -236880,8 +236884,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
-      "arts-entertainment",
+      "time-sequence",
+      "action-behavior",
       "education-academic"
     ],
     "_confidence": "high",
@@ -256817,9 +256821,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "verb",
     "_semanticGroups": [
+      "education-academic",
       "health-body",
       "society-culture",
-      "education-academic",
       "communication-language"
     ],
     "_confidence": "high",
@@ -263079,6 +263083,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "quality-attribute",
       "technology-science",
       "education-academic",
       "communication-language"
@@ -268169,6 +268174,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adverb",
     "_semanticGroups": [
+      "emotion-affect",
       "abstract-conceptual",
       "communication-language",
       "education-academic"
@@ -313048,48 +313054,62 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_33254b73d3bf",
-    "word": "ass",
-    "quizMeaningZh": "驴",
-    "meaningZh": "驴",
-    "meaningDetailedZh": "“ass”常见含义为：驴；笨蛋。",
+    "wordId": "word_d7658b5fe9d8",
+    "word": "forgotten",
+    "quizMeaningZh": "被遗忘的；忘记",
+    "meaningZh": "被遗忘的；忘记",
+    "meaningDetailedZh": "被遗忘的；忘记（过去分词）",
     "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
+    "posFamily": "adjective",
+    "difficulty": "中级核心",
     "selectionScore": 106,
-    "zipfFrequency": 5,
+    "zipfFrequency": 4.58,
     "scoreBreakdown": {
-      "zipf": 5,
-      "priority": 0,
-      "gBonus": 14,
-      "evidence": 0,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 0,
+      "zipf": 4.58,
+      "priority": 2,
+      "gBonus": 19,
+      "evidence": 6,
+      "collocation": 8,
+      "difficulty": 16,
+      "source": 4,
       "rarePenalty": 0,
       "longPenalty": 0,
       "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
+      "curatedSenseBonus": 5,
+      "posBalanceBonus": 4
     },
     "tags": [
-      "speaking"
+      "listening",
+      "reading",
+      "writing"
     ],
     "topics": [
-      "社会"
+      "家庭",
+      "社会",
+      "阅读高频词",
+      "23次",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
     ],
     "sourceEvidence": [
+      "writingPriority",
+      "readingPriority",
+      "excelSourceTags",
       "ieltsUse",
       "topics",
-      "collocations"
+      "quizSenses",
+      "collocations",
+      "phraseCollocations"
     ],
     "legacy4500": false,
-    "_posFamily": "noun",
+    "_posFamily": "adjective",
     "_semanticGroups": [
+      "cognition-opinion",
       "society-culture",
+      "education-academic",
       "communication-language"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -318824,9 +318844,9 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_d21f2433ff83",
     "word": "testing",
-    "quizMeaningZh": "测试",
-    "meaningZh": "测试",
-    "meaningDetailedZh": "“testing”的核心意思是“测试；知道的行为”。本词条按“noun”使用。例句提示：该软件目前处于测试阶段。",
+    "quizMeaningZh": "测试；检验",
+    "meaningZh": "测试；检验",
+    "meaningDetailedZh": "测试；检验",
     "meaningSource": "master-lexicon",
     "posFamily": "noun",
     "difficulty": "中级核心",
@@ -318860,13 +318880,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "cognition-opinion",
-      "education-academic",
-      "technology-science",
-      "time-sequence",
-      "action-behavior"
+      "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -321413,9 +321429,9 @@ export const SEMANTIC_INDEX = [
   {
     "wordId": "word_5c657bebb29e",
     "word": "acts",
-    "quizMeaningZh": "新的",
-    "meaningZh": "新的",
-    "meaningDetailedZh": "“acts”的核心意思是“新的；书；早的”。本词条按“noun/verb”使用。例句提示：新法律起到威慑作用。",
+    "quizMeaningZh": "行动；行为；表演",
+    "meaningZh": "行动；行为；表演",
+    "meaningDetailedZh": "行动；行为；表演（复数/第三人称单数）",
     "meaningSource": "master-lexicon",
     "posFamily": "noun",
     "difficulty": "中级核心",
@@ -321449,9 +321465,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "society-culture",
-      "change-process",
-      "cause-effect",
+      "action-behavior",
+      "arts-entertainment",
       "education-academic"
     ],
     "_confidence": "high",

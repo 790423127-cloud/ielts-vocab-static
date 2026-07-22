@@ -1,0 +1,108 @@
+"use client";
+
+import { Volume2 } from "lucide-react";
+import { getPosDisplay } from "../lib/vocab/page-word-helpers.mjs";
+import {
+  formatHeadwordForDisplay,
+  formatHeadwordForSpeech
+} from "../lib/vocab/headword-format.mjs";
+
+function highlightTargetWords(sentence, words) {
+  if (!sentence) return sentence;
+  const targets = new Set(words.filter(Boolean).map((word) => String(word).toLowerCase()));
+
+  return sentence.split(/([A-Za-z]+(?:'[A-Za-z]+)?)/g).map((part, index) => {
+    if (!targets.has(part.toLowerCase())) return part;
+    return <strong key={`${part}-${index}`}>{part}</strong>;
+  });
+}
+
+function HeadwordText({ value }) {
+  const displayValue = formatHeadwordForDisplay(value) || "—";
+
+  return displayValue.split(/(\s+\/\s+)/).map((part, index) => (
+    part.includes("/")
+      ? <span className="word-slash" aria-hidden="true" key={`slash-${index}`}> / </span>
+      : part
+  ));
+}
+
+export default function WordStudyContent({
+  item,
+  audioInfo,
+  displayForms,
+  fallback,
+  speakExample,
+  speakWord
+}) {
+  const highlightedWords = [item.word, ...displayForms.map((form) => form.word)];
+  const displayHeadword = formatHeadwordForDisplay(item.word) || "—";
+  const spokenHeadword = formatHeadwordForSpeech(item.word) || "当前单词";
+  const headwordClassName = [
+    "word",
+    displayHeadword.length > 18 ? "word--long" : "",
+    displayHeadword.includes("/") ? "word--alternatives" : ""
+  ].filter(Boolean).join(" ");
+
+  return (
+    <div className="word-study-content">
+      <section className="example-box" aria-label="例句">
+        <button
+          className="hero-sound-btn example-sound-btn"
+          type="button"
+          onClick={speakExample}
+          title="播放例句发音（空格）"
+          aria-label="播放例句发音，快捷键空格"
+        >
+          <Volume2 aria-hidden="true" />
+        </button>
+        <div
+          className="example-clickable"
+          onClick={speakExample}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              speakExample();
+            }
+          }}
+        >
+          <div className="example">
+            {highlightTargetWords(fallback(item.example, "等待补充雅思例句"), highlightedWords)}
+          </div>
+          <div className="example-cn">{fallback(item.exampleCn, "等待补充例句中文翻译")}</div>
+        </div>
+      </section>
+
+      <section className="word-hero" aria-label="当前单词">
+        <button
+          className="word-clickable"
+          type="button"
+          onClick={() => speakWord(true)}
+          title="播放单词发音（Tab）"
+          aria-label={`播放单词 ${spokenHeadword} 的发音，快捷键 Tab`}
+        >
+          <span className={headwordClassName}><HeadwordText value={displayHeadword} /></span>
+        </button>
+        <div className="word-sub">
+          <span className="phonetic">{fallback(item.phonetic || audioInfo.phonetic, "等待音标")}</span>
+          <button
+            className="word-pronunciation-button"
+            type="button"
+            onClick={() => speakWord(true)}
+            aria-label="播放当前单词发音"
+            title="播放单词发音"
+          >
+            <Volume2 aria-hidden="true" />
+          </button>
+          <span className="pos">{getPosDisplay(item.pos)}</span>
+        </div>
+      </section>
+
+      <div className="meaning-block">
+        <div className="meaning-primary">{fallback(item.meaning, "等待补充中文释义")}</div>
+      </div>
+    </div>
+  );
+}

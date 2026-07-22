@@ -2,7 +2,7 @@ import { buildSpellingCandidatesWithBreakdown } from "./candidate-builder.mjs";
 import { shouldAllowRepeatedAnswerCandidates } from "./candidate-breakdown.mjs";
 import { normalizeSpellingKey } from "./error-bank-dedupe.mjs";
 import { enrichPersonalWrongBreakdown } from "./personal-wrong-progress.mjs";
-import { getScopeStorageKey, normalizeSpellingScope } from "./spelling-scope.mjs";
+import { normalizeSpellingScope } from "./spelling-scope.mjs";
 
 export const CANDIDATE_CACHE_KEY_PREFIX = "ielts_spelling_candidate_cache_v2";
 

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { isBrushableWord } from "../../app/lib/vocab/word-study-eligibility.mjs";
 
 const browserErrorsByPage = new WeakMap();
 
@@ -36,7 +37,9 @@ test("home loads the full lexicon, changes word, and switches to phrases", async
   const vocabResponse = await page.request.get("/data/words.json");
   expect(vocabResponse.ok()).toBeTruthy();
   const vocabPayload = await vocabResponse.json();
-  const expectedCount = Number(vocabPayload?.count || vocabPayload?.words?.length || 0);
+  const expectedCount = Array.isArray(vocabPayload?.words)
+    ? vocabPayload.words.filter(isBrushableWord).length
+    : 0;
   expect(expectedCount).toBeGreaterThan(10_000);
 
   const wordMode = page.getByRole("tab", { name: /单词刷词/ });
@@ -45,6 +48,9 @@ test("home loads the full lexicon, changes word, and switches to phrases", async
   const currentWord = page.locator(".word-flash-shell .word");
   await expect(currentWord).toBeVisible();
   await expect(currentWord).not.toHaveText(/^(正在读取词库|完成|—)$/);
+  for (const sectionName of ["变形", "词族", "常见搭配", "短语搭配"]) {
+    await expect(page.getByRole("region", { name: sectionName, exact: true })).toBeVisible();
+  }
   const firstWord = (await currentWord.textContent())?.trim();
   expect(firstWord).toBeTruthy();
 
@@ -55,6 +61,24 @@ test("home loads the full lexicon, changes word, and switches to phrases", async
   await phraseMode.click();
   await expect(phraseMode).toHaveAttribute("aria-selected", "true");
   await expect(page.locator(".phrase-text")).toBeVisible({ timeout: 30_000 });
+});
+
+test("plural-reference searches open the base card without double plurals", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText("12,324 词", { timeout: 45_000 });
+
+  await page.locator("summary.top-pill").filter({ hasText: "词库管理" }).click();
+  const search = page.getByPlaceholder("搜索单词并跳转");
+  const currentWord = page.locator(".word-flash-shell .word");
+
+  for (const [plural, base] of [["forces", "force"], ["questions", "question"]]) {
+    await search.fill(plural);
+    const result = page.locator(".word-search-result");
+    await expect(result).toContainText(`${plural} 是词形参考，将进入基词 ${base}`);
+    await result.getByRole("button", { name: `跳转到 ${base}` }).click();
+    await expect(currentWord).toHaveText(base);
+    await expect(page.getByText(`${plural}es`, { exact: true })).toHaveCount(0);
+  }
 });
 
 test("meaning practice starts with four answers", async ({ page }) => {

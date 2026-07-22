@@ -23,8 +23,8 @@ const actions = actionFiles.flatMap((name) => parseTsv(path.join(DATA_DIR, name)
 const byWord = new Map(actions.map((action) => [action.word, action]));
 
 test("second review covers the complete exported candidate queue", () => {
-  assert.equal(actions.length, 225);
-  assert.equal(actions.filter((action) => action.action === "delete").length, 121);
+  assert.equal(actions.length, 226);
+  assert.equal(actions.filter((action) => action.action === "delete").length, 122);
   assert.equal(actions.filter((action) => action.action === "repair").length, 104);
   assert.equal(new Set(actions.map((action) => action.word)).size, actions.length);
 });

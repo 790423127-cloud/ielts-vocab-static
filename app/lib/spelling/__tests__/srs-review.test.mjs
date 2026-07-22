@@ -91,7 +91,7 @@ test("spelling page persists and restores the current word for each active batch
   assert.match(source, /navigationWordId/);
   assert.match(source, /saved\?\.navigationWordId \|\| saved\?\.wordId/);
   assert.match(source, /restoringPositionRef\.current/);
-  assert.match(source, /spelling\.navigateToWord\(savedWordId\)/);
+  assert.match(source, /navigateToWord\(savedWordId\)/);
 });
 
 test("batch selection uses an in-page picker instead of a fragile native select", () => {

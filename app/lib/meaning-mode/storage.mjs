@@ -41,10 +41,6 @@ export function loadProgress() {
  * Save progress — now a no-op; adaptive state saves on each word update.
  * Kept for backward compat with any external callers.
  */
-export function saveProgress(progress) {
-  // No-op: adaptive state handles persistence internally
-}
-
 /**
  * Mark a word with a status. Updates adaptive state.
  */

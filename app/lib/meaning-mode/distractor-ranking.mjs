@@ -430,7 +430,6 @@ export function preallocateGlobalCombinations(wordBank) {
     if (count > MAX_ABS) overLimit.push({ wordId: id, count });
   }
 
-  const allDistractorIds = [...freqStats.keys()];
   const totalSlots = results.reduce((s, r) => s + r.distractors.length, 0);
 
   return {

@@ -28,9 +28,12 @@ Thumbs.db
 playwright-report/
 test-results/
 blob-report/
+.playwright-cli/
+output/
 
 # audit / local work products (do not ship)
 reports/
+backup/
 backups/
 work/
 scripts/archive/

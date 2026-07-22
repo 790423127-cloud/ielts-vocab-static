@@ -194,7 +194,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const [personalWrongInput, setPersonalWrongInput] = useState("");
   const [personalWrongRecords, setPersonalWrongRecords] = useState(() => readPersonalWrongBookRecords());
   const [personalWrongHydrated, setPersonalWrongHydrated] = useState(false);
-  const [idictationDataRevision, setIdictationDataRevision] = useState(0);
+  const [idictationDataReady, setIdictationDataReady] = useState(false);
   const learningActivityRef = useRef(createLearningActivity());
   const sessionStatsRef = useRef(sessionStats);
   const spellingUndoStackRef = useRef([]);
@@ -326,7 +326,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     let cancelled = false;
     ensureIdictationFrequencyData()
       .then(() => {
-        if (!cancelled) setIdictationDataRevision((value) => value + 1);
+        if (!cancelled) setIdictationDataReady(true);
       })
       .catch(() => {});
 
@@ -437,22 +437,22 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   );
 
   const idictationGroupOptions = useMemo(
-    () => idictationSourceKey ? listIdictationGroupOptions(idictationSourceKey) : [],
-    [idictationSourceKey, idictationDataRevision]
+    () => idictationDataReady && idictationSourceKey ? listIdictationGroupOptions(idictationSourceKey) : [],
+    [idictationDataReady, idictationSourceKey]
   );
 
   const idictationBatchSelection = useMemo(
-    () => idictationSourceKey
+    () => idictationDataReady && idictationSourceKey
       ? selectIdictationBatch(idictationSourceKey, idictationPrefs)
       : { entries: [], batchIndex: 0, batchCount: 1, batchEntryCount: 0, totalInCategory: 0 },
-    [idictationSourceKey, idictationPrefs, idictationDataRevision]
+    [idictationDataReady, idictationSourceKey, idictationPrefs]
   );
 
   const idictationBatchOptions = useMemo(
-    () => idictationSourceKey
+    () => idictationDataReady && idictationSourceKey
       ? listIdictationBatchOptions(idictationSourceKey, idictationBatchSelection.groupKey)
       : [],
-    [idictationSourceKey, idictationBatchSelection.groupKey, idictationDataRevision]
+    [idictationDataReady, idictationSourceKey, idictationBatchSelection.groupKey]
   );
 
   const activeBatchSelection = practiceSource === "personal_wrong_book"
@@ -962,9 +962,11 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     setErrorAnalysisVisible,
     setActionNotice
   });
+  const spellingReady = spelling.ready;
+  const navigateToWord = spelling.navigateToWord;
 
   useEffect(() => {
-    if (!spelling.ready || !activeBatchId || !batchNavigationWordIds.length || restoredPositionBatchRef.current === activeBatchId) return;
+    if (!spellingReady || !activeBatchId || !batchNavigationWordIds.length || restoredPositionBatchRef.current === activeBatchId) return;
 
     const saved = readSpellingPosition(scope, activeBatchId);
     const rawSavedWordId = String(saved?.navigationWordId || saved?.wordId || "").trim();
@@ -986,7 +988,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     restoredPositionBatchRef.current = activeBatchId;
     let cancelled = false;
     restoringPositionRef.current = true;
-    spelling.navigateToWord(savedWordId).then((result) => {
+    navigateToWord(savedWordId).then((result) => {
       if (!cancelled && result?.currentWord) {
         setErrorAnalysisVisible(false);
       }
@@ -998,10 +1000,10 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       cancelled = true;
       restoringPositionRef.current = false;
     };
-  }, [spelling.ready, activeBatchId, batchNavigationWordIds, scope, current?.wordId, spelling.navigateToWord, practiceSource, personalWrongNavigationUnits]);
+  }, [spellingReady, navigateToWord, activeBatchId, batchNavigationWordIds, scope, current, restoredPositionBatchRef, restoringPositionRef, practiceSource, personalWrongNavigationUnits]);
 
   useEffect(() => {
-    if (!spelling.ready || !activeBatchId || restoredPositionBatchRef.current !== activeBatchId || restoringPositionRef.current || !current) return;
+    if (!spellingReady || !activeBatchId || restoredPositionBatchRef.current !== activeBatchId || restoringPositionRef.current || !current) return;
     const wordId = resolveSpellingWordKey(current);
     if (!wordId) return;
     const navigationWordId = practiceSource === "personal_wrong_book"
@@ -1016,7 +1018,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       category: categoryPrefs,
       savedAt: Date.now()
     });
-  }, [spelling.ready, activeBatchId, current?.wordId, currentBatchIndex, scope, practiceSource, categoryPrefs, personalWrongNavigationUnits]);
+  }, [spellingReady, activeBatchId, current, currentBatchIndex, scope, restoredPositionBatchRef, restoringPositionRef, practiceSource, categoryPrefs, personalWrongNavigationUnits]);
 
   const isBatchComplete = sessionTotal > 0 && completedCount >= sessionTotal && remainingCount === 0;
   const batchWrongWordCount = Math.max(0, Number(progress.repairedCount || 0));
@@ -1659,7 +1661,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
             idictationGroupOptions,
             idictationBatchOptions,
             patchIdictationPrefs,
-            idictationPrefs,
             srsBatchOptions,
             srsBatchSelection,
             errorBankBatchOptions,

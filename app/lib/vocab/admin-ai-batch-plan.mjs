@@ -5,6 +5,19 @@ import {
   isMissingAiFields,
   isMissingClassification
 } from "./page-word-helpers.mjs";
+import { isInflectedReferenceWord } from "./word-study-eligibility.mjs";
+
+export const PAID_AI_LIMITS = Object.freeze({
+  clean: 100,
+  generateMissing: 100,
+  oneByOne: 20,
+  slow: 10,
+  wrongRepair: 20,
+  fast: 100,
+  classification: 100,
+  batchSize: 10,
+  concurrency: 1
+});
 
 function chunkTargets(targets, batchSize) {
   const chunks = [];
@@ -26,31 +39,38 @@ function buildPlan(targets, { batchSize, concurrency }) {
   };
 }
 
-function selectIndexedWords(words, predicate) {
-  return words.reduce((targets, w, i) => {
-    if (predicate(w)) targets.push({ w, i });
-    return targets;
-  }, []);
+function isPaidAiEligibleWord(word) {
+  return Boolean(word?.word && String(word.word).trim()) && !isInflectedReferenceWord(word);
+}
+
+function selectIndexedWords(words, predicate, limit = Infinity) {
+  const targets = [];
+  for (let i = 0; i < words.length && targets.length < limit; i += 1) {
+    const w = words[i];
+    if (isPaidAiEligibleWord(w) && predicate(w)) targets.push({ w, i });
+  }
+  return targets;
 }
 
 export function buildCleanWordsPlan(words) {
-  const targets = words.reduce((result, word, i) => {
-    if (word?.word && word.word.trim()) {
-      result.push({ id: String(i), text: word.word, i });
-    }
-    return result;
-  }, []);
+  const targets = [];
+  for (let i = 0; i < words.length && targets.length < PAID_AI_LIMITS.clean; i += 1) {
+    const word = words[i];
+    if (isPaidAiEligibleWord(word)) targets.push({ id: String(i), text: word.word, i });
+  }
 
-  return buildPlan(targets, { batchSize: 100, concurrency: 5 });
+  return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
 export function buildGenerateMissingPlan(words, options = {}) {
   const repairWrong = options.repairWrong !== false;
   const onlyWrong = Boolean(options.onlyWrong);
+  const maxTargets = Math.max(1, Number(options.maxTargets || PAID_AI_LIMITS.generateMissing));
   const wrongTargets = [];
   const missingTargets = [];
 
   words.forEach((w, i) => {
+    if (!isPaidAiEligibleWord(w)) return;
     const missing = !isCompleteAiWord(w);
     const wrong = repairWrong && isLikelyWrongAiWord(w);
     const target = { w, i, missing, wrong };
@@ -62,8 +82,8 @@ export function buildGenerateMissingPlan(words, options = {}) {
     }
   });
 
-  const targets = onlyWrong ? wrongTargets : [...wrongTargets, ...missingTargets];
-  const basePlan = buildPlan(targets, { batchSize: 20, concurrency: 5 });
+  const targets = (onlyWrong ? wrongTargets : [...wrongTargets, ...missingTargets]).slice(0, maxTargets);
+  const basePlan = buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 
   return {
     ...basePlan,
@@ -75,7 +95,10 @@ export function buildGenerateMissingPlan(words, options = {}) {
 }
 
 export function buildOneByOneCompletionPlan(words) {
-  const targets = words.reduce((result, w, i) => {
+  const targets = [];
+  for (let i = 0; i < words.length && targets.length < PAID_AI_LIMITS.oneByOne; i += 1) {
+    const w = words[i];
+    if (!isPaidAiEligibleWord(w)) continue;
     const target = {
       w,
       i,
@@ -85,12 +108,8 @@ export function buildOneByOneCompletionPlan(words) {
       truncated: hasHeadwordRepair(w.word)
     };
 
-    if (target.missing || target.unclassified || target.wrong || target.truncated) {
-      result.push(target);
-    }
-
-    return result;
-  }, []);
+    if (target.missing || target.unclassified || target.wrong || target.truncated) targets.push(target);
+  }
 
   return { targets };
 }
@@ -98,23 +117,24 @@ export function buildOneByOneCompletionPlan(words) {
 export function buildSlowCompletionPlan(words) {
   const targets = selectIndexedWords(
     words,
-    (word) => isMissingAiFields(word) || isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word)
+    (word) => isMissingAiFields(word) || isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word),
+    PAID_AI_LIMITS.slow
   );
 
-  return buildPlan(targets, { batchSize: 10, concurrency: 1 });
+  return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
 export function buildWrongRepairPlan(words) {
-  const targets = selectIndexedWords(words, isLikelyWrongAiWord);
-  return buildPlan(targets, { batchSize: 10, concurrency: 2 });
+  const targets = selectIndexedWords(words, isLikelyWrongAiWord, PAID_AI_LIMITS.wrongRepair);
+  return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
 export function buildFastCompletionPlan(words) {
-  const targets = selectIndexedWords(words, isMissingAiFields);
-  return buildPlan(targets, { batchSize: 100, concurrency: 5 });
+  const targets = selectIndexedWords(words, isMissingAiFields, PAID_AI_LIMITS.fast);
+  return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
 export function buildClassificationPlan(words) {
-  const targets = selectIndexedWords(words, isMissingClassification);
-  return buildPlan(targets, { batchSize: 20, concurrency: 5 });
+  const targets = selectIndexedWords(words, isMissingClassification, PAID_AI_LIMITS.classification);
+  return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }

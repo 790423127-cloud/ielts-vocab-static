@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  PAID_AI_LIMITS,
   buildClassificationPlan,
   buildCleanWordsPlan,
   buildFastCompletionPlan,
@@ -105,15 +106,39 @@ test("completion plans keep their distinct target policies", () => {
   assert.deepEqual(buildClassificationPlan(words).targets.map(({ i }) => i), [2]);
 });
 
-test("clean plan filters blank headwords and calculates batch workers", () => {
+test("paid plans exclude inflected references", () => {
+  const reference = completeWord("questions", {
+    meaning: "",
+    entryType: "inflected-form",
+    studyMode: "reference",
+    baseWord: "question",
+    relationType: "plural"
+  });
+  const normal = completeWord("cashless", { meaning: "" });
+  const plan = buildFastCompletionPlan([reference, normal]);
+
+  assert.deepEqual(plan.targets.map(({ w }) => w.word), ["cashless"]);
+});
+
+test("clean and completion plans cap paid targets and use small single-worker chunks", () => {
   const words = Array.from({ length: 205 }, (_, i) => ({ word: `word-${i}` }));
   words[1] = { word: "  " };
   words[2] = { word: "" };
 
-  const plan = buildCleanWordsPlan(words);
+  const cleanPlan = buildCleanWordsPlan(words);
+  assert.equal(cleanPlan.targets.length, PAID_AI_LIMITS.clean);
+  assert.deepEqual(cleanPlan.chunks.map((chunk) => chunk.length), Array(10).fill(10));
+  assert.equal(cleanPlan.workerCount, PAID_AI_LIMITS.concurrency);
+  assert.deepEqual(cleanPlan.targets[1], { id: "3", text: "word-3", i: 3 });
 
-  assert.equal(plan.targets.length, 203);
-  assert.deepEqual(plan.chunks.map((chunk) => chunk.length), [100, 100, 3]);
-  assert.equal(plan.workerCount, 3);
-  assert.deepEqual(plan.targets[1], { id: "3", text: "word-3", i: 3 });
+  const fastPlan = buildFastCompletionPlan(words);
+  assert.equal(fastPlan.targets.length, PAID_AI_LIMITS.fast);
+  assert.equal(fastPlan.chunks.every((chunk) => chunk.length <= PAID_AI_LIMITS.batchSize), true);
+  assert.equal(fastPlan.workerCount, PAID_AI_LIMITS.concurrency);
+});
+
+test("one-by-one paid mode has a bounded target count", () => {
+  const words = Array.from({ length: 50 }, (_, index) => ({ word: `entry-${index}` }));
+  const plan = buildOneByOneCompletionPlan(words);
+  assert.equal(plan.targets.length, PAID_AI_LIMITS.oneByOne);
 });

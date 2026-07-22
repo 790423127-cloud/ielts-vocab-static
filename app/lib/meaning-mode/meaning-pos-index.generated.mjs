@@ -1,5 +1,5 @@
 // Auto-generated: meaning-6000 wordId -> posFamily mapping
-// Generated 2026-07-10T11:29:13.710Z
+// Generated 2026-07-22T07:23:48.806Z
 export const MEANING_POS_INDEX = Object.freeze({
   "word_5d80236c4600": "adjective",
   "word_0e57569bdb14": "adverb",
@@ -5585,7 +5585,7 @@ export const MEANING_POS_INDEX = Object.freeze({
   "word_d5186986124a": "noun",
   "word_5251ac00b446": "adjective",
   "word_a091e133b9e6": "adjective",
-  "word_33254b73d3bf": "noun",
+  "word_d7658b5fe9d8": "adjective",
   "word_excel_e49a417471c3": "adjective",
   "word_c5af29182711": "adjective",
   "word_1e48978a0508": "verb",

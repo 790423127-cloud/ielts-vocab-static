@@ -14,8 +14,6 @@ const LEGACY_IMPORT_FLAG = "ielts_spelling_legacy_error_import_v3_restore";
 const RECOVERY_VERSION = "v6-spelling-key-dedupe-prune";
 const RECOVERY_VERSION_KEY = "ielts_spelling_error_recovery_version";
 
-const SEVERITY_PRIORITY = { low: 1, medium: 2, high: 3 };
-
 function severityForWrongCount(count) {
   if (count >= 4) return "high";
   if (count >= 2) return "medium";
@@ -133,7 +131,7 @@ function pickCanonicalEntry(entry = {}, indexes = {}) {
   return findRestoredEntry(canonical, indexes) || indexes.byAnswer.get(canonical) || null;
 }
 
-function targetFromEntry(entry = {}, indexes = {}, fromWordId = "") {
+function targetFromEntry(entry = {}, fromWordId = "") {
   const wordId = getWordId(entry);
   return {
     wordId,
@@ -150,7 +148,7 @@ export function resolveErrorBankTarget(error = {}, indexes = {}) {
   const direct = indexes.byWordId.get(error.wordId);
   if (direct) {
     if (isRestoredTruncationEntry(direct)) {
-      return targetFromEntry(direct, indexes, error.wordId);
+      return targetFromEntry(direct, error.wordId);
     }
 
     if (direct.displacedFrom) {
@@ -177,7 +175,7 @@ export function resolveErrorBankTarget(error = {}, indexes = {}) {
       };
     }
 
-    return targetFromEntry(direct, indexes, error.wordId);
+    return targetFromEntry(direct, error.wordId);
   }
 
   const aliasCandidates = [

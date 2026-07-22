@@ -1,4 +1,4 @@
-﻿import test from "node:test";
+import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
@@ -176,16 +176,16 @@ test("phrase flashcard restores before saving and debounces navigation persisten
   assert.doesNotMatch(phrasePanelSource, /sessionRestoredRef/);
 });
 
-test("word flashcard playback shortcuts are scoped to word mode only", () => {
+test("word flashcard keyboard shortcuts are scoped to word mode only", () => {
   const pageSource = fs.readFileSync(path.join(root, "app/page.jsx"), "utf8");
   const speechHookSource = fs.readFileSync(path.join(root, "app/hooks/useHomeWordSpeech.js"), "utf8");
   const navHook = fs.readFileSync(path.join(root, "app/hooks/useWordFlashNavigation.js"), "utf8");
   assert.match(navHook, /if \(flashStudyMode !== "word"\) return;/);
   assert.match(navHook, /speakWordRef\.current\(true\)/);
-  assert.match(navHook, /speakExampleRef\.current\(\)/);
+  assert.match(navHook, /nextWordRef\.current\(\)/);
   assert.match(navHook, /\}, \[flashStudyMode\]\);/);
   assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakWordRef/);
-  assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakExampleRef/);
+  assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*nextWordRef/);
   assert.match(pageSource, /useHomeWordSpeech/);
   assert.match(pageSource, /\{ text: item\.example, kind: "sentence" \}/);
   assert.doesNotMatch(pageSource, /nextItem\?\.example/);
@@ -213,9 +213,9 @@ test("rapid flashcard navigation coalesces persistence and cancels stale warmup 
 
   assert.match(sessionHook, /sessionPersistTimerRef = useRef\(null\)/);
   assert.match(sessionHook, /pendingSessionPersistRef = useRef\(null\)/);
-  assert.match(sessionHook, /function queueWordFlashSessionPersist/);
+  assert.match(sessionHook, /const queueWordFlashSessionPersist = useCallback/);
   assert.match(sessionHook, /window\.setTimeout\(\(\) => \{\s*const pending = pendingSessionPersistRef\.current/);
-  assert.match(sessionHook, /function flushQueuedWordFlashSessionPersist/);
+  assert.match(sessionHook, /const flushQueuedWordFlashSessionPersist = useCallback/);
   assert.match(sessionHook, /queueWordFlashSessionPersist\(\)/);
   assert.match(pageSource, /useWordFlashSession/);
   assert.doesNotMatch(pageSource, /function nextWord\(\)[\s\S]*?persistWordFlashSessionNow\(nextIndex, latest\.filter, latest\.words\);[\s\S]*?function prevWord/);

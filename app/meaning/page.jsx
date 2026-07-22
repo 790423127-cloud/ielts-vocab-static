@@ -2,14 +2,14 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { loadAdaptiveState, clearProgress, migrateFromV1, getAdaptiveStats } from "../lib/meaning-mode/storage.mjs";
-import { speakWord, speakExample, stop, getVoiceInfo } from "../lib/meaning-mode/audio.mjs";
+import { speakWord, speakExample, stop } from "../lib/meaning-mode/audio.mjs";
 import { FEEDBACK_REASONS, saveFeedback, createFeedbackPayload } from "../lib/meaning-mode/quality-feedback.mjs";
 import StudyRangeSummary from "../components/StudyRangeSummary.jsx";
 import StableLoadingState from "../components/StableLoadingState.jsx";
 import styles from "./meaning.module.css";
 import { getPosFamilyDisplay } from "../lib/vocab/pos-display.mjs";
 
-// 训练子集（6000），与主词库 13808 分开计数。见 PRODUCT.md。
+// 训练子集（6000），与主词库动态物理总数分开计数。见 PRODUCT.md。
 const WORD_BANK_URL = "/data/meaning-6000.json";
 
 let meaningExampleRuntime = null;
@@ -400,7 +400,7 @@ export default function MeaningPage() {
     const prog = stats || runtime?.getCombinedProgress();
     return (
       <main className={styles.page}>
-        <TopBar stats={stats} engine={engine} />
+        <TopBar stats={stats} />
         <StudyRangeSummary
           mode="选择题"
           title="看英文选中文"
@@ -411,7 +411,7 @@ export default function MeaningPage() {
         <div className={styles.centerWrap}>
           <h2 className={styles.readyTitle}>看词选意思</h2>
           <p className={styles.readyDesc}>看英文单词，从 4 个选项中选出正确的中文意思</p>
-          <CompactStats stats={prog} engine={engine} />
+          <CompactStats stats={prog} />
           <button
             className={styles.startBtn}
             onClick={startQuestion}
@@ -432,7 +432,7 @@ export default function MeaningPage() {
   if (phase === "question" && question) {
     return (
       <main className={styles.page}>
-        <TopBar stats={stats} engine={engine} question={question} />
+        <TopBar stats={stats} />
         <StudyRangeSummary
           mode="选择题"
           title="看英文选中文"
@@ -457,7 +457,7 @@ export default function MeaningPage() {
     const example = result.correct ? getExampleFromQuestion(question) : null;
     return (
       <main className={styles.page}>
-        <TopBar stats={stats} engine={engine} question={question} result={result} />
+        <TopBar stats={stats} />
         <StudyRangeSummary
           mode="选择题"
           title="看英文选中文"
@@ -484,9 +484,7 @@ export default function MeaningPage() {
             feedbackNote={feedbackNote}
             setFeedbackNote={setFeedbackNote}
             feedbackSent={feedbackSent}
-            setFeedbackSent={setFeedbackSent}
             copySuccess={copySuccess}
-            setCopySuccess={setCopySuccess}
             handleSubmitFeedback={handleSubmitFeedback}
             handleCopyDiagnostic={handleCopyDiagnostic}
           />
@@ -500,10 +498,10 @@ export default function MeaningPage() {
   if (phase === "done") {
     return (
       <main className={styles.page}>
-        <TopBar stats={stats} engine={engine} />
+        <TopBar stats={stats} />
         <div className={styles.centerWrap}>
           <h2 className={styles.readyTitle}>本轮完成！</h2>
-          <CompactStats stats={stats} engine={engine} />
+          <CompactStats stats={stats} />
           <button className={styles.startBtn} onClick={handleReset}>重新开始</button>
           <a href="/" className={styles.resetBtn}>返回首页</a>
         </div>
@@ -516,11 +514,7 @@ export default function MeaningPage() {
 
 // ─── Sub-components ───
 
-function TopBar({ stats, engine, question, result }) {
-  const sourceLabel = question && question._selectedBecause
-    ? { "new-word": "新词", "weak-reinforcement": "错题强化", "due-review": "到期复习", "fallback-learning": "巩固复习" }[question._selectedBecause]
-    : "";
-
+function TopBar({ stats }) {
   return (
     <div className={styles.topbar}>
       <a href="/" className={styles.pillLink}>← 首页</a>
@@ -581,7 +575,7 @@ function QuestionCard({ question, onSelect, onPlayWord }) {
   );
 }
 
-function ResultCard({ question, selected, result, example, onPlayWord, onPlayExample, onNext, nextDisabled = false, nextLabel = "下一题 →", feedbackRef, showFeedback, setShowFeedback, feedbackReason, setFeedbackReason, feedbackNote, setFeedbackNote, feedbackSent, setFeedbackSent, copySuccess, setCopySuccess, handleSubmitFeedback, handleCopyDiagnostic }) {
+function ResultCard({ question, selected, result, example, onPlayWord, onPlayExample, onNext, nextDisabled = false, nextLabel = "下一题 →", feedbackRef, showFeedback, setShowFeedback, feedbackReason, setFeedbackReason, feedbackNote, setFeedbackNote, feedbackSent, copySuccess, handleSubmitFeedback, handleCopyDiagnostic }) {
   const selMeaning = typeof selected === "string" ? selected : selected.meaningZh;
   const selOption = question.options ? question.options.find(o => o.meaningZh === selMeaning) : null;
 
@@ -794,7 +788,7 @@ function ResultCard({ question, selected, result, example, onPlayWord, onPlayExa
   );
 }
 
-function CompactStats({ stats, engine }) {
+function CompactStats({ stats }) {
   if (!stats) return null;
   return (
     <div className={styles.compactStats}>

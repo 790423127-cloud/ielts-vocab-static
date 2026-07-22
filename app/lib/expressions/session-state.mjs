@@ -10,7 +10,7 @@ export function createSessionState() {
   };
 }
 
-export function recordQuestion(sessionState, { phraseId, correctOptionIndex, optionHash }) {
+export function recordQuestion(sessionState, { correctOptionIndex, optionHash }) {
   sessionState.questionOrdinal++;
   if (correctOptionIndex !== undefined && correctOptionIndex !== null) {
     sessionState.recentCorrectIndices.push(correctOptionIndex);

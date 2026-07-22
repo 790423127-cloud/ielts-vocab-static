@@ -54,7 +54,7 @@ export function shouldAllowRepeatedAnswerCandidates(options = {}, words = []) {
   return (Array.isArray(words) ? words : []).some((entry) => Number(entry?.personalWrong?.repeatTotal || 0) > 1);
 }
 
-function duplicateKeyForSession(candidate = {}, options = {}, allowRepeatedAnswers = false) {
+function duplicateKeyForSession(candidate = {}, allowRepeatedAnswers = false) {
   if (allowRepeatedAnswers) {
     return String(candidate.wordId || "").trim();
   }
@@ -120,7 +120,7 @@ export function analyzeCandidateBreakdown(words = [], flashcardState = {}, optio
       continue;
     }
 
-    const duplicateKey = duplicateKeyForSession(normalized, options, allowRepeatedAnswers);
+    const duplicateKey = duplicateKeyForSession(normalized, allowRepeatedAnswers);
     if (duplicateKey && seenAnswers.has(duplicateKey)) {
       filteredByDuplicate += 1;
       continue;

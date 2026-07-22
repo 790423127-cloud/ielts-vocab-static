@@ -130,6 +130,7 @@
   }
 
   function matches(item) {
+    if (item && item.entryType === "inflected-form" && item.studyMode === "reference") return false;
     var st = getStatus(item);
     if (filter.type === "everything") return true;
     if (filter.type === "status") {

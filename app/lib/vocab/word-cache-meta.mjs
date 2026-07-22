@@ -71,7 +71,11 @@ export function isWordCacheCurrent(cacheMeta = {}, apiMeta = {}) {
   );
 }
 
-export function mergeWordContentWithUserState(freshWords = [], cachedWords = []) {
+export function mergeWordContentWithUserState(
+  freshWords = [],
+  cachedWords = [],
+  { includePersonalSupplements = true } = {}
+) {
   const cachedById = new Map();
   for (const entry of Array.isArray(cachedWords) ? cachedWords : []) {
     const key = wordIdentity(entry);
@@ -88,6 +92,8 @@ export function mergeWordContentWithUserState(freshWords = [], cachedWords = [])
     }
     return merged;
   });
+
+  if (!includePersonalSupplements) return mergedWords;
 
   const freshIds = new Set(mergedWords.map(wordIdentity).filter(Boolean));
   for (const cached of Array.isArray(cachedWords) ? cachedWords : []) {

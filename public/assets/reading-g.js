@@ -332,6 +332,7 @@
 
   function matches(item) {
     if (!item) return false;
+    if (item.entryType === "inflected-form" && item.studyMode === "reference") return false;
     var st = getUiStatus(item);
     var fav = isFavorite(item);
     var layers = item.layers || [];

@@ -31,13 +31,6 @@ function writeJson(file, data) {
   writeFileSync(file, JSON.stringify(data, null, 2), "utf-8");
 }
 
-function safeFileName(value) {
-  return String(value || "")
-    .replace(/[\\/:*?"<>|#%&{}$!@`'=+]/g, "_")
-    .replace(/\s+/g, "_")
-    .slice(0, 120);
-}
-
 function collectAllowedAudioKeys(words) {
   const keys = new Set();
 

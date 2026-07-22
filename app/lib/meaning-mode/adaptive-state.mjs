@@ -129,7 +129,7 @@ export function transitionWrong(state) {
 /**
  * Check if word is ready for review (time has elapsed + spacing constraints).
  */
-export function isReadyForReview(state, questionsSinceLastShown, questionOrdinal) {
+export function isReadyForReview(state, questionsSinceLastShown) {
   if (!state) return true; // new word, always ready
 
   const now = Date.now();

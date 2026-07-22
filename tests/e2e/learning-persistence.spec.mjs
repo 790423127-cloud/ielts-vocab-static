@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { isBrushableWord } from "../../app/lib/vocab/word-study-eligibility.mjs";
 
 const PERSONAL_WRONG_WORD = "codexpersistprobe";
 
@@ -6,7 +7,9 @@ async function waitForFullWordLexicon(page) {
   const response = await page.request.get("/data/words.json");
   expect(response.ok()).toBeTruthy();
   const payload = await response.json();
-  const expectedCount = Number(payload?.count || payload?.words?.length || 0);
+  const expectedCount = Array.isArray(payload?.words)
+    ? payload.words.filter(isBrushableWord).length
+    : 0;
   expect(expectedCount).toBeGreaterThan(10_000);
 
   await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText(
@@ -87,7 +90,7 @@ test("home learning status survives reload through IndexedDB", async ({ page }) 
 
   await page.reload();
   await waitForFullWordLexicon(page);
-  await page.getByText("词库面板", { exact: true }).click();
+  await page.locator("summary.top-pill").filter({ hasText: "词库管理" }).click();
   await page.locator("header.topbar").getByRole("button", { name: "不熟", exact: true }).click();
 
   await expect(currentWord).toHaveText(markedWord, { timeout: 30_000 });

@@ -20,6 +20,8 @@ export default function VocabAdminToolsPanel({
   batchInfo = "",
   duplicateInfo = "",
   isExternalIdictationItem = false,
+  summaryLabel = "工具",
+  showAiTools = true,
   actions = {}
 }) {
   const a = actions;
@@ -33,10 +35,10 @@ export default function VocabAdminToolsPanel({
                   onToolsOpenChange?.(event.currentTarget.open);
                 }}
               >
-                <summary className="top-pill">工具</summary>
+                <summary className="top-pill">{summaryLabel}</summary>
                 <div className="menu-panel">
-                  <h2 className="panel-title">工具</h2>
-                  <p className="panel-desc">本地工具默认推荐；AI工具已折叠，点击会二次确认扣费。</p>
+                  <h2 className="panel-title">{summaryLabel}</h2>
+                  <p className="panel-desc">本地管理工具默认推荐；危险操作继续保留确认与备份提示。</p>
     
                   <div className="action-grid">
                     <label className="file-label" htmlFor="fileInput">上传 TXT</label>
@@ -143,18 +145,22 @@ export default function VocabAdminToolsPanel({
                         <p className="ai-warning">还没有本地修改记录。执行整理、修复、删除、清理单词符号后，这里会显示改了哪些词；可以撤回全部，也可以只撤回某一条。</p>
                       )}
                     </details>
+                    <div className="ai-tool-explain">
+                      <p><strong>本地规整规则：</strong>只使用已经人工审核并写入的 forms、wordFamily、baseWord、baseWordId 和 reference 关系。</p>
+                      <p>不按 s/es、ed、ing、er、est、en、ind 或其他后缀猜词根；保留词条 ID、学习状态、收藏和复习进度。派生词扫描只列人工审核候选，不自动删除。</p>
+                    </div>
                     <div className="action-grid">
-                      <button className="small-btn local-main" disabled={loading} onClick={a.localOptimizeWordList} title="本地整理词表 → 本地去重 → 本地归并词形">
-                        一键本地优化
+                      <button className="small-btn local-main" disabled={loading} onClick={a.localOptimizeWordList} title="规范格式 → 完全同名去重 → 按已存元数据校验人工词形关系">
+                        安全本地规整（推荐）
                       </button>
                       <button className="small-btn" disabled={loading} onClick={a.localCleanWordList}>
-                        本地整理词表
+                        仅规范词条格式
                       </button>
                       <button className="small-btn" disabled={loading} onClick={a.localDedupeWords}>
-                        本地去重
+                        仅合并完全同名
                       </button>
                       <button className="small-btn" disabled={loading} onClick={a.localMergeWordForms}>
-                        本地归并词形
+                        校验人工词形关系
                       </button>
                       <button className="small-btn" disabled={loading} onClick={a.localScanAndRepairWrongWords}>
                         稳定本地修复确定错词
@@ -172,10 +178,7 @@ export default function VocabAdminToolsPanel({
                         清除错误AI修复标记
                       </button>
                       <button className="small-btn" disabled={loading} onClick={a.localScanObscureDerivedWords}>
-                        扫描冷僻/派生词
-                      </button>
-                      <button className="small-btn danger" disabled={loading} onClick={a.localDeleteObscureDerivedWords}>
-                        删除冷僻/派生词
+                        审核冷僻/派生词（只扫描）
                       </button>
                     </div>
                   </details>
@@ -252,7 +255,7 @@ export default function VocabAdminToolsPanel({
                     </div>
                   </details>
     
-                  <details
+                  {showAiTools ? <details
                     className="ai-tools-box"
                     id="ai-tools"
                     ref={aiToolsRef}
@@ -263,7 +266,7 @@ export default function VocabAdminToolsPanel({
                   >
                     <summary>AI工具（会扣费）</summary>
                     <div className="ai-warning">
-                      AI 分成四个实用入口：快速补全 100×5、慢速补全+修错字 10×1、逐个补全+查错词 1×1、稳定修错 10×2。所有按钮都会调用 DeepSeek API，可能扣费。
+                      AI 工具共 7 个入口，分为当前词处理、批量补全/修复和分类整理。所有按钮都会调用 DeepSeek API，可能扣费。
                     </div>
                     <div className="ai-tool-explain">
                       <p><strong>AI处理当前词：</strong>只处理当前这一个词，适合单个词释义、例句、搭配等明显需要重做时使用。</p>
@@ -271,7 +274,7 @@ export default function VocabAdminToolsPanel({
                       <p><strong>AI慢速补全+修错字 10×1：</strong>补缺失资料，同时允许 AI 自动修正明显错字，例如 injur→injure。一次只跑一批，更慢但更稳。</p>
                       <p><strong>AI逐个补全+查错词 1×1：</strong>从待补全、未归类、疑似错词和截断词里读取，一次只处理一个词，不并发，允许修正 word，适合最后精修。</p>
                       <p><strong>AI稳定修复确定错词 10×2：</strong>只修确定错词。速度慢一点，但会自动重试，并把失败批次拆成单词级补救。</p>
-                      <p><strong>AI修复当前单词符号：</strong>只修当前词条的 word 字段，比如 in/within、effect(s)，不动释义、例句、音标和搭配。</p>
+                      <p><strong>AI修复当前单词符号：</strong>只修当前词条的 word 字段；保留有效斜杠并规范显示间距，清理多余标签或括号，不动释义、例句、音标和搭配。</p>
                       <p><strong>AI整理分类/难度：</strong>只用于归纳 IELTS 用途、主题和难度；不建议用它重写释义和例句。</p>
                     </div>
                     <div className="action-grid">
@@ -297,21 +300,21 @@ export default function VocabAdminToolsPanel({
                         AI整理分类/难度（会扣费）
                       </button>
                     </div>
-                  </details>
+                  </details> : null}
     
                   <div className="audio-stat-box">
                     单词音频：有 {audioStats.has} · 没有 {audioStats.missing} · 未检查 {audioStats.unchecked} · 总数 {audioStats.total}
                   </div>
     
                   <div className="hint">
-                    “一键本地优化”不调用 DeepSeek：会按顺序完成本地整理、本地去重、本地归并词形，并保留复数/过去式/过去分词/词族提示。
+                    “安全本地规整”不调用 DeepSeek：无实际变化时不会改写本地词库，也不会重置当前学习会话。
                   </div>
                   <div className="hint">
                     “导出静态网站”会打包 index.html、words.json 和本地发音缓存；音频补全支持断点续跑。
                   </div>
-                  <div className="hint">
-                    AI 工具区只保留 4 个按钮，点击前会二次确认；音频补全已经从 AI 功能中分离。
-                  </div>
+                  {showAiTools ? <div className="hint">
+                    AI 工具区提供 7 个明确入口，点击前会二次确认；音频补全已经从 AI 功能中分离。
+                  </div> : null}
                   {batchInfo ? <div className="status-line">{batchInfo}</div> : null}
                   {duplicateInfo ? <div className="duplicate-box">{duplicateInfo}</div> : null}
                 </div>

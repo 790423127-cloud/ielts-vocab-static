@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import {
   buildStudyPoolForFilter,
   filterKey,
@@ -75,7 +75,7 @@ export function useWordFlashSession({
     }
   }, [setFilter]);
 
-  function resetWordStudySessionState({ resetIndex = true } = {}) {
+  const resetWordStudySessionState = useCallback(({ resetIndex = true } = {}) => {
     entryPositionsRef.current = {};
     pendingSessionRef.current = null;
     clearWordStudySession(safeLocalStorageRemove);
@@ -92,9 +92,9 @@ export function useWordFlashSession({
       latestStateRef.current.index = 0;
       setIndex(0);
     }
-  }
+  }, [latestStateRef, setIndex]);
 
-  function persistWordFlashSessionNow(nextIndex = index, nextFilter = filter, nextWords = words) {
+  const persistWordFlashSessionNow = useCallback((nextIndex = index, nextFilter = filter, nextWords = words) => {
     if (sessionPersistTimerRef.current) {
       clearTimeout(sessionPersistTimerRef.current);
       sessionPersistTimerRef.current = null;
@@ -125,9 +125,9 @@ export function useWordFlashSession({
     }
 
     return result.saved;
-  }
+  }, [filter, index, setToast, storageReadyRef, words]);
 
-  function queueWordFlashSessionPersist(nextIndex = index, nextFilter = filter, nextWords = words) {
+  const queueWordFlashSessionPersist = useCallback((nextIndex = index, nextFilter = filter, nextWords = words) => {
     pendingSessionPersistRef.current = {
       index: nextIndex,
       filter: nextFilter,
@@ -144,14 +144,14 @@ export function useWordFlashSession({
 
       persistWordFlashSessionNow(pending.index, pending.filter, pending.words);
     }, 280);
-  }
+  }, [filter, index, persistWordFlashSessionNow, words]);
 
-  function flushQueuedWordFlashSessionPersist() {
+  const flushQueuedWordFlashSessionPersist = useCallback(() => {
     const pending = pendingSessionPersistRef.current;
     if (!pending) return false;
 
     return persistWordFlashSessionNow(pending.index, pending.filter, pending.words);
-  }
+  }, [persistWordFlashSessionNow]);
 
   useLayoutEffect(() => {
     if (!storageReadyRef.current || !words.length) return;
@@ -246,7 +246,7 @@ export function useWordFlashSession({
       if (message) setToast?.(message);
       sessionState.toastShown = true;
     }
-  }, [words]);
+  }, [filter, index, latestStateRef, setFilter, setIndex, setToast, storageReadyRef, words]);
 
   useEffect(() => {
     if (!storageReadyRef.current || !studySessionRef.current.restored) return;
@@ -254,7 +254,7 @@ export function useWordFlashSession({
 
     releaseStudyPersistBlock(studySessionRef.current, index);
     queueWordFlashSessionPersist();
-  }, [index]);
+  }, [index, queueWordFlashSessionPersist, storageReadyRef]);
 
   useEffect(() => {
     function handlePageHide() {
@@ -286,7 +286,7 @@ export function useWordFlashSession({
       }
       flushQueuedWordFlashSessionPersist();
     };
-  }, []);
+  }, [flushQueuedWordFlashSessionPersist, latestStateRef, storageReadyRef]);
 
   return {
     studySessionRef,

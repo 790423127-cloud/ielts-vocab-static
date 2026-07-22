@@ -5,9 +5,9 @@ import { buildQuestionWithValidation, validateQuestion } from "./builder.mjs";
 import { AntiMemorizationCache } from "./options.mjs";
 import { selectNextWord, createSessionState as createSchedulerSession, recordQuestionInSession } from "./review-scheduler.mjs";
 import {
-  migrateFromV1, loadAdaptiveState, saveAdaptiveState,
+  migrateFromV1, loadAdaptiveState,
   getWordState, updateWordState, getAdaptiveStats,
-  transitionCorrect, transitionWrong, createNewState
+  transitionCorrect, transitionWrong
 } from "./adaptive-state.mjs";
 import { createQualityCache, recordDistractorsUsed, deferWord, getQualityStats } from "./distractor-quality.mjs";
 import {

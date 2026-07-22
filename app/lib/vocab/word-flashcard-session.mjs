@@ -5,6 +5,12 @@ import {
   readWithLegacyFallback,
   writeJsonStorage
 } from "./progress-schema.mjs";
+import {
+  buildEligibilityWordMap,
+  isInflectedReferenceWord,
+  resolveBrushableWord,
+  resolveBrushableWordIndex
+} from "./word-study-eligibility.mjs";
 
 export const WORD_FLASHCARD_SESSION_KEY = "ielts_vocab_session_v1";
 export const WORD_FLASHCARD_POSITIONS_KEY = "ielts_vocab_entry_positions_v1";
@@ -166,41 +172,72 @@ export function resolveWordStudyIndex(words, {
   const savedWordKey = String(session?.wordKey || "").trim();
   const savedPositionKey = String(entryPositions[filterKeyValue] || "").trim();
   const savedIndex = Number.isInteger(session?.index) ? session.index : -1;
+  const wordMap = buildEligibilityWordMap(list);
 
   function findByKey(key, requireFilter) {
-    if (!key) return -1;
-    return list.findIndex((word) => {
-      if (normalizeWord(word.word) !== key) return false;
-      return requireFilter ? wordMatchesFilter(word, nextFilter) : true;
-    });
+    if (!key) return { index: -1, redirected: false };
+    const sourceIndex = list.findIndex((word) => normalizeWord(word.word) === key);
+    if (sourceIndex < 0) return { index: -1, redirected: false };
+    const source = list[sourceIndex];
+    const target = resolveBrushableWord(source, wordMap);
+    const targetIndex = target ? list.indexOf(target) : -1;
+    if (targetIndex < 0 || (requireFilter && !wordMatchesFilter(target, nextFilter))) {
+      return { index: -1, redirected: false };
+    }
+    return { index: targetIndex, redirected: target !== source };
   }
 
-  let index = findByKey(savedWordKey, true);
-  if (index >= 0) return { index, restored: true, reason: "wordKey", filter: nextFilter };
+  let match = findByKey(savedWordKey, true);
+  if (match.index >= 0) return {
+    index: match.index,
+    restored: true,
+    reason: match.redirected ? "wordKeyInflectedRedirect" : "wordKey",
+    filter: nextFilter
+  };
 
-  index = findByKey(savedPositionKey, true);
-  if (index >= 0) return { index, restored: true, reason: "entryPosition", filter: nextFilter };
+  match = findByKey(savedPositionKey, true);
+  if (match.index >= 0) return {
+    index: match.index,
+    restored: true,
+    reason: match.redirected ? "entryPositionInflectedRedirect" : "entryPosition",
+    filter: nextFilter
+  };
 
   if (savedWordKey) {
-    index = findByKey(savedWordKey, false);
-    if (index >= 0) {
-      return { index, restored: true, reason: "wordKeyOutOfFilter", filter: nextFilter };
+    match = findByKey(savedWordKey, false);
+    if (match.index >= 0) {
+      return {
+        index: match.index,
+        restored: true,
+        reason: match.redirected ? "wordKeyInflectedRedirect" : "wordKeyOutOfFilter",
+        filter: nextFilter
+      };
     }
   }
 
   if (savedPositionKey) {
-    index = findByKey(savedPositionKey, false);
-    if (index >= 0) {
-      return { index, restored: true, reason: "entryPositionOutOfFilter", filter: nextFilter };
+    match = findByKey(savedPositionKey, false);
+    if (match.index >= 0) {
+      return {
+        index: match.index,
+        restored: true,
+        reason: match.redirected ? "entryPositionInflectedRedirect" : "entryPositionOutOfFilter",
+        filter: nextFilter
+      };
     }
   }
 
   if (savedIndex >= 0 && savedIndex < list.length) {
-    const word = list[savedIndex];
-    if (wordMatchesFilter(word, nextFilter)) {
-      return { index: savedIndex, restored: true, reason: "savedIndex", filter: nextFilter };
+    const resolvedIndex = resolveBrushableWordIndex(list, savedIndex, wordMap);
+    if (resolvedIndex < 0) return { index: -1, restored: false, reason: "notFound", filter: nextFilter };
+    const word = list[resolvedIndex];
+    if (resolvedIndex !== savedIndex) {
+      return { index: resolvedIndex, restored: true, reason: "savedIndexInflectedRedirect", filter: nextFilter };
     }
-    return { index: savedIndex, restored: true, reason: "savedIndexOutOfFilter", filter: nextFilter };
+    if (wordMatchesFilter(word, nextFilter)) {
+      return { index: resolvedIndex, restored: true, reason: "savedIndex", filter: nextFilter };
+    }
+    return { index: resolvedIndex, restored: true, reason: "savedIndexOutOfFilter", filter: nextFilter };
   }
 
   return { index: -1, restored: false, reason: "notFound", filter: nextFilter };
@@ -218,7 +255,10 @@ export function resolveCurrentStudyItem({
     return studyPool.find((item) => item.originalIndex === index) || null;
   }
 
-  return Array.isArray(words) ? words[index] || null : null;
+  if (!Array.isArray(words)) return null;
+  const current = words[index] || null;
+  if (!isInflectedReferenceWord(current)) return current;
+  return resolveBrushableWord(current, buildEligibilityWordMap(words));
 }
 
 export function buildWordFlashSessionPayload({
@@ -231,18 +271,24 @@ export function buildWordFlashSessionPayload({
   currentItem = null
 }) {
   const nextFilter = normalizeWordFlashFilter(filter);
-  const item = currentItem || resolveCurrentStudyItem({
+  const rawItem = currentItem || resolveCurrentStudyItem({
     words,
     index,
     filter: nextFilter,
     studyPool
   });
+  const item = isIdictationFlashFilter(nextFilter)
+    ? rawItem
+    : resolveBrushableWord(rawItem, buildEligibilityWordMap(words));
+  const persistedIndex = item && Array.isArray(words) && !isIdictationFlashFilter(nextFilter)
+    ? words.indexOf(item)
+    : index;
 
   const payload = {
     v: STUDY_SESSION_SCHEMA_VERSION,
     progressSchemaVersion: PROGRESS_SCHEMA_VERSION,
     progressKey: WORD_FLASHCARD_PROGRESS_KEY,
-    index,
+    index: persistedIndex,
     wordKey: item?.word && typeof normalizeWord === "function" ? normalizeWord(item.word) : "",
     word: item?.word || "",
     filter: nextFilter,
@@ -272,12 +318,15 @@ export function persistWordFlashSession({
   storageSet = defaultStorageSet
 }) {
   const nextFilter = normalizeWordFlashFilter(filter);
-  const item = currentItem || resolveCurrentStudyItem({
+  const rawItem = currentItem || resolveCurrentStudyItem({
     words,
     index,
     filter: nextFilter,
     studyPool
   });
+  const item = isIdictationFlashFilter(nextFilter)
+    ? rawItem
+    : resolveBrushableWord(rawItem, buildEligibilityWordMap(words));
   const nextPositions = { ...(entryPositions || {}) };
 
   if (item?.word && typeof filterKey === "function" && typeof normalizeWord === "function") {
@@ -318,6 +367,10 @@ export function restoreMessageForReason(reason, wordLabel = "") {
     case "savedIndex":
     case "idictationSourceIndex":
       return wordLabel ? `已恢复到：${wordLabel}` : "已恢复到上次学习位置";
+    case "wordKeyInflectedRedirect":
+    case "entryPositionInflectedRedirect":
+    case "savedIndexInflectedRedirect":
+      return wordLabel ? `原位置是纯词形，已迁移到基词：${wordLabel}` : "原位置是纯词形，已迁移到对应基词";
     case "wordKeyOutOfFilter":
     case "entryPositionOutOfFilter":
     case "savedIndexOutOfFilter":

@@ -19,7 +19,7 @@ function normalizeStringArray(value) {
 }
 
 export async function POST(req) {
-  const guard = requireLocalAdmin(req);
+  const guard = requireLocalAdmin(req, { allowLocalhostAlways: true });
   if (guard) return guard;
 
   try {

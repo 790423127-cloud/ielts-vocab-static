@@ -15,7 +15,12 @@ export function shortFieldValue(value) {
       .map((item) => {
         if (typeof item === "string") return item;
         if (item && typeof item === "object") {
-          return item.phrase || item.word || item.meaning || item.chinese || item.note || JSON.stringify(item);
+          if (item.word) {
+            const relation = item.type || item.relation || "";
+            const id = item.id || "";
+            return `${item.word}${relation ? `(${relation})` : ""}${id ? `#${id}` : ""}`;
+          }
+          return item.phrase || item.meaning || item.chinese || item.note || JSON.stringify(item);
         }
         return String(item || "");
       })
@@ -169,4 +174,3 @@ export function buildLocalChangeLog(actionName, beforeWords, afterWords) {
     changes: changes.slice(0, 300)
   };
 }
-

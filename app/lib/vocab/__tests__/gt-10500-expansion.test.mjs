@@ -46,7 +46,12 @@ test("listening-reading paraphrases has 600 entries", () => {
 
 test("supplementary words pass complete field and content gates", () => {
   const data = JSON.parse(fs.readFileSync(path.join(root, ".static-export-cache/words.json"), "utf8"));
-  const gate = runNewWordGates(data.words.slice(9909));
+  const supplementaryWords = data.words.filter((entry) => (
+    entry.normalizedHeadword &&
+    entry.candidateSource &&
+    entry.sourceType !== "gt-complete-corpus-patch"
+  ));
+  const gate = runNewWordGates(supplementaryWords);
   assert.equal(gate.ok, true, gate.errors.slice(0, 10).join("; "));
 });
 

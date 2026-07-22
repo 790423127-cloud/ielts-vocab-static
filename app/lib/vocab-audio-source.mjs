@@ -171,7 +171,6 @@ function pickBestRealVoiceCandidate(candidates = [], targetWord = "") {
     ))[0] || null;
 }
 
-const NON_ENGLISH_COMMONS_PREFIX_RE = /^File:(De|Fr|Es|It|Pt|Ru|Ja|Zh|Ko|Ar|Nl|Pl|Sv|Da|No|Fi|Cs|Hu|Tr|He|Hi)-/i;
 const NON_ENGLISH_COMMONS_HINT_RE = /mandarin|chinese pronunciation|tbilisi|tlelingit|wet.?suwet|karbi|musqueam|ǃ|ǁ/i;
 
 export function extractCommonsSpokenText(title = "") {
@@ -684,7 +683,7 @@ export function audioEntryResponseHeaders(entry = {}, source = "") {
   };
 }
 
-async function enhanceCachedSpeechFile(filepath, entry = {}) {
+async function enhanceCachedSpeechFile(filepath) {
   if (!existsSync(filepath)) return { enhanced: false };
 
   const extension = path.extname(filepath).slice(1) || "mp3";
@@ -840,7 +839,7 @@ export async function ensureEdgeAudio(text, audioIndex, options = {}) {
   };
 }
 
-export async function ensureEnhancedEdgeAudioFile(entry = {}, options = {}) {
+export async function ensureEnhancedEdgeAudioFile(entry = {}) {
   if (!needsEdgeAudioEnhance(entry)) {
     return { ok: true, enhanced: false, skipped: true };
   }
@@ -883,7 +882,7 @@ export async function ensureReadableSpeechCacheEntry(text, audioIndex = {}, opti
   }
 
   if (!entry.realAudio && needsEdgeAudioEnhance(entry)) {
-    const repaired = await ensureEnhancedEdgeAudioFile(entry, options);
+    const repaired = await ensureEnhancedEdgeAudioFile(entry);
     if (repaired.ok && repaired.enhanced) {
       audioIndex[key] = {
         ...entry,

@@ -87,7 +87,7 @@ function mergeToday(a = {}, b = {}, selection = selectTodaySnapshot(a, b)) {
   };
 }
 
-function mergeErrorBank(a = {}, b = {}, aUpdatedAt = 0, bUpdatedAt = 0) {
+function mergeErrorBank(a = {}, b = {}) {
   const latestWrongAt = Math.max(number(a.latestWrongAt), number(b.latestWrongAt));
   const severity = SEVERITY_PRIORITY[b.severity] > SEVERITY_PRIORITY[a.severity] ? b.severity : a.severity;
   return {
@@ -147,7 +147,7 @@ export function mergeWordState(local, remote) {
     deviceIds,
     spelling: mergeSpelling(local.spelling, remote.spelling),
     today: mergeToday(local.today, remote.today, todaySelection),
-    errorBank: mergeErrorBank(local.errorBank, remote.errorBank, local.updatedAt, remote.updatedAt),
+    errorBank: mergeErrorBank(local.errorBank, remote.errorBank),
     srs: mergeSrs(local.srs, remote.srs, hasRepairStateConflict || hasActiveRepairState ? todaySelection.source : ""),
     dirty: Boolean(local.dirty || remote.dirty)
   };

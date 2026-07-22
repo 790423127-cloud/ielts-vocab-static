@@ -254,7 +254,14 @@ export function useSpellingEngine(words = [], options = {}) {
     return () => {
       cancelled = true;
     };
-  }, [engineDepsKey]);
+  }, [
+    engineDepsKey,
+    categoryScope?.currentBatchId,
+    categoryScope?.errorBankTotal,
+    categoryScope?.label,
+    categoryScope?.practiceSource,
+    spellingScope.scope
+  ]);
 
   function refresh(overrides = {}) {
     const bridge = bridgeRef.current;

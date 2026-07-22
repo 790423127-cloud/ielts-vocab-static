@@ -1,7 +1,7 @@
 // Meaning Mode review scheduler — independent priority-based next-question selection.
 // Never imports from spelling/SRS schedulers.
 
-import { isReadyForReview, getSelectionReason, getWordState, createNewState } from "./adaptive-state.mjs";
+import { isReadyForReview, getSelectionReason, getWordState } from "./adaptive-state.mjs";
 import { getWordBankIndex } from "./runtime-indexes.mjs";
 
 // ─── Constants ───

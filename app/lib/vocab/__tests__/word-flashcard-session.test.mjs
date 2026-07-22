@@ -13,6 +13,10 @@ import {
   safeLocalStorageRemove,
   safeLocalStorageSet
 } from "../page-word-helpers.mjs";
+import {
+  buildWordStudyOverviewModel,
+  getWordStudyProgressLabel
+} from "../word-study-overview.mjs";
 
 const pagePath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../page.jsx");
 const pageSource = fs.readFileSync(pagePath, "utf8");
@@ -305,4 +309,63 @@ test("persistWordFlashSession writes schema version", () => {
   });
 
   assert.equal(result.session.v, 2);
+});
+
+test("free browsing reports position and explicit marks instead of mastery", () => {
+  const overview = buildWordStudyOverviewModel({
+    filter: { type: "all", value: "" },
+    studyWords: [
+      { word: "alpha", status: "" },
+      { word: "beta", status: "模糊" },
+      { word: "gamma", status: "不熟", favorite: true }
+    ],
+    currentPosition: 1,
+    wordLibraryStats: { todayReviewed: 2 }
+  });
+
+  assert.equal(overview.title, "待学词浏览");
+  assert.equal(overview.ringLabel, "浏览位置");
+  assert.equal(overview.progressPercent, 67);
+  assert.deepEqual(overview.metrics.map(({ label, value }) => [label, value]), [
+    ["当前范围", 3],
+    ["未标记", 1],
+    ["模糊", 1],
+    ["不熟", 1]
+  ]);
+  assert.match(overview.note, /翻页只代表浏览/);
+});
+
+test("overview clamps a stale queue position after status filtering", () => {
+  const overview = buildWordStudyOverviewModel({
+    filter: { type: "status", value: "不熟" },
+    studyWords: Array.from({ length: 6 }, (_, index) => ({ word: `word-${index}`, status: "不熟" })),
+    currentPosition: 8,
+    wordLibraryStats: { unfamiliar: 6, todayReviewed: 3 }
+  });
+
+  assert.equal(overview.title, "不熟词复习");
+  assert.equal(overview.progressPercent, 100);
+  assert.equal(overview.progressAria, "当前位置 6/6");
+  assert.equal(overview.metrics.find((entry) => entry.label === "当前位置")?.value, "6/6");
+});
+
+test("idictation overview states that browsing does not rewrite master status", () => {
+  const overview = buildWordStudyOverviewModel({
+    filter: { type: "idictation", value: "listening" },
+    studyWords: [{ word: "alpha" }, { word: "beta" }],
+    currentPosition: 0,
+    isExternalIdictationItem: true
+  });
+
+  assert.equal(overview.title, "听写词表浏览");
+  assert.equal(overview.facts.find((entry) => entry.label === "主词库状态")?.value, "不改写");
+  assert.match(overview.note, /不会自动标记主词库/);
+});
+
+test("progress labels follow the active learning mode", () => {
+  assert.equal(getWordStudyProgressLabel({ type: "all", value: "" }), "浏览进度");
+  assert.equal(getWordStudyProgressLabel({ type: "status", value: "模糊" }), "复习进度");
+  assert.equal(getWordStudyProgressLabel({ type: "status", value: "不熟" }), "复习进度");
+  assert.equal(getWordStudyProgressLabel({ type: "status", value: "熟悉" }), "回顾进度");
+  assert.equal(getWordStudyProgressLabel({ type: "idictation", value: "listening" }), "词表进度");
 });

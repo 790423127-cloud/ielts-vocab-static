@@ -14,6 +14,7 @@ import { emptyParaphraseReviewState, normalizeParaphraseReviewState } from "./pa
 import { normalizeParaphraseSession } from "./paraphrase-session.mjs";
 import { itemMatchesPathStage } from "./stages.mjs";
 import { normalizeReadingGKey } from "./normalize.mjs";
+import { isInflectedReferenceWord } from "../vocab/word-study-eligibility.mjs";
 
 function safeGet(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -416,6 +417,7 @@ export function filterKey(filter) {
  * @param {string} [learnMode] current mode for status filters
  */
 export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEARN_MODE.MEANING) {
+  if (isInflectedReferenceWord(item)) return false;
   const mode = resolveLearnMode(learnMode, item, filter);
   const status = getRgStatus(item, statusMap, mode);
   const favorite = isRgFavorite(item, statusMap);

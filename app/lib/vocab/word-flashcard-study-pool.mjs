@@ -3,6 +3,11 @@ import {
   IDICTATION_FLASH_INDEX_OFFSET,
   isIdictationFlashFilter as isIdictationFlashSessionFilter
 } from "./word-flashcard-session.mjs";
+import {
+  isBrushableWord,
+  isInflectedReferenceWord,
+  resolveBrushableWord
+} from "./word-study-eligibility.mjs";
 
 function normalizePhraseItems(value) {
   if (!Array.isArray(value)) return [];
@@ -87,14 +92,15 @@ export function buildIdictationFlashWords(sourceKey, libraryWords = [], libraryW
   if (!source?.entries?.length) return [];
   const lookup = libraryWordMap || buildLibraryWordMap(libraryWords);
 
-  return source.entries.map((entry, sourceIndex) => {
+  return source.entries.flatMap((entry, sourceIndex) => {
     const libraryWord = findIdictationLibraryWord(entry, lookup);
+    if (isInflectedReferenceWord(libraryWord)) return [];
     const answerText = Array.isArray(entry.acceptedAnswers) && entry.acceptedAnswers.length
       ? entry.acceptedAnswers.join(" / ")
       : entry.expectedAnswer || "";
     const frequencyLabel = entry.frequencyGroupLabel || `${entry.frequency || 0}次`;
 
-    return {
+    return [{
       id: entry.id,
       word: entry.word,
       phonetic: entry.phonetic || libraryWord?.phonetic || "",
@@ -119,7 +125,7 @@ export function buildIdictationFlashWords(sourceKey, libraryWords = [], libraryW
       sourceLibraryWord: libraryWord?.word || "",
       originalIndex: IDICTATION_FLASH_INDEX_OFFSET + sourceIndex,
       __idictationFlash: true
-    };
+    }];
   });
 }
 
@@ -144,10 +150,12 @@ export function isLifeWorkWord(word) {
 }
 
 export function wordMatchesFilter(word, filter) {
+  if (!isBrushableWord(word)) return false;
   if (filter.type === "everything") return true;
   if (isIdictationFlashFilter(filter)) return Boolean(word.__idictationFlash);
 
   if (filter.type === "status") {
+    if (filter.value === "模糊") return word.status === "模糊";
     if (filter.value === "不熟") return word.status === "不熟";
     if (filter.value === "熟悉") return word.status === "熟悉";
     if (filter.value === "收藏") return word.status !== "熟悉" && word.favorite;
@@ -166,8 +174,8 @@ export function wordMatchesFilter(word, filter) {
 }
 
 export function getFilterName(filter) {
-  if (filter.type === "all") return "今日任务 / 全部待学";
-  if (filter.type === "everything") return "全部单词";
+  if (filter.type === "all") return "待学词浏览";
+  if (filter.type === "everything") return "全部可刷词";
   if (filter.type === "custom" && filter.value === "life-work") return "生活/工作高频";
   if (isIdictationFlashFilter(filter)) return getIdictationSource(filter.value)?.label || "爱听写";
   if (filter.type === "ielts" || filter.type === "ieltsUse") return `IELTS 用途：${filter.value}`;
@@ -184,7 +192,7 @@ export const LEARNING_ENTRIES = [
   {
     group: "今天优先",
     items: [
-      { title: "今日任务", desc: "快速扫待学词 + 复习不熟词。", filter: { type: "all", value: "" } },
+      { title: "待学词浏览", desc: "自由浏览未标记、模糊和不熟词；翻页不会自动标记熟悉。", filter: { type: "all", value: "" } },
       { title: "不熟词", desc: "所有标记不熟的词，优先复习。", filter: { type: "status", value: "不熟" } },
       { title: "收藏词", desc: "写作、口语、书信可直接用的重点词。", filter: { type: "status", value: "收藏" } }
     ]
@@ -209,12 +217,32 @@ export const LEARNING_ENTRIES = [
     ]
   },
   {
+    group: "G类完整学习计划",
+    items: [
+      {
+        title: "阶段1 · 核心理解",
+        desc: "G类阅读核心词和本轮真题精补词，目标是1至2秒内认出。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段1" }
+      },
+      {
+        title: "阶段2 · 扩展识别",
+        desc: "Section 2和Section 3扩展词，以阅读识别为主。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段2" }
+      },
+      {
+        title: "阶段4 · 专业参考",
+        desc: "真题专业词、专名和低频词，只需结合原文识别。",
+        filter: { type: "topic", value: "G类完整学习计划·阶段4" }
+      }
+    ]
+  },
+  {
     group: "难度层级",
     items: [
       { title: "基础必会", desc: "必须快速认出，适合每天扫。", filter: { type: "difficulty", value: "基础高频" } },
       { title: "核心高频", desc: "雅思主力词，优先变熟悉。", filter: { type: "difficulty", value: "中级核心" } },
       { title: "高级认识", desc: "认识即可，不要花太久。", filter: { type: "difficulty", value: "高级加分" } },
-      { title: "全部单词", desc: "总仓库，包含熟悉词。", filter: { type: "everything", value: "" } }
+      { title: "全部可刷词", desc: "全部独立学习卡，包含熟悉词；纯词形只在基词中参考。", filter: { type: "everything", value: "" } }
     ]
   }
 ];
@@ -256,11 +284,20 @@ export function buildFilteredWordIndices(pool, filter, search, { idictation = fa
       .map((word) => word.originalIndex);
   }
 
+  const wordMap = buildLibraryWordMap(pool);
+  const indexByWord = new Map(pool.map((word, index) => [word, index]));
+  const seen = new Set();
   const indices = [];
   for (let i = 0; i < pool.length; i += 1) {
     const word = pool[i];
     if (q && !word.word.toLowerCase().includes(q)) continue;
-    if (wordMatchesFilter(word, filter)) indices.push(i);
+    const target = resolveBrushableWord(word, wordMap);
+    const targetIndex = indexByWord.get(target);
+    if (!Number.isInteger(targetIndex) || seen.has(targetIndex)) continue;
+    if (wordMatchesFilter(target, filter)) {
+      seen.add(targetIndex);
+      indices.push(targetIndex);
+    }
   }
   return indices;
 }

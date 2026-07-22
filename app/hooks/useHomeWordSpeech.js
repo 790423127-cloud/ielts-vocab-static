@@ -12,6 +12,7 @@ import {
   isSimpleDictionaryWord,
   normalizeWord
 } from "../lib/vocab/page-word-helpers.mjs";
+import { formatHeadwordForSpeech } from "../lib/vocab/headword-format.mjs";
 
 function isAudioInterruptedError(error) {
   const message = String(error?.message || error || "").toLowerCase();
@@ -91,7 +92,8 @@ export function useHomeWordSpeech({
   }, []);
 
   const warmSpeechAudio = useCallback(async (text, kind = "word") => {
-    const cleanText = String(text || "").trim();
+    const rawText = String(text || "").trim();
+    const cleanText = kind === "sentence" ? rawText : formatHeadwordForSpeech(rawText);
 
     if (!cleanText || cleanText === "完成") return;
 
@@ -100,7 +102,7 @@ export function useHomeWordSpeech({
 
       if (kind === "sentence") return;
 
-      const key = normalizeWord(cleanText);
+      const key = normalizeWord(rawText);
       patchAudioStatusKey?.(key, {
         checked: true,
         hasAudio: true,
@@ -126,7 +128,8 @@ export function useHomeWordSpeech({
   }, []);
 
   const playSpeechAudio = useCallback(async (text, kind = "word") => {
-    const cleanText = String(text || "").trim();
+    const rawText = String(text || "").trim();
+    const cleanText = kind === "sentence" ? rawText : formatHeadwordForSpeech(rawText);
 
     if (!cleanText) {
       setToast?.(kind === "sentence" ? "没有例句可发音" : "没有单词可发音");
@@ -167,7 +170,7 @@ export function useHomeWordSpeech({
       if (played && showToast) setToast?.(`播放 ${formatSpeechSourceLabel(result)}`);
     } catch (error) {
       if (!isAudioInterruptedError(error)) {
-        browserSpeakFallback(item?.word, "单词");
+        browserSpeakFallback(formatHeadwordForSpeech(item?.word), "单词");
       }
     }
   }, [browserSpeakFallback, item?.word, patchAudioStatusKey, playSpeechAudio, setToast]);
@@ -189,7 +192,7 @@ export function useHomeWordSpeech({
       if (played) setToast?.(`播放${label} ${formatSpeechSourceLabel(result)}`);
     } catch (error) {
       if (!isAudioInterruptedError(error)) {
-        browserSpeakFallback(text, label);
+        browserSpeakFallback(formatHeadwordForSpeech(text), label);
       }
     }
   }, [browserSpeakFallback, playSpeechAudio, setToast]);

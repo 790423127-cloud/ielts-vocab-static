@@ -156,12 +156,24 @@ export function createLocalOps(ctx) {
   }
 
   function applyLocalResult(result, message, actionName = message) {
-    recordLocalChange(actionName, words, result.words);
-    setWords(result.words);
+    const nextWords = Array.isArray(result?.words) ? result.words : [];
+    const changed = words.length !== nextWords.length || words.some((word, wordIndex) => (
+      JSON.stringify(word) !== JSON.stringify(nextWords[wordIndex])
+    ));
+
+    if (!changed) {
+      setDuplicateInfo(message);
+      setToast(`${message}｜检查结果无变化，未改写本地词库`);
+      return false;
+    }
+
+    recordLocalChange(actionName, words, nextWords);
+    setWords(nextWords);
     resetWordStudySessionState();
-    persistWordsImmediately(result.words);
+    persistWordsImmediately(nextWords);
     setDuplicateInfo(message);
     setToast(`${message}｜已生成修改记录，可撤回`);
+    return true;
   }
 
   function localCleanWordList() {
@@ -183,12 +195,11 @@ export function createLocalOps(ctx) {
   function localDedupeWords() {
     try {
       setLoading(true);
-      const cleanResult = buildLocalCleanResult(words);
-      const dedupeResult = buildLocalExactDedupeResult(cleanResult.words);
+      const dedupeResult = buildLocalExactDedupeResult(words);
 
       applyLocalResult(
         dedupeResult,
-        `本地去重完成：合并完全重复 ${dedupeResult.stats.merged} 个；顺手整理 ${cleanResult.stats.changed} 个`
+        `完全同名去重完成：合并 ${dedupeResult.stats.merged} 个；未按后缀合并`
       );
     } catch (error) {
       setToast(error.message || "本地去重失败");
@@ -200,15 +211,14 @@ export function createLocalOps(ctx) {
   function localMergeWordForms() {
     try {
       setLoading(true);
-      const cleanResult = buildLocalCleanResult(words);
-      const formResult = buildLocalFormFamilyResult(cleanResult.words);
+      const formResult = buildLocalFormFamilyResult(words);
 
       applyLocalResult(
         formResult,
-        `本地归并完成：保留重要词形 ${formResult.stats.formMerged + formResult.stats.convertedToBase} 个；建立词族关联 ${formResult.stats.familyLinked} 条`
+        `人工词形关系校验完成：补齐 ${formResult.stats.referenceLinksAdded} 条，更新 ${formResult.stats.referenceLinksUpdated} 条，移除错误归属 ${formResult.stats.wrongOwnerLinksRemoved} 条；后缀猜测 0 条`
       );
     } catch (error) {
-      setToast(error.message || "本地归并词形失败");
+      setToast(error.message || "本地词形校验失败");
     } finally {
       setLoading(false);
     }
@@ -221,7 +231,7 @@ export function createLocalOps(ctx) {
 
       applyLocalResult(
         result,
-        `本地优化完成：整理 ${result.stats.changed} 个，完全去重 ${result.stats.exactMerged} 个，保留词形 ${result.stats.formMerged + result.stats.convertedToBase} 个，词族关联 ${result.stats.familyLinked} 条`
+        `安全本地规整完成：格式整理 ${result.stats.changed} 个，完全同名去重 ${result.stats.exactMerged} 个，人工词形补齐 ${result.stats.referenceLinksAdded} 条，错误归属移除 ${result.stats.wrongOwnerLinksRemoved} 条；后缀猜测 0 条`
       );
     } catch (error) {
       setToast(error.message || "本地优化失败");
@@ -465,55 +475,16 @@ export function createLocalOps(ctx) {
       const candidates = collectObscureDerivedCandidates(words);
 
       if (!candidates.length) {
-        setToast("没有发现明显冷僻/派生过度词");
+        setToast("没有发现需要人工复核的冷僻/派生词候选");
         return;
       }
 
       const first = candidates[0];
 
       setIndex(first.index);
-      setToast(`发现 ${candidates.length} 个冷僻/派生过度候选词，已跳到第一个：${first.word}｜${first.reason}`);
+      setToast(`发现 ${candidates.length} 个只读审核候选，已跳到第一个：${first.word}｜${first.reason}｜不会自动删除`);
     } catch (error) {
       setToast(error.message || "扫描冷僻/派生词失败");
-    }
-  }
-
-  function localDeleteObscureDerivedWords() {
-    try {
-      const candidates = collectObscureDerivedCandidates(words);
-
-      if (!candidates.length) {
-        setToast("没有发现明显冷僻/派生过度词");
-        return;
-      }
-
-      const preview = candidates
-        .slice(0, 12)
-        .map((item) => `${item.word}：${item.reason}`)
-        .join("\\n");
-
-      const ok = confirm(
-        `将删除 ${candidates.length} 个冷僻/派生过度候选词。\\n\\n` +
-        `保护规则：收藏词、不熟词、核心/高频/G类/听说读写常见词不会删。\\n\\n` +
-        `预览：\\n${preview}${candidates.length > 12 ? "\\n..." : ""}\\n\\n确定删除吗？`
-      );
-
-      if (!ok) return;
-
-      const deleteIndexes = new Set(candidates.map((item) => item.index));
-      const oldWord = words[index]?.word || "";
-      const next = words.filter((_, i) => !deleteIndexes.has(i));
-
-      recordLocalChange("删除冷僻/派生词", words, next);
-      setWords(next);
-      persistWordsImmediately(next);
-
-      const nextIndex = Math.min(index, Math.max(0, next.length - 1));
-      setIndex(nextIndex);
-
-      setToast(`已删除 ${candidates.length} 个冷僻/派生过度词；原位置：${oldWord}｜已生成修改记录，可撤回`);
-    } catch (error) {
-      setToast(error.message || "删除冷僻/派生词失败");
     }
   }
 
@@ -623,5 +594,5 @@ export function createLocalOps(ctx) {
     setToast(`已彻底删除：${currentWord.word}（${sameCount} 条记录）｜已生成修改记录，可撤回`);
   }
 
-  return { recordLocalChange, undoLastLocalChange, clearLastLocalChangeLog, undoOneLocalChangeItem, applyLocalResult, localCleanWordList, localDedupeWords, localMergeWordForms, localOptimizeWordList, openEditCurrentWord, updateEditDraft, saveEditCurrentWord, localCleanCurrentTtsSymbols, localScanTtsSymbols, localCleanTtsSymbols, localRepairTruncatedHeadwords, clearWrongAiRepairFlags, localScanObscureDerivedWords, localDeleteObscureDerivedWords, localScanAndRepairWrongWords, deleteCurrentWord };
+  return { recordLocalChange, undoLastLocalChange, clearLastLocalChangeLog, undoOneLocalChangeItem, applyLocalResult, localCleanWordList, localDedupeWords, localMergeWordForms, localOptimizeWordList, openEditCurrentWord, updateEditDraft, saveEditCurrentWord, localCleanCurrentTtsSymbols, localScanTtsSymbols, localCleanTtsSymbols, localRepairTruncatedHeadwords, clearWrongAiRepairFlags, localScanObscureDerivedWords, localScanAndRepairWrongWords, deleteCurrentWord };
 }

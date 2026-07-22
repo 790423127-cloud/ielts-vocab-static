@@ -100,7 +100,6 @@ export function useSpellingTrainingSessionNavigation({
 
     return spellingEntries.map((entry) => getWordId(entry)).filter(Boolean);
   }, [
-    practiceSource,
     personalWrongSessionReady,
     spellingReady,
     getSessionWordIds,

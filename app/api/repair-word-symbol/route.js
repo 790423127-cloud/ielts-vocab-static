@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
+import { preserveHeadwordSlashAlternatives } from "../../lib/vocab/headword-format.mjs";
 
 const DEEPSEEK_TIMEOUT_MS = 45000;
 
@@ -14,7 +15,7 @@ function cleanJsonText(text) {
 }
 
 export async function POST(req) {
-  const guard = requireLocalAdmin(req);
+  const guard = requireLocalAdmin(req, { allowLocalhostAlways: true });
   if (guard) return guard;
 
   try {
@@ -42,9 +43,9 @@ export async function POST(req) {
 ${rawWord}
 
 任务：
-1. 如果原词条里的 / 表示二选一或可替换表达，请保留完整意思，改成适合朗读和显示的自然形式。
-   例：in/within the context of → in or within the context of
-   例：the/an effect(s) on → the or an effect on
+1. 如果原词条里的 / 表示二选一或可替换表达，必须保留斜杠，不得改写成 or，也不得删除任一侧内容；只统一斜杠两侧空格，让显示更清楚。
+   例：in/within the context of → in / within the context of
+   例：the/an effect(s) on → the / an effect on
 2. 如果括号只是词性/用法标签，可以删除。
    例：secure (adj.) → secure
 3. 如果括号表示可选复数或形式，请改成自然常用形式。
@@ -52,7 +53,7 @@ ${rawWord}
 4. 不要截断词条，不要只保留 slash 前面的部分。
 5. 不要改成中文。
 6. 不要扩写成多个无关词。
-7. 如果原词条本来就合理，repairedWord 保持原样。
+7. 如果原词条本来就合理，除了斜杠两侧可增加空格外，repairedWord 保持原样。
 8. 只返回 JSON，不要 markdown，不要解释。
 
 输出格式：
@@ -104,7 +105,7 @@ ${rawWord}
     const payload = JSON.parse(raw);
     const content = payload?.choices?.[0]?.message?.content || "{}";
     const data = JSON.parse(cleanJsonText(content));
-    const repairedWord = String(data.repairedWord || rawWord).trim();
+    const repairedWord = preserveHeadwordSlashAlternatives(rawWord, data.repairedWord || rawWord);
 
     if (!repairedWord) {
       return Response.json(

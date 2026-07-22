@@ -58,6 +58,59 @@ function createLazyOps(names, loadFactory, context) {
   ]));
 }
 
+async function publishAiSnapshot(context, snapshot) {
+  await context.persistWordsImmediately?.(snapshot);
+
+  const response = await fetch("/api/export-cache", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      words: snapshot,
+      savedAt: new Date().toISOString(),
+      version: context.cacheMetaRef?.current?.version || undefined,
+      lexiconHash: context.cacheMetaRef?.current?.lexiconHash || "",
+      source: "paid-ai-checkpoint",
+      forceRefresh: true
+    })
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || result?.ok === false) {
+    throw new Error(result?.detail || result?.error || `HTTP ${response.status}`);
+  }
+  return result;
+}
+
+function createPersistingAiSetWords(context) {
+  let latestSnapshot = null;
+  let flushTimer = null;
+  let persistQueue = Promise.resolve();
+
+  function schedulePersist(nextWords) {
+    latestSnapshot = nextWords;
+    if (flushTimer !== null) return;
+
+    flushTimer = window.setTimeout(() => {
+      flushTimer = null;
+      const snapshot = latestSnapshot;
+      latestSnapshot = null;
+
+      persistQueue = persistQueue
+        .then(async () => {
+          await publishAiSnapshot(context, snapshot);
+        })
+        .catch((error) => {
+          context.setToast?.(`AI结果已生成，但自动保存失败：${error?.message || "未知错误"}`);
+        });
+    }, 0);
+  }
+
+  return (updater) => context.setWords((previousWords) => {
+    const nextWords = typeof updater === "function" ? updater(previousWords) : updater;
+    if (Array.isArray(nextWords)) schedulePersist(nextWords);
+    return nextWords;
+  });
+}
+
 function loadAiFactory() {
   if (!aiFactoryPromise) {
     aiFactoryPromise = import("./useHomeLexiconAdmin.ai.js").then((module) => module.createAiOps);
@@ -74,12 +127,16 @@ function loadIoFactory() {
 
 export function useHomeLexiconAdmin(ctx) {
   const local = createLocalOps(ctx);
-  const aiContext = { ...ctx, ...local };
+  const aiContext = {
+    ...ctx,
+    ...local,
+    setWords: createPersistingAiSetWords(ctx)
+  };
   const ai = createLazyOps(AI_OP_NAMES, loadAiFactory, aiContext);
   const io = createLazyOps(IO_OP_NAMES, loadIoFactory, { ...aiContext, ...ai });
   const confirmAiCost = (actionName) => window.confirm(
     `${actionName}\n\n这个操作会调用 DeepSeek API，可能产生费用。\n\n` +
-    "建议：平时优先使用“安全本地规整 / 校验人工词形关系 / 修改当前单词 / 继续补全全部音频”。\n\n" +
+    "系统会排除纯词形参考、限制单次目标数、关闭自动付费重试，并在每批成功后自动保存到本地主词库。\n\n" +
     "确定继续吗？"
   );
   return { ...local, ...ai, ...io, confirmAiCost };

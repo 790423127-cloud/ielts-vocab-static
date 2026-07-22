@@ -11,6 +11,7 @@ export async function runAdminAiBatch(options) {
     chunks = [],
     workerCount = 1,
     maxRetries = 0,
+    allowAutomaticRetry = false,
     executeChunk,
     shouldRetry = () => true,
     retryDelayMs = () => 0,
@@ -26,9 +27,11 @@ export async function runAdminAiBatch(options) {
     throw new TypeError("runAdminAiBatch requires executeChunk");
   }
 
+  const effectiveMaxRetries = allowAutomaticRetry ? Math.max(0, Number(maxRetries) || 0) : 0;
   let nextChunkIndex = 0;
   let completedChunks = 0;
   let completedItems = 0;
+  let retryCount = 0;
 
   async function runWithRetry(context) {
     let attempt = 0;
@@ -46,7 +49,7 @@ export async function runAdminAiBatch(options) {
       try {
         return await executeChunk(attemptContext);
       } catch (error) {
-        const canRetry = attempt < maxRetries && await shouldRetry({
+        const canRetry = attempt < effectiveMaxRetries && await shouldRetry({
           ...attemptContext,
           error
         });
@@ -60,6 +63,7 @@ export async function runAdminAiBatch(options) {
           nextAttempt
         })) || 0);
 
+        retryCount += 1;
         await onRetry?.({
           ...attemptContext,
           error,
@@ -114,6 +118,7 @@ export async function runAdminAiBatch(options) {
   return {
     completedChunks,
     completedItems,
-    workerCount: activeWorkerCount
+    workerCount: activeWorkerCount,
+    retryCount
   };
 }

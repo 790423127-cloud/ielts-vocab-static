@@ -299,6 +299,7 @@ export function buildFilteredWordIndices(pool, filter, search, { idictation = fa
       indices.push(targetIndex);
     }
   }
+
   return indices;
 }
 

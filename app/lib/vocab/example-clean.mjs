@@ -6,6 +6,12 @@
 
 const BULLET_RE = /^[\s•·●▪◦*‧∙・\-–—]+/;
 
+const META_EXAMPLE_RE = /^(?:You will often see the expression\b|In the passage,\s*["'].*["']\s+relates to\b|The word\s+["'].*["']\s+appears in many IELTS General Training reading texts\b)/i;
+
+export function isMetaExamplePlaceholder(example = "") {
+  return META_EXAMPLE_RE.test(String(example || "").trim());
+}
+
 /**
  * Cheap guard for large runtime lexicons. False positives are acceptable; a
  * false negative would skip the full cleanup pipeline.
@@ -18,6 +24,7 @@ export function exampleFieldsNeedCleanup(example = "", exampleCn = "", options =
   const maxWords = Number(options.maxWords) || 36;
 
   if (!text) return Boolean(options.synthesizeIfEmpty || raw !== text || rawCn !== textCn);
+  if (isMetaExamplePlaceholder(text)) return true;
   if (raw !== text || rawCn !== textCn) return true;
   if (BULLET_RE.test(text) || BULLET_RE.test(textCn)) return true;
   if (/\s{2,}|\s+([,.;!?])|([.!?])\2/.test(text) || /\s{2,}/.test(textCn)) return true;
@@ -188,14 +195,20 @@ export function pickBestExampleSentence(example = "", target = "", options = {})
 export function synthesizeExample(target = "", meaningZh = "", entryType = "word") {
   const w = String(target || "").trim();
   if (!w) return "";
+  void meaningZh;
+  void entryType;
+  // Missing examples stay empty until a real bilingual usage pair is supplied.
+  return "";
+  /* legacy meta templates intentionally disabled
   if (entryType === "phrase" || /\s/.test(w)) {
-    return `You will often see the expression "${w}" in IELTS reading passages.`;
+    return "";
   }
   const gloss = String(meaningZh || "").split(/[；;，,]/)[0].trim();
   if (gloss) {
     return `In the passage, "${w}" relates to ${gloss}.`;
   }
   return `The word "${w}" appears in many IELTS General Training reading texts.`;
+  */
 }
 
 function looksTruncatedExample(text = "") {
@@ -231,7 +244,8 @@ function looksTruncatedExample(text = "") {
  * @returns {{ example: string, repaired: boolean, reason: string }}
  */
 export function cleanExampleField(example = "", target = "", options = {}) {
-  const original = String(example || "").trim();
+  const rawOriginal = String(example || "").trim();
+  const original = isMetaExamplePlaceholder(rawOriginal) ? "" : rawOriginal;
   const entryType = options.entryType || (/\s/.test(String(target || "")) ? "phrase" : "word");
   const meaningZh = options.meaningZh || "";
   const allowSynthTruncated = options.synthesizeIfTruncated === true;
@@ -241,10 +255,14 @@ export function cleanExampleField(example = "", target = "", options = {}) {
       return {
         example: synthesizeExample(target, meaningZh, entryType),
         repaired: true,
-        reason: "synthesized_empty"
+        reason: rawOriginal ? "removed_meta_placeholder" : "missing_real_example"
       };
     }
-    return { example: "", repaired: false, reason: "empty" };
+    return {
+      example: "",
+      repaired: Boolean(rawOriginal),
+      reason: rawOriginal ? "removed_meta_placeholder" : "empty"
+    };
   }
 
   const stripped = stripExampleBulletsAndNoise(original);

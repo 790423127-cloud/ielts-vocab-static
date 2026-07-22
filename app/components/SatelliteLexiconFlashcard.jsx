@@ -8,7 +8,7 @@
  * layoutMode="default": original behavior for /basic.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import StudyRangeSummary from "./StudyRangeSummary";
 import VirtualList from "./VirtualList";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
@@ -58,6 +58,14 @@ function displaySatelliteCategory(value, isReadingG) {
   const s = String(value || "").trim();
   if (isReadingG && (/IELTS\s*G类|阅读核心|G类阅读/i.test(s) || !s)) return "G类阅读提升";
   return s || "";
+}
+
+function isRepeatedSenseExample(senses, index) {
+  const current = String(senses[index]?.example || senses[index]?.exampleEn || "").trim();
+  if (!current) return false;
+  return senses.slice(0, index).some((sense) =>
+    String(sense?.example || sense?.exampleEn || "").trim() === current
+  );
 }
 
 /**
@@ -127,7 +135,6 @@ export default function SatelliteLexiconFlashcard({
   sensesExtra = null
 }) {
   const isReadingG = layoutMode === "readingG";
-  const [sensesOpen, setSensesOpen] = useState(false);
   const commonCollocations = normalizePhraseItems(item?.collocations);
   const phraseCollocations = normalizePhraseItems(item?.phraseCollocations);
   const collocationFallback = [{ phrase: "暂无搭配", chinese: "" }];
@@ -136,7 +143,8 @@ export default function SatelliteLexiconFlashcard({
   const progressLabel = isStudyEmpty
     ? "0 / 0"
     : `${safeStudyPosition + 1} / ${studyCount}`;
-  const senseCount = Array.isArray(item?.senses) ? item.senses.length : 0;
+  const senses = Array.isArray(item?.senses) ? item.senses : [];
+  const supplementalSenses = senses.slice(1);
   const selectFilter = (nextFilter) => {
     onFilter(nextFilter);
     document.querySelectorAll("details.menu[open]").forEach((menu) => {
@@ -750,45 +758,42 @@ export default function SatelliteLexiconFlashcard({
 
                 <div className="meaning-block">
                   <div className="meaning-primary">{fallback(item?.meaning, "等待释义")}</div>
-                  {isReadingG && senseCount > 1 ? (
+                  {isReadingG && supplementalSenses.length ? (
                     <div className={rgStyles.rgSensesWrap}>
-                      <button
-                        type="button"
-                        className={rgStyles.rgSensesBtn}
-                        onClick={() => setSensesOpen((v) => !v)}
+                      <div className={rgStyles.rgSensesLabel}>补充义项 · {supplementalSenses.length}</div>
+                      <div
+                        className={rgStyles.rgSensesPanel}
+                        aria-label={`${supplementalSenses.length} 个补充义项`}
                       >
-                        其他义项 · {senseCount - 1}
-                      </button>
-                      {sensesOpen ? (
-                        <div className={rgStyles.rgSensesPanel}>
-                          {(item.senses || []).map((s, i) => (
-                            <div key={s.senseId || i} className={rgStyles.rgSenseRow}>
-                              <div>
+                        {supplementalSenses.map((s, i) => {
+                          const sourceIndex = i + 1;
+                          const repeatedExample = isRepeatedSenseExample(senses, sourceIndex);
+                          const example = s.example || s.exampleEn || "";
+                          const exampleZh = s.exampleCn || s.exampleZh || "";
+                          const hasUniqueExample = !repeatedExample && Boolean(example || exampleZh);
+                          return (
+                            <div
+                              key={s.senseId || sourceIndex}
+                              className={rgStyles.rgSenseRow}
+                              data-has-example={hasUniqueExample ? "true" : "false"}
+                            >
+                              <div className={rgStyles.rgSenseMeaning}>
                                 <strong>[{getPosDisplay(s.pos) || "—"}]</strong>{" "}
                                 {s.meaningZh || s.meaning || "—"}
-                                {i === 0 || s.isPrimary || s.readingCommon ? (
+                                {s.isPrimary || s.readingCommon ? (
                                   <span className={rgStyles.rgSenseTag}>阅读常用</span>
                                 ) : null}
                               </div>
-                              {s.example || s.exampleEn ? (
-                                <div className={rgStyles.rgMetaLine}>
-                                  {s.example || s.exampleEn}
-                                </div>
-                              ) : null}
-                              {s.exampleCn || s.exampleZh ? (
-                                <div className={rgStyles.rgMetaLine}>
-                                  {s.exampleCn || s.exampleZh}
-                                </div>
-                              ) : null}
-                              {s.source || s.sourceFile ? (
-                                <div className={rgStyles.rgMetaLine}>
-                                  来源：{s.source || s.sourceFile}
+                              {hasUniqueExample ? (
+                                <div className={rgStyles.rgSenseExample}>
+                                  {example ? <div className={rgStyles.rgSenseExampleEn}>{example}</div> : null}
+                                  {exampleZh ? <div className={rgStyles.rgSenseExampleZh}>{exampleZh}</div> : null}
                                 </div>
                               ) : null}
                             </div>
-                          ))}
-                        </div>
-                      ) : null}
+                          );
+                        })}
+                      </div>
                     </div>
                   ) : null}
                   {sensesExtra}

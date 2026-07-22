@@ -5380,6 +5380,58 @@ body > main {
   font-size: calc(clamp(23px, 2vw, 28px) * var(--font-scale));
 }
 
+.page--word-flash .meaning-expanded {
+  display: flex;
+  width: min(760px, 100%);
+  margin: 10px auto 0;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  color: #52645f;
+  font-size: calc(14px * var(--font-scale));
+  line-height: 1.55;
+}
+
+.page--word-flash .meaning-expanded > span {
+  flex: 0 0 auto;
+  color: var(--green);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 750;
+}
+
+.page--word-flash .meaning-expanded p {
+  margin: 0;
+  text-align: left;
+}
+
+.page--word-flash .meaning-senses {
+  display: flex;
+  width: min(760px, 100%);
+  margin: 9px auto 0;
+  padding: 0;
+  justify-content: center;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  list-style: none;
+  color: #40534d;
+  font-size: calc(12px * var(--font-scale));
+}
+
+.page--word-flash .meaning-senses li {
+  display: inline-flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.page--word-flash .meaning-senses span {
+  color: var(--muted);
+  font-size: calc(10px * var(--font-scale));
+}
+
+.page--word-flash .meaning-senses strong {
+  font-weight: 650;
+}
+
 .word-dictionary-panel {
   width: 100%;
   margin-top: auto;

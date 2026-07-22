@@ -35,7 +35,7 @@ export function normalizeReadingGItem(entry, index = 0) {
   const cleanedExample = cleanExampleField(entry.example || "", word, {
     entryType,
     meaningZh: primaryMeaningZh,
-    synthesizeIfEmpty: true,
+    synthesizeIfEmpty: false,
     maxWords: 32
   });
 

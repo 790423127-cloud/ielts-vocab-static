@@ -100,9 +100,7 @@ function resolveIdictationStudyIndex(studyPool, {
     : toIdictationSourceIndex(savedIndex);
 
   function restoreFromPoolItem(item, reason) {
-    if (!item || !Number.isInteger(item.originalIndex)) {
-      return null;
-    }
+    if (!item || !Number.isInteger(item.originalIndex)) return null;
     return { index: item.originalIndex, restored: true, reason, filter: nextFilter };
   }
 
@@ -119,8 +117,7 @@ function resolveIdictationStudyIndex(studyPool, {
   if (restored) return restored;
 
   if (savedSourceIndex >= 0 && savedSourceIndex < studyPool.length) {
-    const poolItem = studyPool[savedSourceIndex];
-    restored = restoreFromPoolItem(poolItem, "idictationSourceIndex");
+    restored = restoreFromPoolItem(studyPool[savedSourceIndex], "idictationSourceIndex");
     if (restored) return restored;
   }
 
@@ -137,6 +134,7 @@ function resolveIdictationStudyIndex(studyPool, {
 
 /**
  * Resolve a saved word position without falling back to the first study word.
+ * Saved pure inflection positions are migrated to their brushable base word.
  */
 export function resolveWordStudyIndex(words, {
   session = null,
@@ -165,7 +163,7 @@ export function resolveWordStudyIndex(words, {
 
   const list = Array.isArray(words) ? words : [];
   if (!list.length) {
-    return { index: -1, restored: false, reason: "emptyLexicon" };
+    return { index: -1, restored: false, reason: "emptyLexicon", filter: nextFilter };
   }
 
   const filterKeyValue = filterKey(nextFilter);
@@ -298,9 +296,7 @@ export function buildWordFlashSessionPayload({
 
   if (isIdictationFlashFilter(nextFilter)) {
     const sourceIndex = toIdictationSourceIndex(index);
-    if (sourceIndex >= 0) {
-      payload.idictationSourceIndex = sourceIndex;
-    }
+    if (sourceIndex >= 0) payload.idictationSourceIndex = sourceIndex;
   }
 
   return payload;

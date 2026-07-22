@@ -71,7 +71,9 @@
   var controlsCollapsed = false;
 
   function controlsViewportKey() {
-    return window.matchMedia("(max-width: 900px)").matches ? "mobile" : "desktop";
+    if (window.matchMedia("(max-width: 900px)").matches) return "mobile";
+    if (window.matchMedia("(max-height: 900px)").matches) return "compact-desktop";
+    return "desktop";
   }
 
   function controlsStorageKey(viewport) {
@@ -129,7 +131,10 @@
     try {
       saved = localStorage.getItem(controlsStorageKey(controlsViewport));
     } catch (e) {}
-    applyControlsState(saved == null ? controlsViewport === "mobile" : saved === "1", false);
+    applyControlsState(
+      saved == null ? controlsViewport !== "desktop" : saved === "1",
+      false
+    );
   }
 
   function toast(msg) {

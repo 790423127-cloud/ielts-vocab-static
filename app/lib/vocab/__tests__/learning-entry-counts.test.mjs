@@ -22,7 +22,7 @@ const learningEntries = [
     group: "IELTS",
     items: [
       { title: "Speaking", filter: { type: "ielts", value: "Speaking" } },
-      { title: "全部单词", filter: { type: "everything", value: "" } }
+      { title: "全部可刷词", filter: { type: "everything", value: "" } }
     ]
   }
 ];
@@ -31,7 +31,24 @@ test("buildLearningEntryCounts tallies filters in one pass", () => {
   const words = [
     { word: "a", status: "", favorite: false, ieltsUse: ["Speaking"], topics: ["工作"], difficulty: "基础高频", meaning: "1", pos: "n", example: "e", collocations: ["c"], phraseCollocations: ["p"] },
     { word: "b", status: "不熟", favorite: true, ieltsUse: ["Reading"], topics: ["教育"], difficulty: "中级核心", meaning: "2", pos: "n", example: "e", collocations: ["c"], phraseCollocations: ["p"] },
-    { word: "c", status: "熟悉", favorite: true, ieltsUse: ["Speaking"], topics: ["科技"], difficulty: "高级加分", meaning: "3", pos: "n", example: "e", collocations: ["c"], phraseCollocations: ["p"] }
+    { word: "c", status: "熟悉", favorite: true, ieltsUse: ["Speaking"], topics: ["科技"], difficulty: "高级加分", meaning: "3", pos: "n", example: "e", collocations: ["c"], phraseCollocations: ["p"] },
+    {
+      word: "conducted",
+      status: "",
+      favorite: false,
+      entryType: "inflected-form",
+      studyMode: "reference",
+      baseWord: "conduct",
+      relationType: "past_or_participle",
+      ieltsUse: ["Speaking"],
+      topics: ["工作"],
+      difficulty: "中级核心",
+      meaning: "conduct 的过去式",
+      pos: "verb",
+      example: "e",
+      collocations: ["c"],
+      phraseCollocations: ["p"]
+    }
   ];
 
   const counts = buildLearningEntryCounts(words, learningEntries, {
@@ -45,6 +62,43 @@ test("buildLearningEntryCounts tallies filters in one pass", () => {
   assert.equal(counts.get("status:收藏"), 1);
   assert.equal(counts.get("ielts:Speaking"), 1);
   assert.equal(counts.get("everything"), 3);
+});
+
+test("buildLearningEntryCounts keeps non-inflection reference entries only in supported ranges", () => {
+  const entries = [
+    {
+      group: "reference",
+      items: [
+        { title: "全部可刷词", filter: { type: "everything", value: "" } },
+        { title: "今日任务", filter: { type: "all", value: "" } },
+        { title: "阶段4", filter: { type: "topic", value: "G类完整学习计划·阶段4" } }
+      ]
+    }
+  ];
+  const words = [{
+    word: "specialist-name",
+    status: "",
+    studyMode: "reference",
+    entryType: "headword",
+    topics: ["G类完整学习计划·阶段4"],
+    ieltsUse: ["Reading"],
+    difficulty: "低频认识即可",
+    meaning: "专名",
+    pos: "noun",
+    example: "e",
+    collocations: ["c"],
+    phraseCollocations: ["p"]
+  }];
+
+  const counts = buildLearningEntryCounts(words, entries, {
+    filterKey,
+    isIdictationFlashFilter: () => false,
+    getIdictationSource: () => null
+  });
+
+  assert.equal(counts.get("everything"), 1);
+  assert.equal(counts.get("all"), 0);
+  assert.equal(counts.get("topic:G类完整学习计划·阶段4"), 1);
 });
 
 test("buildLearningEntryCounts uses idictation metadata before the lazy payload loads", () => {

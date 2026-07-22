@@ -192,7 +192,7 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
     assert.match(source, /spelling\.html\?source=error_bank/);
     assert.match(source, /spelling\.html\?source=srs_review/);
     assert.doesNotMatch(source, /href="#"/);
-    assert.match(source, /20260714_d27_action_dock_stability_v1/);
+    assert.match(source, /20260715_d30_laptop_height_v1/);
   }
 
   assert.match(spellingScript, /const query = new URLSearchParams\(window\.location\.search\)/);
@@ -203,9 +203,9 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
   assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
   assert.doesNotMatch(sources.at(-1), /href="\/spelling-(?:words|phrases)"/);
-  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260714_d27_action_dock_stability_v1"/);
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260715_d30_laptop_height_v1"/);
   assert.match(exportRoute, /id="topToolsToggle"/);
-  assert.match(exportRoute, /topToolsCollapsed=saved===null\?viewport==="mobile"/);
+  assert.match(exportRoute, /topToolsCollapsed=saved===null\?\(viewport==="mobile"\|\|viewport==="compact-desktop"\)/);
   assert.match(exportRoute, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   assert.match(exportRoute, /classList\.toggle\("mobile-mode",narrow&&mobileMode\)/);
   assert.doesNotMatch(exportRoute, /<button id="mobileModeBtn"/);

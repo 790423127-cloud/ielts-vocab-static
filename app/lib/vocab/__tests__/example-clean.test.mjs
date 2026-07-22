@@ -33,14 +33,26 @@ test("shortens multi-sentence corpus dump", () => {
   assert.ok(!best.includes("greatest asset") || best.split(/[.!?]/).filter(Boolean).length <= 2);
 });
 
-test("synthesizes empty phrase example", () => {
+test("does not synthesize a meta-description for an empty phrase example", () => {
   const cleaned = cleanExampleField("", "according to", {
     entryType: "phrase",
     meaningZh: "根据",
     synthesizeIfEmpty: true
   });
   assert.equal(cleaned.repaired, true);
-  assert.match(cleaned.example, /according to/i);
+  assert.equal(cleaned.example, "");
+  assert.equal(cleaned.reason, "missing_real_example");
+});
+
+test("removes legacy meta-description examples", () => {
+  const cleaned = cleanExampleField(
+    'You will often see the expression "copy of" in IELTS reading passages.',
+    "copy of",
+    { entryType: "phrase", synthesizeIfEmpty: false }
+  );
+  assert.equal(cleaned.repaired, true);
+  assert.equal(cleaned.example, "");
+  assert.equal(cleaned.reason, "removed_meta_placeholder");
 });
 
 test("strip bullets helper", () => {

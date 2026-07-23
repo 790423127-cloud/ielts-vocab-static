@@ -37,6 +37,12 @@ test("optional enrichment fields do not create a paid completion backlog", () =>
   assert.equal(getUnifiedQualityQueue(word), "ready");
 });
 
+test("legitimate words named none, null, and unknown are valid headwords", () => {
+  for (const word of ["none", "null", "unknown"]) {
+    assert.equal(isMissingAiFields(readyWord({ word })), false, word);
+  }
+});
+
 test("learning state does not affect the data-quality queue", () => {
   const missing = readyWord({ status: "熟悉", definition: "" });
   assert.equal(getWordQualityStatus(missing).contentMissing, true);

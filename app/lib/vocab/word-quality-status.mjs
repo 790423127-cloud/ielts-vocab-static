@@ -14,6 +14,10 @@ export function hasUsefulQualityText(value) {
   return Boolean(normalized) && !MISSING_TEXT_RE.test(normalized);
 }
 
+export function hasUsefulHeadword(value) {
+  return Boolean(String(value ?? "").trim());
+}
+
 function hasPhraseItems(value) {
   return normalizeAiPhraseItems(value).some((item) => isReliableAiCollocation(item));
 }
@@ -21,7 +25,9 @@ function hasPhraseItems(value) {
 export function getWordQualityStatus(word = {}) {
   const missingContentFields = [];
 
-  if (!hasUsefulQualityText(word.word)) missingContentFields.push("word");
+  // Words such as "none", "null", and "unknown" are legitimate English
+  // headwords even though the same strings are placeholders in content fields.
+  if (!hasUsefulHeadword(word.word)) missingContentFields.push("word");
   if (!hasUsefulQualityText(word.pos)) missingContentFields.push("pos");
   if (!hasUsefulQualityText(word.meaning)) missingContentFields.push("meaning");
   if (!hasUsefulQualityText(word.definition)) missingContentFields.push("definition");

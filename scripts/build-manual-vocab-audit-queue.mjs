@@ -65,7 +65,8 @@ function normalizePhraseItems(value) {
 
 function classifyEntry(word) {
   const missingCoreFields = [];
-  for (const field of ["word", "pos", "meaning", "definition", "example", "exampleCn"]) {
+  if (!text(word?.word)) missingCoreFields.push("word");
+  for (const field of ["pos", "meaning", "definition", "example", "exampleCn"]) {
     if (!useful(word?.[field])) missingCoreFields.push(field);
   }
 

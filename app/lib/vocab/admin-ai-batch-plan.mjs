@@ -9,6 +9,7 @@ import {
   isInvalidAiContent,
   isMissingAiFields,
   isMissingClassification,
+  needsOptionalWordEnrichment,
   summarizeWordQuality
 } from "./word-quality-status.mjs";
 
@@ -47,8 +48,12 @@ function isPaidAiEligibleWord(word) {
   return Boolean(word?.word && String(word.word).trim()) && !isInflectedReferenceWord(word);
 }
 
+function needsStructureRepair(word) {
+  return isInvalidAiContent(word) || isLikelyWrongAiWord(word);
+}
+
 function needsRepair(word) {
-  return isInvalidAiContent(word) || isLikelyWrongAiWord(word) || hasHeadwordRepair(word?.word);
+  return needsStructureRepair(word) || hasHeadwordRepair(word?.word);
 }
 
 function selectIndexedWords(words, predicate, limit = Infinity) {
@@ -70,7 +75,7 @@ function resolveTargetLimit(value, fallback = Infinity) {
 export function buildQualityLaneSummary(words = []) {
   return summarizeWordQuality(
     (Array.isArray(words) ? words : []).filter(isPaidAiEligibleWord),
-    { needsRepair }
+    { needsRepair: needsStructureRepair }
   );
 }
 
@@ -93,7 +98,7 @@ export function buildGenerateMissingPlan(words, options = {}) {
   words.forEach((w, i) => {
     if (!isPaidAiEligibleWord(w)) return;
     const missing = isMissingAiFields(w);
-    const wrong = needsRepair(w);
+    const wrong = needsStructureRepair(w);
 
     if (wrong && repairWrong) wrongTargets.push({ w, i, missing, wrong: true });
     else if (!wrong && missing) missingTargets.push({ w, i, missing: true, wrong: false });
@@ -131,7 +136,7 @@ export function buildOneByOneCompletionPlan(words) {
 
 export function buildAnomalyRepairPlan(words, options = {}) {
   const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.wrongRepair);
-  const targets = selectIndexedWords(words, needsRepair, maxTargets);
+  const targets = selectIndexedWords(words, needsStructureRepair, maxTargets);
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
@@ -141,10 +146,46 @@ export function buildSlowCompletionPlan(words) {
 }
 
 export function buildWrongRepairPlan(words) {
-  const targets = selectIndexedWords(words, needsRepair, PAID_AI_LIMITS.wrongRepair);
+  const targets = selectIndexedWords(words, needsStructureRepair, PAID_AI_LIMITS.wrongRepair);
   return buildPlan(targets, {
     batchSize: PAID_AI_LIMITS.batchSize,
     concurrency: Math.min(2, PAID_AI_LIMITS.concurrency)
+  });
+}
+
+function enrichmentPriority(word = {}) {
+  let score = 0;
+  if (word.favorite) score += 100;
+  if (String(word.status || "").trim() === "不熟") score += 40;
+  const difficulty = String(word.difficulty || "").trim();
+  if (difficulty === "基础高频") score += 30;
+  else if (difficulty === "中级核心") score += 20;
+  else if (difficulty === "高级加分") score += 10;
+  return score;
+}
+
+export function buildEnrichmentPlan(words, options = {}) {
+  const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.fast);
+  const excludedWordKeys = options.excludeWordKeys instanceof Set
+    ? options.excludeWordKeys
+    : new Set(options.excludeWordKeys || []);
+  const candidates = [];
+
+  for (let i = 0; i < words.length; i += 1) {
+    const w = words[i];
+    if (!isPaidAiEligibleWord(w)) continue;
+    const key = normalizeWord(w.word);
+    if (!key || excludedWordKeys.has(key) || hasHeadwordRepair(w.word)) continue;
+    if (getUnifiedQualityQueue(w, { needsRepair: needsStructureRepair(w) }) !== "ready") continue;
+    if (!needsOptionalWordEnrichment(w)) continue;
+    candidates.push({ w, i, priority: enrichmentPriority(w) });
+  }
+
+  candidates.sort((left, right) => right.priority - left.priority || left.i - right.i);
+  const targets = candidates.slice(0, maxTargets).map(({ w, i }) => ({ w, i, enrichment: true }));
+  return buildPlan(targets, {
+    batchSize: PAID_AI_LIMITS.batchSize,
+    concurrency: PAID_AI_LIMITS.concurrency
   });
 }
 

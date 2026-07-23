@@ -85,7 +85,7 @@ export function normalizePhraseItems(value) {
       };
     })
     .filter((item) => item.phrase)
-    .slice(0, 3);
+    .slice(0, 4);
 }
 
 export function normalizeStringArray(value) {
@@ -107,7 +107,7 @@ export function mergePhraseLists(a = [], b = []) {
     });
   });
 
-  return Array.from(map.values()).slice(0, 3);
+  return Array.from(map.values()).slice(0, 4);
 }
 
 export function normalizeFormList(value) {

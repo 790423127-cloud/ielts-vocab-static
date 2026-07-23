@@ -3,6 +3,11 @@ import {
   sanitizeAiWordCollocations
 } from "./admin-ai-content-profile.mjs";
 import { USER_STATE_FIELDS, wordIdentity } from "./word-cache-meta.mjs";
+import {
+  AI_WRITE_MODES,
+  mergeOptionalEnrichment,
+  mergePreciseStructureRepair
+} from "./ai-field-repair-policy.mjs";
 import { hasUsefulQualityText } from "./word-quality-status.mjs";
 
 export const AI_REPLACE_EXISTING_FIELD = "aiReplaceExisting";
@@ -146,6 +151,14 @@ export function applyAiResultByIdentity(
 
 export function mergeAiWriteWithExisting(existingWord = {}, candidateWord = {}) {
   if (!candidateWord || typeof candidateWord !== "object") return candidateWord;
+
+  if (candidateWord.aiWriteMode === AI_WRITE_MODES.PRECISE_STRUCTURE_REPAIR) {
+    return mergePreciseStructureRepair(existingWord, candidateWord);
+  }
+  if (candidateWord.aiWriteMode === AI_WRITE_MODES.OPTIONAL_ENRICHMENT) {
+    return mergeOptionalEnrichment(existingWord, candidateWord);
+  }
+
   if (!Object.prototype.hasOwnProperty.call(candidateWord, AI_REPLACE_EXISTING_FIELD)) {
     return sanitizeAiWordCollocations(candidateWord);
   }

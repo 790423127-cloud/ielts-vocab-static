@@ -63,7 +63,7 @@ import {
   normalizePhraseItems,
   normalizeWord,
 } from "./lib/vocab/page-word-helpers.mjs";
-import { getUnifiedQualityQueue } from "./lib/vocab/word-quality-status.mjs";
+import { getWordQualityEvaluation } from "./lib/vocab/word-quality-status.mjs";
 
 // Source anchors kept for regression tests: AI工具（会扣费）; 听力阅读同义替换; /data/phrases.json; LR_SYNONYM_URL; asSynonymItems(payload).length;
 // Runtime mode counts display an em dash until catalog metadata is ready.
@@ -588,7 +588,7 @@ function Home() {
 
   const wordLibraryStats = useMemo(() => {
     if (!isWordFlashActive) {
-      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0, repairMissing: 0 };
+      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0, repairMissing: 0, enrichmentThin: 0, familyReview: 0, familyPromotion: 0 };
     }
 
     let total = 0;
@@ -601,6 +601,10 @@ function Home() {
     let missing = 0;
     let classifyMissing = 0;
     let repairMissing = 0;
+    let enrichmentThin = 0;
+    let familyReview = 0;
+    let familyPromotion = 0;
+    const knownHeadwords = new Set(libraryWordMap.keys());
 
     for (const word of words) {
       if (isInflectedReferenceWord(word)) {
@@ -614,20 +618,28 @@ function Home() {
       if (word.status === "不熟") unfamiliar += 1;
       if (word.status === "熟悉") familiar += 1;
       if (word.lastReviewedAt && new Date(word.lastReviewedAt).toDateString() === new Date().toDateString()) todayReviewed += 1;
-      const qualityQueue = getUnifiedQualityQueue(word, {
-        needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word)
+      const quality = getWordQualityEvaluation(word, {
+        needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word),
+        knownHeadwords
       });
-      if (qualityQueue === "completion") missing += 1;
-      if (qualityQueue === "classification") classifyMissing += 1;
-      if (qualityQueue === "repair") repairMissing += 1;
+      if (quality.lane === "completion") missing += 1;
+      if (quality.lane === "classification") classifyMissing += 1;
+      if (quality.lane === "repair") repairMissing += 1;
+      if (quality.needsOptionalEnrichment) enrichmentThin += 1;
+      if (quality.needsFamilyReview) familyReview += 1;
+      if (quality.hasFamilyPromotionCandidate) familyPromotion += 1;
     }
 
-    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing, repairMissing };
-  }, [isWordFlashActive, words]);
+    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing, repairMissing, enrichmentThin, familyReview, familyPromotion };
+  }, [isWordFlashActive, words, libraryWordMap]);
 
   const familiarCount = wordLibraryStats.familiar;
   const missingCount = wordLibraryStats.missing;
   const classifyMissingCount = wordLibraryStats.classifyMissing;
+  const repairMissingCount = wordLibraryStats.repairMissing;
+  const enrichmentThinCount = wordLibraryStats.enrichmentThin;
+  const familyReviewCount = wordLibraryStats.familyReview;
+  const familyPromotionCount = wordLibraryStats.familyPromotion;
 
   const audioStats = useMemo(() => {
     if (!isWordFlashActive) {
@@ -1013,7 +1025,11 @@ function Home() {
             wordLibraryStats,
             familiarCount,
             missingCount,
-            classifyMissingCount
+            classifyMissingCount,
+            repairMissingCount,
+            enrichmentThinCount,
+            familyReviewCount,
+            familyPromotionCount
           }}
           speech={{
             speakWord,
@@ -1035,6 +1051,7 @@ function Home() {
             audioStats,
             batchInfo,
             aiRunState,
+            qualityStats: wordLibraryStats,
             duplicateInfo,
             adminActions: {
               importFromText, handleFile, openEditCurrentWord, deleteCurrentWord,

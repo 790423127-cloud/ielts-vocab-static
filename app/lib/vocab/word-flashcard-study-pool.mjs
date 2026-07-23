@@ -9,6 +9,8 @@ import {
   resolveBrushableWord
 } from "./word-study-eligibility.mjs";
 import {
+  getWordEnrichmentStatus,
+  getWordQualityStatus,
   isMissingAiFields,
   isMissingClassification
 } from "./word-quality-status.mjs";
@@ -150,7 +152,15 @@ export function wordMatchesFilter(word, filter) {
     if (filter.value === "熟悉") return word.status === "熟悉";
     if (filter.value === "收藏") return word.status !== "熟悉" && word.favorite;
     if (filter.value === "待补全") return isMissingAiFields(word);
-    if (filter.value === "待归纳") return !isMissingAiFields(word) && isMissingClassification(word);
+    if (filter.value === "待修复") return getWordQualityStatus(word).contentInvalid;
+    if (filter.value === "待归纳") {
+      const quality = getWordQualityStatus(word);
+      return !quality.contentMissing && !quality.contentInvalid && isMissingClassification(word);
+    }
+    if (filter.value === "待丰富") {
+      const quality = getWordQualityStatus(word);
+      return !quality.contentMissing && !quality.contentInvalid && getWordEnrichmentStatus(word).needsOptionalEnrichment;
+    }
   }
 
   if (word.status === "熟悉") return false;
@@ -174,8 +184,10 @@ export function getFilterName(filter) {
   if (filter.type === "status" && filter.value === "不熟") return "不熟词库";
   if (filter.type === "status" && filter.value === "熟悉") return "熟悉词库";
   if (filter.type === "status" && filter.value === "收藏") return "收藏词";
-  if (filter.type === "status" && filter.value === "待补全") return "资料缺失";
+  if (filter.type === "status" && filter.value === "待补全") return "必须补全";
+  if (filter.type === "status" && filter.value === "待修复") return "结构异常";
   if (filter.type === "status" && filter.value === "待归纳") return "仅缺分类";
+  if (filter.type === "status" && filter.value === "待丰富") return "可选丰富";
   if (filter.type === "status") return `状态：${filter.value}`;
   return "待学习单词";
 }

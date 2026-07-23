@@ -89,22 +89,24 @@ function classifyEntry(word) {
   const validCommon = common.filter((item) => item.valid);
   const validPhrase = phrase.filter((item) => item.valid);
   const reviewReasons = [];
-  const optionalEnrichmentReasons = [];
+  const enrichmentReviewReasons = [];
+  const familyReviewReasons = [];
 
   if (quality.contentMissing) reviewReasons.push("missing-required-content");
   if (quality.contentInvalid) reviewReasons.push("invalid-content-structure");
-  if (common.some((item) => !item.valid)) reviewReasons.push("invalid-common-collocation");
-  if (phrase.some((item) => !item.valid)) reviewReasons.push("invalid-phrase-collocation");
   if (quality.classificationMissing) reviewReasons.push("missing-classification");
-  if (quality.needsFamilyReview) reviewReasons.push("invalid-family-structure");
-  if (quality.needsOptionalEnrichment) {
-    optionalEnrichmentReasons.push("below-tier-enrichment-target");
-  }
+
+  if (common.some((item) => !item.valid)) enrichmentReviewReasons.push("invalid-common-collocation");
+  if (phrase.some((item) => !item.valid)) enrichmentReviewReasons.push("invalid-phrase-collocation");
+  if (quality.needsOptionalEnrichment) enrichmentReviewReasons.push("below-tier-enrichment-target");
+
+  if (quality.needsFamilyReview) familyReviewReasons.push("invalid-family-structure");
+  if (quality.hasFamilyPromotionCandidate) familyReviewReasons.push("standalone-promotion-candidate");
 
   const requiredRepair = quality.lane === "completion" || quality.lane === "repair";
   const priority = requiredRepair
     ? "P1"
-    : quality.classificationMissing || quality.needsFamilyReview
+    : quality.classificationMissing
       ? "P2"
       : "READY";
 
@@ -129,10 +131,13 @@ function classifyEntry(word) {
     enrichmentCounts: quality.enrichmentCounts,
     enrichmentTarget: quality.enrichmentTarget,
     needsOptionalEnrichment: quality.needsOptionalEnrichment,
-    optionalEnrichmentReasons,
+    enrichmentReviewReasons,
+    needsEnrichmentReview: enrichmentReviewReasons.length > 0,
     familyStatus: quality.familyStatus,
     familyReviewItems: quality.familyReviewItems,
     familyPromotionCandidates: quality.familyPromotionCandidates,
+    familyReviewReasons,
+    needsFamilyReview: familyReviewReasons.length > 0,
     reviewReasons,
     needsManualReview: reviewReasons.length > 0
   };
@@ -140,7 +145,8 @@ function classifyEntry(word) {
 
 const entries = words.map(classifyEntry);
 const reviewEntries = entries.filter((entry) => entry.needsManualReview);
-const optionalEnrichment = entries.filter((entry) => entry.needsOptionalEnrichment);
+const optionalEnrichment = entries.filter((entry) => entry.needsEnrichmentReview);
+const familyReviewEntries = entries.filter((entry) => entry.needsFamilyReview);
 
 const familyCandidateMap = new Map();
 words.forEach((owner) => {
@@ -213,6 +219,7 @@ const summary = {
   readyCount: countLane("ready"),
   manualReviewCount: reviewEntries.length,
   optionalEnrichmentCount: optionalEnrichment.length,
+  familyReviewQueueCount: familyReviewEntries.length,
   enrichmentThinCount: entries.filter((entry) => entry.enrichmentStatus === "thin").length,
   enrichmentStandardCount: entries.filter((entry) => entry.enrichmentStatus === "standard").length,
   enrichmentRichCount: entries.filter((entry) => entry.enrichmentStatus === "rich").length,
@@ -225,7 +232,7 @@ const summary = {
   familyMembersAlreadyStandalone: familyCandidates.filter((item) => item.existingInLexicon).length,
   familyMembersEligibleForStandaloneReview: familyCandidates.filter((item) => item.eligibleForStandaloneReview).length,
   familyStructureReviewCount: entries.filter((entry) => entry.familyStatus === "review").length,
-  note: "Required repairs are separated from optional enrichment. Fewer than four collocations alone does not make an entry defective."
+  note: "Required repair, classification, optional enrichment, and family review are independent queues. Collocation quantity never creates a required-content repair by itself."
 };
 
 rmSync(outputDir, { recursive: true, force: true });
@@ -243,6 +250,7 @@ function writeJsonLines(filename, values) {
 writeJson("summary.json", summary);
 writeJsonLines("entries-needing-review.jsonl", reviewEntries);
 writeJsonLines("optional-enrichment.jsonl", optionalEnrichment);
+writeJsonLines("family-review.jsonl", familyReviewEntries);
 writeJsonLines("word-family-candidates.jsonl", familyCandidates);
 writeJson("duplicate-headwords.json", duplicateGroups);
 

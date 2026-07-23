@@ -7,6 +7,9 @@ on:
     branches: [master, main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   verify:
     name: quality + test + build
@@ -16,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -23,20 +28,21 @@ jobs:
           node-version: "20"
           cache: npm
 
-      - name: Install dependencies
+      - name: Install dependencies and security patch
         run: |
           npm ci
           npm install next@15.5.21 --save-exact --registry=https://registry.npmjs.org
 
-      - name: Upload patched dependency manifests
-        uses: actions/upload-artifact@v4
-        with:
-          name: patched-dependency-manifests-${{ github.run_id }}
-          path: |
-            package.json
-            package-lock.json
-          if-no-files-found: error
-          retention-days: 7
+      - name: Commit patched dependency manifests
+        if: github.event_name == 'pull_request' && github.head_ref == 'codex/ai-four-sections-main-meaning-v1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update Next.js to 15.5.21"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
 
       - name: Dependency audit
         shell: bash
@@ -80,7 +86,6 @@ jobs:
       - name: Production build
         run: npm run build
         env:
-          # Build must not require real secrets
           DEEPSEEK_API_KEY: ""
 
       - name: Export semantic review candidates

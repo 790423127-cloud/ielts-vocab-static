@@ -60,15 +60,22 @@ test("normalizes one main meaning, concise other meanings, and exactly one examp
   assert.equal(isAiContentProfileComplete(entry), true);
 });
 
-test("forms reject self links, unknown relation types, phrases, and duplicates", () => {
+test("forms reject self links, unknown relation types, phrases, duplicates, and protected plural-like headwords", () => {
   assert.deepEqual(normalizeAiForms([
     { word: "news", type: "plural" },
     { word: "newses", type: "invented" },
     { word: "news items", type: "plural" },
     { word: "newss", type: "plural" },
     { word: "newss", type: "plural" }
-  ], "news"), [
-    { word: "newss", type: "plural", note: "", source: "ai-generated" }
+  ], "news"), []);
+
+  assert.deepEqual(normalizeAiForms([
+    { word: "processes", type: "plural" },
+    { word: "processes", type: "plural" },
+    { word: "processing", type: "present participle" }
+  ], "process").map(({ word, type }) => ({ word, type })), [
+    { word: "processes", type: "plural" },
+    { word: "processing", type: "present participle / gerund" }
   ]);
 });
 

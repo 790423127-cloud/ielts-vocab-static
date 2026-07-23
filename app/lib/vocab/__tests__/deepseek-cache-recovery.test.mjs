@@ -31,6 +31,32 @@ test("fills only missing fields and preserves protected state", () => {
   assert.deepEqual(plan.words[0].collocations, [{ phrase: "cashless payment", chinese: "无现金支付" }]);
 });
 
+test("recovery removes huh rows, duplicates, and keeps at most four reliable collocations", () => {
+  const words = [{ id: "1", word: "charge", collocations: [] }];
+  const cache = {
+    charge: {
+      word: "charge",
+      common_collocations: [
+        { phrase: "huh?", chinese: "啊？" },
+        { phrase: "charge a fee", chinese: "收取费用" },
+        { phrase: "charge a fee", chinese: "收费" },
+        { phrase: "additional charge", chinese: "额外费用" },
+        { phrase: "charge a customer", chinese: "向顾客收费" },
+        { phrase: "service charge", chinese: "服务费" },
+        { phrase: "charge a card", chinese: "从卡中扣款" }
+      ]
+    }
+  };
+
+  const plan = buildDeepseekCacheRecoveryPlan(words, cache);
+  assert.deepEqual(plan.words[0].collocations.map(({ phrase }) => phrase), [
+    "charge a fee",
+    "additional charge",
+    "charge a customer",
+    "service charge"
+  ]);
+});
+
 test("recovers main detail, other meanings, forms, and word family without touching IDs", () => {
   const words = [{
     id: "charge-id",

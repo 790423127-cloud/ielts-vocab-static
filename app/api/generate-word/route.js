@@ -3,15 +3,13 @@ export const runtime = "nodejs";
 import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
 import {
   AiProfileError,
+  isUsableAiProfile,
   mergeProfileCache,
   normalizeProfileKey,
   readProfileCache,
   requestDeepseekProfiles
 } from "../../lib/ai/deepseek-word-profile.server.mjs";
-import {
-  isAiContentProfileComplete,
-  withAiClientCollocationPayload
-} from "../../lib/vocab/admin-ai-content-profile.mjs";
+import { withAiClientCollocationPayload } from "../../lib/vocab/admin-ai-content-profile.mjs";
 
 export async function POST(req) {
   const guard = requireLocalAdmin(req, { allowLocalhostAlways: true });
@@ -26,7 +24,7 @@ export async function POST(req) {
 
     const key = normalizeProfileKey(cleanWord);
     const cache = readProfileCache();
-    if (!force && isAiContentProfileComplete(cache[key])) {
+    if (!force && isUsableAiProfile(cache[key])) {
       return Response.json({
         ...withAiClientCollocationPayload({ ...cache[key], word: cleanWord }),
         inputId: cleanInputId,
@@ -62,6 +60,7 @@ export async function POST(req) {
     const headers = error?.retryAfter ? { "Retry-After": error.retryAfter } : undefined;
     return Response.json({
       error: error instanceof Error ? error.message : "Server error",
+      code: error?.code || "",
       detail: error?.detail || ""
     }, { status, headers });
   }

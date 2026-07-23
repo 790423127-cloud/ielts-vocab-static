@@ -85,7 +85,7 @@ export function normalizePhraseItems(value) {
       };
     })
     .filter((item) => item.phrase)
-    .slice(0, 3);
+    .slice(0, 4);
 }
 
 export function normalizeStringArray(value) {
@@ -107,7 +107,7 @@ export function mergePhraseLists(a = [], b = []) {
     });
   });
 
-  return Array.from(map.values()).slice(0, 3);
+  return Array.from(map.values()).slice(0, 4);
 }
 
 export function normalizeFormList(value) {
@@ -885,39 +885,53 @@ export function flattenWordFieldsForCheck(word) {
   return values.join(" ").toLowerCase();
 }
 
-export function isLikelyWrongAiWord(word) {
-  if (!word?.word) return false;
+export function getLikelyWrongAiWordReasons(word) {
+  if (!word?.word) return [];
 
-  const text = flattenWordFieldsForCheck(word);
+  const reasons = [];
+  const exactPlaceholderRe = /^(?:undefined|null|nan|\?{2,}|example sentence|中文释义|英文释义|meaning here|translation here|待补全|待完善|暂无|无释义|not available)$/i;
+  const scalarFields = ["phonetic", "pos", "meaning", "definition", "example", "exampleCn", "difficulty"];
+
+  for (const field of scalarFields) {
+    const value = String(word?.[field] ?? "").trim();
+    if (value && exactPlaceholderRe.test(value)) reasons.push(`placeholder:${field}`);
+  }
+
+  function inspectList(value, field) {
+    if (!Array.isArray(value)) return;
+    value.forEach((item, index) => {
+      const values = item && typeof item === "object" ? Object.values(item) : [item];
+      if (values.some((entry) => exactPlaceholderRe.test(String(entry ?? "").trim()))) {
+        reasons.push(`placeholder:${field}[${index}]`);
+      }
+    });
+  }
+
+  inspectList(word.collocations, "collocations");
+  inspectList(word.phraseCollocations, "phraseCollocations");
+
+  // 只检查词形/词族里“完全等于截断拼写”的项目，避免把正常中文“完成”
+  // 或 null hypothesis 等合法内容误判为结构异常。
   const cleanWord = normalizeWord(word.word);
-
-  if (!text.trim()) return false;
-
-  const badMarkers = [
-    "undefined",
-    "null",
-    "nan",
-    "???",
-    "example sentence",
-    "中文释义",
-    "英文释义",
-    "完成"
-  ];
-
-  if (badMarkers.some((marker) => text.includes(marker))) return true;
-
-  // 明显异常：词族/变形里出现当前词被截断后的错误拼写，例如 experience -> experienc / experiencs。
   if (cleanWord.length >= 5) {
     const chopped = cleanWord.slice(0, -1);
-    if (chopped.length >= 4 && text.includes(chopped) && !text.includes(cleanWord)) {
-      return true;
+    const relationWords = [
+      ...(Array.isArray(word.forms) ? word.forms : []),
+      ...(Array.isArray(word.wordFamily) ? word.wordFamily : [])
+    ]
+      .map((item) => normalizeWord(item?.word || item))
+      .filter(Boolean);
+
+    if (relationWords.some((value) => value === chopped || value === `${chopped}s`)) {
+      reasons.push("truncated-relation-headword");
     }
   }
 
-  // 明显异常：单词本身是短词，但生成了过多不相关的大段内容时，交给 AI 重修更稳。
-  if (cleanWord.length <= 2 && text.length > 900) return true;
+  return [...new Set(reasons)];
+}
 
-  return false;
+export function isLikelyWrongAiWord(word) {
+  return getLikelyWrongAiWordReasons(word).length > 0;
 }
 
 

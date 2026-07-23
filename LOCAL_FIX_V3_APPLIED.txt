@@ -1,0 +1,7 @@
+version=local-fix-v3-2026-07-23
+appliedAt=2026-07-23T17:04:16.513Z
+backup=C:\Users\Administrator\Desktop\ielts-vocab-deepseek-edge-tts\_local_fix_backup_v3_2026-07-23T17-04-16-506Z
+changed=app/lib/vocab/page-word-helpers.mjs
+changed=app/page.jsx
+changed=app/components/VocabAdminToolsPanel.jsx
+changed=app/hooks/useHomeLexiconAdmin.ai.js

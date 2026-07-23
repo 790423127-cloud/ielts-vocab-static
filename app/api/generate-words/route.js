@@ -5,7 +5,8 @@ import path from "path";
 import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
 import {
   isAiContentProfileComplete,
-  normalizeAiGeneratedEntry
+  normalizeAiGeneratedEntry,
+  withAiClientCollocationPayload
 } from "../../lib/vocab/admin-ai-content-profile.mjs";
 
 const DEEPSEEK_TIMEOUT_MS = 75000;
@@ -65,12 +66,13 @@ function buildPrompt(words) {
 5. 每个单词只生成 1 个英文例句和 1 个中文翻译，例句体现主释义。
 6. forms：0-5 个真实语法变形。type 只允许 plural、irregular plural、third-person singular、past tense、past participle、past tense / past participle、present participle / gerund、comparative、superlative。若输入本身是变形、短语、专有名词或不适用，返回空数组。禁止二次复数和虚构词形。
 7. word_family：0-6 个常用直接词族。relation 只允许 base-word、noun-form、verb-form、adjective-form、adverb-form、agent-noun、negative-form、related-to。禁止拼写相似但无词族关系的词。
-8. common_collocations：3 个真正属于当前词条的常见搭配，每个带中文。
-9. phrase_collocations：3 个固定结构、介词搭配或常见句型，每个带中文；不要放入其他词族成员的搭配。
-10. ielts_use 从 Listening, Speaking, Reading, G类书信, Task 2, 生活高频, 工作高频 中选 1-3 个。
-11. topics 从 教育, 工作, 住房, 交通, 健康, 环境, 科技, 政府, 社会, 消费, 旅行, 社区, 法律, 家庭, 公共服务 中选 1-3 个。
-12. difficulty 只能是 基础高频、中级核心、高级加分、低频认识即可。
-13. 只输出 JSON，不要 markdown，不要解释。
+8. common_collocations：必须给恰好 4 个真正属于当前词条主用法、对 IELTS Listening、Reading、Speaking、G类书信或 Task 2 有学习价值的常见搭配，每个都带简洁中文。
+9. phrase_collocations：必须给恰好 4 个包含当前词条或其真实语法变形的固定结构、介词搭配或常见句型，每个都带简洁中文。
+10. 两类搭配都必须至少包含 2 个英文单词，彼此不重复；禁止只返回当前单词，禁止 huh?、oh、wow、yeah、um、uh 等语气词，禁止问句、占位符、乱码、纯符号和其他词族成员的无关搭配。
+11. ielts_use 从 Listening, Speaking, Reading, G类书信, Task 2, 生活高频, 工作高频 中选 1-3 个。
+12. topics 从 教育, 工作, 住房, 交通, 健康, 环境, 科技, 政府, 社会, 消费, 旅行, 社区, 法律, 家庭, 公共服务 中选 1-3 个。
+13. difficulty 只能是 基础高频、中级核心、高级加分、低频认识即可。
+14. 只输出 JSON，不要 markdown，不要解释。
 
 输出格式：
 {
@@ -122,7 +124,11 @@ export async function POST(req) {
       const inputKey = normalizeKey(word);
       const cached = cache[inputKey];
       if (!force && isAiContentProfileComplete(cached)) {
-        resolvedByInputKey.set(inputKey, { ...cached, word: cached.word || word, cacheHit: true, source: "ai-cache" });
+        resolvedByInputKey.set(inputKey, {
+          ...withAiClientCollocationPayload({ ...cached, word: cached.word || word }),
+          cacheHit: true,
+          source: "ai-cache"
+        });
         cacheHit += 1;
       } else {
         toGenerate.push(word);
@@ -152,11 +158,11 @@ export async function POST(req) {
       body: JSON.stringify({
         model,
         messages: [
-          { role: "system", content: "你是严谨的 IELTS General Training 英语词库编辑。只返回可解析 JSON，不制造不存在的词义、词形或词族。" },
+          { role: "system", content: "你是严谨的 IELTS General Training 英语词库编辑。只返回可解析 JSON，不制造不存在的词义、词形、词族或搭配。" },
           { role: "user", content: buildPrompt(toGenerate) }
         ],
         temperature: 0.1,
-        max_tokens: 12000,
+        max_tokens: 14000,
         response_format: { type: "json_object" },
         thinking: { type: "disabled" },
         stream: false
@@ -191,7 +197,11 @@ export async function POST(req) {
         return;
       }
       generatedCount += 1;
-      const resolved = { ...entry, cacheHit: false, source: "deepseek" };
+      const resolved = {
+        ...withAiClientCollocationPayload(entry),
+        cacheHit: false,
+        source: "deepseek"
+      };
       resolvedByInputKey.set(inputKey, resolved);
       cache[inputKey] = { ...entry, cachedAt: Date.now() };
     });

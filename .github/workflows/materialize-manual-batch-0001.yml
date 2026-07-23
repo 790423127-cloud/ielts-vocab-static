@@ -50,3 +50,5 @@ jobs:
           git add data/manual-review/batches/batch-0001-review-v1.json
           git commit -m 'data: add human-reviewed vocabulary batch 0001'
           git push origin HEAD:fix/ai-queue-audit-v1
+
+# Touching this workflow triggers the first materialization run.

@@ -1,6 +1,7 @@
 "use client";
 
 import { GitBranch, Network, PanelsTopLeft, Volume2 } from "lucide-react";
+import { normalizeAiPhraseItems } from "../lib/vocab/admin-ai-content-profile.mjs";
 import {
   getFormChineseType,
   getFormExplanation,
@@ -18,10 +19,9 @@ function DetailCard({ title, icon: Icon, children }) {
 }
 
 function PhraseRows({ items, typeLabel, speechLabel, speakSmallText }) {
-  const visibleItems = items.filter((pair) => pair?.phrase && !pair.phrase.startsWith("等待 AI")).slice(0, 4);
-  if (!visibleItems.length) return <p className="word-dictionary-empty">当前词暂无可靠搭配。</p>;
+  if (!items.length) return <p className="word-dictionary-empty">当前词暂无可靠搭配。</p>;
 
-  return visibleItems.map((pair) => (
+  return items.map((pair) => (
     <div className="word-dictionary-row" key={`${pair.phrase}-${pair.chinese}`}>
       <span>{typeLabel}</span>
       <button
@@ -46,8 +46,14 @@ export default function WordDetailGrid({
   phraseCollocationFallback,
   speakSmallText
 }) {
-  const commonItems = commonCollocations.length ? commonCollocations : collocationFallback;
-  const phraseItems = phraseCollocations.length ? phraseCollocations : phraseCollocationFallback;
+  const normalizedCommon = normalizeAiPhraseItems(commonCollocations);
+  const normalizedPhrases = normalizeAiPhraseItems(phraseCollocations);
+  const commonItems = normalizedCommon.length
+    ? normalizedCommon
+    : normalizeAiPhraseItems(collocationFallback);
+  const phraseItems = normalizedPhrases.length
+    ? normalizedPhrases
+    : normalizeAiPhraseItems(phraseCollocationFallback);
 
   return (
     <section className="word-dictionary-panel" aria-label="词典详情">

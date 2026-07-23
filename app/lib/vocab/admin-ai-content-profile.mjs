@@ -86,8 +86,10 @@ export function normalizeAiPhraseItems(value, { max = 3 } = {}) {
 }
 
 export function normalizeOtherMeanings(value, mainMeaning = "") {
+  const normalizedMainMeaning = text(mainMeaning);
+  const mainMeaningKey = key(normalizedMainMeaning);
   const mainParts = new Set(
-    text(mainMeaning)
+    normalizedMainMeaning
       .split(/[；;，,、/]+/)
       .map((item) => key(item))
       .filter(Boolean)
@@ -98,7 +100,7 @@ export function normalizeOtherMeanings(value, mainMeaning = "") {
   for (const item of raw) {
     const meaning = text(typeof item === "string" ? item : item?.meaningZh || item?.meaning || item?.chinese);
     const meaningKey = key(meaning);
-    if (!meaningKey || mainParts.has(meaningKey) || seen.has(meaningKey)) continue;
+    if (!meaningKey || meaningKey === mainMeaningKey || mainParts.has(meaningKey) || seen.has(meaningKey)) continue;
     seen.add(meaningKey);
     result.push(meaning);
     if (result.length >= 5) break;

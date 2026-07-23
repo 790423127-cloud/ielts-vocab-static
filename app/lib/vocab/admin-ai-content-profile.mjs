@@ -1,4 +1,10 @@
-export const AI_CONTENT_PROFILE_VERSION = "main-meaning-four-sections-v1";
+export const AI_CONTENT_PROFILE_VERSION = "main-meaning-four-sections-v2";
+export const AI_COLLOCATION_LIMIT = 4;
+
+export const AI_COLLOCATION_TRANSPORT_FIELDS = Object.freeze({
+  common: "aiCollocationsV2",
+  phrase: "aiPhraseCollocationsV2"
+});
 
 const FORM_TYPE_ALIASES = new Map([
   ["plural", "plural"],
@@ -42,6 +48,30 @@ const FORMLESS_LEXICALIZED_HEADWORDS = new Set([
   "species"
 ]);
 
+const INVALID_COLLOCATION_KEYS = new Set([
+  "huh",
+  "oh",
+  "wow",
+  "yeah",
+  "yep",
+  "nope",
+  "ok",
+  "okay",
+  "um",
+  "uh",
+  "hmm",
+  "ah",
+  "hey",
+  "n a",
+  "na",
+  "none",
+  "null",
+  "unknown",
+  "not available",
+  "to be completed",
+  "waiting ai"
+]);
+
 function text(value) {
   return String(value ?? "").normalize("NFC").trim().replace(/\s+/g, " ");
 }
@@ -50,8 +80,33 @@ function key(value) {
   return text(value).toLowerCase().replace(/[’‘]/g, "'").replace(/[“”]/g, '"');
 }
 
+function collocationKey(value) {
+  return key(value)
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function englishWords(value) {
+  return text(value).match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g) || [];
+}
+
 function isSingleEnglishHeadword(value) {
   return /^[A-Za-z][A-Za-z'-]*$/.test(text(value));
+}
+
+export function isReliableAiCollocation(value) {
+  const phrase = text(typeof value === "string" ? value : value?.phrase || value?.text || value?.collocation);
+  const phraseKey = collocationKey(phrase);
+  const words = englishWords(phrase);
+
+  if (!phrase || !phraseKey || words.length < 2 || words.length > 10) return false;
+  if (/[?？]/.test(phrase)) return false;
+  if (INVALID_COLLOCATION_KEYS.has(phraseKey)) return false;
+  if (/^(?:等待\s*ai|待补|待完善|暂无|未知|无意义)/i.test(phrase)) return false;
+  if (/^(?:huh|oh|wow|yeah|yep|nope|ok|okay|um|uh|hmm|ah|hey)\b/i.test(phrase) && words.length <= 3) return false;
+  if (!/[A-Za-z]/.test(phrase) || /^[\W_]+$/u.test(phrase)) return false;
+
+  return true;
 }
 
 export function normalizeAiStringArray(value, { max = 6 } = {}) {
@@ -69,20 +124,56 @@ export function normalizeAiStringArray(value, { max = 6 } = {}) {
   return result;
 }
 
-export function normalizeAiPhraseItems(value, { max = 3 } = {}) {
+export function normalizeAiPhraseItems(value, { max = AI_COLLOCATION_LIMIT, requireChinese = false } = {}) {
   if (!Array.isArray(value)) return [];
   const seen = new Set();
   const result = [];
   for (const item of value) {
     const phrase = text(typeof item === "string" ? item : item?.phrase || item?.text || item?.collocation);
     const chinese = text(typeof item === "string" ? "" : item?.chinese || item?.meaning || item?.translation);
-    const phraseKey = key(phrase);
-    if (!phraseKey || seen.has(phraseKey)) continue;
+    const phraseKey = collocationKey(phrase);
+    if (!isReliableAiCollocation({ phrase }) || !phraseKey || seen.has(phraseKey)) continue;
+    if (requireChinese && !chinese) continue;
     seen.add(phraseKey);
     result.push({ phrase, chinese });
     if (result.length >= max) break;
   }
   return result;
+}
+
+function samePhraseItems(left, right) {
+  if (!Array.isArray(left) || left.length !== right.length) return false;
+  return left.every((item, index) => (
+    text(item?.phrase || item) === right[index].phrase &&
+    text(typeof item === "string" ? "" : item?.chinese || item?.meaning || item?.translation) === right[index].chinese
+  ));
+}
+
+export function sanitizeAiWordCollocations(word = {}) {
+  if (!word || typeof word !== "object") return word;
+  const commonSource = word[AI_COLLOCATION_TRANSPORT_FIELDS.common] || word.collocations;
+  const phraseSource = word[AI_COLLOCATION_TRANSPORT_FIELDS.phrase] || word.phraseCollocations;
+  const collocations = normalizeAiPhraseItems(commonSource);
+  const phraseCollocations = normalizeAiPhraseItems(phraseSource);
+  const hasTransport = Object.prototype.hasOwnProperty.call(word, AI_COLLOCATION_TRANSPORT_FIELDS.common) ||
+    Object.prototype.hasOwnProperty.call(word, AI_COLLOCATION_TRANSPORT_FIELDS.phrase);
+
+  if (!hasTransport && samePhraseItems(word.collocations, collocations) && samePhraseItems(word.phraseCollocations, phraseCollocations)) {
+    return word;
+  }
+
+  const next = { ...word, collocations, phraseCollocations };
+  delete next[AI_COLLOCATION_TRANSPORT_FIELDS.common];
+  delete next[AI_COLLOCATION_TRANSPORT_FIELDS.phrase];
+  return next;
+}
+
+export function withAiClientCollocationPayload(entry = {}) {
+  return {
+    ...entry,
+    [AI_COLLOCATION_TRANSPORT_FIELDS.common]: normalizeAiPhraseItems(entry.collocations),
+    [AI_COLLOCATION_TRANSPORT_FIELDS.phrase]: normalizeAiPhraseItems(entry.phraseCollocations)
+  };
 }
 
 export function normalizeOtherMeanings(value, mainMeaning = "") {
@@ -174,8 +265,14 @@ export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
     exampleCn: text(entry.example_chinese || entry.exampleCn),
     forms: normalizeAiForms(entry.forms, word),
     wordFamily: normalizeAiWordFamily(entry.word_family || entry.wordFamily, word),
-    collocations: normalizeAiPhraseItems(entry.common_collocations || entry.collocations || entry.commonCollocations),
-    phraseCollocations: normalizeAiPhraseItems(entry.phrase_collocations || entry.phraseCollocations || entry.prepositional_phrases),
+    collocations: normalizeAiPhraseItems(entry.common_collocations || entry.collocations || entry.commonCollocations, {
+      max: AI_COLLOCATION_LIMIT,
+      requireChinese: true
+    }),
+    phraseCollocations: normalizeAiPhraseItems(entry.phrase_collocations || entry.phraseCollocations || entry.prepositional_phrases, {
+      max: AI_COLLOCATION_LIMIT,
+      requireChinese: true
+    }),
     ieltsUse: normalizeAiStringArray(entry.ielts_use || entry.ieltsUse, { max: 3 }),
     topics: normalizeAiStringArray(entry.topics || entry.topic, { max: 3 }),
     difficulty: text(entry.difficulty || "中级核心"),
@@ -184,6 +281,17 @@ export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
     aiContentProfile: AI_CONTENT_PROFILE_VERSION,
     generatedAt: new Date().toISOString()
   };
+}
+
+function hasReliableCollocations(value) {
+  return normalizeAiPhraseItems(value).length > 0;
+}
+
+function hasFourTranslatedCollocations(value) {
+  return normalizeAiPhraseItems(value, {
+    max: AI_COLLOCATION_LIMIT,
+    requireChinese: true
+  }).length === AI_COLLOCATION_LIMIT;
 }
 
 export function isAiCoreContentComplete(word) {
@@ -198,14 +306,16 @@ export function isAiCoreContentComplete(word) {
     word?.exampleCn &&
     Array.isArray(word?.forms) &&
     Array.isArray(word?.wordFamily) &&
-    Array.isArray(word?.collocations) && word.collocations.length &&
-    Array.isArray(word?.phraseCollocations) && word.phraseCollocations.length
+    hasReliableCollocations(word?.collocations) &&
+    hasReliableCollocations(word?.phraseCollocations)
   );
 }
 
 export function isAiContentProfileComplete(word) {
   return Boolean(
     isAiCoreContentComplete(word) &&
+    hasFourTranslatedCollocations(word?.collocations) &&
+    hasFourTranslatedCollocations(word?.phraseCollocations) &&
     Array.isArray(word?.ieltsUse) && word.ieltsUse.length &&
     Array.isArray(word?.topics) && word.topics.length &&
     word?.difficulty &&

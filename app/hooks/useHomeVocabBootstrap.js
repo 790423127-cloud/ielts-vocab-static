@@ -1,6 +1,7 @@
 "use client";
 
 import { startTransition, useEffect, useRef, useState } from "react";
+import { sanitizeAiWordCollocations } from "../lib/vocab/admin-ai-content-profile.mjs";
 import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "../lib/vocab/lexicon-guard-shared.mjs";
 import { PHRASE_FLASH_STUDY_MODE_KEY } from "../lib/vocab/phrase-flashcard-keys.mjs";
 import {
@@ -28,29 +29,36 @@ import {
   exampleFieldsNeedCleanup
 } from "../lib/vocab/example-clean.mjs";
 
-/** Repair noisy / multi-sentence examples when hydrating client cache. */
-function sanitizeWordsExamples(words = []) {
+/** Repair noisy examples and invalid/duplicated collocations when hydrating client cache. */
+function sanitizeRuntimeWords(words = []) {
   if (!Array.isArray(words) || !words.length) return words;
   let changed = 0;
   const next = words.map((word) => {
     if (!word || typeof word !== "object") return word;
-    if (!exampleFieldsNeedCleanup(word.example || "", word.exampleCn || "", { maxWords: 36 })) {
-      return word;
+
+    let nextWord = sanitizeAiWordCollocations(word);
+    if (nextWord !== word) changed += 1;
+
+    if (!exampleFieldsNeedCleanup(nextWord.example || "", nextWord.exampleCn || "", { maxWords: 36 })) {
+      return nextWord;
     }
-    const cleaned = cleanExampleField(word.example || "", word.word || "", {
+
+    const cleaned = cleanExampleField(nextWord.example || "", nextWord.word || "", {
       entryType: "word",
-      meaningZh: word.meaning || word.definition || "",
+      meaningZh: nextWord.meaning || nextWord.definition || "",
       synthesizeIfEmpty: false,
       maxWords: 36
     });
-    const exampleCn = cleanExampleCnField(word.exampleCn || "");
-    if (!cleaned.repaired && exampleCn === (word.exampleCn || "")) return word;
-    changed += 1;
-    return {
-      ...word,
-      example: cleaned.example || word.example || "",
+    const exampleCn = cleanExampleCnField(nextWord.exampleCn || "");
+    if (!cleaned.repaired && exampleCn === (nextWord.exampleCn || "")) return nextWord;
+
+    if (nextWord === word) changed += 1;
+    nextWord = {
+      ...nextWord,
+      example: cleaned.example || nextWord.example || "",
       exampleCn
     };
+    return nextWord;
   });
   return changed ? next : words;
 }
@@ -130,7 +138,7 @@ export function useHomeVocabBootstrap({ setToast }) {
     const saved = safeLocalStorageGet("ielts_vocab_words_deepseek");
     if (saved) {
       try {
-        const parsed = sanitizeWordsExamples(JSON.parse(saved));
+        const parsed = sanitizeRuntimeWords(JSON.parse(saved));
         if (Array.isArray(parsed) && parsed.length) {
           loadedWords = parsed;
           hydratedWordsRef.current = parsed;
@@ -148,11 +156,13 @@ export function useHomeVocabBootstrap({ setToast }) {
     async function loadActiveWords() {
       let cachedWords = loadedWords;
       let cachedMeta = null;
+      let cachedNeedsRepair = false;
 
       try {
         const stored = await withTimeout(loadWordsFromIndexedDB().catch(() => null), 2500, null);
         if (stored?.words?.length) {
-          cachedWords = sanitizeWordsExamples(stored.words);
+          cachedWords = sanitizeRuntimeWords(stored.words);
+          cachedNeedsRepair = cachedWords !== stored.words;
           cachedMeta = stored.meta || null;
 
           if (!cancelled) {
@@ -177,8 +187,12 @@ export function useHomeVocabBootstrap({ setToast }) {
           apiMeta?.lexiconHash &&
           isWordCacheCurrent(cachedMeta || {}, apiMeta)
         ) {
+          const currentMeta = { ...(cachedMeta || {}), ...apiMeta };
+          if (cachedNeedsRepair) {
+            await saveWordsToIndexedDB(cachedWords, currentMeta).catch(() => {});
+          }
           if (!cancelled) {
-            cacheMetaRef.current = { ...(cachedMeta || {}), ...apiMeta };
+            cacheMetaRef.current = currentMeta;
             setVocabRuntime({ status: "online", ...apiMeta });
           }
           return;
@@ -202,11 +216,11 @@ export function useHomeVocabBootstrap({ setToast }) {
           fileHash: payload.fileHash || "",
           wordsHash: payload.wordsHash || ""
         };
-        const onlineWords = sanitizeWordsExamples(
-          mergeWordContentWithUserState(payload.words, cachedWords || [], {
-            includePersonalSupplements: false
-          })
-        );
+        const mergedOnlineWords = mergeWordContentWithUserState(payload.words, cachedWords || [], {
+          includePersonalSupplements: false
+        });
+        const onlineWords = sanitizeRuntimeWords(mergedOnlineWords);
+        const onlineNeedsRepair = onlineWords !== mergedOnlineWords;
 
         cacheMetaRef.current = mergedMeta;
         if (!cancelled) {
@@ -218,12 +232,17 @@ export function useHomeVocabBootstrap({ setToast }) {
         runWhenBrowserIdle(async () => {
           if (cancelled) return;
 
-          const wordsForCache = sanitizeWordsExamples(
-            mergeWordContentWithUserState(payload.words, cachedWords || onlineWords, {
-              includePersonalSupplements: false
-            })
-          );
-          if (!isWordCacheCurrent(cachedMeta || {}, mergedMeta) || !stored?.words?.length) {
+          const mergedWordsForCache = mergeWordContentWithUserState(payload.words, cachedWords || onlineWords, {
+            includePersonalSupplements: false
+          });
+          const wordsForCache = sanitizeRuntimeWords(mergedWordsForCache);
+          if (
+            cachedNeedsRepair ||
+            onlineNeedsRepair ||
+            wordsForCache !== mergedWordsForCache ||
+            !isWordCacheCurrent(cachedMeta || {}, mergedMeta) ||
+            !stored?.words?.length
+          ) {
             await saveWordsToIndexedDB(wordsForCache, mergedMeta);
           }
         });
@@ -231,11 +250,13 @@ export function useHomeVocabBootstrap({ setToast }) {
         if (cancelled) return;
         const stored = await withTimeout(loadWordsFromIndexedDB().catch(() => null), 2500, null);
         if (stored?.words?.length) {
-          cachedWords = sanitizeWordsExamples(stored.words);
+          cachedWords = sanitizeRuntimeWords(stored.words);
+          cachedNeedsRepair = cachedWords !== stored.words;
           cachedMeta = stored.meta || null;
           if (cachedMeta) cacheMetaRef.current = cachedMeta;
           hydratedWordsRef.current = cachedWords;
           startTransition(() => setWords(cachedWords));
+          if (cachedNeedsRepair) saveWordsToIndexedDB(cachedWords, cachedMeta || {}).catch(() => {});
         }
 
         if (cachedWords?.length) {

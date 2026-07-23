@@ -29,15 +29,16 @@ export default function VocabAdminToolsPanel({
 }) {
   const a = actions;
   const continuousActive = ["running", "stopping"].includes(aiRunState?.status);
+  const continuousModeLabel = aiRunState?.mode === "enrichment" ? "连续丰富" : "连续补全";
   const continuousStatusLabel = {
-    running: "连续补全运行中",
+    running: `${continuousModeLabel}运行中`,
     stopping: "正在安全停止",
-    completed: "连续补全已完成",
+    completed: `${continuousModeLabel}已完成`,
     "completed-with-failures": "仍有失败词待处理",
-    stopped: "连续补全已停止",
+    stopped: `${continuousModeLabel}已停止`,
     fused: "已触发失败熔断",
     limit: "已到安全轮次上限",
-    failed: "连续补全失败"
+    failed: `${continuousModeLabel}失败`
   }[aiRunState?.status] || "";
   const continuousTotal = Math.max(0, Number(aiRunState?.initialRemaining) || 0);
   const continuousResolved = Math.min(
@@ -282,11 +283,12 @@ export default function VocabAdminToolsPanel({
                   >
                     <summary>AI工具（会扣费）</summary>
                     <div className="ai-warning">
-                      默认付费队列只处理必须补全、结构异常和分类缺失。搭配数量不足只算“可选丰富”，不会自动重写整个词库。
+                      默认付费队列只处理必须补全、真实结构异常和分类缺失。词头待修单独显示；搭配数量不足只算“可选丰富”。
                     </div>
                     <div className="duplicate-box">
                       <div><strong>必须补全：</strong>{qualityStats.missing || 0}</div>
                       <div><strong>结构异常：</strong>{qualityStats.repairMissing || 0}</div>
+                      <div><strong>词头待修：</strong>{qualityStats.headwordRepair || 0}（单独处理，不进入结构异常批次）</div>
                       <div><strong>仅缺分类：</strong>{qualityStats.classifyMissing || 0}</div>
                       <div><strong>可选丰富：</strong>{qualityStats.enrichmentThin || 0}（不进入默认付费队列）</div>
                       <div><strong>词族复核 / 独立词候选：</strong>{qualityStats.familyReview || 0} / {qualityStats.familyPromotion || 0}</div>
@@ -295,7 +297,8 @@ export default function VocabAdminToolsPanel({
                       <p><strong>单词级：</strong>只重做当前词的完整 AI 内容，保留 ID、学习状态和收藏。</p>
                       <p><strong>单轮补全：</strong>最多 100 词；每请求 5 词、最多 3 路并发，完成后停止。</p>
                       <p><strong>连续补全：</strong>逐轮处理剩余队列，每轮保存检查点；停止后下次从最新队列继续。</p>
-                      <p><strong>异常重做：</strong>只重做含占位符或明显异常内容的资料，不修改词头。</p>
+                      <p><strong>异常重做：</strong>按字段精准修复，保留词形、词族、ID、收藏和学习进度。</p>
+                      <p><strong>可选丰富：</strong>只合并自然搭配与句型，最多 4+4；不覆盖释义、例句、分类或词族。</p>
                     </div>
                     <div className="action-grid">
                       <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI处理当前词（会扣费）") && a.generateCurrent?.({ force: true })}>
@@ -318,10 +321,16 @@ export default function VocabAdminToolsPanel({
                         disabled={!continuousActive}
                         onClick={a.stopContinuousAiCompletion}
                       >
-                        {aiRunState?.status === "stopping" ? "正在停止..." : "停止连续补全"}
+                        {aiRunState?.status === "stopping" ? "正在停止..." : "停止连续任务"}
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI修复结构异常资料：最多100词 / 每请求5词 / 2并发（会扣费）") && a.aiStableRepairWrongWords10x2?.()}>
-                        修复结构异常 · 最多100词
+                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI精准修复结构异常：最多100词 / 每请求5词 / 2并发；不改词族和学习状态（会扣费）") && a.aiStableRepairWrongWords10x2?.()}>
+                        精准修复结构异常 · 最多100词
+                      </button>
+                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.(`AI丰富可选词条：当前约 ${qualityStats.enrichmentThin || 0} 词；本轮最多100词，只补搭配和句型（会扣费）`) && a.enrichOptionalBatch?.()}>
+                        丰富可选项 · 最多100词
+                      </button>
+                      <button className="small-btn ai-paid ai-continuous-start" disabled={loading} onClick={() => a.confirmAiCost?.(`AI连续丰富可选词条：当前约 ${qualityStats.enrichmentThin || 0} 词；逐轮处理，可随时停止（会持续扣费）`) && a.startContinuousAiEnrichment?.()}>
+                        连续丰富可选项 · 可暂停
                       </button>
                     </div>
                     {continuousStatusLabel ? (

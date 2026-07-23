@@ -588,7 +588,7 @@ function Home() {
 
   const wordLibraryStats = useMemo(() => {
     if (!isWordFlashActive) {
-      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0, repairMissing: 0, enrichmentThin: 0, familyReview: 0, familyPromotion: 0 };
+      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0, repairMissing: 0, headwordRepair: 0, enrichmentThin: 0, familyReview: 0, familyPromotion: 0 };
     }
 
     let total = 0;
@@ -601,6 +601,7 @@ function Home() {
     let missing = 0;
     let classifyMissing = 0;
     let repairMissing = 0;
+    let headwordRepair = 0;
     let enrichmentThin = 0;
     let familyReview = 0;
     let familyPromotion = 0;
@@ -618,8 +619,9 @@ function Home() {
       if (word.status === "不熟") unfamiliar += 1;
       if (word.status === "熟悉") familiar += 1;
       if (word.lastReviewedAt && new Date(word.lastReviewedAt).toDateString() === new Date().toDateString()) todayReviewed += 1;
+      if (hasHeadwordRepair(word.word)) headwordRepair += 1;
       const quality = getWordQualityEvaluation(word, {
-        needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word),
+        needsRepair: isLikelyWrongAiWord(word),
         knownHeadwords
       });
       if (quality.lane === "completion") missing += 1;
@@ -630,7 +632,7 @@ function Home() {
       if (quality.hasFamilyPromotionCandidate) familyPromotion += 1;
     }
 
-    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing, repairMissing, enrichmentThin, familyReview, familyPromotion };
+    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing, repairMissing, headwordRepair, enrichmentThin, familyReview, familyPromotion };
   }, [isWordFlashActive, words, libraryWordMap]);
 
   const familiarCount = wordLibraryStats.familiar;

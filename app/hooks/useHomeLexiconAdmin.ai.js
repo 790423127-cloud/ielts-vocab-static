@@ -15,6 +15,7 @@ import {
 import {
   buildClassificationPlan,
   buildCleanWordsPlan,
+  buildEnrichmentPlan,
   buildFastCompletionPlan,
   buildGenerateMissingPlan,
   buildOneByOneCompletionPlan,
@@ -31,6 +32,10 @@ import {
   captureWordWriteTarget,
   resolveWordWriteTarget
 } from "../lib/vocab/ai-write-merge.mjs";
+import {
+  isInvalidAiContent,
+  needsOptionalWordEnrichment
+} from "../lib/vocab/word-quality-status.mjs";
 
 function targetForWord(word) {
   return captureWordWriteTarget(word);
@@ -851,10 +856,20 @@ export function createAiOps(ctx) {
               collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
               phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations),
               status: existing.status || "",
+              aiWriteMode: "precise-structure-repair",
               aiWrongRepairedAt: Date.now()
             }));
 
-            repaired += 1;
+            const updated = resolveWordWriteTarget(next, writeTarget).word;
+            if (isInvalidAiContent(updated) || isLikelyWrongAiWord(updated)) {
+              if (!failed.includes(w.word)) failed.push(w.word);
+              const reasons = isLikelyWrongAiWord(updated)
+                ? "修复后仍命中异常判定"
+                : "修复后其他义项结构仍无效";
+              failedDetails.push(`${w.word}: ${reasons}`);
+            } else {
+              repaired += 1;
+            }
           });
 
           return next;
@@ -954,7 +969,7 @@ export function createAiOps(ctx) {
       await Promise.all(Array.from({ length: workerCount }, (_, i) => worker(i + 1)));
 
       setBatchInfo("");
-      setToast(`AI稳定修复确定错词完成：处理 ${targets.length} 个，修复 ${repaired} 个，失败 ${failed.length} 个${failedDetails[0] ? "｜失败示例：" + failedDetails.slice(0, 3).join("；") : ""}`);
+      setToast(`AI精准结构修复完成：尝试 ${targets.length} 个，真正退出异常队列 ${repaired} 个，仍需处理 ${failed.length} 个${failedDetails[0] ? "｜示例：" + failedDetails.slice(0, 3).join("；") : ""}`);
 
       return {
         total: targets.length,
@@ -1163,6 +1178,254 @@ export function createAiOps(ctx) {
     }
   }
 
+  function countEnrichmentTargets(sourceWords, excludedWordKeys = new Set()) {
+    return buildEnrichmentPlan(sourceWords, {
+      maxTargets: Infinity,
+      excludeWordKeys: excludedWordKeys
+    }).targets.length;
+  }
+
+  async function executeEnrichmentRound(sourceWords, options = {}) {
+    const {
+      excludedWordKeys = new Set(),
+      roundNumber = 1,
+      signal
+    } = options;
+    const { targets, chunks, workerCount } = buildEnrichmentPlan(sourceWords, {
+      excludeWordKeys: excludedWordKeys
+    });
+
+    if (!targets.length) {
+      return {
+        words: sourceWords,
+        total: 0,
+        filled: 0,
+        failed: 0,
+        failedWordKeys: [],
+        aborted: Boolean(signal?.aborted)
+      };
+    }
+
+    const generatedByInputId = new Map();
+    const failedWordKeys = new Set();
+    const failureDetails = [];
+
+    await runAdminAiBatch({
+      chunks,
+      workerCount,
+      signal,
+      maxRetries: 1,
+      allowAutomaticRetry: true,
+      shouldRetry: ({ error }) => error?.retryable === true,
+      retryDelayMs: ({ error, workerId }) => error?.retryAfterMs || (1200 + workerId * 250),
+      onChunkStart({ chunk, workerId, completedItems }) {
+        const preview = chunk.map(({ w }) => w.word).slice(0, 5).join(", ");
+        setBatchInfo(
+          `AI丰富第 ${roundNumber} 轮：${completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${chunk.length > 5 ? "..." : ""}`
+        );
+      },
+      async executeChunk({ chunk }) {
+        const res = await fetch("/api/generate-words", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items: chunk.map(({ w }) => requestItemForWord(w)),
+            force: true
+          }),
+          signal
+        });
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok) {
+          throw retryableBatchError(
+            data?.detail || data?.error || `AI丰富接口返回 HTTP ${res.status}`,
+            res.status,
+            res.headers?.get?.("retry-after")
+          );
+        }
+        if (!Array.isArray(data?.items) || !data.items.length) {
+          throw retryableBatchError("AI丰富批次没有返回可用词条", 422);
+        }
+
+        const entriesByInputId = indexAiResponses(data.items);
+        for (const target of chunk) {
+          const writeTarget = targetForWord(target.w);
+          const entry = entriesByInputId.get(writeTarget.inputId);
+          const key = normalizeWord(target.w.word);
+          if (entry) generatedByInputId.set(writeTarget.inputId, entry);
+          else if (key) failedWordKeys.add(key);
+        }
+      },
+      onRetry({ workerId, error }) {
+        setBatchInfo(`AI丰富第 ${workerId} 路失败，正在重试：${error.message}`);
+      },
+      onChunkError({ chunk, workerId, error }) {
+        if (signal?.aborted || error?.name === "AbortError") return;
+        for (const { w } of chunk) {
+          const key = normalizeWord(w.word);
+          if (key) failedWordKeys.add(key);
+        }
+        if (error?.message && !failureDetails.includes(error.message)) failureDetails.push(error.message);
+        setBatchInfo(`AI丰富第 ${workerId} 路失败：${error.message}`);
+      },
+      onChunkSettled({ completedItems, remainingChunks }) {
+        setBatchInfo(
+          `AI丰富第 ${roundNumber} 轮：${Math.min(completedItems, targets.length)} / ${targets.length} ｜ 已返回 ${generatedByInputId.size} ｜ 失败 ${failedWordKeys.size} ｜ 剩余批次 ${remainingChunks}`
+        );
+      }
+    });
+
+    let nextWords = sourceWords;
+    let enriched = 0;
+    for (const { w } of targets) {
+      const writeTarget = targetForWord(w);
+      const entry = generatedByInputId.get(writeTarget.inputId);
+      const key = normalizeWord(w.word);
+      if (!entry) continue;
+
+      try {
+        nextWords = applyIdentityUpdate(nextWords, writeTarget, entry, (existing) => ({
+          ...entry,
+          aiWriteMode: "optional-enrichment",
+          collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
+          phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations),
+          status: existing.status || "",
+          aiEnrichedAt: Date.now()
+        }));
+        const updated = resolveWordWriteTarget(nextWords, writeTarget).word;
+        if (needsOptionalWordEnrichment(updated)) {
+          if (key) failedWordKeys.add(key);
+        } else {
+          enriched += 1;
+          if (key) failedWordKeys.delete(key);
+        }
+      } catch (error) {
+        if (key) failedWordKeys.add(key);
+        if (error?.message && !failureDetails.includes(error.message)) failureDetails.push(error.message);
+      }
+    }
+
+    return {
+      words: nextWords,
+      total: targets.length,
+      filled: enriched,
+      failed: failedWordKeys.size,
+      failedWordKeys: [...failedWordKeys],
+      error: failureDetails[0] || "",
+      aborted: Boolean(signal?.aborted)
+    };
+  }
+
+  async function enrichOptionalBatch() {
+    try {
+      setLoading(true);
+      setBatchInfo("");
+      const result = await executeEnrichmentRound(words);
+      if (!result.total) {
+        setToast("没有可选丰富词条，或必须修复/分类队列尚未完成");
+        return result;
+      }
+      setWords(result.words);
+      setBatchInfo("");
+      setToast(`AI可选丰富完成：处理 ${result.total} 个，达到标准 ${result.filled} 个，未达标或失败 ${result.failed} 个`);
+      return result;
+    } catch (error) {
+      setToast(error.message || "AI可选丰富失败");
+      return { words, total: 0, failed: 0, filled: 0, failedWordKeys: [] };
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function startContinuousAiEnrichment() {
+    const controlRef = aiRunControlRef || fallbackAiRunControlRef;
+    if (controlRef.current?.running) {
+      setToast("已有连续 AI 任务正在运行");
+      return;
+    }
+
+    const initialRemaining = countEnrichmentTargets(words);
+    if (!initialRemaining) {
+      setToast("没有可选丰富词条，或必须修复/分类队列尚未完成");
+      return;
+    }
+
+    const controller = new AbortController();
+    controlRef.current = { controller, running: true };
+    setLoading(true);
+    setAiRunState?.({
+      mode: "enrichment",
+      status: "running",
+      rounds: 0,
+      processed: 0,
+      filled: 0,
+      failed: 0,
+      remaining: initialRemaining,
+      initialRemaining
+    });
+
+    try {
+      const result = await runContinuousAiCompletion({
+        initialWords: words,
+        signal: controller.signal,
+        maxRounds: Math.min(
+          CONTINUOUS_AI_POLICY.maxRounds,
+          Math.ceil(initialRemaining / 100) + 1
+        ),
+        countRemaining: (snapshot, excludedWordKeys) => (
+          countEnrichmentTargets(snapshot, excludedWordKeys)
+        ),
+        executeRound: async ({ words: snapshot, roundNumber, failedWordKeys, signal }) => {
+          const roundResult = await executeEnrichmentRound(snapshot, {
+            excludedWordKeys: failedWordKeys,
+            roundNumber,
+            signal
+          });
+          if (roundResult.total > 0) setWords(roundResult.words);
+          return roundResult;
+        },
+        onProgress(progress) {
+          setAiRunState?.({ ...progress, mode: "enrichment" });
+        }
+      });
+
+      const status = result.reason === "completed"
+        ? "completed"
+        : result.reason === "completed-with-failures"
+          ? "completed-with-failures"
+          : result.reason;
+      setAiRunState?.({ ...result, mode: "enrichment", status });
+      setBatchInfo("");
+
+      if (result.reason === "stopped") {
+        setToast(`AI连续丰富已停止：达到标准 ${result.filled} 个，剩余 ${result.remaining} 个`);
+      } else if (result.reason === "fused") {
+        setToast(`AI连续丰富已熔断：达到标准 ${result.filled} 个，失败 ${result.failed} 个`);
+      } else if (result.reason === "limit") {
+        setToast(`AI连续丰富达到安全轮次上限：达到标准 ${result.filled} 个，剩余 ${result.remaining} 个`);
+      } else {
+        setToast(`AI连续丰富结束：${result.rounds} 轮，达到标准 ${result.filled} 个，失败 ${result.failed} 个`);
+      }
+      return result;
+    } catch (error) {
+      const stopped = controller.signal.aborted || error?.name === "AbortError";
+      setAiRunState?.((previous) => ({
+        ...(previous || {}),
+        mode: "enrichment",
+        status: stopped ? "stopped" : "failed",
+        error: stopped ? "" : (error.message || "连续丰富失败")
+      }));
+      setToast(stopped ? "AI连续丰富已停止" : (error.message || "AI连续丰富失败"));
+      return undefined;
+    } finally {
+      if (controlRef.current?.controller === controller) {
+        controlRef.current = { controller: null, running: false };
+      }
+      setBatchInfo("");
+      setLoading(false);
+    }
+  }
+
   async function startContinuousAiCompletion() {
     const controlRef = aiRunControlRef || fallbackAiRunControlRef;
     if (controlRef.current?.running) {
@@ -1255,7 +1518,7 @@ export function createAiOps(ctx) {
     const controlRef = aiRunControlRef || fallbackAiRunControlRef;
     const controller = controlRef.current?.controller;
     if (!controller || controller.signal.aborted) {
-      setToast("当前没有正在运行的连续补全");
+      setToast("当前没有正在运行的连续 AI 任务");
       return;
     }
 
@@ -1263,7 +1526,7 @@ export function createAiOps(ctx) {
       ...(previous || {}),
       status: "stopping"
     }));
-    setBatchInfo("正在停止连续补全，已完成的轮次会保留...");
+    setBatchInfo("正在停止连续 AI 任务，已完成的轮次会保留...");
     controller.abort();
   }
 
@@ -1482,6 +1745,8 @@ export function createAiOps(ctx) {
     aiCompletePendingAndUnclassifiedOneByOne,
     aiSlowCompleteMissing10x1,
     aiStableRepairWrongWords10x2,
+    enrichOptionalBatch,
+    startContinuousAiEnrichment,
     generateHundredByFiveBatch,
     startContinuousAiCompletion,
     stopContinuousAiCompletion,

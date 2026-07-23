@@ -7,6 +7,7 @@ import {
   buildBulkCompletionPlan,
   buildClassificationPlan,
   buildCleanWordsPlan,
+  buildEnrichmentPlan,
   buildFastCompletionPlan,
   buildGenerateMissingPlan,
   buildOneByOneCompletionPlan,
@@ -95,11 +96,11 @@ test("completion plans keep their distinct target policies", () => {
   const oneByOne = buildOneByOneCompletionPlan(words);
   assert.deepEqual(oneByOne.targets.map(({ i }) => i), [1, 2, 3, 4]);
 
-  assert.deepEqual(buildSlowCompletionPlan(words).targets.map(({ i }) => i), [3, 4]);
+  assert.deepEqual(buildSlowCompletionPlan(words).targets.map(({ i }) => i), [3]);
   const wrongRepair = buildWrongRepairPlan(words);
-  assert.deepEqual(wrongRepair.targets.map(({ i }) => i), [3, 4]);
+  assert.deepEqual(wrongRepair.targets.map(({ i }) => i), [3]);
   assert.equal(wrongRepair.workerCount, 1);
-  assert.deepEqual(buildAnomalyRepairPlan(words).targets.map(({ i }) => i), [3, 4]);
+  assert.deepEqual(buildAnomalyRepairPlan(words).targets.map(({ i }) => i), [3]);
   assert.deepEqual(buildFastCompletionPlan(words).targets.map(({ i }) => i), [1]);
   assert.deepEqual(buildBulkCompletionPlan(words).targets.map(({ i }) => i), [1]);
   assert.deepEqual(buildClassificationPlan(words).targets.map(({ i }) => i), [2]);
@@ -195,6 +196,25 @@ test("one-by-one paid mode remains bounded for manual review", () => {
   const words = Array.from({ length: 50 }, (_, index) => ({ word: `entry-${index}` }));
   const plan = buildOneByOneCompletionPlan(words);
   assert.equal(plan.targets.length, PAID_AI_LIMITS.oneByOne);
+});
+
+test("enrichment plan selects ready thin words, prioritizes favorites and excludes invalid queues", () => {
+  const thin = completeWord("thin");
+  const favorite = completeWord("favorite", { favorite: true });
+  const rich = completeWord("rich", {
+    collocations: Array.from({ length: 4 }, (_, index) => ({ phrase: `rich common ${index}`, chinese: `常见${index}` })),
+    phraseCollocations: Array.from({ length: 4 }, (_, index) => ({ phrase: `rich phrase ${index}`, chinese: `短语${index}` }))
+  });
+  const invalid = completeWord("invalid", { otherMeanings: [{ meaningZh: "残缺" }] });
+  const unclassified = completeWord("unclassified-enrichment", { topics: [] });
+
+  const plan = buildEnrichmentPlan([thin, favorite, rich, invalid, unclassified]);
+  assert.deepEqual(plan.targets.map(({ w }) => w.word), ["favorite", "thin"]);
+  assert.equal(plan.chunks.length, 1);
+  assert.equal(plan.workerCount, 1);
+
+  const capped = buildEnrichmentPlan([thin, favorite], { maxTargets: 1 });
+  assert.deepEqual(capped.targets.map(({ w }) => w.word), ["favorite"]);
 });
 
 test("optional enrichment fields and a legacy profile marker do not create a paid backlog", () => {

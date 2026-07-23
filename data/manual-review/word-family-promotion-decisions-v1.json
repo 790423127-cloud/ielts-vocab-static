@@ -1,0 +1,122 @@
+{
+  "version": "word-family-promotion-decisions-v1",
+  "status": "reviewed-not-applied",
+  "reviewedAt": "2026-07-23",
+  "policy": {
+    "noAutomaticPromotion": true,
+    "preserveExistingIds": true,
+    "requireFullStandaloneEntryBeforePromotion": true,
+    "notes": "This file records editorial decisions only. It does not modify public/data/words.json."
+  },
+  "linkExistingEntries": [
+    {
+      "word": "charge",
+      "owner": "charger",
+      "existingId": "word_77f66e6487c8",
+      "decision": "link-existing-entry"
+    },
+    {
+      "word": "ecological",
+      "owner": "ecology",
+      "existingId": "word_6bdece4b555c",
+      "decision": "link-existing-entry"
+    },
+    {
+      "word": "ecologist",
+      "owner": "ecology",
+      "existingId": "word_excel_0dbd58e18e4e",
+      "decision": "link-existing-entry"
+    },
+    {
+      "word": "recharge",
+      "owner": "charger",
+      "existingId": "word_listening1179_fe7280cbed88",
+      "decision": "link-existing-entry"
+    },
+    {
+      "word": "stimulation",
+      "owner": "stimulate",
+      "existingId": "word_f7db80bfe755",
+      "decision": "link-existing-entry"
+    },
+    {
+      "word": "stimulus",
+      "owner": "stimulate",
+      "existingId": "word_0a9cd5dc143b",
+      "decision": "link-existing-entry"
+    },
+    {
+      "word": "three",
+      "owner": "third",
+      "existingId": "word_listening1179_8b5b9db0c13d",
+      "decision": "link-existing-entry"
+    },
+    {
+      "word": "vacant",
+      "owner": "vacancy",
+      "existingId": "word_291ec44feb79",
+      "decision": "link-existing-entry"
+    }
+  ],
+  "promoteAfterFullEditorialEntry": [
+    {
+      "word": "accompaniment",
+      "owner": "accompany",
+      "suggestedPos": "noun",
+      "suggestedMeaning": "伴随物；伴奏",
+      "decision": "promote-after-full-entry",
+      "reason": "Common independent lexical item with distinct IELTS reading and listening value."
+    },
+    {
+      "word": "accompanist",
+      "owner": "accompany",
+      "suggestedPos": "noun",
+      "suggestedMeaning": "伴奏者",
+      "decision": "promote-after-full-entry",
+      "reason": "Independent person noun; useful for arts and event contexts."
+    },
+    {
+      "word": "ecologically",
+      "owner": "ecology",
+      "suggestedPos": "adverb",
+      "suggestedMeaning": "从生态角度；生态上",
+      "suggestedDifficulty": "低频认识即可",
+      "decision": "promote-after-full-entry",
+      "reason": "Valid standalone adverb, mainly useful for Reading and environmental topics."
+    },
+    {
+      "word": "stimulant",
+      "owner": "stimulate",
+      "suggestedPos": "noun; adjective",
+      "suggestedMeaning": "兴奋剂；有刺激作用的",
+      "decision": "promote-after-full-entry",
+      "reason": "Independent lexical item with health and science relevance."
+    },
+    {
+      "word": "thirdly",
+      "owner": "third",
+      "suggestedPos": "adverb",
+      "suggestedMeaning": "第三；第三点",
+      "decision": "promote-after-full-entry",
+      "reason": "Independent discourse marker useful in formal writing, though less natural than alternatives."
+    }
+  ],
+  "keepAsFamilyReferenceOnly": [
+    {
+      "word": "vacantly",
+      "owner": "vacancy",
+      "suggestedPos": "adverb",
+      "suggestedMeaning": "茫然地；空洞地",
+      "decision": "family-reference-only",
+      "reason": "Valid word but low-frequency, and its common sense is semantically distant from vacancy as an empty position."
+    }
+  ],
+  "rejectAndRemoveRelation": [
+    {
+      "word": "earliness",
+      "owner": "venue",
+      "decision": "reject-family-relation",
+      "reason": "Earliness is not a member of the venue word family; this is contaminated metadata."
+    }
+  ]
+}

@@ -118,6 +118,7 @@ export async function POST(req) {
     if (!force && isAiContentProfileComplete(cache[key])) {
       return Response.json({
         ...withAiClientCollocationPayload(cache[key]),
+        aiReplaceExisting: false,
         cacheHit: true,
         source: "ai-cache"
       });
@@ -179,6 +180,7 @@ export async function POST(req) {
 
     return Response.json({
       ...withAiClientCollocationPayload(entry),
+      aiReplaceExisting: Boolean(force),
       cacheHit: false,
       source: "deepseek"
     });

@@ -7,7 +7,8 @@ import { isInflectedReferenceWord } from "./word-study-eligibility.mjs";
 import {
   getUnifiedQualityQueue,
   isMissingAiFields,
-  isMissingClassification
+  isMissingClassification,
+  summarizeWordQuality
 } from "./word-quality-status.mjs";
 
 export const PAID_AI_LIMITS = Object.freeze({
@@ -18,8 +19,10 @@ export const PAID_AI_LIMITS = Object.freeze({
   wrongRepair: 100,
   fast: 100,
   classification: 100,
-  batchSize: 10,
-  concurrency: 5
+  // Rich word profiles are large. Five words per request materially reduces
+  // truncation and malformed JSON without making the queue too slow.
+  batchSize: 5,
+  concurrency: 3
 });
 
 function chunkTargets(targets, batchSize) {
@@ -43,6 +46,10 @@ function isPaidAiEligibleWord(word) {
   return Boolean(word?.word && String(word.word).trim()) && !isInflectedReferenceWord(word);
 }
 
+function needsRepair(word) {
+  return isLikelyWrongAiWord(word) || hasHeadwordRepair(word?.word);
+}
+
 function selectIndexedWords(words, predicate, limit = Infinity) {
   const targets = [];
   for (let i = 0; i < words.length && targets.length < limit; i += 1) {
@@ -57,6 +64,13 @@ function resolveTargetLimit(value, fallback = Infinity) {
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return Infinity;
   return Math.max(0, Math.floor(parsed));
+}
+
+export function buildQualityLaneSummary(words = []) {
+  return summarizeWordQuality(
+    (Array.isArray(words) ? words : []).filter(isPaidAiEligibleWord),
+    { needsRepair }
+  );
 }
 
 export function buildCleanWordsPlan(words) {
@@ -78,9 +92,9 @@ export function buildGenerateMissingPlan(words, options = {}) {
   words.forEach((w, i) => {
     if (!isPaidAiEligibleWord(w)) return;
     const missing = isMissingAiFields(w);
-    const wrong = isLikelyWrongAiWord(w) || hasHeadwordRepair(w.word);
+    const wrong = needsRepair(w);
 
-    if (wrong && repairWrong) wrongTargets.push({ w, i, missing: false, wrong: true });
+    if (wrong && repairWrong) wrongTargets.push({ w, i, missing, wrong: true });
     else if (!wrong && missing) missingTargets.push({ w, i, missing: true, wrong: false });
   });
 
@@ -116,11 +130,7 @@ export function buildOneByOneCompletionPlan(words) {
 
 export function buildAnomalyRepairPlan(words, options = {}) {
   const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.wrongRepair);
-  const targets = selectIndexedWords(
-    words,
-    (word) => isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word),
-    maxTargets
-  );
+  const targets = selectIndexedWords(words, needsRepair, maxTargets);
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
@@ -146,9 +156,7 @@ export function buildBulkCompletionPlan(words, options = {}) {
     words,
     (word) => (
       !excludedWordKeys.has(normalizeWord(word.word)) &&
-      getUnifiedQualityQueue(word, {
-        needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word)
-      }) === "completion"
+      getUnifiedQualityQueue(word, { needsRepair: needsRepair(word) }) === "completion"
     ),
     maxTargets
   );
@@ -164,9 +172,7 @@ export function buildClassificationPlan(words, options = {}) {
   const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.classification);
   const targets = selectIndexedWords(
     words,
-    (word) => getUnifiedQualityQueue(word, {
-      needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word)
-    }) === "classification",
+    (word) => getUnifiedQualityQueue(word, { needsRepair: needsRepair(word) }) === "classification",
     maxTargets
   );
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });

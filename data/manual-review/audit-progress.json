@@ -1,0 +1,48 @@
+{
+  "version": "manual-vocab-audit-progress-v1",
+  "sourceAudit": "manual-vocab-audit-queue-v2",
+  "totalSourceWords": 13757,
+  "batchSize": 100,
+  "totalBatches": 138,
+  "completedBatches": [
+    1
+  ],
+  "currentBatch": 1,
+  "nextBatch": 2,
+  "reviewedSourceEntries": 100,
+  "reviewedAt": "2026-07-23",
+  "reviewBranch": "fix/ai-queue-audit-v1",
+  "pullRequest": 20,
+  "batchFiles": [
+    "data/manual-review/batches/batch-0001-review-v1.json"
+  ],
+  "standaloneFamilyEntriesAuthored": [
+    "accompaniment",
+    "accompanist",
+    "ecologically",
+    "stimulant",
+    "thirdly"
+  ],
+  "standaloneFamilyEntriesApplied": [],
+  "familyReferenceOnly": [
+    "vacantly"
+  ],
+  "rejectedFamilyRelations": [
+    {
+      "owner": "venue",
+      "word": "earliness"
+    }
+  ],
+  "safety": {
+    "mainModified": false,
+    "paidAiUsed": false,
+    "formalLexiconApplied": false,
+    "idsPreserved": true
+  },
+  "notes": [
+    "Batch 0001 has completed human semantic review for 100 source entries.",
+    "Each reviewed source entry has four common collocations and four phrase or pattern collocations in the batch patch.",
+    "Five complete standalone word-family entries have been authored but are not yet written into the formal lexicon.",
+    "Formal lexicon application remains blocked until the reviewed patch is materialized and validation passes."
+  ]
+}

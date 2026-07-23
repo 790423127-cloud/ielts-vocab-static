@@ -1,16 +1,20 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  AI_COLLOCATION_LIMIT,
   AI_CONTENT_PROFILE_VERSION,
   isAiContentProfileComplete,
   normalizeAiGeneratedEntry,
   normalizeAiForms,
+  normalizeAiPhraseItems,
   normalizeAiWordFamily,
-  normalizeOtherMeanings
+  normalizeOtherMeanings,
+  sanitizeAiWordCollocations,
+  withAiClientCollocationPayload
 } from "../admin-ai-content-profile.mjs";
 
-test("normalizes one main meaning, concise other meanings, and exactly one example pair", () => {
-  const entry = normalizeAiGeneratedEntry({
+function buildChargeEntry() {
+  return normalizeAiGeneratedEntry({
     word: "charge",
     phonetic: "/tʃɑːdʒ/",
     part_of_speech: "verb",
@@ -32,17 +36,27 @@ test("normalizes one main meaning, concise other meanings, and exactly one examp
     common_collocations: [
       { phrase: "charge a fee", chinese: "收取费用" },
       { phrase: "charge a fee", chinese: "收费" },
-      { phrase: "additional charge", chinese: "额外费用" }
+      { phrase: "additional charge", chinese: "额外费用" },
+      { phrase: "charge a customer", chinese: "向顾客收费" },
+      { phrase: "service charge", chinese: "服务费" },
+      { phrase: "huh?", chinese: "啊？" }
     ],
     phrase_collocations: [
-      { phrase: "charge for", chinese: "因……收费" },
-      { phrase: "in charge of", chinese: "负责" }
+      { phrase: "charge for a service", chinese: "为服务收费" },
+      { phrase: "be charged with a crime", chinese: "被控犯罪" },
+      { phrase: "in charge of a team", chinese: "负责一个团队" },
+      { phrase: "charge something to an account", chinese: "把费用记到账户上" },
+      { phrase: "huh?", chinese: "啊？" }
     ],
     ielts_use: ["Reading", "生活高频"],
     topics: ["消费"],
     difficulty: "中级核心",
     category: "消费"
   });
+}
+
+test("normalizes one main meaning, concise other meanings, one example pair, and four collocations per section", () => {
+  const entry = buildChargeEntry();
 
   assert.equal(entry.meaning, "收费；要价");
   assert.equal(entry.meaningDetailZh, "要求某人为商品或服务支付一定金额。");
@@ -55,9 +69,60 @@ test("normalizes one main meaning, concise other meanings, and exactly one examp
     { word: "charging", type: "present participle / gerund" }
   ]);
   assert.deepEqual(entry.wordFamily.map(({ word }) => word), ["chargeable"]);
-  assert.equal(entry.collocations.length, 2);
+  assert.deepEqual(entry.collocations.map(({ phrase }) => phrase), [
+    "charge a fee",
+    "additional charge",
+    "charge a customer",
+    "service charge"
+  ]);
+  assert.equal(entry.collocations.length, AI_COLLOCATION_LIMIT);
+  assert.equal(entry.phraseCollocations.length, AI_COLLOCATION_LIMIT);
   assert.equal(entry.aiContentProfile, AI_CONTENT_PROFILE_VERSION);
   assert.equal(isAiContentProfileComplete(entry), true);
+});
+
+test("collocation normalization removes interjections, questions, placeholders, one-word rows, duplicates, and overflow", () => {
+  const normalized = normalizeAiPhraseItems([
+    "huh?",
+    "wow",
+    "charge",
+    "等待 AI 补充",
+    { phrase: "charge a fee", chinese: "收取费用" },
+    { phrase: "Charge a fee!", chinese: "收费" },
+    { phrase: "additional charge", chinese: "额外费用" },
+    { phrase: "charge a customer", chinese: "向顾客收费" },
+    { phrase: "service charge", chinese: "服务费" },
+    { phrase: "charge a card", chinese: "从卡中扣款" }
+  ]);
+
+  assert.deepEqual(normalized.map(({ phrase }) => phrase), [
+    "charge a fee",
+    "additional charge",
+    "charge a customer",
+    "service charge"
+  ]);
+});
+
+test("client transport restores the fourth collocation after legacy three-item normalization", () => {
+  const entry = buildChargeEntry();
+  const transported = withAiClientCollocationPayload(entry);
+  const legacyWritten = {
+    ...transported,
+    collocations: transported.collocations.slice(0, 3),
+    phraseCollocations: transported.phraseCollocations.slice(0, 3)
+  };
+  const restored = sanitizeAiWordCollocations(legacyWritten);
+
+  assert.equal(restored.collocations.length, 4);
+  assert.equal(restored.phraseCollocations.length, 4);
+  assert.equal(Object.hasOwn(restored, "aiCollocationsV2"), false);
+  assert.equal(Object.hasOwn(restored, "aiPhraseCollocationsV2"), false);
+});
+
+test("profiles with fewer than four translated items are rejected from the paid cache", () => {
+  const entry = buildChargeEntry();
+  entry.collocations = entry.collocations.slice(0, 3);
+  assert.equal(isAiContentProfileComplete(entry), false);
 });
 
 test("forms reject self links, unknown relation types, phrases, duplicates, and protected plural-like headwords", () => {

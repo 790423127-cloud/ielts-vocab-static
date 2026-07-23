@@ -27,6 +27,21 @@ const FAMILY_RELATIONS = new Set([
   "related-to"
 ]);
 
+const FORMLESS_LEXICALIZED_HEADWORDS = new Set([
+  "news",
+  "means",
+  "customs",
+  "premises",
+  "savings",
+  "earnings",
+  "goods",
+  "clothes",
+  "mathematics",
+  "physics",
+  "series",
+  "species"
+]);
+
 function text(value) {
   return String(value ?? "").normalize("NFKC").trim().replace(/\s+/g, " ");
 }
@@ -94,6 +109,7 @@ export function normalizeOtherMeanings(value, mainMeaning = "") {
 export function normalizeAiForms(value, headword = "") {
   if (!Array.isArray(value) || !isSingleEnglishHeadword(headword)) return [];
   const headwordKey = key(headword);
+  if (FORMLESS_LEXICALIZED_HEADWORDS.has(headwordKey)) return [];
   const seen = new Set();
   const result = [];
   for (const item of value) {
@@ -102,6 +118,7 @@ export function normalizeAiForms(value, headword = "") {
     const type = FORM_TYPE_ALIASES.get(rawType);
     const formKey = key(formWord);
     if (!isSingleEnglishHeadword(formWord) || !type || !formKey || formKey === headwordKey) continue;
+    if (type === "plural" && formKey === `${headwordKey}s` && /s$/.test(headwordKey)) continue;
     const relationKey = `${formKey}::${type}`;
     if (seen.has(relationKey)) continue;
     seen.add(relationKey);

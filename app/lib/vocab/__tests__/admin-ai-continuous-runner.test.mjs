@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { runContinuousAiCompletion } from "../admin-ai-continuous-runner.mjs";
 
+// Regression coverage for the UI contract: failed words remain unresolved.
 test("continuous completion advances through bounded rounds until the queue is empty", async () => {
   const rounds = [];
   const result = await runContinuousAiCompletion({

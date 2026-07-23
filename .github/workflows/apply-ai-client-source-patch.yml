@@ -6,9 +6,6 @@ on:
       - fix/ai-queue-audit-v1
     paths:
       - "scripts/apply-ai-client-source-patch.mjs"
-      - "scripts/fix-quality-patch-script.mjs"
-      - "scripts/apply-quality-standard-once.mjs"
-      - "scripts/apply-quality-standard-patch.mjs"
       - "scripts/materialize-manual-vocab-batch-0001.mjs"
       - ".github/workflows/apply-ai-client-source-patch.yml"
 
@@ -53,7 +50,7 @@ jobs:
           console.log('Reviewed batch validated');
           NODE
 
-      - name: Commit generated review and source files
+      - name: Commit generated review and client files
         run: |
           if git diff --quiet; then
             echo "No source or review patch changes were needed."
@@ -61,16 +58,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            app/page.jsx \
-            app/hooks/useHomeLexiconAdmin.ai.js \
-            app/components/WordFlashcardView.jsx \
-            app/components/VocabAdminToolsPanel.jsx \
-            app/lib/vocab/admin-ai-batch-plan.mjs \
-            app/lib/vocab/word-flashcard-study-pool.mjs \
-            app/lib/vocab/__tests__/admin-ai-batch-plan.test.mjs \
-            scripts/apply-quality-standard-patch.mjs \
-            scripts/build-manual-vocab-audit-queue.mjs \
-            data/manual-review/batches/batch-0001-review-v1.json
-          git commit -m "refactor: separate required repairs from optional enrichment [batch-0001-materialized]"
+          git add app/hooks/useHomeLexiconAdmin.ai.js app/components/VocabAdminToolsPanel.jsx data/manual-review/batches/batch-0001-review-v1.json
+          git commit -m "data: materialize human-reviewed batch 0001 [batch-0001-materialized]"
           git push origin HEAD:fix/ai-queue-audit-v1

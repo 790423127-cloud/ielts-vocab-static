@@ -1,0 +1,447 @@
+{
+  "version": "manual-vocab-audit-batch-0002-part-01-v1",
+  "status": "reviewed-not-applied",
+  "branch": "fix/ai-queue-audit-v1",
+  "sourceBatch": 2,
+  "range": {
+    "start": 101,
+    "end": 120
+  },
+  "count": 20,
+  "policy": {
+    "preserveIds": true,
+    "preserveUserState": true,
+    "noPaidAiApi": true,
+    "doNotMergeMainUntilVerified": true
+  },
+  "entries": [
+    {
+      "id": "word_4fbeb3982230",
+      "word": "prevention",
+      "set": {
+        "collocations": [
+          {"phrase": "disease prevention", "chinese": "疾病预防"},
+          {"phrase": "crime prevention", "chinese": "犯罪预防"},
+          {"phrase": "accident prevention", "chinese": "事故预防"},
+          {"phrase": "prevention measures", "chinese": "预防措施"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "prevention of disease", "chinese": "疾病预防"},
+          {"phrase": "focus on prevention", "chinese": "重视预防"},
+          {"phrase": "for the prevention of", "chinese": "为了预防……"},
+          {"phrase": "prevention is better than cure", "chinese": "预防胜于治疗"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_296c291b4304",
+      "word": "diplomatic",
+      "set": {
+        "collocations": [
+          {"phrase": "diplomatic relations", "chinese": "外交关系"},
+          {"phrase": "diplomatic efforts", "chinese": "外交努力"},
+          {"phrase": "diplomatic solution", "chinese": "外交解决方案"},
+          {"phrase": "diplomatic mission", "chinese": "外交使团；外交任务"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "diplomatic ties with", "chinese": "与……的外交关系"},
+          {"phrase": "diplomatic talks between", "chinese": "……之间的外交会谈"},
+          {"phrase": "through diplomatic channels", "chinese": "通过外交渠道"},
+          {"phrase": "take a diplomatic approach", "chinese": "采取圆融而有策略的方式"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_bf466ef9418e",
+      "word": "hang",
+      "set": {
+        "collocations": [
+          {"phrase": "hang a picture", "chinese": "挂一幅画"},
+          {"phrase": "hang curtains", "chinese": "挂窗帘"},
+          {"phrase": "hang loosely", "chinese": "松垂着"},
+          {"phrase": "hang vertically", "chinese": "垂直悬挂"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "hang on", "chinese": "稍等；坚持住"},
+          {"phrase": "hang up", "chinese": "挂断电话；挂起"},
+          {"phrase": "hang out with", "chinese": "与……闲逛或相处"},
+          {"phrase": "hang over", "chinese": "笼罩；悬而未决"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_0885ff9f77fb",
+      "word": "fix",
+      "set": {
+        "collocations": [
+          {"phrase": "fix a problem", "chinese": "解决问题"},
+          {"phrase": "fix a date", "chinese": "确定日期"},
+          {"phrase": "fix the roof", "chinese": "修理屋顶"},
+          {"phrase": "quick fix", "chinese": "权宜之计；快速修补"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "fix up", "chinese": "修理；安排"},
+          {"phrase": "fix a time for", "chinese": "为……确定时间"},
+          {"phrase": "be fixed on", "chinese": "专注于；执意选择"},
+          {"phrase": "fix something to something", "chinese": "把某物固定在某物上"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_92d31811901b",
+      "word": "ratio",
+      "set": {
+        "collocations": [
+          {"phrase": "high ratio", "chinese": "高比率"},
+          {"phrase": "low ratio", "chinese": "低比率"},
+          {"phrase": "student-teacher ratio", "chinese": "师生比"},
+          {"phrase": "cost-benefit ratio", "chinese": "成本效益比"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "ratio of A to B", "chinese": "A 与 B 的比率"},
+          {"phrase": "in the ratio of", "chinese": "按……的比例"},
+          {"phrase": "at a ratio of", "chinese": "以……的比率"},
+          {"phrase": "ratio between A and B", "chinese": "A 与 B 之间的比率"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_a6d64067afaf",
+      "word": "tutorial",
+      "set": {
+        "collocations": [
+          {"phrase": "online tutorial", "chinese": "在线教程"},
+          {"phrase": "video tutorial", "chinese": "视频教程"},
+          {"phrase": "tutorial session", "chinese": "辅导课"},
+          {"phrase": "step-by-step tutorial", "chinese": "分步骤教程"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "tutorial on", "chinese": "关于……的教程"},
+          {"phrase": "tutorial for beginners", "chinese": "面向初学者的教程"},
+          {"phrase": "attend a tutorial", "chinese": "参加辅导课"},
+          {"phrase": "follow a tutorial", "chinese": "按照教程学习"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_9a65b94eeb86",
+      "word": "enclosed",
+      "set": {
+        "collocations": [
+          {"phrase": "enclosed document", "chinese": "所附文件"},
+          {"phrase": "enclosed form", "chinese": "所附表格"},
+          {"phrase": "enclosed space", "chinese": "封闭空间"},
+          {"phrase": "enclosed area", "chinese": "围起来的区域"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "please find enclosed", "chinese": "请查收随附的……"},
+          {"phrase": "enclosed with this letter", "chinese": "随本信附上"},
+          {"phrase": "in an enclosed space", "chinese": "在封闭空间内"},
+          {"phrase": "be enclosed by", "chinese": "被……围住"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_a845caf2dbc5",
+      "word": "case",
+      "set": {
+        "collocations": [
+          {"phrase": "criminal case", "chinese": "刑事案件"},
+          {"phrase": "court case", "chinese": "诉讼案件"},
+          {"phrase": "special case", "chinese": "特殊情况"},
+          {"phrase": "strong case", "chinese": "有力的论据；胜算大的案件"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "in this case", "chinese": "在这种情况下"},
+          {"phrase": "in case of", "chinese": "如果发生……；在……情况下"},
+          {"phrase": "make a case for", "chinese": "为……提出有力论据"},
+          {"phrase": "be the case", "chinese": "属实；情况如此"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_050e3fda1ce0",
+      "word": "dreadful",
+      "set": {
+        "collocations": [
+          {"phrase": "dreadful weather", "chinese": "糟糕的天气"},
+          {"phrase": "dreadful mistake", "chinese": "严重的错误"},
+          {"phrase": "dreadful experience", "chinese": "可怕的经历"},
+          {"phrase": "feel dreadful", "chinese": "感觉非常难受"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "look dreadful", "chinese": "看起来很糟"},
+          {"phrase": "sound dreadful", "chinese": "听起来很糟"},
+          {"phrase": "be in a dreadful state", "chinese": "处于糟糕状态"},
+          {"phrase": "a dreadful thing to do", "chinese": "一件很恶劣的事"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_c1dca7cfb5a0",
+      "word": "brown",
+      "set": {
+        "collocations": [
+          {"phrase": "dark brown", "chinese": "深棕色"},
+          {"phrase": "light brown", "chinese": "浅棕色"},
+          {"phrase": "brown hair", "chinese": "棕色头发"},
+          {"phrase": "brown sugar", "chinese": "红糖；黄糖"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "turn brown", "chinese": "变成棕色"},
+          {"phrase": "brown in colour", "chinese": "呈棕色"},
+          {"phrase": "a shade of brown", "chinese": "一种棕色色调"},
+          {"phrase": "brown on both sides", "chinese": "两面煎至焦黄"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_b37e5c36a093",
+      "word": "house",
+      "set": {
+        "collocations": [
+          {"phrase": "detached house", "chinese": "独立式住宅"},
+          {"phrase": "family house", "chinese": "家庭住宅"},
+          {"phrase": "house prices", "chinese": "房价"},
+          {"phrase": "house fire", "chinese": "住宅火灾"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "move house", "chinese": "搬家"},
+          {"phrase": "in the house", "chinese": "在房子里"},
+          {"phrase": "house for sale", "chinese": "待售房屋"},
+          {"phrase": "from house to house", "chinese": "挨家挨户地"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_56953f9c44c6",
+      "word": "enough",
+      "set": {
+        "collocations": [
+          {"phrase": "enough time", "chinese": "足够的时间"},
+          {"phrase": "enough money", "chinese": "足够的钱"},
+          {"phrase": "good enough", "chinese": "足够好"},
+          {"phrase": "large enough", "chinese": "足够大"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "enough to do", "chinese": "足以做……"},
+          {"phrase": "enough for", "chinese": "对……来说足够"},
+          {"phrase": "not enough to", "chinese": "不足以……"},
+          {"phrase": "more than enough", "chinese": "绰绰有余"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_970ba6028d72",
+      "word": "leisure",
+      "set": {
+        "collocations": [
+          {"phrase": "leisure time", "chinese": "闲暇时间"},
+          {"phrase": "leisure activities", "chinese": "休闲活动"},
+          {"phrase": "leisure centre", "chinese": "休闲中心"},
+          {"phrase": "leisure facilities", "chinese": "休闲设施"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "at leisure", "chinese": "有空地；从容地"},
+          {"phrase": "in your leisure time", "chinese": "在闲暇时间"},
+          {"phrase": "have the leisure to", "chinese": "有空做……"},
+          {"phrase": "for leisure purposes", "chinese": "以休闲为目的"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_511e9f26ac1b",
+      "word": "feel",
+      "set": {
+        "collocations": [
+          {"phrase": "feel happy", "chinese": "感到高兴"},
+          {"phrase": "feel tired", "chinese": "感到疲倦"},
+          {"phrase": "feel pain", "chinese": "感到疼痛"},
+          {"phrase": "feel pressure", "chinese": "感到压力"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "feel like doing", "chinese": "想做……"},
+          {"phrase": "feel free to", "chinese": "尽管……；可以随意……"},
+          {"phrase": "feel sorry for", "chinese": "为……感到难过；同情……"},
+          {"phrase": "feel up to doing", "chinese": "觉得有精力或能力做……"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_23f0f6887770",
+      "word": "really",
+      "set": {
+        "collocations": [
+          {"phrase": "really good", "chinese": "非常好"},
+          {"phrase": "really important", "chinese": "确实重要"},
+          {"phrase": "really want", "chinese": "非常想要"},
+          {"phrase": "really need", "chinese": "确实需要"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "not really", "chinese": "不完全是；其实没有"},
+          {"phrase": "do you really mean", "chinese": "你真的意思是……吗"},
+          {"phrase": "really and truly", "chinese": "确确实实"},
+          {"phrase": "if you really want to", "chinese": "如果你确实想……"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_a864966c7604",
+      "word": "previously",
+      "set": {
+        "collocations": [
+          {"phrase": "previously reported", "chinese": "此前报道的"},
+          {"phrase": "previously known", "chinese": "此前已知的"},
+          {"phrase": "previously unavailable", "chinese": "此前无法获得的"},
+          {"phrase": "previously published", "chinese": "此前发表的"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "as previously stated", "chinese": "如前所述"},
+          {"phrase": "previously used for", "chinese": "以前用于……"},
+          {"phrase": "previously owned by", "chinese": "以前由……拥有"},
+          {"phrase": "not previously available", "chinese": "以前无法获得"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_1ef183c5d826",
+      "word": "deskjob",
+      "set": {
+        "collocations": [
+          {"phrase": "sedentary desk job", "chinese": "久坐的案头工作"},
+          {"phrase": "full-time desk job", "chinese": "全职办公室工作"},
+          {"phrase": "nine-to-five desk job", "chinese": "朝九晚五的办公室工作"},
+          {"phrase": "demanding desk job", "chinese": "繁重的案头工作"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "work at a desk job", "chinese": "从事办公室工作"},
+          {"phrase": "leave a desk job", "chinese": "离开办公室岗位"},
+          {"phrase": "move into a desk job", "chinese": "转入办公室岗位"},
+          {"phrase": "be stuck in a desk job", "chinese": "困在办公室工作中"}
+        ],
+        "word": "desk job",
+        "normalizedHeadword": "desk job",
+        "entryType": "phrase",
+        "isPhrase": true,
+        "auditNote": "High-confidence headword repair: 'deskjob' is normally written as the open compound 'desk job'."
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_08792d68e958",
+      "word": "flexibility",
+      "set": {
+        "collocations": [
+          {"phrase": "greater flexibility", "chinese": "更大的灵活性"},
+          {"phrase": "workplace flexibility", "chinese": "职场灵活性"},
+          {"phrase": "flexibility training", "chinese": "柔韧性训练"},
+          {"phrase": "financial flexibility", "chinese": "财务灵活性"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "flexibility to do", "chinese": "做……的灵活性"},
+          {"phrase": "flexibility in", "chinese": "在……方面的灵活性"},
+          {"phrase": "allow for flexibility", "chinese": "为灵活调整留出空间"},
+          {"phrase": "lack of flexibility", "chinese": "缺乏灵活性"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_5f10bb115df1",
+      "word": "than",
+      "set": {
+        "collocations": [
+          {"phrase": "better than", "chinese": "比……更好"},
+          {"phrase": "more than", "chinese": "多于；不仅仅"},
+          {"phrase": "less than", "chinese": "少于；不到"},
+          {"phrase": "rather than", "chinese": "而不是"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "other than", "chinese": "除……之外"},
+          {"phrase": "no sooner than", "chinese": "不早于；一……就……"},
+          {"phrase": "sooner rather than later", "chinese": "宜早不宜迟"},
+          {"phrase": "than expected", "chinese": "比预期的……"}
+        ],
+        "studyMode": "reference",
+        "category": "英语语法 · 比较结构",
+        "auditNote": "Function word retained as a grammar-pattern reference rather than a normal lexical headword."
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    },
+    {
+      "id": "word_9e3f96dd8c1d",
+      "word": "bread",
+      "set": {
+        "collocations": [
+          {"phrase": "fresh bread", "chinese": "新鲜面包"},
+          {"phrase": "wholemeal bread", "chinese": "全麦面包"},
+          {"phrase": "bread dough", "chinese": "面包面团"},
+          {"phrase": "loaf of bread", "chinese": "一条面包"}
+        ],
+        "phraseCollocations": [
+          {"phrase": "bread and butter", "chinese": "谋生之道；基本收入来源"},
+          {"phrase": "a slice of bread", "chinese": "一片面包"},
+          {"phrase": "break bread with", "chinese": "与……一起用餐"},
+          {"phrase": "live on bread and water", "chinese": "仅靠面包和水维生"}
+        ]
+      },
+      "reviewStatus": "human-reviewed",
+      "reviewedAt": "2026-07-23",
+      "reviewer": "ChatGPT"
+    }
+  ]
+}

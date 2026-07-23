@@ -86,7 +86,7 @@ export function resolveWordEnrichmentTarget(word = {}) {
   if (isFunctionWord(word)) {
     return {
       applicable: true,
-      minimum: { common: 0, phrase: 1 },
+      minimum: { common: 0, phrase: 0 },
       standard: { common: 0, phrase: 2 },
       rich: { common: 0, phrase: 4 }
     };
@@ -96,7 +96,7 @@ export function resolveWordEnrichmentTarget(word = {}) {
   if (difficulty === "低频认识即可") {
     return {
       applicable: true,
-      minimum: { common: 1, phrase: 0 },
+      minimum: { common: 0, phrase: 0 },
       standard: { common: 1, phrase: 0 },
       rich: { common: 2, phrase: 1 }
     };
@@ -104,7 +104,7 @@ export function resolveWordEnrichmentTarget(word = {}) {
   if (difficulty === "高级加分") {
     return {
       applicable: true,
-      minimum: { common: 1, phrase: 1 },
+      minimum: { common: 0, phrase: 0 },
       standard: { common: 2, phrase: 1 },
       rich: { common: 3, phrase: 3 }
     };
@@ -112,7 +112,7 @@ export function resolveWordEnrichmentTarget(word = {}) {
 
   return {
     applicable: true,
-    minimum: { common: 1, phrase: 1 },
+    minimum: { common: 0, phrase: 0 },
     standard: { common: 2, phrase: 2 },
     rich: { common: 4, phrase: 4 }
   };
@@ -166,8 +166,6 @@ export function getWordQualityStatus(word = {}) {
   if (!hasUsefulQualityText(word.definition)) missingContentFields.push("definition");
   if (!hasUsefulQualityText(word.example)) missingContentFields.push("example");
   if (!hasUsefulQualityText(word.exampleCn)) missingContentFields.push("exampleCn");
-  if (commonCount < target.minimum.common) missingContentFields.push("collocations");
-  if (phraseCount < target.minimum.phrase) missingContentFields.push("phraseCollocations");
 
   const invalidOtherMeaningIndexes = inspectOtherMeanings(word?.otherMeanings);
   const invalidContentFields = invalidOtherMeaningIndexes.length ? ["otherMeanings"] : [];

@@ -32,7 +32,10 @@ import {
   captureWordWriteTarget,
   resolveWordWriteTarget
 } from "../lib/vocab/ai-write-merge.mjs";
-import { needsOptionalWordEnrichment } from "../lib/vocab/word-quality-status.mjs";
+import {
+  isInvalidAiContent,
+  needsOptionalWordEnrichment
+} from "../lib/vocab/word-quality-status.mjs";
 
 function targetForWord(word) {
   return captureWordWriteTarget(word);
@@ -857,7 +860,16 @@ export function createAiOps(ctx) {
               aiWrongRepairedAt: Date.now()
             }));
 
-            repaired += 1;
+            const updated = resolveWordWriteTarget(next, writeTarget).word;
+            if (isInvalidAiContent(updated) || isLikelyWrongAiWord(updated)) {
+              if (!failed.includes(w.word)) failed.push(w.word);
+              const reasons = isLikelyWrongAiWord(updated)
+                ? "修复后仍命中异常判定"
+                : "修复后其他义项结构仍无效";
+              failedDetails.push(`${w.word}: ${reasons}`);
+            } else {
+              repaired += 1;
+            }
           });
 
           return next;
@@ -957,7 +969,7 @@ export function createAiOps(ctx) {
       await Promise.all(Array.from({ length: workerCount }, (_, i) => worker(i + 1)));
 
       setBatchInfo("");
-      setToast(`AI稳定修复确定错词完成：处理 ${targets.length} 个，修复 ${repaired} 个，失败 ${failed.length} 个${failedDetails[0] ? "｜失败示例：" + failedDetails.slice(0, 3).join("；") : ""}`);
+      setToast(`AI精准结构修复完成：尝试 ${targets.length} 个，真正退出异常队列 ${repaired} 个，仍需处理 ${failed.length} 个${failedDetails[0] ? "｜示例：" + failedDetails.slice(0, 3).join("；") : ""}`);
 
       return {
         total: targets.length,

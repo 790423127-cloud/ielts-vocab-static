@@ -283,11 +283,12 @@ export default function VocabAdminToolsPanel({
                   >
                     <summary>AI工具（会扣费）</summary>
                     <div className="ai-warning">
-                      默认付费队列只处理必须补全、结构异常和分类缺失。搭配数量不足只算“可选丰富”，不会自动重写整个词库。
+                      默认付费队列只处理必须补全、真实结构异常和分类缺失。词头待修单独显示；搭配数量不足只算“可选丰富”。
                     </div>
                     <div className="duplicate-box">
                       <div><strong>必须补全：</strong>{qualityStats.missing || 0}</div>
                       <div><strong>结构异常：</strong>{qualityStats.repairMissing || 0}</div>
+                      <div><strong>词头待修：</strong>{qualityStats.headwordRepair || 0}（单独处理，不进入结构异常批次）</div>
                       <div><strong>仅缺分类：</strong>{qualityStats.classifyMissing || 0}</div>
                       <div><strong>可选丰富：</strong>{qualityStats.enrichmentThin || 0}（不进入默认付费队列）</div>
                       <div><strong>词族复核 / 独立词候选：</strong>{qualityStats.familyReview || 0} / {qualityStats.familyPromotion || 0}</div>

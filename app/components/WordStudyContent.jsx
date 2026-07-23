@@ -2,6 +2,7 @@
 
 import { Volume2 } from "lucide-react";
 import { getPosDisplay } from "../lib/vocab/page-word-helpers.mjs";
+import { normalizeOtherMeanings } from "../lib/vocab/admin-ai-content-profile.mjs";
 import {
   formatHeadwordForDisplay,
   formatHeadwordForSpeech
@@ -43,6 +44,8 @@ export default function WordStudyContent({
     displayHeadword.length > 18 ? "word--long" : "",
     displayHeadword.includes("/") ? "word--alternatives" : ""
   ].filter(Boolean).join(" ");
+  const otherMeanings = normalizeOtherMeanings(item.otherMeanings, item.meaning);
+  const mainMeaningDetail = String(item.meaningDetailZh || item.definition || "").trim();
 
   return (
     <div className="word-study-content">
@@ -101,7 +104,13 @@ export default function WordStudyContent({
       </section>
 
       <div className="meaning-block">
-        <div className="meaning-primary">{fallback(item.meaning, "等待补充中文释义")}</div>
+        <div className="meaning-primary">{fallback(item.meaning, "等待补充中文主释义")}</div>
+        {mainMeaningDetail ? (
+          <div className="meaning-detail"><strong>主释义详解：</strong>{mainMeaningDetail}</div>
+        ) : null}
+        {otherMeanings.length ? (
+          <div className="meaning-other"><strong>其他释义：</strong>{otherMeanings.join("；")}</div>
+        ) : null}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import {
 import { isInflectedReferenceWord } from "./word-study-eligibility.mjs";
 import {
   getUnifiedQualityQueue,
+  isInvalidAiContent,
   isMissingAiFields,
   isMissingClassification,
   summarizeWordQuality
@@ -47,7 +48,7 @@ function isPaidAiEligibleWord(word) {
 }
 
 function needsRepair(word) {
-  return isLikelyWrongAiWord(word) || hasHeadwordRepair(word?.word);
+  return isInvalidAiContent(word) || isLikelyWrongAiWord(word) || hasHeadwordRepair(word?.word);
 }
 
 function selectIndexedWords(words, predicate, limit = Infinity) {
@@ -120,7 +121,7 @@ export function buildOneByOneCompletionPlan(words) {
       i,
       missing: isMissingAiFields(w),
       unclassified: isMissingClassification(w),
-      wrong: isLikelyWrongAiWord(w),
+      wrong: isInvalidAiContent(w) || isLikelyWrongAiWord(w),
       truncated: hasHeadwordRepair(w.word)
     };
     if (target.missing || target.unclassified || target.wrong || target.truncated) targets.push(target);
@@ -140,7 +141,7 @@ export function buildSlowCompletionPlan(words) {
 }
 
 export function buildWrongRepairPlan(words) {
-  const targets = selectIndexedWords(words, isLikelyWrongAiWord, PAID_AI_LIMITS.wrongRepair);
+  const targets = selectIndexedWords(words, needsRepair, PAID_AI_LIMITS.wrongRepair);
   return buildPlan(targets, {
     batchSize: PAID_AI_LIMITS.batchSize,
     concurrency: Math.min(2, PAID_AI_LIMITS.concurrency)

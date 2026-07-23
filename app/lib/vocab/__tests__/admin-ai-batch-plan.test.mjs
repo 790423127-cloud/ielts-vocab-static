@@ -97,7 +97,7 @@ test("completion plans keep their distinct target policies", () => {
 
   assert.deepEqual(buildSlowCompletionPlan(words).targets.map(({ i }) => i), [3, 4]);
   const wrongRepair = buildWrongRepairPlan(words);
-  assert.deepEqual(wrongRepair.targets.map(({ i }) => i), [3]);
+  assert.deepEqual(wrongRepair.targets.map(({ i }) => i), [3, 4]);
   assert.equal(wrongRepair.workerCount, 1);
   assert.deepEqual(buildAnomalyRepairPlan(words).targets.map(({ i }) => i), [3, 4]);
   assert.deepEqual(buildFastCompletionPlan(words).targets.map(({ i }) => i), [1]);
@@ -105,7 +105,16 @@ test("completion plans keep their distinct target policies", () => {
   assert.deepEqual(buildClassificationPlan(words).targets.map(({ i }) => i), [2]);
 });
 
-test("quality lane summary explains why the visible missing count differs from completion", () => {
+test("structurally invalid other meanings enter the repair queue", () => {
+  const words = [
+    completeWord("valid"),
+    completeWord("invalid-sense", { otherMeanings: [{ meaningZh: "另一含义" }] })
+  ];
+  assert.deepEqual(buildWrongRepairPlan(words).targets.map(({ i }) => i), [1]);
+  assert.deepEqual(buildFastCompletionPlan(words).targets.map(({ i }) => i), []);
+});
+
+test("quality lane summary explains required work separately from enrichment", () => {
   const words = [
     completeWord("ready"),
     completeWord("missing", { definition: "" }),
@@ -119,7 +128,13 @@ test("quality lane summary explains why the visible missing count differs from c
     classification: 1,
     ready: 1,
     contentMissing: 2,
+    contentInvalid: 0,
     classificationMissing: 1,
+    enrichmentThin: 4,
+    enrichmentStandard: 0,
+    enrichmentRich: 0,
+    familyReview: 0,
+    familyPromotion: 0,
     total: 4
   });
 });

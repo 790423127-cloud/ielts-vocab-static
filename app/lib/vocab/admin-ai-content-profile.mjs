@@ -184,7 +184,7 @@ export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
   };
 }
 
-export function isAiContentProfileComplete(word) {
+export function isAiCoreContentComplete(word) {
   return Boolean(
     word?.word &&
     word?.pos &&
@@ -197,7 +197,13 @@ export function isAiContentProfileComplete(word) {
     Array.isArray(word?.forms) &&
     Array.isArray(word?.wordFamily) &&
     Array.isArray(word?.collocations) && word.collocations.length &&
-    Array.isArray(word?.phraseCollocations) && word.phraseCollocations.length &&
+    Array.isArray(word?.phraseCollocations) && word.phraseCollocations.length
+  );
+}
+
+export function isAiContentProfileComplete(word) {
+  return Boolean(
+    isAiCoreContentComplete(word) &&
     Array.isArray(word?.ieltsUse) && word.ieltsUse.length &&
     Array.isArray(word?.topics) && word.topics.length &&
     word?.difficulty &&
@@ -206,5 +212,5 @@ export function isAiContentProfileComplete(word) {
 }
 
 export function isAiContentProfileMissing(word) {
-  return !isAiContentProfileComplete(word);
+  return !isAiCoreContentComplete(word);
 }

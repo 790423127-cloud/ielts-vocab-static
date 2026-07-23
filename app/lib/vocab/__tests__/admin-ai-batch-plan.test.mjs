@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { AI_CONTENT_PROFILE_VERSION } from "../admin-ai-content-profile.mjs";
 import {
   PAID_AI_LIMITS,
+  buildAnomalyRepairPlan,
+  buildBulkCompletionPlan,
   buildClassificationPlan,
   buildCleanWordsPlan,
   buildFastCompletionPlan,
@@ -91,24 +93,12 @@ test("completion plans keep their distinct target policies", () => {
 
   const oneByOne = buildOneByOneCompletionPlan(words);
   assert.deepEqual(oneByOne.targets.map(({ i }) => i), [1, 2, 3, 4]);
-  assert.deepEqual(
-    oneByOne.targets.map(({ missing, unclassified, wrong, truncated }) => ({
-      missing,
-      unclassified,
-      wrong,
-      truncated
-    })),
-    [
-      { missing: true, unclassified: false, wrong: false, truncated: false },
-      { missing: false, unclassified: true, wrong: false, truncated: false },
-      { missing: false, unclassified: false, wrong: true, truncated: false },
-      { missing: false, unclassified: false, wrong: false, truncated: true }
-    ]
-  );
 
-  assert.deepEqual(buildSlowCompletionPlan(words).targets.map(({ i }) => i), [1, 3, 4]);
-  assert.deepEqual(buildWrongRepairPlan(words).targets.map(({ i }) => i), [3]);
+  assert.deepEqual(buildSlowCompletionPlan(words).targets.map(({ i }) => i), [3, 4]);
+  assert.deepEqual(buildWrongRepairPlan(words).targets.map(({ i }) => i), [3, 4]);
+  assert.deepEqual(buildAnomalyRepairPlan(words).targets.map(({ i }) => i), [3, 4]);
   assert.deepEqual(buildFastCompletionPlan(words).targets.map(({ i }) => i), [1]);
+  assert.deepEqual(buildBulkCompletionPlan(words).targets.map(({ i }) => i), [1]);
   assert.deepEqual(buildClassificationPlan(words).targets.map(({ i }) => i), [2]);
 });
 
@@ -127,7 +117,7 @@ test("paid plans exclude inflected references", () => {
   assert.deepEqual(plan.targets.map(({ w }) => w.word), ["cashless"]);
 });
 
-test("clean and completion plans cap paid targets and use small single-worker chunks", () => {
+test("bulk completion scans all missing words but still sends ten-word single-worker chunks", () => {
   const words = Array.from({ length: 205 }, (_, i) => ({ word: `word-${i}` }));
   words[1] = { word: "  " };
   words[2] = { word: "" };
@@ -139,12 +129,19 @@ test("clean and completion plans cap paid targets and use small single-worker ch
   assert.deepEqual(cleanPlan.targets[1], { id: "3", text: "word-3", i: 3 });
 
   const fastPlan = buildFastCompletionPlan(words);
-  assert.equal(fastPlan.targets.length, PAID_AI_LIMITS.fast);
+  assert.equal(fastPlan.targets.length, 203);
+  assert.equal(fastPlan.chunks.length, 21);
   assert.equal(fastPlan.chunks.every((chunk) => chunk.length <= PAID_AI_LIMITS.batchSize), true);
   assert.equal(fastPlan.workerCount, PAID_AI_LIMITS.concurrency);
 });
 
-test("one-by-one paid mode has a bounded target count", () => {
+test("bulk and classification plans support an explicit optional cap", () => {
+  const words = Array.from({ length: 35 }, (_, index) => ({ word: `entry-${index}` }));
+  assert.equal(buildBulkCompletionPlan(words, { maxTargets: 12 }).targets.length, 12);
+  assert.equal(buildClassificationPlan(words, { maxTargets: 7 }).targets.length, 7);
+});
+
+test("one-by-one paid mode remains bounded for manual review", () => {
   const words = Array.from({ length: 50 }, (_, index) => ({ word: `entry-${index}` }));
   const plan = buildOneByOneCompletionPlan(words);
   assert.equal(plan.targets.length, PAID_AI_LIMITS.oneByOne);

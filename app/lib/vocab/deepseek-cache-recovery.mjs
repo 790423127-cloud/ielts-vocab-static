@@ -1,5 +1,6 @@
 import {
   normalizeAiForms,
+  normalizeAiPhraseItems,
   normalizeAiWordFamily,
   normalizeOtherMeanings
 } from "./admin-ai-content-profile.mjs";
@@ -86,25 +87,6 @@ function normalizeStringArray(value) {
   return result;
 }
 
-function normalizePhraseArray(value) {
-  if (!Array.isArray(value)) return [];
-  const seen = new Set();
-  const result = [];
-  for (const item of value) {
-    const normalized = typeof item === "string"
-      ? { phrase: item.trim(), chinese: "" }
-      : {
-          phrase: String(item?.phrase || item?.text || item?.collocation || "").trim(),
-          chinese: String(item?.chinese || item?.translation || item?.meaning || "").trim()
-        };
-    const key = normalizeRecoveryWord(normalized.phrase);
-    if (!key || seen.has(key)) continue;
-    seen.add(key);
-    result.push(normalized);
-  }
-  return result;
-}
-
 export function normalizeCachedRecoveryEntry(entry = {}, fallbackWord = "") {
   const word = String(entry.word || fallbackWord || "").trim();
   const meaning = String(entry.chinese_meaning || entry.meaning || "").trim();
@@ -120,8 +102,8 @@ export function normalizeCachedRecoveryEntry(entry = {}, fallbackWord = "") {
     exampleCn: String(entry.example_chinese || entry.exampleCn || "").trim(),
     forms: normalizeAiForms(entry.forms, word),
     wordFamily: normalizeAiWordFamily(entry.word_family || entry.wordFamily, word),
-    collocations: normalizePhraseArray(entry.common_collocations || entry.collocations || entry.commonCollocations),
-    phraseCollocations: normalizePhraseArray(entry.phrase_collocations || entry.phraseCollocations || entry.prepositional_phrases),
+    collocations: normalizeAiPhraseItems(entry.common_collocations || entry.collocations || entry.commonCollocations),
+    phraseCollocations: normalizeAiPhraseItems(entry.phrase_collocations || entry.phraseCollocations || entry.prepositional_phrases),
     ieltsUse: normalizeStringArray(entry.ielts_use || entry.ieltsUse),
     topics: normalizeStringArray(entry.topics || entry.topic),
     difficulty: String(entry.difficulty || "").trim(),

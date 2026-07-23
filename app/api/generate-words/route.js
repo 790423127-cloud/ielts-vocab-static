@@ -3,15 +3,13 @@ export const runtime = "nodejs";
 import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
 import {
   AiProfileError,
+  isUsableAiProfile,
   mergeProfileCache,
   normalizeProfileKey,
   readProfileCache,
   requestDeepseekProfiles
 } from "../../lib/ai/deepseek-word-profile.server.mjs";
-import {
-  isAiContentProfileComplete,
-  withAiClientCollocationPayload
-} from "../../lib/vocab/admin-ai-content-profile.mjs";
+import { withAiClientCollocationPayload } from "../../lib/vocab/admin-ai-content-profile.mjs";
 
 const MAX_BATCH_WORDS = 10;
 
@@ -50,7 +48,7 @@ export async function POST(req) {
     for (const { word } of cleanItems) {
       const key = normalizeProfileKey(word);
       const cached = cache[key];
-      if (!force && isAiContentProfileComplete(cached)) {
+      if (!force && isUsableAiProfile(cached)) {
         resolvedByKey.set(key, {
           ...withAiClientCollocationPayload({ ...cached, word }),
           aiReplaceExisting: false,
@@ -115,6 +113,7 @@ export async function POST(req) {
     const headers = error?.retryAfter ? { "Retry-After": error.retryAfter } : undefined;
     return Response.json({
       error: error instanceof Error ? error.message : "Server error",
+      code: error?.code || "",
       detail: error?.detail || ""
     }, { status, headers });
   }

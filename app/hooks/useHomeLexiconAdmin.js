@@ -3,6 +3,7 @@
  * Home lexicon admin composer (local + AI + IO).
  * Split in v2026-07-10.3 for maintainability.
  */
+import { sanitizeAiWordCollocations } from "../lib/vocab/admin-ai-content-profile.mjs";
 import { createLocalOps } from "./useHomeLexiconAdmin.local.js";
 
 const AI_OP_NAMES = [
@@ -80,6 +81,17 @@ async function publishAiSnapshot(context, snapshot) {
   return result;
 }
 
+function sanitizeAiSnapshot(words) {
+  if (!Array.isArray(words)) return words;
+  let changed = false;
+  const next = words.map((word) => {
+    const sanitized = sanitizeAiWordCollocations(word);
+    if (sanitized !== word) changed = true;
+    return sanitized;
+  });
+  return changed ? next : words;
+}
+
 function createPersistingAiSetWords(context) {
   let latestSnapshot = null;
   let flushTimer = null;
@@ -105,7 +117,8 @@ function createPersistingAiSetWords(context) {
   }
 
   return (updater) => context.setWords((previousWords) => {
-    const nextWords = typeof updater === "function" ? updater(previousWords) : updater;
+    const rawNextWords = typeof updater === "function" ? updater(previousWords) : updater;
+    const nextWords = sanitizeAiSnapshot(rawNextWords);
     if (Array.isArray(nextWords)) schedulePersist(nextWords);
     return nextWords;
   });
@@ -136,7 +149,7 @@ export function useHomeLexiconAdmin(ctx) {
   const io = createLazyOps(IO_OP_NAMES, loadIoFactory, { ...aiContext, ...ai });
   const confirmAiCost = (actionName) => window.confirm(
     `${actionName}\n\n这个操作会调用 DeepSeek API，可能产生费用。\n\n` +
-    "系统会排除纯词形参考、限制单次目标数、关闭自动付费重试，并在每批成功后自动保存到本地主词库。\n\n" +
+    "系统会排除纯词形参考，每次最多发送10个词、单路连续处理，关闭自动付费重试，并在每批成功后自动保存到本地主词库。\n\n" +
     "确定继续吗？"
   );
   return { ...local, ...ai, ...io, confirmAiCost };

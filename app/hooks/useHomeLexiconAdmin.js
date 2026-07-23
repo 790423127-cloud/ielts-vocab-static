@@ -3,7 +3,7 @@
  * Home lexicon admin composer (local + AI + IO).
  * Split in v2026-07-10.3 for maintainability.
  */
-import { sanitizeAiWordCollocations } from "../lib/vocab/admin-ai-content-profile.mjs";
+import { mergeAiSnapshotWithExisting } from "../lib/vocab/ai-write-merge.mjs";
 import { createLocalOps } from "./useHomeLexiconAdmin.local.js";
 
 const AI_OP_NAMES = [
@@ -81,17 +81,6 @@ async function publishAiSnapshot(context, snapshot) {
   return result;
 }
 
-function sanitizeAiSnapshot(words) {
-  if (!Array.isArray(words)) return words;
-  let changed = false;
-  const next = words.map((word) => {
-    const sanitized = sanitizeAiWordCollocations(word);
-    if (sanitized !== word) changed = true;
-    return sanitized;
-  });
-  return changed ? next : words;
-}
-
 function createPersistingAiSetWords(context) {
   let latestSnapshot = null;
   let flushTimer = null;
@@ -118,7 +107,7 @@ function createPersistingAiSetWords(context) {
 
   return (updater) => context.setWords((previousWords) => {
     const rawNextWords = typeof updater === "function" ? updater(previousWords) : updater;
-    const nextWords = sanitizeAiSnapshot(rawNextWords);
+    const nextWords = mergeAiSnapshotWithExisting(previousWords, rawNextWords);
     if (Array.isArray(nextWords)) schedulePersist(nextWords);
     return nextWords;
   });

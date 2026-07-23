@@ -2,8 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   getUnifiedQualityQueue,
+  getWordQualityEvaluation,
   getWordQualityStatus,
-  isMissingAiFields
+  isMissingAiFields,
+  summarizeWordQuality
 } from "../word-quality-status.mjs";
 
 function readyWord(overrides = {}) {
@@ -45,6 +47,36 @@ test("classification is a separate queue after content is complete", () => {
   const classificationOnly = readyWord({ topics: [] });
   assert.equal(getUnifiedQualityQueue(classificationOnly), "classification");
   assert.equal(getUnifiedQualityQueue(classificationOnly, { needsRepair: true }), "repair");
+});
+
+test("repair lane retains the missing-field diagnosis", () => {
+  const evaluation = getWordQualityEvaluation(readyWord({ meaning: "undefined" }), {
+    needsRepair: true
+  });
+  assert.equal(evaluation.lane, "repair");
+  assert.equal(evaluation.contentMissing, true);
+  assert.deepEqual(evaluation.missingContentFields, ["meaning"]);
+});
+
+test("quality summaries expose visible missing and actionable lanes separately", () => {
+  const words = [
+    readyWord(),
+    readyWord({ word: "missing", definition: "" }),
+    readyWord({ word: "repair", meaning: "undefined" }),
+    readyWord({ word: "classify", topics: [] })
+  ];
+  const counts = summarizeWordQuality(words, {
+    needsRepair: (word) => word.word === "repair"
+  });
+  assert.deepEqual(counts, {
+    completion: 1,
+    repair: 1,
+    classification: 1,
+    ready: 1,
+    contentMissing: 2,
+    classificationMissing: 1,
+    total: 4
+  });
 });
 
 test("placeholder text is missing content rather than a valid populated field", () => {

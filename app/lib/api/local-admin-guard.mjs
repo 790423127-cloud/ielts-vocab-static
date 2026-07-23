@@ -8,18 +8,23 @@ function parseHost(value) {
   return host.split(":")[0];
 }
 
-export function isLocalRequest(req) {
+function isTrustedProxyLocalRequest(req) {
+  if (process.env.TRUST_PROXY_LOCAL_HEADERS !== "1") return false;
   const headers = req?.headers;
-  const host = parseHost(headers?.get?.("host"));
   const forwardedFor = String(headers?.get?.("x-forwarded-for") || "")
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
   const realIp = String(headers?.get?.("x-real-ip") || "").trim();
 
-  if (LOCAL_HOSTS.has(host)) return true;
   if (forwardedFor.length && forwardedFor.every((ip) => LOCAL_HOSTS.has(parseHost(ip)))) return true;
   return Boolean(realIp && LOCAL_HOSTS.has(parseHost(realIp)));
+}
+
+export function isLocalRequest(req) {
+  const host = parseHost(req?.headers?.get?.("host"));
+  if (LOCAL_HOSTS.has(host)) return true;
+  return isTrustedProxyLocalRequest(req);
 }
 
 function hasValidAdminToken(req) {
@@ -42,8 +47,11 @@ function forbiddenResponse(message) {
 /**
  * Protect destructive write/admin routes.
  * - development + localhost: allow
- * - allowLocalhostAlways: localhost allowed even in production (local speech/TTS)
+ * - allowLocalhostAlways: localhost allowed even in production
  * - otherwise: require LOCAL_ADMIN_TOKEN header
+ *
+ * Forwarded IP headers are ignored unless TRUST_PROXY_LOCAL_HEADERS=1 is set
+ * in a deployment whose reverse proxy overwrites those headers.
  */
 export function requireLocalAdmin(req, options = {}) {
   const { allowLocalhostAlways = false } = options;
@@ -68,6 +76,10 @@ export function requireLocalRead(req) {
   );
 }
 
+/**
+ * Speech-only browser header helper. NEXT_PUBLIC_* values are public and must
+ * never be treated as a privileged administrator secret.
+ */
 export function buildSpeechRequestHeaders(extra = {}) {
   const token = String(
     typeof process !== "undefined"

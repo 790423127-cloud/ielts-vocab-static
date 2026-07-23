@@ -69,7 +69,7 @@ function applyIdentityUpdate(previousWords, target, response, buildCandidate, op
 function retryableBatchError(message, status = 0, retryAfter = "") {
   const error = new Error(message);
   error.status = Number(status) || 0;
-  error.retryable = [429, 503, 504].includes(error.status);
+  error.retryable = [429, 502, 503, 504].includes(error.status);
   const retryAfterSeconds = Number(retryAfter);
   error.retryAfterMs = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
     ? retryAfterSeconds * 1000
@@ -1097,7 +1097,11 @@ export function createAiOps(ctx) {
     // service, account, build, or response schema is broken, stop after this
     // bounded probe instead of turning the same root cause into 100 failures.
     await runChunks(chunks.slice(0, 1), 1);
-    if (generatedByInputId.size > 0 && !signal?.aborted) {
+    // A failed probe is diagnostic only. It must not prevent later batches
+    // from running because one malformed group can otherwise hide the entire
+    // remaining completion queue. Server-side adaptive splitting isolates the
+    // bad words while later chunks continue normally.
+    if (!signal?.aborted) {
       await runChunks(chunks.slice(1), concurrency);
     }
 

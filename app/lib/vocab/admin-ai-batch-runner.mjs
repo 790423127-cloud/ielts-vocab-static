@@ -11,7 +11,10 @@ export async function runAdminAiBatch(options) {
     chunks = [],
     workerCount = 1,
     maxRetries = 0,
-    allowAutomaticRetry = false,
+    // Kept for compatibility with older callers. A positive maxRetries value is
+    // now authoritative; previously several callers configured retries that
+    // were silently disabled because this flag was omitted.
+    allowAutomaticRetry = true,
     executeChunk,
     shouldRetry = () => true,
     retryDelayMs = () => 0,
@@ -28,7 +31,8 @@ export async function runAdminAiBatch(options) {
     throw new TypeError("runAdminAiBatch requires executeChunk");
   }
 
-  const effectiveMaxRetries = allowAutomaticRetry ? Math.max(0, Number(maxRetries) || 0) : 0;
+  const configuredRetries = Math.max(0, Math.floor(Number(maxRetries) || 0));
+  const effectiveMaxRetries = allowAutomaticRetry === false ? 0 : configuredRetries;
   let nextChunkIndex = 0;
   let completedChunks = 0;
   let completedItems = 0;

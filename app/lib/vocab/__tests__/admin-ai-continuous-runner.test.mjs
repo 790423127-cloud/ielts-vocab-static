@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { runContinuousAiCompletion } from "../admin-ai-continuous-runner.mjs";
 
+// Regression coverage for the UI contract: failed words remain unresolved.
 test("continuous completion advances through bounded rounds until the queue is empty", async () => {
   const rounds = [];
   const result = await runContinuousAiCompletion({
@@ -26,6 +27,7 @@ test("continuous completion advances through bounded rounds until the queue is e
   assert.equal(result.rounds, 3);
   assert.equal(result.filled, 250);
   assert.equal(result.remaining, 0);
+  assert.equal(result.actionableRemaining, 0);
 });
 
 test("continuous completion fuses when a round fails at the configured rate", async () => {
@@ -81,7 +83,8 @@ test("continuous completion stops without claiming another round after abort", a
   assert.equal(result.words, 100);
 });
 
-test("failed words are skipped for the rest of the current continuous run", async () => {
+test("failed words are skipped for requests but remain visible as unresolved", async () => {
+  const progress = [];
   const result = await runContinuousAiCompletion({
     initialWords: [
       { key: "done-1", completed: false },
@@ -92,6 +95,9 @@ test("failed words are skipped for the rest of the current continuous run", asyn
     countRemaining: (words, failedWordKeys) => words.filter(
       (word) => !word.completed && !failedWordKeys.has(word.key)
     ).length,
+    onProgress(state) {
+      progress.push(state);
+    },
     async executeRound({ words }) {
       return {
         words: words.map((word) => (
@@ -108,5 +114,9 @@ test("failed words are skipped for the rest of the current continuous run", asyn
   assert.equal(result.reason, "completed-with-failures");
   assert.equal(result.rounds, 1);
   assert.deepEqual(result.failedWordKeys, ["failed"]);
-  assert.equal(result.remaining, 0);
+  assert.equal(result.blocked, 1);
+  assert.equal(result.remaining, 1);
+  assert.equal(result.actionableRemaining, 0);
+  assert.equal(progress.at(-1).remaining, 1);
+  assert.equal(progress.at(-1).actionableRemaining, 0);
 });

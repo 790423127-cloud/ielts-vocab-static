@@ -37,7 +37,31 @@ test("runAdminAiBatch respects concurrency and settles each chunk once", async (
   });
 });
 
-test("runAdminAiBatch does not retry paid failures by default", async () => {
+test("runAdminAiBatch honors maxRetries without a second opt-in flag", async () => {
+  let attempts = 0;
+  const retries = [];
+
+  const result = await runAdminAiBatch({
+    chunks: [["paid"]],
+    workerCount: 1,
+    maxRetries: 1,
+    executeChunk({ attempt }) {
+      attempts += 1;
+      if (attempt === 1) return;
+      const error = new Error("paid request failed");
+      error.retryable = true;
+      throw error;
+    },
+    shouldRetry: ({ error }) => error.retryable,
+    onRetry: ({ nextAttempt }) => retries.push(nextAttempt)
+  });
+
+  assert.equal(attempts, 2);
+  assert.equal(result.retryCount, 1);
+  assert.deepEqual(retries, [1]);
+});
+
+test("runAdminAiBatch can explicitly disable automatic retries", async () => {
   let attempts = 0;
   const errors = [];
 
@@ -45,6 +69,7 @@ test("runAdminAiBatch does not retry paid failures by default", async () => {
     chunks: [["paid"]],
     workerCount: 1,
     maxRetries: 3,
+    allowAutomaticRetry: false,
     executeChunk() {
       attempts += 1;
       const error = new Error("paid request failed");
@@ -60,7 +85,7 @@ test("runAdminAiBatch does not retry paid failures by default", async () => {
   assert.deepEqual(errors, ["paid request failed"]);
 });
 
-test("runAdminAiBatch retries only with explicit opt-in", async () => {
+test("runAdminAiBatch retries only errors accepted by shouldRetry", async () => {
   const attempts = [];
   const retries = [];
   const delays = [];
@@ -70,7 +95,6 @@ test("runAdminAiBatch retries only with explicit opt-in", async () => {
     chunks: [["retry"], ["stop"]],
     workerCount: 1,
     maxRetries: 2,
-    allowAutomaticRetry: true,
     executeChunk({ chunk, attempt }) {
       attempts.push(`${chunk[0]}:${attempt}`);
       const error = new Error(chunk[0]);

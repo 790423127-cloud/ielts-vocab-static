@@ -19,6 +19,7 @@ export default function VocabAdminToolsPanel({
   audioStats = { has: 0, missing: 0, unchecked: 0, total: 0 },
   batchInfo = "",
   aiRunState = null,
+  qualityStats = {},
   pendingAiCount = 0,
   duplicateInfo = "",
   isExternalIdictationItem = false,
@@ -32,7 +33,7 @@ export default function VocabAdminToolsPanel({
     running: "连续补全运行中",
     stopping: "正在安全停止",
     completed: "连续补全已完成",
-    "completed-with-failures": "可处理队列已完成",
+    "completed-with-failures": "仍有失败词待处理",
     stopped: "连续补全已停止",
     fused: "已触发失败熔断",
     limit: "已到安全轮次上限",
@@ -41,7 +42,7 @@ export default function VocabAdminToolsPanel({
   const continuousTotal = Math.max(0, Number(aiRunState?.initialRemaining) || 0);
   const continuousResolved = Math.min(
     continuousTotal,
-    Math.max(0, (Number(aiRunState?.filled) || 0) + (Number(aiRunState?.failed) || 0))
+    Math.max(0, continuousTotal - (Number(aiRunState?.remaining) || 0))
   );
 
   return (
@@ -281,11 +282,18 @@ export default function VocabAdminToolsPanel({
                   >
                     <summary>AI工具（会扣费）</summary>
                     <div className="ai-warning">
-                      AI 工具统一使用“一个主释义、一个主例句、详细其他义项”的资料规则。单轮模式执行 100 词后停止；连续模式会自动进入下一轮，但可随时停止并带失败熔断。
+                      默认付费队列只处理必须补全、结构异常和分类缺失。搭配数量不足只算“可选丰富”，不会自动重写整个词库。
+                    </div>
+                    <div className="duplicate-box">
+                      <div><strong>必须补全：</strong>{qualityStats.missing || 0}</div>
+                      <div><strong>结构异常：</strong>{qualityStats.repairMissing || 0}</div>
+                      <div><strong>仅缺分类：</strong>{qualityStats.classifyMissing || 0}</div>
+                      <div><strong>可选丰富：</strong>{qualityStats.enrichmentThin || 0}（不进入默认付费队列）</div>
+                      <div><strong>词族复核 / 独立词候选：</strong>{qualityStats.familyReview || 0} / {qualityStats.familyPromotion || 0}</div>
                     </div>
                     <div className="ai-tool-explain">
                       <p><strong>单词级：</strong>只重做当前词的完整 AI 内容，保留 ID、学习状态和收藏。</p>
-                      <p><strong>单轮补全：</strong>最多 100 词；每请求 10 词、最多 5 路并发，完成后停止。</p>
+                      <p><strong>单轮补全：</strong>最多 100 词；每请求 5 词、最多 3 路并发，完成后停止。</p>
                       <p><strong>连续补全：</strong>逐轮处理剩余队列，每轮保存检查点；停止后下次从最新队列继续。</p>
                       <p><strong>异常重做：</strong>只重做含占位符或明显异常内容的资料，不修改词头。</p>
                     </div>
@@ -293,17 +301,17 @@ export default function VocabAdminToolsPanel({
                       <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI处理当前词（会扣费）") && a.generateCurrent?.({ force: true })}>
                         {loading ? "处理中" : "AI处理当前词（会扣费）"}
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI快速补全一轮：最多100词 / 10词每请求 / 5路并发（会扣费）") && a.generateHundredByFiveBatch?.()}>
-                        补全一轮 · 最多100词
+                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI修复必须补全项：最多100词 / 5词每请求 / 3路并发（会扣费）") && a.generateHundredByFiveBatch?.()}>
+                        修复必须项 · 最多100词
                       </button>
                       <button
                         className="small-btn ai-paid ai-continuous-start"
                         disabled={loading}
                         onClick={() => a.confirmAiCost?.(
-                          `AI连续补全未完成资料：当前资料字段缺失约 ${pendingAiCount} 词；每轮最多100词，直到队列完成、手动停止或触发失败熔断（会持续扣费）`
+                          `AI连续修复必须补全项：当前约 ${pendingAiCount} 词；可选丰富不会进入本队列。每轮最多100词，直到队列完成、手动停止或触发失败熔断（会持续扣费）`
                         ) && a.startContinuousAiCompletion?.()}
                       >
-                        连续补全未完成 · 可暂停
+                        连续修复必须项 · 可暂停
                       </button>
                       <button
                         className="small-btn ai-stop"
@@ -312,8 +320,8 @@ export default function VocabAdminToolsPanel({
                       >
                         {aiRunState?.status === "stopping" ? "正在停止..." : "停止连续补全"}
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI重做异常资料：最多100词 / 每请求10词 / 2并发（会扣费）") && a.aiStableRepairWrongWords10x2?.()}>
-                        AI重做异常资料 · 最多100词 / 2并发
+                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI修复结构异常资料：最多100词 / 每请求5词 / 2并发（会扣费）") && a.aiStableRepairWrongWords10x2?.()}>
+                        修复结构异常 · 最多100词
                       </button>
                     </div>
                     {continuousStatusLabel ? (
@@ -329,8 +337,8 @@ export default function VocabAdminToolsPanel({
                         ) : null}
                         <div className="ai-run-metrics">
                           <span>已补全 {aiRunState.filled || 0}</span>
-                          <span>失败 {aiRunState.failed || 0}</span>
-                          <span>剩余 {aiRunState.remaining || 0}</span>
+                          <span>失败待处理 {aiRunState.blocked ?? aiRunState.failed ?? 0}</span>
+                          <span>真实剩余 {aiRunState.remaining || 0}</span>
                         </div>
                         {aiRunState.error ? <p>{aiRunState.error}</p> : null}
                       </div>

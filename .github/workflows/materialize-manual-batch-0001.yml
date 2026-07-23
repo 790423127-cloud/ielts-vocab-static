@@ -1,0 +1,54 @@
+name: Materialize reviewed batch 0001
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - fix/ai-queue-audit-v1
+    paths:
+      - scripts/materialize-manual-vocab-batch-0001.mjs
+      - .github/workflows/materialize-manual-batch-0001.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/ai-queue-audit-v1
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Materialize reviewed payload
+        run: node scripts/materialize-manual-vocab-batch-0001.mjs
+      - name: Validate reviewed payload
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const file = 'data/manual-review/batches/batch-0001-review-v1.json';
+          const payload = JSON.parse(fs.readFileSync(file, 'utf8'));
+          if (payload.entries?.length !== 100) throw new Error('Expected 100 reviewed entries');
+          if (payload.standaloneFamilyEntries?.length !== 5) throw new Error('Expected 5 standalone family entries');
+          for (const entry of payload.entries) {
+            if (entry.set?.collocations?.length !== 4) throw new Error(`Common collocation count failed: ${entry.word}`);
+            if (entry.set?.phraseCollocations?.length !== 4) throw new Error(`Phrase collocation count failed: ${entry.word}`);
+          }
+          console.log('Reviewed batch validated');
+          NODE
+      - name: Commit generated review file
+        run: |
+          if git diff --quiet -- data/manual-review/batches/batch-0001-review-v1.json; then
+            echo 'No generated review changes'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/manual-review/batches/batch-0001-review-v1.json
+          git commit -m 'data: add human-reviewed vocabulary batch 0001'
+          git push origin HEAD:fix/ai-queue-audit-v1
+
+# Touching this workflow triggers the first materialization run.

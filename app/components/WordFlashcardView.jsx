@@ -80,7 +80,11 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     wordLibraryStats,
     familiarCount,
     missingCount,
-    classifyMissingCount
+    classifyMissingCount,
+    repairMissingCount,
+    enrichmentThinCount,
+    familyReviewCount,
+    familyPromotionCount
   } = library;
 
   const { speakWord, speakExample, speakSmallText } = speech;
@@ -100,6 +104,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     audioStats,
     batchInfo,
     aiRunState,
+    qualityStats,
     duplicateInfo,
     adminActions
   } = admin;
@@ -230,7 +235,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
       <div className="menu-panel wide">
         <h2 className="panel-title">词库管理</h2>
         <p className="panel-desc">
-          可刷 {wordLibraryStats.total} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 待学习 {wordLibraryStats.pending} · 不熟 {wordLibraryStats.unfamiliar} · 已认识 {familiarCount} · 资料缺失 {missingCount} · 仅缺分类 {classifyMissingCount} · 音频 {audioStats.state === "error" ? "核对失败" : audioStats.state !== "ready" ? "核对中" : `${audioStats.has}/${audioStats.total}`}
+          可刷 {wordLibraryStats.total} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 待学习 {wordLibraryStats.pending} · 不熟 {wordLibraryStats.unfamiliar} · 已认识 {familiarCount} · 必须补全 {missingCount} · 结构异常 {repairMissingCount} · 仅缺分类 {classifyMissingCount} · 可选丰富 {enrichmentThinCount} · 词族复核 {familyReviewCount} · 独立词候选 {familyPromotionCount} · 音频 {audioStats.state === "error" ? "核对失败" : audioStats.state !== "ready" ? "核对中" : `${audioStats.has}/${audioStats.total}`}
         </p>
         <div className="current-filter">当前学习范围：{getFilterName(filter)} · {studyWords.length} 个词</div>
 
@@ -264,7 +269,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
         <div className="filter-group">
           <div className="filter-title">资料质量</div>
           <div className="filter-chips">
-            {[["待补全", "资料缺失"], ["待归纳", "仅缺分类"]].map(([value, label]) => (
+            {[["待补全", "必须补全"], ["待修复", "结构异常"], ["待归纳", "仅缺分类"], ["待丰富", "可选丰富"]].map(([value, label]) => (
               <button type="button" key={value} className={`chip-btn ${filter.type === "status" && filter.value === value ? "active" : ""}`} onClick={() => setLibraryFilter("status", value)}>{label}</button>
             ))}
           </div>
@@ -379,6 +384,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                   audioStats={audioStats}
                   batchInfo={batchInfo}
                   aiRunState={aiRunState}
+                  qualityStats={qualityStats}
                   pendingAiCount={missingCount}
                   duplicateInfo={duplicateInfo}
                   isExternalIdictationItem={isExternalIdictationItem}

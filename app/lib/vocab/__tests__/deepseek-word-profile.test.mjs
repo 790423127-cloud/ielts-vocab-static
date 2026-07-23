@@ -1,9 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { requestDeepseekProfiles } from "../../ai/deepseek-word-profile.server.mjs";
+import {
+  isUsableAiProfile,
+  parseAiJson,
+  requestDeepseekProfiles
+} from "../../ai/deepseek-word-profile.server.mjs";
 import { buildAiWordProfilePrompt } from "../../ai/vocab-profile-prompt.mjs";
 
-function rawProfile(inputId, word) {
+function rawProfile(inputId, word, { collocationCount = 4 } = {}) {
   return {
     input_id: inputId,
     word,
@@ -23,11 +27,11 @@ function rawProfile(inputId, word) {
     example_chinese: `${word}很有用。`,
     forms: [],
     word_family: [],
-    common_collocations: Array.from({ length: 4 }, (_, index) => ({
+    common_collocations: Array.from({ length: collocationCount }, (_, index) => ({
       phrase: `${word} common ${index}`,
       chinese: `常用搭配${index}`
     })),
-    phrase_collocations: Array.from({ length: 4 }, (_, index) => ({
+    phrase_collocations: Array.from({ length: collocationCount }, (_, index) => ({
       phrase: `${word} phrase ${index}`,
       chinese: `短语搭配${index}`
     })),
@@ -38,67 +42,108 @@ function rawProfile(inputId, word) {
   };
 }
 
-function mockDeepseekResponse(items) {
+function mockDeepseekResponse(items, options = {}) {
+  const content = options.content ?? JSON.stringify({ items });
   return {
     ok: true,
     status: 200,
     headers: new Headers(),
     async text() {
       return JSON.stringify({
-        choices: [{ message: { content: JSON.stringify({ items }) } }],
-        usage: { total_tokens: 100 }
+        choices: [{ message: { content }, finish_reason: options.finishReason || "stop" }],
+        usage: { total_tokens: options.tokens || 100 }
       });
     }
   };
 }
 
-test("batch results are aligned by input_id, never by array position", async () => {
+async function withMockedDeepseek(fetchImpl, callback) {
   const originalFetch = globalThis.fetch;
   const originalKey = process.env.DEEPSEEK_API_KEY;
   process.env.DEEPSEEK_API_KEY = "test-key";
-  globalThis.fetch = async () => mockDeepseekResponse([
-    rawProfile("item-2", "beta"),
-    rawProfile("item-1", "alpha")
-  ]);
-
+  globalThis.fetch = fetchImpl;
   try {
-    const result = await requestDeepseekProfiles([
-      { inputId: "item-1", word: "alpha" },
-      { inputId: "item-2", word: "beta" }
-    ]);
-    assert.equal(result.entries.get("item-1").word, "alpha");
-    assert.equal(result.entries.get("item-2").word, "beta");
-    assert.equal(result.invalid.length, 0);
+    return await callback();
   } finally {
     globalThis.fetch = originalFetch;
     if (originalKey === undefined) delete process.env.DEEPSEEK_API_KEY;
     else process.env.DEEPSEEK_API_KEY = originalKey;
   }
+}
+
+test("batch results are aligned by input_id, never by array position", async () => {
+  await withMockedDeepseek(
+    async () => mockDeepseekResponse([
+      rawProfile("item-2", "beta"),
+      rawProfile("item-1", "alpha")
+    ]),
+    async () => {
+      const result = await requestDeepseekProfiles([
+        { inputId: "item-1", word: "alpha" },
+        { inputId: "item-2", word: "beta" }
+      ]);
+      assert.equal(result.entries.get("item-1").word, "alpha");
+      assert.equal(result.entries.get("item-2").word, "beta");
+      assert.equal(result.invalid.length, 0);
+    }
+  );
 });
 
 test("a mismatched returned word is rejected instead of written to another entry", async () => {
-  const originalFetch = globalThis.fetch;
-  const originalKey = process.env.DEEPSEEK_API_KEY;
-  process.env.DEEPSEEK_API_KEY = "test-key";
-  globalThis.fetch = async () => mockDeepseekResponse([
-    rawProfile("item-1", "wrong-word")
-  ]);
-
-  try {
-    const result = await requestDeepseekProfiles([{ inputId: "item-1", word: "alpha" }]);
-    assert.equal(result.entries.size, 0);
-    assert.match(result.invalid[0].reason, /word mismatch/);
-  } finally {
-    globalThis.fetch = originalFetch;
-    if (originalKey === undefined) delete process.env.DEEPSEEK_API_KEY;
-    else process.env.DEEPSEEK_API_KEY = originalKey;
-  }
+  await withMockedDeepseek(
+    async () => mockDeepseekResponse([rawProfile("item-1", "wrong-word")]),
+    async () => {
+      const result = await requestDeepseekProfiles([{ inputId: "item-1", word: "alpha" }]);
+      assert.equal(result.entries.size, 0);
+      assert.match(result.invalid[0].reason, /word mismatch/);
+    }
+  );
 });
 
-test("the unified prompt requires one main example and detailed additional senses", () => {
+test("control characters inside JSON strings are escaped without deleting content", () => {
+  const parsed = parseAiJson('{"example":"line one\nline two\tend"}');
+  assert.equal(parsed.example, "line one\nline two\tend");
+});
+
+test("a malformed multi-word response is split so later words are still processed", async () => {
+  let calls = 0;
+  await withMockedDeepseek(
+    async () => {
+      calls += 1;
+      if (calls === 1) return mockDeepseekResponse([], { content: '{"items":[{"broken":"line\n' });
+      if (calls === 2) return mockDeepseekResponse([rawProfile("item-1", "alpha")]);
+      return mockDeepseekResponse([rawProfile("item-2", "beta")]);
+    },
+    async () => {
+      const result = await requestDeepseekProfiles([
+        { inputId: "item-1", word: "alpha" },
+        { inputId: "item-2", word: "beta" }
+      ]);
+      assert.equal(calls, 3);
+      assert.equal(result.entries.size, 2);
+      assert.equal(result.invalid.length, 0);
+    }
+  );
+});
+
+test("two genuine translated collocations are usable and do not discard the whole profile", async () => {
+  await withMockedDeepseek(
+    async () => mockDeepseekResponse([rawProfile("item-1", "alpha", { collocationCount: 2 })]),
+    async () => {
+      const result = await requestDeepseekProfiles([{ inputId: "item-1", word: "alpha" }]);
+      const entry = result.entries.get("item-1");
+      assert.equal(isUsableAiProfile(entry), true);
+      assert.equal(entry.collocations.length, 2);
+      assert.equal(entry.phraseCollocations.length, 2);
+    }
+  );
+});
+
+test("the unified prompt requests useful ranges and forbids filler", () => {
   const prompt = buildAiWordProfilePrompt([{ inputId: "item-1", word: "access" }]);
   assert.match(prompt, /exactly one primary English example/i);
-  assert.match(prompt, /definition_en/);
-  assert.match(prompt, /example_chinese/);
+  assert.match(prompt, /2-4 genuinely useful common_collocations/i);
+  assert.match(prompt, /Never invent filler/i);
+  assert.match(prompt, /Escape all line breaks/i);
   assert.match(prompt, /Echo input_id exactly/);
 });

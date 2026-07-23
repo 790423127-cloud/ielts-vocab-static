@@ -10,6 +10,7 @@ import {
   buildFastCompletionPlan,
   buildGenerateMissingPlan,
   buildOneByOneCompletionPlan,
+  buildQualityLaneSummary,
   buildSlowCompletionPlan,
   buildWrongRepairPlan
 } from "../admin-ai-batch-plan.mjs";
@@ -37,7 +38,7 @@ function completeWord(word, overrides = {}) {
   };
 }
 
-test("buildGenerateMissingPlan prioritizes wrong words and forces only affected chunks", () => {
+test("buildGenerateMissingPlan prioritizes wrong words and preserves missing metadata", () => {
   const words = [
     completeWord("ready"),
     completeWord("missing", { definition: "", aiContentProfile: "" }),
@@ -51,8 +52,8 @@ test("buildGenerateMissingPlan prioritizes wrong words and forces only affected 
   assert.deepEqual(
     plan.targets.map(({ missing, wrong }) => ({ missing, wrong })),
     [
-      { missing: false, wrong: true },
-      { missing: false, wrong: true },
+      { missing: true, wrong: true },
+      { missing: true, wrong: true },
       { missing: true, wrong: false }
     ]
   );
@@ -96,12 +97,46 @@ test("completion plans keep their distinct target policies", () => {
 
   assert.deepEqual(buildSlowCompletionPlan(words).targets.map(({ i }) => i), [3, 4]);
   const wrongRepair = buildWrongRepairPlan(words);
-  assert.deepEqual(wrongRepair.targets.map(({ i }) => i), [3]);
+  assert.deepEqual(wrongRepair.targets.map(({ i }) => i), [3, 4]);
   assert.equal(wrongRepair.workerCount, 1);
   assert.deepEqual(buildAnomalyRepairPlan(words).targets.map(({ i }) => i), [3, 4]);
   assert.deepEqual(buildFastCompletionPlan(words).targets.map(({ i }) => i), [1]);
   assert.deepEqual(buildBulkCompletionPlan(words).targets.map(({ i }) => i), [1]);
   assert.deepEqual(buildClassificationPlan(words).targets.map(({ i }) => i), [2]);
+});
+
+test("structurally invalid other meanings enter the repair queue", () => {
+  const words = [
+    completeWord("valid"),
+    completeWord("invalid-sense", { otherMeanings: [{ meaningZh: "另一含义" }] })
+  ];
+  assert.deepEqual(buildWrongRepairPlan(words).targets.map(({ i }) => i), [1]);
+  assert.deepEqual(buildFastCompletionPlan(words).targets.map(({ i }) => i), []);
+});
+
+test("quality lane summary explains required work separately from enrichment", () => {
+  const words = [
+    completeWord("ready"),
+    completeWord("missing", { definition: "" }),
+    completeWord("wrong", { meaning: "undefined" }),
+    completeWord("classification", { topics: [] })
+  ];
+
+  assert.deepEqual(buildQualityLaneSummary(words), {
+    completion: 1,
+    repair: 1,
+    classification: 1,
+    ready: 1,
+    contentMissing: 2,
+    contentInvalid: 0,
+    classificationMissing: 1,
+    enrichmentThin: 4,
+    enrichmentStandard: 0,
+    enrichmentRich: 0,
+    familyReview: 0,
+    familyPromotion: 0,
+    total: 4
+  });
 });
 
 test("paid plans exclude inflected references", () => {
@@ -119,20 +154,20 @@ test("paid plans exclude inflected references", () => {
   assert.deepEqual(plan.targets.map(({ w }) => w.word), ["cashless"]);
 });
 
-test("bulk completion runs a bounded 100-word round in ten-word, five-worker chunks", () => {
+test("bulk completion runs a bounded 100-word round in five-word, three-worker chunks", () => {
   const words = Array.from({ length: 205 }, (_, i) => ({ word: `word-${i}` }));
   words[1] = { word: "  " };
   words[2] = { word: "" };
 
   const cleanPlan = buildCleanWordsPlan(words);
   assert.equal(cleanPlan.targets.length, PAID_AI_LIMITS.clean);
-  assert.deepEqual(cleanPlan.chunks.map((chunk) => chunk.length), Array(10).fill(10));
+  assert.deepEqual(cleanPlan.chunks.map((chunk) => chunk.length), Array(20).fill(5));
   assert.equal(cleanPlan.workerCount, PAID_AI_LIMITS.concurrency);
   assert.deepEqual(cleanPlan.targets[1], { id: "3", text: "word-3", i: 3 });
 
   const fastPlan = buildFastCompletionPlan(words);
   assert.equal(fastPlan.targets.length, 100);
-  assert.equal(fastPlan.chunks.length, 10);
+  assert.equal(fastPlan.chunks.length, 20);
   assert.equal(fastPlan.chunks.every((chunk) => chunk.length <= PAID_AI_LIMITS.batchSize), true);
   assert.equal(fastPlan.workerCount, PAID_AI_LIMITS.concurrency);
 });

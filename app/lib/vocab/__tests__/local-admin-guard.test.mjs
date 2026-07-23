@@ -7,12 +7,14 @@ import {
   buildSpeechRequestHeaders
 } from "../../api/local-admin-guard.mjs";
 
-function mockReq({ host = "localhost:3000", token = "" } = {}) {
+function mockReq({ host = "localhost:3000", token = "", forwardedFor = "", realIp = "" } = {}) {
   return {
     headers: {
       get(name) {
         if (name === "host") return host;
         if (name === "x-local-admin-token") return token;
+        if (name === "x-forwarded-for") return forwardedFor;
+        if (name === "x-real-ip") return realIp;
         return "";
       }
     }
@@ -23,6 +25,26 @@ test("isLocalRequest accepts localhost hosts", () => {
   assert.equal(isLocalRequest(mockReq({ host: "localhost:3000" })), true);
   assert.equal(isLocalRequest(mockReq({ host: "127.0.0.1:3000" })), true);
   assert.equal(isLocalRequest(mockReq({ host: "example.com" })), false);
+});
+
+test("isLocalRequest ignores spoofable forwarded headers by default", () => {
+  const previous = process.env.TRUST_PROXY_LOCAL_HEADERS;
+  delete process.env.TRUST_PROXY_LOCAL_HEADERS;
+  assert.equal(isLocalRequest(mockReq({
+    host: "example.com",
+    forwardedFor: "127.0.0.1",
+    realIp: "127.0.0.1"
+  })), false);
+  if (previous === undefined) delete process.env.TRUST_PROXY_LOCAL_HEADERS;
+  else process.env.TRUST_PROXY_LOCAL_HEADERS = previous;
+});
+
+test("trusted proxy local headers require explicit deployment opt-in", () => {
+  const previous = process.env.TRUST_PROXY_LOCAL_HEADERS;
+  process.env.TRUST_PROXY_LOCAL_HEADERS = "1";
+  assert.equal(isLocalRequest(mockReq({ host: "example.com", forwardedFor: "127.0.0.1" })), true);
+  if (previous === undefined) delete process.env.TRUST_PROXY_LOCAL_HEADERS;
+  else process.env.TRUST_PROXY_LOCAL_HEADERS = previous;
 });
 
 test("requireLocalAdmin allows localhost in development", () => {
@@ -56,7 +78,7 @@ test("requireLocalRead blocks remote hosts in production", () => {
   process.env.LOCAL_ADMIN_TOKEN = prevToken;
 });
 
-test("buildSpeechRequestHeaders includes public admin token when configured", () => {
+test("buildSpeechRequestHeaders includes public speech token when configured", () => {
   const prev = process.env.NEXT_PUBLIC_LOCAL_ADMIN_TOKEN;
   process.env.NEXT_PUBLIC_LOCAL_ADMIN_TOKEN = "speech-token";
   assert.deepEqual(buildSpeechRequestHeaders({ "Content-Type": "application/json" }), {

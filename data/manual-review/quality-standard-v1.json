@@ -1,0 +1,52 @@
+{
+  "version": "required-repair-optional-enrichment-v1",
+  "status": "verified-on-branch-not-applied-to-main",
+  "generatedAt": "2026-07-23T15:41:35.487Z",
+  "sourceVersion": "v12-13757-manual-morphology-audit-v3",
+  "policy": {
+    "requiredContentFields": [
+      "word",
+      "pos",
+      "meaning",
+      "definition",
+      "example",
+      "exampleCn"
+    ],
+    "collocationQuantityCreatesRequiredRepair": false,
+    "invalidOtherMeaningsCreatesRepair": true,
+    "classificationUsesSeparateQueue": true,
+    "optionalEnrichmentUsesSeparateQueue": true,
+    "familyReviewUsesSeparateQueue": true,
+    "preserveStableIds": true,
+    "preserveUserLearningState": true
+  },
+  "counts": {
+    "totalWords": 13757,
+    "requiredRepair": 8,
+    "completion": 0,
+    "repair": 8,
+    "classification": 177,
+    "ready": 13572,
+    "optionalEnrichment": 6895,
+    "familyReviewQueue": 1392,
+    "enrichmentThin": 6895,
+    "enrichmentStandard": 5292,
+    "enrichmentRich": 1570,
+    "duplicateHeadwordGroups": 0,
+    "familyMembersObserved": 15,
+    "familyMembersAlreadyStandalone": 8,
+    "familyMembersEligibleForStandaloneReview": 7
+  },
+  "recommendedOrder": [
+    "repair-invalid-content",
+    "complete-missing-core-content",
+    "complete-classification",
+    "review-family-relations",
+    "optionally-enrich-high-value-words"
+  ],
+  "notes": [
+    "The 6895 optional-enrichment entries are usable learning entries and are excluded from default paid AI repair queues.",
+    "The family review queue is advisory and must not automatically create or delete headwords.",
+    "This file records the branch audit baseline and does not modify public/data/words.json."
+  ]
+}

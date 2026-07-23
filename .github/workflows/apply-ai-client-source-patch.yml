@@ -1,0 +1,63 @@
+name: Apply reviewed AI client source patch
+
+on:
+  push:
+    branches:
+      - fix/ai-queue-audit-v1
+    paths:
+      - "scripts/apply-ai-client-source-patch.mjs"
+      - "scripts/materialize-manual-vocab-batch-0001.mjs"
+      - ".github/workflows/apply-ai-client-source-patch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[client-patch-applied]') && !contains(github.event.head_commit.message, '[batch-0001-materialized]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/ai-queue-audit-v1
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Apply exact source patch
+        run: node scripts/apply-ai-client-source-patch.mjs
+
+      - name: Materialize reviewed vocabulary batch
+        run: node scripts/materialize-manual-vocab-batch-0001.mjs
+
+      - name: Validate reviewed vocabulary batch
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const file = 'data/manual-review/batches/batch-0001-review-v1.json';
+          const payload = JSON.parse(fs.readFileSync(file, 'utf8'));
+          if (payload.entries?.length !== 100) throw new Error('Expected 100 reviewed entries');
+          if (payload.standaloneFamilyEntries?.length !== 5) throw new Error('Expected 5 standalone family entries');
+          for (const entry of payload.entries) {
+            if (entry.set?.collocations?.length !== 4) throw new Error(`Common collocation count failed: ${entry.word}`);
+            if (entry.set?.phraseCollocations?.length !== 4) throw new Error(`Phrase collocation count failed: ${entry.word}`);
+          }
+          console.log('Reviewed batch validated');
+          NODE
+
+      - name: Commit generated review and client files
+        run: |
+          if git diff --quiet; then
+            echo "No source or review patch changes were needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/hooks/useHomeLexiconAdmin.ai.js app/components/VocabAdminToolsPanel.jsx data/manual-review/batches/batch-0001-review-v1.json
+          git commit -m "data: materialize human-reviewed batch 0001 [batch-0001-materialized]"
+          git push origin HEAD:fix/ai-queue-audit-v1

@@ -36,22 +36,30 @@ export async function runContinuousAiCompletion(options = {}) {
   let lastError = "";
   let reason = "completed";
   const failedWordKeys = new Set();
-  const initialRemaining = countRemaining(words, failedWordKeys);
+  const trueRemaining = () => countRemaining(words, new Set());
+  const actionableRemaining = () => countRemaining(words, failedWordKeys);
+  const initialRemaining = trueRemaining();
   const effectiveMaxRounds = Math.max(1, Math.min(
     CONTINUOUS_AI_POLICY.maxRounds,
     Math.floor(Number(maxRounds) || CONTINUOUS_AI_POLICY.maxRounds)
   ));
 
-  await onProgress?.({
-    status: "running",
-    rounds,
-    processed,
-    filled,
-    failed,
-    remaining: initialRemaining,
-    initialRemaining,
-    error: ""
-  });
+  async function publishProgress(status) {
+    await onProgress?.({
+      status,
+      rounds,
+      processed,
+      filled,
+      failed,
+      blocked: failedWordKeys.size,
+      remaining: trueRemaining(),
+      actionableRemaining: actionableRemaining(),
+      initialRemaining,
+      error: lastError
+    });
+  }
+
+  await publishProgress("running");
 
   while (rounds < effectiveMaxRounds) {
     if (signal?.aborted) {
@@ -59,8 +67,7 @@ export async function runContinuousAiCompletion(options = {}) {
       break;
     }
 
-    const remaining = countRemaining(words, failedWordKeys);
-    if (remaining <= 0) {
+    if (actionableRemaining() <= 0) {
       reason = failedWordKeys.size ? "completed-with-failures" : "completed";
       break;
     }
@@ -83,16 +90,10 @@ export async function runContinuousAiCompletion(options = {}) {
       filled += partialFilled;
       failed += partialFailed;
       lastError = String(result?.error || lastError);
-      await onProgress?.({
-        status: "stopping",
-        rounds,
-        processed,
-        filled,
-        failed,
-        remaining: countRemaining(words, failedWordKeys),
-        initialRemaining,
-        error: lastError
-      });
+      for (const key of result?.failedWordKeys || []) {
+        if (key) failedWordKeys.add(String(key));
+      }
+      await publishProgress("stopping");
       reason = "stopped";
       break;
     }
@@ -107,17 +108,7 @@ export async function runContinuousAiCompletion(options = {}) {
       if (key) failedWordKeys.add(String(key));
     }
 
-    const nextRemaining = countRemaining(words, failedWordKeys);
-    await onProgress?.({
-      status: "running",
-      rounds,
-      processed,
-      filled,
-      failed,
-      remaining: nextRemaining,
-      initialRemaining,
-      error: lastError
-    });
+    await publishProgress("running");
 
     const total = Math.max(0, Number(result?.total) || 0);
     const roundFailed = Math.max(0, Number(result?.failed) || 0);
@@ -129,7 +120,7 @@ export async function runContinuousAiCompletion(options = {}) {
       break;
     }
 
-    if (nextRemaining <= 0) {
+    if (actionableRemaining() <= 0) {
       reason = failedWordKeys.size ? "completed-with-failures" : "completed";
       break;
     }
@@ -137,7 +128,7 @@ export async function runContinuousAiCompletion(options = {}) {
     if (roundDelayMs > 0) await sleep(roundDelayMs);
   }
 
-  if (rounds >= effectiveMaxRounds && countRemaining(words, failedWordKeys) > 0 && reason === "completed") {
+  if (rounds >= effectiveMaxRounds && actionableRemaining() > 0 && reason === "completed") {
     reason = "limit";
   }
 
@@ -148,8 +139,10 @@ export async function runContinuousAiCompletion(options = {}) {
     processed,
     filled,
     failed,
+    blocked: failedWordKeys.size,
     failedWordKeys: [...failedWordKeys],
-    remaining: countRemaining(words, failedWordKeys),
+    remaining: trueRemaining(),
+    actionableRemaining: actionableRemaining(),
     initialRemaining,
     error: lastError
   };

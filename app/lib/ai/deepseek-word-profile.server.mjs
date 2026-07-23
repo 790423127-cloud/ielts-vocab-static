@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "fs";
 import path from "path";
 import {
-  isAiContentProfileComplete,
+  AI_CONTENT_PROFILE_VERSION,
+  isAiCoreContentComplete,
   normalizeAiGeneratedEntry
 } from "../vocab/admin-ai-content-profile.mjs";
 import {
@@ -12,12 +13,13 @@ import {
 let cacheWriteQueue = Promise.resolve();
 
 export class AiProfileError extends Error {
-  constructor(message, { status = 502, detail = "", retryAfter = "" } = {}) {
+  constructor(message, { status = 502, detail = "", retryAfter = "", code = "AI_PROFILE_ERROR" } = {}) {
     super(message);
     this.name = "AiProfileError";
     this.status = status;
     this.detail = detail;
     this.retryAfter = retryAfter;
+    this.code = code;
   }
 }
 
@@ -38,13 +40,22 @@ function cacheFilePath() {
 }
 
 export function readProfileCache() {
+  const file = cacheFilePath();
+  if (!existsSync(file)) return {};
+
   try {
-    const file = cacheFilePath();
-    if (!existsSync(file)) return {};
     const parsed = JSON.parse(readFileSync(file, "utf8") || "{}");
     return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
-  } catch {
-    return {};
+  } catch (error) {
+    const corruptFile = `${file}.corrupt-${Date.now()}`;
+    try {
+      renameSync(file, corruptFile);
+    } catch {}
+    throw new AiProfileError("AI profile cache is corrupted", {
+      status: 500,
+      code: "AI_CACHE_CORRUPT",
+      detail: `The damaged cache was isolated at ${path.basename(corruptFile)}. Paid AI calls were stopped to avoid regenerating the full cache.`
+    });
   }
 }
 
@@ -72,24 +83,109 @@ function cleanJsonText(value) {
     .trim();
 }
 
+function escapeControlCharactersInsideJsonStrings(value) {
+  const text = String(value || "");
+  let output = "";
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const code = char.charCodeAt(0);
+
+    if (!inString) {
+      output += char;
+      if (char === '"') inString = true;
+      continue;
+    }
+
+    if (escaped) {
+      output += char;
+      escaped = false;
+      continue;
+    }
+
+    if (char === "\\") {
+      output += char;
+      escaped = true;
+      continue;
+    }
+
+    if (char === '"') {
+      output += char;
+      inString = false;
+      continue;
+    }
+
+    if (code < 0x20) {
+      if (char === "\n") output += "\\n";
+      else if (char === "\r") output += "\\r";
+      else if (char === "\t") output += "\\t";
+      else if (char === "\b") output += "\\b";
+      else if (char === "\f") output += "\\f";
+      else output += `\\u${code.toString(16).padStart(4, "0")}`;
+      continue;
+    }
+
+    output += char;
+  }
+
+  return output;
+}
+
+export function parseAiJson(value) {
+  const cleaned = cleanJsonText(value);
+  try {
+    return JSON.parse(cleaned);
+  } catch (firstError) {
+    try {
+      return JSON.parse(escapeControlCharactersInsideJsonStrings(cleaned));
+    } catch (secondError) {
+      throw new AiProfileError("AI JSON parse failed", {
+        status: 502,
+        code: "AI_JSON_PARSE_FAILED",
+        detail: secondError instanceof Error ? secondError.message : String(secondError)
+      });
+    }
+  }
+}
+
 function timeoutStatus(error) {
   return error?.name === "TimeoutError" || error?.name === "AbortError";
 }
 
-export async function requestDeepseekProfiles(inputItems, {
-  timeoutMs = 75000,
-  maxTokens = 14000
-} = {}) {
-  const items = inputItems.map((item, index) => ({
-    inputId: String(item.inputId || `item-${index + 1}`),
-    word: String(item.word || "").trim()
-  }));
+export function isUsableAiProfile(word) {
+  return Boolean(
+    isAiCoreContentComplete(word) &&
+    Array.isArray(word?.ieltsUse) && word.ieltsUse.length &&
+    Array.isArray(word?.topics) && word.topics.length &&
+    word?.difficulty &&
+    word?.aiContentProfile === AI_CONTENT_PROFILE_VERSION
+  );
+}
+
+function addUsage(left, right) {
+  if (!left) return right || null;
+  if (!right) return left;
+  const merged = { ...left };
+  for (const [key, value] of Object.entries(right)) {
+    if (Number.isFinite(Number(value)) && Number.isFinite(Number(merged[key]))) {
+      merged[key] = Number(merged[key]) + Number(value);
+    } else if (merged[key] === undefined) {
+      merged[key] = value;
+    }
+  }
+  return merged;
+}
+
+async function requestProfileBatch(items, { timeoutMs, maxTokens }) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-flash";
 
   if (!apiKey) {
     throw new AiProfileError("Missing DEEPSEEK_API_KEY", {
       status: 500,
+      code: "AI_API_KEY_MISSING",
       detail: "Configure the server-side DeepSeek API key before running paid AI tools."
     });
   }
@@ -120,38 +216,56 @@ export async function requestDeepseekProfiles(inputItems, {
     if (timeoutStatus(error)) {
       throw new AiProfileError("DeepSeek API request timed out", {
         status: 504,
-        detail: `No response within ${Math.round(timeoutMs / 1000)} seconds. This request was not retried automatically.`
+        code: "AI_TIMEOUT",
+        detail: `No response within ${Math.round(timeoutMs / 1000)} seconds.`
       });
     }
     throw new AiProfileError("DeepSeek API request failed", {
       status: 502,
+      code: "AI_NETWORK_ERROR",
       detail: error instanceof Error ? error.message : String(error)
     });
   }
 
   const raw = await response.text();
   if (!response.ok) {
+    const upstreamStatus = Number(response.status) || 502;
     throw new AiProfileError("DeepSeek API request failed", {
-      status: response.status === 429 ? 429 : 502,
+      status: [429, 502, 503, 504].includes(upstreamStatus) ? upstreamStatus : 502,
+      code: "AI_UPSTREAM_ERROR",
       detail: raw,
       retryAfter: response.headers.get("retry-after") || ""
     });
   }
 
   let payload;
-  let data;
   try {
     payload = JSON.parse(raw);
-    const content = payload?.choices?.[0]?.message?.content;
-    if (!String(content || "").trim()) throw new Error("DeepSeek returned empty content");
-    data = JSON.parse(cleanJsonText(content));
   } catch (error) {
-    throw new AiProfileError("AI JSON parse failed", {
+    throw new AiProfileError("DeepSeek response envelope is invalid", {
       status: 502,
+      code: "AI_ENVELOPE_PARSE_FAILED",
       detail: error instanceof Error ? error.message : String(error)
     });
   }
 
+  const choice = payload?.choices?.[0];
+  const content = choice?.message?.content;
+  if (!String(content || "").trim()) {
+    throw new AiProfileError("DeepSeek returned empty content", {
+      status: 502,
+      code: "AI_EMPTY_CONTENT"
+    });
+  }
+  if (choice?.finish_reason === "length") {
+    throw new AiProfileError("DeepSeek output was truncated", {
+      status: 502,
+      code: "AI_OUTPUT_TRUNCATED",
+      detail: "finish_reason=length"
+    });
+  }
+
+  const data = parseAiJson(content);
   const rawItems = items.length === 1
     ? [Array.isArray(data?.items) ? data.items[0] : data]
     : (Array.isArray(data?.items) ? data.items : []);
@@ -177,7 +291,7 @@ export async function requestDeepseekProfiles(inputItems, {
     }
 
     const entry = normalizeAiGeneratedEntry(rawItem, expected.word);
-    if (!isAiContentProfileComplete(entry)) {
+    if (!isUsableAiProfile(entry)) {
       invalid.push({
         inputId: expected.inputId,
         word: expected.word,
@@ -188,9 +302,74 @@ export async function requestDeepseekProfiles(inputItems, {
     resolved.set(expected.inputId, entry);
   }
 
+  return { entries: resolved, invalid, usage: payload?.usage || null };
+}
+
+function isSplittableContentError(error) {
+  return [
+    "AI_JSON_PARSE_FAILED",
+    "AI_OUTPUT_TRUNCATED",
+    "AI_EMPTY_CONTENT"
+  ].includes(error?.code);
+}
+
+async function resolveProfiles(items, options, depth = 0) {
+  const maxDepth = Math.max(1, Number(options.maxSplitDepth) || 6);
+  let batchResult;
+
+  try {
+    batchResult = await requestProfileBatch(items, options);
+  } catch (error) {
+    if (items.length > 1 && depth < maxDepth && isSplittableContentError(error)) {
+      const midpoint = Math.ceil(items.length / 2);
+      const left = await resolveProfiles(items.slice(0, midpoint), options, depth + 1);
+      const right = await resolveProfiles(items.slice(midpoint), options, depth + 1);
+      return {
+        entries: new Map([...left.entries, ...right.entries]),
+        invalid: [...left.invalid, ...right.invalid],
+        usage: addUsage(left.usage, right.usage)
+      };
+    }
+    if (items.length === 1 && isSplittableContentError(error)) {
+      return {
+        entries: new Map(),
+        invalid: [{
+          inputId: items[0].inputId,
+          word: items[0].word,
+          reason: `${error.code}: ${error.detail || error.message}`
+        }],
+        usage: null
+      };
+    }
+    throw error;
+  }
+
+  if (!batchResult.invalid.length || items.length === 1 || depth >= maxDepth) {
+    return batchResult;
+  }
+
+  const invalidIds = new Set(batchResult.invalid.map((item) => item.inputId));
+  const unresolvedItems = items.filter((item) => invalidIds.has(item.inputId));
+  if (!unresolvedItems.length) return batchResult;
+
+  const recovered = await resolveProfiles(unresolvedItems, options, depth + 1);
+  const recoveredIds = new Set(recovered.entries.keys());
   return {
-    entries: resolved,
-    invalid,
-    usage: payload?.usage || null
+    entries: new Map([...batchResult.entries, ...recovered.entries]),
+    invalid: recovered.invalid.filter((item) => !recoveredIds.has(item.inputId)),
+    usage: addUsage(batchResult.usage, recovered.usage)
   };
+}
+
+export async function requestDeepseekProfiles(inputItems, {
+  timeoutMs = 75000,
+  maxTokens = 14000,
+  maxSplitDepth = 6
+} = {}) {
+  const items = inputItems.map((item, index) => ({
+    inputId: String(item.inputId || `item-${index + 1}`),
+    word: String(item.word || "").trim()
+  }));
+
+  return resolveProfiles(items, { timeoutMs, maxTokens, maxSplitDepth });
 }

@@ -1,0 +1,38 @@
+name: Manual vocabulary audit queue
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - fix/ai-queue-audit-v1
+    paths:
+      - "public/data/words.json"
+      - "scripts/build-manual-vocab-audit-queue.mjs"
+      - ".github/workflows/manual-vocab-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-audit-queue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build deterministic audit queue
+        run: node scripts/build-manual-vocab-audit-queue.mjs
+
+      - name: Upload audit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-vocab-audit-queue
+          path: reports/manual-vocab-audit
+          if-no-files-found: error
+          retention-days: 30

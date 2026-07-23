@@ -16,6 +16,7 @@
     "test:performance": "playwright test tests/e2e/performance-budget.spec.mjs --config=playwright.config.mjs",
     "start": "next start -H 127.0.0.1 -p 3000",
     "audit:core": "node scripts/core-vocab-quality-audit.mjs --write-reports",
+    "audit:vocab-manual-queue": "node scripts/build-manual-vocab-audit-queue.mjs",
     "quality:gate": "node scripts/core-vocab-quality-audit.mjs --gate",
     "quality:phrases": "node scripts/phrase-quality-gate.mjs --gate",
     "quality:all": "node scripts/core-vocab-quality-audit.mjs --gate && node scripts/phrase-quality-gate.mjs --gate && node scripts/sync-master-lexicon.mjs --check",

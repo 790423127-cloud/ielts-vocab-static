@@ -126,6 +126,7 @@ export async function POST(req) {
       if (!force && isAiContentProfileComplete(cached)) {
         resolvedByInputKey.set(inputKey, {
           ...withAiClientCollocationPayload({ ...cached, word: cached.word || word }),
+          aiReplaceExisting: false,
           cacheHit: true,
           source: "ai-cache"
         });
@@ -199,6 +200,7 @@ export async function POST(req) {
       generatedCount += 1;
       const resolved = {
         ...withAiClientCollocationPayload(entry),
+        aiReplaceExisting: Boolean(force),
         cacheHit: false,
         source: "deepseek"
       };

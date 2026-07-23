@@ -45,7 +45,7 @@ export default function WordStudyContent({
     displayHeadword.includes("/") ? "word--alternatives" : ""
   ].filter(Boolean).join(" ");
   const otherMeanings = normalizeOtherMeanings(item.otherMeanings, item.meaning);
-  const mainMeaningDetail = String(item.meaningDetailZh || item.definition || "").trim();
+  const mainMeaningDetail = String(item.meaningDetailZh || "").trim();
 
   return (
     <div className="word-study-content">

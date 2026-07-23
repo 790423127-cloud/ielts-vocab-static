@@ -51,7 +51,4 @@ replaceOnce(
   "display blocked and true remaining"
 );
 
-await import("./fix-quality-patch-script.mjs");
-await import("./apply-quality-standard-once.mjs");
-
 console.log("Applied exact AI client queue patches.");

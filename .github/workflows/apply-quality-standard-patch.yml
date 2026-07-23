@@ -1,0 +1,83 @@
+name: Apply vocabulary quality standard patch
+
+on:
+  push:
+    branches:
+      - fix/ai-queue-audit-v1
+    paths:
+      - "scripts/apply-quality-standard-patch.mjs"
+      - ".github/workflows/apply-quality-standard-patch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[quality-standard-applied]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/ai-queue-audit-v1
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Apply exact quality patch
+        run: node scripts/apply-quality-standard-patch.mjs
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run targeted quality tests
+        run: |
+          node --test \
+            app/lib/vocab/__tests__/word-quality-status.test.mjs \
+            app/lib/vocab/__tests__/admin-ai-batch-plan.test.mjs \
+            app/lib/vocab/__tests__/admin-ai-continuous-runner.test.mjs
+
+      - name: Generate revised audit report
+        run: npm run audit:vocab-manual-queue -- --out-dir output/revised-quality-audit
+
+      - name: Verify revised audit semantics
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const summary = JSON.parse(fs.readFileSync('output/revised-quality-audit/summary.json', 'utf8'));
+          if (!Number.isFinite(summary.manualReviewCount)) throw new Error('manualReviewCount missing');
+          if (!Number.isFinite(summary.optionalEnrichmentCount)) throw new Error('optionalEnrichmentCount missing');
+          if (summary.manualReviewCount >= summary.optionalEnrichmentCount) {
+            console.warn('Required repair queue is not smaller than optional enrichment; inspect source data.');
+          }
+          if (!fs.existsSync('output/revised-quality-audit/optional-enrichment.jsonl')) {
+            throw new Error('optional enrichment queue missing');
+          }
+          console.log(summary);
+          NODE
+
+      - name: Run lint
+        run: npm run lint:errors
+
+      - name: Commit patched source files
+        run: |
+          if git diff --quiet; then
+            echo "No quality-standard changes were needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            app/page.jsx \
+            app/components/WordFlashcardView.jsx \
+            app/components/VocabAdminToolsPanel.jsx \
+            app/lib/vocab/admin-ai-batch-plan.mjs \
+            app/lib/vocab/word-flashcard-study-pool.mjs \
+            app/lib/vocab/__tests__/admin-ai-batch-plan.test.mjs \
+            scripts/build-manual-vocab-audit-queue.mjs
+          git commit -m "refactor: separate required repairs from optional enrichment [quality-standard-applied]"
+          git push origin HEAD:fix/ai-queue-audit-v1

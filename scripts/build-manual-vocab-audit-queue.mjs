@@ -1,5 +1,9 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import {
+  getWordQualityEvaluation,
+  hasUsefulQualityText
+} from "../app/lib/vocab/word-quality-status.mjs";
 
 const projectRoot = process.cwd();
 const sourceFile = path.join(projectRoot, "public", "data", "words.json");
@@ -11,8 +15,6 @@ const outputDir = path.resolve(
     : "reports/manual-vocab-audit"
 );
 const batchSize = 100;
-
-const PLACEHOLDER_RE = /^(?:-|—|n\/?a|none|null|undefined|unknown|not available|待补全|待完善|暂无|无释义|中文释义|英文释义|meaning here|translation here|example sentence|\?{2,})$/i;
 const DIRECT_FAMILY_RELATIONS = new Set([
   "base-word",
   "noun-form",
@@ -32,25 +34,22 @@ function key(value) {
   return text(value).toLowerCase().replace(/[’‘]/g, "'").replace(/[“”]/g, '"');
 }
 
-function useful(value) {
-  const valueText = text(value);
-  return Boolean(valueText) && !PLACEHOLDER_RE.test(valueText);
-}
-
 function isSingleEnglishHeadword(value) {
   return /^[A-Za-z][A-Za-z'-]*$/.test(text(value));
 }
 
-function normalizePhraseItems(value) {
+function inspectPhraseItems(value) {
   if (!Array.isArray(value)) return [];
   const seen = new Set();
   const result = [];
+
   for (const item of value) {
     const phrase = text(typeof item === "string" ? item : item?.phrase || item?.text || item?.collocation);
     const chinese = text(typeof item === "string" ? "" : item?.chinese || item?.translation || item?.meaning);
     const phraseKey = key(phrase).replace(/[^a-z0-9]+/g, " ").trim();
     const wordCount = phrase.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g)?.length || 0;
     const reasons = [];
+
     if (!phrase) reasons.push("empty-phrase");
     if (wordCount < 2) reasons.push("not-a-collocation");
     if (wordCount > 10) reasons.push("too-long");
@@ -58,77 +57,11 @@ function normalizePhraseItems(value) {
     if (/[?？]/.test(phrase)) reasons.push("question-like");
     if (phraseKey && seen.has(phraseKey)) reasons.push("duplicate");
     if (phraseKey) seen.add(phraseKey);
+
     result.push({ phrase, chinese, valid: reasons.length === 0, reasons });
   }
+
   return result;
-}
-
-function classifyEntry(word) {
-  const missingCoreFields = [];
-  if (!text(word?.word)) missingCoreFields.push("word");
-  for (const field of ["pos", "meaning", "definition", "example", "exampleCn"]) {
-    if (!useful(word?.[field])) missingCoreFields.push(field);
-  }
-
-  const common = normalizePhraseItems(word?.collocations);
-  const phrase = normalizePhraseItems(word?.phraseCollocations);
-  const validCommon = common.filter((item) => item.valid);
-  const validPhrase = phrase.filter((item) => item.valid);
-  const missingClassificationFields = [];
-  if (!Array.isArray(word?.ieltsUse) || !word.ieltsUse.length) missingClassificationFields.push("ieltsUse");
-  if (!Array.isArray(word?.topics) || !word.topics.length) missingClassificationFields.push("topics");
-  if (!useful(word?.difficulty)) missingClassificationFields.push("difficulty");
-
-  const otherMeanings = Array.isArray(word?.otherMeanings) ? word.otherMeanings : [];
-  const invalidOtherMeaningIndexes = [];
-  otherMeanings.forEach((sense, index) => {
-    if (typeof sense === "string") {
-      invalidOtherMeaningIndexes.push(index);
-      return;
-    }
-    if (
-      !useful(sense?.meaningZh || sense?.meaning) ||
-      !useful(sense?.definitionEn || sense?.definition) ||
-      !useful(sense?.example) ||
-      !useful(sense?.exampleCn)
-    ) {
-      invalidOtherMeaningIndexes.push(index);
-    }
-  });
-
-  const reviewReasons = [];
-  if (missingCoreFields.length) reviewReasons.push("missing-core-content");
-  if (validCommon.length < 4) reviewReasons.push("common-collocations-under-four");
-  if (validPhrase.length < 4) reviewReasons.push("phrase-collocations-under-four");
-  if (common.some((item) => !item.valid)) reviewReasons.push("invalid-common-collocation");
-  if (phrase.some((item) => !item.valid)) reviewReasons.push("invalid-phrase-collocation");
-  if (missingClassificationFields.length) reviewReasons.push("missing-classification");
-  if (invalidOtherMeaningIndexes.length) reviewReasons.push("invalid-other-meanings");
-
-  return {
-    id: text(word?.id || word?.wordId),
-    word: text(word?.word),
-    pos: text(word?.pos),
-    meaning: text(word?.meaning),
-    missingCoreFields,
-    missingClassificationFields,
-    commonCollocations: common,
-    phraseCollocations: phrase,
-    validCommonCount: validCommon.length,
-    validPhraseCount: validPhrase.length,
-    commonNeedsManualCompletion: validCommon.length < 4,
-    phraseNeedsManualCompletion: validPhrase.length < 4,
-    invalidOtherMeaningIndexes,
-    reviewReasons,
-    needsManualReview: reviewReasons.length > 0,
-    priority: missingCoreFields.length
-      ? "P1"
-      : (validCommon.length < 4 || validPhrase.length < 4 || invalidOtherMeaningIndexes.length)
-        ? "P2"
-        : missingClassificationFields.length
-          ? "P3"
-          : "READY"
-  };
 }
 
 const payload = JSON.parse(readFileSync(sourceFile, "utf8"));
@@ -147,21 +80,74 @@ words.forEach((word, index) => {
   duplicateHeadwords.set(wordKey, indexes);
   if (!byWord.has(wordKey)) byWord.set(wordKey, word);
 });
+const knownHeadwords = new Set(byWord.keys());
+
+function classifyEntry(word) {
+  const quality = getWordQualityEvaluation(word, { knownHeadwords });
+  const common = inspectPhraseItems(word?.collocations);
+  const phrase = inspectPhraseItems(word?.phraseCollocations);
+  const validCommon = common.filter((item) => item.valid);
+  const validPhrase = phrase.filter((item) => item.valid);
+  const reviewReasons = [];
+  const optionalEnrichmentReasons = [];
+
+  if (quality.contentMissing) reviewReasons.push("missing-required-content");
+  if (quality.contentInvalid) reviewReasons.push("invalid-content-structure");
+  if (common.some((item) => !item.valid)) reviewReasons.push("invalid-common-collocation");
+  if (phrase.some((item) => !item.valid)) reviewReasons.push("invalid-phrase-collocation");
+  if (quality.classificationMissing) reviewReasons.push("missing-classification");
+  if (quality.needsFamilyReview) reviewReasons.push("invalid-family-structure");
+  if (quality.needsOptionalEnrichment) {
+    optionalEnrichmentReasons.push("below-tier-enrichment-target");
+  }
+
+  const requiredRepair = quality.lane === "completion" || quality.lane === "repair";
+  const priority = requiredRepair
+    ? "P1"
+    : quality.classificationMissing || quality.needsFamilyReview
+      ? "P2"
+      : "READY";
+
+  return {
+    id: text(word?.id || word?.wordId),
+    word: text(word?.word),
+    pos: text(word?.pos),
+    meaning: text(word?.meaning),
+    lane: quality.lane,
+    priority,
+    missingContentFields: quality.missingContentFields,
+    invalidContentFields: quality.invalidContentFields,
+    invalidOtherMeaningIndexes: quality.invalidOtherMeaningIndexes,
+    missingClassificationFields: quality.missingClassificationFields,
+    reliableContentCounts: quality.reliableContentCounts,
+    minimumLearningTarget: quality.minimumLearningTarget,
+    commonCollocations: common,
+    phraseCollocations: phrase,
+    validCommonCount: validCommon.length,
+    validPhraseCount: validPhrase.length,
+    enrichmentStatus: quality.enrichmentStatus,
+    enrichmentCounts: quality.enrichmentCounts,
+    enrichmentTarget: quality.enrichmentTarget,
+    needsOptionalEnrichment: quality.needsOptionalEnrichment,
+    optionalEnrichmentReasons,
+    familyStatus: quality.familyStatus,
+    familyReviewItems: quality.familyReviewItems,
+    familyPromotionCandidates: quality.familyPromotionCandidates,
+    reviewReasons,
+    needsManualReview: reviewReasons.length > 0
+  };
+}
 
 const entries = words.map(classifyEntry);
 const reviewEntries = entries.filter((entry) => entry.needsManualReview);
-const collocationReview = reviewEntries.filter((entry) => (
-  entry.commonNeedsManualCompletion ||
-  entry.phraseNeedsManualCompletion ||
-  entry.commonCollocations.some((item) => !item.valid) ||
-  entry.phraseCollocations.some((item) => !item.valid)
-));
+const optionalEnrichment = entries.filter((entry) => entry.needsOptionalEnrichment);
 
 const familyCandidateMap = new Map();
 words.forEach((owner) => {
   const ownerWord = text(owner?.word);
   const ownerId = text(owner?.id || owner?.wordId);
   const family = Array.isArray(owner?.wordFamily) ? owner.wordFamily : [];
+
   family.forEach((item) => {
     const familyWord = text(item?.word || item);
     const familyKey = key(familyWord);
@@ -171,7 +157,7 @@ words.forEach((owner) => {
     if (!familyKey || familyKey === key(ownerWord)) return;
     if (!isSingleEnglishHeadword(familyWord)) return;
     if (!DIRECT_FAMILY_RELATIONS.has(relation)) return;
-    if (!useful(meaning)) return;
+    if (!hasUsefulQualityText(meaning)) return;
 
     const existing = byWord.get(familyKey);
     const candidate = familyCandidateMap.get(familyKey) || {
@@ -198,7 +184,7 @@ const familyCandidates = [...familyCandidateMap.values()]
     eligibleForStandaloneReview: Boolean(
       !candidate.existingInLexicon &&
       isSingleEnglishHeadword(candidate.word) &&
-      useful(candidate.meaning)
+      hasUsefulQualityText(candidate.meaning)
     )
   }))
   .sort((a, b) => a.word.localeCompare(b.word));
@@ -215,12 +201,21 @@ const duplicateGroups = [...duplicateHeadwords.entries()]
     }))
   }));
 
+const countLane = (lane) => entries.filter((entry) => entry.lane === lane).length;
 const summary = {
   generatedAt: new Date().toISOString(),
   sourceVersion: text(payload?.version),
   totalWords: words.length,
+  requiredRepairCount: countLane("completion") + countLane("repair"),
+  completionCount: countLane("completion"),
+  repairCount: countLane("repair"),
+  classificationCount: countLane("classification"),
+  readyCount: countLane("ready"),
   manualReviewCount: reviewEntries.length,
-  missingCoreCount: entries.filter((entry) => entry.missingCoreFields.length).length,
+  optionalEnrichmentCount: optionalEnrichment.length,
+  enrichmentThinCount: entries.filter((entry) => entry.enrichmentStatus === "thin").length,
+  enrichmentStandardCount: entries.filter((entry) => entry.enrichmentStatus === "standard").length,
+  enrichmentRichCount: entries.filter((entry) => entry.enrichmentStatus === "rich").length,
   commonCollocationsUnderFour: entries.filter((entry) => entry.validCommonCount < 4).length,
   phraseCollocationsUnderFour: entries.filter((entry) => entry.validPhraseCount < 4).length,
   invalidOtherMeaningsCount: entries.filter((entry) => entry.invalidOtherMeaningIndexes.length).length,
@@ -229,7 +224,8 @@ const summary = {
   familyMembersObserved: familyCandidates.length,
   familyMembersAlreadyStandalone: familyCandidates.filter((item) => item.existingInLexicon).length,
   familyMembersEligibleForStandaloneReview: familyCandidates.filter((item) => item.eligibleForStandaloneReview).length,
-  note: "This report is deterministic triage only. It does not modify the lexicon and does not certify semantic correctness."
+  familyStructureReviewCount: entries.filter((entry) => entry.familyStatus === "review").length,
+  note: "Required repairs are separated from optional enrichment. Fewer than four collocations alone does not make an entry defective."
 };
 
 rmSync(outputDir, { recursive: true, force: true });
@@ -246,7 +242,7 @@ function writeJsonLines(filename, values) {
 
 writeJson("summary.json", summary);
 writeJsonLines("entries-needing-review.jsonl", reviewEntries);
-writeJsonLines("collocation-review.jsonl", collocationReview);
+writeJsonLines("optional-enrichment.jsonl", optionalEnrichment);
 writeJsonLines("word-family-candidates.jsonl", familyCandidates);
 writeJson("duplicate-headwords.json", duplicateGroups);
 

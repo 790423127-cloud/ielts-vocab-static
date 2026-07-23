@@ -8,12 +8,12 @@ import { isInflectedReferenceWord } from "./word-study-eligibility.mjs";
 
 export const PAID_AI_LIMITS = Object.freeze({
   clean: 100,
-  generateMissing: 100,
+  generateMissing: Infinity,
   oneByOne: 20,
   slow: 10,
-  wrongRepair: 20,
-  fast: 100,
-  classification: 100,
+  wrongRepair: 100,
+  fast: Infinity,
+  classification: Infinity,
   batchSize: 10,
   concurrency: 1
 });
@@ -48,6 +48,13 @@ function selectIndexedWords(words, predicate, limit = Infinity) {
   return targets;
 }
 
+function resolveTargetLimit(value, fallback = Infinity) {
+  if (value === undefined || value === null || value === "") return fallback;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return Infinity;
+  return Math.max(0, Math.floor(parsed));
+}
+
 export function buildCleanWordsPlan(words) {
   const targets = [];
   for (let i = 0; i < words.length && targets.length < PAID_AI_LIMITS.clean; i += 1) {
@@ -60,7 +67,7 @@ export function buildCleanWordsPlan(words) {
 export function buildGenerateMissingPlan(words, options = {}) {
   const repairWrong = options.repairWrong !== false;
   const onlyWrong = Boolean(options.onlyWrong);
-  const maxTargets = Math.max(1, Number(options.maxTargets || PAID_AI_LIMITS.generateMissing));
+  const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.generateMissing);
   const wrongTargets = [];
   const missingTargets = [];
 
@@ -104,26 +111,38 @@ export function buildOneByOneCompletionPlan(words) {
   return { targets };
 }
 
-export function buildSlowCompletionPlan(words) {
+export function buildAnomalyRepairPlan(words, options = {}) {
+  const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.wrongRepair);
   const targets = selectIndexedWords(
     words,
-    (word) => isAiContentProfileMissing(word) || isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word),
-    PAID_AI_LIMITS.slow
+    (word) => isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word),
+    maxTargets
   );
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
+// Compatibility alias for the old slow button: it now repairs anomalous headwords only.
+export function buildSlowCompletionPlan(words) {
+  return buildAnomalyRepairPlan(words, { maxTargets: PAID_AI_LIMITS.slow });
+}
+
 export function buildWrongRepairPlan(words) {
-  const targets = selectIndexedWords(words, isLikelyWrongAiWord, PAID_AI_LIMITS.wrongRepair);
+  return buildAnomalyRepairPlan(words);
+}
+
+export function buildBulkCompletionPlan(words, options = {}) {
+  const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.fast);
+  const targets = selectIndexedWords(words, isAiContentProfileMissing, maxTargets);
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
+// Compatibility alias for the existing UI. Unlike the old implementation, this scans the whole lexicon.
 export function buildFastCompletionPlan(words) {
-  const targets = selectIndexedWords(words, isAiContentProfileMissing, PAID_AI_LIMITS.fast);
-  return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
+  return buildBulkCompletionPlan(words);
 }
 
-export function buildClassificationPlan(words) {
-  const targets = selectIndexedWords(words, isMissingClassification, PAID_AI_LIMITS.classification);
+export function buildClassificationPlan(words, options = {}) {
+  const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.classification);
+  const targets = selectIndexedWords(words, isMissingClassification, maxTargets);
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }

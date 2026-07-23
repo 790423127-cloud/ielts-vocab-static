@@ -1,15 +1,19 @@
 export const runtime = "nodejs";
 
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import path from "path";
 import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
+import {
+  isAiContentProfileComplete,
+  normalizeAiGeneratedEntry
+} from "../../lib/vocab/admin-ai-content-profile.mjs";
 
-const DEEPSEEK_TIMEOUT_MS = 45000;
+const DEEPSEEK_TIMEOUT_MS = 75000;
+const MAX_BATCH_WORDS = 10;
 
 function isDeepSeekTimeout(error) {
   return error?.name === "TimeoutError" || error?.name === "AbortError";
 }
-
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-import path from "path";
 
 function ensureCacheDir() {
   const dir = path.join(process.cwd(), ".ai-cache");
@@ -32,9 +36,7 @@ function readCache() {
 }
 
 function writeCache(cache) {
-  try {
-    writeFileSync(cachePath(), JSON.stringify(cache, null, 2), "utf-8");
-  } catch {}
+  writeFileSync(cachePath(), JSON.stringify(cache, null, 2), "utf-8");
 }
 
 function cleanJsonText(text) {
@@ -51,144 +53,24 @@ function normalizeKey(value) {
     .trim();
 }
 
-function normalizePhraseList(value) {
-  if (!Array.isArray(value)) return [];
+function buildPrompt(words) {
+  return `
+请为下面这些英文词条批量生成 IELTS General Training 刷词资料。每个输入词必须返回一个对象，顺序必须与输入顺序一致。
 
-  return value
-    .map((item) => {
-      if (typeof item === "string") return { phrase: item, chinese: "" };
-
-      return {
-        phrase: item?.phrase || item?.collocation || item?.text || "",
-        chinese: item?.chinese || item?.meaning || item?.translation || ""
-      };
-    })
-    .filter((item) => item.phrase)
-    .slice(0, 3);
-}
-
-function normalizeStringArray(value) {
-  if (!Array.isArray(value)) return [];
-  return value.map((item) => String(item || "").trim()).filter(Boolean).slice(0, 3);
-}
-
-function normalizeEntry(entry, fallbackWord) {
-  return {
-    word: entry.word || fallbackWord || "",
-    phonetic: entry.phonetic || "",
-    pos: entry.part_of_speech || entry.pos || "",
-    meaning: entry.chinese_meaning || entry.meaning || "",
-    definition: entry.english_definition || entry.definition || "",
-    example: entry.ielts_example || entry.example || "",
-    exampleCn: entry.example_chinese || entry.exampleCn || "",
-    collocations: normalizePhraseList(entry.common_collocations || entry.collocations || entry.commonCollocations),
-    phraseCollocations: normalizePhraseList(entry.phrase_collocations || entry.phraseCollocations || entry.prepositional_phrases),
-    ieltsUse: normalizeStringArray(entry.ielts_use || entry.ieltsUse),
-    topics: normalizeStringArray(entry.topics || entry.topic),
-    difficulty: entry.difficulty || "中级核心",
-    category: entry.category ? `IELTS G类 · ${entry.category}` : "IELTS G类",
-    aiGenerated: true,
-    generatedAt: new Date().toISOString()
-  };
-}
-
-function isCompleteEntry(entry) {
-  return Boolean(
-    entry?.pos &&
-    entry?.meaning &&
-    entry?.definition &&
-    entry?.example &&
-    entry?.exampleCn &&
-    Array.isArray(entry?.collocations) &&
-    entry.collocations.length &&
-    Array.isArray(entry?.phraseCollocations) &&
-    entry.phraseCollocations.length &&
-    Array.isArray(entry?.ieltsUse) &&
-    entry.ieltsUse.length &&
-    Array.isArray(entry?.topics) &&
-    entry.topics.length &&
-    entry?.difficulty
-  );
-}
-
-export async function POST(req) {
-  const guard = requireLocalAdmin(req, { allowLocalhostAlways: true });
-  if (guard) return guard;
-
-  try {
-    const { words, force = false } = await req.json();
-
-    if (!Array.isArray(words)) {
-      return Response.json({ error: "words must be an array" }, { status: 400 });
-    }
-
-    const cleanWords = words
-      .map((word) => String(word || "").trim())
-      .filter(Boolean)
-      .slice(0, 100);
-
-    if (!cleanWords.length) {
-      return Response.json({ items: [], stats: { cacheHit: 0, deepseek: 0 } });
-    }
-
-    const cache = readCache();
-    const cachedItems = [];
-    const toGenerate = [];
-    let cacheHit = 0;
-
-    for (const word of cleanWords) {
-      const key = normalizeKey(word);
-      const cached = cache[key];
-
-      if (!force && isCompleteEntry(cached)) {
-        cachedItems.push({
-          ...cached,
-          word: cached.word || word,
-          cacheHit: true,
-          source: "ai-cache"
-        });
-        cacheHit += 1;
-      } else {
-        toGenerate.push(word);
-      }
-    }
-
-    if (!toGenerate.length) {
-      return Response.json({
-        items: cachedItems,
-        stats: {
-          cacheHit,
-          deepseek: 0
-        }
-      });
-    }
-
-    const apiKey = process.env.DEEPSEEK_API_KEY;
-    const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-flash";
-
-    if (!apiKey) {
-      return Response.json(
-        { error: "Missing DEEPSEEK_API_KEY. Please configure your DeepSeek API key first." },
-        { status: 500 }
-      );
-    }
-
-    const prompt = `
-请为下面这些英文单词批量生成 IELTS General Training 刷词词条。
-
-要求：
-1. 每个输入单词都必须返回一个对象。
-2. 输出顺序尽量和输入顺序一致。
-3. 中文释义简洁。
-4. 英文释义简短。
-5. 例句必须短，适合 IELTS General Training 场景。
-6. common_collocations 给 2-3 个常见搭配，每个带中文。
-7. phrase_collocations 给 2-3 个短语/介词搭配，每个带中文。
-8. ielts_use 从这些选 1-3 个：Listening, Speaking, Reading, G类书信, Task 2, 生活高频, 工作高频。
-9. topics 从这些选 1-3 个：教育, 工作, 住房, 交通, 健康, 环境, 科技, 政府, 社会, 消费, 旅行, 社区, 法律, 家庭, 公共服务。
-10. difficulty 只能选一个：基础高频, 中级核心, 高级加分, 低频认识即可。
-11. 为了速度，内容要简洁，不要长解释。
-12. 只输出 JSON，不要 markdown，不要解释。
+每个词条规则：
+1. chinese_meaning：只写最常用、最适合 IELTS G 类的主释义，不要堆叠多个义项。
+2. main_meaning_detail_zh：只详细解释主释义，用自然中文写 1 句。
+3. english_definition：只解释主释义，简短自然。
+4. other_meanings：0-5 个其他真实义项，只写简短中文；可包括有 IELTS 阅读价值的次常见/生僻义，但禁止古义、重复义和猜测义。
+5. 每个单词只生成 1 个英文例句和 1 个中文翻译，例句体现主释义。
+6. forms：0-5 个真实语法变形。type 只允许 plural、irregular plural、third-person singular、past tense、past participle、past tense / past participle、present participle / gerund、comparative、superlative。若输入本身是变形、短语、专有名词或不适用，返回空数组。禁止二次复数和虚构词形。
+7. word_family：0-6 个常用直接词族。relation 只允许 base-word、noun-form、verb-form、adjective-form、adverb-form、agent-noun、negative-form、related-to。禁止拼写相似但无词族关系的词。
+8. common_collocations：3 个真正属于当前词条的常见搭配，每个带中文。
+9. phrase_collocations：3 个固定结构、介词搭配或常见句型，每个带中文；不要放入其他词族成员的搭配。
+10. ielts_use 从 Listening, Speaking, Reading, G类书信, Task 2, 生活高频, 工作高频 中选 1-3 个。
+11. topics 从 教育, 工作, 住房, 交通, 健康, 环境, 科技, 政府, 社会, 消费, 旅行, 社区, 法律, 家庭, 公共服务 中选 1-3 个。
+12. difficulty 只能是 基础高频、中级核心、高级加分、低频认识即可。
+13. 只输出 JSON，不要 markdown，不要解释。
 
 输出格式：
 {
@@ -198,15 +80,15 @@ export async function POST(req) {
       "phonetic": "string",
       "part_of_speech": "string",
       "chinese_meaning": "string",
+      "main_meaning_detail_zh": "string",
       "english_definition": "string",
+      "other_meanings": ["string"],
       "ielts_example": "string",
       "example_chinese": "string",
-      "common_collocations": [
-        {"phrase": "string", "chinese": "string"}
-      ],
-      "phrase_collocations": [
-        {"phrase": "string", "chinese": "string"}
-      ],
+      "forms": [{"word": "string", "type": "string", "note": "string"}],
+      "word_family": [{"word": "string", "pos": "string", "meaningZh": "string", "relation": "string"}],
+      "common_collocations": [{"phrase": "string", "chinese": "string"}],
+      "phrase_collocations": [{"phrase": "string", "chinese": "string"}],
       "ielts_use": ["string"],
       "topics": ["string"],
       "difficulty": "string",
@@ -216,117 +98,115 @@ export async function POST(req) {
 }
 
 单词列表：
-${JSON.stringify(toGenerate)}
+${JSON.stringify(words)}
 `.trim();
+}
+
+export async function POST(req) {
+  const guard = requireLocalAdmin(req, { allowLocalhostAlways: true });
+  if (guard) return guard;
+
+  try {
+    const { words, force = false } = await req.json();
+    if (!Array.isArray(words)) return Response.json({ error: "words must be an array" }, { status: 400 });
+
+    const cleanWords = words.map((word) => String(word || "").trim()).filter(Boolean).slice(0, MAX_BATCH_WORDS);
+    if (!cleanWords.length) return Response.json({ items: [], stats: { cacheHit: 0, deepseek: 0, invalid: 0 } });
+
+    const cache = readCache();
+    const cachedItems = [];
+    const toGenerate = [];
+    let cacheHit = 0;
+
+    for (const word of cleanWords) {
+      const cached = cache[normalizeKey(word)];
+      if (!force && isAiContentProfileComplete(cached)) {
+        cachedItems.push({ ...cached, word: cached.word || word, cacheHit: true, source: "ai-cache" });
+        cacheHit += 1;
+      } else {
+        toGenerate.push(word);
+      }
+    }
+
+    if (!toGenerate.length) {
+      return Response.json({ items: cachedItems, stats: { cacheHit, deepseek: 0, invalid: 0 } });
+    }
+
+    const apiKey = process.env.DEEPSEEK_API_KEY;
+    const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-flash";
+    if (!apiKey) {
+      return Response.json({ error: "Missing DEEPSEEK_API_KEY. Please configure your DeepSeek API key first." }, { status: 500 });
+    }
 
     const deepseekRes = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       signal: AbortSignal.timeout(DEEPSEEK_TIMEOUT_MS),
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         model,
         messages: [
-          {
-            role: "system",
-            content: "你是专业 IELTS General Training 英语词库编辑。你只返回可解析 JSON。"
-          },
-          {
-            role: "user",
-            content: prompt
-          }
+          { role: "system", content: "你是严谨的 IELTS General Training 英语词库编辑。只返回可解析 JSON，不制造不存在的词义、词形或词族。" },
+          { role: "user", content: buildPrompt(toGenerate) }
         ],
-        temperature: 0.15,
-        max_tokens: 24000,
+        temperature: 0.1,
+        max_tokens: 12000,
         response_format: { type: "json_object" },
+        thinking: { type: "disabled" },
         stream: false
       })
     });
 
     const raw = await deepseekRes.text();
-
     if (!deepseekRes.ok) {
-      return Response.json(
-        {
-          error: "DeepSeek API request failed",
-          status: deepseekRes.status,
-          detail: raw
-        },
-        { status: 500 }
-      );
+      return Response.json({ error: "DeepSeek API request failed", status: deepseekRes.status, detail: raw }, { status: 502 });
     }
 
     let payload;
-    try {
-      payload = JSON.parse(raw);
-    } catch {
-      return Response.json(
-        {
-          error: "DeepSeek returned non-JSON response",
-          detail: raw.slice(0, 1000)
-        },
-        { status: 500 }
-      );
-    }
-
-    const content = payload?.choices?.[0]?.message?.content || "{}";
-
     let data;
     try {
+      payload = JSON.parse(raw);
+      const content = payload?.choices?.[0]?.message?.content || "";
+      if (!content.trim()) throw new Error("DeepSeek returned empty content");
       data = JSON.parse(cleanJsonText(content));
-    } catch {
-      return Response.json(
-        {
-          error: "AI JSON parse failed",
-          detail: content.slice(0, 1200)
-        },
-        { status: 500 }
-      );
+    } catch (error) {
+      return Response.json({ error: "AI JSON parse failed", detail: error.message }, { status: 502 });
     }
 
-    const generatedItems = Array.isArray(data.items)
-      ? data.items.map((entry, index) => normalizeEntry(entry, toGenerate[index])).filter((entry) => entry.word)
-      : [];
+    const rawItems = Array.isArray(data.items) ? data.items : [];
+    const generatedItems = [];
+    let invalid = 0;
 
-    for (const entry of generatedItems) {
-      const key = normalizeKey(entry.word);
-      cache[key] = {
-        ...entry,
-        cachedAt: Date.now()
-      };
-    }
+    toGenerate.forEach((fallbackWord, index) => {
+      const entry = normalizeAiGeneratedEntry(rawItems[index] || {}, fallbackWord);
+      if (!isAiContentProfileComplete(entry)) {
+        invalid += 1;
+        return;
+      }
+      generatedItems.push(entry);
+      cache[normalizeKey(fallbackWord)] = { ...entry, cachedAt: Date.now() };
+    });
 
-    writeCache(cache);
+    if (generatedItems.length) writeCache(cache);
 
     return Response.json({
       items: [
         ...cachedItems,
-        ...generatedItems.map((entry) => ({
-          ...entry,
-          cacheHit: false,
-          source: "deepseek"
-        }))
+        ...generatedItems.map((entry) => ({ ...entry, cacheHit: false, source: "deepseek" }))
       ],
       stats: {
         cacheHit,
-        deepseek: generatedItems.length
+        deepseek: generatedItems.length,
+        invalid,
+        requested: toGenerate.length
       }
     });
   } catch (error) {
     if (isDeepSeekTimeout(error)) {
-      return Response.json(
-        { error: "DeepSeek API request timed out", detail: "The AI service did not respond within 45 seconds." },
-        { status: 504 }
-      );
+      return Response.json({ error: "DeepSeek API request timed out", detail: "The AI service did not respond within 75 seconds. The request will not be retried automatically." }, { status: 504 });
     }
-    return Response.json(
-      {
-        error: "Server error",
-        detail: error instanceof Error ? error.message : String(error)
-      },
-      { status: 500 }
-    );
+    return Response.json({ error: "Server error", detail: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

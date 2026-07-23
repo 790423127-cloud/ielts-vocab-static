@@ -46,8 +46,10 @@ export default function WordDetailGrid({
   phraseCollocationFallback,
   speakSmallText
 }) {
-  const normalizedCommon = normalizeAiPhraseItems(commonCollocations);
-  const normalizedPhrases = normalizeAiPhraseItems(phraseCollocations);
+  // page.jsx still normalizes legacy display props to three items. Read the active
+  // word first so the v2 four-item profile is not truncated before rendering.
+  const normalizedCommon = normalizeAiPhraseItems(item?.collocations || commonCollocations);
+  const normalizedPhrases = normalizeAiPhraseItems(item?.phraseCollocations || phraseCollocations);
   const commonItems = normalizedCommon.length
     ? normalizedCommon
     : normalizeAiPhraseItems(collocationFallback);

@@ -10,6 +10,7 @@ import {
   buildFastCompletionPlan,
   buildGenerateMissingPlan,
   buildOneByOneCompletionPlan,
+  buildQualityLaneSummary,
   buildSlowCompletionPlan,
   buildWrongRepairPlan
 } from "../admin-ai-batch-plan.mjs";
@@ -37,7 +38,7 @@ function completeWord(word, overrides = {}) {
   };
 }
 
-test("buildGenerateMissingPlan prioritizes wrong words and forces only affected chunks", () => {
+test("buildGenerateMissingPlan prioritizes wrong words and preserves missing metadata", () => {
   const words = [
     completeWord("ready"),
     completeWord("missing", { definition: "", aiContentProfile: "" }),
@@ -51,8 +52,8 @@ test("buildGenerateMissingPlan prioritizes wrong words and forces only affected 
   assert.deepEqual(
     plan.targets.map(({ missing, wrong }) => ({ missing, wrong })),
     [
-      { missing: false, wrong: true },
-      { missing: false, wrong: true },
+      { missing: true, wrong: true },
+      { missing: true, wrong: true },
       { missing: true, wrong: false }
     ]
   );
@@ -104,6 +105,25 @@ test("completion plans keep their distinct target policies", () => {
   assert.deepEqual(buildClassificationPlan(words).targets.map(({ i }) => i), [2]);
 });
 
+test("quality lane summary explains why the visible missing count differs from completion", () => {
+  const words = [
+    completeWord("ready"),
+    completeWord("missing", { definition: "" }),
+    completeWord("wrong", { meaning: "undefined" }),
+    completeWord("classification", { topics: [] })
+  ];
+
+  assert.deepEqual(buildQualityLaneSummary(words), {
+    completion: 1,
+    repair: 1,
+    classification: 1,
+    ready: 1,
+    contentMissing: 2,
+    classificationMissing: 1,
+    total: 4
+  });
+});
+
 test("paid plans exclude inflected references", () => {
   const reference = completeWord("questions", {
     definition: "",
@@ -119,20 +139,20 @@ test("paid plans exclude inflected references", () => {
   assert.deepEqual(plan.targets.map(({ w }) => w.word), ["cashless"]);
 });
 
-test("bulk completion runs a bounded 100-word round in ten-word, five-worker chunks", () => {
+test("bulk completion runs a bounded 100-word round in five-word, three-worker chunks", () => {
   const words = Array.from({ length: 205 }, (_, i) => ({ word: `word-${i}` }));
   words[1] = { word: "  " };
   words[2] = { word: "" };
 
   const cleanPlan = buildCleanWordsPlan(words);
   assert.equal(cleanPlan.targets.length, PAID_AI_LIMITS.clean);
-  assert.deepEqual(cleanPlan.chunks.map((chunk) => chunk.length), Array(10).fill(10));
+  assert.deepEqual(cleanPlan.chunks.map((chunk) => chunk.length), Array(20).fill(5));
   assert.equal(cleanPlan.workerCount, PAID_AI_LIMITS.concurrency);
   assert.deepEqual(cleanPlan.targets[1], { id: "3", text: "word-3", i: 3 });
 
   const fastPlan = buildFastCompletionPlan(words);
   assert.equal(fastPlan.targets.length, 100);
-  assert.equal(fastPlan.chunks.length, 10);
+  assert.equal(fastPlan.chunks.length, 20);
   assert.equal(fastPlan.chunks.every((chunk) => chunk.length <= PAID_AI_LIMITS.batchSize), true);
   assert.equal(fastPlan.workerCount, PAID_AI_LIMITS.concurrency);
 });

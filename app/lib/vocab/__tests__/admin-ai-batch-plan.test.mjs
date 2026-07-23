@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { AI_CONTENT_PROFILE_VERSION } from "../admin-ai-content-profile.mjs";
 import {
   PAID_AI_LIMITS,
   buildClassificationPlan,
@@ -17,14 +18,19 @@ function completeWord(word, overrides = {}) {
     phonetic: `/${word}/`,
     pos: "noun",
     meaning: `${word} meaning`,
+    meaningDetailZh: `${word} detailed meaning`,
     definition: `${word} definition`,
+    otherMeanings: [],
     example: `${word} example`,
     exampleCn: `${word} example cn`,
+    forms: [],
+    wordFamily: [],
     collocations: [{ phrase: `${word} collocation`, chinese: "搭配" }],
     phraseCollocations: [{ phrase: `${word} phrase`, chinese: "短语" }],
-    ieltsUse: ["writing"],
-    topics: ["work"],
-    difficulty: "B2",
+    ieltsUse: ["Reading"],
+    topics: ["工作"],
+    difficulty: "中级核心",
+    aiContentProfile: AI_CONTENT_PROFILE_VERSION,
     ...overrides
   };
 }
@@ -32,7 +38,7 @@ function completeWord(word, overrides = {}) {
 test("buildGenerateMissingPlan prioritizes wrong words and forces only affected chunks", () => {
   const words = [
     completeWord("ready"),
-    completeWord("missing", { meaning: "" }),
+    completeWord("missing", { meaningDetailZh: "", aiContentProfile: "" }),
     completeWord("wrong", { meaning: "undefined" }),
     completeWord("wrong-missing", { pos: "", meaning: "undefined" })
   ];
@@ -56,7 +62,7 @@ test("buildGenerateMissingPlan prioritizes wrong words and forces only affected 
 test("buildGenerateMissingPlan preserves repair and only-wrong option semantics", () => {
   const words = [
     completeWord("wrong", { meaning: "undefined" }),
-    completeWord("missing", { meaning: "" })
+    completeWord("missing", { meaningDetailZh: "", aiContentProfile: "" })
   ];
 
   const missingOnly = buildGenerateMissingPlan(words, { repairWrong: false });
@@ -77,7 +83,7 @@ test("buildGenerateMissingPlan preserves repair and only-wrong option semantics"
 test("completion plans keep their distinct target policies", () => {
   const words = [
     completeWord("ready"),
-    completeWord("missing", { meaning: "" }),
+    completeWord("missing", { meaningDetailZh: "", aiContentProfile: "" }),
     completeWord("unclassified", { topics: [] }),
     completeWord("wrong", { meaning: "undefined" }),
     completeWord("injur")
@@ -108,13 +114,14 @@ test("completion plans keep their distinct target policies", () => {
 
 test("paid plans exclude inflected references", () => {
   const reference = completeWord("questions", {
-    meaning: "",
+    meaningDetailZh: "",
+    aiContentProfile: "",
     entryType: "inflected-form",
     studyMode: "reference",
     baseWord: "question",
     relationType: "plural"
   });
-  const normal = completeWord("cashless", { meaning: "" });
+  const normal = completeWord("cashless", { meaningDetailZh: "", aiContentProfile: "" });
   const plan = buildFastCompletionPlan([reference, normal]);
 
   assert.deepEqual(plan.targets.map(({ w }) => w.word), ["cashless"]);
@@ -141,4 +148,15 @@ test("one-by-one paid mode has a bounded target count", () => {
   const words = Array.from({ length: 50 }, (_, index) => ({ word: `entry-${index}` }));
   const plan = buildOneByOneCompletionPlan(words);
   assert.equal(plan.targets.length, PAID_AI_LIMITS.oneByOne);
+});
+
+test("legacy complete-looking words are upgraded until the new profile marker exists", () => {
+  const legacy = completeWord("legacy", {
+    meaningDetailZh: "",
+    otherMeanings: undefined,
+    forms: undefined,
+    wordFamily: undefined,
+    aiContentProfile: undefined
+  });
+  assert.deepEqual(buildFastCompletionPlan([legacy]).targets.map(({ w }) => w.word), ["legacy"]);
 });

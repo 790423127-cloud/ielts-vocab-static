@@ -1,7 +1,14 @@
+import {
+  normalizeAiForms,
+  normalizeAiWordFamily,
+  normalizeOtherMeanings
+} from "./admin-ai-content-profile.mjs";
+
 const RECOVERABLE_SCALAR_FIELDS = Object.freeze([
   "phonetic",
   "pos",
   "meaning",
+  "meaningDetailZh",
   "definition",
   "example",
   "exampleCn",
@@ -10,6 +17,9 @@ const RECOVERABLE_SCALAR_FIELDS = Object.freeze([
 ]);
 
 const RECOVERABLE_ARRAY_FIELDS = Object.freeze([
+  "otherMeanings",
+  "forms",
+  "wordFamily",
   "collocations",
   "phraseCollocations",
   "ieltsUse",
@@ -96,14 +106,20 @@ function normalizePhraseArray(value) {
 }
 
 export function normalizeCachedRecoveryEntry(entry = {}, fallbackWord = "") {
+  const word = String(entry.word || fallbackWord || "").trim();
+  const meaning = String(entry.chinese_meaning || entry.meaning || "").trim();
   return {
-    word: String(entry.word || fallbackWord || "").trim(),
+    word,
     phonetic: String(entry.phonetic || "").trim(),
     pos: String(entry.part_of_speech || entry.pos || "").trim(),
-    meaning: String(entry.chinese_meaning || entry.meaning || "").trim(),
+    meaning,
+    meaningDetailZh: String(entry.main_meaning_detail_zh || entry.meaningDetailZh || entry.meaning_detail_zh || "").trim(),
     definition: String(entry.english_definition || entry.definition || "").trim(),
+    otherMeanings: normalizeOtherMeanings(entry.other_meanings || entry.otherMeanings, meaning),
     example: String(entry.ielts_example || entry.example || "").trim(),
     exampleCn: String(entry.example_chinese || entry.exampleCn || "").trim(),
+    forms: normalizeAiForms(entry.forms, word),
+    wordFamily: normalizeAiWordFamily(entry.word_family || entry.wordFamily, word),
     collocations: normalizePhraseArray(entry.common_collocations || entry.collocations || entry.commonCollocations),
     phraseCollocations: normalizePhraseArray(entry.phrase_collocations || entry.phraseCollocations || entry.prepositional_phrases),
     ieltsUse: normalizeStringArray(entry.ielts_use || entry.ieltsUse),
@@ -149,7 +165,7 @@ export function buildDeepseekCacheRecoveryPlan(words = [], cacheObject = {}, opt
 
   for (const [cacheKey, rawEntry] of Object.entries(cacheObject || {})) {
     const entry = normalizeCachedRecoveryEntry(rawEntry, cacheKey);
-    if (since && entry.generatedAt && !entry.generatedAt.startsWith(since)) continue;
+    if (since && (!entry.generatedAt || !entry.generatedAt.startsWith(since))) continue;
 
     const key = normalizeRecoveryWord(entry.word || cacheKey);
     if (!key) {

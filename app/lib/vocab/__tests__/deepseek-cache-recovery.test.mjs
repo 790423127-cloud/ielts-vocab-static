@@ -31,6 +31,37 @@ test("fills only missing fields and preserves protected state", () => {
   assert.deepEqual(plan.words[0].collocations, [{ phrase: "cashless payment", chinese: "无现金支付" }]);
 });
 
+test("recovers main detail, other meanings, forms, and word family without touching IDs", () => {
+  const words = [{
+    id: "charge-id",
+    word: "charge",
+    meaning: "收费",
+    meaningDetailZh: "",
+    otherMeanings: [],
+    forms: [],
+    wordFamily: [],
+    status: "模糊"
+  }];
+  const cache = {
+    charge: {
+      word: "charge",
+      main_meaning_detail_zh: "要求某人为商品或服务支付费用。",
+      other_meanings: ["指控", "充电"],
+      forms: [{ word: "charged", type: "past tense and past participle" }],
+      word_family: [{ word: "chargeable", pos: "adjective", meaningZh: "可收费的", relation: "adjective-form" }]
+    }
+  };
+
+  const plan = buildDeepseekCacheRecoveryPlan(words, cache);
+  assert.equal(plan.changedWords, 1);
+  assert.equal(plan.words[0].id, "charge-id");
+  assert.equal(plan.words[0].status, "模糊");
+  assert.equal(plan.words[0].meaningDetailZh, "要求某人为商品或服务支付费用。");
+  assert.deepEqual(plan.words[0].otherMeanings, ["指控", "充电"]);
+  assert.equal(plan.words[0].forms[0].word, "charged");
+  assert.equal(plan.words[0].wordFamily[0].word, "chargeable");
+});
+
 test("skips inflected references", () => {
   const words = [{
     id: "2",
@@ -58,4 +89,15 @@ test("recovery is idempotent", () => {
   assert.equal(first.changedWords, 1);
   assert.equal(second.changedWords, 0);
   assert.equal(second.counts.MATCHED_NO_CHANGE, 1);
+});
+
+test("since filter excludes cache rows without a matching generatedAt date", () => {
+  const words = [{ id: "1", word: "cashless", meaning: "" }];
+  const cache = {
+    cashless: { word: "cashless", meaning: "无现金的" },
+    another: { word: "another", meaning: "另一个", generatedAt: "2026-07-22T10:00:00.000Z" }
+  };
+  const plan = buildDeepseekCacheRecoveryPlan(words, cache, { since: "2026-07-22" });
+  assert.equal(plan.results.length, 1);
+  assert.equal(plan.results[0].status, "NOT_FOUND");
 });

@@ -43,7 +43,7 @@ const FORMLESS_LEXICALIZED_HEADWORDS = new Set([
 ]);
 
 function text(value) {
-  return String(value ?? "").normalize("NFKC").trim().replace(/\s+/g, " ");
+  return String(value ?? "").normalize("NFC").trim().replace(/\s+/g, " ");
 }
 
 function key(value) {

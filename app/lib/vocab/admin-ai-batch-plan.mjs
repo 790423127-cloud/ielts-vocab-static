@@ -1,21 +1,25 @@
 import {
   hasHeadwordRepair,
   isLikelyWrongAiWord,
-  isMissingClassification
+  normalizeWord
 } from "./page-word-helpers.mjs";
-import { isAiContentProfileMissing } from "./admin-ai-content-profile.mjs";
 import { isInflectedReferenceWord } from "./word-study-eligibility.mjs";
+import {
+  getUnifiedQualityQueue,
+  isMissingAiFields,
+  isMissingClassification
+} from "./word-quality-status.mjs";
 
 export const PAID_AI_LIMITS = Object.freeze({
   clean: 100,
-  generateMissing: Infinity,
+  generateMissing: 100,
   oneByOne: 20,
   slow: 10,
   wrongRepair: 100,
-  fast: Infinity,
-  classification: Infinity,
+  fast: 100,
+  classification: 100,
   batchSize: 10,
-  concurrency: 1
+  concurrency: 5
 });
 
 function chunkTargets(targets, batchSize) {
@@ -73,12 +77,11 @@ export function buildGenerateMissingPlan(words, options = {}) {
 
   words.forEach((w, i) => {
     if (!isPaidAiEligibleWord(w)) return;
-    const missing = isAiContentProfileMissing(w);
-    const wrong = repairWrong && isLikelyWrongAiWord(w);
-    const target = { w, i, missing, wrong };
+    const missing = isMissingAiFields(w);
+    const wrong = isLikelyWrongAiWord(w) || hasHeadwordRepair(w.word);
 
-    if (wrong) wrongTargets.push(target);
-    else if (missing) missingTargets.push(target);
+    if (wrong && repairWrong) wrongTargets.push({ w, i, missing: false, wrong: true });
+    else if (!wrong && missing) missingTargets.push({ w, i, missing: true, wrong: false });
   });
 
   const targets = (onlyWrong ? wrongTargets : [...wrongTargets, ...missingTargets]).slice(0, maxTargets);
@@ -101,7 +104,7 @@ export function buildOneByOneCompletionPlan(words) {
     const target = {
       w,
       i,
-      missing: isAiContentProfileMissing(w),
+      missing: isMissingAiFields(w),
       unclassified: isMissingClassification(w),
       wrong: isLikelyWrongAiWord(w),
       truncated: hasHeadwordRepair(w.word)
@@ -127,22 +130,44 @@ export function buildSlowCompletionPlan(words) {
 }
 
 export function buildWrongRepairPlan(words) {
-  return buildAnomalyRepairPlan(words);
+  const targets = selectIndexedWords(words, isLikelyWrongAiWord, PAID_AI_LIMITS.wrongRepair);
+  return buildPlan(targets, {
+    batchSize: PAID_AI_LIMITS.batchSize,
+    concurrency: Math.min(2, PAID_AI_LIMITS.concurrency)
+  });
 }
 
 export function buildBulkCompletionPlan(words, options = {}) {
   const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.fast);
-  const targets = selectIndexedWords(words, isAiContentProfileMissing, maxTargets);
+  const excludedWordKeys = options.excludeWordKeys instanceof Set
+    ? options.excludeWordKeys
+    : new Set(options.excludeWordKeys || []);
+  const targets = selectIndexedWords(
+    words,
+    (word) => (
+      !excludedWordKeys.has(normalizeWord(word.word)) &&
+      getUnifiedQualityQueue(word, {
+        needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word)
+      }) === "completion"
+    ),
+    maxTargets
+  );
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }
 
-// Compatibility alias for the existing UI. Unlike the old implementation, this scans the whole lexicon.
-export function buildFastCompletionPlan(words) {
-  return buildBulkCompletionPlan(words);
+// Compatibility alias for the existing UI. One call processes one bounded round.
+export function buildFastCompletionPlan(words, options = {}) {
+  return buildBulkCompletionPlan(words, options);
 }
 
 export function buildClassificationPlan(words, options = {}) {
   const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.classification);
-  const targets = selectIndexedWords(words, isMissingClassification, maxTargets);
+  const targets = selectIndexedWords(
+    words,
+    (word) => getUnifiedQualityQueue(word, {
+      needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word)
+    }) === "classification",
+    maxTargets
+  );
   return buildPlan(targets, { batchSize: PAID_AI_LIMITS.batchSize, concurrency: PAID_AI_LIMITS.concurrency });
 }

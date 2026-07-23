@@ -7,6 +7,7 @@ import {
   formatHeadwordForDisplay,
   formatHeadwordForSpeech
 } from "../lib/vocab/headword-format.mjs";
+import { getMeaningDisplay } from "../lib/vocab/meaning-display.mjs";
 
 function highlightTargetWords(sentence, words) {
   if (!sentence) return sentence;
@@ -45,7 +46,7 @@ export default function WordStudyContent({
     displayHeadword.includes("/") ? "word--alternatives" : ""
   ].filter(Boolean).join(" ");
   const otherMeanings = normalizeOtherMeanings(item.otherMeanings, item.meaning);
-  const mainMeaningDetail = String(item.meaningDetailZh || "").trim();
+  const mainMeaningDetail = getMeaningDisplay(item).detail;
 
   return (
     <div className="word-study-content">
@@ -109,7 +110,29 @@ export default function WordStudyContent({
           <div className="meaning-detail"><strong>主释义详解：</strong>{mainMeaningDetail}</div>
         ) : null}
         {otherMeanings.length ? (
-          <div className="meaning-other"><strong>其他释义：</strong>{otherMeanings.join("；")}</div>
+          <details className="meaning-other">
+            <summary>
+              <strong>其他释义 {otherMeanings.length}</strong>
+              <span>{otherMeanings.map((sense) => sense.meaningZh).join("；")}</span>
+            </summary>
+            <div className="meaning-other-list">
+              {otherMeanings.map((sense, senseIndex) => (
+                <article className="meaning-other-item" key={`${sense.meaningZh}-${senseIndex}`}>
+                  <div className="meaning-other-heading">
+                    {sense.pos ? <span className="meaning-other-pos">{getPosDisplay(sense.pos)}</span> : null}
+                    <strong>{sense.meaningZh}</strong>
+                  </div>
+                  {sense.definitionEn ? <p>{sense.definitionEn}</p> : null}
+                  {sense.example ? (
+                    <div className="meaning-other-example">
+                      <span>{sense.example}</span>
+                      {sense.exampleCn ? <span>{sense.exampleCn}</span> : null}
+                    </div>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </details>
         ) : null}
       </div>
     </div>

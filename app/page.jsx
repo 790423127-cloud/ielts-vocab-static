@@ -57,12 +57,13 @@ import {
   enrichDisplayFamily,
   fallback,
   getDisplayForms,
-  isMissingAiFields,
-  isMissingClassification,
+  hasHeadwordRepair,
+  isLikelyWrongAiWord,
   isSimpleDictionaryWord,
   normalizePhraseItems,
   normalizeWord,
 } from "./lib/vocab/page-word-helpers.mjs";
+import { getUnifiedQualityQueue } from "./lib/vocab/word-quality-status.mjs";
 
 // Source anchors kept for regression tests: AI工具（会扣费）; 听力阅读同义替换; /data/phrases.json; LR_SYNONYM_URL; asSynonymItems(payload).length;
 // Runtime mode counts display an em dash until catalog metadata is ready.
@@ -168,6 +169,15 @@ function Home() {
   const [toast, setToast] = useState("");
   const [loading, setLoading] = useState(false);
   const [batchInfo, setBatchInfo] = useState("");
+  const [aiRunState, setAiRunState] = useState({
+    status: "idle",
+    rounds: 0,
+    processed: 0,
+    filled: 0,
+    failed: 0,
+    remaining: 0,
+    initialRemaining: 0
+  });
   const [duplicateInfo, setDuplicateInfo] = useState("");
   const [idictationFlashReady, setIdictationFlashReady] = useState(false);
   const [lastLocalChange, setLastLocalChange] = useState(null);
@@ -187,12 +197,14 @@ function Home() {
     lrSynonymCount,
     storageReadyRef,
     cacheMetaRef,
-    persistWordsImmediately
+    persistWordsImmediately,
+    markContentSnapshot
   } = useHomeVocabBootstrap({ setToast });
 
   const {
     audioStatusMapRef,
     audioStatsRevision,
+    audioStatusState,
     patchAudioStatusKey,
     prefillWordAudio,
     clearAudioPrefillCursor,
@@ -214,6 +226,7 @@ function Home() {
   });
   const toolsMenuRef = useRef(null);
   const aiToolsRef = useRef(null);
+  const aiRunControlRef = useRef({ controller: null, running: false });
   const searchParams = useSearchParams();
   const wantOpenAiToolsQuery = searchParams?.get("openAiTools") === "1";
   const [toolsOpen, setToolsOpen] = useState(false);
@@ -575,7 +588,7 @@ function Home() {
 
   const wordLibraryStats = useMemo(() => {
     if (!isWordFlashActive) {
-      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0 };
+      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0, repairMissing: 0 };
     }
 
     let total = 0;
@@ -587,6 +600,7 @@ function Home() {
     let todayReviewed = 0;
     let missing = 0;
     let classifyMissing = 0;
+    let repairMissing = 0;
 
     for (const word of words) {
       if (isInflectedReferenceWord(word)) {
@@ -600,11 +614,15 @@ function Home() {
       if (word.status === "不熟") unfamiliar += 1;
       if (word.status === "熟悉") familiar += 1;
       if (word.lastReviewedAt && new Date(word.lastReviewedAt).toDateString() === new Date().toDateString()) todayReviewed += 1;
-      if (isMissingAiFields(word)) missing += 1;
-      if (isMissingClassification(word)) classifyMissing += 1;
+      const qualityQueue = getUnifiedQualityQueue(word, {
+        needsRepair: isLikelyWrongAiWord(word) || hasHeadwordRepair(word.word)
+      });
+      if (qualityQueue === "completion") missing += 1;
+      if (qualityQueue === "classification") classifyMissing += 1;
+      if (qualityQueue === "repair") repairMissing += 1;
     }
 
-    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing };
+    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing, repairMissing };
   }, [isWordFlashActive, words]);
 
   const familiarCount = wordLibraryStats.familiar;
@@ -613,7 +631,14 @@ function Home() {
 
   const audioStats = useMemo(() => {
     if (!isWordFlashActive) {
-      return { revision: audioStatsRevision, total: 0, has: 0, missing: 0, unchecked: 0 };
+      return {
+        revision: audioStatsRevision,
+        state: audioStatusState,
+        total: 0,
+        has: 0,
+        missing: 0,
+        unchecked: 0
+      };
     }
 
     let has = 0;
@@ -639,12 +664,13 @@ function Home() {
 
     return {
       revision: audioStatsRevision,
+      state: audioStatusState,
       total: has + missing + unchecked,
       has,
       missing,
       unchecked
     };
-  }, [isWordFlashActive, words, audioMap, audioStatsRevision, audioStatusMapRef]);
+  }, [isWordFlashActive, words, audioMap, audioStatsRevision, audioStatusMapRef, audioStatusState]);
 
   const progressPercent = studyWords.length ? ((safeStudyPosition + 1) / studyWords.length) * 100 : 0;
 
@@ -665,6 +691,8 @@ function Home() {
     aiSlowCompleteMissing10x1,
     aiStableRepairWrongWords10x2,
     generateHundredByFiveBatch,
+    startContinuousAiCompletion,
+    stopContinuousAiCompletion,
     categorizeWords,
     exportStaticSite,
     openEditCurrentWord,
@@ -698,6 +726,8 @@ function Home() {
     setLoading,
     setToast,
     setBatchInfo,
+    setAiRunState,
+    aiRunControlRef,
     setDuplicateInfo,
     setEditOpen,
     setEditDraft,
@@ -707,6 +737,7 @@ function Home() {
     pasteText,
     setPasteText,
     persistWordsImmediately,
+    markContentSnapshot,
     resetWordStudySessionState,
     cacheMetaRef,
     latestStateRef,
@@ -1003,6 +1034,7 @@ function Home() {
             audioCacheStats,
             audioStats,
             batchInfo,
+            aiRunState,
             duplicateInfo,
             adminActions: {
               importFromText, handleFile, openEditCurrentWord, deleteCurrentWord,
@@ -1018,6 +1050,7 @@ function Home() {
               clearRealAudioPrefillCursor, clearAudioPrefillCursor, dedupeLocalAudio,
               recoverWordsFromLocalFiles, recoverWordsFromTencentCloud, cleanBrowserStorageNow,
               downloadBlankVocabTemplateJson, exportJSON, generateCurrent, generateHundredByFiveBatch,
+              startContinuousAiCompletion, stopContinuousAiCompletion,
               aiSlowCompleteMissing10x1, aiCompletePendingAndUnclassifiedOneByOne,
               aiStableRepairWrongWords10x2, categorizeWords
             }

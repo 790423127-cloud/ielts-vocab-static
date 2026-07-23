@@ -16,6 +16,7 @@ export async function runAdminAiBatch(options) {
     shouldRetry = () => true,
     retryDelayMs = () => 0,
     sleep = defaultSleep,
+    signal,
     getChunkSize = defaultChunkSize,
     onChunkStart,
     onRetry,
@@ -37,6 +38,12 @@ export async function runAdminAiBatch(options) {
     let attempt = 0;
 
     while (true) {
+      if (signal?.aborted) {
+        const error = new Error("AI batch stopped");
+        error.name = "AbortError";
+        throw error;
+      }
+
       const attemptContext = {
         ...context,
         attempt,
@@ -78,7 +85,7 @@ export async function runAdminAiBatch(options) {
   }
 
   async function worker(workerId) {
-    while (nextChunkIndex < chunks.length) {
+    while (!signal?.aborted && nextChunkIndex < chunks.length) {
       const chunkIndex = nextChunkIndex;
       nextChunkIndex += 1;
 

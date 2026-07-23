@@ -83,7 +83,7 @@ test("recovers main detail, other meanings, forms, and word family without touch
   assert.equal(plan.words[0].id, "charge-id");
   assert.equal(plan.words[0].status, "模糊");
   assert.equal(plan.words[0].meaningDetailZh, "要求某人为商品或服务支付费用。");
-  assert.deepEqual(plan.words[0].otherMeanings, ["指控", "充电"]);
+  assert.deepEqual(plan.words[0].otherMeanings.map(({ meaningZh }) => meaningZh), ["指控", "充电"]);
   assert.equal(plan.words[0].forms[0].word, "charged");
   assert.equal(plan.words[0].wordFamily[0].word, "chargeable");
 });

@@ -19,11 +19,15 @@ export async function POST(req) {
   if (guard) return guard;
 
   try {
-    const { word } = await req.json();
+    const { word, inputId } = await req.json();
     const rawWord = String(word || "").trim();
+    const cleanInputId = String(inputId || "").trim();
 
     if (!rawWord) {
       return Response.json({ error: "word is required" }, { status: 400 });
+    }
+    if (!cleanInputId) {
+      return Response.json({ error: "inputId is required" }, { status: 400 });
     }
 
     const apiKey = process.env.DEEPSEEK_API_KEY;
@@ -115,6 +119,7 @@ ${rawWord}
     }
 
     return Response.json({
+      inputId: cleanInputId,
       originalWord: rawWord,
       repairedWord,
       reason: String(data.reason || "").trim(),

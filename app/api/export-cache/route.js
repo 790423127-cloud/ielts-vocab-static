@@ -2,10 +2,19 @@ export const runtime = "nodejs";
 
 import { requireLocalAdmin, requireLocalRead } from "../../lib/api/local-admin-guard.mjs";
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync
+} from "fs";
+import { createHash, randomUUID } from "node:crypto";
 import path from "path";
 import {
   LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES,
+  computeIntegrityHash,
   computeLexiconHash,
   validateExportCacheWrite
 } from "../../lib/vocab/lexicon-guard.mjs";
@@ -26,6 +35,171 @@ function readCache() {
   } catch {
     return null;
   }
+}
+
+const DEFAULT_FILE_SYSTEM = {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  writeFileSync
+};
+
+function sha256(text) {
+  return createHash("sha256").update(text).digest("hex");
+}
+
+export function buildExportCachePayload({ words, version, savedAt }) {
+  const payload = {
+    version: String(version || "").trim(),
+    words,
+    count: words.length,
+    savedAt,
+    lexiconHash: computeLexiconHash(words),
+    integrityHash: computeIntegrityHash(words)
+  };
+  const text = JSON.stringify(payload, null, 2);
+  return { payload, text, fileHash: sha256(text) };
+}
+
+function validatePreparedPayload(text, expectedCount) {
+  const parsed = JSON.parse(text);
+  if (!parsed || !Array.isArray(parsed.words)) {
+    throw new Error("待发布词库不是预期的words数组结构");
+  }
+  if (parsed.count !== expectedCount || parsed.words.length !== expectedCount) {
+    throw new Error("待发布词库数量校验失败");
+  }
+  if (parsed.lexiconHash !== computeLexiconHash(parsed.words)) {
+    throw new Error("待发布词库lexiconHash校验失败");
+  }
+  if (parsed.integrityHash !== computeIntegrityHash(parsed.words)) {
+    throw new Error("待发布词库integrityHash校验失败");
+  }
+  return parsed;
+}
+
+export function publishLexiconPair({
+  cacheFile,
+  publicFile,
+  payloadText,
+  expectedCount,
+  fsApi = DEFAULT_FILE_SYSTEM,
+  transactionId = randomUUID()
+}) {
+  const cacheTemp = path.join(
+    path.dirname(cacheFile),
+    `.${path.basename(cacheFile)}.${transactionId}.tmp`
+  );
+  const publicTemp = path.join(
+    path.dirname(publicFile),
+    `.${path.basename(publicFile)}.${transactionId}.tmp`
+  );
+  const cacheRollback = `${cacheFile}.${transactionId}.rollback`;
+  const publicRollback = `${publicFile}.${transactionId}.rollback`;
+  const temporaryPaths = [cacheTemp, publicTemp];
+  const rollbackPaths = [cacheRollback, publicRollback];
+  let cacheBackedUp = false;
+  let publicBackedUp = false;
+  let cacheInstalled = false;
+  let publicInstalled = false;
+  let committed = false;
+
+  const removeIfPresent = (filePath) => {
+    if (fsApi.existsSync(filePath)) fsApi.rmSync(filePath, { force: true });
+  };
+
+  try {
+    fsApi.mkdirSync(path.dirname(cacheFile), { recursive: true });
+    fsApi.mkdirSync(path.dirname(publicFile), { recursive: true });
+    fsApi.writeFileSync(cacheTemp, payloadText, "utf8");
+    fsApi.writeFileSync(publicTemp, payloadText, "utf8");
+
+    if (!fsApi.existsSync(cacheTemp) || !fsApi.existsSync(publicTemp)) {
+      throw new Error("待发布临时文件缺失");
+    }
+    const cachePrepared = fsApi.readFileSync(cacheTemp);
+    const publicPrepared = fsApi.readFileSync(publicTemp);
+    if (!Buffer.from(cachePrepared).equals(Buffer.from(publicPrepared))) {
+      throw new Error("两份待发布临时文件字节不一致");
+    }
+    const preparedText = Buffer.from(cachePrepared).toString("utf8");
+    validatePreparedPayload(preparedText, expectedCount);
+    if (sha256(preparedText) !== sha256(payloadText)) {
+      throw new Error("待发布临时文件hash与内存内容不一致");
+    }
+
+    if (fsApi.existsSync(cacheFile)) {
+      fsApi.renameSync(cacheFile, cacheRollback);
+      cacheBackedUp = true;
+    }
+    if (fsApi.existsSync(publicFile)) {
+      fsApi.renameSync(publicFile, publicRollback);
+      publicBackedUp = true;
+    }
+
+    fsApi.renameSync(cacheTemp, cacheFile);
+    cacheInstalled = true;
+    fsApi.renameSync(publicTemp, publicFile);
+    publicInstalled = true;
+
+    const finalCache = fsApi.readFileSync(cacheFile);
+    const finalPublic = fsApi.readFileSync(publicFile);
+    if (!Buffer.from(finalCache).equals(Buffer.from(finalPublic))) {
+      throw new Error("正式词库发布后字节不一致");
+    }
+    validatePreparedPayload(Buffer.from(finalCache).toString("utf8"), expectedCount);
+    committed = true;
+  } catch (error) {
+    const rollbackErrors = [];
+    for (const [installed, target] of [
+      [cacheInstalled, cacheFile],
+      [publicInstalled, publicFile]
+    ]) {
+      if (!installed) continue;
+      try {
+        removeIfPresent(target);
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError);
+      }
+    }
+    for (const [backedUp, rollbackFile, target] of [
+      [cacheBackedUp, cacheRollback, cacheFile],
+      [publicBackedUp, publicRollback, publicFile]
+    ]) {
+      if (!backedUp) continue;
+      try {
+        fsApi.renameSync(rollbackFile, target);
+      } catch (rollbackError) {
+        rollbackErrors.push(rollbackError);
+      }
+    }
+    if (rollbackErrors.length) {
+      error.rollbackErrors = rollbackErrors;
+      error.message = `${error.message}；回滚失败：${rollbackErrors.map((item) => item.message).join("；")}`;
+    }
+    throw error;
+  } finally {
+    for (const filePath of temporaryPaths) {
+      try {
+        removeIfPresent(filePath);
+      } catch {}
+    }
+    if (committed) {
+      for (const filePath of rollbackPaths) {
+        try {
+          removeIfPresent(filePath);
+        } catch {}
+      }
+    }
+  }
+
+  return {
+    ok: true,
+    fileHash: sha256(payloadText),
+    count: expectedCount
+  };
 }
 
 export async function POST(req) {
@@ -74,36 +248,23 @@ export async function POST(req) {
         current?.version ||
         LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES
     ).trim();
-    const lexiconHash = computeLexiconHash(words);
-
-    mkdirSync(cacheDir(), { recursive: true });
-
-    const payloadText = JSON.stringify(
-      {
-        version,
-        words,
-        count: words.length,
-        savedAt,
-        lexiconHash,
-        integrityHash: current?.integrityHash || ""
-      },
-      null,
-      2
-    );
-
-    writeFileSync(cachePath(), payloadText, "utf-8");
-
-    // Keep static public path aligned so browser /data/words.json fallback stays fresh.
     const publicWordsPath = path.join(process.cwd(), "public", "data", "words.json");
-    mkdirSync(path.dirname(publicWordsPath), { recursive: true });
-    writeFileSync(publicWordsPath, payloadText, "utf-8");
+    const prepared = buildExportCachePayload({ words, version, savedAt });
+    const published = publishLexiconPair({
+      cacheFile: cachePath(),
+      publicFile: publicWordsPath,
+      payloadText: prepared.text,
+      expectedCount: words.length
+    });
 
     return Response.json({
       ok: true,
       count: words.length,
       savedAt,
       version,
-      lexiconHash
+      lexiconHash: prepared.payload.lexiconHash,
+      integrityHash: prepared.payload.integrityHash,
+      fileHash: published.fileHash
     });
   } catch (error) {
     return Response.json(

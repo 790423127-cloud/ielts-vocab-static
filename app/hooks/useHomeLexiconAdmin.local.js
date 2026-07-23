@@ -157,6 +157,9 @@ export function createLocalOps(ctx) {
 
   function applyLocalResult(result, message, actionName = message) {
     const nextWords = Array.isArray(result?.words) ? result.words : [];
+    const studyOrderChanged = words.length !== nextWords.length || words.some((word, wordIndex) => (
+      normalizeWord(word?.word) !== normalizeWord(nextWords[wordIndex]?.word)
+    ));
     const changed = words.length !== nextWords.length || words.some((word, wordIndex) => (
       JSON.stringify(word) !== JSON.stringify(nextWords[wordIndex])
     ));
@@ -169,7 +172,7 @@ export function createLocalOps(ctx) {
 
     recordLocalChange(actionName, words, nextWords);
     setWords(nextWords);
-    resetWordStudySessionState();
+    if (studyOrderChanged) resetWordStudySessionState();
     persistWordsImmediately(nextWords);
     setDuplicateInfo(message);
     setToast(`${message}｜已生成修改记录，可撤回`);
@@ -456,7 +459,6 @@ export function createLocalOps(ctx) {
         delete copy.needsAiRepair;
         delete copy.localWrongReasons;
         delete copy.localWrongCheckedAt;
-        delete copy.aiWrongRepairedAt;
 
         return copy;
       });
@@ -502,7 +504,6 @@ export function createLocalOps(ctx) {
         delete cleanWord.needsAiRepair;
         delete cleanWord.localWrongReasons;
         delete cleanWord.localWrongCheckedAt;
-        delete cleanWord.aiWrongRepairedAt;
 
         const reasons = getLocalWrongReasons(cleanWord);
 

@@ -69,7 +69,17 @@ export function hasUsefulArray(value) {
   return Array.isArray(value) && value.some((item) => {
     if (typeof item === "string") return hasUsefulScalar(item);
     if (!item || typeof item !== "object") return false;
-    return hasUsefulScalar(item.phrase || item.text || item.collocation || item.word || item.chinese || item.meaning || item.translation);
+    return hasUsefulScalar(
+      item.phrase ||
+      item.text ||
+      item.collocation ||
+      item.word ||
+      item.chinese ||
+      item.meaning ||
+      item.meaningZh ||
+      item.meaning_zh ||
+      item.translation
+    );
   });
 }
 

@@ -1,4 +1,4 @@
-export const AI_CONTENT_PROFILE_VERSION = "main-meaning-four-sections-v2";
+export const AI_CONTENT_PROFILE_VERSION = "main-meaning-detailed-senses-v3";
 export const AI_COLLOCATION_LIMIT = 4;
 
 export const AI_COLLOCATION_TRANSPORT_FIELDS = Object.freeze({
@@ -189,14 +189,31 @@ export function normalizeOtherMeanings(value, mainMeaning = "") {
   const seen = new Set();
   const result = [];
   for (const item of raw) {
-    const meaning = text(typeof item === "string" ? item : item?.meaningZh || item?.meaning || item?.chinese);
+    const meaning = text(typeof item === "string" ? item : item?.meaningZh || item?.meaning_zh || item?.meaning || item?.chinese);
     const meaningKey = key(meaning);
     if (!meaningKey || meaningKey === mainMeaningKey || mainParts.has(meaningKey) || seen.has(meaningKey)) continue;
     seen.add(meaningKey);
-    result.push(meaning);
+    result.push({
+      pos: text(typeof item === "string" ? "" : item?.pos || item?.partOfSpeech || item?.part_of_speech),
+      meaningZh: meaning,
+      definitionEn: text(typeof item === "string" ? "" : item?.definitionEn || item?.definition_en || item?.definition || item?.english_definition),
+      example: text(typeof item === "string" ? "" : item?.example || item?.ielts_example),
+      exampleCn: text(typeof item === "string" ? "" : item?.exampleCn || item?.example_chinese || item?.translation)
+    });
     if (result.length >= 5) break;
   }
   return result;
+}
+
+export function isDetailedOtherMeaning(value) {
+  return Boolean(
+    value &&
+    typeof value === "object" &&
+    text(value.meaningZh) &&
+    text(value.definitionEn) &&
+    text(value.example) &&
+    text(value.exampleCn)
+  );
 }
 
 export function normalizeAiForms(value, headword = "") {
@@ -302,6 +319,7 @@ export function isAiCoreContentComplete(word) {
     word?.meaningDetailZh &&
     word?.definition &&
     Array.isArray(word?.otherMeanings) &&
+    word.otherMeanings.every(isDetailedOtherMeaning) &&
     word?.example &&
     word?.exampleCn &&
     Array.isArray(word?.forms) &&

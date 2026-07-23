@@ -33,10 +33,11 @@ test("page word storage wrappers are safe before browser hydration", () => {
   assert.doesNotThrow(() => safeLocalStorageRemove("test-key"));
 });
 
-test("home page imports the runtime quality helpers used after vocab hydration", () => {
+test("home page imports the unified quality queue used after vocab hydration", () => {
   const helperImport = pageSource.match(/import\s*\{([\s\S]*?)\}\s*from\s*["']\.\/lib\/vocab\/page-word-helpers\.mjs["']/)?.[1] || "";
-  assert.match(helperImport, /\bisMissingAiFields\b/);
-  assert.match(helperImport, /\bisMissingClassification\b/);
+  assert.match(helperImport, /\bhasHeadwordRepair\b/);
+  assert.match(helperImport, /\bisLikelyWrongAiWord\b/);
+  assert.match(pageSource, /\bgetUnifiedQualityQueue\b/);
 });
 
 function wordMatchesFilter(word, filter) {

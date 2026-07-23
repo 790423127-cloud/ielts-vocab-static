@@ -4,6 +4,7 @@ import { getMeaningDisplay } from "../meaning-display.mjs";
 
 test("meaning display hides copied, generic and placeholder details", () => {
   assert.equal(getMeaningDisplay({ word: "cat", meaning: "猫", meaningDetailedZh: "猫" }).detail, "");
+  assert.equal(getMeaningDisplay({ word: "cat", meaning: "猫", meaningDetailZh: "“cat”常见含义为：猫。" }).detail, "");
   assert.equal(getMeaningDisplay({ word: "cat", meaning: "猫", meaningDetailedZh: "待完善" }).detail, "");
   assert.equal(getMeaningDisplay({ word: "cat", meaning: "猫", meaningDetailedZh: "“cat”常见含义为：猫" }).detail, "");
 });

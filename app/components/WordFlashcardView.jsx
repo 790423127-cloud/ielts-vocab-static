@@ -99,6 +99,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     audioCacheStats,
     audioStats,
     batchInfo,
+    aiRunState,
     duplicateInfo,
     adminActions
   } = admin;
@@ -229,7 +230,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
       <div className="menu-panel wide">
         <h2 className="panel-title">词库管理</h2>
         <p className="panel-desc">
-          可刷 {wordLibraryStats.total} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 待学习 {wordLibraryStats.pending} · 不熟 {wordLibraryStats.unfamiliar} · 已认识 {familiarCount} · 待补全 {missingCount} · 待归纳 {classifyMissingCount} · 音频 {audioStats.has}/{audioStats.total}
+          可刷 {wordLibraryStats.total} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 待学习 {wordLibraryStats.pending} · 不熟 {wordLibraryStats.unfamiliar} · 已认识 {familiarCount} · 资料缺失 {missingCount} · 仅缺分类 {classifyMissingCount} · 音频 {audioStats.state === "error" ? "核对失败" : audioStats.state !== "ready" ? "核对中" : `${audioStats.has}/${audioStats.total}`}
         </p>
         <div className="current-filter">当前学习范围：{getFilterName(filter)} · {studyWords.length} 个词</div>
 
@@ -249,13 +250,22 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
         </div>
 
         <div className="filter-group">
-          <div className="filter-title">状态</div>
+          <div className="filter-title">学习状态</div>
           <div className="filter-chips">
             <button type="button" className={`chip-btn ${filter.type === "all" ? "active" : ""}`} onClick={() => setLibraryFilter("all", "")}>全部待学</button>
             <button type="button" className={`chip-btn ${filter.type === "everything" ? "active" : ""}`} onClick={() => setLibraryFilter("everything", "")}>全部可刷词</button>
             <button type="button" className={`chip-btn ${filter.type === "custom" && filter.value === "life-work" ? "active" : ""}`} onClick={() => setLibraryFilter("custom", "life-work")}>生活/工作高频</button>
-            {["模糊", "不熟", "熟悉", "收藏", "待补全", "待归纳"].map((value) => (
+            {["模糊", "不熟", "熟悉", "收藏"].map((value) => (
               <button type="button" key={value} className={`chip-btn ${filter.type === "status" && filter.value === value ? "active" : ""}`} onClick={() => setLibraryFilter("status", value)}>{value}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="filter-group">
+          <div className="filter-title">资料质量</div>
+          <div className="filter-chips">
+            {[["待补全", "资料缺失"], ["待归纳", "仅缺分类"]].map(([value, label]) => (
+              <button type="button" key={value} className={`chip-btn ${filter.type === "status" && filter.value === value ? "active" : ""}`} onClick={() => setLibraryFilter("status", value)}>{label}</button>
             ))}
           </div>
         </div>
@@ -368,6 +378,8 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                   audioCacheStats={audioCacheStats}
                   audioStats={audioStats}
                   batchInfo={batchInfo}
+                  aiRunState={aiRunState}
+                  pendingAiCount={missingCount}
                   duplicateInfo={duplicateInfo}
                   isExternalIdictationItem={isExternalIdictationItem}
                   actions={adminActions}

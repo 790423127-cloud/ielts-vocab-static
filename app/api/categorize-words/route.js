@@ -31,12 +31,13 @@ export async function POST(req) {
 
     const cleanWords = words
       .map((item) => ({
+        inputId: String(item?.inputId || "").trim(),
         word: String(item?.word || "").trim(),
         pos: String(item?.pos || "").trim(),
         meaning: String(item?.meaning || "").trim(),
         example: String(item?.example || "").trim()
       }))
-      .filter((item) => item.word)
+      .filter((item) => item.inputId && item.word)
       .slice(0, 100);
 
     if (!cleanWords.length) {
@@ -79,6 +80,7 @@ export async function POST(req) {
 {
   "items": [
     {
+      "inputId": "原样返回输入中的inputId",
       "word": "string",
       "ielts_use": ["string"],
       "topics": ["string"],
@@ -136,11 +138,12 @@ ${JSON.stringify(cleanWords, null, 2)}
 
     const items = Array.isArray(data.items)
       ? data.items.map((item) => ({
+          inputId: String(item.inputId || "").trim(),
           word: item.word || "",
           ieltsUse: normalizeStringArray(item.ielts_use || item.ieltsUse),
           topics: normalizeStringArray(item.topics),
           difficulty: item.difficulty || "中级核心"
-        })).filter((item) => item.word)
+        })).filter((item) => item.inputId && item.word)
       : [];
 
     return Response.json({ items });

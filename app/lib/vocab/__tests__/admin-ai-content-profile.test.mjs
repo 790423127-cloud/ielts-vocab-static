@@ -21,7 +21,12 @@ function buildChargeEntry() {
     chinese_meaning: "收费；要价",
     main_meaning_detail_zh: "要求某人为商品或服务支付一定金额。",
     english_definition: "to ask someone to pay for a product or service",
-    other_meanings: ["收费；要价", "指控；控告", "给电池充电", "指控；控告"],
+    other_meanings: [
+      { meaning_zh: "收费；要价", definition_en: "duplicate main meaning", example: "x", example_chinese: "x" },
+      { part_of_speech: "verb", meaning_zh: "指控；控告", definition_en: "to accuse someone of a crime", example: "Police charged him with theft.", example_chinese: "警方指控他盗窃。" },
+      { part_of_speech: "verb", meaning_zh: "给电池充电", definition_en: "to put electricity into a battery", example: "Charge the battery before travel.", example_chinese: "出行前给电池充电。" },
+      { part_of_speech: "verb", meaning_zh: "指控；控告", definition_en: "duplicate", example: "x", example_chinese: "x" }
+    ],
     ielts_example: "The hotel charged us for breakfast.",
     example_chinese: "酒店向我们收取了早餐费。",
     forms: [
@@ -60,7 +65,8 @@ test("normalizes one main meaning, concise other meanings, one example pair, and
 
   assert.equal(entry.meaning, "收费；要价");
   assert.equal(entry.meaningDetailZh, "要求某人为商品或服务支付一定金额。");
-  assert.deepEqual(entry.otherMeanings, ["指控；控告", "给电池充电"]);
+  assert.deepEqual(entry.otherMeanings.map(({ meaningZh }) => meaningZh), ["指控；控告", "给电池充电"]);
+  assert.equal(entry.otherMeanings.every(({ definitionEn, example, exampleCn }) => definitionEn && example && exampleCn), true);
   assert.equal(entry.example, "The hotel charged us for breakfast.");
   assert.equal(entry.exampleCn, "酒店向我们收取了早餐费。");
   assert.deepEqual(entry.forms.map(({ word, type }) => ({ word, type })), [
@@ -159,7 +165,7 @@ test("word family keeps only direct normalized unique members", () => {
 
 test("other meanings remove the main meaning and repeated variants", () => {
   assert.deepEqual(
-    normalizeOtherMeanings(["费用", "指控", "指控", { meaningZh: "充电" }], "费用"),
+    normalizeOtherMeanings(["费用", "指控", "指控", { meaningZh: "充电" }], "费用").map(({ meaningZh }) => meaningZh),
     ["指控", "充电"]
   );
 });

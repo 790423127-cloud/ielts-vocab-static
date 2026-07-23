@@ -22,18 +22,74 @@ import {
   buildWrongRepairPlan
 } from "../lib/vocab/admin-ai-batch-plan.mjs";
 import { runAdminAiBatch } from "../lib/vocab/admin-ai-batch-runner.mjs";
+import {
+  CONTINUOUS_AI_POLICY,
+  runContinuousAiCompletion
+} from "../lib/vocab/admin-ai-continuous-runner.mjs";
+import {
+  applyAiResultByIdentity,
+  captureWordWriteTarget,
+  resolveWordWriteTarget
+} from "../lib/vocab/ai-write-merge.mjs";
 
-function retryableBatchError(message) {
+function targetForWord(word) {
+  return captureWordWriteTarget(word);
+}
+
+function requestItemForWord(word) {
+  const target = targetForWord(word);
+  return { inputId: target.inputId, word: target.requestedWord };
+}
+
+function indexAiResponses(items = []) {
+  const byInputId = new Map();
+  for (const item of Array.isArray(items) ? items : []) {
+    const inputId = String(item?.inputId || "");
+    if (!inputId) continue;
+    if (byInputId.has(inputId)) {
+      const error = new Error(`AI响应包含重复inputId：${inputId}`);
+      error.code = "AI_INPUT_ID_CONFLICT";
+      throw error;
+    }
+    byInputId.set(inputId, item);
+  }
+  return byInputId;
+}
+
+function applyIdentityUpdate(previousWords, target, response, buildCandidate, options = {}) {
+  return applyAiResultByIdentity(
+    previousWords,
+    target,
+    response,
+    buildCandidate,
+    options
+  ).words;
+}
+
+function retryableBatchError(message, status = 0, retryAfter = "") {
   const error = new Error(message);
-  error.retryable = true;
+  error.status = Number(status) || 0;
+  error.retryable = [429, 503, 504].includes(error.status);
+  const retryAfterSeconds = Number(retryAfter);
+  error.retryAfterMs = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+    ? retryAfterSeconds * 1000
+    : 0;
   return error;
 }
+
+const fallbackAiRunControlRef = {
+  current: {
+    controller: null,
+    running: false
+  }
+};
 
 export function createAiOps(ctx) {
   const {
     words, setWords, index,
     setLoading, setToast, setBatchInfo, setDuplicateInfo,
-    persistWordsImmediately, resetWordStudySessionState,
+    setAiRunState, aiRunControlRef,
+    resetWordStudySessionState,
     prefillWordAudio, recordLocalChange
   } = ctx;
 
@@ -51,9 +107,16 @@ export function createAiOps(ctx) {
 
       let failedWords = [];
       const cleanResults = new Map();
+      const stableTargets = new Map(targets.map((target) => {
+        const writeTarget = targetForWord(words[target.i]);
+        return [target.id, { ...target, writeTarget }];
+      }));
+      const stableChunks = chunks.map((chunk) => (
+        chunk.map((target) => stableTargets.get(target.id))
+      ));
 
       await runAdminAiBatch({
-        chunks,
+        chunks: stableChunks,
         workerCount: concurrency,
         maxRetries: 1,
         shouldRetry: ({ error }) => error?.retryable === true,
@@ -68,13 +131,16 @@ export function createAiOps(ctx) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              items: chunk.map(({ id, text }) => ({ id, text }))
+              items: chunk.map(({ writeTarget, text }) => ({
+                id: writeTarget.inputId,
+                text
+              }))
             })
           });
           const data = await res.json();
 
           if (!res.ok) {
-            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
+            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`, res.status, res.headers.get("retry-after"));
           }
 
           (data.items || []).forEach((entry) => {
@@ -96,47 +162,42 @@ export function createAiOps(ctx) {
       let mergedCount = 0;
 
       setWords((prev) => {
-        const cleaned = prev
-          .map((word, i) => {
-            const entry = cleanResults.get(String(i));
-            if (!entry) return word;
+        const cleaned = [...prev];
 
-            const clean = String(entry.clean || "").trim();
+        for (const target of stableTargets.values()) {
+          const entry = cleanResults.get(target.writeTarget.inputId);
+          if (!entry) continue;
+          const clean = String(entry.clean || "").trim();
+          const resolved = resolveWordWriteTarget(cleaned, target.writeTarget);
 
-            if (!clean) {
-              return null;
-            }
+          if (!clean) {
+            cleaned.splice(resolved.index, 1);
+            continue;
+          }
 
-            cleanedCount += 1;
-
-            const changed = normalizeWord(clean) !== normalizeWord(word.word);
-
-            if (!changed) {
-              return word;
-            }
-
-            changedCount += 1;
-
-            return {
-              ...word,
-              word: clean,
-              phonetic: "",
-              pos: entry.type === "phrase" ? "phrase" : "",
-              meaning: "",
-              definition: "",
-              example: "",
-              exampleCn: "",
-              collocations: [],
-              phraseCollocations: [],
-              ieltsUse: [],
-              topics: [],
-              difficulty: "",
-              category: entry.type === "phrase" ? "AI深度整理词表 · 短语" : "AI深度整理词表 · 单词",
-              status: word.status || "",
-              favorite: Boolean(word.favorite)
-            };
-          })
-          .filter(Boolean);
+          cleanedCount += 1;
+          const changed = normalizeWord(clean) !== normalizeWord(resolved.word.word);
+          if (!changed) continue;
+          changedCount += 1;
+          cleaned[resolved.index] = {
+            ...resolved.word,
+            word: clean,
+            phonetic: "",
+            pos: entry.type === "phrase" ? "phrase" : "",
+            meaning: "",
+            definition: "",
+            example: "",
+            exampleCn: "",
+            collocations: [],
+            phraseCollocations: [],
+            ieltsUse: [],
+            topics: [],
+            difficulty: "",
+            category: entry.type === "phrase" ? "AI深度整理词表 · 短语" : "AI深度整理词表 · 单词",
+            status: resolved.word.status || "",
+            favorite: Boolean(resolved.word.favorite)
+          };
+        }
 
         const map = new Map();
 
@@ -174,6 +235,7 @@ export function createAiOps(ctx) {
   async function generateForIndex(targetIndex, options = {}) {
     const target = words[targetIndex];
     if (!target?.word) return null;
+    const writeTarget = targetForWord(target);
 
     const force = !!options.force;
 
@@ -185,7 +247,11 @@ export function createAiOps(ctx) {
     const res = await fetch("/api/generate-word", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ word: target.word, force })
+      body: JSON.stringify({
+        word: target.word,
+        force,
+        inputId: writeTarget.inputId
+      })
     });
 
     const data = await res.json();
@@ -194,20 +260,20 @@ export function createAiOps(ctx) {
       throw new Error(data?.error || data?.detail || "AI 生成失败");
     }
 
-    setWords((prev) => {
-      const next = [...prev];
-      next[targetIndex] = {
-        ...next[targetIndex],
+    setWords((prev) => applyIdentityUpdate(
+      prev,
+      writeTarget,
+      data,
+      (existing) => ({
         ...data,
         ieltsUse: normalizeStringArray(data.ieltsUse || data.ielts_use),
         topics: normalizeStringArray(data.topics),
-        difficulty: data.difficulty || next[targetIndex].difficulty || "",
+        difficulty: data.difficulty || existing.difficulty || "",
         collocations: normalizePhraseItems(data.collocations),
         phraseCollocations: normalizePhraseItems(data.phraseCollocations),
-        status: next[targetIndex].status || ""
-      };
-      return next;
-    });
+        status: existing.status || ""
+      })
+    ));
 
     return data;
   }
@@ -240,6 +306,7 @@ export function createAiOps(ctx) {
       setToast("没有当前单词");
       return;
     }
+    const writeTarget = targetForWord(currentWord);
 
     try {
       setLoading(true);
@@ -251,7 +318,8 @@ export function createAiOps(ctx) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          word: currentWord.word
+          word: currentWord.word,
+          inputId: writeTarget.inputId
         })
       });
 
@@ -272,17 +340,22 @@ export function createAiOps(ctx) {
         return;
       }
 
-      const nextWords = [...words];
-      nextWords[index] = {
-        ...currentWord,
-        word: repairedWord,
-        aiSymbolRepairedAt: Date.now(),
-        aiSymbolRepairReason: data.reason || ""
-      };
-
-      recordLocalChange("AI修复当前单词符号", words, nextWords);
-      setWords(nextWords);
-      persistWordsImmediately(nextWords);
+      setWords((prev) => {
+        const nextWords = applyIdentityUpdate(
+          prev,
+          writeTarget,
+          { ...data, word: repairedWord },
+          (existing) => ({
+            ...existing,
+            word: repairedWord,
+            aiSymbolRepairedAt: Date.now(),
+            aiSymbolRepairReason: data.reason || ""
+          }),
+          { allowHeadwordChange: true }
+        );
+        recordLocalChange("AI修复当前单词符号", prev, nextWords);
+        return nextWords;
+      });
 
       setToast(`AI已修复当前单词符号：${currentWord.word} → ${repairedWord}${data.reason ? "｜" + data.reason : ""}`);
     } catch (error) {
@@ -320,37 +393,33 @@ export function createAiOps(ctx) {
       let completedMissing = 0;
 
       function applyGeneratedItems(chunk, items) {
-        const itemMap = new Map();
-
-        (items || []).forEach((entry) => {
-          itemMap.set(normalizeWord(entry.word), entry);
-        });
+        const itemMap = indexAiResponses(items);
 
         setWords((prev) => {
-          const next = [...prev];
+          let next = prev;
 
-          chunk.items.forEach(({ i, wrong, missing }) => {
-            const entry = itemMap.get(normalizeWord(next[i].word));
+          chunk.items.forEach(({ w, wrong, missing }) => {
+            const writeTarget = targetForWord(w);
+            const entry = itemMap.get(writeTarget.inputId);
 
             if (!entry) {
-              failedWords.push(next[i].word);
+              failedWords.push(w.word);
               return;
             }
 
             if (wrong) repairedWords += 1;
             if (missing) completedMissing += 1;
 
-            next[i] = {
-              ...next[i],
+            next = applyIdentityUpdate(next, writeTarget, entry, (existing) => ({
               ...entry,
               ieltsUse: normalizeStringArray(entry.ieltsUse || entry.ielts_use),
               topics: normalizeStringArray(entry.topics),
-              difficulty: entry.difficulty || next[i].difficulty || "",
+              difficulty: entry.difficulty || existing.difficulty || "",
               collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
               phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations),
-              status: next[i].status || "",
-              aiWrongRepairedAt: wrong ? Date.now() : next[i].aiWrongRepairedAt
-            };
+              status: existing.status || "",
+              aiWrongRepairedAt: wrong ? Date.now() : existing.aiWrongRepairedAt
+            }));
           });
 
           return next;
@@ -376,14 +445,14 @@ export function createAiOps(ctx) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              words: wordList,
+              items: chunk.items.map(({ w }) => requestItemForWord(w)),
               force: chunk.force
             })
           });
           const data = await res.json();
 
           if (!res.ok) {
-            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
+            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`, res.status, res.headers.get("retry-after"));
           }
 
           if (!Array.isArray(data.items) || !data.items.length) {
@@ -462,30 +531,29 @@ export function createAiOps(ctx) {
 
       function applyEntry(target, entry) {
         let applied = false;
+        const writeTarget = targetForWord(target.w);
 
         setWords((prev) => {
-          const next = [...prev];
-          const beforeWord = String(next[target.i]?.word || target.w.word || "").trim();
+          if (!entry) return prev;
+          const next = applyIdentityUpdate(prev, writeTarget, entry, (existing) => {
+            const beforeWord = String(existing.word || target.w.word || "").trim();
+            const normalized = normalizeCompletionEntry(entry, target.w.word, beforeWord);
+            const afterWord = String(normalized.word || beforeWord).trim();
 
-          if (!entry) return next;
+            if (afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord)) {
+              repairedWordCount += 1;
+            }
 
-          const normalized = normalizeCompletionEntry(entry, target.w.word, beforeWord);
-          const afterWord = String(normalized.word || beforeWord).trim();
-
-          next[target.i] = {
-            ...next[target.i],
-            ...normalized,
-            word: afterWord || beforeWord,
-            difficulty: normalized.difficulty || next[target.i].difficulty || "",
-            status: next[target.i].status || "",
-            aiOneByOneCompletedAt: Date.now(),
-            aiOneByOneWordRepairedAt: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? Date.now() : next[target.i].aiOneByOneWordRepairedAt,
-            originalBrokenWord: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? (next[target.i].originalBrokenWord || beforeWord) : next[target.i].originalBrokenWord
-          };
-
-          if (afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord)) {
-            repairedWordCount += 1;
-          }
+            return {
+              ...normalized,
+              word: afterWord || beforeWord,
+              difficulty: normalized.difficulty || existing.difficulty || "",
+              status: existing.status || "",
+              aiOneByOneCompletedAt: Date.now(),
+              aiOneByOneWordRepairedAt: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? Date.now() : existing.aiOneByOneWordRepairedAt,
+              originalBrokenWord: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? (existing.originalBrokenWord || beforeWord) : existing.originalBrokenWord
+            };
+          });
 
           applied = true;
           return next;
@@ -509,12 +577,14 @@ export function createAiOps(ctx) {
         );
 
         try {
+          const writeTarget = targetForWord(target.w);
           const res = await fetch("/api/generate-word", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               word: target.w.word,
-              force: target.wrong || target.truncated
+              force: target.wrong || target.truncated,
+              inputId: writeTarget.inputId
             })
           });
 
@@ -592,49 +662,40 @@ export function createAiOps(ctx) {
       }
 
       function applyEntries(chunk, items) {
-        const list = Array.isArray(items) ? items : [];
-        const usedIndexes = new Set();
+        const responseMap = indexAiResponses(items);
         const missing = [];
 
         setWords((prev) => {
-          const next = [...prev];
+          let next = prev;
 
-          chunk.forEach(({ i, w }, orderIndex) => {
-            const current = next[i]?.word || w.word;
-            let entryIndex = list.findIndex((entry, idx) => !usedIndexes.has(idx) && normalizeWord(entry.word) === normalizeWord(current));
+          chunk.forEach(({ w }) => {
+            const writeTarget = targetForWord(w);
+            const entry = responseMap.get(writeTarget.inputId);
 
-            // 如果 AI 把 injur 返回成 injure，按同批次顺序兜底匹配。
-            if (entryIndex < 0 && list[orderIndex] && !usedIndexes.has(orderIndex)) {
-              entryIndex = orderIndex;
-            }
-
-            if (entryIndex < 0) {
-              missing.push({ i, w, reason: "AI没有返回可匹配词条" });
+            if (!entry) {
+              missing.push({ w, reason: "AI没有返回可匹配词条" });
               return;
             }
 
-            const entry = list[entryIndex];
-            usedIndexes.add(entryIndex);
+            next = applyIdentityUpdate(next, writeTarget, entry, (existing) => {
+              const beforeWord = String(existing.word || w.word || "").trim();
+              const normalized = normalizeCompletionEntry(entry, w.word, beforeWord);
+              const afterWord = String(normalized.word || beforeWord).trim();
 
-            const beforeWord = String(current || "").trim();
-            const normalized = normalizeCompletionEntry(entry, w.word, current);
-            const afterWord = String(normalized.word || beforeWord).trim();
+              if (afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord)) {
+                repairedWordCount += 1;
+              }
 
-            next[i] = {
-              ...next[i],
-              ...normalized,
-              word: afterWord || beforeWord,
-              difficulty: normalized.difficulty || next[i].difficulty || "",
-              status: next[i].status || "",
-              aiSlowCompletedAt: Date.now(),
-              aiWordAutoRepairedAt: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? Date.now() : next[i].aiWordAutoRepairedAt,
-              originalBrokenWord: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? (next[i].originalBrokenWord || beforeWord) : next[i].originalBrokenWord
-            };
-
-            if (afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord)) {
-              repairedWordCount += 1;
-            }
-
+              return {
+                ...normalized,
+                word: afterWord || beforeWord,
+                difficulty: normalized.difficulty || existing.difficulty || "",
+                status: existing.status || "",
+                aiSlowCompletedAt: Date.now(),
+                aiWordAutoRepairedAt: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? Date.now() : existing.aiWordAutoRepairedAt,
+                originalBrokenWord: afterWord && normalizeWord(afterWord) !== normalizeWord(beforeWord) ? (existing.originalBrokenWord || beforeWord) : existing.originalBrokenWord
+              };
+            });
             filled += 1;
           });
 
@@ -646,12 +707,14 @@ export function createAiOps(ctx) {
 
       async function completeSingle(item, reason = "") {
         try {
+          const writeTarget = targetForWord(item.w);
           const res = await fetch("/api/generate-word", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               word: item.w.word,
-              force: isLikelyWrongAiWord(item.w) || hasHeadwordRepair(item.w.word)
+              force: isLikelyWrongAiWord(item.w) || hasHeadwordRepair(item.w.word),
+              inputId: writeTarget.inputId
             })
           });
 
@@ -685,7 +748,7 @@ export function createAiOps(ctx) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              words: wordList,
+              items: chunk.map(({ w }) => requestItemForWord(w)),
               // 慢速模式允许修错字，所以开启 force。
               force: true
             })
@@ -764,37 +827,32 @@ export function createAiOps(ctx) {
       const failedDetails = [];
 
       function applyEntries(chunk, items) {
-        const itemMap = new Map();
-
-        (items || []).forEach((entry) => {
-          itemMap.set(normalizeWord(entry.word), entry);
-        });
+        const itemMap = indexAiResponses(items);
 
         const missing = [];
 
         setWords((prev) => {
-          const next = [...prev];
+          let next = prev;
 
-          chunk.forEach(({ i, w }) => {
-            const current = next[i]?.word || w.word;
-            const entry = itemMap.get(normalizeWord(current));
+          chunk.forEach(({ w }) => {
+            const writeTarget = targetForWord(w);
+            const entry = itemMap.get(writeTarget.inputId);
 
             if (!entry) {
-              missing.push({ i, w });
+              missing.push({ w });
               return;
             }
 
-            next[i] = {
-              ...next[i],
+            next = applyIdentityUpdate(next, writeTarget, entry, (existing) => ({
               ...entry,
               ieltsUse: normalizeStringArray(entry.ieltsUse || entry.ielts_use),
               topics: normalizeStringArray(entry.topics),
-              difficulty: entry.difficulty || next[i].difficulty || "",
+              difficulty: entry.difficulty || existing.difficulty || "",
               collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
               phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations),
-              status: next[i].status || "",
+              status: existing.status || "",
               aiWrongRepairedAt: Date.now()
-            };
+            }));
 
             repaired += 1;
           });
@@ -807,12 +865,14 @@ export function createAiOps(ctx) {
 
       async function repairSingle(item, reason = "") {
         try {
+          const writeTarget = targetForWord(item.w);
           const res = await fetch("/api/generate-word", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               word: item.w.word,
-              force: true
+              force: true,
+              inputId: writeTarget.inputId
             })
           });
 
@@ -842,7 +902,7 @@ export function createAiOps(ctx) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              words: wordList,
+              items: chunk.map(({ w }) => requestItemForWord(w)),
               force: true
             })
           });
@@ -909,138 +969,298 @@ export function createAiOps(ctx) {
     }
   }
 
+  function countFastCompletionTargets(sourceWords, excludedWordKeys = new Set()) {
+    return buildFastCompletionPlan(sourceWords, {
+      maxTargets: Infinity,
+      excludeWordKeys: excludedWordKeys
+    }).targets.length;
+  }
+
+  async function executeFastCompletionRound(sourceWords, options = {}) {
+    const {
+      excludedWordKeys = new Set(),
+      roundNumber = 1,
+      signal
+    } = options;
+    const { targets, chunks, workerCount: concurrency } = buildFastCompletionPlan(sourceWords, {
+      excludeWordKeys: excludedWordKeys
+    });
+
+    if (!targets.length) {
+      return {
+        words: sourceWords,
+        total: 0,
+        filled: 0,
+        failed: 0,
+        failedWordKeys: [],
+        aborted: Boolean(signal?.aborted)
+      };
+    }
+
+    const generatedByInputId = new Map();
+    const failedWordKeys = new Set();
+    const failureDetails = [];
+    let attemptedItems = 0;
+
+    function markChunkFailed(chunk) {
+      for (const { w } of chunk) {
+        const key = normalizeWord(w.word);
+        if (key) failedWordKeys.add(key);
+      }
+    }
+
+    function collectGeneratedItems(chunk, items) {
+      const entriesByInputId = indexAiResponses(items);
+
+      for (const target of chunk) {
+        const writeTarget = targetForWord(target.w);
+        const key = normalizeWord(target.w.word);
+        const entry = entriesByInputId.get(writeTarget.inputId);
+        if (entry) generatedByInputId.set(writeTarget.inputId, entry);
+        else if (key) failedWordKeys.add(key);
+      }
+    }
+
+    async function runChunks(batchChunks, workerCount) {
+      if (!batchChunks.length || signal?.aborted) return;
+      const result = await runAdminAiBatch({
+        chunks: batchChunks,
+        workerCount,
+        signal,
+        maxRetries: 1,
+        allowAutomaticRetry: true,
+        shouldRetry: ({ error }) => error?.retryable === true,
+        retryDelayMs: ({ error, workerId }) => error?.retryAfterMs || (1200 + workerId * 250),
+        onChunkStart({ chunk, workerId, completedItems }) {
+          const wordList = chunk.map(({ w }) => w.word);
+          const preview = wordList.slice(0, 5).join(", ");
+          setBatchInfo(
+            `AI补全第 ${roundNumber} 轮：${attemptedItems + completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${wordList.length > 5 ? "..." : ""}`
+          );
+        },
+        async executeChunk({ chunk }) {
+          const res = await fetch("/api/generate-words", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              items: chunk.map(({ w }) => requestItemForWord(w))
+            }),
+            signal
+          });
+          const data = await res.json().catch(() => null);
+
+          if (!res.ok) {
+            throw retryableBatchError(
+              data?.detail || data?.error || `AI批次接口返回 HTTP ${res.status}`,
+              res.status,
+              res.headers?.get?.("retry-after")
+            );
+          }
+
+          if (!Array.isArray(data?.items) || !data.items.length) {
+            const invalidReasons = (data?.stats?.invalidItems || [])
+              .map((item) => item?.reason)
+              .filter(Boolean)
+              .slice(0, 3)
+              .join("；");
+            throw retryableBatchError(
+              invalidReasons
+                ? `AI返回内容未通过校验：${invalidReasons}`
+                : "AI批次没有返回可用词条",
+              422
+            );
+          }
+
+          collectGeneratedItems(chunk, data.items);
+        },
+        onRetry({ workerId, error }) {
+          setBatchInfo(`第 ${workerId} 路失败，正在进行一次受控重试：${error.message}`);
+        },
+        onChunkError({ chunk, workerId, error }) {
+          if (signal?.aborted || error?.name === "AbortError") return;
+          markChunkFailed(chunk);
+          if (error?.message && !failureDetails.includes(error.message)) {
+            failureDetails.push(error.message);
+          }
+          setBatchInfo(`第 ${workerId} 路失败：${error.message}`);
+        },
+        onChunkSettled({ completedItems, remainingChunks }) {
+          setBatchInfo(
+            `AI补全第 ${roundNumber} 轮：${Math.min(attemptedItems + completedItems, targets.length)} / ${targets.length} ｜ 已返回 ${generatedByInputId.size} ｜ 失败 ${failedWordKeys.size} ｜ 剩余批次 ${remainingChunks}`
+          );
+        }
+      });
+      attemptedItems += result.completedItems;
+    }
+
+    // Probe one 10-word chunk before opening the five-worker batch. If the
+    // service, account, build, or response schema is broken, stop after this
+    // bounded probe instead of turning the same root cause into 100 failures.
+    await runChunks(chunks.slice(0, 1), 1);
+    if (generatedByInputId.size > 0 && !signal?.aborted) {
+      await runChunks(chunks.slice(1), concurrency);
+    }
+
+    let nextWords = sourceWords;
+    for (const { w } of targets) {
+      const writeTarget = targetForWord(w);
+      const entry = generatedByInputId.get(writeTarget.inputId);
+      if (!entry) continue;
+      nextWords = applyIdentityUpdate(nextWords, writeTarget, entry, (existing) => ({
+          ...entry,
+          word: existing.word,
+          ieltsUse: normalizeStringArray(entry.ieltsUse || entry.ielts_use),
+          topics: normalizeStringArray(entry.topics),
+          difficulty: entry.difficulty || existing.difficulty || "",
+          collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
+          phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations),
+          status: existing.status || ""
+        }));
+    }
+
+    return {
+      words: nextWords,
+      total: attemptedItems,
+      filled: generatedByInputId.size,
+      failed: failedWordKeys.size,
+      failedWordKeys: [...failedWordKeys],
+      error: failureDetails[0] || "",
+      aborted: Boolean(signal?.aborted)
+    };
+  }
+
   async function generateHundredByFiveBatch(options = {}) {
     const { keepLoading = false, quiet = false } = options;
 
     try {
       if (!keepLoading) setLoading(true);
       setBatchInfo("");
+      const result = await executeFastCompletionRound(words);
 
-      const { targets, chunks, workerCount: concurrency } = buildFastCompletionPlan(words);
-
-      if (!targets.length) {
+      if (!result.total) {
         if (!quiet) setToast("没有发现缺失资料，不需要调用 AI");
-        return { total: 0, failed: 0 };
+        return result;
       }
 
-      let failedWords = [];
+      setWords(result.words);
+      setBatchInfo("");
 
-      let filledWords = 0;
-
-      function normalizeCompletionEntry(entry, originalWord, existingWord) {
-        return {
-          ...entry,
-          // 快速补全模式不改 word。AI 返回 injure，也只拿资料，不把 injur 自动改掉。
-          word: existingWord || originalWord,
-          ieltsUse: normalizeStringArray(entry.ieltsUse || entry.ielts_use),
-          topics: normalizeStringArray(entry.topics),
-          difficulty: entry.difficulty || "",
-          collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
-          phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations)
-        };
+      if (!quiet) {
+        setToast(
+          `AI单轮补全完成：处理 ${result.total} 个，补全 ${result.filled} 个，失败 ${result.failed} 个`
+        );
       }
+      return result;
+    } catch (error) {
+      setToast(error.message || "AI单轮补全失败");
+      return { words, total: 0, failed: 0, filled: 0, failedWordKeys: [] };
+    } finally {
+      if (!keepLoading) setLoading(false);
+    }
+  }
 
-      function applyGeneratedItems(chunk, items) {
-        const list = Array.isArray(items) ? items : [];
-        const usedIndexes = new Set();
+  async function startContinuousAiCompletion() {
+    const controlRef = aiRunControlRef || fallbackAiRunControlRef;
+    if (controlRef.current?.running) {
+      setToast("连续补全已经在运行");
+      return;
+    }
 
-        setWords((prev) => {
-          const next = [...prev];
+    const initialRemaining = countFastCompletionTargets(words);
+    if (!initialRemaining) {
+      setToast("没有待补全资料，不需要调用 AI");
+      return;
+    }
 
-          chunk.forEach(({ i, w }, orderIndex) => {
-            const current = next[i]?.word || w.word;
-            let entryIndex = list.findIndex((entry, idx) => !usedIndexes.has(idx) && normalizeWord(entry.word) === normalizeWord(current));
+    const controller = new AbortController();
+    controlRef.current = { controller, running: true };
+    setLoading(true);
+    setAiRunState?.({
+      status: "running",
+      rounds: 0,
+      processed: 0,
+      filled: 0,
+      failed: 0,
+      remaining: initialRemaining,
+      initialRemaining
+    });
 
-            // 如果 AI 把 injur 返回成 injure，按同批次顺序兜底写回资料。
-            if (entryIndex < 0 && list[orderIndex] && !usedIndexes.has(orderIndex)) {
-              entryIndex = orderIndex;
-            }
-
-            if (entryIndex < 0) {
-              failedWords.push(current);
-              return;
-            }
-
-            const entry = list[entryIndex];
-            usedIndexes.add(entryIndex);
-            const normalized = normalizeCompletionEntry(entry, w.word, current);
-
-            next[i] = {
-              ...next[i],
-              ...normalized,
-              word: current,
-              difficulty: normalized.difficulty || next[i].difficulty || "",
-              status: next[i].status || ""
-            };
-
-            filledWords += 1;
+    try {
+      const result = await runContinuousAiCompletion({
+        initialWords: words,
+        signal: controller.signal,
+        maxRounds: Math.min(
+          CONTINUOUS_AI_POLICY.maxRounds,
+          Math.ceil(initialRemaining / 100) + 1
+        ),
+        countRemaining: (snapshot, excludedWordKeys) => (
+          countFastCompletionTargets(snapshot, excludedWordKeys)
+        ),
+        executeRound: async ({ words: snapshot, roundNumber, failedWordKeys, signal }) => {
+          const roundResult = await executeFastCompletionRound(snapshot, {
+            excludedWordKeys: failedWordKeys,
+            roundNumber,
+            signal
           });
-
-          return next;
-        });
-      }
-
-      await runAdminAiBatch({
-        chunks,
-        workerCount: concurrency,
-        maxRetries: 1,
-        shouldRetry: ({ error }) => error?.retryable === true,
-        onChunkStart({ chunk, workerId, completedItems }) {
-          const wordList = chunk.map(({ w }) => w.word);
-          const preview = wordList.slice(0, 5).join(", ");
-          setBatchInfo(
-            `AI快速补全缺失资料 100×5：${completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${wordList.length > 5 ? "..." : ""}`
-          );
+          if (roundResult.filled > 0) setWords(roundResult.words);
+          return roundResult;
         },
-        async executeChunk({ chunk, workerId }) {
-          const wordList = chunk.map(({ w }) => w.word);
-          const res = await fetch("/api/generate-words", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ words: wordList })
-          });
-          const data = await res.json();
-
-          if (!res.ok) {
-            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
-          }
-
-          if (!Array.isArray(data.items) || !data.items.length) {
-            failedWords.push(...wordList);
-            setBatchInfo(`第 ${workerId} 路没有返回有效词条`);
-            return;
-          }
-
-          applyGeneratedItems(chunk, data.items);
-        },
-        onRetry({ workerId, error }) {
-          setBatchInfo(`第 ${workerId} 路失败，正在重试：${error.message}`);
-        },
-        onChunkError({ chunk, workerId, error }) {
-          failedWords.push(...chunk.map(({ w }) => w.word));
-          if (error?.retryable) setBatchInfo(`第 ${workerId} 路失败：${error.message}`);
-        },
-        onChunkSettled({ completedItems, remainingChunks }) {
-          setBatchInfo(
-            `AI快速补全缺失资料 100×5：${Math.min(completedItems, targets.length)} / ${targets.length} ｜ 已补全 ${filledWords} 个 ｜ 失败 ${failedWords.length} 个 ｜ 剩余批次 ${remainingChunks}`
-          );
+        onProgress(progress) {
+          setAiRunState?.(progress);
         }
       });
 
+      const status = result.reason === "completed"
+        ? "completed"
+        : result.reason === "completed-with-failures"
+          ? "completed-with-failures"
+          : result.reason;
+      setAiRunState?.({ ...result, status });
       setBatchInfo("");
 
-      if (failedWords.length) {
-        if (!quiet) setToast(`AI快速补全完成：处理 ${targets.length} 个，补全 ${filledWords} 个，失败 ${failedWords.length} 个，可再次点击补剩余`);
+      if (result.reason === "stopped") {
+        setToast(`AI连续补全已停止：完成 ${result.filled} 个，剩余 ${result.remaining} 个`);
+      } else if (result.reason === "fused") {
+        setToast(`AI连续补全已自动熔断：完成 ${result.filled} 个，失败 ${result.failed} 个，请检查网络或 API 返回`);
+      } else if (result.reason === "limit") {
+        setToast(`AI连续补全达到安全轮次上限：完成 ${result.filled} 个，剩余 ${result.remaining} 个`);
       } else {
-        if (!quiet) setToast(`AI快速补全完成：处理 ${targets.length} 个，补全 ${filledWords} 个`);
+        setToast(`AI连续补全结束：${result.rounds} 轮，完成 ${result.filled} 个，失败 ${result.failed} 个`);
       }
 
-      return { total: targets.length, failed: failedWords.length, filled: filledWords };
+      return result;
     } catch (error) {
-      setToast(error.message || "AI快速补全缺失资料 100×5失败");
+      const stopped = controller.signal.aborted || error?.name === "AbortError";
+      setAiRunState?.((previous) => ({
+        ...(previous || {}),
+        status: stopped ? "stopped" : "failed",
+        error: stopped ? "" : (error.message || "连续补全失败")
+      }));
+      setToast(stopped ? "AI连续补全已停止" : (error.message || "AI连续补全失败"));
+      return undefined;
     } finally {
+      if (controlRef.current?.controller === controller) {
+        controlRef.current = { controller: null, running: false };
+      }
+      setBatchInfo("");
       setLoading(false);
     }
+  }
+
+  function stopContinuousAiCompletion() {
+    const controlRef = aiRunControlRef || fallbackAiRunControlRef;
+    const controller = controlRef.current?.controller;
+    if (!controller || controller.signal.aborted) {
+      setToast("当前没有正在运行的连续补全");
+      return;
+    }
+
+    setAiRunState?.((previous) => ({
+      ...(previous || {}),
+      status: "stopping"
+    }));
+    setBatchInfo("正在停止连续补全，已完成的轮次会保留...");
+    controller.abort();
   }
 
   async function completeMeaningAndAudio() {
@@ -1088,29 +1308,26 @@ export function createAiOps(ctx) {
       let failedWords = [];
 
       function applyCategorizedItems(chunk, items) {
-        const itemMap = new Map();
-
-        (items || []).forEach((item) => {
-          itemMap.set(normalizeWord(item.word), item);
-        });
+        const itemMap = indexAiResponses(items);
 
         setWords((prev) => {
-          const next = [...prev];
+          let next = prev;
 
-          chunk.forEach(({ i }) => {
-            const match = itemMap.get(normalizeWord(next[i].word));
+          chunk.forEach(({ w }) => {
+            const writeTarget = targetForWord(w);
+            const match = itemMap.get(writeTarget.inputId);
 
             if (!match) {
-              failedWords.push(next[i].word);
+              failedWords.push(w.word);
               return;
             }
 
-            next[i] = {
-              ...next[i],
+            next = applyIdentityUpdate(next, writeTarget, match, (existing) => ({
+              ...existing,
               ieltsUse: normalizeStringArray(match.ieltsUse || match.ielts_use),
               topics: normalizeStringArray(match.topics),
-              difficulty: match.difficulty || next[i].difficulty || "中级核心"
-            };
+              difficulty: match.difficulty || existing.difficulty || "中级核心"
+            }));
           });
 
           return next;
@@ -1134,6 +1351,7 @@ export function createAiOps(ctx) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               words: chunk.map(({ w }) => ({
+                inputId: targetForWord(w).inputId,
                 word: w.word,
                 pos: w.pos,
                 meaning: w.meaning,
@@ -1144,7 +1362,7 @@ export function createAiOps(ctx) {
           const data = await res.json();
 
           if (!res.ok) {
-            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`);
+            throw retryableBatchError(data?.detail || data?.error || `HTTP ${res.status}`, res.status, res.headers.get("retry-after"));
           }
 
           applyCategorizedItems(chunk, data.items || []);
@@ -1250,5 +1468,21 @@ export function createAiOps(ctx) {
     }
   }
 
-  return { cleanWordList, generateForIndex, confirmAiCost, generateCurrent, aiRepairCurrentWordSymbol, generateMissingBatch, aiCompletePendingAndUnclassifiedOneByOne, aiSlowCompleteMissing10x1, aiStableRepairWrongWords10x2, generateHundredByFiveBatch, completeMeaningAndAudio, categorizeWords, aiDedupe };
+  return {
+    cleanWordList,
+    generateForIndex,
+    confirmAiCost,
+    generateCurrent,
+    aiRepairCurrentWordSymbol,
+    generateMissingBatch,
+    aiCompletePendingAndUnclassifiedOneByOne,
+    aiSlowCompleteMissing10x1,
+    aiStableRepairWrongWords10x2,
+    generateHundredByFiveBatch,
+    startContinuousAiCompletion,
+    stopContinuousAiCompletion,
+    completeMeaningAndAudio,
+    categorizeWords,
+    aiDedupe
+  };
 }

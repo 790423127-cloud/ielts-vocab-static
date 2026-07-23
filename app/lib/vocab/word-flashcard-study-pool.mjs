@@ -8,6 +8,10 @@ import {
   isInflectedReferenceWord,
   resolveBrushableWord
 } from "./word-study-eligibility.mjs";
+import {
+  isMissingAiFields,
+  isMissingClassification
+} from "./word-quality-status.mjs";
 
 function normalizePhraseItems(value) {
   if (!Array.isArray(value)) return [];
@@ -34,20 +38,6 @@ export function normalizeStudyWordKey(word) {
     .replace(/[“”]/g, '"')
     .replace(/^[^a-z0-9]+|[^a-z0-9]+$/gi, "")
     .replace(/\s+/g, " ");
-}
-
-function isMissingAiFields(word) {
-  return (
-    !word.meaning ||
-    !word.pos ||
-    !word.example ||
-    !normalizePhraseItems(word.collocations).length ||
-    !normalizePhraseItems(word.phraseCollocations).length
-  );
-}
-
-function isMissingClassification(word) {
-  return !word.ieltsUse?.length || !word.topics?.length || !word.difficulty;
 }
 
 export const IDICTATION_FLASH_FILTERS = [
@@ -159,8 +149,8 @@ export function wordMatchesFilter(word, filter) {
     if (filter.value === "不熟") return word.status === "不熟";
     if (filter.value === "熟悉") return word.status === "熟悉";
     if (filter.value === "收藏") return word.status !== "熟悉" && word.favorite;
-    if (filter.value === "待补全") return word.status !== "熟悉" && isMissingAiFields(word);
-    if (filter.value === "待归纳") return word.status !== "熟悉" && isMissingClassification(word);
+    if (filter.value === "待补全") return isMissingAiFields(word);
+    if (filter.value === "待归纳") return !isMissingAiFields(word) && isMissingClassification(word);
   }
 
   if (word.status === "熟悉") return false;
@@ -184,6 +174,8 @@ export function getFilterName(filter) {
   if (filter.type === "status" && filter.value === "不熟") return "不熟词库";
   if (filter.type === "status" && filter.value === "熟悉") return "熟悉词库";
   if (filter.type === "status" && filter.value === "收藏") return "收藏词";
+  if (filter.type === "status" && filter.value === "待补全") return "资料缺失";
+  if (filter.type === "status" && filter.value === "待归纳") return "仅缺分类";
   if (filter.type === "status") return `状态：${filter.value}`;
   return "待学习单词";
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AUDIO_PREFILL_CURSOR_KEY,
   REAL_AUDIO_BATCH_SIZE,
@@ -27,6 +27,8 @@ export function useHomeAudioPrefill({
 }) {
   const audioStatusMapRef = useRef({});
   const [audioStatsRevision, setAudioStatsRevision] = useState(0);
+  const [audioStatusState, setAudioStatusState] = useState("loading");
+  const audioStatusHydrationKeyRef = useRef("");
 
   const bumpAudioStatsRevision = useCallback(() => {
     setAudioStatsRevision((revision) => revision + 1);
@@ -523,28 +525,55 @@ export function useHomeAudioPrefill({
     }
   }
 
-  async function refreshAudioCacheStats(options = {}) {
-    const { quiet = false } = options;
+  const refreshAudioCacheStats = useCallback(async (options = {}) => {
+    const { quiet = false, includeStatus = true, statusOnly = false } = options;
 
     try {
-      const res = await fetch("/api/audio-cache", { cache: "no-store" });
+      if (includeStatus) setAudioStatusState("loading");
+      const suffix = includeStatus
+        ? `?includeStatus=word${statusOnly ? "&summary=0" : ""}`
+        : "";
+      const res = await fetch(`/api/audio-cache${suffix}`, { cache: "no-store" });
       const data = await res.json();
 
       if (!res.ok || !data.ok) {
         throw new Error(data.detail || data.error || "读取发音缓存统计失败");
       }
 
-      setAudioCacheStats(data);
+      if (!statusOnly) setAudioCacheStats(data);
+      if (includeStatus) {
+        mergeAudioStatusMap(data.wordStatus || {});
+        setAudioStatusState("ready");
+      }
       if (!quiet) {
         setToast(`发音缓存：真人 ${data.files?.real || 0} 个，兜底 ${data.files?.fallback || 0} 个`);
       }
 
       return data;
     } catch (error) {
+      if (includeStatus) setAudioStatusState("error");
       if (!quiet) setToast(error.message || "读取发音缓存统计失败");
       return null;
     }
-  }
+  }, [mergeAudioStatusMap, setAudioCacheStats, setToast]);
+
+  useEffect(() => {
+    if (!words.length) return;
+
+    const firstKey = normalizeWord(words[0]?.word);
+    const lastKey = normalizeWord(words[words.length - 1]?.word);
+    const hydrationKey = `${words.length}:${firstKey}:${lastKey}`;
+    if (audioStatusHydrationKeyRef.current === hydrationKey) return;
+
+    audioStatusHydrationKeyRef.current = hydrationKey;
+    void refreshAudioCacheStats({
+      quiet: true,
+      includeStatus: true,
+      statusOnly: true
+    }).then((data) => {
+      if (!data) audioStatusHydrationKeyRef.current = "";
+    });
+  }, [words, refreshAudioCacheStats]);
 
   async function cleanupFallbackAudioCache() {
     if (!confirm("删除所有兜底发音缓存？\n\n全站仅使用 Edge 兜底发音；删除后下次播放会重新生成。")) return;
@@ -621,6 +650,7 @@ export function useHomeAudioPrefill({
   return {
     audioStatusMapRef,
     audioStatsRevision,
+    audioStatusState,
     bumpAudioStatsRevision,
     patchAudioStatusKey,
     mergeAudioStatusMap,

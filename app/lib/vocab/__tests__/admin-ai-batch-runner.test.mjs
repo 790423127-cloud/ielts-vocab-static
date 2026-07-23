@@ -147,3 +147,22 @@ test("runAdminAiBatch validates execution and handles empty plans", async () => 
     retryCount: 0
   });
 });
+
+test("runAdminAiBatch stops claiming queued chunks after abort", async () => {
+  const controller = new AbortController();
+  const executed = [];
+
+  const result = await runAdminAiBatch({
+    chunks: [[1], [2], [3]],
+    workerCount: 1,
+    signal: controller.signal,
+    executeChunk({ chunk }) {
+      executed.push(chunk[0]);
+      controller.abort();
+    }
+  });
+
+  assert.deepEqual(executed, [1]);
+  assert.equal(result.completedChunks, 1);
+  assert.equal(result.completedItems, 1);
+});

@@ -5,7 +5,8 @@ import {
   buildWordUserStateMap,
   isWordCacheCurrent,
   mergeWordContentWithUserState,
-  stripWordUserState
+  stripWordUserState,
+  WORD_CACHE_SCHEMA_VERSION
 } from "./word-cache-meta.mjs";
 
 export const BIG_STORE_DB = "ielts_vocab_big_store_v1";
@@ -55,79 +56,289 @@ async function readStoredValues(db, keys) {
   const transaction = db.transaction(BIG_STORE_NAME, "readonly");
   const store = transaction.objectStore(BIG_STORE_NAME);
   const done = transactionDone(transaction);
-  const values = await Promise.all(keys.map((key) => requestValue(store, key).catch(() => null)));
-  await done;
-  return values;
+  try {
+    const values = await Promise.all(keys.map((key) => requestValue(store, key)));
+    await done;
+    return values;
+  } catch (error) {
+    await done.catch(() => {});
+    throw error;
+  }
+}
+
+export function computeWordStoreContentHash(words = []) {
+  const text = JSON.stringify(Array.isArray(words) ? words : []);
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+function updateContentHash(hash, text, start = 0, end = text.length) {
+  let nextHash = hash;
+  for (let index = start; index < end; index += 1) {
+    nextHash ^= text.charCodeAt(index);
+    nextHash = Math.imul(nextHash, 0x01000193);
+  }
+  return nextHash;
+}
+
+export function computeWordStoreContentHashFromChunks(serializedChunks = []) {
+  const chunks = Array.isArray(serializedChunks) && serializedChunks.length
+    ? serializedChunks
+    : ["[]"];
+  let hash = updateContentHash(0x811c9dc5, "[");
+
+  for (let index = 0; index < chunks.length; index += 1) {
+    const chunk = String(chunks[index] || "[]");
+    if (index > 0) hash = updateContentHash(hash, ",");
+    hash = updateContentHash(hash, chunk, 1, Math.max(1, chunk.length - 1));
+  }
+
+  hash = updateContentHash(hash, "]");
+  return (hash >>> 0).toString(16).padStart(8, "0");
+}
+
+export function yieldToBrowserMainThread() {
+  if (typeof globalThis.scheduler?.yield === "function") {
+    return globalThis.scheduler.yield();
+  }
+  return new Promise((resolve) => globalThis.setTimeout(resolve, 0));
+}
+
+export async function prepareWordStoreSnapshot(nextWords, options = {}) {
+  const list = Array.isArray(nextWords) ? nextWords : [];
+  const chunkSize = Math.max(1, Number(options.chunkSize) || BIG_WORDS_CHUNK_SIZE);
+  const yieldControl = options.yieldControl || yieldToBrowserMainThread;
+  const chunkCount = Math.max(1, Math.ceil(list.length / chunkSize));
+  const serializedChunks = [];
+  const userState = {};
+
+  for (let index = 0; index < chunkCount; index += 1) {
+    const start = index * chunkSize;
+    const sourceChunk = list.slice(start, start + chunkSize);
+    const contentChunk = sourceChunk.map(stripWordUserState);
+    serializedChunks.push(JSON.stringify(contentChunk));
+    Object.assign(userState, buildWordUserStateMap(sourceChunk));
+
+    if (index < chunkCount - 1) await yieldControl();
+  }
+
+  return {
+    serializedChunks,
+    userState,
+    contentHash: computeWordStoreContentHashFromChunks(serializedChunks),
+    totalCount: list.length,
+    chunkCount,
+    chunkSize
+  };
+}
+
+function cacheResult(status, options = {}) {
+  return {
+    status,
+    words: Array.isArray(options.words) ? options.words : [],
+    meta: options.meta || null,
+    userState: options.userState && typeof options.userState === "object"
+      ? options.userState
+      : {},
+    reason: options.reason || "",
+    error: options.error
+  };
+}
+
+export function validateWordCacheChunks(meta, rawChunks, userState = {}) {
+  if (!meta || typeof meta !== "object") {
+    return cacheResult("cache-miss", { userState });
+  }
+  if (Number(meta.schemaVersion) !== WORD_CACHE_SCHEMA_VERSION) {
+    return cacheResult("cache-version-mismatch", {
+      meta,
+      userState,
+      reason: `不支持的词库缓存schemaVersion：${meta.schemaVersion ?? "缺失"}`
+    });
+  }
+
+  const chunkCount = Number(meta.chunks);
+  const chunkSize = Number(meta.chunkSize);
+  const totalCount = Number(meta.totalCount ?? meta.count);
+  if (
+    !Number.isInteger(chunkCount) ||
+    chunkCount <= 0 ||
+    !Number.isInteger(chunkSize) ||
+    chunkSize <= 0 ||
+    !Number.isInteger(totalCount) ||
+    totalCount < 0 ||
+    !Array.isArray(rawChunks) ||
+    rawChunks.length !== chunkCount
+  ) {
+    return cacheResult("cache-invalid", {
+      meta,
+      userState,
+      reason: "词库缓存manifest中的chunk数量、chunkSize或totalCount无效"
+    });
+  }
+
+  const content = [];
+  for (let index = 0; index < chunkCount; index += 1) {
+    const raw = rawChunks[index];
+    if (raw === undefined || raw === null || raw === "") {
+      return cacheResult("cache-invalid", {
+        meta,
+        userState,
+        reason: `词库缓存缺少chunk ${index}`
+      });
+    }
+
+    let chunk;
+    try {
+      chunk = typeof raw === "string" ? JSON.parse(raw) : raw;
+    } catch {
+      return cacheResult("cache-invalid", {
+        meta,
+        userState,
+        reason: `词库缓存chunk ${index}无法解析`
+      });
+    }
+    const expectedFullChunk = index < chunkCount - 1;
+    if (
+      !Array.isArray(chunk) ||
+      (expectedFullChunk && chunk.length !== chunkSize) ||
+      (!expectedFullChunk && (chunk.length <= 0 || chunk.length > chunkSize))
+    ) {
+      return cacheResult("cache-invalid", {
+        meta,
+        userState,
+        reason: `词库缓存chunk ${index}结构或长度无效`
+      });
+    }
+    content.push(...chunk);
+  }
+
+  if (content.length !== totalCount) {
+    return cacheResult("cache-invalid", {
+      meta,
+      userState,
+      reason: `词库缓存数量不一致：manifest=${totalCount}，实际=${content.length}`
+    });
+  }
+  if (meta.contentHash && meta.contentHash !== computeWordStoreContentHash(content)) {
+    return cacheResult("cache-invalid", {
+      meta,
+      userState,
+      reason: "词库缓存contentHash不一致"
+    });
+  }
+
+  return cacheResult("cache-hit", {
+    words: applyWordUserStateMap(content, userState),
+    meta,
+    userState
+  });
+}
+
+export function applyStoredUserState(words, stored) {
+  return applyWordUserStateMap(words, stored?.userState || {});
 }
 
 export async function loadWordsFromIndexedDB() {
-  const db = await openBigStore();
+  let db;
+  try {
+    db = await openBigStore();
+  } catch (error) {
+    return cacheResult("storage-error", { error, reason: error?.message || "IndexedDB打开失败" });
+  }
 
   try {
-    const [meta] = await readStoredValues(db, [BIG_WORDS_META_KEY]);
+    let meta;
+    let state;
+    let legacy;
+    try {
+      [meta, state, legacy] = await readStoredValues(db, [
+        BIG_WORDS_META_KEY,
+        BIG_WORD_USER_STATE_KEY,
+        BIG_WORDS_KEY
+      ]);
+    } catch (error) {
+      return cacheResult("storage-error", {
+        error,
+        reason: error?.message || "IndexedDB读取失败"
+      });
+    }
+    const userState = state && typeof state === "object" ? state : {};
     const chunkCount = Number(meta?.chunks || 0);
     const chunkKeys = Array.from(
       { length: chunkCount },
       (_, index) => `${BIG_WORDS_CHUNK_PREFIX}${index}`
     );
-    const keys = [...chunkKeys, BIG_WORD_USER_STATE_KEY, BIG_WORDS_KEY];
-    const values = await readStoredValues(db, keys);
-    const state = values[chunkKeys.length] || {};
 
     if (chunkCount > 0) {
-      const content = [];
-      for (let index = 0; index < chunkCount; index += 1) {
-        const raw = values[index];
-        if (!raw) continue;
-        const chunk = typeof raw === "string" ? JSON.parse(raw) : raw;
-        if (Array.isArray(chunk)) content.push(...chunk);
+      let rawChunks;
+      try {
+        rawChunks = await readStoredValues(db, chunkKeys);
+      } catch (error) {
+        return cacheResult("storage-error", {
+          meta,
+          userState,
+          error,
+          reason: error?.message || "IndexedDB chunk读取失败"
+        });
       }
-
-      if (content.length) {
-        return { words: applyWordUserStateMap(content, state), meta };
-      }
+      return validateWordCacheChunks(meta, rawChunks, userState);
     }
 
-    const legacy = values[chunkKeys.length + 1];
     if (Array.isArray(legacy) && legacy.length) {
       await saveWordsToIndexedDB(legacy).catch(() => {});
-      return { words: legacy, meta: buildWordCacheMeta(legacy) };
+      const legacyMeta = buildWordCacheMeta(legacy);
+      return cacheResult("cache-hit", {
+        words: applyWordUserStateMap(legacy, userState),
+        meta: legacyMeta,
+        userState
+      });
     }
+    if (meta) {
+      return cacheResult("cache-invalid", {
+        meta,
+        userState,
+        reason: "词库缓存manifest未声明有效chunk"
+      });
+    }
+    return cacheResult("cache-miss", { userState });
   } finally {
     db.close();
   }
-
-  return null;
 }
 
 export async function saveWordsToIndexedDB(nextWords, sourceMeta = {}) {
   const list = Array.isArray(nextWords) ? nextWords : [];
-  const content = list.map(stripWordUserState);
-  const userState = buildWordUserStateMap(list);
+  const prepared = await prepareWordStoreSnapshot(list);
   const db = await openBigStore();
 
   try {
     const [oldMeta] = await readStoredValues(db, [BIG_WORDS_META_KEY]).catch(() => [null]);
     const oldChunks = Number(oldMeta?.chunks || 0);
-    const chunks = Math.max(1, Math.ceil(content.length / BIG_WORDS_CHUNK_SIZE));
+    const chunks = prepared.chunkCount;
     const transaction = db.transaction(BIG_STORE_NAME, "readwrite");
     const store = transaction.objectStore(BIG_STORE_NAME);
     const done = transactionDone(transaction);
 
     store.delete(BIG_WORDS_KEY);
     for (let index = 0; index < chunks; index += 1) {
-      const start = index * BIG_WORDS_CHUNK_SIZE;
       store.put(
-        JSON.stringify(content.slice(start, start + BIG_WORDS_CHUNK_SIZE)),
+        prepared.serializedChunks[index],
         `${BIG_WORDS_CHUNK_PREFIX}${index}`
       );
     }
-    store.put(userState, BIG_WORD_USER_STATE_KEY);
+    store.put(prepared.userState, BIG_WORD_USER_STATE_KEY);
     store.put(
       {
         ...buildWordCacheMeta(list, sourceMeta),
         chunks,
-        chunkSize: BIG_WORDS_CHUNK_SIZE,
+        chunkSize: prepared.chunkSize,
+        totalCount: prepared.totalCount,
+        contentHash: prepared.contentHash,
         updatedAt: Date.now()
       },
       BIG_WORDS_META_KEY
@@ -161,7 +372,7 @@ export async function saveWordUserStateToIndexedDB(words) {
 }
 
 export async function loadActiveWordsForSync() {
-  const stored = await loadWordsFromIndexedDB().catch(() => null);
+  const stored = await loadWordsFromIndexedDB();
   let words = stored?.words || [];
   let meta = stored?.meta || {};
 
@@ -177,7 +388,8 @@ export async function loadActiveWordsForSync() {
     if (response?.ok) {
       const payload = await response.json().catch(() => null);
       if (payload?.words?.length) {
-        words = mergeWordContentWithUserState(payload.words, words);
+        const onlineWords = applyStoredUserState(payload.words, stored);
+        words = mergeWordContentWithUserState(onlineWords, words);
         meta = {
           count: payload.count,
           version: payload.version || meta.version || "",

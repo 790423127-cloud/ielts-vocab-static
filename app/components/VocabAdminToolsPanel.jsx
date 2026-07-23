@@ -18,6 +18,8 @@ export default function VocabAdminToolsPanel({
   audioCacheStats = null,
   audioStats = { has: 0, missing: 0, unchecked: 0, total: 0 },
   batchInfo = "",
+  aiRunState = null,
+  pendingAiCount = 0,
   duplicateInfo = "",
   isExternalIdictationItem = false,
   summaryLabel = "工具",
@@ -25,6 +27,22 @@ export default function VocabAdminToolsPanel({
   actions = {}
 }) {
   const a = actions;
+  const continuousActive = ["running", "stopping"].includes(aiRunState?.status);
+  const continuousStatusLabel = {
+    running: "连续补全运行中",
+    stopping: "正在安全停止",
+    completed: "连续补全已完成",
+    "completed-with-failures": "可处理队列已完成",
+    stopped: "连续补全已停止",
+    fused: "已触发失败熔断",
+    limit: "已到安全轮次上限",
+    failed: "连续补全失败"
+  }[aiRunState?.status] || "";
+  const continuousTotal = Math.max(0, Number(aiRunState?.initialRemaining) || 0);
+  const continuousResolved = Math.min(
+    continuousTotal,
+    Math.max(0, (Number(aiRunState?.filled) || 0) + (Number(aiRunState?.failed) || 0))
+  );
 
   return (
               <details
@@ -171,9 +189,6 @@ export default function VocabAdminToolsPanel({
                       <button className="small-btn" disabled={loading} onClick={a.localScanTtsSymbols}>
                         检查单词符号
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI修复当前单词符号（会扣费）") && a.aiRepairCurrentWordSymbol?.()}>
-                        AI修复当前单词符号（会扣费）
-                      </button>
                       <button className="small-btn ghost" disabled={loading} onClick={a.clearWrongAiRepairFlags}>
                         清除错误AI修复标记
                       </button>
@@ -266,44 +281,79 @@ export default function VocabAdminToolsPanel({
                   >
                     <summary>AI工具（会扣费）</summary>
                     <div className="ai-warning">
-                      AI 工具共 7 个入口，分为当前词处理、批量补全/修复和分类整理。所有按钮都会调用 DeepSeek API，可能扣费。
+                      AI 工具统一使用“一个主释义、一个主例句、详细其他义项”的资料规则。单轮模式执行 100 词后停止；连续模式会自动进入下一轮，但可随时停止并带失败熔断。
                     </div>
                     <div className="ai-tool-explain">
-                      <p><strong>AI处理当前词：</strong>只处理当前这一个词，适合单个词释义、例句、搭配等明显需要重做时使用。</p>
-                      <p><strong>AI快速补全缺失资料 100×5：</strong>只补缺失资料，不修错词。适合导入基础模板后批量补搭配、词形、词族、分类和难度，速度快。</p>
-                      <p><strong>AI慢速补全+修错字 10×1：</strong>补缺失资料，同时允许 AI 自动修正明显错字，例如 injur→injure。一次只跑一批，更慢但更稳。</p>
-                      <p><strong>AI逐个补全+查错词 1×1：</strong>从待补全、未归类、疑似错词和截断词里读取，一次只处理一个词，不并发，允许修正 word，适合最后精修。</p>
-                      <p><strong>AI稳定修复确定错词 10×2：</strong>只修确定错词。速度慢一点，但会自动重试，并把失败批次拆成单词级补救。</p>
-                      <p><strong>AI修复当前单词符号：</strong>只修当前词条的 word 字段；保留有效斜杠并规范显示间距，清理多余标签或括号，不动释义、例句、音标和搭配。</p>
-                      <p><strong>AI整理分类/难度：</strong>只用于归纳 IELTS 用途、主题和难度；不建议用它重写释义和例句。</p>
+                      <p><strong>单词级：</strong>只重做当前词的完整 AI 内容，保留 ID、学习状态和收藏。</p>
+                      <p><strong>单轮补全：</strong>最多 100 词；每请求 10 词、最多 5 路并发，完成后停止。</p>
+                      <p><strong>连续补全：</strong>逐轮处理剩余队列，每轮保存检查点；停止后下次从最新队列继续。</p>
+                      <p><strong>异常重做：</strong>只重做含占位符或明显异常内容的资料，不修改词头。</p>
                     </div>
                     <div className="action-grid">
                       <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI处理当前词（会扣费）") && a.generateCurrent?.({ force: true })}>
                         {loading ? "处理中" : "AI处理当前词（会扣费）"}
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI快速补全缺失资料 100×5（会扣费）") && a.generateHundredByFiveBatch?.()}>
-                        AI快速补全缺失资料 100×5（会扣费）
+                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI快速补全一轮：最多100词 / 10词每请求 / 5路并发（会扣费）") && a.generateHundredByFiveBatch?.()}>
+                        补全一轮 · 最多100词
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI慢速补全+修错字 10×1（会扣费）") && a.aiSlowCompleteMissing10x1?.()}>
-                        AI慢速补全+修错字 10×1（会扣费）
+                      <button
+                        className="small-btn ai-paid ai-continuous-start"
+                        disabled={loading}
+                        onClick={() => a.confirmAiCost?.(
+                          `AI连续补全未完成资料：当前资料字段缺失约 ${pendingAiCount} 词；每轮最多100词，直到队列完成、手动停止或触发失败熔断（会持续扣费）`
+                        ) && a.startContinuousAiCompletion?.()}
+                      >
+                        连续补全未完成 · 可暂停
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI逐个补全+查错词 1×1（会扣费）") && a.aiCompletePendingAndUnclassifiedOneByOne?.()}>
-                        AI逐个补全+查错词 1×1（会扣费）
+                      <button
+                        className="small-btn ai-stop"
+                        disabled={!continuousActive}
+                        onClick={a.stopContinuousAiCompletion}
+                      >
+                        {aiRunState?.status === "stopping" ? "正在停止..." : "停止连续补全"}
                       </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI稳定修复确定错词 10×2（会扣费）") && a.aiStableRepairWrongWords10x2?.()}>
-                        AI稳定修复确定错词 10×2（会扣费）
-                      </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI修复当前单词符号（会扣费）") && a.aiRepairCurrentWordSymbol?.()}>
-                        AI修复当前单词符号（会扣费）
-                      </button>
-                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI整理分类/难度（会扣费）") && a.categorizeWords?.()}>
-                        AI整理分类/难度（会扣费）
+                      <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI重做异常资料：最多100词 / 每请求10词 / 2并发（会扣费）") && a.aiStableRepairWrongWords10x2?.()}>
+                        AI重做异常资料 · 最多100词 / 2并发
                       </button>
                     </div>
+                    {continuousStatusLabel ? (
+                      <div className={`ai-run-status ai-run-status--${aiRunState.status}`} role="status">
+                        <div className="ai-run-status-head">
+                          <strong>{continuousStatusLabel}</strong>
+                          <span>第 {aiRunState.rounds || 0} 轮</span>
+                        </div>
+                        {continuousTotal ? (
+                          <progress value={continuousResolved} max={continuousTotal}>
+                            {continuousResolved} / {continuousTotal}
+                          </progress>
+                        ) : null}
+                        <div className="ai-run-metrics">
+                          <span>已补全 {aiRunState.filled || 0}</span>
+                          <span>失败 {aiRunState.failed || 0}</span>
+                          <span>剩余 {aiRunState.remaining || 0}</span>
+                        </div>
+                        {aiRunState.error ? <p>{aiRunState.error}</p> : null}
+                      </div>
+                    ) : null}
+                    <details className="ai-tool-advanced">
+                      <summary>高级修复与分类</summary>
+                      <div className="action-grid">
+                        <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI修复当前单词符号（会扣费）") && a.aiRepairCurrentWordSymbol?.()}>
+                          AI修复当前词头符号
+                        </button>
+                        <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI仅补分类/难度（会扣费）") && a.categorizeWords?.()}>
+                          AI仅补分类 / 难度
+                        </button>
+                      </div>
+                    </details>
                   </details> : null}
     
                   <div className="audio-stat-box">
-                    单词音频：有 {audioStats.has} · 没有 {audioStats.missing} · 未检查 {audioStats.unchecked} · 总数 {audioStats.total}
+                    {audioStats.state === "error"
+                      ? "单词音频：缓存核对失败，请刷新统计后重试"
+                      : audioStats.state !== "ready"
+                      ? "单词音频：正在核对本地缓存..."
+                      : `单词音频：有 ${audioStats.has} · 没有 ${audioStats.missing} · 未检查 ${audioStats.unchecked} · 总数 ${audioStats.total}`}
                   </div>
     
                   <div className="hint">
@@ -313,7 +363,7 @@ export default function VocabAdminToolsPanel({
                     “导出静态网站”会打包 index.html、words.json 和本地发音缓存；音频补全支持断点续跑。
                   </div>
                   {showAiTools ? <div className="hint">
-                    AI 工具区提供 7 个明确入口，点击前会二次确认；音频补全已经从 AI 功能中分离。
+                    AI 工具区提供 4 个主要入口和 2 个高级入口，付费操作前会二次确认；音频补全已经从 AI 功能中分离。
                   </div> : null}
                   {batchInfo ? <div className="status-line">{batchInfo}</div> : null}
                   {duplicateInfo ? <div className="duplicate-box">{duplicateInfo}</div> : null}

@@ -15,6 +15,7 @@ import {
   safeSpeechText,
   writeJson
 } from "../../lib/vocab-audio-source.mjs";
+import { buildWordAudioStatusMap } from "../../lib/vocab/audio-cache-status.mjs";
 
 const AUDIO_FILE_RE = /\.(mp3|ogg|oga|wav|webm)$/i;
 
@@ -42,7 +43,22 @@ function readAudioIndex() {
   return readJson(audioIndexPath(), {});
 }
 
-function summarizeAudioCache() {
+function summarizeWordAudioStatus() {
+  const filenames = new Set(
+    readdirSync(cacheDir()).filter((name) => AUDIO_FILE_RE.test(name))
+  );
+  const wordStatus = buildWordAudioStatusMap(readAudioIndex(), filenames);
+
+  return {
+    ok: true,
+    version: REAL_AUDIO_CACHE_VERSION,
+    wordStatus,
+    wordStatusCount: Object.keys(wordStatus).length
+  };
+}
+
+function summarizeAudioCache(options = {}) {
+  const { includeWordStatus = false } = options;
   const files = listAudioFiles();
   const index = readAudioIndex();
   const entries = Object.values(index || {});
@@ -59,7 +75,7 @@ function summarizeAudioCache() {
   const indexedFallback = entries.filter((entry) => entry?.hasAudio && entry?.filename && !entry?.realAudio);
   const realUnavailable = entries.filter((entry) => entry?.realAudioUnavailable);
 
-  return {
+  const summary = {
     ok: true,
     version: REAL_AUDIO_CACHE_VERSION,
     files: {
@@ -93,6 +109,16 @@ function summarizeAudioCache() {
       }))
     }
   };
+
+  if (includeWordStatus) {
+    summary.wordStatus = buildWordAudioStatusMap(
+      index,
+      new Set(files.map((file) => file.name))
+    );
+    summary.wordStatusCount = Object.keys(summary.wordStatus).length;
+  }
+
+  return summary;
 }
 
 function deleteFileInsideCache(filename, failures = []) {
@@ -275,9 +301,14 @@ async function retryRealAudio(rawItems = [], options = {}) {
   };
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
-    return Response.json(summarizeAudioCache());
+    const searchParams = new URL(request.url).searchParams;
+    const includeWordStatus = searchParams.get("includeStatus") === "word";
+    if (includeWordStatus && searchParams.get("summary") === "0") {
+      return Response.json(summarizeWordAudioStatus());
+    }
+    return Response.json(summarizeAudioCache({ includeWordStatus }));
   } catch (error) {
     return Response.json(
       {

@@ -312,8 +312,9 @@ test("the word study UI renders the paid AI tool panel", () => {
   assert.doesNotMatch(viewSource, /showAiTools=\{false\}/);
   assert.match(panelSource, /AI工具（会扣费）/);
   assert.match(panelSource, /AI处理当前词（会扣费）/);
-  assert.match(panelSource, /AI 工具共 7 个入口/);
-  assert.match(panelSource, /保留有效斜杠并规范显示间距/);
+  assert.match(panelSource, /AI 工具统一使用/);
+  assert.match(panelSource, /最多 100 词/);
+  assert.match(panelSource, /AI修复当前词头符号/);
   assert.doesNotMatch(panelSource, /只保留 4 个按钮/);
 });
 

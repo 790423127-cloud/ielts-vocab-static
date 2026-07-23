@@ -11,7 +11,7 @@ export function getMeaningDisplay(entry = {}) {
   const definition = /[A-Za-z]{3}/.test(rawDefinition) && !/[\u3400-\u9fff]/u.test(rawDefinition)
     ? rawDefinition
     : "";
-  const candidate = String(entry.meaningDetailedZh || "").trim();
+  const candidate = String(entry.meaningDetailZh || entry.meaningDetailedZh || "").trim();
   const detail = candidate
     && normalize(candidate) !== normalize(meaning)
     && !PLACEHOLDER_RE.test(candidate)

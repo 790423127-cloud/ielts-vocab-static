@@ -13,6 +13,20 @@ import {
   isBrushableWord,
   isInflectedReferenceWord
 } from "./word-study-eligibility.mjs";
+import {
+  isLearningContentComplete,
+  isMissingClassification
+} from "./word-quality-status.mjs";
+import {
+  AI_CONTENT_FIELDS,
+  copyFields,
+  pickPreferredAiContentPackage
+} from "./word-field-boundaries.mjs";
+
+export {
+  isMissingAiFields,
+  isMissingClassification
+} from "./word-quality-status.mjs";
 
 export const LOCAL_LEXICON_ORGANIZATION_POLICY = Object.freeze({
   version: "manual-morphology-audit-v3-20260722",
@@ -53,22 +67,7 @@ export function isSimpleDictionaryWord(value) {
 }
 
 export function isCompleteAiWord(word) {
-  return Boolean(
-    word?.pos &&
-    word?.meaning &&
-    word?.definition &&
-    word?.example &&
-    word?.exampleCn &&
-    Array.isArray(word?.collocations) &&
-    word.collocations.length &&
-    Array.isArray(word?.phraseCollocations) &&
-    word.phraseCollocations.length &&
-    Array.isArray(word?.ieltsUse) &&
-    word.ieltsUse.length &&
-    Array.isArray(word?.topics) &&
-    word.topics.length &&
-    word?.difficulty
-  );
+  return isLearningContentComplete(word) && !isMissingClassification(word);
 }
 
 export function normalizePhraseItems(value) {
@@ -232,22 +231,11 @@ export function resetAiFieldsForChangedWord(word, clean, label = "本地整理")
   return {
     ...word,
     word: clean,
-    phonetic: "",
-    pos: clean.includes(" ") ? "phrase" : "",
-    meaning: "",
-    definition: "",
-    example: "",
-    exampleCn: "",
-    collocations: [],
-    phraseCollocations: [],
-    ieltsUse: [],
-    topics: [],
-    difficulty: "",
-    category: clean.includes(" ") ? `${label} · 短语` : `${label} · 单词`,
-    status: word.status || "",
-    favorite: Boolean(word.favorite),
     forms: normalizeFormList(word.forms),
-    wordFamily: normalizeFamilyList(word.wordFamily)
+    wordFamily: normalizeFamilyList(word.wordFamily),
+    localHeadwordNormalizedFrom: word.localHeadwordNormalizedFrom || String(word.word || "").trim(),
+    localHeadwordNormalizedAt: Date.now(),
+    localHeadwordNormalization: label
   };
 }
 
@@ -275,24 +263,13 @@ export function makeCleanWordObject(word, clean, label = "本地整理") {
 }
 
 export function mergeWord(oldItem, newItem) {
+  const preferredAiPackage = pickPreferredAiContentPackage(oldItem, newItem);
   const merged = {
     ...oldItem,
-    phonetic: oldItem.phonetic || newItem.phonetic || "",
-    pos: oldItem.pos || newItem.pos || "",
-    meaning: oldItem.meaning || newItem.meaning || "",
-    definition: oldItem.definition || newItem.definition || "",
-    example: oldItem.example || newItem.example || "",
-    exampleCn: oldItem.exampleCn || newItem.exampleCn || "",
-    collocations: mergePhraseLists(oldItem.collocations, newItem.collocations),
-    phraseCollocations: mergePhraseLists(oldItem.phraseCollocations, newItem.phraseCollocations),
-    ieltsUse: oldItem.ieltsUse?.length ? oldItem.ieltsUse : newItem.ieltsUse || [],
-    topics: oldItem.topics?.length ? oldItem.topics : newItem.topics || [],
-    difficulty: oldItem.difficulty || newItem.difficulty || "",
-    category: oldItem.category || newItem.category || "IELTS G类",
+    ...copyFields(preferredAiPackage, AI_CONTENT_FIELDS),
     status: oldItem.status || newItem.status || "",
     favorite: Boolean(oldItem.favorite || newItem.favorite),
-    forms: mergeFormLists(oldItem.forms, newItem.forms),
-    wordFamily: mergeFamilyLists(oldItem.wordFamily, newItem.wordFamily)
+    duplicateContentSource: preferredAiPackage === oldItem ? "first" : "second"
   };
 
   // Exact duplicate consolidation must never throw away local learning state.
@@ -381,8 +358,18 @@ export function buildLocalFormFamilyResult(sourceWords) {
     suffixGuesses: 0
   };
   const words = sourceWords.map((word) => {
-    const forms = normalizeFormList(word.forms);
-    const wordFamily = normalizeFamilyList(word.wordFamily);
+    const sourceForms = Array.isArray(word.forms) ? word.forms : [];
+    const sourceFamily = Array.isArray(word.wordFamily) ? word.wordFamily : [];
+    const protectedAiForms = sourceForms.filter((item) => item?.source === "ai-generated");
+    const protectedAiFamily = sourceFamily.filter((item) => item?.source === "ai-generated");
+    const forms = [
+      ...normalizeFormList(sourceForms.filter((item) => item?.source !== "ai-generated")),
+      ...protectedAiForms
+    ];
+    const wordFamily = [
+      ...normalizeFamilyList(sourceFamily.filter((item) => item?.source !== "ai-generated")),
+      ...protectedAiFamily
+    ];
     if (JSON.stringify(forms) !== JSON.stringify(word.forms || [])) stats.normalizedForms += 1;
     if (JSON.stringify(wordFamily) !== JSON.stringify(word.wordFamily || [])) stats.normalizedFamilies += 1;
     return { ...word, forms, wordFamily };
@@ -427,6 +414,10 @@ export function buildLocalFormFamilyResult(sourceWords) {
     const nextForms = [];
 
     owner.forms.forEach((form) => {
+      if (form?.source === "ai-generated") {
+        nextForms.push(form);
+        return;
+      }
       const formKey = normalizeWord(form.word);
       if (!formKey || formKey === ownerKey) {
         stats.selfLinksRemoved += 1;
@@ -491,10 +482,6 @@ export function buildLocalFormFamilyResult(sourceWords) {
       });
       stats.referenceLinksAdded += 1;
     }
-  });
-
-  words.forEach((word) => {
-    word.forms = normalizeFormList(word.forms);
   });
 
   return {
@@ -674,20 +661,6 @@ export function parseLine(line) {
 
 export function parseImportText(text) {
   return text.split(/\r?\n/).map(parseLine).filter(Boolean);
-}
-
-export function isMissingAiFields(word) {
-  return (
-    !word.meaning ||
-    !word.pos ||
-    !word.example ||
-    !normalizePhraseItems(word.collocations).length ||
-    !normalizePhraseItems(word.phraseCollocations).length
-  );
-}
-
-export function isMissingClassification(word) {
-  return !word.ieltsUse?.length || !word.topics?.length || !word.difficulty;
 }
 
 export function splitListText(value) {
@@ -918,17 +891,13 @@ export function isLikelyWrongAiWord(word) {
   const text = flattenWordFieldsForCheck(word);
   const cleanWord = normalizeWord(word.word);
 
-  if (!text.trim()) return true;
+  if (!text.trim()) return false;
 
   const badMarkers = [
     "undefined",
     "null",
     "nan",
     "???",
-    "待补全",
-    "无释义",
-    "unknown",
-    "not available",
     "example sentence",
     "中文释义",
     "英文释义",
@@ -1373,21 +1342,6 @@ export function repairObviousWrongWordLocally(word) {
     next.originalBrokenWord = next.originalBrokenWord || oldWord;
     next.headwordRepairedAt = Date.now();
   }
-
-  // 其他基础字段只清除“整格就是占位符”的坏内容，不再做拼写补 e。
-  ["pos", "meaning", "definition", "example", "exampleCn", "difficulty", "category"].forEach((field) => {
-    if (isBadLocalText(next[field])) {
-      next[field] = "";
-    }
-  });
-
-  next.phonetic = String(next.phonetic || "").trim();
-  next.collocations = cleanBadPhraseItemsOnly(next.collocations);
-  next.phraseCollocations = cleanBadPhraseItemsOnly(next.phraseCollocations);
-  next.forms = cleanBadFormItemsOnly(next.forms);
-  next.wordFamily = cleanBadFormItemsOnly(next.wordFamily);
-  next.ieltsUse = normalizeStringArray(next.ieltsUse).filter((item) => !isBadLocalText(item));
-  next.topics = normalizeStringArray(next.topics).filter((item) => !isBadLocalText(item));
 
   if (JSON.stringify(next) !== before) {
     next.localWrongRepairedAt = Date.now();

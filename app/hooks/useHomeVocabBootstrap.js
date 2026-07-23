@@ -9,6 +9,7 @@ import {
   mergeWordContentWithUserState
 } from "../lib/vocab/word-cache-meta.mjs";
 import {
+  applyStoredUserState,
   loadWordsFromIndexedDB,
   saveWordUserStateToIndexedDB,
   saveWordsToIndexedDB
@@ -66,6 +67,44 @@ function sanitizeRuntimeWords(words = []) {
 /**
  * Home page vocab bootstrap: flash mode, catalog counts, IndexedDB/API load, user-state persist.
  */
+export async function persistWordsWithLocalStore(nextWords, options = {}) {
+  const {
+    sourceMeta = {},
+    saveWords = saveWordsToIndexedDB,
+    compactAndRetry = compactBrowserStorageForCurrentWords,
+    isFullVocab = isProbablyFullVocab,
+    onStatus
+  } = options;
+
+  if (!isFullVocab(nextWords)) {
+    const error = new Error(
+      `已阻止少量词覆盖大词库：当前只有 ${Array.isArray(nextWords) ? nextWords.length : 0} 个词，请先恢复词库`
+    );
+    error.code = "LOCAL_SAVE_REJECTED";
+    error.status = "local-save-failed";
+    onStatus?.(error.message);
+    throw error;
+  }
+
+  try {
+    await saveWords(nextWords, sourceMeta);
+    return { ok: true, status: "local-saved", recovered: false };
+  } catch (initialError) {
+    try {
+      await compactAndRetry(nextWords, sourceMeta);
+      onStatus?.("已清理浏览器旧缓存并重新保存大词库");
+      return { ok: true, status: "local-saved", recovered: true };
+    } catch (retryError) {
+      const error = new Error("本地保存失败：请先恢复词库，再点“清理浏览器存储空间”");
+      error.code = "LOCAL_SAVE_FAILED";
+      error.status = "local-save-failed";
+      error.cause = retryError || initialError;
+      onStatus?.(error.message);
+      throw error;
+    }
+  }
+}
+
 export function useHomeVocabBootstrap({ setToast }) {
   const [words, setWords] = useState([]);
   const [flashStudyMode, setFlashStudyMode] = useState("word");
@@ -80,6 +119,7 @@ export function useHomeVocabBootstrap({ setToast }) {
 
   const storageReadyRef = useRef(false);
   const hydratedWordsRef = useRef(null);
+  const contentSnapshotRef = useRef(new WeakSet());
   const cacheMetaRef = useRef({
     version: LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES,
     lexiconHash: "",
@@ -87,16 +127,16 @@ export function useHomeVocabBootstrap({ setToast }) {
   });
 
   function persistWordsImmediately(nextWords) {
-    if (!isProbablyFullVocab(nextWords)) {
-      setToast?.(`已阻止少量词覆盖大词库：当前只有 ${Array.isArray(nextWords) ? nextWords.length : 0} 个词，请先恢复词库`);
-      return;
-    }
-
-    saveWordsToIndexedDB(nextWords, cacheMetaRef.current).catch(() => {
-      compactBrowserStorageForCurrentWords(nextWords, cacheMetaRef.current)
-        .then(() => setToast?.("已清理浏览器旧缓存并重新保存大词库"))
-        .catch(() => setToast?.("本地保存失败：请先恢复词库，再点“清理浏览器存储空间”"));
+    return persistWordsWithLocalStore(nextWords, {
+      sourceMeta: cacheMetaRef.current,
+      onStatus(message) {
+        setToast?.(message);
+      }
     });
+  }
+
+  function markContentSnapshot(nextWords) {
+    if (Array.isArray(nextWords)) contentSnapshotRef.current.add(nextWords);
   }
 
   useEffect(() => {
@@ -159,7 +199,7 @@ export function useHomeVocabBootstrap({ setToast }) {
       let cachedNeedsRepair = false;
 
       try {
-        const stored = await withTimeout(loadWordsFromIndexedDB().catch(() => null), 2500, null);
+        const stored = await withTimeout(loadWordsFromIndexedDB(), 2500, null);
         if (stored?.words?.length) {
           cachedWords = sanitizeRuntimeWords(stored.words);
           cachedNeedsRepair = cachedWords !== stored.words;
@@ -216,7 +256,8 @@ export function useHomeVocabBootstrap({ setToast }) {
           fileHash: payload.fileHash || "",
           wordsHash: payload.wordsHash || ""
         };
-        const mergedOnlineWords = mergeWordContentWithUserState(payload.words, cachedWords || [], {
+        const onlineWordsWithStoredState = applyStoredUserState(payload.words, stored);
+        const mergedOnlineWords = mergeWordContentWithUserState(onlineWordsWithStoredState, cachedWords || [], {
           includePersonalSupplements: false
         });
         const onlineWords = sanitizeRuntimeWords(mergedOnlineWords);
@@ -248,7 +289,7 @@ export function useHomeVocabBootstrap({ setToast }) {
         });
       } catch {
         if (cancelled) return;
-        const stored = await withTimeout(loadWordsFromIndexedDB().catch(() => null), 2500, null);
+        const stored = await withTimeout(loadWordsFromIndexedDB(), 2500, null);
         if (stored?.words?.length) {
           cachedWords = sanitizeRuntimeWords(stored.words);
           cachedNeedsRepair = cachedWords !== stored.words;
@@ -269,7 +310,19 @@ export function useHomeVocabBootstrap({ setToast }) {
           cacheMetaRef.current = offlineMeta;
           setVocabRuntime({ status: "offline", ...offlineMeta });
         } else {
-          setVocabRuntime({ status: "error", count: null, version: "", lexiconHash: "" });
+          const cacheStatus = stored?.status || "cache-miss";
+          if (cacheStatus === "cache-invalid" || cacheStatus === "cache-version-mismatch") {
+            setToast?.("本地词库缓存不完整或版本不兼容，离线时无法加载；学习状态已保留");
+          } else if (cacheStatus === "storage-error") {
+            setToast?.("本地词库存储读取失败，离线时无法加载");
+          }
+          setVocabRuntime({
+            status: "error",
+            cacheStatus,
+            count: null,
+            version: "",
+            lexiconHash: ""
+          });
         }
       }
     }
@@ -292,6 +345,10 @@ export function useHomeVocabBootstrap({ setToast }) {
     // Loading API/IndexedDB content must not be treated as a user edit or rewrite words.json metadata.
     if (hydratedWordsRef.current === words) {
       hydratedWordsRef.current = null;
+      return;
+    }
+    if (contentSnapshotRef.current.has(words)) {
+      contentSnapshotRef.current.delete(words);
       return;
     }
 
@@ -317,6 +374,7 @@ export function useHomeVocabBootstrap({ setToast }) {
     storageReadyRef,
     hydratedWordsRef,
     cacheMetaRef,
-    persistWordsImmediately
+    persistWordsImmediately,
+    markContentSnapshot
   };
 }

@@ -32,7 +32,7 @@ export default function VocabAdminToolsPanel({
     running: "连续补全运行中",
     stopping: "正在安全停止",
     completed: "连续补全已完成",
-    "completed-with-failures": "可处理队列已完成",
+    "completed-with-failures": "仍有失败词待处理",
     stopped: "连续补全已停止",
     fused: "已触发失败熔断",
     limit: "已到安全轮次上限",
@@ -41,7 +41,7 @@ export default function VocabAdminToolsPanel({
   const continuousTotal = Math.max(0, Number(aiRunState?.initialRemaining) || 0);
   const continuousResolved = Math.min(
     continuousTotal,
-    Math.max(0, (Number(aiRunState?.filled) || 0) + (Number(aiRunState?.failed) || 0))
+    Math.max(0, continuousTotal - (Number(aiRunState?.remaining) || 0))
   );
 
   return (
@@ -329,8 +329,8 @@ export default function VocabAdminToolsPanel({
                         ) : null}
                         <div className="ai-run-metrics">
                           <span>已补全 {aiRunState.filled || 0}</span>
-                          <span>失败 {aiRunState.failed || 0}</span>
-                          <span>剩余 {aiRunState.remaining || 0}</span>
+                          <span>失败待处理 {aiRunState.blocked ?? aiRunState.failed ?? 0}</span>
+                          <span>真实剩余 {aiRunState.remaining || 0}</span>
                         </div>
                         {aiRunState.error ? <p>{aiRunState.error}</p> : null}
                       </div>

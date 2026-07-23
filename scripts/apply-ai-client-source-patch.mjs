@@ -3,7 +3,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 function replaceOnce(file, search, replacement, label) {
   const source = readFileSync(file, "utf8");
   const first = source.indexOf(search);
-  if (first < 0) throw new Error(`${label}: source pattern not found in ${file}`);
+  if (first < 0) {
+    if (source.includes(replacement)) {
+      console.log(`${label}: already applied`);
+      return;
+    }
+    throw new Error(`${label}: source pattern not found in ${file}`);
+  }
   if (source.indexOf(search, first + search.length) >= 0) {
     throw new Error(`${label}: source pattern is not unique in ${file}`);
   }

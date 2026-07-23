@@ -1,0 +1,236 @@
+{
+  "version": "standalone-family-entries-batch-0001-v1",
+  "reviewedAt": "2026-07-23",
+  "status": "authored-not-applied",
+  "entries": [
+    {
+      "word": "accompaniment",
+      "id": "word_587be4c09171",
+      "wordId": "word_587be4c09171",
+      "entryType": "headword",
+      "isPhrase": false,
+      "pos": "noun",
+      "phonetic": "/əˈkʌmpənimənt/",
+      "meaning": "伴随物；伴奏",
+      "meaningDetailZh": "指伴随某事出现的事物；在音乐中也指为主旋律、歌唱或独奏提供支持的伴奏。",
+      "definition": "something that is added to or goes together with something else; music that supports a main voice or instrument",
+      "example": "The meal was served with a simple salad as an accompaniment.",
+      "exampleCn": "这顿饭配有一份简单的沙拉。",
+      "otherMeanings": [
+        {
+          "pos": "noun",
+          "meaningZh": "伴奏",
+          "definitionEn": "music played to support a singer or main instrument",
+          "example": "She sang the song with piano accompaniment.",
+          "exampleCn": "她在钢琴伴奏下演唱了这首歌。"
+        }
+      ],
+      "collocations": [
+        { "phrase": "musical accompaniment", "chinese": "音乐伴奏" },
+        { "phrase": "piano accompaniment", "chinese": "钢琴伴奏" },
+        { "phrase": "perfect accompaniment", "chinese": "绝佳搭配" },
+        { "phrase": "traditional accompaniment", "chinese": "传统伴奏" }
+      ],
+      "phraseCollocations": [
+        { "phrase": "an accompaniment to a meal", "chinese": "餐食的搭配" },
+        { "phrase": "sing with accompaniment", "chinese": "在伴奏下演唱" },
+        { "phrase": "serve as an accompaniment", "chinese": "作为搭配物" },
+        { "phrase": "without musical accompaniment", "chinese": "无音乐伴奏" }
+      ],
+      "forms": [
+        { "word": "accompaniments", "type": "plural", "note": "复数形式", "source": "manual-review" }
+      ],
+      "wordFamily": [
+        { "word": "accompany", "pos": "verb", "meaning": "陪伴；伴随；伴奏", "relation": "base-word", "source": "manual-review" },
+        { "word": "accompanist", "pos": "noun", "meaning": "伴奏者", "relation": "agent-noun", "source": "manual-review" }
+      ],
+      "ieltsUse": ["Listening", "Reading", "Speaking"],
+      "topics": ["艺术", "活动", "日常生活"],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 艺术与活动",
+      "status": "",
+      "favorite": false,
+      "aiGenerated": false,
+      "source": "manual-human-review",
+      "entryStatus": "manual-family-promotion-batch-0001"
+    },
+    {
+      "word": "accompanist",
+      "id": "word_9ebd02cb495a",
+      "wordId": "word_9ebd02cb495a",
+      "entryType": "headword",
+      "isPhrase": false,
+      "pos": "noun",
+      "phonetic": "/əˈkʌmpənɪst/",
+      "meaning": "伴奏者",
+      "meaningDetailZh": "指为歌手、舞者或独奏者提供器乐伴奏的人，常见于演出、考试和音乐课程语境。",
+      "definition": "a musician who plays an instrument to support a singer, dancer, or solo performer",
+      "example": "The school hired an accompanist for the music examination.",
+      "exampleCn": "学校为音乐考试聘请了一名伴奏者。",
+      "otherMeanings": [],
+      "collocations": [
+        { "phrase": "piano accompanist", "chinese": "钢琴伴奏者" },
+        { "phrase": "professional accompanist", "chinese": "专业伴奏者" },
+        { "phrase": "experienced accompanist", "chinese": "有经验的伴奏者" },
+        { "phrase": "official accompanist", "chinese": "指定伴奏者" }
+      ],
+      "phraseCollocations": [
+        { "phrase": "work as an accompanist", "chinese": "担任伴奏者" },
+        { "phrase": "accompanist for a singer", "chinese": "歌手的伴奏者" },
+        { "phrase": "perform with an accompanist", "chinese": "与伴奏者一起演出" },
+        { "phrase": "hire an accompanist", "chinese": "聘请伴奏者" }
+      ],
+      "forms": [
+        { "word": "accompanists", "type": "plural", "note": "复数形式", "source": "manual-review" }
+      ],
+      "wordFamily": [
+        { "word": "accompany", "pos": "verb", "meaning": "陪伴；伴随；伴奏", "relation": "base-word", "source": "manual-review" },
+        { "word": "accompaniment", "pos": "noun", "meaning": "伴随物；伴奏", "relation": "noun-form", "source": "manual-review" }
+      ],
+      "ieltsUse": ["Listening", "Speaking", "Reading"],
+      "topics": ["艺术", "教育", "活动"],
+      "difficulty": "低频认识即可",
+      "category": "IELTS G类 · 艺术与教育",
+      "status": "",
+      "favorite": false,
+      "aiGenerated": false,
+      "source": "manual-human-review",
+      "entryStatus": "manual-family-promotion-batch-0001"
+    },
+    {
+      "word": "ecologically",
+      "id": "word_0571afca5286",
+      "wordId": "word_0571afca5286",
+      "entryType": "headword",
+      "isPhrase": false,
+      "pos": "adverb",
+      "phonetic": "/ˌiːkəˈlɒdʒɪkli/",
+      "meaning": "从生态角度；生态上",
+      "meaningDetailZh": "用于说明某事对生态系统的影响或其是否符合生态原则，常见于环境类阅读与讨论。",
+      "definition": "in a way that relates to ecology or the effects of an activity on the natural environment",
+      "example": "The council wants the new housing project to be ecologically sustainable.",
+      "exampleCn": "市政会希望新的住房项目在生态上可持续。",
+      "otherMeanings": [],
+      "collocations": [
+        { "phrase": "ecologically sustainable", "chinese": "生态上可持续的" },
+        { "phrase": "ecologically sensitive", "chinese": "生态脆弱的；生态敏感的" },
+        { "phrase": "ecologically important", "chinese": "生态上重要的" },
+        { "phrase": "ecologically responsible", "chinese": "对生态负责的" }
+      ],
+      "phraseCollocations": [
+        { "phrase": "ecologically friendly to wildlife", "chinese": "对野生动物生态友好" },
+        { "phrase": "manage land ecologically", "chinese": "以生态方式管理土地" },
+        { "phrase": "ecologically different from nearby areas", "chinese": "在生态上与附近地区不同" },
+        { "phrase": "design a project ecologically", "chinese": "从生态角度设计项目" }
+      ],
+      "forms": [],
+      "wordFamily": [
+        { "word": "ecology", "pos": "noun", "meaning": "生态学；生态关系", "relation": "base-word", "source": "manual-review" },
+        { "word": "ecological", "pos": "adjective", "meaning": "生态的；生态学的", "relation": "adjective-form", "source": "manual-review" },
+        { "word": "ecologist", "pos": "noun", "meaning": "生态学家", "relation": "agent-noun", "source": "manual-review" }
+      ],
+      "ieltsUse": ["Reading", "Task 2", "Speaking"],
+      "topics": ["环境", "住房", "政府"],
+      "difficulty": "低频认识即可",
+      "category": "IELTS G类 · 环境",
+      "status": "",
+      "favorite": false,
+      "aiGenerated": false,
+      "source": "manual-human-review",
+      "entryStatus": "manual-family-promotion-batch-0001"
+    },
+    {
+      "word": "stimulant",
+      "id": "word_46ab01df8603",
+      "wordId": "word_46ab01df8603",
+      "entryType": "headword",
+      "isPhrase": false,
+      "pos": "noun / adjective",
+      "phonetic": "/ˈstɪmjələnt/",
+      "meaning": "兴奋剂；有刺激作用的",
+      "meaningDetailZh": "名词指提高身体或神经活动的物质；形容词指具有刺激或促进作用的。",
+      "definition": "a substance that increases activity in the body or nervous system; having a stimulating effect",
+      "example": "Caffeine is a mild stimulant that can reduce tiredness for a short time.",
+      "exampleCn": "咖啡因是一种温和的兴奋剂，能在短时间内减轻疲劳。",
+      "otherMeanings": [
+        {
+          "pos": "adjective",
+          "meaningZh": "有刺激或促进作用的",
+          "definitionEn": "causing increased activity, interest, or growth",
+          "example": "The policy had a stimulant effect on local investment.",
+          "exampleCn": "这项政策对当地投资产生了刺激作用。"
+        }
+      ],
+      "collocations": [
+        { "phrase": "mild stimulant", "chinese": "温和的兴奋剂" },
+        { "phrase": "powerful stimulant", "chinese": "强效兴奋剂" },
+        { "phrase": "natural stimulant", "chinese": "天然兴奋剂" },
+        { "phrase": "stimulant effect", "chinese": "刺激作用" }
+      ],
+      "phraseCollocations": [
+        { "phrase": "act as a stimulant", "chinese": "起兴奋剂作用" },
+        { "phrase": "a stimulant for the economy", "chinese": "经济刺激因素" },
+        { "phrase": "depend on stimulants", "chinese": "依赖兴奋剂" },
+        { "phrase": "avoid stimulant drugs", "chinese": "避免兴奋类药物" }
+      ],
+      "forms": [
+        { "word": "stimulants", "type": "plural", "note": "复数形式", "source": "manual-review" }
+      ],
+      "wordFamily": [
+        { "word": "stimulate", "pos": "verb", "meaning": "刺激；促进；激励", "relation": "base-word", "source": "manual-review" },
+        { "word": "stimulation", "pos": "noun", "meaning": "刺激；促进", "relation": "noun-form", "source": "manual-review" },
+        { "word": "stimulus", "pos": "noun", "meaning": "刺激因素", "relation": "related-to", "source": "manual-review" }
+      ],
+      "ieltsUse": ["Reading", "Listening", "Task 2"],
+      "topics": ["健康", "经济", "科技"],
+      "difficulty": "高级加分",
+      "category": "IELTS G类 · 健康与经济",
+      "status": "",
+      "favorite": false,
+      "aiGenerated": false,
+      "source": "manual-human-review",
+      "entryStatus": "manual-family-promotion-batch-0001"
+    },
+    {
+      "word": "thirdly",
+      "id": "word_2d0269322e82",
+      "wordId": "word_2d0269322e82",
+      "entryType": "headword",
+      "isPhrase": false,
+      "pos": "adverb",
+      "phonetic": "/ˈθɜːdli/",
+      "meaning": "第三；第三点",
+      "meaningDetailZh": "用于正式列举中的第三点。虽然在现代英语中常可直接用 third，但 thirdly 仍可用于结构清晰的正式写作。",
+      "definition": "used to introduce the third point in a list or argument",
+      "example": "Thirdly, the council should provide safer cycling routes.",
+      "exampleCn": "第三，市政会应提供更安全的自行车路线。",
+      "otherMeanings": [],
+      "collocations": [
+        { "phrase": "thirdly consider", "chinese": "第三点考虑" },
+        { "phrase": "thirdly examine", "chinese": "第三点审视" },
+        { "phrase": "thirdly note", "chinese": "第三点说明" },
+        { "phrase": "thirdly propose", "chinese": "第三点建议" }
+      ],
+      "phraseCollocations": [
+        { "phrase": "firstly secondly and thirdly", "chinese": "第一、第二和第三" },
+        { "phrase": "thirdly it is important to note", "chinese": "第三，需要注意的是" },
+        { "phrase": "thirdly the report recommends", "chinese": "第三，报告建议" },
+        { "phrase": "thirdly we should consider", "chinese": "第三，我们应考虑" }
+      ],
+      "forms": [],
+      "wordFamily": [
+        { "word": "third", "pos": "adjective / noun / adverb", "meaning": "第三的；第三个；三分之一", "relation": "base-word", "source": "manual-review" },
+        { "word": "three", "pos": "number", "meaning": "三", "relation": "related-to", "source": "manual-review" }
+      ],
+      "ieltsUse": ["Task 2", "G类书信", "Speaking"],
+      "topics": ["写作结构", "观点表达"],
+      "difficulty": "中级核心",
+      "category": "IELTS G类 · 写作连接",
+      "status": "",
+      "favorite": false,
+      "aiGenerated": false,
+      "source": "manual-human-review",
+      "entryStatus": "manual-family-promotion-batch-0001"
+    }
+  ]
+}

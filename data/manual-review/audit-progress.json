@@ -13,9 +13,10 @@
   "reviewedAt": "2026-07-23",
   "reviewBranch": "fix/ai-queue-audit-v1",
   "pullRequest": 20,
-  "batchFiles": [
-    "data/manual-review/batches/batch-0001-review-v1.json"
-  ],
+  "batchMaterializer": "scripts/materialize-manual-vocab-batch-0001.mjs",
+  "materializedBatchPath": "data/manual-review/batches/batch-0001-review-v1.json",
+  "materializedBatchCommitted": false,
+  "standaloneFamilyEntriesFile": "data/manual-review/standalone-family-entries-batch-0001-v1.json",
   "standaloneFamilyEntriesAuthored": [
     "accompaniment",
     "accompanist",
@@ -40,9 +41,10 @@
     "idsPreserved": true
   },
   "notes": [
-    "Batch 0001 has completed human semantic review for 100 source entries.",
-    "Each reviewed source entry has four common collocations and four phrase or pattern collocations in the batch patch.",
-    "Five complete standalone word-family entries have been authored but are not yet written into the formal lexicon.",
-    "Formal lexicon application remains blocked until the reviewed patch is materialized and validation passes."
+    "Batch 0001 has completed direct semantic review for 100 source entries without a paid AI API.",
+    "Each reviewed source entry has four common collocations and four phrase or pattern collocations in the validated local batch patch.",
+    "The full batch payload is embedded in the committed materializer, but GitHub Actions has not yet committed the generated JSON path.",
+    "Five complete standalone word-family entries are committed as an authored-not-applied review file.",
+    "Formal lexicon application remains blocked until the reviewed batch is materialized and repository validation is complete."
   ]
 }

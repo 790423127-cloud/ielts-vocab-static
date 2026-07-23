@@ -114,14 +114,15 @@ export async function POST(req) {
     if (!cleanWords.length) return Response.json({ items: [], stats: { cacheHit: 0, deepseek: 0, invalid: 0 } });
 
     const cache = readCache();
-    const cachedItems = [];
+    const resolvedByInputKey = new Map();
     const toGenerate = [];
     let cacheHit = 0;
 
     for (const word of cleanWords) {
-      const cached = cache[normalizeKey(word)];
+      const inputKey = normalizeKey(word);
+      const cached = cache[inputKey];
       if (!force && isAiContentProfileComplete(cached)) {
-        cachedItems.push({ ...cached, word: cached.word || word, cacheHit: true, source: "ai-cache" });
+        resolvedByInputKey.set(inputKey, { ...cached, word: cached.word || word, cacheHit: true, source: "ai-cache" });
         cacheHit += 1;
       } else {
         toGenerate.push(word);
@@ -129,7 +130,10 @@ export async function POST(req) {
     }
 
     if (!toGenerate.length) {
-      return Response.json({ items: cachedItems, stats: { cacheHit, deepseek: 0, invalid: 0 } });
+      return Response.json({
+        items: cleanWords.map((word) => resolvedByInputKey.get(normalizeKey(word))).filter(Boolean),
+        stats: { cacheHit, deepseek: 0, invalid: 0 }
+      });
     }
 
     const apiKey = process.env.DEEPSEEK_API_KEY;
@@ -176,31 +180,32 @@ export async function POST(req) {
     }
 
     const rawItems = Array.isArray(data.items) ? data.items : [];
-    const generatedItems = [];
+    let generatedCount = 0;
     let invalid = 0;
 
     toGenerate.forEach((fallbackWord, index) => {
+      const inputKey = normalizeKey(fallbackWord);
       const entry = normalizeAiGeneratedEntry(rawItems[index] || {}, fallbackWord);
       if (!isAiContentProfileComplete(entry)) {
         invalid += 1;
         return;
       }
-      generatedItems.push(entry);
-      cache[normalizeKey(fallbackWord)] = { ...entry, cachedAt: Date.now() };
+      generatedCount += 1;
+      const resolved = { ...entry, cacheHit: false, source: "deepseek" };
+      resolvedByInputKey.set(inputKey, resolved);
+      cache[inputKey] = { ...entry, cachedAt: Date.now() };
     });
 
-    if (generatedItems.length) writeCache(cache);
+    if (generatedCount) writeCache(cache);
 
     return Response.json({
-      items: [
-        ...cachedItems,
-        ...generatedItems.map((entry) => ({ ...entry, cacheHit: false, source: "deepseek" }))
-      ],
+      items: cleanWords.map((word) => resolvedByInputKey.get(normalizeKey(word))).filter(Boolean),
       stats: {
         cacheHit,
-        deepseek: generatedItems.length,
+        deepseek: generatedCount,
         invalid,
-        requested: toGenerate.length
+        requested: toGenerate.length,
+        usage: payload?.usage || null
       }
     });
   } catch (error) {

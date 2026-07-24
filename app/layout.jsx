@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import FontScaleProvider from "./components/FontScaleProvider";
 import GlobalStudyHeader from "./components/GlobalStudyHeader";
+import QuickDeleteCurrentWordButton from "./components/QuickDeleteCurrentWordButton";
 
 export const metadata = {
   title: "IELTS Vocab",
@@ -45,6 +46,7 @@ export default function RootLayout({ children }) {
         <Suspense fallback={null}>
           <GlobalStudyHeader />
         </Suspense>
+        <QuickDeleteCurrentWordButton />
         {children}
       </body>
     </html>

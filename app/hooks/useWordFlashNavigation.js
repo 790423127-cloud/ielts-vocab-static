@@ -5,6 +5,7 @@ import {
   getFilterName,
   wordMatchesFilter
 } from "../lib/vocab/word-flashcard-study-pool.mjs";
+import { resolveMissingQueuePosition } from "../lib/vocab/word-navigation-index.mjs";
 
 /**
  * Word flashcard navigation: markStatus, prev/next, shuffle, keyboard shortcuts.
@@ -101,7 +102,9 @@ export function useWordFlashNavigation({
     if (!queue.length) return;
 
     const position = queue.indexOf(latest.index);
-    const nextPosition = position < 0 ? 0 : (position + 1) % queue.length;
+    const nextPosition = position < 0
+      ? resolveMissingQueuePosition(queue, latest.index, "next")
+      : (position + 1) % queue.length;
     applyNavigationIndex(latest, queue[nextPosition]);
   }
 
@@ -111,7 +114,9 @@ export function useWordFlashNavigation({
     if (!queue.length) return;
 
     const position = queue.indexOf(latest.index);
-    const prevPosition = position < 0 ? queue.length - 1 : (position - 1 + queue.length) % queue.length;
+    const prevPosition = position < 0
+      ? resolveMissingQueuePosition(queue, latest.index, "prev")
+      : (position - 1 + queue.length) % queue.length;
     applyNavigationIndex(latest, queue[prevPosition]);
   }
 
@@ -284,6 +289,11 @@ export function useWordFlashNavigation({
         }
 
         quickStatusLockRef.current = true;
+        studySessionRef.current.userAdjusted = true;
+        studySessionRef.current.restoreTargetIndex = null;
+        studySessionRef.current.persistBlocked = false;
+        studySessionRef.current.settling = false;
+
         if (typeof deleteCurrentWord === "function") {
           deleteCurrentWord();
         }
@@ -329,7 +339,7 @@ export function useWordFlashNavigation({
     return () => {
       window.removeEventListener("keydown", handleQuickStatus, true);
     };
-  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef]);
+  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef, studySessionRef]);
 
   // Tab plays the word; Space and arrows navigate.
   useEffect(() => {

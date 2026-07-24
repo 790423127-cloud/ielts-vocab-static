@@ -4,12 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Trash2 } from "lucide-react";
 
-function findDeleteCurrentWordButton() {
-  return [...document.querySelectorAll("button")].find(
-    (button) => button.textContent?.trim() === "删除当前单词"
-  ) || null;
-}
-
 function isTypingTarget(target) {
   const tagName = target?.tagName?.toLowerCase();
   return (
@@ -20,22 +14,32 @@ function isTypingTarget(target) {
   );
 }
 
+/**
+ * Reuse the page's existing Delete-key workflow instead of locating the hidden
+ * tools button by its visible Chinese label. This keeps confirmation, saving,
+ * study-session guards, and undo logging in the single existing delete path.
+ */
+function requestCurrentWordDeletion() {
+  window.dispatchEvent(new KeyboardEvent("keydown", {
+    key: "Delete",
+    code: "Delete",
+    bubbles: true,
+    cancelable: true
+  }));
+}
+
 export default function QuickDeleteCurrentWordButton() {
   const [portalTarget, setPortalTarget] = useState(null);
   const [disabled, setDisabled] = useState(true);
 
   const syncButtonState = useCallback(() => {
     const topbar = document.querySelector(".word-flash-shell .topbar");
-    const sourceButton = findDeleteCurrentWordButton();
+    const favoriteButton = document.querySelector('button[aria-label="收藏当前单词"]');
 
     setPortalTarget(topbar instanceof HTMLElement ? topbar : null);
-    setDisabled(!sourceButton || sourceButton.disabled);
-  }, []);
-
-  const deleteCurrentWord = useCallback(() => {
-    const sourceButton = findDeleteCurrentWordButton();
-    if (!sourceButton || sourceButton.disabled) return;
-    sourceButton.click();
+    // The favorite control uses the same empty/external-item guards as deletion.
+    // Loading is still guarded by the existing Delete-key handler itself.
+    setDisabled(!topbar || Boolean(favoriteButton?.disabled));
   }, []);
 
   useEffect(() => {
@@ -63,7 +67,8 @@ export default function QuickDeleteCurrentWordButton() {
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (event.key?.toLowerCase() !== "d") return;
+      const isDShortcut = event.key?.toLowerCase() === "d" || event.code === "KeyD";
+      if (!isDShortcut) return;
       if (
         event.repeat ||
         event.ctrlKey ||
@@ -74,12 +79,9 @@ export default function QuickDeleteCurrentWordButton() {
         return;
       }
 
-      const sourceButton = findDeleteCurrentWordButton();
-      if (!sourceButton || sourceButton.disabled) return;
-
       event.preventDefault();
       event.stopPropagation();
-      sourceButton.click();
+      requestCurrentWordDeletion();
     }
 
     window.addEventListener("keydown", handleKeyDown, true);
@@ -93,7 +95,7 @@ export default function QuickDeleteCurrentWordButton() {
       type="button"
       className="top-pill quick-delete-pill"
       disabled={disabled}
-      onClick={deleteCurrentWord}
+      onClick={requestCurrentWordDeletion}
       title="删除当前单词（快捷键 D 或 Delete）"
       aria-label="删除当前单词"
     >

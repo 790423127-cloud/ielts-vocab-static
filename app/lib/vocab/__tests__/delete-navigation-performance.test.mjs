@@ -5,7 +5,13 @@ import {
   buildLocalChangeLog,
   detectPureDeletionChanges
 } from "../local-change-log.mjs";
-import { resolveMissingQueuePosition } from "../word-navigation-index.mjs";
+import {
+  buildAtomicDeletionNavigation,
+  resolveMissingQueuePosition
+} from "../word-navigation-index.mjs";
+
+const normalizeWord = (value) => String(value || "").trim().toLowerCase();
+const wordMatchesFilter = (word, filter) => filter?.type === "all" || word.group === filter?.value;
 
 test("删除单词只记录真实删除项，不把后续词误判为修改", () => {
   const before = ["a", "business", "c", "d"].map((word) => ({
@@ -50,4 +56,46 @@ test("邻近词不存在时才正常首尾循环", () => {
   assert.equal(resolveMissingQueuePosition(queue, 20, "next"), 0);
   assert.equal(resolveMissingQueuePosition(queue, 1, "prev"), queue.length - 1);
   assert.equal(resolveMissingQueuePosition([], 7, "next"), -1);
+});
+
+test("删除与后继索引在同一状态中生成，不经过筛选队列首词", () => {
+  const words = [
+    { word: "a", group: "basic" },
+    { word: "off-1", group: "other" },
+    { word: "business", group: "basic" },
+    { word: "off-2", group: "other" },
+    { word: "c", group: "basic" }
+  ];
+
+  const result = buildAtomicDeletionNavigation({
+    words,
+    currentIndex: 2,
+    filter: { type: "group", value: "basic" },
+    wordMatchesFilter,
+    normalizeWord
+  });
+
+  assert.deepEqual(result.words.map((word) => word.word), ["a", "off-1", "off-2", "c"]);
+  assert.equal(result.index, 3);
+  assert.equal(result.words[result.index].word, "c");
+  assert.equal(result.queueLength, 2);
+});
+
+test("删除当前范围最后一个词时自然停在前一个词", () => {
+  const words = [
+    { word: "a", group: "basic" },
+    { word: "off", group: "other" },
+    { word: "c", group: "basic" }
+  ];
+
+  const result = buildAtomicDeletionNavigation({
+    words,
+    currentIndex: 2,
+    filter: { type: "group", value: "basic" },
+    wordMatchesFilter,
+    normalizeWord
+  });
+
+  assert.equal(result.index, 0);
+  assert.equal(result.words[result.index].word, "a");
 });

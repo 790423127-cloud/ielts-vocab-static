@@ -5,7 +5,11 @@ import {
   getFilterName,
   wordMatchesFilter
 } from "../lib/vocab/word-flashcard-study-pool.mjs";
-import { resolveMissingQueuePosition } from "../lib/vocab/word-navigation-index.mjs";
+import { normalizeWord } from "../lib/vocab/page-word-helpers.mjs";
+import {
+  buildAtomicDeletionNavigation,
+  resolveMissingQueuePosition
+} from "../lib/vocab/word-navigation-index.mjs";
 
 /**
  * Word flashcard navigation: markStatus, prev/next, shuffle, keyboard shortcuts.
@@ -288,6 +292,15 @@ export function useWordFlashNavigation({
           return;
         }
 
+        const activeFilter = latest.filter || { type: "all", value: "" };
+        const deletionNavigation = buildAtomicDeletionNavigation({
+          words: latest.words,
+          currentIndex: latest.index,
+          filter: activeFilter,
+          wordMatchesFilter,
+          normalizeWord
+        });
+
         quickStatusLockRef.current = true;
         studySessionRef.current.userAdjusted = true;
         studySessionRef.current.restoreTargetIndex = null;
@@ -296,6 +309,21 @@ export function useWordFlashNavigation({
 
         if (typeof deleteCurrentWord === "function") {
           deleteCurrentWord();
+        }
+
+        if (deletionNavigation) {
+          // deleteCurrentWord queues its own words/index updates. Apply the exact
+          // filtered successor in the same browser event so React only commits
+          // one visible destination instead of rendering queue[0] first.
+          latest.words = deletionNavigation.words;
+          latest.index = deletionNavigation.index;
+          latest.isStudyEmpty = deletionNavigation.queueLength === 0;
+          setIndex(deletionNavigation.index);
+          persistWordFlashSessionNow(
+            deletionNavigation.index,
+            activeFilter,
+            deletionNavigation.words
+          );
         }
 
         window.setTimeout(() => {
@@ -339,7 +367,7 @@ export function useWordFlashNavigation({
     return () => {
       window.removeEventListener("keydown", handleQuickStatus, true);
     };
-  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef, studySessionRef]);
+  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef, persistWordFlashSessionNow, setIndex, studySessionRef]);
 
   // Tab plays the word; Space and arrows navigate.
   useEffect(() => {

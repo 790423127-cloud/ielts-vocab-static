@@ -14,10 +14,18 @@ function isTypingTarget(target) {
   );
 }
 
+function isCurrentWordDeleteConfirmation(message) {
+  const text = String(message || "");
+  return (
+    text.includes("确定删除这个单词？") &&
+    text.includes("将从本地总词库删除")
+  );
+}
+
 /**
  * Reuse the page's existing Delete-key workflow instead of locating the hidden
- * tools button by its visible Chinese label. This keeps confirmation, saving,
- * study-session guards, and undo logging in the single existing delete path.
+ * tools button by its visible Chinese label. Saving, study-session guards, and
+ * undo logging stay in the single existing delete path.
  */
 function requestCurrentWordDeletion() {
   window.dispatchEvent(new KeyboardEvent("keydown", {
@@ -64,6 +72,23 @@ export default function QuickDeleteCurrentWordButton() {
       window.cancelAnimationFrame(animationFrame);
     };
   }, [syncButtonState]);
+
+  useEffect(() => {
+    const originalConfirm = window.confirm;
+
+    function confirmExceptCurrentWordDelete(message) {
+      if (isCurrentWordDeleteConfirmation(message)) return true;
+      return originalConfirm.call(window, message);
+    }
+
+    window.confirm = confirmExceptCurrentWordDelete;
+
+    return () => {
+      if (window.confirm === confirmExceptCurrentWordDelete) {
+        window.confirm = originalConfirm;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(event) {

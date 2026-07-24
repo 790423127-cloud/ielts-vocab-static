@@ -118,9 +118,58 @@ export function summarizeWordChanges(beforeWord, afterWord) {
   return diffs;
 }
 
+/**
+ * Fast path for deletion-only operations that keep every retained word object
+ * in the same order. Array.filter-based single-word deletion matches this shape.
+ * It avoids comparing every shifted entry field-by-field after one removal.
+ */
+export function detectPureDeletionChanges(beforeList, afterList) {
+  if (!Array.isArray(beforeList) || !Array.isArray(afterList)) return null;
+  if (afterList.length >= beforeList.length) return null;
+
+  const changes = [];
+  let afterIndex = 0;
+
+  for (let beforeIndex = 0; beforeIndex < beforeList.length; beforeIndex += 1) {
+    const beforeWord = beforeList[beforeIndex];
+
+    if (afterIndex < afterList.length && beforeWord === afterList[afterIndex]) {
+      afterIndex += 1;
+      continue;
+    }
+
+    changes.push({
+      type: "删除",
+      word: beforeWord?.word || "未知",
+      beforeIndex,
+      afterIndex: -1,
+      diffs: [{ label: "删除词", before: beforeWord?.word || "未知", after: "无" }]
+    });
+  }
+
+  const expectedDeletedCount = beforeList.length - afterList.length;
+  if (afterIndex !== afterList.length || changes.length !== expectedDeletedCount) return null;
+  return changes;
+}
+
 export function buildLocalChangeLog(actionName, beforeWords, afterWords) {
   const beforeList = Array.isArray(beforeWords) ? beforeWords : [];
   const afterList = Array.isArray(afterWords) ? afterWords : [];
+  const pureDeletionChanges = detectPureDeletionChanges(beforeList, afterList);
+
+  if (pureDeletionChanges) {
+    return {
+      actionName,
+      createdAt: Date.now(),
+      beforeWords: beforeList,
+      afterWords: afterList,
+      beforeCount: beforeList.length,
+      afterCount: afterList.length,
+      changedCount: pureDeletionChanges.length,
+      changes: pureDeletionChanges.slice(0, 300)
+    };
+  }
+
   const beforeMap = new Map();
 
   beforeList.forEach((word, index) => {

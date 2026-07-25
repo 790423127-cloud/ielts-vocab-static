@@ -1,0 +1,4 @@
+/* 词库整理只展示主词库相关信息。 */
+.tidy-review-panel p {
+  display: none;
+}

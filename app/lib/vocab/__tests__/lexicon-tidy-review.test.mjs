@@ -84,6 +84,18 @@ test("旧版因熟悉自动保留记录不再阻止人工复核", () => {
   assert.equal(result.counts.review, 1);
 });
 
+test("旧版只保存在浏览器的删除记录不会隐藏正式词库中的词", () => {
+  const target = word("good");
+  const audit = mergeTidyAuditRecords(createEmptyLexiconTidyAudit(), [{
+    auditKey: getTidyAuditKey(target, 0),
+    record: { decision: "deleted", word: "good", deletedAt: 1 }
+  }]);
+  const result = buildLexiconTidyReview([target], { audit, removableKeys: new Set(["good"]) });
+
+  assert.equal(result.counts.review, 1);
+  assert.equal(result.counts.deleted, 1);
+});
+
 test("熟悉状态不会掩盖同名重复", () => {
   const result = review([
     word("good", { id: "good-1", status: "熟悉" }),

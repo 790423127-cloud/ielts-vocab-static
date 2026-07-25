@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 
 import {
   LEXICON_TIDY_FILTERS,
+  MAX_REMOVABLE_WORD_CANDIDATES,
   buildLexiconTidyReview,
+  buildRemovableWordKeySet,
   createEmptyLexiconTidyAudit,
   findTidyCandidate,
   getTidyAuditKey,
@@ -31,27 +33,55 @@ function review(words, removable = []) {
   });
 }
 
-test("只有明确进入删除候选名单的基础词才展示", () => {
-  const result = review([word("good"), word("upheavals")], ["good"]);
+test("只把参考名单里真实存在于主词库的词加入候选", () => {
+  const words = [word("good"), word("upheavals")];
+  const keys = buildRemovableWordKeySet({ words: [{ word: "good" }, { word: "hello" }] }, words);
+  const result = review(words, keys);
+
+  assert.deepEqual([...keys], ["good"]);
   assert.equal(result.counts.review, 1);
-  assert.equal(result.counts.basic, 1);
   assert.equal(result.candidateByIndex.get(0).reasonCodes[0], "removable_basic");
   assert.equal(result.candidateByIndex.has(1), false);
 });
 
-test("主词库难度和主题不再自动扩大候选范围", () => {
-  const result = review([
-    word("photosynthesis", { difficulty: "基础高频" }),
-    word("commute", { topics: ["交通"], ieltsUse: ["生活高频"] })
-  ]);
-  assert.equal(result.counts.review, 0);
+test("候选总量最多1500个，不为数量硬扩展规则", () => {
+  const words = Array.from({ length: 1600 }, (_, index) => word(`basic${index}`));
+  const reference = { words: words.map((entry) => ({ word: entry.word })) };
+  const keys = buildRemovableWordKeySet(reference, words);
+
+  assert.equal(keys.size, MAX_REMOVABLE_WORD_CANDIDATES);
+  assert.equal(keys.has("basic1499"), true);
+  assert.equal(keys.has("basic1500"), false);
 });
 
-test("已经熟悉的基础候选默认保留", () => {
+test("参考名单未占满时可补少量明确低价值名词", () => {
+  const words = [
+    word("good"),
+    word("paris", { category: "地名专名", difficulty: "低频认识即可" }),
+    word("upheaval", { category: "IELTS Reading", difficulty: "高级加分" })
+  ];
+  const keys = buildRemovableWordKeySet({ words: [{ word: "good" }] }, words);
+
+  assert.equal(keys.has("good"), true);
+  assert.equal(keys.has("paris"), true);
+  assert.equal(keys.has("upheaval"), false);
+});
+
+test("熟悉状态不再自动隐藏，仍交给用户人工筛选", () => {
   const result = review([word("good", { status: "熟悉" })], ["good"]);
-  assert.equal(result.counts.review, 0);
-  assert.equal(result.counts.autoKeptFamiliar, 1);
-  assert.equal(result.autoKeepRecords[0].record.decision, "keep_by_familiar");
+  assert.equal(result.counts.review, 1);
+  assert.equal(result.candidateByIndex.has(0), true);
+});
+
+test("旧版因熟悉自动保留记录不再阻止人工复核", () => {
+  const target = word("good");
+  const audit = mergeTidyAuditRecords(createEmptyLexiconTidyAudit(), [{
+    auditKey: getTidyAuditKey(target, 0),
+    record: { decision: "keep_by_familiar", word: "good", reviewedAt: 1 }
+  }]);
+  const result = buildLexiconTidyReview([target], { audit, removableKeys: new Set(["good"]) });
+
+  assert.equal(result.counts.review, 1);
 });
 
 test("熟悉状态不会掩盖同名重复", () => {

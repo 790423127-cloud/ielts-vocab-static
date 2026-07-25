@@ -1,0 +1,33 @@
+name: Materialize friendly lexicon tidy review
+
+on:
+  push:
+    branches:
+      - feat/friendly-lexicon-tidy-review
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: ${{ !contains(github.event.head_commit.message, '[materialized tidy review]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Materialize source changes
+        run: node scripts/materialize-friendly-lexicon-tidy.mjs
+      - name: Remove one-time materializer
+        run: rm scripts/materialize-friendly-lexicon-tidy.mjs .github/workflows/materialize-friendly-lexicon-tidy.yml
+      - name: Commit materialized feature
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "feat: add friendly lexicon tidy review [materialized tidy review]"
+          git push origin HEAD:feat/friendly-lexicon-tidy-review

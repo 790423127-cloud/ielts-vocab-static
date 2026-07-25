@@ -5,7 +5,7 @@ export const LEXICON_TIDY_FILTER_TYPE = "tidy";
 export const LEXICON_TIDY_FILTERS = { REVIEW: "review", BASIC: "basic", ISSUES: "issues" };
 export const MAX_REMOVABLE_WORD_CANDIDATES = 1500;
 
-const LOW_VALUE_NOUN_HINT = /低频认识即可|专名|人名|地名|城市|国家|星期|月份|数字|序数|颜色|动物|食物|衣服|家居|物品|职业|身体|天气|计量|单位/;
+const LOW_VALUE_NOUN_HINT = /专名|人名|地名|城市|国家|星期|月份|数字|序数|颜色|动物|食物|衣服|家居|物品|职业|身体|天气|计量|单位/;
 
 export function normalizeTidyWordKey(value) {
   return String(value || "").normalize("NFKC").trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ");
@@ -40,8 +40,10 @@ function isLowValueNounCandidate(word) {
   const pos = String(word?.pos || "").trim().toLowerCase();
   const isNoun = /(^|[\s/;,])(proper\s+)?noun\b/.test(pos) || pos.includes("名词");
   if (!isNoun) return false;
+
+  // “低频认识即可”只是学习优先级，不能代表这个词没有价值。
+  // 只使用明确的实体类别补充候选，避免 fabrication 这类抽象学术名词被误选。
   const labels = [
-    word?.difficulty,
     word?.category,
     ...(Array.isArray(word?.topics) ? word.topics : [])
   ].filter(Boolean).join(" ");

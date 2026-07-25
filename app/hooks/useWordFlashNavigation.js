@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { flushSync } from "react-dom";
 import {
   getFilterName,
   wordMatchesFilter
@@ -308,23 +309,25 @@ export function useWordFlashNavigation({
         studySessionRef.current.persistBlocked = false;
         studySessionRef.current.settling = false;
 
-        if (typeof deleteCurrentWord === "function") {
-          deleteCurrentWord();
-        }
+        if (deletionNavigation && typeof deleteCurrentWord === "function") {
+          // The legacy delete path also sets a raw master-lexicon index. Flush the
+          // deletion and the exact filtered successor as one React commit so no
+          // out-of-range word can be painted between them.
+          flushSync(() => {
+            deleteCurrentWord();
+            latest.words = deletionNavigation.words;
+            latest.index = deletionNavigation.index;
+            latest.isStudyEmpty = deletionNavigation.queueLength === 0;
+            setIndex(deletionNavigation.index);
+          });
 
-        if (deletionNavigation) {
-          // deleteCurrentWord queues its own words/index updates. Apply the exact
-          // filtered successor in the same browser event so React only commits
-          // one visible destination instead of rendering queue[0] first.
-          latest.words = deletionNavigation.words;
-          latest.index = deletionNavigation.index;
-          latest.isStudyEmpty = deletionNavigation.queueLength === 0;
-          setIndex(deletionNavigation.index);
           persistWordFlashSessionNow(
             deletionNavigation.index,
             activeFilter,
             deletionNavigation.words
           );
+        } else if (typeof deleteCurrentWord === "function") {
+          deleteCurrentWord();
         }
 
         window.setTimeout(() => {

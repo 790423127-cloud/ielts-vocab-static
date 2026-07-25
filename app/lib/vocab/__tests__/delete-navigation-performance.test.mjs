@@ -10,6 +10,13 @@ import {
   buildAtomicDeletionNavigation,
   resolveMissingQueuePosition
 } from "../word-navigation-index.mjs";
+import {
+  LEXICON_TIDY_FILTERS,
+  buildLexiconTidyReview,
+  createEmptyLexiconTidyAudit,
+  findTidyCandidate,
+  matchesTidyScope
+} from "../lexicon-tidy-review.mjs";
 
 const normalizeWord = (value) => String(value || "").trim().toLowerCase();
 const wordMatchesFilter = (word, filter) => filter?.type === "all" || word.group === filter?.value;
@@ -116,6 +123,35 @@ test("自定义整理筛选器会收到删除后的真实索引", () => {
   assert.equal(result.words[result.index].word, "c");
 });
 
+test("真实整理候选按稳定ID匹配，删除后索引移动仍进入下一个简单词", () => {
+  const words = [
+    { id: "first", word: "good", pos: "adjective", meaning: "好" },
+    { id: "middle", word: "accommodation", pos: "noun", meaning: "住宿" },
+    { id: "next", word: "school", pos: "noun", meaning: "学校" }
+  ];
+  const review = buildLexiconTidyReview(words, {
+    audit: createEmptyLexiconTidyAudit()
+  });
+  const matcher = (word, filter, sourceIndex) => (
+    matchesTidyScope(
+      findTidyCandidate(review, word, sourceIndex),
+      filter?.value || LEXICON_TIDY_FILTERS.REVIEW
+    )
+  );
+
+  const result = buildAtomicDeletionNavigation({
+    words,
+    currentIndex: 0,
+    filter: { type: "tidy", value: "basic" },
+    wordMatchesFilter: matcher,
+    normalizeWord
+  });
+
+  assert.equal(result.queueLength, 1);
+  assert.equal(result.index, 1);
+  assert.equal(result.words[result.index].word, "school");
+});
+
 test("整理页删除按钮复用 Delete 快捷键的原子导航流程", () => {
   const source = readFileSync(
     new URL("../../../components/WordStudyActions.jsx", import.meta.url),
@@ -126,4 +162,16 @@ test("整理页删除按钮复用 Delete 快捷键的原子导航流程", () => 
   assert.match(source, /key:\s*"Delete"/);
   assert.match(source, /onClick=\{requestCurrentWordDeletion\}/);
   assert.doesNotMatch(source, /onClick=\{tidyReview\.onDelete\}/);
+});
+
+test("删除状态和筛选后继使用 flushSync 一次提交，避免绘制范围外单词", () => {
+  const source = readFileSync(
+    new URL("../../../hooks/useWordFlashNavigation.js", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(source, /import \{ flushSync \} from "react-dom"/);
+  assert.match(source, /flushSync\(\(\) => \{/);
+  assert.match(source, /latest\.words = deletionNavigation\.words/);
+  assert.match(source, /setIndex\(deletionNavigation\.index\)/);
 });

@@ -166,7 +166,8 @@ test("真实整理候选按稳定ID匹配，删除后索引移动仍进入下一
     { id: "next", word: "school", pos: "noun", meaning: "学校" }
   ];
   const review = buildLexiconTidyReview(words, {
-    audit: createEmptyLexiconTidyAudit()
+    audit: createEmptyLexiconTidyAudit(),
+    removableKeys: new Set(["good", "school"])
   });
   const matcher = (word, filter, sourceIndex) => (
     matchesTidyScope(

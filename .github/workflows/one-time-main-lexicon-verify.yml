@@ -1,0 +1,37 @@
+name: One-time main lexicon verification
+
+on:
+  push:
+    branches: [fix/persist-main-lexicon-and-removal-review]
+    paths: [.github/workflows/one-time-main-lexicon-verify.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/persist-main-lexicon-and-removal-review
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:errors
+      - run: node --test app/lib/vocab/__tests__/lexicon-content-change.test.mjs app/lib/vocab/__tests__/lexicon-tidy-review.test.mjs app/lib/vocab/__tests__/delete-navigation-performance.test.mjs
+      - run: npm run quality:all
+      - run: npm run build
+        env:
+          DEEPSEEK_API_KEY: ""
+      - name: Record success
+        run: |
+          printf 'lint, targeted tests, quality gates, and production build passed\n' > .one-time-main-lexicon-verification-passed
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .one-time-main-lexicon-verification-passed
+          git commit -m "test: record main lexicon verification"
+          git push origin HEAD:fix/persist-main-lexicon-and-removal-review

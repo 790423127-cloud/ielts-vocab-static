@@ -67,6 +67,17 @@ test("参考名单未占满时可补少量明确低价值名词", () => {
   assert.equal(keys.has("upheaval"), false);
 });
 
+test("低频学习标签不会把抽象学术名词误判为低价值名词", () => {
+  const words = [word("fabrication", {
+    difficulty: "低频认识即可",
+    category: "IELTS Reading",
+    topics: ["媒体", "社会"]
+  })];
+  const keys = buildRemovableWordKeySet({ words: [] }, words);
+
+  assert.equal(keys.has("fabrication"), false);
+});
+
 test("熟悉状态不再自动隐藏，仍交给用户人工筛选", () => {
   const result = review([word("good", { status: "熟悉" })], ["good"]);
   assert.equal(result.counts.review, 1);

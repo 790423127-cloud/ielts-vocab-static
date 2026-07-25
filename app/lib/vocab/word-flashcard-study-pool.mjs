@@ -15,6 +15,9 @@ import {
   isMissingClassification
 } from "./word-quality-status.mjs";
 
+const TIDY_EASIEST_HINT = /问候|礼貌|基础应答|人称|指示|疑问词|数字|序数|星期|月份|颜色|冠词|数量/;
+const TIDY_EVERYDAY_HINT = /家庭|人物|身体|学校|家|食物|衣服|动物|交通|方向|天气|季节|购物|地点|专名|人名|地名|城市|国家|职业|物品|计量|单位/;
+
 function normalizePhraseItems(value) {
   if (!Array.isArray(value)) return [];
 
@@ -40,6 +43,27 @@ export function normalizeStudyWordKey(word) {
     .replace(/[“”]/g, '"')
     .replace(/^[^a-z0-9]+|[^a-z0-9]+$/gi, "")
     .replace(/\s+/g, " ");
+}
+
+function tidyWordTier(word) {
+  const key = normalizeStudyWordKey(word?.word);
+  const labels = [word?.category, word?.pos, ...(Array.isArray(word?.topics) ? word.topics : [])].filter(Boolean).join(" ");
+  if (TIDY_EASIEST_HINT.test(labels) || key.length <= 4) return 0;
+  if (TIDY_EVERYDAY_HINT.test(labels) || key.length <= 7) return 1;
+  return 2;
+}
+
+export function sortWordIndicesForFilter(indices, pool, filter) {
+  if (filter?.type !== "tidy") return indices;
+  const list = Array.isArray(pool) ? pool : [];
+  return [...indices].sort((left, right) => {
+    const leftKey = normalizeStudyWordKey(list[left]?.word);
+    const rightKey = normalizeStudyWordKey(list[right]?.word);
+    return tidyWordTier(list[left]) - tidyWordTier(list[right])
+      || leftKey.length - rightKey.length
+      || leftKey.localeCompare(rightKey)
+      || left - right;
+  });
 }
 
 export const IDICTATION_FLASH_FILTERS = [
@@ -210,7 +234,7 @@ export const LEARNING_ENTRIES = [
     items: [
       {
         title: "看看这些词",
-        desc: "初高中一眼能认出的基础词和少量低价值名词，最多1500个，由你人工决定留不留。",
+        desc: "初高中一眼能认出的基础词和少量低价值名词，按简单到较难排列，最多1500个。",
         filter: { type: "tidy", value: "review" }
       }
     ]
@@ -285,7 +309,7 @@ export function buildStudyWordIndices(pool, filter, {
     if (!matchesWord(pool[i], filter, i)) continue;
     indices.push(idictation ? pool[i].originalIndex : i);
   }
-  return indices;
+  return sortWordIndicesForFilter(indices, pool, filter);
 }
 
 export function buildFilteredWordIndices(pool, filter, search, {
@@ -301,7 +325,7 @@ export function buildFilteredWordIndices(pool, filter, search, {
       if (q && !word.word.toLowerCase().includes(q)) continue;
       if (matchesWord(word, filter, i)) indices.push(word.originalIndex);
     }
-    return indices;
+    return sortWordIndicesForFilter(indices, pool, filter);
   }
 
   const wordMap = buildLibraryWordMap(pool);
@@ -320,7 +344,7 @@ export function buildFilteredWordIndices(pool, filter, search, {
     }
   }
 
-  return indices;
+  return sortWordIndicesForFilter(indices, pool, filter);
 }
 
 export function resolveStudyWordEntry(pool, poolIndex, wordByIndex) {

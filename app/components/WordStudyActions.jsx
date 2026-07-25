@@ -1,5 +1,14 @@
 "use client";
 
+function requestCurrentWordDeletion() {
+  window.dispatchEvent(new KeyboardEvent("keydown", {
+    key: "Delete",
+    code: "Delete",
+    bubbles: true,
+    cancelable: true
+  }));
+}
+
 export default function WordStudyActions({
   item,
   isStudyEmpty,
@@ -22,7 +31,7 @@ export default function WordStudyActions({
           <button className="status uncertain" type="button" disabled={isStudyEmpty} onClick={tidyReview.onLater}>
             以后再看
           </button>
-          <button className="status unknown active-unknown" type="button" disabled={isStudyEmpty} onClick={tidyReview.onDelete} title="只从雅思主词库删除">
+          <button className="status unknown active-unknown" type="button" disabled={isStudyEmpty} onClick={requestCurrentWordDeletion} title="只从雅思主词库删除">
             删除
           </button>
         </div>

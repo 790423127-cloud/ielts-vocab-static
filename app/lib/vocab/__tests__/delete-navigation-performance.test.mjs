@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   buildLocalChangeLog,
@@ -100,7 +101,6 @@ test("删除当前范围最后一个词时自然停在前一个词", () => {
   assert.equal(result.words[result.index].word, "a");
 });
 
-
 test("自定义整理筛选器会收到删除后的真实索引", () => {
   const words = [{ word: "a" }, { word: "b" }, { word: "c" }];
   const result = buildAtomicDeletionNavigation({
@@ -114,4 +114,16 @@ test("自定义整理筛选器会收到删除后的真实索引", () => {
   assert.equal(result.queueLength, 1);
   assert.equal(result.index, 1);
   assert.equal(result.words[result.index].word, "c");
+});
+
+test("整理页删除按钮复用 Delete 快捷键的原子导航流程", () => {
+  const source = readFileSync(
+    new URL("../../../components/WordStudyActions.jsx", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(source, /function requestCurrentWordDeletion\(\)/);
+  assert.match(source, /key:\s*"Delete"/);
+  assert.match(source, /onClick=\{requestCurrentWordDeletion\}/);
+  assert.doesNotMatch(source, /onClick=\{tidyReview\.onDelete\}/);
 });

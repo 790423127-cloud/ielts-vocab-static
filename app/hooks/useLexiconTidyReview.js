@@ -12,8 +12,7 @@ import {
   matchesTidyScope,
   mergeTidyAuditRecords,
   normalizeLexiconTidyAudit,
-  normalizeTidyWordKey,
-  sortTidyWordIndices
+  normalizeTidyWordKey
 } from "../lib/vocab/lexicon-tidy-review.mjs";
 
 export function useLexiconTidyReview({ words, setToast }) {
@@ -60,7 +59,6 @@ export function useLexiconTidyReview({ words, setToast }) {
   const getCandidate = useCallback((index) => findTidyCandidate(review, Number.isInteger(index) ? words[index] : null, index), [review, words]);
   const matchesWord = useCallback((word, index, scope = LEXICON_TIDY_FILTERS.REVIEW) =>
     Boolean(ready && word && Number.isInteger(index) && matchesTidyScope(findTidyCandidate(review, word, index), scope)), [ready, review]);
-  const sortIndices = useCallback((indices, sourceWords = words) => sortTidyWordIndices(indices, sourceWords, review), [review, words]);
 
   const keepWord = useCallback((word, index) => {
     const candidate = findTidyCandidate(review, word, index);
@@ -100,5 +98,5 @@ export function useLexiconTidyReview({ words, setToast }) {
     return entries.length;
   }, [review, commitAudit]);
 
-  return { ready, review, matchesWord, sortIndices, getCandidate, keepWord, recordDeletedWords };
+  return { ready, review, matchesWord, getCandidate, keepWord, recordDeletedWords };
 }

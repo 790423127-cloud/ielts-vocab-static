@@ -1,0 +1,22 @@
+name: One-time tidy sort verification
+
+on:
+  push:
+    branches: [fix/exclude-academic-nouns-from-tidy]
+    paths: [.github/workflows/one-time-tidy-sort-verify.yml]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/exclude-academic-nouns-from-tidy
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint:errors
+      - run: node --test app/lib/vocab/__tests__/lexicon-tidy-review.test.mjs app/lib/vocab/__tests__/delete-navigation-performance.test.mjs

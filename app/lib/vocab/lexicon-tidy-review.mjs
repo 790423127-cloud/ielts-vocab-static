@@ -1,48 +1,32 @@
-import { evaluateSimpleWord } from "./basic-word-signals.mjs";
 import { isBrushableWord } from "./word-study-eligibility.mjs";
 
 export const LEXICON_TIDY_AUDIT_VERSION = 1;
 export const LEXICON_TIDY_FILTER_TYPE = "tidy";
-export const LEXICON_TIDY_FILTERS = {
-  REVIEW: "review",
-  BASIC: "basic",
-  ISSUES: "issues"
-};
+export const LEXICON_TIDY_FILTERS = { REVIEW: "review", BASIC: "basic", ISSUES: "issues" };
 
 const KEPT_DECISIONS = new Set(["keep", "keep_by_familiar"]);
 
 export function normalizeTidyWordKey(value) {
-  return String(value || "")
-    .normalize("NFKC")
-    .trim()
-    .toLowerCase()
-    .replace(/[’‘]/g, "'")
-    .replace(/\s+/g, " ");
+  return String(value || "").normalize("NFKC").trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ");
 }
 
 export function getTidyAuditKey(word, index = -1) {
   const stableId = String(word?.wordId || word?.id || "").trim();
   if (stableId) return `main:${stableId}`;
-
   const key = normalizeTidyWordKey(word?.word);
   return key ? `main:word:${key}` : `main:index:${Number.isInteger(index) ? index : "unknown"}`;
 }
 
 export function createEmptyLexiconTidyAudit() {
-  return {
-    version: LEXICON_TIDY_AUDIT_VERSION,
-    updatedAt: 0,
-    records: {}
-  };
+  return { version: LEXICON_TIDY_AUDIT_VERSION, updatedAt: 0, records: {} };
 }
 
 export function normalizeLexiconTidyAudit(value) {
   const source = value && typeof value === "object" ? value : {};
-  const records = source.records && typeof source.records === "object" ? source.records : {};
   return {
     version: LEXICON_TIDY_AUDIT_VERSION,
     updatedAt: Number(source.updatedAt) || 0,
-    records: { ...records }
+    records: { ...(source.records && typeof source.records === "object" ? source.records : {}) }
   };
 }
 
@@ -52,13 +36,7 @@ function isStrictStandaloneHeadword(value) {
 }
 
 function reasonLabel(code) {
-  if (code === "core_basic_headword") return "常见基础词";
-  if (code === "basic_word_form") return "常见基础词形";
-  if (code === "basic_difficulty") return "主词库标记为基础词";
-  if (code === "basic_category") return "主词库分类偏基础";
-  if (code === "everyday_usage") return "日常生活或工作高频";
-  if (code === "everyday_topic") return "常见生活主题";
-  if (code === "short_common_word") return "较短的常用词";
+  if (code === "removable_basic") return "常见基础词";
   if (code === "duplicate_headword") return "主词库里有同名单词";
   if (code === "invalid_headword") return "单词本身含异常字符或不是独立词头";
   return code;
@@ -73,20 +51,19 @@ export function matchesTidyScope(candidate, scope = LEXICON_TIDY_FILTERS.REVIEW)
 
 export function findTidyCandidate(review, word, index = -1) {
   if (!review || !word) return null;
-  const auditKey = getTidyAuditKey(word, index);
-  return review.candidateByAuditKey?.get(auditKey) || null;
+  return review.candidateByAuditKey?.get(getTidyAuditKey(word, index)) || null;
 }
 
 export function buildLexiconTidyReview(words, options = {}) {
   const list = Array.isArray(words) ? words : [];
   const audit = normalizeLexiconTidyAudit(options.audit);
+  const removableKeys = options.removableKeys instanceof Set ? options.removableKeys : new Set();
   const duplicateCounts = new Map();
 
   for (const word of list) {
     if (!isBrushableWord(word)) continue;
     const key = normalizeTidyWordKey(word?.word);
-    if (!key) continue;
-    duplicateCounts.set(key, (duplicateCounts.get(key) || 0) + 1);
+    if (key) duplicateCounts.set(key, (duplicateCounts.get(key) || 0) + 1);
   }
 
   const candidateByIndex = new Map();
@@ -116,34 +93,30 @@ export function buildLexiconTidyReview(words, options = {}) {
     const auditKey = getTidyAuditKey(word, index);
     const existing = audit.records[auditKey];
     const key = normalizeTidyWordKey(word?.word);
-    const simple = evaluateSimpleWord(word);
-    const reasonCodes = [...simple.reasonCodes];
-
+    const isSimple = removableKeys.has(key);
+    const reasonCodes = [];
+    if (isSimple) reasonCodes.push("removable_basic");
     if (key && (duplicateCounts.get(key) || 0) > 1) reasonCodes.push("duplicate_headword");
     if (!isStrictStandaloneHeadword(word?.word)) reasonCodes.push("invalid_headword");
 
-    const hasDataIssue = reasonCodes.some((code) => code === "duplicate_headword" || code === "invalid_headword");
-    if (simple.isSimple) counts.simpleDetected += 1;
+    const hasDataIssue = reasonCodes.some((code) => code !== "removable_basic");
+    if (isSimple) counts.simpleDetected += 1;
     if (hasDataIssue) counts.issueDetected += 1;
+    if (KEPT_DECISIONS.has(existing?.decision) || existing?.decision === "deleted" || !reasonCodes.length) continue;
 
-    if (KEPT_DECISIONS.has(existing?.decision) || existing?.decision === "deleted") continue;
-    if (!reasonCodes.length) continue;
-
-    if (word?.status === "熟悉" && simple.isSimple && !hasDataIssue) {
+    if (word?.status === "熟悉" && isSimple && !hasDataIssue) {
       counts.autoKeptFamiliar += 1;
-      if (!existing) {
-        autoKeepRecords.push({
-          auditKey,
-          record: {
-            sourceLexicon: "main",
-            wordId: word?.wordId || word?.id || "",
-            word: word?.word || "",
-            decision: "keep_by_familiar",
-            reasonCodes: simple.reasonCodes,
-            reviewedAt: Date.now()
-          }
-        });
-      }
+      if (!existing) autoKeepRecords.push({
+        auditKey,
+        record: {
+          sourceLexicon: "main",
+          wordId: word?.wordId || word?.id || "",
+          word: word?.word || "",
+          decision: "keep_by_familiar",
+          reasonCodes: ["removable_basic"],
+          reviewedAt: Date.now()
+        }
+      });
       continue;
     }
 
@@ -153,45 +126,29 @@ export function buildLexiconTidyReview(words, options = {}) {
       word: word?.word || "",
       reasonCodes,
       reasons: reasonCodes.map(reasonLabel),
-      isSimple: simple.isSimple,
-      simpleScore: simple.score,
-      matchedBase: simple.matchedBase,
-      basicOverlap: simple.isSimple,
+      isSimple,
+      simpleScore: isSimple ? 1 : 0,
+      matchedBase: isSimple ? key : "",
+      basicOverlap: isSimple,
       hasDataIssue
     };
 
     candidateByIndex.set(index, candidate);
     candidateByAuditKey.set(auditKey, candidate);
     counts.review += 1;
-    if (candidate.isSimple) counts.basic += 1;
-    if (candidate.hasDataIssue) counts.issues += 1;
+    if (isSimple) counts.basic += 1;
+    if (hasDataIssue) counts.issues += 1;
   }
 
-  return {
-    candidateByIndex,
-    candidateByAuditKey,
-    autoKeepRecords,
-    counts,
-    audit
-  };
+  return { candidateByIndex, candidateByAuditKey, autoKeepRecords, counts, audit };
 }
 
 export function mergeTidyAuditRecords(audit, entries = []) {
   const current = normalizeLexiconTidyAudit(audit);
   if (!Array.isArray(entries) || !entries.length) return current;
-
   const records = { ...current.records };
   for (const entry of entries) {
-    if (!entry?.auditKey || !entry?.record) continue;
-    records[entry.auditKey] = {
-      ...(records[entry.auditKey] || {}),
-      ...entry.record
-    };
+    if (entry?.auditKey && entry?.record) records[entry.auditKey] = { ...(records[entry.auditKey] || {}), ...entry.record };
   }
-
-  return {
-    version: LEXICON_TIDY_AUDIT_VERSION,
-    updatedAt: Date.now(),
-    records
-  };
+  return { version: LEXICON_TIDY_AUDIT_VERSION, updatedAt: Date.now(), records };
 }

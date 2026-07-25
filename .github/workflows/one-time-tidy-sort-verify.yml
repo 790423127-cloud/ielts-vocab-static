@@ -1,9 +1,8 @@
 name: One-time tidy sort verification
 
 on:
-  push:
-    branches: [fix/exclude-academic-nouns-from-tidy]
-    paths: [.github/workflows/one-time-tidy-sort-verify.yml]
+  pull_request:
+    branches: [main]
 
 jobs:
   verify:
@@ -11,8 +10,6 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: fix/exclude-academic-nouns-from-tidy
       - uses: actions/setup-node@v4
         with:
           node-version: "20"

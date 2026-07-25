@@ -1,3 +1,4 @@
+import { evaluateSimpleWord } from "./basic-word-signals.mjs";
 import { isBrushableWord } from "./word-study-eligibility.mjs";
 
 export const LEXICON_TIDY_AUDIT_VERSION = 1;
@@ -51,7 +52,13 @@ function isStrictStandaloneHeadword(value) {
 }
 
 function reasonLabel(code) {
-  if (code === "basic_1500_overlap") return "主词库中的简单基础词";
+  if (code === "core_basic_headword") return "常见基础词";
+  if (code === "basic_word_form") return "常见基础词形";
+  if (code === "basic_difficulty") return "主词库标记为基础词";
+  if (code === "basic_category") return "主词库分类偏基础";
+  if (code === "everyday_usage") return "日常生活或工作高频";
+  if (code === "everyday_topic") return "常见生活主题";
+  if (code === "short_common_word") return "较短的常用词";
   if (code === "duplicate_headword") return "主词库里有同名单词";
   if (code === "invalid_headword") return "单词本身含异常字符或不是独立词头";
   return code;
@@ -59,16 +66,19 @@ function reasonLabel(code) {
 
 export function matchesTidyScope(candidate, scope = LEXICON_TIDY_FILTERS.REVIEW) {
   if (!candidate) return false;
-  if (scope === LEXICON_TIDY_FILTERS.BASIC) return candidate.reasonCodes.includes("basic_1500_overlap");
-  if (scope === LEXICON_TIDY_FILTERS.ISSUES) {
-    return candidate.reasonCodes.some((code) => code === "duplicate_headword" || code === "invalid_headword");
-  }
+  if (scope === LEXICON_TIDY_FILTERS.BASIC) return candidate.isSimple;
+  if (scope === LEXICON_TIDY_FILTERS.ISSUES) return candidate.hasDataIssue;
   return true;
+}
+
+export function findTidyCandidate(review, word, index = -1) {
+  if (!review || !word) return null;
+  const auditKey = getTidyAuditKey(word, index);
+  return review.candidateByAuditKey?.get(auditKey) || null;
 }
 
 export function buildLexiconTidyReview(words, options = {}) {
   const list = Array.isArray(words) ? words : [];
-  const basicWordKeys = options.basicWordKeys instanceof Set ? options.basicWordKeys : new Set();
   const audit = normalizeLexiconTidyAudit(options.audit);
   const duplicateCounts = new Map();
 
@@ -80,11 +90,14 @@ export function buildLexiconTidyReview(words, options = {}) {
   }
 
   const candidateByIndex = new Map();
+  const candidateByAuditKey = new Map();
   const autoKeepRecords = [];
   const counts = {
     review: 0,
     basic: 0,
     issues: 0,
+    simpleDetected: 0,
+    issueDetected: 0,
     autoKeptFamiliar: 0,
     manuallyKept: 0,
     deleted: 0
@@ -102,18 +115,21 @@ export function buildLexiconTidyReview(words, options = {}) {
 
     const auditKey = getTidyAuditKey(word, index);
     const existing = audit.records[auditKey];
-    if (KEPT_DECISIONS.has(existing?.decision) || existing?.decision === "deleted") continue;
-
     const key = normalizeTidyWordKey(word?.word);
-    const reasonCodes = [];
+    const simple = evaluateSimpleWord(word);
+    const reasonCodes = [...simple.reasonCodes];
 
-    if (key && basicWordKeys.has(key)) reasonCodes.push("basic_1500_overlap");
     if (key && (duplicateCounts.get(key) || 0) > 1) reasonCodes.push("duplicate_headword");
     if (!isStrictStandaloneHeadword(word?.word)) reasonCodes.push("invalid_headword");
-    if (!reasonCodes.length) continue;
 
     const hasDataIssue = reasonCodes.some((code) => code === "duplicate_headword" || code === "invalid_headword");
-    if (word?.status === "熟悉" && !hasDataIssue) {
+    if (simple.isSimple) counts.simpleDetected += 1;
+    if (hasDataIssue) counts.issueDetected += 1;
+
+    if (KEPT_DECISIONS.has(existing?.decision) || existing?.decision === "deleted") continue;
+    if (!reasonCodes.length) continue;
+
+    if (word?.status === "熟悉" && simple.isSimple && !hasDataIssue) {
       counts.autoKeptFamiliar += 1;
       if (!existing) {
         autoKeepRecords.push({
@@ -123,7 +139,7 @@ export function buildLexiconTidyReview(words, options = {}) {
             wordId: word?.wordId || word?.id || "",
             word: word?.word || "",
             decision: "keep_by_familiar",
-            reasonCodes: ["basic_1500_overlap"],
+            reasonCodes: simple.reasonCodes,
             reviewedAt: Date.now()
           }
         });
@@ -137,18 +153,23 @@ export function buildLexiconTidyReview(words, options = {}) {
       word: word?.word || "",
       reasonCodes,
       reasons: reasonCodes.map(reasonLabel),
-      basicOverlap: reasonCodes.includes("basic_1500_overlap"),
+      isSimple: simple.isSimple,
+      simpleScore: simple.score,
+      matchedBase: simple.matchedBase,
+      basicOverlap: simple.isSimple,
       hasDataIssue
     };
 
     candidateByIndex.set(index, candidate);
+    candidateByAuditKey.set(auditKey, candidate);
     counts.review += 1;
-    if (candidate.basicOverlap) counts.basic += 1;
+    if (candidate.isSimple) counts.basic += 1;
     if (candidate.hasDataIssue) counts.issues += 1;
   }
 
   return {
     candidateByIndex,
+    candidateByAuditKey,
     autoKeepRecords,
     counts,
     audit

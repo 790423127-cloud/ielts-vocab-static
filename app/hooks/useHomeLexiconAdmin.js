@@ -163,37 +163,16 @@ export async function publishAiSnapshot(context, snapshot) {
     throw error;
   }
 
-  const localResult = await context.persistWordsImmediately(snapshot);
-  const requestBody = await buildAiSnapshotRequestBody(snapshot, {
-    savedAt: new Date().toISOString(),
-    version: context.cacheMetaRef?.current?.version || undefined,
-    lexiconHash: context.cacheMetaRef?.current?.lexiconHash || "",
-    source: "paid-ai-checkpoint",
-    forceRefresh: true
-  });
-
-  const response = await fetch("/api/export-cache", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: requestBody
-  });
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok || result?.ok === false) {
-    const error = new Error(result?.detail || result?.error || `HTTP ${response.status}`);
-    error.code = "SERVER_PUBLISH_FAILED";
-    error.status = "server-publish-failed";
-    error.localSaved = true;
+  const result = await context.persistWordsImmediately(snapshot);
+  if (!result?.ok || result.serverPublished === false) {
+    const error = new Error(result?.serverResult?.detail || result?.serverResult?.error || result?.error?.message || "正式主词库发布失败");
+    error.code = result?.localSaved ? "SERVER_PUBLISH_FAILED" : "LOCAL_SAVE_FAILED";
+    error.status = result?.localSaved ? "server-publish-failed" : "local-save-failed";
+    error.localSaved = Boolean(result?.localSaved);
     error.serverPublished = false;
     throw error;
   }
-  return {
-    ok: true,
-    status: "published",
-    localSaved: true,
-    serverPublished: true,
-    localResult,
-    serverResult: result
-  };
+  return result;
 }
 
 function createPersistingAiSetWords(context) {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { loadBasicWords } from "../lib/basic-vocab/load-basic-words.mjs";
 import {
   loadLexiconTidyAuditFromIndexedDB,
   saveLexiconTidyAuditToIndexedDB
@@ -10,6 +9,7 @@ import {
   LEXICON_TIDY_FILTERS,
   buildLexiconTidyReview,
   createEmptyLexiconTidyAudit,
+  findTidyCandidate,
   getTidyAuditKey,
   matchesTidyScope,
   mergeTidyAuditRecords,
@@ -17,14 +17,7 @@ import {
   normalizeTidyWordKey
 } from "../lib/vocab/lexicon-tidy-review.mjs";
 
-const FALLBACK_BASIC_WORDS = new Set([
-  "a", "an", "the", "and", "or", "but", "i", "you", "he", "she", "it", "we", "they",
-  "am", "is", "are", "was", "were", "be", "do", "go", "come", "get", "make", "have",
-  "good", "bad", "big", "small", "new", "old", "yes", "no", "one", "two", "three"
-]);
-
 export function useLexiconTidyReview({ words, setToast }) {
-  const [basicWordKeys, setBasicWordKeys] = useState(FALLBACK_BASIC_WORDS);
   const [audit, setAudit] = useState(() => createEmptyLexiconTidyAudit());
   const [ready, setReady] = useState(false);
   const auditRef = useRef(audit);
@@ -53,39 +46,31 @@ export function useLexiconTidyReview({ words, setToast }) {
   useEffect(() => {
     let cancelled = false;
 
-    async function loadReviewData() {
-      const [basicResult, auditResult] = await Promise.allSettled([
-        loadBasicWords(),
-        loadLexiconTidyAuditFromIndexedDB()
-      ]);
-      if (cancelled) return;
+    loadLexiconTidyAuditFromIndexedDB()
+      .then((value) => {
+        if (cancelled) return;
+        const nextAudit = normalizeLexiconTidyAudit(value);
+        auditRef.current = nextAudit;
+        setAudit(nextAudit);
+        setReady(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        const nextAudit = createEmptyLexiconTidyAudit();
+        auditRef.current = nextAudit;
+        setAudit(nextAudit);
+        setReady(true);
+        setToast?.("词库整理记录读取失败，已先使用当前主词库继续");
+      });
 
-      if (basicResult.status === "fulfilled") {
-        const nextKeys = new Set(FALLBACK_BASIC_WORDS);
-        for (const word of basicResult.value?.words || []) {
-          const key = normalizeTidyWordKey(word?.word);
-          if (key) nextKeys.add(key);
-        }
-        setBasicWordKeys(nextKeys);
-      }
-
-      const nextAudit = auditResult.status === "fulfilled"
-        ? normalizeLexiconTidyAudit(auditResult.value)
-        : createEmptyLexiconTidyAudit();
-      auditRef.current = nextAudit;
-      setAudit(nextAudit);
-      setReady(true);
-    }
-
-    loadReviewData();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [setToast]);
 
   const review = useMemo(
-    () => buildLexiconTidyReview(words, { basicWordKeys, audit }),
-    [words, basicWordKeys, audit]
+    () => buildLexiconTidyReview(words, { audit }),
+    [words, audit]
   );
 
   useEffect(() => {
@@ -93,13 +78,18 @@ export function useLexiconTidyReview({ words, setToast }) {
     commitAudit((current) => mergeTidyAuditRecords(current, review.autoKeepRecords));
   }, [ready, review.autoKeepRecords, commitAudit]);
 
+  const getCandidate = useCallback((index) => {
+    const word = Number.isInteger(index) ? words[index] : null;
+    return findTidyCandidate(review, word, index);
+  }, [review, words]);
+
   const matchesWord = useCallback((word, index, scope = LEXICON_TIDY_FILTERS.REVIEW) => {
     if (!ready || !word || !Number.isInteger(index)) return false;
-    return matchesTidyScope(review.candidateByIndex.get(index), scope);
-  }, [ready, review.candidateByIndex]);
+    return matchesTidyScope(findTidyCandidate(review, word, index), scope);
+  }, [ready, review]);
 
   const keepWord = useCallback((word, index) => {
-    const candidate = review.candidateByIndex.get(index);
+    const candidate = findTidyCandidate(review, word, index);
     const auditKey = candidate?.auditKey || getTidyAuditKey(word, index);
     commitAudit((current) => mergeTidyAuditRecords(current, [{
       auditKey,
@@ -113,7 +103,7 @@ export function useLexiconTidyReview({ words, setToast }) {
       }
     }]));
     return candidate;
-  }, [review.candidateByIndex, commitAudit]);
+  }, [review, commitAudit]);
 
   const recordDeletedWords = useCallback((sourceWords, currentIndex) => {
     const list = Array.isArray(sourceWords) ? sourceWords : [];
@@ -121,7 +111,7 @@ export function useLexiconTidyReview({ words, setToast }) {
     const targetKey = normalizeTidyWordKey(currentWord?.word);
     if (!targetKey) return 0;
 
-    const currentCandidate = review.candidateByIndex.get(currentIndex);
+    const currentCandidate = findTidyCandidate(review, currentWord, currentIndex);
     const entries = [];
     for (let index = 0; index < list.length; index += 1) {
       const word = list[index];
@@ -144,13 +134,13 @@ export function useLexiconTidyReview({ words, setToast }) {
       commitAudit((current) => mergeTidyAuditRecords(current, entries));
     }
     return entries.length;
-  }, [review.candidateByIndex, commitAudit]);
+  }, [review, commitAudit]);
 
   return {
     ready,
     review,
     matchesWord,
-    getCandidate: (index) => review.candidateByIndex.get(index) || null,
+    getCandidate,
     keepWord,
     recordDeletedWords
   };

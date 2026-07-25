@@ -6,8 +6,6 @@ export const LEXICON_TIDY_FILTERS = { REVIEW: "review", BASIC: "basic", ISSUES: 
 export const MAX_REMOVABLE_WORD_CANDIDATES = 1500;
 
 const LOW_VALUE_NOUN_HINT = /专名|人名|地名|城市|国家|星期|月份|数字|序数|颜色|动物|食物|衣服|家居|物品|职业|身体|天气|计量|单位/;
-const FIRST_TIER_HINT = /问候|礼貌|基础应答|人称|指示|疑问词|数字|序数|星期|月份|颜色|冠词|数量/;
-const SECOND_TIER_HINT = /家庭|人物|身体|学校|家|食物|衣服|动物|交通|方向|天气|季节|购物|地点/;
 
 export function normalizeTidyWordKey(value) {
   return String(value || "").normalize("NFKC").trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ");
@@ -43,23 +41,9 @@ function isLowValueNounCandidate(word) {
   const isNoun = /(^|[\s/;,])(proper\s+)?noun\b/.test(pos) || pos.includes("名词");
   if (!isNoun) return false;
 
-  // “低频认识即可”只是学习优先级，不能代表词条没有价值。
+  // “低频认识即可”只是学习优先级，不能代表这个词没有价值。
   const labels = [word?.category, ...(Array.isArray(word?.topics) ? word.topics : [])].filter(Boolean).join(" ");
   return LOW_VALUE_NOUN_HINT.test(labels);
-}
-
-function referenceTier(item) {
-  const key = normalizeTidyWordKey(item?.word);
-  const labels = [item?.category, item?.pos, ...(Array.isArray(item?.topics) ? item.topics : [])].filter(Boolean).join(" ");
-  if (FIRST_TIER_HINT.test(labels) || key.length <= 4) return 0;
-  if (SECOND_TIER_HINT.test(labels) || key.length <= 7) return 1;
-  return 2;
-}
-
-function compareReferenceItems(a, b) {
-  return referenceTier(a.item) - referenceTier(b.item)
-    || normalizeTidyWordKey(a.item?.word).length - normalizeTidyWordKey(b.item?.word).length
-    || a.index - b.index;
 }
 
 export function buildRemovableWordKeySet(referenceData, mainWords, limit = MAX_REMOVABLE_WORD_CANDIDATES) {
@@ -76,15 +60,11 @@ export function buildRemovableWordKeySet(referenceData, mainWords, limit = MAX_R
     selected.push(key);
   };
 
-  const referenceWords = (Array.isArray(referenceData?.words) ? referenceData.words : [])
-    .map((item, index) => ({ item, index }))
-    .sort(compareReferenceItems);
-  for (const { item } of referenceWords) add(item?.word);
-
-  const lowValueNouns = list
-    .filter(isLowValueNounCandidate)
-    .sort((a, b) => normalizeTidyWordKey(a?.word).length - normalizeTidyWordKey(b?.word).length);
-  for (const word of lowValueNouns) add(word?.word);
+  for (const item of Array.isArray(referenceData?.words) ? referenceData.words : []) add(item?.word);
+  for (const word of list) {
+    if (selected.length >= max) break;
+    if (isLowValueNounCandidate(word)) add(word?.word);
+  }
 
   return new Set(selected);
 }
@@ -108,25 +88,10 @@ export function findTidyCandidate(review, word, index = -1) {
   return review.candidateByAuditKey?.get(getTidyAuditKey(word, index)) || null;
 }
 
-export function sortTidyWordIndices(indices, words, review) {
-  const list = Array.isArray(words) ? words : [];
-  return [...(Array.isArray(indices) ? indices : [])].sort((left, right) => {
-    const leftWord = list[left];
-    const rightWord = list[right];
-    const leftCandidate = findTidyCandidate(review, leftWord, left);
-    const rightCandidate = findTidyCandidate(review, rightWord, right);
-    return (leftCandidate?.sortRank ?? Number.MAX_SAFE_INTEGER) - (rightCandidate?.sortRank ?? Number.MAX_SAFE_INTEGER)
-      || normalizeTidyWordKey(leftWord?.word).length - normalizeTidyWordKey(rightWord?.word).length
-      || normalizeTidyWordKey(leftWord?.word).localeCompare(normalizeTidyWordKey(rightWord?.word))
-      || left - right;
-  });
-}
-
 export function buildLexiconTidyReview(words, options = {}) {
   const list = Array.isArray(words) ? words : [];
   const audit = normalizeLexiconTidyAudit(options.audit);
   const removableKeys = options.removableKeys instanceof Set ? options.removableKeys : new Set();
-  const removableRank = new Map([...removableKeys].map((key, rank) => [key, rank]));
   const duplicateCounts = new Map();
 
   for (const word of list) {
@@ -180,8 +145,7 @@ export function buildLexiconTidyReview(words, options = {}) {
       simpleScore: isSimple ? 1 : 0,
       matchedBase: isSimple ? key : "",
       basicOverlap: isSimple,
-      hasDataIssue,
-      sortRank: isSimple ? removableRank.get(key) : Number.MAX_SAFE_INTEGER
+      hasDataIssue
     };
 
     candidateByIndex.set(index, candidate);

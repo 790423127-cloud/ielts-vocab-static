@@ -27,7 +27,8 @@ export function buildAtomicDeletionNavigation({
   currentIndex,
   filter,
   wordMatchesFilter,
-  normalizeWord
+  normalizeWord,
+  sortQueue
 }) {
   const sourceWords = Array.isArray(words) ? words : [];
   if (!Number.isInteger(currentIndex) || !sourceWords[currentIndex]) return null;
@@ -40,8 +41,9 @@ export function buildAtomicDeletionNavigation({
   for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
     if (wordMatchesFilter(sourceWords[sourceIndex], filter, sourceIndex)) oldQueue.push(sourceIndex);
   }
+  const sortedOldQueue = typeof sortQueue === "function" ? sortQueue(oldQueue, sourceWords, filter) : oldQueue;
 
-  const oldPosition = oldQueue.indexOf(currentIndex);
+  const oldPosition = sortedOldQueue.indexOf(currentIndex);
   const nextWords = [];
   const nextQueue = [];
   let deletedCount = 0;
@@ -59,12 +61,13 @@ export function buildAtomicDeletionNavigation({
 
   if (!deletedCount) return null;
 
+  const sortedNextQueue = typeof sortQueue === "function" ? sortQueue(nextQueue, nextWords, filter) : nextQueue;
   let nextIndex = 0;
-  if (nextQueue.length) {
+  if (sortedNextQueue.length) {
     const queuePosition = oldPosition >= 0
-      ? Math.min(oldPosition, nextQueue.length - 1)
-      : resolveMissingQueuePosition(nextQueue, Math.min(currentIndex, Math.max(0, nextWords.length - 1)), "next");
-    nextIndex = nextQueue[Math.max(0, queuePosition)];
+      ? Math.min(oldPosition, sortedNextQueue.length - 1)
+      : resolveMissingQueuePosition(sortedNextQueue, Math.min(currentIndex, Math.max(0, nextWords.length - 1)), "next");
+    nextIndex = sortedNextQueue[Math.max(0, queuePosition)];
   } else if (nextWords.length) {
     nextIndex = Math.min(currentIndex, nextWords.length - 1);
   }
@@ -72,7 +75,7 @@ export function buildAtomicDeletionNavigation({
   return {
     words: nextWords,
     index: nextIndex,
-    queueLength: nextQueue.length,
+    queueLength: sortedNextQueue.length,
     deletedCount,
     targetKey
   };

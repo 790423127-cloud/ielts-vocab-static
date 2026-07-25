@@ -11,6 +11,10 @@ import {
   resolveMissingQueuePosition
 } from "../word-navigation-index.mjs";
 import {
+  buildStudyWordIndices,
+  sortWordIndicesForFilter
+} from "../word-flashcard-study-pool.mjs";
+import {
   LEXICON_TIDY_FILTERS,
   buildLexiconTidyReview,
   createEmptyLexiconTidyAudit,
@@ -66,6 +70,20 @@ test("邻近词不存在时才正常首尾循环", () => {
   assert.equal(resolveMissingQueuePosition([], 7, "next"), -1);
 });
 
+test("整理候选按简单到较难生成显示和翻页队列", () => {
+  const words = [
+    { word: "fabrication", category: "IELTS Reading", topics: ["社会"] },
+    { word: "Paris", category: "地名专名", topics: ["地点"] },
+    { word: "apple", category: "基础词", topics: ["食物"] },
+    { word: "go", category: "基础词", topics: ["动词"] }
+  ];
+  const indices = buildStudyWordIndices(words, { type: "tidy", value: "review" }, {
+    matchesWord: () => true
+  });
+
+  assert.deepEqual(indices.map((index) => words[index].word), ["go", "apple", "Paris", "fabrication"]);
+});
+
 test("删除与后继索引在同一状态中生成，不经过筛选队列首词", () => {
   const words = [
     { word: "a", group: "basic" },
@@ -108,6 +126,24 @@ test("删除当前范围最后一个词时自然停在前一个词", () => {
   assert.equal(result.words[result.index].word, "a");
 });
 
+test("整理页删除后继续进入排序中的下一词", () => {
+  const words = [
+    { word: "fabrication", category: "IELTS Reading", topics: ["社会"] },
+    { word: "go", category: "基础词", topics: ["动词"] },
+    { word: "apple", category: "基础词", topics: ["食物"] }
+  ];
+  const result = buildAtomicDeletionNavigation({
+    words,
+    currentIndex: 2,
+    filter: { type: "tidy", value: "review" },
+    wordMatchesFilter: () => true,
+    normalizeWord,
+    sortQueue: sortWordIndicesForFilter
+  });
+
+  assert.equal(result.words[result.index].word, "fabrication");
+});
+
 test("自定义整理筛选器会收到删除后的真实索引", () => {
   const words = [{ word: "a" }, { word: "b" }, { word: "c" }];
   const result = buildAtomicDeletionNavigation({
@@ -130,7 +166,8 @@ test("真实整理候选按稳定ID匹配，删除后索引移动仍进入下一
     { id: "next", word: "school", pos: "noun", meaning: "学校" }
   ];
   const review = buildLexiconTidyReview(words, {
-    audit: createEmptyLexiconTidyAudit()
+    audit: createEmptyLexiconTidyAudit(),
+    removableKeys: new Set(["good", "school"])
   });
   const matcher = (word, filter, sourceIndex) => (
     matchesTidyScope(

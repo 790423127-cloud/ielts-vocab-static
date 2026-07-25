@@ -15,6 +15,7 @@ export const BIG_WORDS_KEY = "words";
 export const BIG_WORDS_META_KEY = "words_meta_v2";
 export const BIG_WORDS_CHUNK_PREFIX = "words_chunk_v2_";
 export const BIG_WORD_USER_STATE_KEY = "word_user_state_v1";
+export const BIG_LEXICON_TIDY_AUDIT_KEY = "lexicon_tidy_audit_v1";
 export const BIG_WORDS_CHUNK_SIZE = 250;
 
 function openBigStore() {
@@ -368,6 +369,38 @@ export async function saveWordUserStateToIndexedDB(words) {
     db.close();
   }
 
+  return true;
+}
+
+export async function loadLexiconTidyAuditFromIndexedDB() {
+  let db;
+  try {
+    db = await openBigStore();
+  } catch {
+    return null;
+  }
+
+  try {
+    const [audit] = await readStoredValues(db, [BIG_LEXICON_TIDY_AUDIT_KEY]);
+    return audit && typeof audit === "object" ? audit : null;
+  } catch {
+    return null;
+  } finally {
+    db.close();
+  }
+}
+
+export async function saveLexiconTidyAuditToIndexedDB(audit) {
+  const db = await openBigStore();
+  try {
+    const transaction = db.transaction(BIG_STORE_NAME, "readwrite");
+    const store = transaction.objectStore(BIG_STORE_NAME);
+    const done = transactionDone(transaction);
+    store.put(audit && typeof audit === "object" ? audit : {}, BIG_LEXICON_TIDY_AUDIT_KEY);
+    await done;
+  } finally {
+    db.close();
+  }
   return true;
 }
 

@@ -32,7 +32,8 @@ export function useWordFlashNavigation({
   persistWordFlashSessionNow,
   speakWord,
   speakExample,
-  deleteCurrentWord
+  deleteCurrentWord,
+  matchesStudyWord = wordMatchesFilter
 }) {
   const quickStatusLockRef = useRef(false);
   const markStatusRef = useRef(null);
@@ -73,7 +74,7 @@ export function useWordFlashNavigation({
     const indices = [];
 
     for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
-      if (wordMatchesFilter(sourceWords[sourceIndex], activeFilter)) {
+      if (matchesStudyWord(sourceWords[sourceIndex], activeFilter, sourceIndex)) {
         indices.push(sourceIndex);
       }
     }
@@ -149,7 +150,7 @@ export function useWordFlashNavigation({
 
     for (let wordIndex = 0; wordIndex < simulatedWords.length; wordIndex += 1) {
       if (nextStatus === "熟悉" && wordIndex === currentOriginalIndex) continue;
-      if (wordMatchesFilter(simulatedWords[wordIndex], filter)) candidateIndices.push(wordIndex);
+      if (matchesStudyWord(simulatedWords[wordIndex], filter, wordIndex)) candidateIndices.push(wordIndex);
     }
 
     let targetIndex = currentOriginalIndex;
@@ -222,7 +223,7 @@ export function useWordFlashNavigation({
 
     const currentMatches = words
       .map((word, originalIndex) => ({ word, originalIndex }))
-      .filter(({ word }) => wordMatchesFilter(word, filter));
+      .filter(({ word, originalIndex }) => matchesStudyWord(word, filter, originalIndex));
 
     if (currentMatches.length < 2) {
       setToast("当前范围单词太少，无法随机");
@@ -297,7 +298,7 @@ export function useWordFlashNavigation({
           words: latest.words,
           currentIndex: latest.index,
           filter: activeFilter,
-          wordMatchesFilter,
+          wordMatchesFilter: matchesStudyWord,
           normalizeWord
         });
 
@@ -367,7 +368,7 @@ export function useWordFlashNavigation({
     return () => {
       window.removeEventListener("keydown", handleQuickStatus, true);
     };
-  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef, persistWordFlashSessionNow, setIndex, studySessionRef]);
+  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef, matchesStudyWord, persistWordFlashSessionNow, setIndex, studySessionRef]);
 
   // Tab plays the word; Space and arrows navigate.
   useEffect(() => {

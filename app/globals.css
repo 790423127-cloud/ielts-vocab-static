@@ -8274,3 +8274,50 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
     grid-template-columns: 58px minmax(0, 1fr) 58px;
   }
 }
+
+/* Friendly main-lexicon tidy review */
+.tidy-review-panel {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(180, 83, 9, 0.2);
+  border-radius: 14px;
+  background: rgba(255, 247, 237, 0.78);
+}
+
+.tidy-review-panel > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+}
+
+.tidy-review-panel strong {
+  font-size: 14px;
+}
+
+.tidy-review-panel span,
+.tidy-review-panel p,
+.tidy-review-panel small {
+  color: var(--muted, #667085);
+}
+
+.tidy-review-panel p {
+  margin: 7px 0 5px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.tidy-review-panel small {
+  display: block;
+  font-size: 12px;
+}
+
+.tidy-review-actions .actions {
+  min-width: min(420px, 54vw);
+}
+
+@media (max-width: 720px) {
+  .tidy-review-actions .actions {
+    min-width: 0;
+  }
+}

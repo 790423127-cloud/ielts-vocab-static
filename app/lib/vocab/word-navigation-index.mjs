@@ -38,7 +38,7 @@ export function buildAtomicDeletionNavigation({
 
   const oldQueue = [];
   for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
-    if (wordMatchesFilter(sourceWords[sourceIndex], filter)) oldQueue.push(sourceIndex);
+    if (wordMatchesFilter(sourceWords[sourceIndex], filter, sourceIndex)) oldQueue.push(sourceIndex);
   }
 
   const oldPosition = oldQueue.indexOf(currentIndex);
@@ -54,7 +54,7 @@ export function buildAtomicDeletionNavigation({
 
     const nextIndex = nextWords.length;
     nextWords.push(word);
-    if (wordMatchesFilter(word, filter)) nextQueue.push(nextIndex);
+    if (wordMatchesFilter(word, filter, nextIndex)) nextQueue.push(nextIndex);
   }
 
   if (!deletedCount) return null;

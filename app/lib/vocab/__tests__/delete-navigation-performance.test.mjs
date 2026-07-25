@@ -99,3 +99,19 @@ test("删除当前范围最后一个词时自然停在前一个词", () => {
   assert.equal(result.index, 0);
   assert.equal(result.words[result.index].word, "a");
 });
+
+
+test("自定义整理筛选器会收到删除后的真实索引", () => {
+  const words = [{ word: "a" }, { word: "b" }, { word: "c" }];
+  const result = buildAtomicDeletionNavigation({
+    words,
+    currentIndex: 1,
+    filter: { type: "tidy", value: "review" },
+    wordMatchesFilter: (_word, _filter, sourceIndex) => sourceIndex >= 1,
+    normalizeWord: (value) => String(value || "").toLowerCase()
+  });
+
+  assert.equal(result.queueLength, 1);
+  assert.equal(result.index, 1);
+  assert.equal(result.words[result.index].word, "c");
+});

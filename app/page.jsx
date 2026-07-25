@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useHomeWordSpeech } from "./hooks/useHomeWordSpeech.js";
 import { useHomeAudioPrefill } from "./hooks/useHomeAudioPrefill.js";
@@ -8,6 +8,7 @@ import { useHomeLexiconAdmin } from "./hooks/useHomeLexiconAdmin.js";
 import { useHomeVocabBootstrap } from "./hooks/useHomeVocabBootstrap.js";
 import { useWordFlashSession } from "./hooks/useWordFlashSession.js";
 import { useWordFlashNavigation } from "./hooks/useWordFlashNavigation.js";
+import { useLexiconTidyReview } from "./hooks/useLexiconTidyReview.js";
 import {
   formatOfflineVocabNotice,
   formatVocabCountLabel
@@ -42,6 +43,10 @@ import {
   resolveStudyWordEntry,
   wordMatchesFilter
 } from "./lib/vocab/word-flashcard-study-pool.mjs";
+import {
+  LEXICON_TIDY_FILTERS,
+  LEXICON_TIDY_FILTER_TYPE
+} from "./lib/vocab/lexicon-tidy-review.mjs";
 import {
   resolveCurrentStudyItem,
   resolveWordStudyIndex
@@ -200,6 +205,29 @@ function Home() {
     persistWordsImmediately,
     markContentSnapshot
   } = useHomeVocabBootstrap({ setToast });
+
+  const {
+    ready: lexiconTidyReady,
+    review: lexiconTidyReview,
+    matchesWord: matchesTidyWord,
+    getCandidate: getTidyCandidate,
+    keepWord: keepTidyWord,
+    recordDeletedWords: recordTidyDeletedWords
+  } = useLexiconTidyReview({ words, setToast });
+
+  const matchesActiveFilter = useCallback((word, targetFilter, sourceIndex = -1) => {
+    if (targetFilter?.type === LEXICON_TIDY_FILTER_TYPE) {
+      const resolvedIndex = Number.isInteger(sourceIndex) && sourceIndex >= 0
+        ? sourceIndex
+        : words.indexOf(word);
+      return matchesTidyWord(
+        word,
+        resolvedIndex,
+        targetFilter.value || LEXICON_TIDY_FILTERS.REVIEW
+      );
+    }
+    return wordMatchesFilter(word, targetFilter);
+  }, [matchesTidyWord, words]);
 
   const {
     audioStatusMapRef,
@@ -404,9 +432,9 @@ function Home() {
   }, [isWordFlashActive, idictationFlashSourceKey, activeWordPool]);
   const studyWordIndices = useMemo(
     () => (isWordFlashActive
-      ? buildStudyWordIndices(activeWordPool, filter, { idictation: Boolean(idictationFlashSourceKey) })
+      ? buildStudyWordIndices(activeWordPool, filter, { idictation: Boolean(idictationFlashSourceKey), matchesWord: matchesActiveFilter })
       : []),
-    [isWordFlashActive, activeWordPool, filter, idictationFlashSourceKey]
+    [isWordFlashActive, activeWordPool, filter, idictationFlashSourceKey, matchesActiveFilter]
   );
   const studyWords = useMemo(
     () => (isWordFlashActive
@@ -576,9 +604,9 @@ function Home() {
 
   const filteredWordIndices = useMemo(
     () => (isWordFlashActive
-      ? buildFilteredWordIndices(activeWordPool, filter, search, { idictation: Boolean(idictationFlashSourceKey) })
+      ? buildFilteredWordIndices(activeWordPool, filter, search, { idictation: Boolean(idictationFlashSourceKey), matchesWord: matchesActiveFilter })
       : []),
-    [isWordFlashActive, activeWordPool, filter, search, idictationFlashSourceKey]
+    [isWordFlashActive, activeWordPool, filter, search, idictationFlashSourceKey, matchesActiveFilter]
   );
 
   const wordSearchResolution = useMemo(
@@ -763,6 +791,18 @@ function Home() {
     prefillWordAudio
   });
 
+  const deleteCurrentWordWithTidyAudit = useCallback(() => {
+    const latest = latestStateRef.current || {};
+    const activeFilter = latest.filter || filter;
+    const sourceWords = Array.isArray(latest.words) && latest.words.length ? latest.words : words;
+    const targetIndex = Number.isInteger(latest.index) ? latest.index : index;
+
+    if (activeFilter?.type === LEXICON_TIDY_FILTER_TYPE) {
+      recordTidyDeletedWords(sourceWords, targetIndex);
+    }
+    deleteCurrentWord();
+  }, [deleteCurrentWord, filter, index, recordTidyDeletedWords, words]);
+
   const {
     markStatus,
     nextWord,
@@ -787,18 +827,44 @@ function Home() {
     persistWordFlashSessionNow,
     speakWord,
     speakExample,
-    deleteCurrentWord
+    deleteCurrentWord: deleteCurrentWordWithTidyAudit,
+    matchesStudyWord: matchesActiveFilter
   });
+
+  const keepCurrentTidyWord = useCallback(() => {
+    if (filter?.type !== LEXICON_TIDY_FILTER_TYPE || isStudyEmpty) return;
+    const currentIndex = Number.isInteger(latestStateRef.current?.index)
+      ? latestStateRef.current.index
+      : effectiveIndex;
+    const currentWord = words[currentIndex];
+    if (!currentWord || !getTidyCandidate(currentIndex)) return;
+
+    keepTidyWord(currentWord, currentIndex);
+    const currentPosition = studyWordIndices.indexOf(currentIndex);
+    const remaining = studyWordIndices.filter((wordIndex) => wordIndex !== currentIndex);
+    if (remaining.length) {
+      const nextPosition = Math.min(Math.max(0, currentPosition), remaining.length - 1);
+      const nextIndex = remaining[nextPosition];
+      latestStateRef.current.index = nextIndex;
+      setIndex(nextIndex);
+      persistWordFlashSessionNow(nextIndex, filter, words);
+    }
+    setToast(`已留在主词库：${currentWord.word}，以后不会再放进这份清单`);
+  }, [effectiveIndex, filter, getTidyCandidate, isStudyEmpty, keepTidyWord, persistWordFlashSessionNow, studyWordIndices, words]);
 
   const learningEntryCounts = useMemo(() => {
     if (!isWordFlashActive) return new Map();
 
-    return buildLearningEntryCounts(words, LEARNING_ENTRIES, {
+    const counts = buildLearningEntryCounts(words, LEARNING_ENTRIES, {
       filterKey,
       isIdictationFlashFilter,
       getIdictationSource
     });
-  }, [isWordFlashActive, words]);
+    counts.set("tidy:review", lexiconTidyReview.counts.review);
+    counts.set("tidy:basic", lexiconTidyReview.counts.basic);
+    counts.set("tidy:issues", lexiconTidyReview.counts.issues);
+    return counts;
+  }, [isWordFlashActive, words, lexiconTidyReview.counts.review, lexiconTidyReview.counts.basic, lexiconTidyReview.counts.issues]);
 
   const learningEntryGroups = useMemo(() => {
     if (!isWordFlashActive) return [];
@@ -837,6 +903,11 @@ function Home() {
   }, [isWordFlashActive, words, filter, index, learningEntryCounts, libraryWordMap, idictationFlashReady, entryPositionsRef]);
 
   function setLibraryFilter(type, value) {
+    if (type === LEXICON_TIDY_FILTER_TYPE && !lexiconTidyReady) {
+      setToast("正在准备这份词库整理清单，请稍等一下");
+      return;
+    }
+
     studySessionRef.current.userAdjusted = true;
     studySessionRef.current.restoreTargetIndex = null;
     studySessionRef.current.persistBlocked = false;
@@ -853,15 +924,15 @@ function Home() {
       entryPositions: entryPositionsRef.current,
       filter: nextFilter,
       filterKey,
-      wordMatchesFilter,
+      wordMatchesFilter: matchesActiveFilter,
       normalizeWord,
       studyPool,
       findFirstInFilter: () => {
         if (!isIdictationFlashFilter(nextFilter)) {
-          return targetPool.findIndex((word) => wordMatchesFilter(word, nextFilter));
+          return targetPool.findIndex((word, sourceIndex) => matchesActiveFilter(word, nextFilter, sourceIndex));
         }
 
-        const first = targetPool.find((word) => wordMatchesFilter(word, nextFilter));
+        const first = targetPool.find((word, sourceIndex) => matchesActiveFilter(word, nextFilter, sourceIndex));
         return Number.isInteger(first?.originalIndex) ? first.originalIndex : -1;
       }
     });
@@ -1056,7 +1127,7 @@ function Home() {
             qualityStats: wordLibraryStats,
             duplicateInfo,
             adminActions: {
-              importFromText, handleFile, openEditCurrentWord, deleteCurrentWord,
+              importFromText, handleFile, openEditCurrentWord, deleteCurrentWord: deleteCurrentWordWithTidyAudit,
               downloadVocabBackup, exportStaticSite, downloadBlankVocabTemplateCsv,
               importTemplateVocabFile, importVocabBackup, downloadEnglishOnlyTxt,
               undoLastLocalChange, clearLastLocalChangeLog, undoOneLocalChangeItem,
@@ -1083,7 +1154,16 @@ function Home() {
             nextWord,
             prevWord,
             toggleFavorite,
-            markStatus
+            markStatus,
+            tidyReview: {
+              active: filter.type === LEXICON_TIDY_FILTER_TYPE,
+              ready: lexiconTidyReady,
+              candidate: getTidyCandidate(effectiveIndex),
+              stats: lexiconTidyReview.counts,
+              onKeep: keepCurrentTidyWord,
+              onLater: nextWord,
+              onDelete: deleteCurrentWordWithTidyAudit
+            }
           }}
         />
 

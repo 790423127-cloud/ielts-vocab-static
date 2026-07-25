@@ -37,8 +37,9 @@ function isStrictStandaloneHeadword(value) {
 }
 
 function isLowValueNounCandidate(word) {
-  const pos = String(word?.pos || "").toLowerCase();
-  if (!pos.includes("noun") && !pos.includes("名词")) return false;
+  const pos = String(word?.pos || "").trim().toLowerCase();
+  const isNoun = /(^|[\s/;,])(proper\s+)?noun\b/.test(pos) || pos.includes("名词");
+  if (!isNoun) return false;
   const labels = [
     word?.difficulty,
     word?.category,
@@ -48,7 +49,8 @@ function isLowValueNounCandidate(word) {
 }
 
 export function buildRemovableWordKeySet(referenceData, mainWords, limit = MAX_REMOVABLE_WORD_CANDIDATES) {
-  const max = Math.max(0, Math.min(MAX_REMOVABLE_WORD_CANDIDATES, Number(limit) || MAX_REMOVABLE_WORD_CANDIDATES));
+  const requestedLimit = Number(limit);
+  const max = Math.max(0, Math.min(MAX_REMOVABLE_WORD_CANDIDATES, Number.isFinite(requestedLimit) ? requestedLimit : MAX_REMOVABLE_WORD_CANDIDATES));
   const list = (Array.isArray(mainWords) ? mainWords : []).filter(isBrushableWord);
   const mainKeys = new Set(list.map((word) => normalizeTidyWordKey(word?.word)).filter(Boolean));
   const selected = [];

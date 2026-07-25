@@ -3,8 +3,9 @@ import { isBrushableWord } from "./word-study-eligibility.mjs";
 export const LEXICON_TIDY_AUDIT_VERSION = 1;
 export const LEXICON_TIDY_FILTER_TYPE = "tidy";
 export const LEXICON_TIDY_FILTERS = { REVIEW: "review", BASIC: "basic", ISSUES: "issues" };
+export const MAX_REMOVABLE_WORD_CANDIDATES = 1500;
 
-const KEPT_DECISIONS = new Set(["keep", "keep_by_familiar"]);
+const LOW_VALUE_NOUN_HINT = /低频认识即可|专名|人名|地名|城市|国家|星期|月份|数字|序数|颜色|动物|食物|衣服|家居|物品|职业|身体|天气|计量|单位/;
 
 export function normalizeTidyWordKey(value) {
   return String(value || "").normalize("NFKC").trim().toLowerCase().replace(/[’‘]/g, "'").replace(/\s+/g, " ");
@@ -35,8 +36,41 @@ function isStrictStandaloneHeadword(value) {
   return Boolean(key && /^[a-z][a-z'-]*$/.test(key));
 }
 
+function isLowValueNounCandidate(word) {
+  const pos = String(word?.pos || "").toLowerCase();
+  if (!pos.includes("noun") && !pos.includes("名词")) return false;
+  const labels = [
+    word?.difficulty,
+    word?.category,
+    ...(Array.isArray(word?.topics) ? word.topics : [])
+  ].filter(Boolean).join(" ");
+  return LOW_VALUE_NOUN_HINT.test(labels);
+}
+
+export function buildRemovableWordKeySet(referenceData, mainWords, limit = MAX_REMOVABLE_WORD_CANDIDATES) {
+  const max = Math.max(0, Math.min(MAX_REMOVABLE_WORD_CANDIDATES, Number(limit) || MAX_REMOVABLE_WORD_CANDIDATES));
+  const list = (Array.isArray(mainWords) ? mainWords : []).filter(isBrushableWord);
+  const mainKeys = new Set(list.map((word) => normalizeTidyWordKey(word?.word)).filter(Boolean));
+  const selected = [];
+  const seen = new Set();
+  const add = (value) => {
+    const key = normalizeTidyWordKey(value);
+    if (!key || !mainKeys.has(key) || seen.has(key) || selected.length >= max) return;
+    seen.add(key);
+    selected.push(key);
+  };
+
+  for (const item of Array.isArray(referenceData?.words) ? referenceData.words : []) add(item?.word);
+  for (const word of list) {
+    if (selected.length >= max) break;
+    if (isLowValueNounCandidate(word)) add(word?.word);
+  }
+
+  return new Set(selected);
+}
+
 function reasonLabel(code) {
-  if (code === "removable_basic") return "常见基础词";
+  if (code === "removable_basic") return "基础常见词或低价值名词";
   if (code === "duplicate_headword") return "主词库里有同名单词";
   if (code === "invalid_headword") return "单词本身含异常字符或不是独立词头";
   return code;
@@ -68,21 +102,18 @@ export function buildLexiconTidyReview(words, options = {}) {
 
   const candidateByIndex = new Map();
   const candidateByAuditKey = new Map();
-  const autoKeepRecords = [];
   const counts = {
     review: 0,
     basic: 0,
     issues: 0,
     simpleDetected: 0,
     issueDetected: 0,
-    autoKeptFamiliar: 0,
     manuallyKept: 0,
     deleted: 0
   };
 
   for (const record of Object.values(audit.records)) {
     if (record?.decision === "keep") counts.manuallyKept += 1;
-    if (record?.decision === "keep_by_familiar") counts.autoKeptFamiliar += 1;
     if (record?.decision === "deleted") counts.deleted += 1;
   }
 
@@ -102,23 +133,7 @@ export function buildLexiconTidyReview(words, options = {}) {
     const hasDataIssue = reasonCodes.some((code) => code !== "removable_basic");
     if (isSimple) counts.simpleDetected += 1;
     if (hasDataIssue) counts.issueDetected += 1;
-    if (KEPT_DECISIONS.has(existing?.decision) || existing?.decision === "deleted" || !reasonCodes.length) continue;
-
-    if (word?.status === "熟悉" && isSimple && !hasDataIssue) {
-      counts.autoKeptFamiliar += 1;
-      if (!existing) autoKeepRecords.push({
-        auditKey,
-        record: {
-          sourceLexicon: "main",
-          wordId: word?.wordId || word?.id || "",
-          word: word?.word || "",
-          decision: "keep_by_familiar",
-          reasonCodes: ["removable_basic"],
-          reviewedAt: Date.now()
-        }
-      });
-      continue;
-    }
+    if (existing?.decision === "keep" || existing?.decision === "deleted" || !reasonCodes.length) continue;
 
     const candidate = {
       auditKey,
@@ -140,7 +155,7 @@ export function buildLexiconTidyReview(words, options = {}) {
     if (hasDataIssue) counts.issues += 1;
   }
 
-  return { candidateByIndex, candidateByAuditKey, autoKeepRecords, counts, audit };
+  return { candidateByIndex, candidateByAuditKey, counts, audit };
 }
 
 export function mergeTidyAuditRecords(audit, entries = []) {

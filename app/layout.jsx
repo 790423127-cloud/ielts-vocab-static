@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import "./globals.css";
+import "./tidy-review-overrides.css";
 import FontScaleProvider from "./components/FontScaleProvider";
 import GlobalStudyHeader from "./components/GlobalStudyHeader";
 import QuickDeleteCurrentWordButton from "./components/QuickDeleteCurrentWordButton";

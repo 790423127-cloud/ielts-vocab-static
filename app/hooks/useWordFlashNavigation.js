@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { flushSync } from "react-dom";
 import {
   getFilterName,
+  sortWordIndicesForFilter,
   wordMatchesFilter
 } from "../lib/vocab/word-flashcard-study-pool.mjs";
 import { normalizeWord } from "../lib/vocab/page-word-helpers.mjs";
@@ -60,6 +61,8 @@ export function useWordFlashNavigation({
 
   function navigationIndices(latest) {
     const visibleStudyWords = Array.isArray(latest?.studyWords) ? latest.studyWords : [];
+    const sourceWords = Array.isArray(latest?.words) ? latest.words : [];
+    const activeFilter = latest?.filter || filter;
 
     // 爱听写使用 10 亿偏移后的虚拟索引，必须保留 studyWords 中的 originalIndex。
     if (visibleStudyWords.some((word) => word?.__idictationFlash)) {
@@ -68,19 +71,23 @@ export function useWordFlashNavigation({
         .filter((value) => Number.isInteger(value));
     }
 
+    // 整理页已经按简单到较难生成队列，导航必须沿用同一顺序。
+    if (activeFilter?.type === "tidy" && visibleStudyWords.length) {
+      return visibleStudyWords
+        .map((word) => word?.originalIndex)
+        .filter((value) => Number.isInteger(value));
+    }
+
     // 普通主词库直接由最新 words + filter 生成数字索引队列。
     // 不依赖派生单词对象上的 originalIndex，避免大词库渲染时索引丢失。
-    const sourceWords = Array.isArray(latest?.words) ? latest.words : [];
-    const activeFilter = latest?.filter || filter;
     const indices = [];
-
     for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
       if (matchesStudyWord(sourceWords[sourceIndex], activeFilter, sourceIndex)) {
         indices.push(sourceIndex);
       }
     }
 
-    if (indices.length) return indices;
+    if (indices.length) return sortWordIndicesForFilter(indices, sourceWords, activeFilter);
 
     // 兼容极短暂的词库加载阶段。
     return visibleStudyWords
@@ -154,14 +161,15 @@ export function useWordFlashNavigation({
       if (matchesStudyWord(simulatedWords[wordIndex], filter, wordIndex)) candidateIndices.push(wordIndex);
     }
 
+    const sortedCandidateIndices = sortWordIndicesForFilter(candidateIndices, simulatedWords, filter);
     let targetIndex = currentOriginalIndex;
-    if (candidateIndices.length) {
-      const currentCandidatePosition = candidateIndices.indexOf(currentOriginalIndex);
+    if (sortedCandidateIndices.length) {
+      const currentCandidatePosition = sortedCandidateIndices.indexOf(currentOriginalIndex);
       const targetPosition =
         nextStatus === "熟悉" || currentCandidatePosition < 0
-          ? Math.min(oldPosition, candidateIndices.length - 1)
-          : (currentCandidatePosition + 1) % candidateIndices.length;
-      targetIndex = candidateIndices[targetPosition];
+          ? Math.min(oldPosition, sortedCandidateIndices.length - 1)
+          : (currentCandidatePosition + 1) % sortedCandidateIndices.length;
+      targetIndex = sortedCandidateIndices[targetPosition];
     }
 
     studySessionRef.current.userAdjusted = true;
@@ -300,7 +308,8 @@ export function useWordFlashNavigation({
           currentIndex: latest.index,
           filter: activeFilter,
           wordMatchesFilter: matchesStudyWord,
-          normalizeWord
+          normalizeWord,
+          sortQueue: sortWordIndicesForFilter
         });
 
         quickStatusLockRef.current = true;

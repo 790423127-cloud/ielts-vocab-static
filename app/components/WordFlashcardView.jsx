@@ -272,7 +272,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
           <div className="filter-chips">
             {[
               ["review", "看看这些词"],
-              ["basic", "简单词"],
+              ["basic", "基础词候选"],
               ["issues", "可能有问题"]
             ].map(([value, label]) => (
               <button type="button" key={value} className={`chip-btn ${filter.type === "tidy" && filter.value === value ? "active" : ""}`} onClick={() => setLibraryFilter("tidy", value)}>{label}</button>
@@ -421,11 +421,11 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             {tidyReview?.active && !isStudyEmpty ? (
               <div className="tidy-review-panel" role="status">
                 <div>
-                  <strong>这个词值得看一眼</strong>
+                  <strong>这个词可能不需要留在主词库</strong>
                   <span>{tidyReview.candidate?.reasons?.join(" · ") || "由整理规则选出"}</span>
                 </div>
-                <p>你点“留着”后它不会再出现；删除只影响雅思主词库，独立零基础 1500 仍会保留。</p>
-                <small>待看 {tidyReview.stats?.review || 0} · 已留 {tidyReview.stats?.manuallyKept || 0} · 因熟悉自动留着 {tidyReview.stats?.autoKeptFamiliar || 0} · 已删记录 {tidyReview.stats?.deleted || 0}</small>
+                <p>你点“留着”后它不会再出现；删除成功后会写入正式主词库文件。</p>
+                <small>待看 {tidyReview.stats?.review || 0} · 已留 {tidyReview.stats?.manuallyKept || 0} · 已删记录 {tidyReview.stats?.deleted || 0}</small>
               </div>
             ) : null}
 

@@ -51,7 +51,7 @@ function isStrictStandaloneHeadword(value) {
 }
 
 function reasonLabel(code) {
-  if (code === "basic_1500_overlap") return "也在独立零基础 1500 词库里";
+  if (code === "basic_1500_overlap") return "主词库中的简单基础词";
   if (code === "duplicate_headword") return "主词库里有同名单词";
   if (code === "invalid_headword") return "单词本身含异常字符或不是独立词头";
   return code;

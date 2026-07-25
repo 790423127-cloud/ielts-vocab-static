@@ -24,131 +24,70 @@ function word(value, patch = {}) {
   };
 }
 
-test("常见基础词直接进入整理清单，不依赖独立词库", () => {
-  const words = [word("good"), word("accommodation")];
-  const review = buildLexiconTidyReview(words, {
-    audit: createEmptyLexiconTidyAudit()
+function review(words, removable = []) {
+  return buildLexiconTidyReview(words, {
+    audit: createEmptyLexiconTidyAudit(),
+    removableKeys: new Set(removable)
   });
+}
 
-  assert.equal(review.counts.review, 1);
-  assert.equal(review.counts.basic, 1);
-  assert.equal(review.counts.simpleDetected, 1);
-  assert.ok(review.candidateByIndex.get(0).reasonCodes.includes("core_basic_headword"));
-  assert.equal(review.candidateByIndex.has(1), false);
+test("只有明确进入删除候选名单的基础词才展示", () => {
+  const result = review([word("good"), word("upheavals")], ["good"]);
+  assert.equal(result.counts.review, 1);
+  assert.equal(result.counts.basic, 1);
+  assert.equal(result.candidateByIndex.get(0).reasonCodes[0], "removable_basic");
+  assert.equal(result.candidateByIndex.has(1), false);
 });
 
-test("主词库自身标记为基础的词会进入简单词清单", () => {
-  const review = buildLexiconTidyReview([
-    word("photosynthesis", { difficulty: "基础高频" })
-  ], {
-    audit: createEmptyLexiconTidyAudit()
-  });
-
-  assert.equal(review.counts.basic, 1);
-  assert.ok(review.candidateByIndex.get(0).reasonCodes.includes("basic_difficulty"));
+test("主词库难度和主题不再自动扩大候选范围", () => {
+  const result = review([
+    word("photosynthesis", { difficulty: "基础高频" }),
+    word("commute", { topics: ["交通"], ieltsUse: ["生活高频"] })
+  ]);
+  assert.equal(result.counts.review, 0);
 });
 
-test("日常标签需要多项信号共同命中，避免把长难词都判成简单词", () => {
-  const review = buildLexiconTidyReview([
-    word("commute", {
-      pos: "verb",
-      ieltsUse: ["工作高频"],
-      topics: ["交通"]
-    }),
-    word("accommodation", {
-      pos: "noun",
-      ieltsUse: ["生活高频"],
-      topics: ["住房"]
-    })
-  ], {
-    audit: createEmptyLexiconTidyAudit()
-  });
-
-  assert.equal(review.candidateByIndex.get(0).isSimple, true);
-  assert.equal(review.candidateByIndex.has(1), false);
+test("已经熟悉的基础候选默认保留", () => {
+  const result = review([word("good", { status: "熟悉" })], ["good"]);
+  assert.equal(result.counts.review, 0);
+  assert.equal(result.counts.autoKeptFamiliar, 1);
+  assert.equal(result.autoKeepRecords[0].record.decision, "keep_by_familiar");
 });
 
-test("常见基础词形也会被识别", () => {
-  const review = buildLexiconTidyReview([
-    word("running", { pos: "verb" }),
-    word("children", { pos: "noun" })
-  ], {
-    audit: createEmptyLexiconTidyAudit()
-  });
-
-  assert.equal(review.counts.basic, 2);
-  assert.equal(review.candidateByIndex.get(0).matchedBase, "run");
-  assert.equal(review.candidateByIndex.get(1).isSimple, true);
-});
-
-test("已经熟悉的简单词默认保留，不再重复展示", () => {
-  const words = [word("good", { status: "熟悉" })];
-  const review = buildLexiconTidyReview(words, {
-    audit: createEmptyLexiconTidyAudit()
-  });
-
-  assert.equal(review.counts.review, 0);
-  assert.equal(review.counts.autoKeptFamiliar, 1);
-  assert.equal(review.autoKeepRecords.length, 1);
-  assert.equal(review.autoKeepRecords[0].record.decision, "keep_by_familiar");
-});
-
-test("熟悉状态不会掩盖同名重复等数据问题", () => {
-  const words = [
+test("熟悉状态不会掩盖同名重复", () => {
+  const result = review([
     word("good", { id: "good-1", status: "熟悉" }),
     word("good", { id: "good-2", status: "熟悉" })
-  ];
-  const review = buildLexiconTidyReview(words, {
-    audit: createEmptyLexiconTidyAudit()
-  });
-
-  assert.equal(review.counts.review, 2);
-  assert.equal(review.counts.issues, 2);
-  assert.ok(review.candidateByIndex.get(0).reasonCodes.includes("duplicate_headword"));
+  ], ["good"]);
+  assert.equal(result.counts.review, 2);
+  assert.equal(result.counts.issues, 2);
 });
 
-test("人工选择留着后，该词不会再次进入清单", () => {
+test("人工留着后不会再次进入清单", () => {
   const target = word("good");
   const auditKey = getTidyAuditKey(target, 0);
   const audit = mergeTidyAuditRecords(createEmptyLexiconTidyAudit(), [{
     auditKey,
     record: { decision: "keep", word: "good", reviewedAt: 1 }
   }]);
-  const review = buildLexiconTidyReview([target], {
-    audit
-  });
-
-  assert.equal(review.counts.review, 0);
-  assert.equal(review.counts.manuallyKept, 1);
+  const result = buildLexiconTidyReview([target], { audit, removableKeys: new Set(["good"]) });
+  assert.equal(result.counts.review, 0);
+  assert.equal(result.counts.manuallyKept, 1);
 });
 
-test("候选按稳定ID匹配，删除前方单词后不会因索引移动失效", () => {
+test("候选按稳定ID匹配，删除前方单词后仍有效", () => {
   const target = word("good", { id: "stable-good" });
-  const review = buildLexiconTidyReview([
-    word("advanced", { id: "advanced" }),
-    target
-  ], {
-    audit: createEmptyLexiconTidyAudit()
-  });
-
-  const shiftedCandidate = findTidyCandidate(review, target, 0);
+  const result = review([word("advanced", { id: "advanced" }), target], ["good"]);
+  const shiftedCandidate = findTidyCandidate(result, target, 0);
   assert.ok(shiftedCandidate);
   assert.equal(shiftedCandidate.auditKey, "main:stable-good");
-  assert.equal(shiftedCandidate.isSimple, true);
 });
 
-test("整理清单可按简单词和数据问题查看", () => {
-  const words = [
+test("基础候选和数据问题可以分开查看", () => {
+  const result = review([
     word("good", { id: "good-1" }),
     word("broken word", { id: "broken-1" })
-  ];
-  const review = buildLexiconTidyReview(words, {
-    audit: createEmptyLexiconTidyAudit()
-  });
-
-  const basicCandidate = review.candidateByIndex.get(0);
-  const issueCandidate = review.candidateByIndex.get(1);
-  assert.equal(matchesTidyScope(basicCandidate, LEXICON_TIDY_FILTERS.BASIC), true);
-  assert.equal(matchesTidyScope(basicCandidate, LEXICON_TIDY_FILTERS.ISSUES), false);
-  assert.equal(matchesTidyScope(issueCandidate, LEXICON_TIDY_FILTERS.ISSUES), true);
+  ], ["good"]);
+  assert.equal(matchesTidyScope(result.candidateByIndex.get(0), LEXICON_TIDY_FILTERS.BASIC), true);
+  assert.equal(matchesTidyScope(result.candidateByIndex.get(1), LEXICON_TIDY_FILTERS.ISSUES), true);
 });

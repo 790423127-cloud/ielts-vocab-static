@@ -178,7 +178,7 @@ export function getFilterName(filter) {
   if (filter.type === "all") return "待学词浏览";
   if (filter.type === "everything") return "全部可刷词";
   if (filter.type === "custom" && filter.value === "life-work") return "生活/工作高频";
-  if (filter.type === "tidy" && filter.value === "basic") return "简单词";
+  if (filter.type === "tidy" && filter.value === "basic") return "基础词候选";
   if (filter.type === "tidy" && filter.value === "issues") return "可能有问题";
   if (filter.type === "tidy") return "看看这些词";
   if (isIdictationFlashFilter(filter)) return getIdictationSource(filter.value)?.label || "爱听写";
@@ -210,7 +210,7 @@ export const LEARNING_ENTRIES = [
     items: [
       {
         title: "看看这些词",
-        desc: "简单词和可能重复的词放在这里，你来决定留不留；已熟悉的简单词不会重复出现。",
+        desc: "初高中一眼能认出的基础词和少量低价值名词，最多1500个，由你人工决定留不留。",
         filter: { type: "tidy", value: "review" }
       }
     ]

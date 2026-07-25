@@ -5,6 +5,7 @@ import { loadLexiconTidyAuditFromIndexedDB, saveLexiconTidyAuditToIndexedDB } fr
 import {
   LEXICON_TIDY_FILTERS,
   buildLexiconTidyReview,
+  buildRemovableWordKeySet,
   createEmptyLexiconTidyAudit,
   findTidyCandidate,
   getTidyAuditKey,
@@ -14,21 +15,9 @@ import {
   normalizeTidyWordKey
 } from "../lib/vocab/lexicon-tidy-review.mjs";
 
-const REMOVABLE_TOPICS = new Set([
-  "问候", "礼貌", "基础应答", "人称", "指示", "疑问词", "连接词", "数字", "序数", "时间", "颜色",
-  "星期", "月份", "家庭", "人物", "身体", "学校", "家", "国家", "物品", "动物", "职业", "衣服", "地点",
-  "自然", "交通", "方向", "天气", "购物", "数量", "基础名词", "季节", "食物"
-]);
-
-function pickRemovableKeys(data) {
-  const source = Array.isArray(data?.words) ? data.words : [];
-  const selected = source.filter((item) => item?.topics?.some((topic) => REMOVABLE_TOPICS.has(topic))).slice(0, 1000);
-  return new Set(selected.map((item) => normalizeTidyWordKey(item?.word)).filter(Boolean));
-}
-
 export function useLexiconTidyReview({ words, setToast }) {
   const [audit, setAudit] = useState(() => createEmptyLexiconTidyAudit());
-  const [removableKeys, setRemovableKeys] = useState(() => new Set());
+  const [referenceData, setReferenceData] = useState(null);
   const [ready, setReady] = useState(false);
   const auditRef = useRef(audit);
   const saveQueueRef = useRef(Promise.resolve());
@@ -57,18 +46,15 @@ export function useLexiconTidyReview({ words, setToast }) {
       const nextAudit = normalizeLexiconTidyAudit(savedAudit);
       auditRef.current = nextAudit;
       setAudit(nextAudit);
-      setRemovableKeys(pickRemovableKeys(source));
+      setReferenceData(source);
       setReady(true);
-      if (!source) setToast?.("基础词候选暂时加载失败");
+      if (!source) setToast?.("基础词候选参考暂时加载失败，已仅使用主词库低价值名词规则");
     });
     return () => { cancelled = true; };
   }, [setToast]);
 
+  const removableKeys = useMemo(() => buildRemovableWordKeySet(referenceData, words), [referenceData, words]);
   const review = useMemo(() => buildLexiconTidyReview(words, { audit, removableKeys }), [words, audit, removableKeys]);
-
-  useEffect(() => {
-    if (ready && review.autoKeepRecords.length) commitAudit((current) => mergeTidyAuditRecords(current, review.autoKeepRecords));
-  }, [ready, review.autoKeepRecords, commitAudit]);
 
   const getCandidate = useCallback((index) => findTidyCandidate(review, Number.isInteger(index) ? words[index] : null, index), [review, words]);
   const matchesWord = useCallback((word, index, scope = LEXICON_TIDY_FILTERS.REVIEW) =>

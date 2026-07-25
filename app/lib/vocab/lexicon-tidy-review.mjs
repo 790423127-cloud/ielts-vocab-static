@@ -135,7 +135,7 @@ export function buildLexiconTidyReview(words, options = {}) {
     const hasDataIssue = reasonCodes.some((code) => code !== "removable_basic");
     if (isSimple) counts.simpleDetected += 1;
     if (hasDataIssue) counts.issueDetected += 1;
-    if (existing?.decision === "keep" || existing?.decision === "deleted" || !reasonCodes.length) continue;
+    if (existing?.decision === "keep" || !reasonCodes.length) continue;
 
     const candidate = {
       auditKey,

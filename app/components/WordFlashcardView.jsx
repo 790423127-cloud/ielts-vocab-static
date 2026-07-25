@@ -118,7 +118,8 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     nextWord,
     prevWord,
     toggleFavorite,
-    markStatus
+    markStatus,
+    tidyReview
   } = chrome;
 
   const relatedWords = useMemo(
@@ -235,7 +236,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
       <div className="menu-panel wide">
         <h2 className="panel-title">词库管理</h2>
         <p className="panel-desc">
-          可刷 {wordLibraryStats.total} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 待学习 {wordLibraryStats.pending} · 不熟 {wordLibraryStats.unfamiliar} · 已认识 {familiarCount} · 必须补全 {missingCount} · 结构异常 {repairMissingCount} · 仅缺分类 {classifyMissingCount} · 可选丰富 {enrichmentThinCount} · 词族复核 {familyReviewCount} · 独立词候选 {familyPromotionCount} · 音频 {audioStats.state === "error" ? "核对失败" : audioStats.state !== "ready" ? "核对中" : `${audioStats.has}/${audioStats.total}`}
+          可刷 {wordLibraryStats.total} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 待学习 {wordLibraryStats.pending} · 不熟 {wordLibraryStats.unfamiliar} · 已认识 {familiarCount} · 必须补全 {missingCount} · 结构异常 {repairMissingCount} · 仅缺分类 {classifyMissingCount} · 可选丰富 {enrichmentThinCount} · 词族复核 {familyReviewCount} · 独立词候选 {familyPromotionCount} · 待整理 {tidyReview?.stats?.review || 0} · 音频 {audioStats.state === "error" ? "核对失败" : audioStats.state !== "ready" ? "核对中" : `${audioStats.has}/${audioStats.total}`}
         </p>
         <div className="current-filter">当前学习范围：{getFilterName(filter)} · {studyWords.length} 个词</div>
 
@@ -262,6 +263,19 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             <button type="button" className={`chip-btn ${filter.type === "custom" && filter.value === "life-work" ? "active" : ""}`} onClick={() => setLibraryFilter("custom", "life-work")}>生活/工作高频</button>
             {["模糊", "不熟", "熟悉", "收藏"].map((value) => (
               <button type="button" key={value} className={`chip-btn ${filter.type === "status" && filter.value === value ? "active" : ""}`} onClick={() => setLibraryFilter("status", value)}>{value}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="filter-group">
+          <div className="filter-title">词库整理</div>
+          <div className="filter-chips">
+            {[
+              ["review", "看看这些词"],
+              ["basic", "简单词"],
+              ["issues", "可能有问题"]
+            ].map(([value, label]) => (
+              <button type="button" key={value} className={`chip-btn ${filter.type === "tidy" && filter.value === value ? "active" : ""}`} onClick={() => setLibraryFilter("tidy", value)}>{label}</button>
             ))}
           </div>
         </div>
@@ -404,6 +418,17 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
               </div>
             </div>
 
+            {tidyReview?.active && !isStudyEmpty ? (
+              <div className="tidy-review-panel" role="status">
+                <div>
+                  <strong>这个词值得看一眼</strong>
+                  <span>{tidyReview.candidate?.reasons?.join(" · ") || "由整理规则选出"}</span>
+                </div>
+                <p>你点“留着”后它不会再出现；删除只影响雅思主词库，独立零基础 1500 仍会保留。</p>
+                <small>待看 {tidyReview.stats?.review || 0} · 已留 {tidyReview.stats?.manuallyKept || 0} · 因熟悉自动留着 {tidyReview.stats?.autoKeptFamiliar || 0} · 已删记录 {tidyReview.stats?.deleted || 0}</small>
+              </div>
+            ) : null}
+
             {item.status === "不熟" ? <div className="unfamiliar-alert">当前词标记为不熟，复习时会优先出现</div> : null}
 
             <WordStudyContent
@@ -433,6 +458,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             prevWord={prevWord}
             nextWord={nextWord}
             markStatus={markStatus}
+            tidyReview={tidyReview}
           />
         </section>
 

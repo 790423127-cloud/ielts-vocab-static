@@ -145,6 +145,7 @@ export function wordMatchesFilter(word, filter) {
   if (!isBrushableWord(word)) return false;
   if (filter.type === "everything") return true;
   if (isIdictationFlashFilter(filter)) return Boolean(word.__idictationFlash);
+  if (filter.type === "tidy") return false;
 
   if (filter.type === "status") {
     if (filter.value === "模糊") return word.status === "模糊";
@@ -177,6 +178,9 @@ export function getFilterName(filter) {
   if (filter.type === "all") return "待学词浏览";
   if (filter.type === "everything") return "全部可刷词";
   if (filter.type === "custom" && filter.value === "life-work") return "生活/工作高频";
+  if (filter.type === "tidy" && filter.value === "basic") return "简单词";
+  if (filter.type === "tidy" && filter.value === "issues") return "可能有问题";
+  if (filter.type === "tidy") return "看看这些词";
   if (isIdictationFlashFilter(filter)) return getIdictationSource(filter.value)?.label || "爱听写";
   if (filter.type === "ielts" || filter.type === "ieltsUse") return `IELTS 用途：${filter.value}`;
   if (filter.type === "topic") return `主题分类：${filter.value}`;
@@ -199,6 +203,16 @@ export const LEARNING_ENTRIES = [
       { title: "待学词浏览", desc: "自由浏览未标记、模糊和不熟词；翻页不会自动标记熟悉。", filter: { type: "all", value: "" } },
       { title: "不熟词", desc: "所有标记不熟的词，优先复习。", filter: { type: "status", value: "不熟" } },
       { title: "收藏词", desc: "写作、口语、书信可直接用的重点词。", filter: { type: "status", value: "收藏" } }
+    ]
+  },
+  {
+    group: "词库整理",
+    items: [
+      {
+        title: "看看这些词",
+        desc: "简单词和可能重复的词放在这里，你来决定留不留；已熟悉的简单词不会重复出现。",
+        filter: { type: "tidy", value: "review" }
+      }
     ]
   },
   {
@@ -262,30 +276,32 @@ export function isSameFilter(a, b) {
   return filterKey(a) === filterKey(b);
 }
 
-export function buildStudyWordIndices(pool, filter, { idictation = false } = {}) {
-  if (idictation) {
-    return pool
-      .filter((word) => wordMatchesFilter(word, filter))
-      .map((word) => word.originalIndex);
-  }
-
+export function buildStudyWordIndices(pool, filter, {
+  idictation = false,
+  matchesWord = wordMatchesFilter
+} = {}) {
   const indices = [];
   for (let i = 0; i < pool.length; i += 1) {
-    if (wordMatchesFilter(pool[i], filter)) indices.push(i);
+    if (!matchesWord(pool[i], filter, i)) continue;
+    indices.push(idictation ? pool[i].originalIndex : i);
   }
   return indices;
 }
 
-export function buildFilteredWordIndices(pool, filter, search, { idictation = false } = {}) {
+export function buildFilteredWordIndices(pool, filter, search, {
+  idictation = false,
+  matchesWord = wordMatchesFilter
+} = {}) {
   const q = search.trim().toLowerCase();
 
   if (idictation) {
-    return pool
-      .filter((word) => {
-        if (q && !word.word.toLowerCase().includes(q)) return false;
-        return wordMatchesFilter(word, filter);
-      })
-      .map((word) => word.originalIndex);
+    const indices = [];
+    for (let i = 0; i < pool.length; i += 1) {
+      const word = pool[i];
+      if (q && !word.word.toLowerCase().includes(q)) continue;
+      if (matchesWord(word, filter, i)) indices.push(word.originalIndex);
+    }
+    return indices;
   }
 
   const wordMap = buildLibraryWordMap(pool);
@@ -298,7 +314,7 @@ export function buildFilteredWordIndices(pool, filter, search, { idictation = fa
     const target = resolveBrushableWord(word, wordMap);
     const targetIndex = indexByWord.get(target);
     if (!Number.isInteger(targetIndex) || seen.has(targetIndex)) continue;
-    if (wordMatchesFilter(target, filter)) {
+    if (matchesWord(target, filter, targetIndex)) {
       seen.add(targetIndex);
       indices.push(targetIndex);
     }

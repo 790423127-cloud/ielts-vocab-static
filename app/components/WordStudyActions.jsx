@@ -6,8 +6,33 @@ export default function WordStudyActions({
   isExternalIdictationItem,
   prevWord,
   nextWord,
-  markStatus
+  markStatus,
+  tidyReview
 }) {
+  if (tidyReview?.active) {
+    return (
+      <footer className="bottom bottombar tidy-review-actions" aria-label="词库整理操作">
+        <button className="study-step-button study-step-button--previous" type="button" disabled={isStudyEmpty} onClick={prevWord}>
+          上一个
+        </button>
+        <div className="actions">
+          <button className="status known" type="button" disabled={isStudyEmpty} onClick={tidyReview.onKeep}>
+            留着
+          </button>
+          <button className="status uncertain" type="button" disabled={isStudyEmpty} onClick={tidyReview.onLater}>
+            以后再看
+          </button>
+          <button className="status unknown active-unknown" type="button" disabled={isStudyEmpty} onClick={tidyReview.onDelete} title="只从雅思主词库删除">
+            删除
+          </button>
+        </div>
+        <button className="study-step-button study-step-button--next" type="button" disabled={isStudyEmpty} onClick={nextWord}>
+          下一个
+        </button>
+      </footer>
+    );
+  }
+
   return (
     <footer className="bottom bottombar" aria-label="学习操作">
       <button className="study-step-button study-step-button--previous" type="button" disabled={isStudyEmpty} onClick={prevWord}>

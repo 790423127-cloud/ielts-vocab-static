@@ -21,13 +21,18 @@ test("学习状态变化不会触发正式词库发布", () => {
   assert.equal(hasLexiconContentChange(before, after), false);
 });
 
-test("删除、修改内容和调整正式顺序会触发发布", () => {
+test("删除和修改正式内容会触发发布", () => {
   const first = word("good");
   const second = word("bad");
 
   assert.equal(hasLexiconContentChange([first, second], [first]), true);
   assert.equal(hasLexiconContentChange([first], [{ ...first, meaning: "好的" }]), true);
-  assert.equal(hasLexiconContentChange([first, second], [second, first]), true);
+});
+
+test("随机打乱学习顺序不会改写正式词库", () => {
+  const first = word("good");
+  const second = word("bad");
+  assert.equal(hasLexiconContentChange([first, second], [second, first]), false);
 });
 
 test("相同数组或相同正式内容不会重复发布", () => {

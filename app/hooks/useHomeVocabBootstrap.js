@@ -1,7 +1,8 @@
 "use client";
 
-import { startTransition, useEffect, useRef, useState } from "react";
+import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import { sanitizeAiWordCollocations } from "../lib/vocab/admin-ai-content-profile.mjs";
+import { hasLexiconContentChange } from "../lib/vocab/lexicon-content-change.mjs";
 import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "../lib/vocab/lexicon-guard-shared.mjs";
 import { PHRASE_FLASH_STUDY_MODE_KEY } from "../lib/vocab/phrase-flashcard-keys.mjs";
 import {
@@ -11,6 +12,7 @@ import {
 import {
   applyStoredUserState,
   loadWordsFromIndexedDB,
+  postExportCache,
   saveWordUserStateToIndexedDB,
   saveWordsToIndexedDB
 } from "../lib/vocab/word-store.mjs";
@@ -106,7 +108,7 @@ export async function persistWordsWithLocalStore(nextWords, options = {}) {
 }
 
 export function useHomeVocabBootstrap({ setToast }) {
-  const [words, setWords] = useState([]);
+  const [words, setWordsState] = useState([]);
   const [flashStudyMode, setFlashStudyMode] = useState("word");
   const [vocabRuntime, setVocabRuntime] = useState({
     status: "loading",
@@ -120,20 +122,80 @@ export function useHomeVocabBootstrap({ setToast }) {
   const storageReadyRef = useRef(false);
   const hydratedWordsRef = useRef(null);
   const contentSnapshotRef = useRef(new WeakSet());
+  const persistPromiseBySnapshotRef = useRef(new WeakMap());
   const cacheMetaRef = useRef({
     version: LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES,
     lexiconHash: "",
     savedAt: ""
   });
 
-  function persistWordsImmediately(nextWords) {
-    return persistWordsWithLocalStore(nextWords, {
-      sourceMeta: cacheMetaRef.current,
-      onStatus(message) {
-        setToast?.(message);
+  const persistWordsImmediately = useCallback((nextWords) => {
+    if (!Array.isArray(nextWords)) return Promise.resolve({ ok: false, status: "invalid-words" });
+    const existing = persistPromiseBySnapshotRef.current.get(nextWords);
+    if (existing) return existing;
+
+    const task = (async () => {
+      try {
+        const localResult = await persistWordsWithLocalStore(nextWords, {
+          sourceMeta: cacheMetaRef.current,
+          onStatus(message) {
+            setToast?.(message);
+          }
+        });
+        const serverResult = await postExportCache(nextWords, cacheMetaRef.current, {
+          source: "main-lexicon-content-edit",
+          forceRefresh: true
+        });
+
+        if (!serverResult?.ok) {
+          const detail = [serverResult?.error, serverResult?.detail].filter(Boolean).join("：");
+          setToast?.(`改动已保存在当前浏览器，但正式主词库文件写入失败：${detail || "请在本地工作台中操作"}`);
+          return {
+            ok: false,
+            status: "server-publish-failed",
+            localSaved: true,
+            serverPublished: false,
+            localResult,
+            serverResult
+          };
+        }
+
+        cacheMetaRef.current = { ...cacheMetaRef.current, ...serverResult };
+        setVocabRuntime({ status: "online", ...cacheMetaRef.current });
+        return {
+          ok: true,
+          status: "published",
+          localSaved: true,
+          serverPublished: true,
+          localResult,
+          serverResult
+        };
+      } catch (error) {
+        setToast?.(`词库改动保存失败：${error?.message || "未知错误"}`);
+        return {
+          ok: false,
+          status: error?.status || "save-failed",
+          localSaved: false,
+          serverPublished: false,
+          error
+        };
       }
+    })();
+
+    persistPromiseBySnapshotRef.current.set(nextWords, task);
+    task.then((result) => {
+      if (!result?.ok) persistPromiseBySnapshotRef.current.delete(nextWords);
     });
-  }
+    return task;
+  }, [setToast]);
+
+  const setWords = useCallback((updater) => {
+    setWordsState((previousWords) => {
+      const nextWords = typeof updater === "function" ? updater(previousWords) : updater;
+      if (hasLexiconContentChange(previousWords, nextWords)) contentSnapshotRef.current.add(nextWords);
+      return nextWords;
+    });
+  }, []);
 
   function markContentSnapshot(nextWords) {
     if (Array.isArray(nextWords)) contentSnapshotRef.current.add(nextWords);
@@ -182,7 +244,7 @@ export function useHomeVocabBootstrap({ setToast }) {
         if (Array.isArray(parsed) && parsed.length) {
           loadedWords = parsed;
           hydratedWordsRef.current = parsed;
-          setWords(parsed);
+          setWordsState(parsed);
           saveWordsToIndexedDB(parsed).catch(() => {});
         }
       } catch {
@@ -208,7 +270,7 @@ export function useHomeVocabBootstrap({ setToast }) {
           if (!cancelled) {
             if (cachedMeta) cacheMetaRef.current = cachedMeta;
             hydratedWordsRef.current = cachedWords;
-            startTransition(() => setWords(cachedWords));
+            startTransition(() => setWordsState(cachedWords));
             setVocabRuntime({
               status: "loading",
               count: cachedMeta?.count || cachedWords.length,
@@ -266,7 +328,7 @@ export function useHomeVocabBootstrap({ setToast }) {
         cacheMetaRef.current = mergedMeta;
         if (!cancelled) {
           hydratedWordsRef.current = onlineWords;
-          startTransition(() => setWords(onlineWords));
+          startTransition(() => setWordsState(onlineWords));
           setVocabRuntime({ status: "online", ...mergedMeta });
         }
 
@@ -296,7 +358,7 @@ export function useHomeVocabBootstrap({ setToast }) {
           cachedMeta = stored.meta || null;
           if (cachedMeta) cacheMetaRef.current = cachedMeta;
           hydratedWordsRef.current = cachedWords;
-          startTransition(() => setWords(cachedWords));
+          startTransition(() => setWordsState(cachedWords));
           if (cachedNeedsRepair) saveWordsToIndexedDB(cachedWords, cachedMeta || {}).catch(() => {});
         }
 
@@ -347,20 +409,17 @@ export function useHomeVocabBootstrap({ setToast }) {
       hydratedWordsRef.current = null;
       return;
     }
+
+    if (!isProbablyFullVocab(words)) return;
+
     if (contentSnapshotRef.current.has(words)) {
       contentSnapshotRef.current.delete(words);
-      return;
+      persistWordsImmediately(words);
+    } else {
+      saveWordUserStateToIndexedDB(words).catch(() => {});
     }
-
-    // Learning actions only update the compact user-state record. Content edits
-    // call persistWordsImmediately explicitly.
-    if (!isProbablyFullVocab(words)) {
-      return;
-    }
-
-    saveWordUserStateToIndexedDB(words).catch(() => {});
     cleanupOldLargeLocalStorageKeys();
-  }, [words]);
+  }, [words, persistWordsImmediately]);
 
   return {
     words,

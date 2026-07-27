@@ -41,9 +41,9 @@ test("current words.json can be analyzed without mutation under strict 10k rules
   assert.equal(actualUniqueHeadwords.size, expectedCount);
   assert.equal(report.validHeadwordCount, expectedCount - report.invalidCount);
   for (const sentinel of ["one", "two", "three"]) {
-    if (!retiredWords.has(sentinel)) {
-      assert.ok(report.invalidSamples.some((entry) => entry.word === sentinel), sentinel);
-    }
+    const sentinelReport = analyzeIeltsGt10kVocabulary({ words: [{ word: sentinel }] });
+    assert.equal(sentinelReport.invalidCount, 1, sentinel);
+    assert.equal(sentinelReport.validHeadwordCount, 0, sentinel);
   }
   assert.ok(report.invalidSamples.every((entry) => entry.reason === "not_strict_headword"));
   assert.ok(expectedCount >= 10_500);

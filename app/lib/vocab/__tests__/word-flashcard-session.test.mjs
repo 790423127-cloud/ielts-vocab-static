@@ -37,7 +37,7 @@ test("home page imports the unified quality queue used after vocab hydration", (
   const helperImport = pageSource.match(/import\s*\{([\s\S]*?)\}\s*from\s*["']\.\/lib\/vocab\/page-word-helpers\.mjs["']/)?.[1] || "";
   assert.match(helperImport, /\bhasHeadwordRepair\b/);
   assert.match(helperImport, /\bisLikelyWrongAiWord\b/);
-  assert.match(pageSource, /\bgetUnifiedQualityQueue\b/);
+  assert.match(pageSource, /\bgetWordQualityEvaluation\b/);
 });
 
 function wordMatchesFilter(word, filter) {

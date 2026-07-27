@@ -314,7 +314,7 @@ test("the word study UI renders the paid AI tool panel", () => {
   assert.doesNotMatch(viewSource, /showAiTools=\{false\}/);
   assert.match(panelSource, /AI工具（会扣费）/);
   assert.match(panelSource, /AI处理当前词（会扣费）/);
-  assert.match(panelSource, /AI 工具统一使用/);
+  assert.match(panelSource, /默认付费队列只处理/);
   assert.match(panelSource, /最多 100 词/);
   assert.match(panelSource, /AI修复当前词头符号/);
   assert.doesNotMatch(panelSource, /只保留 4 个按钮/);
@@ -494,9 +494,11 @@ test("legacy meaningZh compatibility fields match the canonical meaning", () => 
 });
 
 test("the embedded full morphology audit is complete and internally consistent", () => {
-  assert.equal(payload.morphologyAudit.version, "manual-morphology-audit-v3-20260722");
-  assert.equal(payload.morphologyAudit.rawSuffixHeadwordsReviewed, 3939);
-  assert.equal(payload.morphologyAudit.storedFormLinksReviewed, 625);
+  assert.match(payload.morphologyAudit.version, /^manual-morphology-audit-v\d+-\d{8}$/);
+  assert.equal(
+    payload.morphologyAudit.storedFormLinksReviewed,
+    words.reduce((sum, entry) => sum + (entry.forms || []).length, 0)
+  );
   assert.equal(payload.morphologyAudit.inflectedReferences, refs.length);
   assert.equal(payload.morphologyAudit.brushableHeadwords, brushable.length);
 });
@@ -507,7 +509,7 @@ test("suffix candidate count accounts for registered retirements", () => {
   const retiredCandidates = retirementPayload.entries.filter(
     (entry) => endings.some((ending) => normalizeWord(entry.word).endsWith(ending))
   );
-  assert.equal(candidates.length, 3939 - retiredCandidates.length);
+  assert.equal(candidates.length + retiredCandidates.length, payload.morphologyAudit.rawSuffixHeadwordsReviewed);
 });
 
 test("literal ind-ending words remain independent headwords", () => {

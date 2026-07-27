@@ -1,0 +1,48 @@
+name: Apply static cloud deep fix
+
+on:
+  push:
+    branches:
+      - fix/static-cloud-deep-audit-swipe-v3
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/static-cloud-deep-audit-swipe-v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate applicator syntax
+        run: python -m py_compile scripts/apply-static-cloud-deep-fix.py
+
+      - name: Apply deep static fix
+        run: python scripts/apply-static-cloud-deep-fix.py
+
+      - name: Validate final diff
+        run: |
+          git diff --check
+          test ! -e scripts/apply-static-cloud-deep-fix.py
+          test ! -e .github/workflows/apply-static-cloud-deep-fix.yml
+          grep -q '20260728_static_mobile_swipe_v3' app/lib/static-export-responsive.mjs
+          grep -q 'createVerifiedStaticZipResponse' app/api/export-static/route.js
+          grep -q 'actual exported mobile page changes words' tests/e2e/static-export-mobile-swipe.spec.mjs
+
+      - name: Commit final changes
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "fix: verify mobile swipe in the real static export"
+          git push origin HEAD:fix/static-cloud-deep-audit-swipe-v3

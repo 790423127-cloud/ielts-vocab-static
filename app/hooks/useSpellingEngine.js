@@ -127,11 +127,26 @@ function buildPersonalWrongBatchIdentity(words = []) {
     .join("|");
 }
 
+function buildSpellingBatchIdentity(words = []) {
+  return (Array.isArray(words) ? words : [])
+    .map((entry, index) => {
+      const wordId = getWordId(entry)
+        || entry?.wordId
+        || entry?.id
+        || entry?.expectedAnswer
+        || entry?.displayText
+        || entry?.word
+        || "";
+      return `${index}:${String(wordId).trim()}`;
+    })
+    .join("|");
+}
+
 function buildEngineDepsKey(words, candidateOptions, lexiconMeta, debugMode, categoryScope, spellingScope) {
   const practiceSource = categoryScope?.practiceSource || "category";
   const wordsIdentity = practiceSource === "personal_wrong_book"
     ? buildPersonalWrongBatchIdentity(words)
-    : String(Array.isArray(words) ? words.length : 0);
+    : buildSpellingBatchIdentity(words);
 
   return JSON.stringify({
     spellingScope,
@@ -240,6 +255,12 @@ export function useSpellingEngine(words = [], options = {}) {
 
     if (!previousKey || previousKey !== engineDepsKey) {
       setReady(false);
+      setSnapshot(null);
+      setInputValue("");
+      setHintOverrideLevel(0);
+      setAwaitingAdvance(false);
+      pendingAdvanceRef.current = null;
+      submitInFlightRef.current = false;
       setStatusText(statusTextFor("idle"));
       setFeedbackDetail("");
       setLastDiagnosis(null);
@@ -540,6 +561,8 @@ export {
   AUTO_SUBMIT_DEBOUNCE_MS,
   CORRECT_ADVANCE_DELAY_MS,
   TURBO_ADVANCE_DELAY_MS,
+  buildEngineDepsKey,
+  buildSpellingBatchIdentity,
   resolveCorrectAdvanceDelay
 };
 
@@ -548,5 +571,7 @@ export default {
   isSpellingStorageUnavailableError,
   mapSnapshotToProductionHookState,
   buildProductionFlashcardState,
+  buildEngineDepsKey,
+  buildSpellingBatchIdentity,
   useSpellingEngine
 };

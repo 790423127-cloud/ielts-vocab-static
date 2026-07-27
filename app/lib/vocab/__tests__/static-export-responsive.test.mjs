@@ -100,7 +100,7 @@ test("static CSS unlocks desktop height and adds compact laptop, mobile entry an
   assert.match(patched, /max-height:720px/);
   assert.match(patched, new RegExp(STATIC_FILTER_FIX_MARKER));
   assert.match(patched, /\.entry-grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-  assert.match(patched, /\.static-study-card\{min-width:0;touch-action:pan-y;overscroll-behavior-x:contain\}/);
+  assert.match(patched, /\.static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y;overscroll-behavior-x:contain\}/);
   assert.match(patched, /\.static-build-version\{/);
   assert.equal(patchStaticCss(patched), patched, "responsive CSS patch must be idempotent");
 });
@@ -187,7 +187,7 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
 
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_RESPONSIVE_MARKER));
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_FILTER_FIX_MARKER));
-  assert.match(entries.get("assets/style.css"), /static-study-card\{min-width:0;touch-action:pan-y/);
+  assert.match(entries.get("assets/style.css"), /static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y/);
   assert.match(entries.get("assets/app.js"), /index=-1/);
   assert.match(entries.get("assets/app.js"), /基础必会/);
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));

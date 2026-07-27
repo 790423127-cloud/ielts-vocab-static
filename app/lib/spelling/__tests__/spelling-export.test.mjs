@@ -206,12 +206,12 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
   assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
   assert.doesNotMatch(spellingSource, /href="\/spelling-(?:words|phrases)"/);
-  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260726_ielts538_v2"/);
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260727_mobile_first_screen_v2"/);
   assert.match(exportRoute, /wordId: stableId/);
   assert.match(exportRoute, /otherMeanings: Array\.isArray\(item\?\.otherMeanings\)/);
   assert.match(exportRoute, /id="topToolsToggle"/);
   assert.match(exportRoute, /topToolsCollapsed=saved===null\?\(viewport==="mobile"\|\|viewport==="compact-desktop"\)/);
-  assert.match(exportRoute, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(exportRoute, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(exportRoute, /classList\.toggle\("mobile-mode",narrow&&mobileMode\)/);
   assert.doesNotMatch(exportRoute, /<button id="mobileModeBtn"/);
   assert.match(fs.readFileSync(path.join(root, "public/assets/spelling.css"), "utf8"), /D2\.1 responsive system/);

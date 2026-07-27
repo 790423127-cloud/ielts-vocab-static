@@ -10,7 +10,8 @@
     "lint:errors": "eslint app scripts tests/e2e middleware.js next.config.mjs eslint.config.mjs playwright.config.mjs --quiet",
     "lint:quality": "eslint app scripts tests/e2e middleware.js next.config.mjs eslint.config.mjs playwright.config.mjs",
     "lint:budget": "node scripts/eslint-warning-budget.mjs",
-    "audit:dependencies": "npm audit --audit-level=high --registry=https://registry.npmjs.org",
+    "audit:dependencies": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
+    "audit:dependencies:all": "npm audit --audit-level=high --registry=https://registry.npmjs.org",
     "test:smoke": "playwright test tests/e2e/production-smoke.spec.mjs --config=playwright.config.mjs",
     "test:e2e": "playwright test --config=playwright.config.mjs",
     "test:performance": "playwright test tests/e2e/performance-budget.spec.mjs --config=playwright.config.mjs",
@@ -49,7 +50,7 @@
     "react-dom": "19.0.1"
   },
   "overrides": {
-    "postcss": "8.5.10",
+    "postcss": "8.5.18",
     "sharp": "0.35.3"
   },
   "engines": {

@@ -39,7 +39,7 @@ replaceRequired(
 replaceRequired(
   regressionTest,
   'test("home page imports the unified quality queue used after vocab hydration", () => {',
-  'test("paid AI start remains clickable so it can explain missing confirmation", () => {\n  assert.match(readingWordsSource, /if \(!aiConfirmed\) \{/);\n  assert.match(readingWordsSource, /请先勾选付费确认/);\n  assert.match(readingWordsSource, /disabled=\{aiRunning \|\| !aiTargetWords\.length \|\| !mainReady\}/);\n  assert.doesNotMatch(readingWordsSource, /disabled=\{!aiConfirmed \|\|/);\n});\n\ntest("home page imports the unified quality queue used after vocab hydration", () => {'
+  'test("paid AI start remains clickable so it can explain missing confirmation", () => {\n  assert.match(readingWordsSource, /if \\(!aiConfirmed\\) \\{/);\n  assert.match(readingWordsSource, /请先勾选付费确认/);\n  assert.match(readingWordsSource, /disabled=\\{aiRunning \\|\\| !aiTargetWords\\.length \\|\\| !mainReady\\}/);\n  assert.doesNotMatch(readingWordsSource, /disabled=\\{!aiConfirmed \\|\\|/);\n});\n\ntest("home page imports the unified quality queue used after vocab hydration", () => {'
 );
 
 for (const relativePath of [

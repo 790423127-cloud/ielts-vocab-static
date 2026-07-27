@@ -1,56 +1,52 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import nextConfig from "../../../../next.config.mjs";
-import { patchStaticZipResponse } from "../../static-export-response.mjs";
+import { POST } from "../../../api/export-static/route.js";
 import {
-  createStoredZip,
   readStoredZipEntries,
   STATIC_RESPONSIVE_VERSION,
   STATIC_SWIPE_FIX_MARKER
 } from "../../static-export-responsive.mjs";
 
-test("the public export endpoint is rewritten through the final artifact route", async () => {
-  const rewrites = await nextConfig.rewrites();
-  assert.deepEqual(rewrites.beforeFiles, [
-    { source: "/api/export-static", destination: "/api/export-static-final" }
-  ]);
-});
+function fixtureWord(id, word) {
+  return {
+    id,
+    wordId: id,
+    word,
+    phonetic: "/test/",
+    pos: "noun",
+    meaning: `${word} meaning`,
+    definition: `${word} definition`,
+    example: `This is ${word}.`,
+    exampleCn: "测试例句",
+    ieltsUse: ["Reading"],
+    topics: ["教育"],
+    difficulty: "基础高频",
+    forms: [],
+    wordFamily: [],
+    collocations: [],
+    phraseCollocations: []
+  };
+}
 
-test("the final export response contains the real mobile swipe and cache version", async () => {
-  const rawZip = createStoredZip([
-    {
-      name: "assets/app.js",
-      data: Buffer.from('const APP_VERSION="old";let sx=0,sy=0,st=0;els.swipeArea.addEventListener("touchcancel",stopHoldStep,{passive:true});')
-    },
-    {
-      name: "assets/style.css",
-      data: Buffer.from(".hero{overflow:visible}")
-    },
-    {
-      name: "index.html",
-      data: Buffer.from('<script src="./assets/app.js?v=old"></script>')
-    },
-    {
-      name: "sw.js",
-      data: Buffer.from('const CACHE_NAME="static_vocab_shell_old";')
-    }
-  ]);
-  const response = new Response(rawZip, {
-    status: 200,
-    headers: { "Content-Type": "application/zip" }
+test("the real export endpoint returns a verified mobile-swipe ZIP", async () => {
+  const request = new Request("http://127.0.0.1:3000/api/export-static?audio=0", {
+    method: "POST",
+    headers: { host: "127.0.0.1:3000", "content-type": "application/json" },
+    body: JSON.stringify({ words: [fixtureWord("word-alpha", "alpha"), fixtureWord("word-beta", "beta")] })
   });
-
-  const patchedResponse = await patchStaticZipResponse(response);
-  const entries = new Map(
-    readStoredZipEntries(Buffer.from(await patchedResponse.arrayBuffer()))
-      .map((entry) => [entry.name, entry.data.toString("utf8")])
-  );
-
-  assert.equal(patchedResponse.headers.get("x-static-export-version"), STATIC_RESPONSIVE_VERSION);
+  const response = await POST(request);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("x-static-export-version"), STATIC_RESPONSIVE_VERSION);
+  const entries = new Map(readStoredZipEntries(Buffer.from(await response.arrayBuffer())).map((entry) => [entry.name, entry.data.toString("utf8")]));
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));
-  assert.match(entries.get("assets/app.js"), /pointerdown/);
-  assert.match(entries.get("assets/style.css"), /touch-action:pan-y/);
-  assert.match(entries.get("index.html"), new RegExp(`v=${STATIC_RESPONSIVE_VERSION}`));
-  assert.match(entries.get("sw.js"), new RegExp(`static_vocab_shell_${STATIC_RESPONSIVE_VERSION}`));
+  assert.match(entries.get("assets/app.js"), /pointer-touch-v3/);
+  assert.match(entries.get("assets/app.js"), /window\.addEventListener\("pointerup"/);
+  assert.match(entries.get("assets/app.js"), /window\.addEventListener\("touchend"/);
+  assert.doesNotMatch(entries.get("assets/app.js"), /Math\.abs\(dx\)>55/);
+  assert.match(entries.get("assets/style.css"), /touch-action:pan-y pinch-zoom/);
+  assert.match(entries.get("index.html"), new RegExp(STATIC_RESPONSIVE_VERSION));
+  assert.match(entries.get("index.html"), /staticBuildVersion/);
+  assert.match(entries.get("sw.js"), new RegExp(STATIC_RESPONSIVE_VERSION));
+  assert.match(entries.get("build-info.json"), /pointer-touch-v3/);
 });

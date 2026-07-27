@@ -6,6 +6,7 @@ function entryId(entry = {}) {
   return normalizeId(entry.id || entry.wordId);
 }
 
+// Reading-list deletion is isolated from the main lexicon and other learning stores.
 export function removeReadingWordEntry(words = [], selectedId = "", visibleWords = words) {
   const list = Array.isArray(words) ? words : [];
   const visible = Array.isArray(visibleWords) ? visibleWords : [];

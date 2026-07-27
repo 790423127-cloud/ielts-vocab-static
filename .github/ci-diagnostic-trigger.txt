@@ -1,2 +1,0 @@
-Temporary CI diagnostic trigger for the 2026-07-27 failed main run.
-This file will be removed before the fix is merged.

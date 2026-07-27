@@ -12,6 +12,15 @@ const nextConfig = {
     return [
       { source: "/index.html", destination: "/", permanent: false }
     ];
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: "/api/export-static", destination: "/api/export-static-final" }
+      ],
+      afterFiles: [],
+      fallback: []
+    };
   }
 };
 

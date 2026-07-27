@@ -66,7 +66,10 @@ const MISSING_FIELD_LABELS = {
   meaning: "中文释义",
   definition: "英文释义",
   example: "英文例句",
-  exampleCn: "例句翻译"
+  exampleCn: "例句翻译",
+  forms: "变形",
+  wordFamily: "词族",
+  synonyms: "同义替换"
 };
 
 function speak(text) {

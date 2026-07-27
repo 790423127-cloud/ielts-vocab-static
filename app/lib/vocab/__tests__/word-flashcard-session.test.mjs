@@ -17,6 +17,16 @@ import {
   buildWordStudyOverviewModel,
   getWordStudyProgressLabel
 } from "../word-study-overview.mjs";
+import {
+  getReadingWordMissingFields,
+  isReadingWordIncomplete,
+  mergeReadingWordAiProfile,
+  normalizeReadingWord
+} from "../../reading-words/storage.mjs";
+import {
+  mergeAiProfileIntoMainEntry,
+  needsReadingAiProcessing
+} from "../../reading-words/main-lexicon-sync.mjs";
 
 const pagePath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../page.jsx");
 const pageSource = fs.readFileSync(pagePath, "utf8");
@@ -39,6 +49,78 @@ test("paid AI start remains clickable so it can explain missing confirmation", (
   assert.match(readingWordsSource, /请先勾选付费确认/);
   assert.match(readingWordsSource, /disabled=\{aiRunning \|\| !aiTargetWords\.length \|\| !mainReady\}/);
   assert.doesNotMatch(readingWordsSource, /disabled=\{!aiConfirmed \|\|/);
+});
+
+test("reading relations stay pending until data exists or an AI review marker is stored", () => {
+  const word = normalizeReadingWord({
+    word: "brochure",
+    pos: "noun",
+    meaning: "小册子",
+    definition: "a small book containing information",
+    example: "Please pick up a travel brochure at the counter.",
+    exampleCn: "请在柜台拿一份旅行小册子。"
+  });
+  const completeMain = {
+    word: "brochure",
+    ieltsUse: ["Reading"],
+    topics: ["旅行"],
+    difficulty: "基础"
+  };
+
+  assert.deepEqual(getReadingWordMissingFields(word), ["forms", "wordFamily", "synonyms"]);
+  assert.equal(isReadingWordIncomplete(word), true);
+  assert.equal(needsReadingAiProcessing(word, completeMain), true);
+});
+
+test("successful AI review marks empty relation sections so they are not processed repeatedly", () => {
+  const word = normalizeReadingWord({
+    word: "brochure",
+    pos: "noun",
+    meaning: "小册子",
+    definition: "a small book containing information",
+    example: "Please pick up a travel brochure at the counter.",
+    exampleCn: "请在柜台拿一份旅行小册子。"
+  });
+  const reviewedWord = mergeReadingWordAiProfile(word, {
+    forms: [],
+    wordFamily: [],
+    synonyms: []
+  });
+  const reviewedMain = mergeAiProfileIntoMainEntry({
+    word: "brochure",
+    ieltsUse: ["Reading"],
+    topics: ["旅行"],
+    difficulty: "基础"
+  }, {
+    forms: [],
+    wordFamily: [],
+    synonyms: []
+  }, { now: "2026-07-27T00:00:00.000Z" });
+
+  assert.equal(reviewedWord.formsReviewed, true);
+  assert.equal(reviewedWord.wordFamilyReviewed, true);
+  assert.equal(reviewedWord.synonymsReviewed, true);
+  assert.deepEqual(getReadingWordMissingFields(reviewedWord), []);
+  assert.equal(reviewedMain.formsReviewed, true);
+  assert.equal(reviewedMain.wordFamilyReviewed, true);
+  assert.equal(reviewedMain.synonymsReviewed, true);
+  assert.equal(needsReadingAiProcessing(reviewedWord, reviewedMain), false);
+});
+
+test("existing relation data counts as complete before review markers are added", () => {
+  const word = normalizeReadingWord({
+    word: "brochure",
+    pos: "noun",
+    meaning: "小册子",
+    definition: "a small book containing information",
+    example: "Please pick up a travel brochure at the counter.",
+    exampleCn: "请在柜台拿一份旅行小册子。",
+    forms: [{ word: "brochures", type: "plural" }],
+    wordFamily: [{ word: "brochure", pos: "noun" }],
+    synonyms: ["leaflet"]
+  });
+
+  assert.deepEqual(getReadingWordMissingFields(word), []);
 });
 
 test("home page imports the unified quality queue used after vocab hydration", () => {

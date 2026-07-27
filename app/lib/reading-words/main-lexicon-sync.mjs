@@ -21,6 +21,12 @@ const MAIN_ARRAY_FIELDS = [
   "wordFamily"
 ];
 
+const RELATION_REVIEW_FIELDS = [
+  ["forms", "formsReviewed"],
+  ["wordFamily", "wordFamilyReviewed"],
+  ["synonyms", "synonymsReviewed"]
+];
+
 function cleanText(value) {
   return String(value ?? "").normalize("NFC").trim().replace(/\s+/g, " ");
 }
@@ -56,6 +62,11 @@ export function applyMainEntryToReadingWord(readingWord = {}, mainEntry = {}, no
   if ((!Array.isArray(next.synonyms) || !next.synonyms.length) && Array.isArray(mainEntry.synonyms)) {
     next.synonyms = normalizeReadingSynonyms(mainEntry.synonyms, next.word);
   }
+  for (const [field, reviewedField] of RELATION_REVIEW_FIELDS) {
+    if ((Array.isArray(mainEntry[field]) && mainEntry[field].length) || mainEntry[reviewedField] === true) {
+      next[reviewedField] = true;
+    }
+  }
   next.updatedAt = cleanText(now) || next.updatedAt;
   return next;
 }
@@ -81,6 +92,9 @@ export function buildPersonalReadingMainEntry(readingWord = {}, options = {}) {
     forms: Array.isArray(readingWord.forms) ? readingWord.forms : [],
     wordFamily: Array.isArray(readingWord.wordFamily) ? readingWord.wordFamily : [],
     synonyms: normalizeReadingSynonyms(readingWord.synonyms, readingWord.word),
+    formsReviewed: readingWord.formsReviewed === true || Boolean(readingWord.forms?.length),
+    wordFamilyReviewed: readingWord.wordFamilyReviewed === true || Boolean(readingWord.wordFamily?.length),
+    synonymsReviewed: readingWord.synonymsReviewed === true || Boolean(readingWord.synonyms?.length),
     source: "personal-reading",
     supplemental: true,
     addedFromReadingWords: true,
@@ -199,6 +213,9 @@ export function mergeAiProfileIntoMainEntry(mainEntry = {}, profile = {}, option
   if ((!Array.isArray(next.synonyms) || !next.synonyms.length) && Array.isArray(profile.synonyms)) {
     next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
   }
+  next.formsReviewed = true;
+  next.wordFamilyReviewed = true;
+  next.synonymsReviewed = true;
   if ((!Array.isArray(next.ieltsUse) || !next.ieltsUse.length) && Array.isArray(profile.ieltsUse)) {
     next.ieltsUse = profile.ieltsUse;
   }

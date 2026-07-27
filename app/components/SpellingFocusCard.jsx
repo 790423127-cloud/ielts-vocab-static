@@ -208,17 +208,6 @@ export default function SpellingFocusCard({
         >
           <span className="spelling-pronounce-btn__icon" aria-hidden="true">🔊</span>
         </button>
-        {practiceSource === "error_bank" && trainingControls.canDeleteCurrentErrorBankItem ? (
-          <button
-            type="button"
-            className="spelling-undo-btn"
-            onMouseDown={trainingControls.markSettingsInteraction}
-            onClick={() => { void trainingControls.deleteCurrentErrorBankItem(); }}
-            title="只从拼写错词本移除，不删除主词库（快捷键：D / Delete）"
-          >
-            移出错词本
-          </button>
-        ) : null}
       </div>
       </section>
 
@@ -287,7 +276,6 @@ export default function SpellingFocusCard({
         <span><b>3</b> 例句</span>
         <span><b>4</b> 熟悉</span>
         <span><b>5</b> 重点复习</span>
-        {practiceSource === "error_bank" ? <span><b>D / Delete</b> 移出错词本</span> : null}
         <button
           type="button"
           className="spelling-undo-btn"
@@ -304,11 +292,11 @@ export default function SpellingFocusCard({
       </span>
     </p>
     <p
-      className={`spelling-action-notice${actionNotice || trainingControls.errorBankDeleteNotice ? "" : " is-empty"}`}
+      className={`spelling-action-notice${actionNotice ? "" : " is-empty"}`}
       role="status"
       aria-live="polite"
     >
-      {actionNotice || trainingControls.errorBankDeleteNotice || "\u00A0"}
+      {actionNotice || "\u00A0"}
     </p>
   </footer>
 </section>

@@ -82,15 +82,7 @@ export function mergeErrorBankRecords(errorRecords = [], lexiconEntries = []) {
 export function errorBankEntriesToSpellingCandidates(items = []) {
   return items.map((item) => {
     const { errorBank, ...entry } = item;
-    const sourceWordIds = Array.isArray(errorBank?.sourceWordIds) && errorBank.sourceWordIds.length
-      ? errorBank.sourceWordIds
-      : [entry.wordId || entry.id].filter(Boolean);
-
-    return {
-      ...entry,
-      __errorBankRecordIds: Array.from(new Set(sourceWordIds.map((value) => String(value || "").trim()).filter(Boolean))),
-      __errorBankDedupeKey: String(errorBank?.dedupeKey || "")
-    };
+    return entry;
   });
 }
 

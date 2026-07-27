@@ -52,7 +52,7 @@ const LAPTOP_HEIGHT_CSS = `
 const MOBILE_ENTRY_CSS = `
 
 /* ${STATIC_FILTER_FIX_MARKER} */
-.static-study-card{min-width:0;touch-action:pan-y;overscroll-behavior-x:contain}
+.static-study-card{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y;overscroll-behavior-x:contain}
 .static-build-version{position:fixed;right:8px;bottom:6px;z-index:2;padding:3px 7px;border-radius:999px;background:rgba(255,255,255,.72);color:rgba(22,53,47,.55);font-size:10px;line-height:1.2;pointer-events:none}
 @media (max-width:900px){
   .entry-panel{align-items:flex-end;padding:8px}
@@ -426,8 +426,8 @@ export function patchStaticExportZip(input) {
   if (!appJs.includes(STATIC_SWIPE_FIX_MARKER) || !appJs.includes(STATIC_SWIPE_ENGINE)) {
     throw new Error("Final static ZIP does not contain the verified 538-style swipe controller");
   }
-  if (!css.includes(".static-study-card{min-width:0;touch-action:pan-y")) {
-    throw new Error("Final static ZIP does not contain the 538-style touch-action rule");
+  if (!css.includes(".static-study-card{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y")) {
+    throw new Error("Final static ZIP does not contain the 538-style touch-action and preserved flex layout");
   }
   if (!html.includes(STATIC_RESPONSIVE_VERSION) || !html.includes('id="staticStudyCard"') || !html.includes("staticBuildVersion")) {
     throw new Error("Final static ZIP does not expose the verified study card and deployment version");

@@ -1,0 +1,255 @@
+name: Patch mobile spelling entry switch
+
+on:
+  push:
+    branches: [fix/mobile-spelling-entry-switch]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/mobile-spelling-entry-switch
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Apply mobile switching patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          hook_path = Path('app/hooks/useSpellingEngine.js')
+          hook = hook_path.read_text(encoding='utf-8')
+
+          old_identity = '''function buildPersonalWrongBatchIdentity(words = []) {
+            return (Array.isArray(words) ? words : [])
+              .map((entry) => String(entry?.wordId || entry?.id || "").trim())
+              .filter(Boolean)
+              .sort()
+              .join("|");
+          }
+
+          function buildEngineDepsKey(words, candidateOptions, lexiconMeta, debugMode, categoryScope, spellingScope) {
+            const practiceSource = categoryScope?.practiceSource || "category";
+            const wordsIdentity = practiceSource === "personal_wrong_book"
+              ? buildPersonalWrongBatchIdentity(words)
+              : String(Array.isArray(words) ? words.length : 0);
+          '''
+          new_identity = '''function buildPersonalWrongBatchIdentity(words = []) {
+            return (Array.isArray(words) ? words : [])
+              .map((entry) => String(entry?.wordId || entry?.id || "").trim())
+              .filter(Boolean)
+              .sort()
+              .join("|");
+          }
+
+          function buildSpellingBatchIdentity(words = []) {
+            return (Array.isArray(words) ? words : [])
+              .map((entry, index) => {
+                const wordId = getWordId(entry)
+                  || entry?.wordId
+                  || entry?.id
+                  || entry?.expectedAnswer
+                  || entry?.displayText
+                  || entry?.word
+                  || "";
+                return `${index}:${String(wordId).trim()}`;
+              })
+              .join("|");
+          }
+
+          function buildEngineDepsKey(words, candidateOptions, lexiconMeta, debugMode, categoryScope, spellingScope) {
+            const practiceSource = categoryScope?.practiceSource || "category";
+            const wordsIdentity = practiceSource === "personal_wrong_book"
+              ? buildPersonalWrongBatchIdentity(words)
+              : buildSpellingBatchIdentity(words);
+          '''
+          if old_identity not in hook:
+              raise SystemExit('useSpellingEngine identity block not found')
+          hook = hook.replace(old_identity, new_identity, 1)
+
+          old_reset = '''    if (!previousKey || previousKey !== engineDepsKey) {
+                setReady(false);
+                setStatusText(statusTextFor("idle"));
+                setFeedbackDetail("");
+                setLastDiagnosis(null);
+                setStorageWarning("");
+              }
+          '''
+          new_reset = '''    if (!previousKey || previousKey !== engineDepsKey) {
+                setReady(false);
+                setSnapshot(null);
+                setInputValue("");
+                setHintOverrideLevel(0);
+                setAwaitingAdvance(false);
+                pendingAdvanceRef.current = null;
+                submitInFlightRef.current = false;
+                setStatusText(statusTextFor("idle"));
+                setFeedbackDetail("");
+                setLastDiagnosis(null);
+                setStorageWarning("");
+              }
+          '''
+          if old_reset not in hook:
+              raise SystemExit('useSpellingEngine reset block not found')
+          hook = hook.replace(old_reset, new_reset, 1)
+
+          old_named_export = '''  TURBO_ADVANCE_DELAY_MS,
+            resolveCorrectAdvanceDelay
+          };
+          '''
+          new_named_export = '''  TURBO_ADVANCE_DELAY_MS,
+            buildEngineDepsKey,
+            buildSpellingBatchIdentity,
+            resolveCorrectAdvanceDelay
+          };
+          '''
+          if old_named_export not in hook:
+              raise SystemExit('named export block not found')
+          hook = hook.replace(old_named_export, new_named_export, 1)
+
+          old_default_export = '''  mapSnapshotToProductionHookState,
+            buildProductionFlashcardState,
+            useSpellingEngine
+          };
+          '''
+          new_default_export = '''  mapSnapshotToProductionHookState,
+            buildProductionFlashcardState,
+            buildEngineDepsKey,
+            buildSpellingBatchIdentity,
+            useSpellingEngine
+          };
+          '''
+          if old_default_export not in hook:
+              raise SystemExit('default export block not found')
+          hook = hook.replace(old_default_export, new_default_export, 1)
+          hook_path.write_text(hook, encoding='utf-8')
+
+          range_path = Path('app/components/SpellingRangeBar.jsx')
+          range_source = range_path.read_text(encoding='utf-8')
+
+          replacements = [
+            ('className={practiceSource === entry.value ? "active" : ""}\n          onClick=', 'className={practiceSource === entry.value ? "active" : ""}\n          onPointerDown={trainingControls.markSettingsInteraction}\n          onClick='),
+            ('className={categoryPrefs.categoryType === entry.value ? "active" : ""}\n              onClick=', 'className={categoryPrefs.categoryType === entry.value ? "active" : ""}\n              onPointerDown={trainingControls.markSettingsInteraction}\n              onClick='),
+            ('className={categoryPrefs.categoryValue === entry.value ? "active" : ""}\n                onClick=', 'className={categoryPrefs.categoryValue === entry.value ? "active" : ""}\n                onPointerDown={trainingControls.markSettingsInteraction}\n                onClick='),
+            ('className={categoryPrefs.categoryValue === topic ? "active" : ""}\n                onClick=', 'className={categoryPrefs.categoryValue === topic ? "active" : ""}\n                onPointerDown={trainingControls.markSettingsInteraction}\n                onClick='),
+            ('className={idictationBatchSelection.groupKey === entry.value ? "active" : ""}\n              onClick=', 'className={idictationBatchSelection.groupKey === entry.value ? "active" : ""}\n              onPointerDown={trainingControls.markSettingsInteraction}\n              onClick=')
+          ]
+          for old, new in replacements:
+              if old not in range_source:
+                  raise SystemExit(f'SpellingRangeBar pattern not found: {old[:60]}')
+              range_source = range_source.replace(old, new)
+
+          range_path.write_text(range_source, encoding='utf-8')
+
+          test_path = Path('app/lib/spelling/__tests__/production-hook.test.mjs')
+          test_source = test_path.read_text(encoding='utf-8')
+          test_source = test_source.replace(
+            '''  createInitialProductionSpellingState,
+            isSpellingStorageUnavailableError,
+            mapSnapshotToProductionHookState
+          } = hookModule;
+          ''',
+            '''  buildEngineDepsKey,
+            createInitialProductionSpellingState,
+            isSpellingStorageUnavailableError,
+            mapSnapshotToProductionHookState
+          } = hookModule;
+          ''',
+            1
+          )
+
+          insertion = '''
+          test("equal-sized spelling entries produce different engine identities", () => {
+            const shared = {
+              entryMode: "headwords",
+              excludeFamiliarFlashcards: true
+            };
+            const scope = { scope: "word", entryMode: "headwords" };
+            const categoryScope = {
+              practiceSource: "category",
+              currentBatchId: "word:category:mobile-switch"
+            };
+
+            const firstKey = buildEngineDepsKey(
+              [{ wordId: "alpha", expectedAnswer: "alpha" }],
+              shared,
+              { lexiconVersion: "v1", lexiconHash: "hash" },
+              false,
+              categoryScope,
+              scope
+            );
+            const secondKey = buildEngineDepsKey(
+              [{ wordId: "beta", expectedAnswer: "beta" }],
+              shared,
+              { lexiconVersion: "v1", lexiconHash: "hash" },
+              false,
+              categoryScope,
+              scope
+            );
+
+            assert.notEqual(firstKey, secondKey);
+          });
+
+          test("batch changes clear the previous word before the new engine is ready", () => {
+            const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+            const source = fs.readFileSync(path.join(root, "app/hooks/useSpellingEngine.js"), "utf8");
+            const resetBlock = source.slice(
+              source.indexOf("if (!previousKey || previousKey !== engineDepsKey)"),
+              source.indexOf("const initialize = async ()")
+            );
+
+            assert.match(resetBlock, /setSnapshot\(null\)/);
+            assert.match(resetBlock, /setInputValue\(""\)/);
+            assert.match(resetBlock, /setAwaitingAdvance\(false\)/);
+          });
+
+          test("mobile range controls mark touch interaction before changing filters", () => {
+            const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+            const source = fs.readFileSync(path.join(root, "app/components/SpellingRangeBar.jsx"), "utf8");
+            const pointerGuards = source.match(/onPointerDown=\{trainingControls\.markSettingsInteraction\}/g) || [];
+
+            assert.ok(pointerGuards.length >= 5);
+          });
+          '''
+          marker = 'test("blocked or timed-out IndexedDB is treated as recoverable storage unavailability", () => {'
+          if marker not in test_source:
+              raise SystemExit('production hook test insertion marker not found')
+          test_source = test_source.replace(marker, insertion + '\n' + marker, 1)
+          test_path.write_text(test_source, encoding='utf-8')
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify focused tests and lint
+        run: |
+          node --test app/lib/spelling/__tests__/production-hook.test.mjs
+          npm run lint:errors
+
+      - name: Commit implementation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/hooks/useSpellingEngine.js app/components/SpellingRangeBar.jsx app/lib/spelling/__tests__/production-hook.test.mjs
+          if git diff --cached --quiet; then
+            echo "No implementation changes to commit"
+            exit 0
+          fi
+          git commit -m "fix: switch spelling entries reliably on mobile"
+          git push origin HEAD:fix/mobile-spelling-entry-switch

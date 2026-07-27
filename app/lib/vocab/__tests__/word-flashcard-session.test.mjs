@@ -24,6 +24,7 @@ import {
   normalizeReadingWord
 } from "../../reading-words/storage.mjs";
 import {
+  applyMainEntryToReadingWord,
   mergeAiProfileIntoMainEntry,
   needsReadingAiProcessing
 } from "../../reading-words/main-lexicon-sync.mjs";
@@ -173,6 +174,92 @@ test("reviewed empty reading relations are shown with explicit labels", () => {
   assert.match(readingWordsSource, /待 AI 检查变形/);
   assert.match(readingWordsSource, /待 AI 检查词族/);
   assert.match(readingWordsSource, /待 AI 检查同义替换/);
+});
+
+
+test("legacy or main-lexicon review flags do not mark a reading word complete", () => {
+  const legacy = normalizeReadingWord({
+    word: "brochure",
+    pos: "noun",
+    meaning: "小册子",
+    definition: "a small book containing information",
+    example: "Please pick up a travel brochure at the counter.",
+    exampleCn: "请在柜台拿一份旅行小册子。",
+    formsReviewed: true,
+    wordFamilyReviewed: true,
+    synonymsReviewed: true
+  });
+  const linked = applyMainEntryToReadingWord(legacy, {
+    word: "brochure",
+    forms: [],
+    wordFamily: [],
+    synonyms: [],
+    formsReviewed: true,
+    wordFamilyReviewed: true,
+    synonymsReviewed: true
+  });
+
+  assert.equal(linked.formsReviewed, false);
+  assert.equal(linked.wordFamilyReviewed, false);
+  assert.equal(linked.synonymsReviewed, false);
+  assert.deepEqual(getReadingWordMissingFields(linked), ["forms", "wordFamily", "synonyms"]);
+});
+
+test("reading AI review provenance survives normalization and avoids repeat processing", () => {
+  const base = normalizeReadingWord({
+    word: "brochure",
+    pos: "noun",
+    meaning: "小册子",
+    definition: "a small book containing information",
+    example: "Please pick up a travel brochure at the counter.",
+    exampleCn: "请在柜台拿一份旅行小册子。"
+  });
+  const reviewed = mergeReadingWordAiProfile(base, {
+    forms: [],
+    wordFamily: [],
+    synonyms: []
+  });
+  const reloaded = normalizeReadingWord(reviewed);
+
+  assert.equal(reloaded.formsReviewed, true);
+  assert.equal(reloaded.formsReviewSource, "reading-ai");
+  assert.equal(reloaded.wordFamilyReviewed, true);
+  assert.equal(reloaded.wordFamilyReviewSource, "reading-ai");
+  assert.equal(reloaded.synonymsReviewed, true);
+  assert.equal(reloaded.synonymsReviewSource, "reading-ai");
+  assert.deepEqual(getReadingWordMissingFields(reloaded), []);
+});
+
+test("reading AI results fill missing main-lexicon fields without overwriting existing content", () => {
+  const merged = mergeAiProfileIntoMainEntry({
+    word: "brochure",
+    meaning: "已有释义",
+    forms: [],
+    wordFamily: [],
+    synonyms: [],
+    ieltsUse: [],
+    topics: [],
+    difficulty: ""
+  }, {
+    meaning: "AI 新释义",
+    forms: [{ word: "brochures", type: "plural" }],
+    wordFamily: [],
+    synonyms: ["leaflet"],
+    ieltsUse: ["Reading"],
+    topics: ["旅行"],
+    difficulty: "基础高频"
+  });
+
+  assert.equal(merged.meaning, "已有释义");
+  assert.deepEqual(merged.forms, [{ word: "brochures", type: "plural" }]);
+  assert.deepEqual(merged.wordFamily, []);
+  assert.deepEqual(merged.synonyms, ["leaflet"]);
+  assert.deepEqual(merged.ieltsUse, ["Reading"]);
+  assert.deepEqual(merged.topics, ["旅行"]);
+  assert.equal(merged.difficulty, "基础高频");
+  assert.equal(merged.formsReviewed, true);
+  assert.equal(merged.wordFamilyReviewed, true);
+  assert.equal(merged.synonymsReviewed, true);
 });
 
 test("home page imports the unified quality queue used after vocab hydration", () => {

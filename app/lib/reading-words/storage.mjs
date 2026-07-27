@@ -1,6 +1,7 @@
 export const READING_WORDS_STORAGE_KEY = "ielts-personal-reading-words-v1";
 export const READING_WORDS_ROLLBACK_KEY = "ielts-personal-reading-words-rollback-v1";
 export const READING_WORDS_BACKUP_VERSION = 1;
+const READING_AI_REVIEW_SOURCE = "reading-ai";
 
 const CORE_FIELDS = [
   "pos",
@@ -118,9 +119,12 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
       input.synonyms || input.validatedSynonyms || input.recommendedSynonyms,
       word
     ),
-    formsReviewed: input.formsReviewed === true,
-    wordFamilyReviewed: input.wordFamilyReviewed === true,
-    synonymsReviewed: input.synonymsReviewed === true,
+    formsReviewed: input.formsReviewed === true && cleanText(input.formsReviewSource) === READING_AI_REVIEW_SOURCE,
+    formsReviewSource: cleanText(input.formsReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
+    wordFamilyReviewed: input.wordFamilyReviewed === true && cleanText(input.wordFamilyReviewSource) === READING_AI_REVIEW_SOURCE,
+    wordFamilyReviewSource: cleanText(input.wordFamilyReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
+    synonymsReviewed: input.synonymsReviewed === true && cleanText(input.synonymsReviewSource) === READING_AI_REVIEW_SOURCE,
+    synonymsReviewSource: cleanText(input.synonymsReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
     mainWordId: cleanText(input.mainWordId),
     importCount,
     highFrequency: input.highFrequency === true || importCount >= 2,
@@ -308,9 +312,18 @@ export function mergeReadingWordAiProfile(word, profile = {}) {
   if (!Array.isArray(next.synonyms) || !next.synonyms.length) {
     next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
   }
-  if (Array.isArray(profile.forms)) next.formsReviewed = true;
-  if (Array.isArray(profile.wordFamily)) next.wordFamilyReviewed = true;
-  if (Array.isArray(profile.synonyms)) next.synonymsReviewed = true;
+  if (Array.isArray(profile.forms)) {
+    next.formsReviewed = true;
+    next.formsReviewSource = READING_AI_REVIEW_SOURCE;
+  }
+  if (Array.isArray(profile.wordFamily)) {
+    next.wordFamilyReviewed = true;
+    next.wordFamilyReviewSource = READING_AI_REVIEW_SOURCE;
+  }
+  if (Array.isArray(profile.synonyms)) {
+    next.synonymsReviewed = true;
+    next.synonymsReviewSource = READING_AI_REVIEW_SOURCE;
+  }
   next.updatedAt = new Date().toISOString();
   return next;
 }

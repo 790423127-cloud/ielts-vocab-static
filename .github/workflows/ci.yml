@@ -23,15 +23,26 @@ jobs:
           ref: fix/static-cloud-deep-audit-swipe-v3
 
       - name: Apply verified static cloud fix
+        shell: bash
         run: |
-          python3 -m py_compile scripts/apply-static-cloud-deep-fix.py
-          python3 scripts/apply-static-cloud-deep-fix.py
-          git diff --check
+          set -o pipefail
+          python3 -m py_compile scripts/apply-static-cloud-deep-fix.py 2>&1 | tee static-fix.log
+          python3 scripts/apply-static-cloud-deep-fix.py 2>&1 | tee -a static-fix.log
+          git diff --check 2>&1 | tee -a static-fix.log
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add -A
-          git commit -m "fix: verify mobile swipe in the real static export"
-          git push origin HEAD:fix/static-cloud-deep-audit-swipe-v3
+          git commit -m "fix: verify mobile swipe in the real static export" 2>&1 | tee -a static-fix.log
+          git push origin HEAD:fix/static-cloud-deep-audit-swipe-v3 2>&1 | tee -a static-fix.log
+
+      - name: Upload static fix failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-fix-failure-${{ github.run_id }}
+          path: static-fix.log
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

@@ -130,7 +130,13 @@ export function resolveFilterSwitchIndex(resolveIndex, {
     studyPool
   });
 
-  if (result.index >= 0) {
+  const outOfFilterReasons = new Set([
+    "wordKeyOutOfFilter",
+    "entryPositionOutOfFilter",
+    "savedIndexOutOfFilter"
+  ]);
+
+  if (result.index >= 0 && !outOfFilterReasons.has(result.reason)) {
     return { ...result, switched: true };
   }
 

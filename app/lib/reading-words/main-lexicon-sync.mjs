@@ -213,9 +213,9 @@ export function mergeAiProfileIntoMainEntry(mainEntry = {}, profile = {}, option
   if ((!Array.isArray(next.synonyms) || !next.synonyms.length) && Array.isArray(profile.synonyms)) {
     next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
   }
-  next.formsReviewed = true;
-  next.wordFamilyReviewed = true;
-  next.synonymsReviewed = true;
+  if (Array.isArray(profile.forms)) next.formsReviewed = true;
+  if (Array.isArray(profile.wordFamily)) next.wordFamilyReviewed = true;
+  if (Array.isArray(profile.synonyms)) next.synonymsReviewed = true;
   if ((!Array.isArray(next.ieltsUse) || !next.ieltsUse.length) && Array.isArray(profile.ieltsUse)) {
     next.ieltsUse = profile.ieltsUse;
   }

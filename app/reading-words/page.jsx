@@ -964,7 +964,7 @@ export default function ReadingWordsPage() {
                 <DetailList
                   title="变形"
                   items={Array.isArray(selectedWord.forms) ? selectedWord.forms : []}
-                  emptyText="暂无重要变形"
+                  emptyText={selectedWord.formsReviewed ? "已审核 · 无变形" : "待 AI 检查变形"}
                   renderItem={(item, index) => (
                     <div className={styles.detailItem} key={`${item?.word || item}-${index}`}>
                       <strong>{item?.word || item}</strong><span>{item?.type || item?.note || ""}</span>
@@ -974,7 +974,7 @@ export default function ReadingWordsPage() {
                 <DetailList
                   title="词族"
                   items={Array.isArray(selectedWord.wordFamily) ? selectedWord.wordFamily : []}
-                  emptyText="暂无词族信息"
+                  emptyText={selectedWord.wordFamilyReviewed ? "已审核 · 无词族" : "待 AI 检查词族"}
                   renderItem={(item, index) => (
                     <div className={styles.detailItem} key={`${item?.word || item}-${index}`}>
                       <strong>{item?.word || item}</strong><span>{item?.meaning || item?.pos || ""}</span>
@@ -984,7 +984,7 @@ export default function ReadingWordsPage() {
                 <DetailList
                   title="同义替换"
                   items={Array.isArray(selectedWord.synonyms) ? selectedWord.synonyms : []}
-                  emptyText="当前词暂无可靠同义替换"
+                  emptyText={selectedWord.synonymsReviewed ? "已审核 · 无可替换" : "待 AI 检查同义替换"}
                   renderItem={(item) => (
                     <button type="button" className={styles.synonymItem} key={item} onClick={() => speak(item)}>
                       <Volume2 aria-hidden="true" />{item}

@@ -72,6 +72,49 @@ test("reading relations stay pending until data exists or an AI review marker is
   assert.equal(needsReadingAiProcessing(word, completeMain), true);
 });
 
+test("any single unreviewed empty relation keeps the word in the AI queue", () => {
+  const base = {
+    word: "brochure",
+    pos: "noun",
+    meaning: "小册子",
+    definition: "a small book containing information",
+    example: "Please pick up a travel brochure at the counter.",
+    exampleCn: "请在柜台拿一份旅行小册子。",
+    forms: [{ word: "brochures", type: "plural" }],
+    wordFamily: [{ word: "brochure", pos: "noun" }],
+    synonyms: ["leaflet"]
+  };
+  const completeMain = {
+    word: "brochure",
+    ieltsUse: ["Reading"],
+    topics: ["旅行"],
+    difficulty: "基础"
+  };
+
+  for (const field of ["forms", "wordFamily", "synonyms"]) {
+    const word = normalizeReadingWord({ ...base, [field]: [] });
+    assert.deepEqual(getReadingWordMissingFields(word), [field]);
+    assert.equal(needsReadingAiProcessing(word, completeMain), true);
+  }
+});
+
+test("AI only marks a relation reviewed when that field is explicitly returned", () => {
+  const word = normalizeReadingWord({
+    word: "brochure",
+    pos: "noun",
+    meaning: "小册子",
+    definition: "a small book containing information",
+    example: "Please pick up a travel brochure at the counter.",
+    exampleCn: "请在柜台拿一份旅行小册子。"
+  });
+  const partial = mergeReadingWordAiProfile(word, { forms: [] });
+
+  assert.equal(partial.formsReviewed, true);
+  assert.equal(partial.wordFamilyReviewed, false);
+  assert.equal(partial.synonymsReviewed, false);
+  assert.deepEqual(getReadingWordMissingFields(partial), ["wordFamily", "synonyms"]);
+});
+
 test("successful AI review marks empty relation sections so they are not processed repeatedly", () => {
   const word = normalizeReadingWord({
     word: "brochure",
@@ -121,6 +164,15 @@ test("existing relation data counts as complete before review markers are added"
   });
 
   assert.deepEqual(getReadingWordMissingFields(word), []);
+});
+
+test("reviewed empty reading relations are shown with explicit labels", () => {
+  assert.match(readingWordsSource, /已审核 · 无变形/);
+  assert.match(readingWordsSource, /已审核 · 无词族/);
+  assert.match(readingWordsSource, /已审核 · 无可替换/);
+  assert.match(readingWordsSource, /待 AI 检查变形/);
+  assert.match(readingWordsSource, /待 AI 检查词族/);
+  assert.match(readingWordsSource, /待 AI 检查同义替换/);
 });
 
 test("home page imports the unified quality queue used after vocab hydration", () => {

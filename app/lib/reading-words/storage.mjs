@@ -10,6 +10,12 @@ const CORE_FIELDS = [
   "exampleCn"
 ];
 
+const REVIEWED_RELATION_FIELDS = [
+  ["forms", "formsReviewed"],
+  ["wordFamily", "wordFamilyReviewed"],
+  ["synonyms", "synonymsReviewed"]
+];
+
 const FIELD_ALIASES = new Map([
   ["word", "word"],
   ["headword", "word"],
@@ -112,6 +118,9 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
       input.synonyms || input.validatedSynonyms || input.recommendedSynonyms,
       word
     ),
+    formsReviewed: input.formsReviewed === true,
+    wordFamilyReviewed: input.wordFamilyReviewed === true,
+    synonymsReviewed: input.synonymsReviewed === true,
     mainWordId: cleanText(input.mainWordId),
     importCount,
     highFrequency: input.highFrequency === true || importCount >= 2,
@@ -126,7 +135,14 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
 }
 
 export function getReadingWordMissingFields(word) {
-  return CORE_FIELDS.filter((field) => !cleanText(word?.[field]));
+  const missing = CORE_FIELDS.filter((field) => !cleanText(word?.[field]));
+
+  for (const [field, reviewedField] of REVIEWED_RELATION_FIELDS) {
+    const hasData = Array.isArray(word?.[field]) && word[field].length > 0;
+    if (!hasData && word?.[reviewedField] !== true) missing.push(field);
+  }
+
+  return missing;
 }
 
 export function isReadingWordIncomplete(word) {
@@ -292,6 +308,9 @@ export function mergeReadingWordAiProfile(word, profile = {}) {
   if (!Array.isArray(next.synonyms) || !next.synonyms.length) {
     next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
   }
+  if (Array.isArray(profile.forms)) next.formsReviewed = true;
+  if (Array.isArray(profile.wordFamily)) next.wordFamilyReviewed = true;
+  if (Array.isArray(profile.synonyms)) next.synonymsReviewed = true;
   next.updatedAt = new Date().toISOString();
   return next;
 }

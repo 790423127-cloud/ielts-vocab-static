@@ -8,10 +8,64 @@ import hookModule from "../../../hooks/useSpellingEngine.js";
 import { resolveSpellingLoadingState } from "../spelling-training-page-helpers.mjs";
 
 const {
+  buildEngineDepsKey,
   createInitialProductionSpellingState,
   isSpellingStorageUnavailableError,
   mapSnapshotToProductionHookState
 } = hookModule;
+
+
+test("equal-sized spelling entries produce different engine identities", () => {
+  const shared = {
+    entryMode: "headwords",
+    excludeFamiliarFlashcards: true
+  };
+  const scope = { scope: "word", entryMode: "headwords" };
+  const categoryScope = {
+    practiceSource: "category",
+    currentBatchId: "word:category:mobile-switch"
+  };
+
+  const firstKey = buildEngineDepsKey(
+    [{ wordId: "alpha", expectedAnswer: "alpha" }],
+    shared,
+    { lexiconVersion: "v1", lexiconHash: "hash" },
+    false,
+    categoryScope,
+    scope
+  );
+  const secondKey = buildEngineDepsKey(
+    [{ wordId: "beta", expectedAnswer: "beta" }],
+    shared,
+    { lexiconVersion: "v1", lexiconHash: "hash" },
+    false,
+    categoryScope,
+    scope
+  );
+
+  assert.notEqual(firstKey, secondKey);
+});
+
+test("batch changes clear the previous word before the new engine is ready", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const source = fs.readFileSync(path.join(root, "app/hooks/useSpellingEngine.js"), "utf8");
+  const resetBlock = source.slice(
+    source.indexOf("if (!previousKey || previousKey !== engineDepsKey)"),
+    source.indexOf("const initialize = async ()")
+  );
+
+  assert.match(resetBlock, /setSnapshot\(null\)/);
+  assert.match(resetBlock, /setInputValue\(""\)/);
+  assert.match(resetBlock, /setAwaitingAdvance\(false\)/);
+});
+
+test("mobile range controls mark touch interaction before changing filters", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const source = fs.readFileSync(path.join(root, "app/components/SpellingRangeBar.jsx"), "utf8");
+  const pointerGuards = source.match(/onPointerDown=\{trainingControls\.markSettingsInteraction\}/g) || [];
+
+  assert.ok(pointerGuards.length >= 5);
+});
 
 test("blocked or timed-out IndexedDB is treated as recoverable storage unavailability", () => {
   assert.equal(isSpellingStorageUnavailableError(new Error("拼写进度库被其他标签页占用")), true);

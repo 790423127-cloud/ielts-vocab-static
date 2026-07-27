@@ -90,6 +90,7 @@ export default function SpellingRangeBar({
           key={entry.value}
           type="button"
           className={practiceSource === entry.value ? "active" : ""}
+          onPointerDown={trainingControls.markSettingsInteraction}
           onClick={() => patchStoredPrefs({ practiceSource: entry.value })}
         >
           {entry.label}
@@ -196,6 +197,7 @@ export default function SpellingRangeBar({
               key={entry.value}
               type="button"
               className={categoryPrefs.categoryType === entry.value ? "active" : ""}
+              onPointerDown={trainingControls.markSettingsInteraction}
               onClick={() => patchCategoryPrefs({
                 categoryType: entry.value,
                 categoryValue: entry.value === "difficulty"
@@ -224,6 +226,7 @@ export default function SpellingRangeBar({
                 key={entry.value}
                 type="button"
                 className={categoryPrefs.categoryValue === entry.value ? "active" : ""}
+                onPointerDown={trainingControls.markSettingsInteraction}
                 onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
               >
                 {entry.label}
@@ -242,6 +245,7 @@ export default function SpellingRangeBar({
                 key={topic}
                 type="button"
                 className={categoryPrefs.categoryValue === topic ? "active" : ""}
+                onPointerDown={trainingControls.markSettingsInteraction}
                 onClick={() => patchCategoryPrefs({ categoryValue: topic, batchIndex: 0 })}
               >
                 {topic}
@@ -260,6 +264,7 @@ export default function SpellingRangeBar({
                 key={entry.value}
                 type="button"
                 className={categoryPrefs.categoryValue === entry.value ? "active" : ""}
+                onPointerDown={trainingControls.markSettingsInteraction}
                 onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
               >
                 {entry.label}
@@ -278,6 +283,7 @@ export default function SpellingRangeBar({
                 key={entry.value}
                 type="button"
                 className={categoryPrefs.categoryValue === entry.value ? "active" : ""}
+                onPointerDown={trainingControls.markSettingsInteraction}
                 onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
               >
                 {entry.label}
@@ -314,6 +320,7 @@ export default function SpellingRangeBar({
               key={entry.value}
               type="button"
               className={idictationBatchSelection.groupKey === entry.value ? "active" : ""}
+              onPointerDown={trainingControls.markSettingsInteraction}
               onClick={() => patchIdictationPrefs(idictationSourceKey, { groupKey: entry.value, batchIndex: 0 })}
             >
               {entry.label}

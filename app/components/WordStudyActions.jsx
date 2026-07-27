@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
 function requestCurrentWordDeletion() {
   window.dispatchEvent(new KeyboardEvent("keydown", {
     key: "Delete",
@@ -9,11 +7,6 @@ function requestCurrentWordDeletion() {
     bubbles: true,
     cancelable: true
   }));
-}
-
-function isEditableTarget(target) {
-  const tag = target?.tagName?.toLowerCase();
-  return tag === "input" || tag === "textarea" || tag === "select" || target?.isContentEditable;
 }
 
 export default function WordStudyActions({
@@ -25,21 +18,6 @@ export default function WordStudyActions({
   markStatus,
   tidyReview
 }) {
-  useEffect(() => {
-    function handleDeleteAlias(event) {
-      if (isStudyEmpty || isExternalIdictationItem) return;
-      if (isEditableTarget(event.target) || event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
-      if (String(event.key || "").toLowerCase() !== "d") return;
-
-      event.preventDefault();
-      event.stopPropagation();
-      requestCurrentWordDeletion();
-    }
-
-    window.addEventListener("keydown", handleDeleteAlias, true);
-    return () => window.removeEventListener("keydown", handleDeleteAlias, true);
-  }, [isExternalIdictationItem, isStudyEmpty]);
-
   if (tidyReview?.active) {
     return (
       <footer className="bottom bottombar tidy-review-actions" aria-label="词库整理操作">
@@ -53,7 +31,7 @@ export default function WordStudyActions({
           <button className="status uncertain" type="button" disabled={isStudyEmpty} onClick={tidyReview.onLater}>
             以后再看
           </button>
-          <button className="status unknown active-unknown" type="button" disabled={isStudyEmpty} onClick={requestCurrentWordDeletion} title="只从雅思主词库删除（快捷键：D / Delete）">
+          <button className="status unknown active-unknown" type="button" disabled={isStudyEmpty} onClick={requestCurrentWordDeletion} title="只从雅思主词库删除">
             删除
           </button>
         </div>

@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  dismissErrorBankCandidate,
+  isErrorBankCandidate,
+  resolveErrorBankDeleteShortcut
+} from "../lib/spelling/error-bank-dismiss.mjs";
+import { SpellingIndexedDbStore } from "../lib/spelling/indexeddb-store.mjs";
 import {
   SPELLING_SHORTCUT_ACTIONS,
   resolveSpellingShortcut
@@ -20,6 +26,8 @@ function isWordNavigationShortcut(event) {
 export function useSpellingTrainingControls(options = {}) {
   const inputRef = useRef(null);
   const allowBlurRef = useRef(false);
+  const errorBankDeleteLockRef = useRef(false);
+  const [errorBankDeleteNotice, setErrorBankDeleteNotice] = useState("");
   const {
     enabled = true,
     current,
@@ -43,6 +51,7 @@ export function useSpellingTrainingControls(options = {}) {
   } = options;
   const hasCurrent = Boolean(current);
   const currentWordId = current?.wordId;
+  const canDeleteCurrentErrorBankItem = isErrorBankCandidate(current);
 
   const focusInput = useCallback((options = {}) => {
     if (!enabled || !inputRef.current) return;
@@ -69,6 +78,44 @@ export function useSpellingTrainingControls(options = {}) {
       allowBlurRef.current = false;
     }, 250);
   }, []);
+
+  const deleteCurrentErrorBankItem = useCallback(async () => {
+    if (!enabled || !current || !isErrorBankCandidate(current) || errorBankDeleteLockRef.current) return false;
+
+    errorBankDeleteLockRef.current = true;
+    setErrorBankDeleteNotice("正在移出错词本…");
+
+    try {
+      const scope = current.entryType === "phrase" ? "phrase" : "word";
+      const store = new SpellingIndexedDbStore({ scope });
+      await store.open();
+      const result = await dismissErrorBankCandidate(store, current);
+      if (!result.removed) {
+        setErrorBankDeleteNotice("当前题不是错词本记录");
+        return false;
+      }
+
+      setErrorBankDeleteNotice(`已从错词本移除：${current.displayText || current.expectedAnswer || "当前题"}`);
+      window.dispatchEvent(new CustomEvent("ielts:spelling-error-bank-changed", {
+        detail: { scope, wordIds: result.wordIds }
+      }));
+      window.setTimeout(() => focusInput({ force: true }), 120);
+      return true;
+    } catch (error) {
+      setErrorBankDeleteNotice(`删除失败：${error?.message || error}`);
+      return false;
+    } finally {
+      window.setTimeout(() => {
+        errorBankDeleteLockRef.current = false;
+      }, 180);
+    }
+  }, [current, enabled, focusInput]);
+
+  useEffect(() => {
+    if (!errorBankDeleteNotice) return undefined;
+    const timer = window.setTimeout(() => setErrorBankDeleteNotice(""), 2600);
+    return () => window.clearTimeout(timer);
+  }, [errorBankDeleteNotice]);
 
   const handleInputBlur = useCallback(() => {
     if (allowBlurRef.current) return;
@@ -203,7 +250,18 @@ export function useSpellingTrainingControls(options = {}) {
     if (!enabled) return undefined;
 
     function handleWindowKeyDown(event) {
-      if (isEditableTarget(event.target)) return;
+      const editableTarget = isEditableTarget(event.target);
+      if (resolveErrorBankDeleteShortcut(event, {
+        hasErrorBankCandidate: canDeleteCurrentErrorBankItem,
+        editableTarget
+      })) {
+        event.preventDefault();
+        event.stopPropagation();
+        void deleteCurrentErrorBankItem();
+        return;
+      }
+
+      if (editableTarget) return;
       if (!current) return;
 
       if ((event.ctrlKey || event.metaKey) && !event.shiftKey && (event.key === "z" || event.key === "Z")) {
@@ -279,7 +337,9 @@ export function useSpellingTrainingControls(options = {}) {
     onPreviousWord,
     onNextWord,
     spelling?.uiState,
-    spelling?.awaitingAdvance
+    spelling?.awaitingAdvance,
+    canDeleteCurrentErrorBankItem,
+    deleteCurrentErrorBankItem
   ]);
 
   useEffect(() => {
@@ -311,7 +371,10 @@ export function useSpellingTrainingControls(options = {}) {
     handleInputBlur,
     handleInputKeyDown,
     showMeaning,
-    showExample
+    showExample,
+    canDeleteCurrentErrorBankItem,
+    deleteCurrentErrorBankItem,
+    errorBankDeleteNotice
   };
 }
 

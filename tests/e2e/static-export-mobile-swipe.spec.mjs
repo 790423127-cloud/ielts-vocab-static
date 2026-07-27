@@ -5,7 +5,11 @@ import os from "node:os";
 import path from "node:path";
 
 import { POST } from "../../app/api/export-static/route.js";
-import { readStoredZipEntries, STATIC_RESPONSIVE_VERSION } from "../../app/lib/static-export-responsive.mjs";
+import {
+  readStoredZipEntries,
+  STATIC_RESPONSIVE_VERSION,
+  STATIC_SWIPE_ENGINE
+} from "../../app/lib/static-export-responsive.mjs";
 
 function fixtureWord(id, word) {
   return {
@@ -50,16 +54,48 @@ async function serveDirectory(root) {
   return { url: `http://127.0.0.1:${server.address().port}`, close: () => new Promise((resolve) => server.close(resolve)) };
 }
 
-async function swipe(page, fromX, toX, y, pointerId) {
-  await page.evaluate(({ fromX, toX, y, pointerId }) => {
-    const target = document.getElementById("word");
-    target.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, pointerType: "touch", pointerId, isPrimary: true, clientX: fromX, clientY: y }));
-    window.dispatchEvent(new PointerEvent("pointermove", { bubbles: true, pointerType: "touch", pointerId, isPrimary: true, clientX: (fromX + toX) / 2, clientY: y + 2 }));
-    window.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, pointerType: "touch", pointerId, isPrimary: true, clientX: toX, clientY: y + 2 }));
-  }, { fromX, toX, y, pointerId });
+async function touchSwipe(page, { selector = "#word", fromX, fromY, toX, toY, identifier = 1 }) {
+  await page.evaluate(({ selector, fromX, fromY, toX, toY, identifier }) => {
+    const target = document.querySelector(selector);
+    const startTouch = new Touch({
+      identifier,
+      target,
+      clientX: fromX,
+      clientY: fromY,
+      screenX: fromX,
+      screenY: fromY,
+      pageX: fromX,
+      pageY: fromY
+    });
+    target.dispatchEvent(new TouchEvent("touchstart", {
+      bubbles: true,
+      cancelable: true,
+      touches: [startTouch],
+      targetTouches: [startTouch],
+      changedTouches: [startTouch]
+    }));
+
+    const endTouch = new Touch({
+      identifier,
+      target,
+      clientX: toX,
+      clientY: toY,
+      screenX: toX,
+      screenY: toY,
+      pageX: toX,
+      pageY: toY
+    });
+    target.dispatchEvent(new TouchEvent("touchend", {
+      bubbles: true,
+      cancelable: true,
+      touches: [],
+      targetTouches: [],
+      changedTouches: [endTouch]
+    }));
+  }, { selector, fromX, fromY, toX, toY, identifier });
 }
 
-test("actual exported mobile page changes words on left and right swipe", async ({ browser }) => {
+test("actual exported mobile page uses the 538 touch gesture for reliable left and right navigation", async ({ browser }) => {
   const request = new Request("http://127.0.0.1:3000/api/export-static?audio=0", {
     method: "POST",
     headers: { host: "127.0.0.1:3000", "content-type": "application/json" },
@@ -84,9 +120,19 @@ test("actual exported mobile page changes words on left and right swipe", async 
     await page.goto(`${server.url}/index.html`, { waitUntil: "networkidle" });
     await expect(page.locator("#word")).toHaveText("alpha");
     await expect(page.locator("#staticBuildVersion")).toContainText(STATIC_RESPONSIVE_VERSION);
-    await swipe(page, 330, 80, 330, 41);
+    await expect(page.locator("#staticStudyCard")).toHaveCSS("touch-action", "pan-y");
+    expect(await page.evaluate(() => window.__STATIC_VOCAB_BUILD__?.swipeEngine)).toBe(STATIC_SWIPE_ENGINE);
+
+    await touchSwipe(page, { fromX: 330, fromY: 330, toX: 80, toY: 334, identifier: 41 });
     await expect(page.locator("#word")).toHaveText("beta");
-    await swipe(page, 70, 330, 330, 42);
+
+    await touchSwipe(page, { fromX: 70, fromY: 330, toX: 330, toY: 333, identifier: 42 });
+    await expect(page.locator("#word")).toHaveText("alpha");
+
+    await touchSwipe(page, { fromX: 210, fromY: 250, toX: 225, toY: 520, identifier: 43 });
+    await expect(page.locator("#word")).toHaveText("alpha");
+
+    await touchSwipe(page, { selector: "#favoriteBtn", fromX: 330, fromY: 220, toX: 70, toY: 224, identifier: 44 });
     await expect(page.locator("#word")).toHaveText("alpha");
     expect(pageErrors).toEqual([]);
   } finally {

@@ -5,6 +5,10 @@ import {
   parseAiJson,
   requestDeepseekProfiles
 } from "../../ai/deepseek-word-profile.server.mjs";
+import {
+  hasExplicitAiRelationReview,
+  shouldReuseAiProfileCache
+} from "../../ai/ai-profile-cache-contract.mjs";
 import { buildAiWordProfilePrompt } from "../../ai/vocab-profile-prompt.mjs";
 
 function rawProfile(inputId, word, { collocationCount = 4 } = {}) {
@@ -27,6 +31,7 @@ function rawProfile(inputId, word, { collocationCount = 4 } = {}) {
     example_chinese: `${word}很有用。`,
     forms: [],
     word_family: [],
+    synonyms: [],
     common_collocations: Array.from({ length: collocationCount }, (_, index) => ({
       phrase: `${word} common ${index}`,
       chinese: `常用搭配${index}`
@@ -137,6 +142,25 @@ test("two genuine translated collocations are usable and do not discard the whol
       assert.equal(entry.phraseCollocations.length, 2);
     }
   );
+});
+
+test("legacy cache without an explicit synonyms array is not reused as a completed review", () => {
+  const legacyCache = {
+    forms: [],
+    wordFamily: [],
+    aiContentProfile: "main-meaning-detailed-senses-v3"
+  };
+
+  assert.equal(hasExplicitAiRelationReview(legacyCache), false);
+  assert.equal(shouldReuseAiProfileCache(legacyCache, { usable: true }), false);
+});
+
+test("explicit empty relation arrays are reusable and preserve reviewed-empty meaning", () => {
+  const reviewedCache = { forms: [], wordFamily: [], synonyms: [] };
+
+  assert.equal(hasExplicitAiRelationReview(reviewedCache), true);
+  assert.equal(shouldReuseAiProfileCache(reviewedCache, { usable: true }), true);
+  assert.equal(shouldReuseAiProfileCache(reviewedCache, { usable: true, force: true }), false);
 });
 
 test("the unified prompt requests useful ranges and forbids filler", () => {

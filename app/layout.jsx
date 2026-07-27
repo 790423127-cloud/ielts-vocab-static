@@ -3,6 +3,7 @@ import "./globals.css";
 import "./tidy-review-overrides.css";
 import FontScaleProvider from "./components/FontScaleProvider";
 import GlobalStudyHeader from "./components/GlobalStudyHeader";
+import MobileWordCardSwipeController from "./components/MobileWordCardSwipeController";
 import QuickDeleteCurrentWordButton from "./components/QuickDeleteCurrentWordButton";
 
 export const metadata = {
@@ -44,6 +45,7 @@ export default function RootLayout({ children }) {
       </head>
       <body suppressHydrationWarning>
         <FontScaleProvider />
+        <MobileWordCardSwipeController />
         <Suspense fallback={null}>
           <GlobalStudyHeader />
         </Suspense>

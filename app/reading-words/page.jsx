@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   Bookmark,
@@ -12,6 +12,7 @@ import {
   Search,
   Sparkles,
   Star,
+  Trash2,
   Upload,
   Volume2,
   X
@@ -42,6 +43,10 @@ import {
   writeReadingWords,
   writeReadingWordsWithBackup
 } from "../lib/reading-words/storage.mjs";
+import {
+  removeReadingWordEntry,
+  shouldHandleReadingWordDeleteShortcut
+} from "../lib/reading-words/delete.mjs";
 import {
   loadActiveWordsForSync,
   loadWordsImportBackupFromIndexedDB,
@@ -286,6 +291,44 @@ export default function ReadingWordsPage() {
         : word
     )));
   };
+
+  const deleteSelectedWord = useCallback(() => {
+    if (!selectedWord || aiRunning || mainWriteBusy) return;
+    const confirmed = window.confirm(
+      `确定从阅读生词栏删除“${selectedWord.word}”吗？\n\n` +
+      "只会删除阅读生词记录，不会删除主词库中的单词。"
+    );
+    if (!confirmed) return;
+
+    const result = removeReadingWordEntry(words, selectedWord.id, visibleWords);
+    if (!result.removed) {
+      setNotice("当前阅读生词已不存在，无需重复删除。");
+      return;
+    }
+    if (!writeReadingWordsWithBackup(result.words, words)) {
+      setStorageError("阅读生词删除失败，原数据未改变。请先导出备份并检查浏览器存储空间。");
+      return;
+    }
+
+    setWords(result.words);
+    setSelectedId(result.nextSelectedId);
+    setRollbackAvailable(true);
+    setStorageError("");
+    setNotice(`已从阅读生词栏删除：${result.removed.word}；主词库未改变。`);
+  }, [aiRunning, mainWriteBusy, selectedWord, visibleWords, words]);
+
+  useEffect(() => {
+    function handleReadingWordDeleteShortcut(event) {
+      if (!shouldHandleReadingWordDeleteShortcut(event)) return;
+      if (!selectedWord || aiRunning || mainWriteBusy) return;
+      event.preventDefault();
+      event.stopPropagation();
+      deleteSelectedWord();
+    }
+
+    window.addEventListener("keydown", handleReadingWordDeleteShortcut);
+    return () => window.removeEventListener("keydown", handleReadingWordDeleteShortcut);
+  }, [aiRunning, deleteSelectedWord, mainWriteBusy, selectedWord]);
 
   const updateMainLexiconMemory = (nextWords) => {
     mainLexiconRef.current = {
@@ -939,6 +982,17 @@ export default function ReadingWordsPage() {
                   aria-label={selectedWord.favorite ? "取消收藏" : "收藏"}
                 >
                   <Bookmark aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="word-canvas-icon"
+                  onClick={deleteSelectedWord}
+                  disabled={aiRunning || mainWriteBusy}
+                  aria-label="从阅读生词栏删除"
+                  title="只从阅读生词栏删除（D / Delete）"
+                  data-testid="reading-word-delete"
+                >
+                  <Trash2 aria-hidden="true" />
                 </button>
               </div>
 

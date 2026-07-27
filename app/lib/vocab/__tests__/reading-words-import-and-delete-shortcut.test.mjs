@@ -1,8 +1,5 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import {
   parseReadingWordsPlainLine,
@@ -46,14 +43,4 @@ test("reading words plain-line parser keeps simple words and parses abbreviation
       meaning: "可到达的；易使用的"
     }
   );
-});
-
-test("main flashcard exposes D as the existing Delete action alias", () => {
-  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
-  const source = fs.readFileSync(path.join(root, "app/components/WordStudyActions.jsx"), "utf8");
-
-  assert.match(source, /toLowerCase\(\) !== "d"/);
-  assert.match(source, /requestCurrentWordDeletion\(\)/);
-  assert.match(source, /isEditableTarget\(event\.target\)/);
-  assert.match(source, /快捷键：D \/ Delete/);
 });

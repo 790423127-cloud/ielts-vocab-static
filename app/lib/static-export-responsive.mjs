@@ -1,8 +1,12 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260728_static_mobile_entry_switch_v1";
+export const STATIC_RESPONSIVE_VERSION = "20260728_static_mobile_swipe_v2";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
+export const STATIC_SWIPE_FIX_MARKER = "D2.7 static pointer swipe hotfix";
+export const STATIC_SWIPE_MIN_DISTANCE = 40;
+export const STATIC_SWIPE_MAX_DURATION_MS = 1000;
+export const STATIC_SWIPE_AXIS_RATIO = 1.15;
 
 const LOCKED_DESKTOP_RULE =
   ".app{height:calc(100svh - var(--workspace-header));min-height:calc(100svh - var(--workspace-header));overflow:hidden}";
@@ -47,6 +51,7 @@ const LAPTOP_HEIGHT_CSS = `
 const MOBILE_ENTRY_CSS = `
 
 /* ${STATIC_FILTER_FIX_MARKER} */
+.hero{touch-action:pan-y;overscroll-behavior-x:contain}
 @media (max-width:900px){
   .entry-panel{align-items:flex-end;padding:8px}
   .entry-card{width:100%;max-width:none;max-height:84svh;border-radius:24px 24px 0 0;padding:16px}
@@ -117,8 +122,69 @@ const CURATED_FILTER_FUNCTION = `function buildFilterOptions(){
   els.filterSelect.value=filter;
 }`;
 
+const POINTER_SWIPE_CONTROLLER = `/* ${STATIC_SWIPE_FIX_MARKER} */
+const STATIC_SWIPE_INTERACTIVE_SELECTOR="button,a,input,textarea,select,option,label,[contenteditable=true],[role=button]";
+let swipePointerId=null;
+let swipeStartX=0;
+let swipeStartY=0;
+let swipeStartedAt=0;
+let swipeCancelled=false;
+function resetStaticSwipe(){
+  swipePointerId=null;
+  swipeStartX=0;
+  swipeStartY=0;
+  swipeStartedAt=0;
+  swipeCancelled=false;
+}
+function isStaticSwipeInteractiveTarget(target){
+  return !!(target&&typeof target.closest==="function"&&target.closest(STATIC_SWIPE_INTERACTIVE_SELECTOR));
+}
+els.swipeArea.addEventListener("pointerdown",function(e){
+  if(!e.isPrimary||isStaticSwipeInteractiveTarget(e.target))return;
+  if(e.pointerType==="mouse"&&e.button!==0)return;
+  swipePointerId=e.pointerId;
+  swipeStartX=e.clientX;
+  swipeStartY=e.clientY;
+  swipeStartedAt=Date.now();
+  swipeCancelled=false;
+  if(typeof els.swipeArea.setPointerCapture==="function"){
+    try{els.swipeArea.setPointerCapture(e.pointerId)}catch(error){}
+  }
+},{passive:true});
+els.swipeArea.addEventListener("pointermove",function(e){
+  if(e.pointerId!==swipePointerId)return;
+  const dx=e.clientX-swipeStartX;
+  const dy=e.clientY-swipeStartY;
+  if(Math.abs(dy)>18&&Math.abs(dy)>Math.abs(dx)*1.25)swipeCancelled=true;
+},{passive:true});
+els.swipeArea.addEventListener("pointerup",function(e){
+  if(e.pointerId!==swipePointerId)return;
+  const dx=e.clientX-swipeStartX;
+  const dy=e.clientY-swipeStartY;
+  const duration=Date.now()-swipeStartedAt;
+  const cancelled=swipeCancelled;
+  resetStaticSwipe();
+  if(cancelled)return;
+  if(duration<=${STATIC_SWIPE_MAX_DURATION_MS}&&Math.abs(dx)>=${STATIC_SWIPE_MIN_DISTANCE}&&Math.abs(dx)>Math.abs(dy)*${STATIC_SWIPE_AXIS_RATIO}){
+    dx<0?step(1):step(-1);
+  }
+},{passive:true});
+els.swipeArea.addEventListener("pointercancel",resetStaticSwipe,{passive:true});`;
+
+const LEGACY_TOUCH_SWIPE_RE = /let sx=0,sy=0,st=0;[\s\S]*?els\.swipeArea\.addEventListener\("touchcancel",stopHoldStep,\{passive:true\}\);/;
+
 function replaceVersionQuery(text) {
   return String(text || "").replace(/([?&]v=)[A-Za-z0-9_.-]+/g, `$1${STATIC_RESPONSIVE_VERSION}`);
+}
+
+export function resolveStaticSwipeStep(input = {}) {
+  const dx = Number(input.dx || 0);
+  const dy = Number(input.dy || 0);
+  const durationMs = Number(input.durationMs || 0);
+  if (durationMs < 0 || durationMs > STATIC_SWIPE_MAX_DURATION_MS) return 0;
+  if (Math.abs(dx) < STATIC_SWIPE_MIN_DISTANCE) return 0;
+  if (Math.abs(dx) <= Math.abs(dy) * STATIC_SWIPE_AXIS_RATIO) return 0;
+  return dx < 0 ? 1 : -1;
 }
 
 export function patchStaticCss(css) {
@@ -162,6 +228,13 @@ export function patchStaticAppJs(js) {
     .replace(/filter=nextFilter\|\|"all";\s*progress\.filter=filter;\s*applyIndexForFilter\(filter\);/g, `filter=nextFilter||"all";\n  progress.filter=filter;\n  index=-1;\n  applyIndexForFilter(filter);`);
 
   next = next.replace(/function buildFilterOptions\(\)\{[\s\S]*?\}\s*function passFilterWith/, `${CURATED_FILTER_FUNCTION}\n\nfunction passFilterWith`);
+
+  if (!next.includes(STATIC_SWIPE_FIX_MARKER)) {
+    next = LEGACY_TOUCH_SWIPE_RE.test(next)
+      ? next.replace(LEGACY_TOUCH_SWIPE_RE, POINTER_SWIPE_CONTROLLER)
+      : `${next}\n${POINTER_SWIPE_CONTROLLER}\n`;
+  }
+
   return next;
 }
 

@@ -118,6 +118,7 @@ import {
   readPersonalWrongBookRecords,
   readSpellingPosition,
   resolvePersonalWrongNavigationWordId,
+  resolveSpellingLoadingState,
   writeDailyStats,
   writePersonalWrongBookRecords,
   writeSpellingPosition
@@ -137,6 +138,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const [lexicon, setLexicon] = useState(null);
   const [includeFamiliar, setIncludeFamiliar] = useState(false);
   const [loadError, setLoadError] = useState("");
+  const [loadElapsedMs, setLoadElapsedMs] = useState(0);
   const [personalWrongPanelOpen, setPersonalWrongPanelOpen] = useState(false);
   const [aiToolsPanelOpen, setAiToolsPanelOpen] = useState(false);
 
@@ -199,6 +201,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const sessionStatsRef = useRef(sessionStats);
   const spellingUndoStackRef = useRef([]);
   const personalWrongLexiconReconciledRef = useRef(false);
+  const pageLoadStartedAtRef = useRef(0);
 
   const commitLearningActivity = useCallback(() => {
     const result = finishLearningActivity(learningActivityRef.current);
@@ -880,9 +883,44 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     }
   }
 
-  const isSpellingLoading = !lexicon || !spelling.ready;
-  const showEnginePreparing = isSpellingLoading;
+  const activeSourceLoading = practiceSource === "error_bank"
+    ? errorBank.loading
+    : practiceSource === "srs_review"
+      ? srsReview.loading
+      : practiceSource === "personal_wrong_book"
+        ? !personalWrongHydrated
+        : isIdictationPracticeSource(practiceSource)
+          ? !idictationDataReady
+          : false;
+  const loadingState = resolveSpellingLoadingState({
+    lexiconReady: Boolean(lexicon),
+    activeSourceLoading,
+    entryCount: spellingEntries.length,
+    engineReady: spelling.ready
+  });
+  const isSpellingLoading = loadingState.loading;
+  const showEnginePreparing = loadingState.showEnginePreparing;
   const current = !isSpellingLoading ? spelling.currentWord : null;
+  const loadCycleKey = `${scope}:${activeBatchId}`;
+
+  useEffect(() => {
+    pageLoadStartedAtRef.current = typeof performance !== "undefined" ? performance.now() : Date.now();
+    setLoadElapsedMs(0);
+  }, [loadCycleKey]);
+
+  useEffect(() => {
+    const updateElapsed = () => {
+      const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+      setLoadElapsedMs(Math.max(0, Math.round(now - pageLoadStartedAtRef.current)));
+    };
+
+    updateElapsed();
+    if (!isSpellingLoading) return undefined;
+    const timer = window.setInterval(updateElapsed, 100);
+    return () => window.clearInterval(timer);
+  }, [isSpellingLoading, loadCycleKey]);
+
+  const loadTimingText = `${loadingState.phase} · ${loadElapsedMs} ms`;
 
   useEffect(() => {
     learningActivityRef.current = createLearningActivity();
@@ -1469,6 +1507,8 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
           <span className="spelling-status-bar__item">错词 {errorBank.count} · 累计 {errorBank.totalWrongAttempts || 0}</span>
           <span className="spelling-status-bar__sep" aria-hidden="true">·</span>
           <span className="spelling-status-bar__item">SRS {srsReview.count}</span>
+          <span className="spelling-status-bar__sep" aria-hidden="true">·</span>
+          <span className="spelling-status-bar__item" title="当前页面训练数据加载耗时">{loadTimingText}</span>
         </div>
 
         <div className="spelling-topbar__actions">
@@ -1515,6 +1555,11 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       </header>
 
       {loadError ? <p className="spelling-load-error spelling-load-error--inline">{loadError}</p> : null}
+      {spelling.storageWarning ? (
+        <p className="spelling-load-error spelling-load-error--inline" role="status">
+          {spelling.storageWarning}
+        </p>
+      ) : null}
 
       {aiToolsPanelOpen ? (
         <SpellingAiToolsPanel
@@ -1559,6 +1604,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       <div className={`spelling-page-layout${statsSidebarOpen ? " is-sidebar-open" : ""}`}>
         <SpellingFocusCard
           isSpellingLoading={isSpellingLoading}
+          loadingDetail={loadTimingText}
           isBatchComplete={isBatchComplete}
           current={current}
           batchSuccessRate={batchSuccessRate}

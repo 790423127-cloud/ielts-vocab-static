@@ -154,7 +154,9 @@ test("spelling page does not render placeholder questions before lexicon is read
   const combined = `${source}\n${focus}`;
 
   assert.match(source, /if \(!lexicon\) return \[\]/);
-  assert.match(source, /const isSpellingLoading = !lexicon \|\| !spelling\.ready/);
+  assert.match(source, /resolveSpellingLoadingState\(\{/);
+  assert.match(source, /const isSpellingLoading = loadingState\.loading/);
+  assert.match(source, /activeSourceLoading/);
   assert.match(source, /const current = !isSpellingLoading \? spelling\.currentWord : null/);
   assert.match(focus, /isSpellingLoading \? \(/);
   assert.match(combined, /正在准备本轮训练/);
@@ -182,8 +184,9 @@ test("home page can deep-link to the AI tools menu", () => {
 
 test("static learning pages expose working reading, error-bank, and SRS navigation", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
-  const staticFiles = ["basic.html", "meaning.html", "reading-g.html", "spelling.html"];
+  const staticFiles = ["basic.html", "meaning.html", "reading-g.html", "spelling.html", "ielts-538.html"];
   const sources = staticFiles.map((name) => fs.readFileSync(path.join(root, "public", name), "utf8"));
+  const spellingSource = sources[3];
   const spellingScript = fs.readFileSync(path.join(root, "public/assets/spelling.js"), "utf8");
   const exportRoute = fs.readFileSync(path.join(root, "app/api/export-static/route.js"), "utf8");
 
@@ -192,18 +195,20 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
     assert.match(source, /spelling\.html\?source=error_bank/);
     assert.match(source, /spelling\.html\?source=srs_review/);
     assert.doesNotMatch(source, /href="#"/);
-    assert.match(source, /20260715_d30_laptop_height_v1/);
+    assert.match(source, /20260726_ielts538_v2/);
   }
 
   assert.match(spellingScript, /const query = new URLSearchParams\(window\.location\.search\)/);
   assert.match(spellingScript, /query\.get\("source"\)/);
   assert.match(spellingScript, /VALID_PRACTICE_SOURCES\.has\(requestedSource\)/);
   assert.match(spellingScript, /VALID_ENTRY_MODES\.has\(requestedMode\)/);
-  assert.match(sources.at(-1), /id="settingsToggle"/);
+  assert.match(spellingSource, /id="settingsToggle"/);
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
   assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
-  assert.doesNotMatch(sources.at(-1), /href="\/spelling-(?:words|phrases)"/);
-  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260715_d30_laptop_height_v1"/);
+  assert.doesNotMatch(spellingSource, /href="\/spelling-(?:words|phrases)"/);
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260726_ielts538_v2"/);
+  assert.match(exportRoute, /wordId: stableId/);
+  assert.match(exportRoute, /otherMeanings: Array\.isArray\(item\?\.otherMeanings\)/);
   assert.match(exportRoute, /id="topToolsToggle"/);
   assert.match(exportRoute, /topToolsCollapsed=saved===null\?\(viewport==="mobile"\|\|viewport==="compact-desktop"\)/);
   assert.match(exportRoute, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);

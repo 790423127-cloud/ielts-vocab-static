@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f6f5" />
+  <title>538考点 · IELTS Vocab</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="./assets/style.css?v=20260726_ielts538_v2" />
+  <style>
+    :root{--s-green:#075f50;--s-deep:#123b33;--s-soft:#edf7f3;--s-line:#dce7e2;--s-muted:#687b74;--s-warn:#9a5a00}
+    .hidden{display:none!important}
+    .study538{min-height:calc(100svh - 58px);padding:12px 18px 76px;margin-left:228px;background:#f7f9f8}
+    .study538-top,.study538-progress,.study538-card,.study538-bottom{max-width:1780px;margin-inline:auto}
+    .study538-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .study538-top input,.study538-top select{height:36px;border:1px solid var(--s-line);border-radius:8px;background:#fff;padding:0 10px;color:var(--s-deep)}
+    .study538-top input{min-width:230px;flex:1}
+    .study538-progress{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 13px;border:1px solid var(--s-line);border-radius:9px;background:#fff;font-size:12px}
+    .study538-progress-track{height:7px;border-radius:999px;background:#e1e9e5;overflow:hidden}.study538-progress-track span{display:block;height:100%;background:var(--s-green)}
+    .study538-card{min-width:0;margin-top:8px;padding:14px 16px 18px;border:1px solid var(--s-line);border-radius:10px;background:#fff;overflow-wrap:anywhere;touch-action:pan-y}
+    .study538-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--s-muted);font-size:12px}
+    .study538-example{width:min(900px,96%);margin:8px auto 0;text-align:center;padding-bottom:10px;border-bottom:1px solid var(--s-line)}
+    .study538-example-head{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;color:var(--s-green);font-size:12px;font-weight:800}
+    .study538-example-en{font:500 clamp(20px,1.7vw,29px)/1.32 Georgia,"Times New Roman",serif;color:var(--s-deep)}
+    .study538-example-cn{margin-top:5px;color:#38574f;font-size:13px;font-weight:700}
+    .study538-word{min-width:0;text-align:center;padding-top:9px}.study538-word h1{max-width:100%;margin:0;color:var(--s-deep);font:650 clamp(62px,6vw,96px)/.98 Georgia,"Times New Roman",serif;letter-spacing:-.035em;overflow-wrap:anywhere}
+    .study538-word-meta{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:6px;color:#556b64}.study538-pos{padding:3px 8px;border-radius:5px;background:var(--s-soft);color:var(--s-green);font-weight:800}
+    .study538-meaning{margin-top:4px;text-align:center;color:var(--s-deep);font-size:clamp(19px,1.5vw,25px);font-weight:800}
+    .study538-para{width:min(920px,96%);min-width:0;display:grid;gap:7px;margin:8px auto 0;padding:10px 13px;border:1px solid var(--s-line);border-radius:12px;text-align:center}
+    .study538-para-title{color:#8a9994;font-size:11px}.study538-replacement{display:flex;min-width:0;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-weight:900}.study538-para-sentence{min-width:0;font-size:14px;font-weight:800;line-height:1.5;overflow-wrap:anywhere}.study538-para-cn{color:var(--s-muted);font-size:12px}
+    .study538-section,.study538-recommended,.study538-extra-label{display:inline-flex;align-items:center;border-radius:999px;font-size:10px;font-style:normal;font-weight:900;white-space:nowrap}
+    .study538-section{padding:4px 7px;border:1px solid #bdd8cf;color:var(--s-green);background:var(--s-soft)}.study538-recommended{color:var(--s-warn)}
+    .study538-related{width:min(1120px,100%);margin:8px auto 0;padding:5px 10px;border:1px solid var(--s-line);border-radius:11px}
+    .study538-related-title{display:flex;align-items:center;justify-content:center;gap:8px;min-height:24px;color:#82918c;font-size:11px;font-weight:800}
+    .study538-related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+    .study538-synonym{position:relative;min-width:0;min-height:112px;padding:12px 42px 12px 14px;border:1px solid var(--s-line);border-radius:10px;background:#fff;text-align:left;cursor:pointer;overflow-wrap:anywhere}
+    .study538-synonym.active{border-color:var(--s-deep);box-shadow:0 0 0 1px rgba(18,59,51,.08)}
+    .study538-synonym-head{display:flex;min-width:0;align-items:center;gap:6px;flex-wrap:wrap}.study538-synonym-word{min-width:0;font-size:clamp(22px,1.45vw,29px);font-weight:900;line-height:1.18;color:var(--s-deep);overflow-wrap:anywhere}
+    .study538-synonym-state{margin-top:4px;color:var(--s-muted);font-size:12px}.study538-extra{display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:start;gap:5px;margin-top:6px;color:#355f53;font-size:12px;line-height:1.45;min-width:0}
+    .study538-extra-label{padding:1px 5px;border-radius:4px;color:var(--s-green);background:var(--s-soft)}.study538-extra b{min-width:20px;padding:1px 5px;border-radius:4px;background:#f3f8f6;color:var(--s-muted);font-size:10px;text-align:center}.study538-extra span:last-child{min-width:0;white-space:normal;overflow-wrap:anywhere}
+    .study538-sound{width:27px;height:27px;display:grid;place-items:center;border:1px solid #cce1da;border-radius:50%;background:var(--s-soft);color:var(--s-green);cursor:pointer}.study538-synonym>.study538-sound{position:absolute;right:7px;bottom:7px}
+    .study538-bottom{position:fixed;left:246px;right:18px;bottom:10px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--s-line);border-radius:10px;background:rgba(255,255,255,.96);z-index:8}
+    .study538-bottom>button:last-child{justify-self:end}.study538-status{display:flex;gap:8px}.study538-danger{color:#b24832!important;border-color:#efb9ae!important}
+    .study538-toast{position:fixed;left:50%;bottom:82px;transform:translate(-50%,14px);opacity:0;pointer-events:none;padding:10px 16px;border-radius:999px;background:#162f2a;color:#fff;font-weight:800;transition:.18s;z-index:20}.study538-toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:900px){.study538{margin-left:0;padding:10px 10px 84px}.study538-bottom{left:10px;right:10px}.study538-card{padding-inline:10px}.study538-related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.study538-top input{min-width:160px}.static-shell-sidebar{display:none}}
+    @media(max-width:700px){.study538-related-grid{grid-template-columns:1fr}}
+    @media(max-width:560px){.study538-progress{grid-template-columns:1fr auto}.study538-progress-track{grid-column:1/-1;grid-row:2}.study538-word h1{font-size:clamp(52px,17vw,76px)}.study538-bottom{grid-template-columns:auto 1fr auto}.study538-status{justify-content:center}.study538-status .top-btn{padding-inline:10px}}
+  </style>
+</head>
+<body>
+  <header class="static-brand-bar">
+    <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
+    <div class="static-session-context"><strong>538考点</strong><span>376词 · 静态版</span></div>
+    <nav class="static-brand-nav" aria-label="主要学习模式">
+      <a href="./index.html">主词库</a><a href="./reading-g.html">G类阅读</a><a href="./spelling.html">拼写</a>
+    </nav>
+  </header>
+  <aside class="static-shell-sidebar" aria-label="学习导航">
+    <nav><a href="./index.html">刷单词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav>
+    <div class="static-shell-divider"></div>
+    <span class="static-shell-label">专项学习</span>
+    <nav><a class="active" href="./ielts-538.html">538考点</a><a href="./reading-g.html">G类阅读提升</a><a href="./basic.html">零基础词库</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
+  </aside>
+
+  <main class="study538">
+    <div class="study538-top">
+      <a class="top-btn" href="./index.html">← 主词库</a>
+      <input id="searchInput" type="search" placeholder="搜索538考点词或同义词" aria-label="搜索单词" />
+      <button id="searchBtn" class="top-btn" type="button">查询</button>
+      <select id="filterSelect" aria-label="学习范围">
+        <option value="all">全部待学</option>
+        <option value="everything">全部376词</option>
+        <option value="unfamiliar">不熟词</option>
+        <option value="favorite">收藏词</option>
+      </select>
+      <button id="shuffleBtn" class="top-btn" type="button">随机</button>
+      <button id="deleteBtn" class="top-btn study538-danger" type="button">删除</button>
+    </div>
+
+    <section class="study538-progress" aria-label="学习进度">
+      <strong id="rangeLabel">全部待学</strong>
+      <div class="study538-progress-track"><span id="progressFill" style="width:0"></span></div>
+      <span id="progressCount">0 / 0</span>
+    </section>
+
+    <article id="studyCard" class="study538-card">
+      <div class="study538-meta"><span id="positionMeta">正在读取词库</span><button id="favoriteBtn" class="study538-sound" type="button" aria-label="收藏">☆</button></div>
+      <section class="study538-example">
+        <div class="study538-example-head"><button id="exampleSoundBtn" class="study538-sound" type="button">🔊</button><span>仿雅思 G 类文章句</span></div>
+        <div id="exampleEn" class="study538-example-en">正在准备学习内容</div>
+        <div id="exampleCn" class="study538-example-cn"></div>
+      </section>
+      <section class="study538-word">
+        <button id="wordSoundBtn" class="study538-sound" type="button" style="margin:auto">🔊</button>
+        <h1 id="word">Loading</h1>
+        <div class="study538-word-meta"><span id="phonetic"></span><span id="pos" class="study538-pos"></span></div>
+        <div id="meaning" class="study538-meaning"></div>
+      </section>
+      <section id="paraphrase" class="study538-para"></section>
+      <section class="study538-related">
+        <div class="study538-related-title">相关单词 / 同义替换 <button id="meaningToggle" class="top-btn hidden" type="button">隐藏释义</button></div>
+        <div id="relatedGrid" class="study538-related-grid"></div>
+      </section>
+    </article>
+  </main>
+
+  <footer class="study538-bottom">
+    <button id="prevBtn" class="top-btn" type="button">上一个</button>
+    <div class="study538-status"><button id="knownBtn" class="top-btn" type="button">熟悉</button><button id="unknownBtn" class="top-btn" type="button">不熟</button></div>
+    <button id="nextBtn" class="top-btn" type="button">下一个</button>
+  </footer>
+  <div id="toast" class="study538-toast" role="status"></div>
+  <script src="./assets/ielts-538.js?v=20260726_ielts538_v2"></script>
+</body>
+</html>

@@ -37,9 +37,27 @@ if defined PORT_PID (
   )
 )
 
+set "NEED_BUILD=0"
+if not exist ".next\BUILD_ID" set "NEED_BUILD=1"
+if exist ".next\BUILD_ID" (
+  for /f %%B in ('powershell.exe -NoProfile -Command "$build=(Get-Item '.next\BUILD_ID').LastWriteTimeUtc; $paths=@('app','public','package.json','next.config.mjs','middleware.js'); $newer=Get-ChildItem -LiteralPath $paths -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTimeUtc -gt $build } | Select-Object -First 1; if($newer){'1'}else{'0'}"') do set "NEED_BUILD=%%B"
+)
+
+if "%NEED_BUILD%"=="1" (
+  echo.
+  echo Website files changed. Building the fast production version...
+  call npm.cmd run build
+  if errorlevel 1 (
+    echo.
+    echo Build failed. The website was not started with an incomplete version.
+    pause
+    exit /b 1
+  )
+)
+
 echo.
-echo Starting website...
+echo Starting fast production website...
 echo Open this in browser: %APP_URL%
 start "" %APP_URL%
-call npm.cmd run dev
+call npm.cmd start
 pause

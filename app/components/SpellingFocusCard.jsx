@@ -6,6 +6,7 @@ import layoutStyles from "./SpellingTrainingLayout.module.css";
 
 export default function SpellingFocusCard({
   isSpellingLoading,
+  loadingDetail,
   isBatchComplete,
   current,
   batchSuccessRate,
@@ -57,7 +58,7 @@ export default function SpellingFocusCard({
         mark="S"
         eyebrow="拼写训练"
         title="正在准备本轮训练"
-        note="读取所选词库并恢复批次位置"
+        note={loadingDetail || "读取所选词库并恢复批次位置"}
         compact
       />
     </div>

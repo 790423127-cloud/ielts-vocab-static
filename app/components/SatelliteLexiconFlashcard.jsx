@@ -8,14 +8,62 @@
  * layoutMode="default": original behavior for /basic.
  */
 
-import { useEffect } from "react";
-import StudyRangeSummary from "./StudyRangeSummary";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Bookmark, PanelRightOpen, Shuffle } from "lucide-react";
 import VirtualList from "./VirtualList";
+import WordStudyOverview from "./WordStudyOverview";
+import WordStudyProgress from "./WordStudyProgress";
+import WordStudyWorkspace from "./WordStudyWorkspace";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
 import rgStyles from "../reading-g/reading-g.module.css";
 
 function fallback(value, text) {
   return value && String(value).trim() ? value : text;
+}
+
+function meaningComparisonKey(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[\s，,。；;：:、（）()\[\]【】“”"'·\/\\-]+/g, "");
+}
+
+function chineseMeaningParts(value) {
+  return String(value || "")
+    .split(/[，,。；;：:、\/（）()\[\]【】]+/)
+    .map((part) => part.trim())
+    .filter((part) => /[\u3400-\u9fff]/u.test(part));
+}
+
+function additionalMeaningParts(candidateMeaning, currentMeaning) {
+  const currentKeys = new Set(chineseMeaningParts(currentMeaning).map(meaningComparisonKey));
+  return chineseMeaningParts(candidateMeaning)
+    .filter((part) => !currentKeys.has(meaningComparisonKey(part)))
+    .filter((part, index, parts) =>
+      parts.findIndex((candidate) =>
+        meaningComparisonKey(candidate) === meaningComparisonKey(part)
+      ) === index
+    )
+    .join("；");
+}
+
+function compactPosLabel(value) {
+  const primary = String(value || "")
+    .trim()
+    .toLowerCase()
+    .split(/\s*(?:\/|\||,|;)\s*/)[0];
+  const labels = [
+    [/\bpreposition\b|介词/u, "介"],
+    [/\bconjunction\b|连词/u, "连"],
+    [/\badjective\b|\badj\b|形容词/u, "形"],
+    [/\badverb\b|\badv\b|副词/u, "副"],
+    [/\bpronoun\b|代词/u, "代"],
+    [/\bdeterminer\b|限定词/u, "限"],
+    [/\bnumeral\b|\bnumber\b|数词/u, "数"],
+    [/\bverb\b|\bv\b|动词/u, "动"],
+    [/\bnoun\b|\bn\b|名词/u, "名"],
+    [/\bphrase\b|短语/u, "短"]
+  ];
+  return labels.find(([pattern]) => pattern.test(primary))?.[1] || "";
 }
 
 function normalizePhraseItems(value) {
@@ -132,19 +180,200 @@ export default function SatelliteLexiconFlashcard({
   familiarLabel = "熟悉",
   unfamiliarLabel = "不熟",
   panelStatusCounts = null,
-  sensesExtra = null
+  sensesExtra = null,
+  overviewWords = [],
+  overviewStats = {},
+  onPrev = null,
+  onNext = null
 }) {
+  const [showInsight, setShowInsight] = useState(true);
+  const [showRelatedMeanings, setShowRelatedMeanings] = useState(true);
+  const [paraphraseSelection, setParaphraseSelection] = useState({
+    itemKey: "",
+    replacement: ""
+  });
+  const swipeStartRef = useRef(null);
   const isReadingG = layoutMode === "readingG";
+  const isIelts538 = layoutMode === "ielts538";
+  const insightVisible = !isIelts538 && showInsight;
   const commonCollocations = normalizePhraseItems(item?.collocations);
   const phraseCollocations = normalizePhraseItems(item?.phraseCollocations);
   const collocationFallback = [{ phrase: "暂无搭配", chinese: "" }];
   const phraseCollocationFallback = [{ phrase: "暂无短语搭配", chinese: "" }];
   const speakSmall = onSpeakSmall || (() => {});
-  const progressLabel = isStudyEmpty
-    ? "0 / 0"
-    : `${safeStudyPosition + 1} / ${studyCount}`;
   const senses = Array.isArray(item?.senses) ? item.senses : [];
   const supplementalSenses = senses.slice(1);
+  const overviewStudyWords = overviewWords.length
+    ? overviewWords
+    : libraryRows.map((row) => row.entry).filter(Boolean);
+  const paraphraseExamples = useMemo(() => {
+    const seen = new Set();
+    return (Array.isArray(item?.paraphraseExamples) ? item.paraphraseExamples : [])
+      .filter((pair) => {
+        const replacement = String(pair?.replacement || "").trim();
+        const sentence = String(pair?.paraphraseSentence || "").trim();
+        const key = replacement.toLowerCase();
+        if (!replacement || !sentence || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+  }, [item]);
+  const paraphraseItemKey = String(item?.wordId || item?.id || item?.word || "");
+  const recommendedSynonymKeys = useMemo(
+    () => new Set(
+      (Array.isArray(item?.recommendedSynonyms) ? item.recommendedSynonyms : [])
+        .map((word) => String(word || "").trim().toLowerCase())
+        .filter(Boolean)
+    ),
+    [item]
+  );
+  const synonymSectionByKey = useMemo(
+    () => new Map(
+      Object.entries(item?.synonymSections || {})
+        .map(([word, section]) => [
+          String(word || "").trim().toLowerCase(),
+          String(section || "").trim()
+        ])
+        .filter(([word, section]) =>
+          word && ["Section 1", "Section 2", "Section 3"].includes(section)
+        )
+    ),
+    [item]
+  );
+  const synonymDetailByKey = useMemo(
+    () => new Map(
+      Object.entries(item?.synonymDetails || {})
+        .map(([word, detail]) => [
+          String(word || "").trim().toLowerCase(),
+          {
+            pos: String(detail?.pos || "").trim(),
+            originalMeaning: String(detail?.originalMeaning || "").trim(),
+            contextualMeaning: String(detail?.contextualMeaning || "").trim()
+          }
+        ])
+        .filter(([word, detail]) =>
+          word && (detail.originalMeaning || detail.contextualMeaning)
+        )
+    ),
+    [item]
+  );
+  const relatedWords = useMemo(() => {
+    if (isIelts538) {
+      const pairByWord = new Map(
+        paraphraseExamples.map((pair) => [pair.replacement.trim().toLowerCase(), pair])
+      );
+      const candidates = [
+        ...(item?.synonyms || []),
+        ...paraphraseExamples.map((pair) => pair.replacement)
+      ];
+      const seen = new Set();
+      return candidates
+        .map((word) => String(word || "").trim())
+        .filter((word) => {
+          const key = word.toLowerCase();
+          if (!word || seen.has(key)) return false;
+          seen.add(key);
+          return key !== String(item?.word || "").trim().toLowerCase();
+        })
+        .map((word) => {
+          const paraphrase = pairByWord.get(word.toLowerCase()) || null;
+          const detail = synonymDetailByKey.get(word.toLowerCase()) || {};
+          const contextualMeaning = chineseMeaningParts(detail.contextualMeaning).join("；");
+          const additionalMeaning = additionalMeaningParts(
+            detail.originalMeaning,
+            item?.meaning
+          );
+          return {
+            word,
+            meaning: paraphrase
+              ? "已审核"
+              : "暂无审核例句",
+            pos: detail.pos || "",
+            posLabel: compactPosLabel(detail.pos),
+            originalMeaning: detail.originalMeaning || "",
+            additionalMeaning,
+            contextualMeaning:
+              contextualMeaning &&
+              meaningComparisonKey(contextualMeaning) !== meaningComparisonKey(item?.meaning)
+                ? contextualMeaning
+                : "",
+            paraphrase,
+            isRecommended: recommendedSynonymKeys.has(word.toLowerCase()),
+            readingSection:
+              paraphrase?.readingSection ||
+              synonymSectionByKey.get(word.toLowerCase()) ||
+              ""
+          };
+        });
+    }
+
+    const candidates = [
+      ...(item?.synonyms || []),
+      ...(item?.wordFamily || []).map((entry) => typeof entry === "string" ? entry : entry?.word)
+    ];
+    return [...new Set(candidates.map((word) => String(word || "").trim()).filter(Boolean))]
+      .filter((word) => word.toLowerCase() !== String(item?.word || "").toLowerCase())
+      .slice(0, 3)
+      .map((word) => ({ word, meaning: "当前语境的相关表达" }));
+  }, [
+    isIelts538,
+    item,
+    paraphraseExamples,
+    recommendedSynonymKeys,
+    synonymDetailByKey,
+    synonymSectionByKey
+  ]);
+  const isDenseIelts538 = isIelts538 && relatedWords.length > 6;
+  const hasDistinctRelatedMeanings = relatedWords.some(
+    (relatedWord) =>
+      relatedWord.additionalMeaning || relatedWord.contextualMeaning
+  );
+  const defaultRelatedWord =
+    paraphraseExamples[0]?.replacement || relatedWords[0]?.word || "";
+  const selectedRelatedWord =
+    paraphraseSelection.itemKey === paraphraseItemKey &&
+    relatedWords.some((relatedWord) => relatedWord.word === paraphraseSelection.replacement)
+      ? paraphraseSelection.replacement
+      : defaultRelatedWord;
+  const selectedParaphrase = paraphraseExamples.find(
+    (pair) => pair.replacement.trim().toLowerCase() === selectedRelatedWord.trim().toLowerCase()
+  ) || null;
+  const selectedRelatedEntry = relatedWords.find(
+    (relatedWord) => relatedWord.word === selectedRelatedWord
+  ) || null;
+  const selectedReplacementSection =
+    selectedParaphrase?.readingSection || selectedRelatedEntry?.readingSection || "";
+  const handleSwipeStart = (event) => {
+    if (!isIelts538 || event.touches.length !== 1) return;
+    if (event.target.closest("button, a, input, select, textarea, [role='button']")) {
+      swipeStartRef.current = null;
+      return;
+    }
+    const touch = event.touches[0];
+    swipeStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      at: Date.now()
+    };
+  };
+  const handleSwipeEnd = (event) => {
+    const start = swipeStartRef.current;
+    swipeStartRef.current = null;
+    if (!isIelts538 || !start || event.changedTouches.length !== 1) return;
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    if (
+      Date.now() - start.at > 900 ||
+      Math.abs(deltaX) < 56 ||
+      Math.abs(deltaX) <= Math.abs(deltaY) * 1.35
+    ) {
+      return;
+    }
+    event.preventDefault();
+    if (deltaX < 0) onNext?.();
+    else onPrev?.();
+  };
   const selectFilter = (nextFilter) => {
     onFilter(nextFilter);
     document.querySelectorAll("details.menu[open]").forEach((menu) => {
@@ -362,9 +591,31 @@ export default function SatelliteLexiconFlashcard({
     ) : null;
 
   return (
-    <main className={`page page--word-flash${isReadingG ? " reading-g-study" : ""}`}>
-      <div className="word-flash-shell is-insight-collapsed">
-        <header className="topbar">
+    <main className={`page page--word-flash${isReadingG ? " reading-g-study" : ""}${isIelts538 ? " ielts-538-study" : ""}${isDenseIelts538 ? " ielts-538-study--dense" : ""}`}>
+      <WordStudyWorkspace
+        showInsight={insightVisible}
+        overview={insightVisible ? (
+          <WordStudyOverview
+            wordLibraryStats={overviewStats}
+            filter={filter}
+            filterName={rangeTitle}
+            studyWords={overviewStudyWords}
+            currentPosition={safeStudyPosition}
+            isExternalIdictationItem={false}
+            relatedWords={relatedWords}
+            speakSmallText={speakSmall}
+            onClose={() => setShowInsight(false)}
+          />
+        ) : null}
+      >
+        <WordStudyProgress
+          label={filter?.type === "status" ? "复习进度" : "浏览进度"}
+          title={rangeTitle}
+          current={isStudyEmpty ? 0 : safeStudyPosition + 1}
+          total={studyCount}
+          percent={progressPercent}
+          actions={(
+          <header className="topbar">
           <div className="previous">
             <div className="previous-label">上一个单词</div>
             <div className="previous-word">{prevItem?.word || "—"}</div>
@@ -378,7 +629,7 @@ export default function SatelliteLexiconFlashcard({
           <div className="top-actions">
             {onShuffle ? (
               <button type="button" className="top-pill shuffle-pill" onClick={onShuffle}>
-                随机
+                <Shuffle aria-hidden="true" />随机
               </button>
             ) : null}
             <a className="top-pill spelling-entry-link" href="/">
@@ -390,12 +641,10 @@ export default function SatelliteLexiconFlashcard({
               </a>
             ))}
 
-            {!isReadingG ? (
-              <details className="menu">
-                <summary className="top-pill">更改范围</summary>
-                <div className="menu-panel wide">{filterPanelBody}</div>
-              </details>
-            ) : null}
+            <details className="menu">
+              <summary className="top-pill">学习范围</summary>
+              <div className="menu-panel wide">{filterPanelBody}</div>
+            </details>
 
             <details className="menu">
               <summary className="top-pill">词库面板</summary>
@@ -495,50 +744,47 @@ export default function SatelliteLexiconFlashcard({
               </div>
             </details>
           </div>
-        </header>
+          </header>
+          )}
+        />
 
-        {isReadingG ? (
-          <div className={rgStyles.rgStatusBar}>
-            <div className={rgStyles.rgStatusLeft}>
-              <span className={rgStyles.rgModePill}>{modeLabel || "G类阅读提升"}</span>
-              <span className={rgStyles.rgFilterName} title={rangeMeta || rangeTitle}>
-                {rangeTitle}
-                {rangeMeta ? (
-                  <span style={{ display: "block", fontSize: 11, fontWeight: 650, color: "#6b7c8a" }}>
-                    {rangeMeta}
-                  </span>
-                ) : null}
-              </span>
-            </div>
-            <div className={rgStyles.rgStatusRight}>
-              <span className={rgStyles.rgProgressText}>{progressLabel}</span>
-              <details className="menu">
-                <summary className={rgStyles.rgFilterBtn}>筛选</summary>
-                <div className={`menu-panel wide ${rgStyles.rgFilterPanel}`}>{filterPanelBody}</div>
-              </details>
+        <article
+          className="word-study-card"
+          onTouchStart={handleSwipeStart}
+          onTouchEnd={handleSwipeEnd}
+          onTouchCancel={() => {
+            swipeStartRef.current = null;
+          }}
+        >
+          <div className="word-canvas-tools">
+            <span>{rangeDetail || `${modeLabel} · ${rangeMeta}`}</span>
+            <div>
+              <button
+                className={`word-canvas-icon${isFavorite ? " is-active" : ""}`}
+                type="button"
+                disabled={isStudyEmpty}
+                onClick={onToggleFavorite}
+                title="收藏"
+                aria-label="收藏当前单词"
+              >
+                <Bookmark aria-hidden="true" />
+              </button>
+              {!isIelts538 && !showInsight ? (
+                <button
+                  className="word-canvas-icon"
+                  type="button"
+                  onClick={() => setShowInsight(true)}
+                  title="打开学习概览"
+                  aria-label="打开学习概览"
+                >
+                  <PanelRightOpen aria-hidden="true" />
+                </button>
+              ) : null}
             </div>
           </div>
-        ) : (
-          <StudyRangeSummary
-            mode={modeLabel}
-            title={rangeTitle}
-            meta={rangeMeta}
-            detail={rangeDetail}
-            className="word-study-range"
-          />
-        )}
 
-        <section className="main">
-          <div className="center">
-            <button
-              className="star-mid"
-              type="button"
-              disabled={isStudyEmpty}
-              onClick={onToggleFavorite}
-              title="收藏"
-            >
-              {isFavorite ? "⭐" : "☆"}
-            </button>
+          <section className="main">
+          <div className="center word-study-content">
 
             <div className="example-box">
               <div className="example-head">
@@ -552,6 +798,11 @@ export default function SatelliteLexiconFlashcard({
                   <span aria-hidden="true">🔊</span>
                   <span>空格·例句</span>
                 </button>
+                {isIelts538 ? (
+                  <div className="ielts-538-example-meta" aria-label="仿雅思 G 类文章句">
+                    <span>仿雅思 G 类文章句</span>
+                  </div>
+                ) : null}
               </div>
               <div
                 className="example-clickable"
@@ -796,10 +1047,163 @@ export default function SatelliteLexiconFlashcard({
                       </div>
                     </div>
                   ) : null}
-                  {sensesExtra}
+                  {isIelts538 && selectedRelatedWord ? (
+                    <div className="block ielts-538-paraphrase" aria-label="阅读同义改写">
+                      <div className="block-title">仿雅思 G 类题目改写句</div>
+                      <div className="ielts-538-paraphrase__replacement">
+                        <span>本句可替换表达</span>
+                        <button
+                          className="mini-sound"
+                          type="button"
+                          onClick={() => speakSmall(selectedRelatedWord, "同义表达")}
+                          title={`播放 ${selectedRelatedWord}`}
+                          aria-label={`播放 ${selectedRelatedWord}`}
+                        >
+                          🔊
+                        </button>
+                        <strong>{selectedRelatedWord}</strong>
+                        {selectedReplacementSection ? (
+                          <em
+                            className="ielts-538-section-badge"
+                            aria-label={`替换词难度 ${selectedReplacementSection}`}
+                          >
+                            {selectedReplacementSection}
+                          </em>
+                        ) : null}
+                        {selectedParaphrase?.isRecommended ? (
+                          <em className="ielts-538-recommended-badge">★ 最推荐</em>
+                        ) : null}
+                      </div>
+                      {selectedParaphrase ? (
+                        <>
+                          <div className="ielts-538-paraphrase__sentence">
+                            <span>同义改写句</span>
+                            <button
+                              className="mini-sound"
+                              type="button"
+                              onClick={() => speakSmall(selectedParaphrase.paraphraseSentence, "同义改写句")}
+                              title="播放同义改写句"
+                              aria-label="播放同义改写句"
+                            >
+                              🔊
+                            </button>
+                            <p>{selectedParaphrase.paraphraseSentence}</p>
+                          </div>
+                          <p className="ielts-538-paraphrase__meaning">
+                            {selectedParaphrase.meaningCn}
+                          </p>
+                          <p className="ielts-538-paraphrase__note">
+                            上方为文章语境，下方为题干式改写；信息对应，但词汇和句法结构可以变化。
+                          </p>
+                        </>
+                      ) : (
+                        <div className="ielts-538-paraphrase__empty" role="status">
+                          <strong>暂无审核例句</strong>
+                          <p>该词来自原词库候选列表，现已完整保留展示，但暂不表示能在当前句中直接替换。</p>
+                        </div>
+                      )}
+                    </div>
+                  ) : sensesExtra}
                 </div>
 
                 <div className={isReadingG ? rgStyles.rgFooterGrid : undefined}>
+                  {isIelts538 ? (
+                    relatedWords.length ? (
+                      <section
+                        className={`grid footer-grid ielts-538-related-grid${isDenseIelts538 ? " is-dense" : ""}${showRelatedMeanings && hasDistinctRelatedMeanings ? " is-meaning-expanded" : ""}`}
+                        aria-label="相关单词和同义替换"
+                      >
+                        <div className="block">
+                          <div className="ielts-538-related-heading">
+                            <div className="block-title">相关单词 / 同义替换</div>
+                            {hasDistinctRelatedMeanings ? (
+                              <button
+                                className="ielts-538-meaning-toggle"
+                                type="button"
+                                aria-expanded={showRelatedMeanings}
+                                onClick={() => setShowRelatedMeanings((visible) => !visible)}
+                              >
+                                {showRelatedMeanings ? "隐藏释义" : "显示释义"}
+                              </button>
+                            ) : null}
+                          </div>
+                          <div className="list ielts-538-related-list">
+                            {relatedWords.map((relatedWord) => {
+                              const isSelected =
+                                selectedRelatedWord === relatedWord.word;
+                              return (
+                              <div
+                                className={`item with-sound ielts-538-related-item${isSelected ? " is-active" : ""}`}
+                                key={relatedWord.word}
+                              >
+                                <button
+                                  className="mini-sound"
+                                  type="button"
+                                  onClick={() => speakSmall(relatedWord.word, "相关单词")}
+                                  title={`播放 ${relatedWord.word} 发音`}
+                                  aria-label={`播放 ${relatedWord.word} 发音`}
+                                >
+                                  🔊
+                                </button>
+                                <button
+                                  className="pair-text ielts-538-related-choice"
+                                  type="button"
+                                  aria-pressed={isSelected}
+                                  onClick={() => setParaphraseSelection({
+                                    itemKey: paraphraseItemKey,
+                                    replacement: relatedWord.word
+                                  })}
+                                >
+                                  <span className="en">
+                                    {relatedWord.word}
+                                    {relatedWord.readingSection ? (
+                                      <em
+                                        className="ielts-538-section-badge"
+                                        aria-label={`替换词难度 ${relatedWord.readingSection}`}
+                                      >
+                                        {relatedWord.readingSection}
+                                      </em>
+                                    ) : null}
+                                    {relatedWord.isRecommended ? (
+                                      <em className="ielts-538-recommended-badge">★ 最推荐</em>
+                                    ) : null}
+                                  </span>
+                                  <span className="zh">{relatedWord.meaning}</span>
+                                  {showRelatedMeanings && relatedWord.additionalMeaning ? (
+                                    <span
+                                      className="ielts-538-related-definition"
+                                      title={relatedWord.additionalMeaning}
+                                    >
+                                      <small>其他义</small>
+                                      {relatedWord.posLabel ? (
+                                        <b
+                                          title={relatedWord.pos}
+                                          aria-label={`主要词性 ${relatedWord.posLabel}`}
+                                        >
+                                          {relatedWord.posLabel}
+                                        </b>
+                                      ) : null}
+                                      <span>{relatedWord.additionalMeaning}</span>
+                                    </span>
+                                  ) : null}
+                                  {showRelatedMeanings && relatedWord.contextualMeaning ? (
+                                    <span
+                                      className="ielts-538-related-context"
+                                      title={relatedWord.contextualMeaning}
+                                    >
+                                      <small>释义</small>
+                                      <span>{relatedWord.contextualMeaning}</span>
+                                    </span>
+                                  ) : null}
+                                </button>
+                              </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </section>
+                    ) : null
+                  ) : (
                   <div className="grid footer-grid">
                     <div className="block">
                       <div className="block-title">常见搭配</div>
@@ -894,13 +1298,23 @@ export default function SatelliteLexiconFlashcard({
                       </div>
                     ) : null}
                   </div>
+                  )}
                 </div>
               </>
             )}
           </div>
-        </section>
+          </section>
+        </article>
 
-        <footer className="bottom bottombar bottombar--status-only">
+        <footer className="bottom bottombar">
+          <button
+            className="study-step-button study-step-button--previous"
+            type="button"
+            disabled={isStudyEmpty || !onPrev}
+            onClick={onPrev || undefined}
+          >
+            上一个
+          </button>
           {!quizMode ? <div className="actions">
             <button
               type="button"
@@ -926,18 +1340,18 @@ export default function SatelliteLexiconFlashcard({
             </button>
           </div> : null}
 
-          <div className="progress-row">
-            <div className="progress">
-              <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
-            </div>
-            <div className="count">
-              {isStudyEmpty ? "0 / 0" : `${safeStudyPosition + 1} / ${studyCount}`}
-            </div>
-          </div>
+          <button
+            className="study-step-button study-step-button--next"
+            type="button"
+            disabled={isStudyEmpty || !onNext}
+            onClick={onNext || undefined}
+          >
+            下一个
+          </button>
         </footer>
 
         <div className={`toast ${toast ? "show" : ""}`}>{toast}</div>
-      </div>
+      </WordStudyWorkspace>
     </main>
   );
 }

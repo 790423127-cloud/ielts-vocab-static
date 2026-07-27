@@ -130,6 +130,16 @@ if exist "%EXPORT_DIR%\reading-g.html" (
   if errorlevel 1 goto FAIL
 )
 
+if exist "%EXPORT_DIR%\reading-words.html" (
+  call tcb hosting deploy "%EXPORT_DIR%\reading-words.html" %DEPLOY_PATH%/reading-words.html -e %ENV_ID%
+  if errorlevel 1 goto FAIL
+)
+
+if exist "%EXPORT_DIR%\ielts-538.html" (
+  call tcb hosting deploy "%EXPORT_DIR%\ielts-538.html" %DEPLOY_PATH%/ielts-538.html -e %ENV_ID%
+  if errorlevel 1 goto FAIL
+)
+
 if exist "%EXPORT_DIR%\meaning.html" (
   call tcb hosting deploy "%EXPORT_DIR%\meaning.html" %DEPLOY_PATH%/meaning.html -e %ENV_ID%
   if errorlevel 1 goto FAIL

@@ -5,7 +5,8 @@ import os from "node:os";
 import path from "node:path";
 import {
   buildExportCachePayload,
-  publishLexiconPair
+  publishLexiconPair,
+  POST
 } from "../../../api/export-cache/route.js";
 import {
   computeIntegrityHash,
@@ -58,6 +59,40 @@ function assertNoTransactionFiles(root) {
   walk(root);
   assert.equal(files.some((name) => name.endsWith(".tmp") || name.endsWith(".rollback")), false);
 }
+
+test("production export-cache accepts localhost but still blocks remote writes", async () => {
+  const previousNodeEnv = process.env.NODE_ENV;
+  const previousToken = process.env.LOCAL_ADMIN_TOKEN;
+  process.env.NODE_ENV = "production";
+  delete process.env.LOCAL_ADMIN_TOKEN;
+
+  try {
+    const localResponse = await POST(new Request("http://localhost:3000/api/export-cache", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Host": "localhost:3000"
+      },
+      body: JSON.stringify({ words: [] })
+    }));
+    assert.equal(localResponse.status, 400);
+
+    const remoteResponse = await POST(new Request("https://example.com/api/export-cache", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Host": "example.com"
+      },
+      body: JSON.stringify({ words: [] })
+    }));
+    assert.equal(remoteResponse.status, 403);
+  } finally {
+    if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = previousNodeEnv;
+    if (previousToken === undefined) delete process.env.LOCAL_ADMIN_TOKEN;
+    else process.env.LOCAL_ADMIN_TOKEN = previousToken;
+  }
+});
 
 test("first temporary write failure leaves both official files unchanged", () => {
   const current = fixture();

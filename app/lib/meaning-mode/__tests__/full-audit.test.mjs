@@ -10,7 +10,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..", "..", "..", ".."); // app/lib/meaning-mode/__tests__ -> root
 const WORDS_PATH = join(ROOT, ".static-export-cache", "words.json");
 const MEANING_PATH = join(ROOT, "public", "data", "meaning-6000.json");
-const KNOWN_RETIRED_WORD_IDS = new Set(["word_excel_29d8cda42c88"]);
+const RETIREMENTS_PATH = join(ROOT, "app", "lib", "vocab", "master-lexicon-retirements.json");
+const retirementData = JSON.parse(readFileSync(RETIREMENTS_PATH, "utf-8"));
+const KNOWN_RETIRED_WORD_IDS = new Set([
+  "word_excel_29d8cda42c88",
+  ...retirementData.entries.map((entry) => entry.id),
+]);
 
 let wordsData, meaningData, SEMANTIC_INDEX;
 try {
@@ -27,7 +32,7 @@ function normalizePosFamily(pos) {
   if (!pos) return "unknown";
   const p = String(pos).trim().toLowerCase();
   if (p.startsWith("noun") || p === "n" || p === "n.") return "noun";
-  if (p.startsWith("verb") || p === "v" || p === "v.") return "verb";
+  if (p.startsWith("verb") || p === "v" || p === "v." || p === "modal") return "verb";
   if (p.startsWith("adjectiv") || p === "adj" || p === "adj.") return "adjective";
   if (p.startsWith("adverb") || p === "adv" || p === "adv.") return "adverb";
   if (p.includes("noun")) return "noun";

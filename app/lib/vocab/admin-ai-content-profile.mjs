@@ -282,6 +282,8 @@ export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
     exampleCn: text(entry.example_chinese || entry.exampleCn),
     forms: normalizeAiForms(entry.forms, word),
     wordFamily: normalizeAiWordFamily(entry.word_family || entry.wordFamily, word),
+    synonyms: normalizeAiStringArray(entry.synonyms, { max: 4 })
+      .filter((item) => key(item) !== key(word)),
     collocations: normalizeAiPhraseItems(entry.common_collocations || entry.collocations || entry.commonCollocations, {
       max: AI_COLLOCATION_LIMIT,
       requireChinese: true

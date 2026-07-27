@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f6f5" />
+  <title>阅读生词栏 · IELTS Vocab 静态版</title>
+  <link rel="stylesheet" href="./assets/reading-words.css?v=20260727_mobile_first_screen_v1" />
+</head>
+<body>
+  <header class="reading-header">
+    <a class="brand" href="./index.html"><i aria-hidden="true"></i>IELTS VOCAB</a>
+    <nav aria-label="静态学习导航">
+      <a href="./index.html">刷词</a>
+      <a href="./meaning.html">选义</a>
+      <a href="./spelling.html">拼写</a>
+      <a class="active" href="./reading-words.html">阅读生词</a>
+    </nav>
+  </header>
+
+  <main class="reading-app">
+    <section class="reading-title">
+      <div>
+        <p>个人独立词库 · 仅存本机</p>
+        <h1>阅读生词栏</h1>
+        <span id="mainStatus">正在读取主词库…</span>
+      </div>
+      <dl aria-label="阅读生词统计">
+        <div><dt id="totalCount">0</dt><dd>全部</dd></div>
+        <div><dt id="frequentCount">0</dt><dd>高频</dd></div>
+        <div><dt id="incompleteCount">0</dt><dd>待补全</dd></div>
+      </dl>
+    </section>
+
+    <section class="reading-tools" aria-label="阅读生词工具栏">
+      <label class="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="搜索单词或释义" /></label>
+      <button id="frequentFilterBtn" type="button" aria-pressed="false">高频词</button>
+      <button id="singleAddBtn" type="button">单个添加</button>
+      <button id="batchAddBtn" type="button">表格批量添加</button>
+      <button id="exportBtn" type="button">跨设备导出</button>
+      <label class="file-button">跨设备导入<input id="importInput" type="file" accept=".json,.csv,.tsv,.txt,application/json" /></label>
+      <button id="aiInfoBtn" class="primary" type="button">AI 工具</button>
+    </section>
+
+    <section id="singlePanel" class="editor hidden" aria-label="单个添加单词">
+      <form id="singleForm">
+        <label>单词 *<input id="wordInput" required autocomplete="off" placeholder="例如：allocate" /></label>
+        <label>中文释义<input id="meaningInput" autocomplete="off" /></label>
+        <label>词性<input id="posInput" autocomplete="off" placeholder="例如：verb" /></label>
+        <label>同义替换<input id="synonymInput" autocomplete="off" placeholder="多个词用逗号分开" /></label>
+        <div class="editor-actions">
+          <button id="singleCancelBtn" type="button">取消</button>
+          <button class="primary" type="submit">加入阅读生词栏</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="batchPanel" class="editor hidden" aria-label="表格批量添加">
+      <p>直接粘贴 Excel/WPS 表格、CSV，或每行一个单词。前两列默认识别为“单词、中文释义”。</p>
+      <textarea id="batchInput" rows="7" placeholder="word&#9;meaning&#10;allocate&#9;分配"></textarea>
+      <div class="editor-actions">
+        <button id="batchCancelBtn" type="button">取消</button>
+        <button id="batchImportBtn" class="primary" type="button">导入表格</button>
+      </div>
+    </section>
+
+    <section id="aiPanel" class="editor hidden" aria-label="静态版 AI 工具说明">
+      <strong>静态云版不直接调用付费 AI</strong>
+      <p>静态网页没有安全的服务器密钥环境。请在电脑本地版运行“阅读生词 AI 补全”，然后使用“跨设备导出/导入”同步到手机，避免 API Key 暴露。</p>
+    </section>
+
+    <section class="reading-workspace">
+      <article id="studyCard" class="study-card" aria-label="阅读生词详情">
+        <div id="emptyState" class="empty-state">
+          <strong>还没有阅读生词</strong>
+          <span>可单个添加，也可直接粘贴表格批量导入。</span>
+        </div>
+        <div id="wordContent" class="hidden">
+          <div class="card-meta"><span id="positionText">1 / 1</span><span id="frequencyBadge"></span></div>
+          <div class="example">
+            <button id="exampleSoundBtn" type="button" aria-label="播放例句">🔊</button>
+            <div><p id="exampleText"></p><span id="exampleCnText"></span></div>
+          </div>
+          <button id="wordSoundBtn" class="word" type="button"></button>
+          <div class="word-meta"><span id="phoneticText"></span><b id="posText"></b></div>
+          <h2 id="meaningText"></h2>
+          <div class="detail-grid">
+            <section><h3>变形</h3><div id="formsList"></div></section>
+            <section><h3>词族</h3><div id="familyList"></div></section>
+            <section><h3>同义替换</h3><div id="synonymList"></div></section>
+          </div>
+          <footer class="study-actions" aria-label="学习操作">
+            <button id="prevBtn" type="button">上一个</button>
+            <button id="knownBtn" type="button">认识</button>
+            <button id="blurryBtn" type="button">模糊</button>
+            <button id="unknownBtn" type="button">不熟</button>
+            <button id="nextBtn" type="button">下一个</button>
+          </footer>
+        </div>
+      </article>
+
+      <aside class="word-list-panel" aria-label="阅读生词列表">
+        <div><strong>全部阅读生词</strong><span id="visibleCount">0 个</span></div>
+        <div id="wordList" class="word-list"></div>
+      </aside>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="./assets/reading-words.js?v=20260727_mobile_first_screen_v1"></script>
+</body>
+</html>

@@ -30,8 +30,178 @@ import {
   playSpeechAudio,
   resolveSpeechPlaybackOptions
 } from "../lib/speech-audio-playback.mjs";
+import {
+  getIelts538ProgressKey,
+  loadIelts538Words
+} from "../lib/ielts-538/load-ielts-538.mjs";
+import {
+  IELTS_538_LEARNING_ENTRIES,
+  IELTS_538_STATUS,
+  buildIelts538StudyList,
+  getIelts538FilterLabel,
+  getIelts538WordStatus,
+  ielts538FilterKey,
+  isIelts538Favorite,
+  patchIelts538WordStatus,
+  readIelts538DailyCount,
+  readIelts538Positions,
+  readIelts538Session,
+  readIelts538StatusMap,
+  writeIelts538DailyCount,
+  writeIelts538Positions,
+  writeIelts538Session,
+  writeIelts538StatusMap
+} from "../lib/ielts-538/storage.mjs";
 
-export default function BasicWordsPage() {
+const STATUS_CHIPS = [
+  { label: "全部待学", filter: { type: "all", value: "" } },
+  { label: "不熟", filter: { type: "status", value: "不熟" } },
+  { label: "熟悉", filter: { type: "status", value: "熟悉" } },
+  { label: "收藏", filter: { type: "status", value: "收藏" } }
+];
+
+const BASIC_CHIP_GROUPS = [
+  {
+    title: "状态",
+    chips: [
+      STATUS_CHIPS[0],
+      { label: "全部零基础词", filter: { type: "everything", value: "" } },
+      ...STATUS_CHIPS.slice(1)
+    ]
+  },
+  {
+    title: "主题",
+    chips: [
+      "问候", "人称", "数字", "颜色", "时间", "家庭", "身体", "学校", "家", "食物",
+      "衣服", "地点", "天气", "动物", "动词", "介词", "购物", "健康", "科技", "职业"
+    ].map((value) => ({ label: value, filter: { type: "topic", value } }))
+  }
+];
+
+const IELTS_538_GROUP_FILTERS = [
+  ["1:1", "第1类 · 第1组"],
+  ["2:1", "第2类 · 第1组"],
+  ["2:2", "第2类 · 第2组"],
+  ["3:1", "第3类 · 第1组"],
+  ["3:2", "第3类 · 第2组"],
+  ["3:3", "第3类 · 第3组"],
+  ["3:4", "第3类 · 第4组"],
+  ["3:5", "第3类 · 第5组"]
+];
+
+const IELTS_538_CHIP_GROUPS = [
+  {
+    title: "状态",
+    chips: [
+      STATUS_CHIPS[0],
+      { label: "全部 376 词", filter: { type: "everything", value: "" } },
+      ...STATUS_CHIPS.slice(1)
+    ]
+  },
+  {
+    title: "原书分组",
+    chips: IELTS_538_GROUP_FILTERS.map(([value, label]) => ({
+      label,
+      filter: { type: "group", value }
+    }))
+  }
+];
+
+const BASIC_CONFIG = {
+  modeLabel: "零基础单词",
+  loadingWord: "正在读取零基础词库",
+  loadingEyebrow: "零基础单词",
+  loadingNote: "读取独立词库并恢复上次学习位置",
+  emptyMeaning: "当前范围没有待学零基础词",
+  emptyDetail: "当前范围没有待学内容，可以更改范围或切到全部零基础词。",
+  loadEmptyError: "基础词库为空。请确认 public/data/basic-words.json 存在。",
+  loadFallbackError: "基础词库加载失败",
+  loadWords: loadBasicWords,
+  wordKey: (word) => normalizeBasicWordKey(word?.word || word),
+  learningEntries: BASIC_LEARNING_ENTRIES,
+  status: BASIC_STATUS,
+  buildStudyList: buildBasicStudyList,
+  getFilterLabel: getBasicFilterLabel,
+  getWordStatus: getBasicWordStatus,
+  isFavorite: isBasicFavorite,
+  patchWordStatus: patchBasicWordStatus,
+  storageFilterKey: filterKey,
+  readDailyCount: readBasicDailyCount,
+  readPositions: readBasicPositions,
+  readSession: readBasicSession,
+  readStatusMap: readBasicStatusMap,
+  writeDailyCount: writeBasicDailyCount,
+  writePositions: writeBasicPositions,
+  writeSession: writeBasicSession,
+  writeStatusMap: writeBasicStatusMap,
+  chipGroups: BASIC_CHIP_GROUPS,
+  statsPrefix: "独立零基础词库",
+  extraLinks: [
+    { href: "/ielts-538", label: "538考点" },
+    { href: "/reading-g", label: "G类阅读提升" },
+    { href: "/spelling-words", label: "单词拼写训练" },
+    { href: "/meaning", label: "看词选意思 · 核心6000" }
+  ]
+};
+
+const IELTS_538_CONFIG = {
+  modeLabel: "538考点",
+  loadingWord: "正在读取 538 考点词库",
+  loadingEyebrow: "538考点",
+  loadingNote: "读取 376 条独立词库并恢复上次学习位置",
+  emptyMeaning: "当前范围没有待学的 538 考点词",
+  emptyDetail: "当前范围没有待学内容，可以更改范围或切到全部 376 词。",
+  loadEmptyError: "538 考点词库为空。请确认 public/data/ielts-538-words.json 存在。",
+  loadFallbackError: "538 考点词库加载失败",
+  loadWords: loadIelts538Words,
+  wordKey: getIelts538ProgressKey,
+  learningEntries: IELTS_538_LEARNING_ENTRIES,
+  status: IELTS_538_STATUS,
+  buildStudyList: buildIelts538StudyList,
+  getFilterLabel: getIelts538FilterLabel,
+  getWordStatus: getIelts538WordStatus,
+  isFavorite: isIelts538Favorite,
+  patchWordStatus: patchIelts538WordStatus,
+  storageFilterKey: ielts538FilterKey,
+  readDailyCount: readIelts538DailyCount,
+  readPositions: readIelts538Positions,
+  readSession: readIelts538Session,
+  readStatusMap: readIelts538StatusMap,
+  writeDailyCount: writeIelts538DailyCount,
+  writePositions: writeIelts538Positions,
+  writeSession: writeIelts538Session,
+  writeStatusMap: writeIelts538StatusMap,
+  chipGroups: IELTS_538_CHIP_GROUPS,
+  statsPrefix: "独立 538 考点词库",
+  extraLinks: [
+    { href: "/reading-g", label: "G类阅读提升" },
+    { href: "/basic", label: "零基础词库" },
+    { href: "/spelling-words", label: "单词拼写训练" }
+  ]
+};
+
+export function StandaloneWordsPage({ lexicon = "basic" }) {
+  const config = lexicon === "ielts538" ? IELTS_538_CONFIG : BASIC_CONFIG;
+  const {
+    buildStudyList,
+    getFilterLabel,
+    getWordStatus,
+    isFavorite,
+    learningEntries,
+    loadWords,
+    patchWordStatus,
+    readDailyCount,
+    readPositions,
+    readSession,
+    readStatusMap,
+    status,
+    storageFilterKey,
+    wordKey,
+    writeDailyCount,
+    writePositions,
+    writeSession,
+    writeStatusMap
+  } = config;
   const [phase, setPhase] = useState("loading");
   const [words, setWords] = useState([]);
   const [meta, setMeta] = useState({ version: "", count: 0 });
@@ -56,19 +226,19 @@ export default function BasicWordsPage() {
 
     async function load() {
       try {
-        const loaded = await loadBasicWords();
+        const loaded = await loadWords();
         if (cancelled) return;
 
         if (!loaded.words.length) {
-          setError("基础词库为空。请确认 public/data/basic-words.json 存在。");
+          setError(config.loadEmptyError);
           setPhase("error");
           return;
         }
 
-        const savedStatus = readBasicStatusMap();
-        const savedPositions = readBasicPositions();
-        const savedSession = readBasicSession();
-        const savedDaily = readBasicDailyCount();
+        const savedStatus = readStatusMap();
+        const savedPositions = readPositions();
+        const savedSession = readSession();
+        const savedDaily = readDailyCount();
 
         positionsRef.current = savedPositions;
         setStatusMap(savedStatus);
@@ -81,17 +251,17 @@ export default function BasicWordsPage() {
         setPhase("ready");
         storageReadyRef.current = true;
 
-        const restoreKey = savedSession?.wordKey || positionsRef.current[filterKey({ type: "all", value: "" })] || "";
+        const restoreKey = savedSession?.wordKey || positionsRef.current[storageFilterKey({ type: "all", value: "" })] || "";
         if (restoreKey) {
           const found = loaded.words.findIndex(
-            (word) => normalizeBasicWordKey(word.word) === restoreKey
+            (word) => wordKey(word) === restoreKey
           );
           if (found >= 0) setIndex(found);
         }
         restoredRef.current = true;
       } catch (err) {
         if (!cancelled) {
-          setError(err?.message || "基础词库加载失败");
+          setError(err?.message || config.loadFallbackError);
           setPhase("error");
         }
       }
@@ -108,7 +278,17 @@ export default function BasicWordsPage() {
         }
       }
     };
-  }, []);
+  }, [
+    config.loadEmptyError,
+    config.loadFallbackError,
+    loadWords,
+    readDailyCount,
+    readPositions,
+    readSession,
+    readStatusMap,
+    storageFilterKey,
+    wordKey
+  ]);
 
   useEffect(() => {
     if (!toast) return;
@@ -117,8 +297,8 @@ export default function BasicWordsPage() {
   }, [toast]);
 
   const studyList = useMemo(
-    () => buildBasicStudyList(words, filter, statusMap),
-    [words, filter, statusMap]
+    () => buildStudyList(words, filter, statusMap),
+    [buildStudyList, words, filter, statusMap]
   );
 
   const currentStudyPosition = useMemo(
@@ -129,10 +309,10 @@ export default function BasicWordsPage() {
   const isStudyEmpty = studyList.length === 0;
   const item = isStudyEmpty
     ? {
-        word: phase === "loading" ? "正在读取零基础词库" : "完成",
+        word: phase === "loading" ? config.loadingWord : "完成",
         phonetic: "",
         pos: "",
-        meaning: phase === "loading" ? "请稍候" : "当前范围没有待学零基础词",
+        meaning: phase === "loading" ? "请稍候" : config.emptyMeaning,
         example: "",
         exampleCn: "",
         definition: ""
@@ -148,23 +328,23 @@ export default function BasicWordsPage() {
     : 0;
 
   const familiarCount = useMemo(
-    () => words.filter((word) => getBasicWordStatus(word, statusMap) === BASIC_STATUS.FAMILIAR).length,
-    [words, statusMap]
+    () => words.filter((word) => getWordStatus(word, statusMap) === status.FAMILIAR).length,
+    [getWordStatus, status, words, statusMap]
   );
   const unfamiliarCount = useMemo(
-    () => words.filter((word) => getBasicWordStatus(word, statusMap) === BASIC_STATUS.UNFAMILIAR).length,
-    [words, statusMap]
+    () => words.filter((word) => getWordStatus(word, statusMap) === status.UNFAMILIAR).length,
+    [getWordStatus, status, words, statusMap]
   );
 
   const learningEntryGroups = useMemo(() => {
-    return BASIC_LEARNING_ENTRIES.map((group) => ({
+    return learningEntries.map((group) => ({
       ...group,
       items: group.items.map((entry) => ({
         ...entry,
-        count: buildBasicStudyList(words, entry.filter, statusMap).length
+        count: buildStudyList(words, entry.filter, statusMap).length
       }))
     }));
-  }, [words, statusMap]);
+  }, [buildStudyList, learningEntries, words, statusMap]);
 
   const libraryRows = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -183,16 +363,16 @@ export default function BasicWordsPage() {
     if (!storageReadyRef.current || !restoredRef.current) return;
     const word = words[nextIndex];
     if (!word) return;
-    const key = normalizeBasicWordKey(word.word);
-    positionsRef.current[filterKey(nextFilter)] = key;
-    writeBasicPositions(positionsRef.current);
-    writeBasicSession({
+    const key = wordKey(word);
+    positionsRef.current[storageFilterKey(nextFilter)] = key;
+    writePositions(positionsRef.current);
+    writeSession({
       wordKey: key,
       filter: nextFilter,
       index: nextIndex,
       savedAt: new Date().toISOString()
     });
-  }, [filter, words]);
+  }, [filter, storageFilterKey, wordKey, words, writePositions, writeSession]);
 
   const speakText = useCallback(async (text, kind = "word") => {
     const value = String(text || "").trim();
@@ -240,49 +420,49 @@ export default function BasicWordsPage() {
 
   function setLibraryFilter(nextFilter) {
     setFilter(nextFilter);
-    const list = buildBasicStudyList(words, nextFilter, statusMap);
-    const savedKey = positionsRef.current[filterKey(nextFilter)];
+    const list = buildStudyList(words, nextFilter, statusMap);
+    const savedKey = positionsRef.current[storageFilterKey(nextFilter)];
     let nextIndex = list[0]?.originalIndex ?? 0;
 
     if (savedKey) {
       const found = list.find(
-        (row) => normalizeBasicWordKey(row.entry.word) === savedKey
+        (row) => wordKey(row.entry) === savedKey
       );
       if (found) nextIndex = found.originalIndex;
     }
 
     setIndex(nextIndex);
     persistSession(nextIndex, nextFilter);
-    setToast(`已切换：${getBasicFilterLabel(nextFilter)}`);
+    setToast(`已切换：${getFilterLabel(nextFilter)}`);
   }
 
-  function markStatus(status) {
+  function markStatus(nextRequestedStatus) {
     if (isStudyEmpty || !item?.word) return;
-    const current = getBasicWordStatus(item, statusMap);
+    const current = getWordStatus(item, statusMap);
     const nextStatus =
-      status === BASIC_STATUS.UNFAMILIAR && current === BASIC_STATUS.UNFAMILIAR
-        ? BASIC_STATUS.PENDING
-        : status;
-    const nextMap = patchBasicWordStatus(statusMap, item, { status: nextStatus });
+      nextRequestedStatus === status.UNFAMILIAR && current === status.UNFAMILIAR
+        ? status.PENDING
+        : nextRequestedStatus;
+    const nextMap = patchWordStatus(statusMap, item, { status: nextStatus });
     setStatusMap(nextMap);
-    writeBasicStatusMap(nextMap);
+    writeStatusMap(nextMap);
 
-    if (nextStatus === BASIC_STATUS.FAMILIAR || nextStatus === BASIC_STATUS.UNFAMILIAR) {
+    if (nextStatus === status.FAMILIAR || nextStatus === status.UNFAMILIAR) {
       const nextDaily = dailyCount + 1;
       setDailyCount(nextDaily);
-      writeBasicDailyCount(nextDaily);
+      writeDailyCount(nextDaily);
     }
 
     setToast(
-      nextStatus === BASIC_STATUS.FAMILIAR
+      nextStatus === status.FAMILIAR
         ? "已标记熟悉"
-        : nextStatus === BASIC_STATUS.UNFAMILIAR
+        : nextStatus === status.UNFAMILIAR
           ? "已标记不熟"
           : "已取消不熟"
     );
 
     window.setTimeout(() => {
-      const nextList = buildBasicStudyList(words, filter, nextMap);
+      const nextList = buildStudyList(words, filter, nextMap);
       if (!nextList.length) return;
       const stillHere = nextList.some((row) => row.originalIndex === index);
       if (!stillHere) {
@@ -291,7 +471,7 @@ export default function BasicWordsPage() {
           nextList[0].originalIndex;
         setIndex(nextIndex);
         persistSession(nextIndex);
-      } else if (nextStatus === BASIC_STATUS.FAMILIAR) {
+      } else if (nextStatus === status.FAMILIAR) {
         goToStudyOffset(1);
       }
     }, 120);
@@ -299,10 +479,10 @@ export default function BasicWordsPage() {
 
   function toggleFavorite() {
     if (isStudyEmpty || !item?.word) return;
-    const nextFavorite = !isBasicFavorite(item, statusMap);
-    const nextMap = patchBasicWordStatus(statusMap, item, { favorite: nextFavorite });
+    const nextFavorite = !isFavorite(item, statusMap);
+    const nextMap = patchWordStatus(statusMap, item, { favorite: nextFavorite });
     setStatusMap(nextMap);
-    writeBasicStatusMap(nextMap);
+    writeStatusMap(nextMap);
     setToast(nextFavorite ? "已收藏" : "已取消收藏");
   }
 
@@ -334,10 +514,10 @@ export default function BasicWordsPage() {
         if (event.key === " ") speakText(item?.example, "sentence");
       } else if (event.key === "0" || event.key === "2") {
         event.preventDefault();
-        markStatus(BASIC_STATUS.FAMILIAR);
+        markStatus(status.FAMILIAR);
       } else if (event.key === "1") {
         event.preventDefault();
-        markStatus(BASIC_STATUS.UNFAMILIAR);
+        markStatus(status.UNFAMILIAR);
       }
     }
 
@@ -351,8 +531,8 @@ export default function BasicWordsPage() {
       <main className="page page--word-flash system-loading-page">
         <StableLoadingState
           mark="A"
-          eyebrow="零基础单词"
-          note="读取独立词库并恢复上次学习位置"
+          eyebrow={config.loadingEyebrow}
+          note={config.loadingNote}
         />
       </main>
     );
@@ -363,7 +543,7 @@ export default function BasicWordsPage() {
       <main className="page page--word-flash system-loading-page">
         <StableLoadingState
           mark="A"
-          eyebrow="零基础单词"
+          eyebrow={config.loadingEyebrow}
           title="词库暂时无法读取"
           note={error}
           variant="error"
@@ -374,42 +554,23 @@ export default function BasicWordsPage() {
     );
   }
 
-  const rangeTitle = getBasicFilterLabel(filter);
+  const rangeTitle = getFilterLabel(filter);
   const studyRangeDetail = isStudyEmpty
-    ? "当前范围没有待学内容，可以更改范围或切到全部零基础词。"
+    ? config.emptyDetail
     : `当前位置：${safeStudyPosition + 1} / ${studyList.length} · 当前词：${item.word || "—"} · 今日 ${dailyCount}`;
-
-  const chipGroups = [
-    {
-      title: "状态",
-      chips: [
-        { label: "全部待学", filter: { type: "all", value: "" } },
-        { label: "全部零基础词", filter: { type: "everything", value: "" } },
-        { label: "不熟", filter: { type: "status", value: "不熟" } },
-        { label: "熟悉", filter: { type: "status", value: "熟悉" } },
-        { label: "收藏", filter: { type: "status", value: "收藏" } }
-      ]
-    },
-    {
-      title: "主题",
-      chips: [
-        "问候", "人称", "数字", "颜色", "时间", "家庭", "身体", "学校", "家", "食物",
-        "衣服", "地点", "天气", "动物", "动词", "介词", "购物", "健康", "科技", "职业"
-      ].map((value) => ({ label: value, filter: { type: "topic", value } }))
-    }
-  ];
 
   return (
     <SatelliteLexiconFlashcard
-      modeLabel="零基础单词"
+      layoutMode={lexicon === "ielts538" ? "ielts538" : "default"}
+      modeLabel={config.modeLabel}
       rangeTitle={rangeTitle}
       rangeMeta={`${studyList.length} 个词 · 词库 ${meta.count.toLocaleString()}`}
       rangeDetail={studyRangeDetail}
       prevItem={prevItem}
       item={item}
       isStudyEmpty={isStudyEmpty}
-      isFavorite={isBasicFavorite(item, statusMap)}
-      itemStatus={getBasicWordStatus(item, statusMap)}
+      isFavorite={isFavorite(item, statusMap)}
+      itemStatus={getWordStatus(item, statusMap)}
       filter={filter}
       learningEntryGroups={learningEntryGroups}
       libraryRows={libraryRows}
@@ -424,21 +585,33 @@ export default function BasicWordsPage() {
         setIndex(originalIndex);
         persistSession(originalIndex);
       }}
-      onMarkFamiliar={() => markStatus(BASIC_STATUS.FAMILIAR)}
-      onMarkUnfamiliar={() => markStatus(BASIC_STATUS.UNFAMILIAR)}
+      onMarkFamiliar={() => markStatus(status.FAMILIAR)}
+      onMarkUnfamiliar={() => markStatus(status.UNFAMILIAR)}
       onToggleFavorite={toggleFavorite}
       onSpeakWord={() => speakText(item?.word, "word")}
       onSpeakExample={() => speakText(item?.example, "sentence")}
       onSpeakSmall={(text) => speakText(text, "phrase")}
       onShuffle={shuffleStudy}
-      statsLine={`独立零基础词库 ${meta.count.toLocaleString()} · 熟悉 ${familiarCount} · 不熟 ${unfamiliarCount} · 今日 ${dailyCount} · ${meta.version}`}
+      onPrev={() => goToStudyOffset(-1)}
+      onNext={() => goToStudyOffset(1)}
+      overviewWords={studyList.map(({ entry }) => ({
+        ...entry,
+        status: getWordStatus(entry, statusMap),
+        favorite: isFavorite(entry, statusMap)
+      }))}
+      overviewStats={{
+        familiar: familiarCount,
+        unfamiliar: unfamiliarCount,
+        todayReviewed: dailyCount
+      }}
+      statsLine={`${config.statsPrefix} ${meta.count.toLocaleString()} · 熟悉 ${familiarCount} · 不熟 ${unfamiliarCount} · 今日 ${dailyCount} · ${meta.version}`}
       toast={toast}
-      extraLinks={[
-        { href: "/reading-g", label: "G类阅读提升" },
-        { href: "/spelling-words", label: "单词拼写训练" },
-        { href: "/meaning", label: "看词选意思 · 核心6000" }
-      ]}
-      chipGroups={chipGroups}
+      extraLinks={config.extraLinks}
+      chipGroups={config.chipGroups}
     />
   );
+}
+
+export default function BasicWordsPage() {
+  return <StandaloneWordsPage lexicon="basic" />;
 }

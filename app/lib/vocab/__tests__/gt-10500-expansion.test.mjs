@@ -13,6 +13,12 @@ import {
 } from "../../../../scripts/lib/gt-quality-gates.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+const retirementData = JSON.parse(
+  fs.readFileSync(path.join(root, "app", "lib", "vocab", "master-lexicon-retirements.json"), "utf8")
+);
+const retiredWords = new Set(
+  retirementData.entries.map((entry) => normalizeHeadword(entry.word))
+);
 
 test("active words retain the expanded baseline and include Excel modules", () => {
   const raw = fs.readFileSync(path.join(root, ".static-export-cache/words.json"), "utf8");
@@ -107,7 +113,12 @@ test("the imported 1179-word list is fully eligible for Listening Priority", asy
   const data = JSON.parse(fs.readFileSync(path.join(root, ".static-export-cache/words.json"), "utf8"));
   const { matchSpellingCategory } = await import("../../spelling/spelling-categories.mjs");
   const matching = data.words.filter((entry) => imported.has(normalizeHeadword(entry.word)));
+  const retiredImportedCount = [...imported].filter((word) => retiredWords.has(word)).length;
+  const expectedCurrentCount = imported.size - retiredImportedCount;
   assert.equal(imported.size, 1179);
-  assert.equal(matching.length, 1179);
-  assert.equal(matching.filter((entry) => matchSpellingCategory(entry, "lr_high_frequency", "listening")).length, 1179);
+  assert.equal(matching.length, expectedCurrentCount);
+  assert.equal(
+    matching.filter((entry) => matchSpellingCategory(entry, "lr_high_frequency", "listening")).length,
+    expectedCurrentCount
+  );
 });

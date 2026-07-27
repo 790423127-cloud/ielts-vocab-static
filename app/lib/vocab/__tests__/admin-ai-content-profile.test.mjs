@@ -38,6 +38,7 @@ function buildChargeEntry() {
       { word: "chargeable", pos: "adjective", meaningZh: "可收费的", relation: "adjective-form" },
       { word: "charge", pos: "verb", meaningZh: "收费", relation: "base-word" }
     ],
+    synonyms: ["bill", "ask payment", "charge", "bill"],
     common_collocations: [
       { phrase: "charge a fee", chinese: "收取费用" },
       { phrase: "charge a fee", chinese: "收费" },
@@ -75,6 +76,7 @@ test("normalizes one main meaning, concise other meanings, one example pair, and
     { word: "charging", type: "present participle / gerund" }
   ]);
   assert.deepEqual(entry.wordFamily.map(({ word }) => word), ["chargeable"]);
+  assert.deepEqual(entry.synonyms, ["bill", "ask payment"]);
   assert.deepEqual(entry.collocations.map(({ phrase }) => phrase), [
     "charge a fee",
     "additional charge",

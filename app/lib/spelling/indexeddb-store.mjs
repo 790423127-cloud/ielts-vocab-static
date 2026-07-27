@@ -70,8 +70,21 @@ export class SpellingIndexedDbStore {
 
     const allStoreNames = Object.values(SPELLING_DB_CONFIG.stores);
 
-    this.dbPromise = new Promise((resolve, reject) => {
+    const pending = new Promise((resolve, reject) => {
       const request = this.indexedDB.open(this.dbName, this.version);
+      let settled = false;
+      const timeout = globalThis.setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        reject(new Error("拼写进度库打开超时，可能被其他标签页占用"));
+      }, 5000);
+      const finish = (callback) => {
+        if (settled) return false;
+        settled = true;
+        globalThis.clearTimeout(timeout);
+        callback();
+        return true;
+      };
 
       request.onupgradeneeded = () => {
         const db = request.result;
@@ -89,8 +102,20 @@ export class SpellingIndexedDbStore {
         }
       };
 
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error || new Error("IndexedDB open failed"));
+      request.onsuccess = () => {
+        const db = request.result;
+        db.onversionchange = () => {
+          db.close();
+          this.dbPromise = null;
+        };
+        if (!finish(() => resolve(db))) db.close();
+      };
+      request.onerror = () => finish(() => reject(request.error || new Error("IndexedDB open failed")));
+      request.onblocked = () => finish(() => reject(new Error("拼写进度库被其他标签页占用")));
+    });
+    this.dbPromise = pending.catch((error) => {
+      this.dbPromise = null;
+      throw error;
     });
 
     return this.dbPromise;

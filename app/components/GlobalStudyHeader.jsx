@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BarChart3,
@@ -32,7 +32,9 @@ const PAGE_CONTEXT = [
   { test: (path) => path === "/meaning", title: "看词选意思", meta: "核心词汇" },
   { test: (path) => path === "/expressions", title: "高频表达", meta: "口语与写作" },
   { test: (path) => path === "/basic", title: "零基础词库", meta: "独立进度" },
-  { test: (path) => path === "/reading-g", title: "G类阅读提升", meta: "独立进度" }
+  { test: (path) => path === "/ielts-538", title: "538考点", meta: "独立进度 · 376词" },
+  { test: (path) => path === "/reading-g", title: "G类阅读提升", meta: "独立进度" },
+  { test: (path) => path === "/reading-words", title: "阅读生词栏", meta: "个人独立词库" }
 ];
 
 const NAV_GROUPS = [
@@ -57,10 +59,11 @@ const NAV_GROUPS = [
   {
     label: "专项提升",
     items: [
+      { href: "/ielts-538", label: "538考点", icon: BookOpen, matches: (path) => path === "/ielts-538" },
       { href: "/reading-g", label: "G类阅读提升", icon: BookOpen, matches: (path) => path === "/reading-g" },
       { label: "G类写作提升", icon: FileText, disabled: true },
       { href: "/expressions", label: "口语话题词汇", icon: MessageSquareText, matches: () => false },
-      { label: "书信写作词汇", icon: FileText, disabled: true }
+      { href: "/reading-words", label: "阅读生词栏", icon: FileText, matches: (path) => path === "/reading-words" }
     ]
   },
   {
@@ -100,7 +103,7 @@ function calculateStreak(daySet) {
   return streak;
 }
 
-function NavItem({ item, pathname, source }) {
+function NavItem({ item, pathname, source, onIntent }) {
   const Icon = item.icon;
   if (item.disabled) {
     return (
@@ -111,7 +114,14 @@ function NavItem({ item, pathname, source }) {
   }
   const active = item.matches?.(pathname, source) || false;
   return (
-    <Link href={item.href} prefetch={false} className={`study-shell-nav-item${active ? " is-active" : ""}`} aria-current={active ? "page" : undefined}>
+    <Link
+      href={item.href}
+      prefetch={false}
+      className={`study-shell-nav-item${active ? " is-active" : ""}`}
+      aria-current={active ? "page" : undefined}
+      onPointerEnter={() => onIntent?.(item.href)}
+      onFocus={() => onIntent?.(item.href)}
+    >
       <Icon aria-hidden="true" /><span>{item.label}</span>
     </Link>
   );
@@ -125,8 +135,15 @@ export default function GlobalStudyHeader() {
   const [query, setQuery] = useState("");
   const [theme, setTheme] = useState("light");
   const [studyDays, setStudyDays] = useState(() => new Set());
+  const prefetchedRoutesRef = useRef(new Set());
   const recentDays = useMemo(() => getRecentDays(), []);
   const context = PAGE_CONTEXT.find((entry) => entry.test(pathname)) || { title: "IELTS 学习工作台", meta: "专注训练" };
+  const preloadRoute = useCallback((href) => {
+    const target = String(href || "").trim();
+    if (!target || prefetchedRoutesRef.current.has(target)) return;
+    prefetchedRoutesRef.current.add(target);
+    router.prefetch(target);
+  }, [router]);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("ielts-study-theme") === "dark" ? "dark" : "light";
@@ -165,7 +182,7 @@ export default function GlobalStudyHeader() {
   return (
     <>
       <header className="study-brand-header">
-        <Link href="/" prefetch={false} className="study-brand-mark" aria-label="IELTS Vocab 首页">
+        <Link href="/" prefetch={false} onPointerEnter={() => preloadRoute("/")} onFocus={() => preloadRoute("/")} className="study-brand-mark" aria-label="IELTS Vocab 首页">
           <span aria-hidden="true" />IELTS VOCAB
         </Link>
         <div className="study-session-context" aria-label="当前训练">
@@ -188,7 +205,7 @@ export default function GlobalStudyHeader() {
             <section className="study-shell-nav-section" key={group.label} aria-label={group.label}>
               <div className="study-shell-nav-label">{group.label}</div>
               <nav className="study-shell-nav-group">
-                {group.items.map((item) => <NavItem key={item.label} item={item} pathname={pathname} source={source} />)}
+                {group.items.map((item) => <NavItem key={item.label} item={item} pathname={pathname} source={source} onIntent={preloadRoute} />)}
               </nav>
             </section>
           ))}
@@ -209,12 +226,12 @@ export default function GlobalStudyHeader() {
       </aside>
 
       <nav className="study-mobile-nav" aria-label="移动端学习导航">
-        {NAV_GROUPS[0].items.slice(0, 3).map((item) => <NavItem key={`mobile-${item.label}`} item={item} pathname={pathname} source={source} />)}
-        <Link className="study-shell-nav-item" href="/?openLibrary=1" prefetch={false}><LibraryBig aria-hidden="true" /><span>词库</span></Link>
+        {NAV_GROUPS[0].items.slice(0, 3).map((item) => <NavItem key={`mobile-${item.label}`} item={item} pathname={pathname} source={source} onIntent={preloadRoute} />)}
+        <Link className="study-shell-nav-item" href="/?openLibrary=1" prefetch={false} onPointerEnter={() => preloadRoute("/?openLibrary=1")} onFocus={() => preloadRoute("/?openLibrary=1")}><LibraryBig aria-hidden="true" /><span>词库</span></Link>
         <details className="study-mobile-more">
           <summary className="study-shell-nav-item"><Menu aria-hidden="true" /><span>更多</span></summary>
           <nav className="study-mobile-more-menu">
-            {NAV_GROUPS.slice(1).flatMap((group) => group.items).filter((item) => !item.disabled).map((item) => <NavItem key={`more-${item.label}`} item={item} pathname={pathname} source={source} />)}
+            {NAV_GROUPS.slice(1).flatMap((group) => group.items).filter((item) => !item.disabled).map((item) => <NavItem key={`more-${item.label}`} item={item} pathname={pathname} source={source} onIntent={preloadRoute} />)}
           </nav>
         </details>
       </nav>

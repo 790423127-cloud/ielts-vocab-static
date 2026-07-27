@@ -1093,6 +1093,20 @@ export default function ReadingGVocabPage() {
       onSpeakExample={() => speakText(item?.example, "sentence")}
       onSpeakSmall={(text) => speakText(text, "phrase")}
       onShuffle={shuffleStudy}
+      onPrev={() => goToStudyOffset(-1)}
+      onNext={() => goToStudyOffset(1)}
+      overviewWords={studyList.map(({ entry }) => ({
+        ...entry,
+        status: getRgStatus(entry, statusMap, resolveLearnMode(learnMode, entry, filter)),
+        favorite: isRgFavorite(entry, statusMap)
+      }))}
+      overviewStats={{
+        familiar: familiarCount,
+        unfamiliar: items.filter((entry) =>
+          getRgStatus(entry, statusMap, resolveLearnMode(learnMode, entry, filter)) === RG_STATUS.UNFAMILIAR
+        ).length,
+        todayReviewed: dailyCount
+      }}
       statsLine={`词库 ${meta.count.toLocaleString()} · 单词 ${meta.wordCount.toLocaleString()} · 词组 ${meta.phraseCount.toLocaleString()} · active ${meta.activeCount.toLocaleString()} · 参考 ${meta.referenceCount.toLocaleString()} · 同义可训 ${highQuizParas.length} · 词义熟悉 ${familiarCount} · 今日 ${dailyCount}${migrationInfo?.v4?.matchedCount != null ? ` · 迁移${migrationInfo.v4.matchedCount}` : ""}`}
       toast={toast}
       extraLinks={[

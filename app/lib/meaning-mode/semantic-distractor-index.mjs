@@ -1,72 +1,11 @@
 // Auto-generated semantic distractor index for Meaning Mode — v2 rich micro-domain.
 // Source: .static-export-cache/words.json (READ-ONLY)
 // Matched against: public/data/meaning-6000.json (READ-ONLY)
-// Generated: 2026-07-22T07:23:48.786Z
+// Generated: 2026-07-26T04:48:11.313Z
 // Fields: _posFamily, _semanticGroups, _confidence, _sourceFields
 // DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-semantic-distractor-index.mjs
 
 export const SEMANTIC_INDEX = [
-  {
-    "wordId": "word_5d80236c4600",
-    "word": "first",
-    "quizMeaningZh": "第一",
-    "meaningZh": "第一",
-    "meaningDetailedZh": "第一；首先",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 198.65,
-    "zipfFrequency": 6.11,
-    "scoreBreakdown": {
-      "zipf": 6.11,
-      "priority": 3,
-      "gBonus": 35,
-      "evidence": 8,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "工作",
-      "阅读",
-      "同义替换",
-      "c1~2",
-      "序数词",
-      "听力",
-      "p11"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic",
-      "work-economy",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
   {
     "wordId": "word_0e57569bdb14",
     "word": "already",
@@ -120,10 +59,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adverb",
     "_semanticGroups": [
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "time-sequence",
+      "sound-auditory",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -2031,8 +1969,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adjective",
     "_semanticGroups": [
       "work-economy",
-      "education-academic",
-      "communication-language"
+      "action-behavior",
+      "cause-effect",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -4101,11 +4040,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
+      "technology-science",
+      "action-behavior",
       "relation-possession",
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "change-process",
+      "cause-effect"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -5204,60 +5143,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_10517687ee0c",
-    "word": "all",
-    "quizMeaningZh": "所有的",
-    "meaningZh": "所有的",
-    "meaningDetailedZh": "所有的；全部的",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 178.8,
-    "zipfFrequency": 6.52,
-    "scoreBreakdown": {
-      "zipf": 6.52,
-      "priority": 1,
-      "gBonus": 35,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "社会",
-      "工作"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "relation-possession",
-      "society-culture",
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_52b43951bc72",
     "word": "forward",
     "quizMeaningZh": "向前",
@@ -5614,65 +5499,6 @@ export const SEMANTIC_INDEX = [
       "arts-entertainment",
       "work-economy",
       "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_3bbc9ad96500",
-    "word": "ago",
-    "quizMeaningZh": "以前",
-    "meaningZh": "以前",
-    "meaningDetailedZh": "以前",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adverb",
-    "difficulty": "基础高频",
-    "selectionScore": 178.3,
-    "zipfFrequency": 5.42,
-    "scoreBreakdown": {
-      "zipf": 5.42,
-      "priority": 2,
-      "gBonus": 30,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 8
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "工作",
-      "旅行",
-      "高频听力原文词",
-      "听力原文110~149次",
-      "听力",
-      "p8"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adverb",
-    "_semanticGroups": [
-      "education-academic",
-      "work-economy",
-      "movement-travel",
       "communication-language"
     ],
     "_confidence": "high",
@@ -6873,69 +6699,6 @@ export const SEMANTIC_INDEX = [
       "health-body",
       "environment-nature",
       "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_61ccad19a5e4",
-    "word": "end",
-    "quizMeaningZh": "结束",
-    "meaningZh": "结束",
-    "meaningDetailedZh": "结束，终点；结束",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 177.2,
-    "zipfFrequency": 5.68,
-    "scoreBreakdown": {
-      "zipf": 5.68,
-      "priority": 3,
-      "gBonus": 25,
-      "evidence": 7,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "工作",
-      "社会",
-      "阅读",
-      "同义替换",
-      "c1~2",
-      "听力",
-      "p13"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "time-sequence",
-      "education-academic",
-      "work-economy",
-      "society-culture",
       "communication-language"
     ],
     "_confidence": "high",
@@ -9042,65 +8805,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_f733f54ac445",
-    "word": "cost",
-    "quizMeaningZh": "成本",
-    "meaningZh": "成本",
-    "meaningDetailedZh": "成本；花费",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 175.6,
-    "zipfFrequency": 5.24,
-    "scoreBreakdown": {
-      "zipf": 5.24,
-      "priority": 3,
-      "gBonus": 31,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "消费",
-      "工作",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词5次",
-      "听力",
-      "p2",
-      "p7"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_189428343e7e",
     "word": "visit",
     "quizMeaningZh": "访问",
@@ -10698,68 +10402,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_877889fd9050",
-    "word": "baby",
-    "quizMeaningZh": "婴儿",
-    "meaningZh": "婴儿",
-    "meaningDetailedZh": "婴儿；宝宝",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 174.9,
-    "zipfFrequency": 5.26,
-    "scoreBreakdown": {
-      "zipf": 5.26,
-      "priority": 2,
-      "gBonus": 35,
-      "evidence": 8,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "健康",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①",
-      "阅读",
-      "同义替换",
-      "c3~4",
-      "list17",
-      "list88"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "health-body",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_cfce50304f85",
     "word": "chance",
     "quizMeaningZh": "机会",
@@ -11016,73 +10658,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_3abde6132f9d",
-    "word": "useful",
-    "quizMeaningZh": "有用的",
-    "meaningZh": "有用的",
-    "meaningDetailedZh": "有用的",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 174.8,
-    "zipfFrequency": 4.72,
-    "scoreBreakdown": {
-      "zipf": 4.72,
-      "priority": 3,
-      "gBonus": 35,
-      "evidence": 8,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "高频听力原文词",
-      "听力原文110~149次",
-      "阅读高频词",
-      "63~71次",
-      "雅思写作词库",
-      "15_质量价值重要性与效果_56条",
-      "阅读",
-      "同义替换",
-      "c1~2",
-      "list13",
-      "list85",
-      "听力",
-      "p2",
-      "p6"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -12958,64 +12533,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_a3e1c7a7b80f",
-    "word": "hit",
-    "quizMeaningZh": "打",
-    "meaningZh": "打",
-    "meaningDetailedZh": "打；击；碰撞",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 173.55,
-    "zipfFrequency": 5.37,
-    "scoreBreakdown": {
-      "zipf": 5.37,
-      "priority": 2,
-      "gBonus": 30,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "社会",
-      "健康",
-      "高频听力原文词",
-      "听力原文18次",
-      "阅读高频词",
-      "34~35次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "society-culture",
-      "health-body",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_008a4e96940e",
     "word": "safety",
     "quizMeaningZh": "安全",
@@ -13449,61 +12966,6 @@ export const SEMANTIC_INDEX = [
       "technology-science",
       "action-behavior",
       "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_dc2180fcdb13",
-    "word": "class",
-    "quizMeaningZh": "班级",
-    "meaningZh": "班级",
-    "meaningDetailedZh": "班级；课；阶级",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 173.4,
-    "zipfFrequency": 5.36,
-    "scoreBreakdown": {
-      "zipf": 5.36,
-      "priority": 2,
-      "gBonus": 35,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "听力",
-      "p2"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
       "education-academic",
       "communication-language"
     ],
@@ -14437,63 +13899,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_d4547b06cc4a",
-    "word": "guy",
-    "quizMeaningZh": "家伙",
-    "meaningZh": "家伙",
-    "meaningDetailedZh": "家伙，小伙子",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 173,
-    "zipfFrequency": 5.4,
-    "scoreBreakdown": {
-      "zipf": 5.4,
-      "priority": 2,
-      "gBonus": 35,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "社会",
-      "工作",
-      "高频听力原文词",
-      "听力原文15次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "work-economy",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_15cf6f51c35b",
     "word": "obtain",
     "quizMeaningZh": "获得",
@@ -14746,11 +14151,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adverb",
     "_semanticGroups": [
+      "cause-effect",
       "action-behavior",
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "abstract-conceptual",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -15592,12 +14996,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "work-economy",
-      "education-academic",
-      "technology-science",
-      "communication-language"
+      "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -16470,67 +15871,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_96fdd1f0e20d",
-    "word": "date",
-    "quizMeaningZh": "日期",
-    "meaningZh": "日期",
-    "meaningDetailedZh": "日期；约会；定日期",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 172.3,
-    "zipfFrequency": 5.22,
-    "scoreBreakdown": {
-      "zipf": 5.22,
-      "priority": 2,
-      "gBonus": 35,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "工作",
-      "家庭",
-      "高频听力原文词",
-      "听力原文110~149次",
-      "阅读",
-      "list1",
-      "list72"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "time-sequence",
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_6ffe86e71a91",
     "word": "village",
     "quizMeaningZh": "村庄",
@@ -17350,61 +16690,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_6546fd94944e",
-    "word": "why",
-    "quizMeaningZh": "为什么",
-    "meaningZh": "为什么",
-    "meaningDetailedZh": "为什么",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adverb",
-    "difficulty": "基础高频",
-    "selectionScore": 171.95,
-    "zipfFrequency": 5.93,
-    "scoreBreakdown": {
-      "zipf": 5.93,
-      "priority": 2,
-      "gBonus": 18,
-      "evidence": 6,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 8
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "生活高频",
-      "阅读",
-      "同义替换",
-      "c3~4"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adverb",
-    "_semanticGroups": [
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -18290,63 +17575,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_ce446bdcf172",
-    "word": "fun",
-    "quizMeaningZh": "乐趣",
-    "meaningZh": "乐趣",
-    "meaningDetailedZh": "乐趣；有趣的事",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 171.5,
-    "zipfFrequency": 5.3,
-    "scoreBreakdown": {
-      "zipf": 5.3,
-      "priority": 2,
-      "gBonus": 35,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "社会",
-      "旅行",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次⑩"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "movement-travel",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_807b072bea7b",
     "word": "overall",
     "quizMeaningZh": "总的来说",
@@ -18783,63 +18011,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "action-behavior",
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_64e11a5497fc",
-    "word": "add",
-    "quizMeaningZh": "添加",
-    "meaningZh": "添加",
-    "meaningDetailedZh": "添加",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 171.35,
-    "zipfFrequency": 5.09,
-    "scoreBreakdown": {
-      "zipf": 5.09,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "消费",
-      "工作",
-      "高频听力原文词",
-      "听力原文75~89次",
-      "听力",
-      "p9"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "verb",
-    "_semanticGroups": [
       "work-economy",
       "education-academic",
       "communication-language"
@@ -19719,10 +18890,13 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "society-culture",
       "education-academic",
+      "technology-science",
       "work-economy",
-      "communication-language"
+      "change-process",
+      "action-behavior",
+      "abstract-conceptual",
+      "society-culture"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -19851,11 +19025,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "cause-effect",
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "cognition-opinion",
+      "change-process",
+      "action-behavior",
+      "relation-possession",
+      "communication-language",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -20160,11 +19335,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adverb",
     "_semanticGroups": [
-      "work-economy",
-      "technology-science",
-      "movement-travel",
-      "education-academic",
-      "communication-language"
+      "time-sequence",
+      "quantity-measurement",
+      "movement-travel"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -20603,9 +19776,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "communication-language",
       "work-economy",
-      "education-academic",
-      "communication-language"
+      "action-behavior",
+      "relation-possession"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -22054,65 +21228,6 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adverb",
     "_semanticGroups": [
-      "society-culture",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_2880e7f7ca7e",
-    "word": "cool",
-    "quizMeaningZh": "凉爽",
-    "meaningZh": "凉爽",
-    "meaningDetailedZh": "凉爽；酷",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 170.25,
-    "zipfFrequency": 5.15,
-    "scoreBreakdown": {
-      "zipf": 5.15,
-      "priority": 2,
-      "gBonus": 30,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "健康",
-      "社会",
-      "高频听力原文词",
-      "听力原文32~35次",
-      "阅读",
-      "list9",
-      "list80"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "health-body",
       "society-culture",
       "education-academic",
       "communication-language"
@@ -24688,61 +23803,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "education-academic",
       "work-economy",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_56fe2c5453ac",
-    "word": "job",
-    "quizMeaningZh": "工作",
-    "meaningZh": "工作",
-    "meaningDetailedZh": "工作；职位",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 169.5,
-    "zipfFrequency": 5.5,
-    "scoreBreakdown": {
-      "zipf": 5.5,
-      "priority": 1,
-      "gBonus": 35,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "工作",
-      "阅读",
-      "同义替换",
-      "c1~2"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic",
       "communication-language"
     ],
     "_confidence": "high",
@@ -27976,8 +27036,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "education-academic",
-      "communication-language"
+      "quantity-measurement"
     ],
     "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -28660,9 +27719,10 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "work-economy",
       "relation-possession",
-      "technology-science",
-      "education-academic",
-      "communication-language"
+      "time-sequence",
+      "change-process",
+      "action-behavior",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -31615,62 +30675,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_7745ef79a072",
-    "word": "club",
-    "quizMeaningZh": "俱乐部",
-    "meaningZh": "俱乐部",
-    "meaningDetailedZh": "俱乐部；社团",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 167,
-    "zipfFrequency": 5.2,
-    "scoreBreakdown": {
-      "zipf": 5.2,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "社会",
-      "社区",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词6次",
-      "阅读高频词",
-      "13次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_55c0451c2079",
     "word": "completely",
     "quizMeaningZh": "完全地",
@@ -31721,12 +30725,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adverb",
     "_semanticGroups": [
-      "work-economy",
-      "movement-travel",
-      "education-academic",
-      "communication-language"
+      "quantity-measurement"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -32787,10 +31788,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adverb",
     "_semanticGroups": [
+      "cognition-opinion",
+      "change-process",
+      "cause-effect",
+      "action-behavior",
       "abstract-conceptual",
-      "work-economy",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -33989,65 +32992,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_5cf9dbc99582",
-    "word": "art",
-    "quizMeaningZh": "艺术",
-    "meaningZh": "艺术",
-    "meaningDetailedZh": "艺术",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 166.35,
-    "zipfFrequency": 5.29,
-    "scoreBreakdown": {
-      "zipf": 5.29,
-      "priority": 2,
-      "gBonus": 25,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 16,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "社会",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词10次及以上",
-      "听力",
-      "p4"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "arts-entertainment",
-      "education-academic",
-      "society-culture",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_57eaba8d957d",
     "word": "article",
     "quizMeaningZh": "文章",
@@ -34872,63 +33816,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_3a5021b463df",
-    "word": "hair",
-    "quizMeaningZh": "头发",
-    "meaningZh": "头发",
-    "meaningDetailedZh": "头发",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 166.2,
-    "zipfFrequency": 5.08,
-    "scoreBreakdown": {
-      "zipf": 5.08,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "家庭",
-      "社会",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次①",
-      "阅读",
-      "list10",
-      "list81"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -41544,65 +40431,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_8e12102ca4bc",
-    "word": "ball",
-    "quizMeaningZh": "球",
-    "meaningZh": "球",
-    "meaningDetailedZh": "球",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 164.6,
-    "zipfFrequency": 5.04,
-    "scoreBreakdown": {
-      "zipf": 5.04,
-      "priority": 2,
-      "gBonus": 30,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "社会",
-      "健康",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次①",
-      "阅读",
-      "list26",
-      "list97"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "health-body",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_0a7c5b5fc720",
     "word": "structure",
     "quizMeaningZh": "结构",
@@ -41982,64 +40810,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_7f7f08be5364",
-    "word": "fourth",
-    "quizMeaningZh": "第四",
-    "meaningZh": "第四",
-    "meaningDetailedZh": "第四",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 164.45,
-    "zipfFrequency": 4.83,
-    "scoreBreakdown": {
-      "zipf": 4.83,
-      "priority": 3,
-      "gBonus": 21,
-      "evidence": 7,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "教育",
-      "高频听力原文词",
-      "听力原文15次",
-      "阅读",
-      "list31",
-      "list102",
-      "序数词"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_e75e45a2b87d",
     "word": "funding",
     "quizMeaningZh": "资金",
@@ -42210,12 +40980,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "health-body",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "environment-nature",
+      "quality-attribute"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -42778,63 +41546,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_c1dca7cfb5a0",
-    "word": "brown",
-    "quizMeaningZh": "棕色的",
-    "meaningZh": "棕色的",
-    "meaningDetailedZh": "棕色的",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 164.15,
-    "zipfFrequency": 5.01,
-    "scoreBreakdown": {
-      "zipf": 5.01,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "消费",
-      "高频听力原文词",
-      "听力原文46~52次",
-      "阅读高频词",
-      "24次",
-      "阅读",
-      "list57",
-      "list128"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -44321,11 +43032,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "technology-science",
+      "action-behavior",
       "relation-possession",
-      "society-culture",
-      "work-economy",
-      "education-academic",
-      "communication-language"
+      "change-process",
+      "cause-effect",
+      "quality-attribute"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -45206,66 +43918,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_4c8a3142b573",
-    "word": "copy",
-    "quizMeaningZh": "副本",
-    "meaningZh": "副本",
-    "meaningDetailedZh": "副本；复制",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 163.55,
-    "zipfFrequency": 4.77,
-    "scoreBreakdown": {
-      "zipf": 4.77,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 8,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "工作",
-      "教育",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①",
-      "阅读",
-      "同义替换",
-      "c9~10",
-      "list25",
-      "list96"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_601abda828b0",
     "word": "journal",
     "quizMeaningZh": "期刊",
@@ -45708,61 +44360,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_3080db0651e0",
-    "word": "second",
-    "quizMeaningZh": "第二",
-    "meaningZh": "第二",
-    "meaningDetailedZh": "第二；秒",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 163.45,
-    "zipfFrequency": 5.63,
-    "scoreBreakdown": {
-      "zipf": 5.63,
-      "priority": 1,
-      "gBonus": 25,
-      "evidence": 6,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "雅思写作词库",
-      "09_时间过程顺序与阶段_40条",
-      "序数词"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "time-sequence",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_ee89d601de12",
     "word": "novel",
     "quizMeaningZh": "新颖的",
@@ -45889,12 +44486,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "quality-attribute",
       "society-culture",
-      "work-economy",
-      "technology-science",
-      "education-academic",
-      "communication-language"
+      "abstract-conceptual",
+      "quantity-measurement",
+      "change-process",
+      "cause-effect",
+      "relation-possession"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -46707,10 +45304,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
+      "technology-science",
+      "time-sequence",
+      "change-process",
+      "quality-attribute",
       "housing-shelter",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -47350,65 +45949,6 @@ export const SEMANTIC_INDEX = [
       "society-culture",
       "communication-language",
       "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_46e2662e18e4",
-    "word": "hide",
-    "quizMeaningZh": "隐藏",
-    "meaningZh": "隐藏",
-    "meaningDetailedZh": "隐藏",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 163.1,
-    "zipfFrequency": 4.54,
-    "scoreBreakdown": {
-      "zipf": 4.54,
-      "priority": 2,
-      "gBonus": 30,
-      "evidence": 7,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "社会",
-      "高频听力原文词",
-      "听力原文21~22次",
-      "阅读",
-      "同义替换",
-      "c7~8"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "visual-spatial",
-      "society-culture",
-      "education-academic",
-      "communication-language"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -48597,63 +47137,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_b1b170a70024",
-    "word": "beach",
-    "quizMeaningZh": "海滩",
-    "meaningZh": "海滩",
-    "meaningDetailedZh": "海滩",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 162.8,
-    "zipfFrequency": 4.92,
-    "scoreBreakdown": {
-      "zipf": 4.92,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "旅行",
-      "环境",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次⑥",
-      "阅读高频词",
-      "28~30次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "environment-nature",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_fc7f824f8972",
     "word": "impact",
     "quizMeaningZh": "影响",
@@ -48951,9 +47434,13 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "work-economy",
+      "action-behavior",
+      "environment-nature",
+      "relation-possession",
+      "cause-effect",
       "education-academic"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -51905,63 +50392,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_bf55677c35aa",
-    "word": "foot",
-    "quizMeaningZh": "脚",
-    "meaningZh": "脚",
-    "meaningDetailedZh": "脚；英尺",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 162.05,
-    "zipfFrequency": 4.87,
-    "scoreBreakdown": {
-      "zipf": 4.87,
-      "priority": 2,
-      "gBonus": 30,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "健康",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①",
-      "阅读",
-      "list16",
-      "list88"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "health-body",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_2d60798e8481",
     "word": "occur",
     "quizMeaningZh": "发生",
@@ -52821,12 +51251,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adverb",
     "_semanticGroups": [
       "relation-possession",
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "quality-attribute"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -53882,13 +52309,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "verb",
     "_semanticGroups": [
-      "time-sequence",
-      "education-academic",
-      "work-economy",
-      "society-culture",
-      "communication-language"
+      "time-sequence"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -54615,11 +53038,17 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "visual-spatial",
-      "work-economy",
-      "society-culture",
+      "cognition-opinion",
+      "education-academic",
       "communication-language",
-      "education-academic"
+      "technology-science",
+      "society-culture",
+      "work-economy",
+      "time-sequence",
+      "change-process",
+      "action-behavior",
+      "quality-attribute",
+      "visual-spatial"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -56122,10 +54551,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "verb",
     "_semanticGroups": [
+      "time-sequence",
+      "action-behavior",
       "movement-travel",
-      "work-economy",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -62112,65 +60541,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_155dbd175970",
-    "word": "boss",
-    "quizMeaningZh": "老板",
-    "meaningZh": "老板",
-    "meaningDetailedZh": "老板",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 159.4,
-    "zipfFrequency": 4.76,
-    "scoreBreakdown": {
-      "zipf": 4.76,
-      "priority": 2,
-      "gBonus": 30,
-      "evidence": 7,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "工作",
-      "高频听力原文词",
-      "听力原文7次①",
-      "阅读高频词",
-      "7次①",
-      "阅读",
-      "同义替换",
-      "c1~2"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_89bb7906f704",
     "word": "connection",
     "quizMeaningZh": "连接",
@@ -65258,8 +63628,8 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "work-economy",
       "action-behavior",
-      "education-academic",
-      "communication-language"
+      "time-sequence",
+      "change-process"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -66240,8 +64610,7 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "emotion-affect",
       "work-economy",
-      "education-academic",
-      "communication-language"
+      "action-behavior"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -66479,62 +64848,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_4e0ab357b145",
-    "word": "map",
-    "quizMeaningZh": "地图",
-    "meaningZh": "地图",
-    "meaningDetailedZh": "地图；映射",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 158.4,
-    "zipfFrequency": 4.76,
-    "scoreBreakdown": {
-      "zipf": 4.76,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 5,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "旅行",
-      "交通",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词7次",
-      "阅读高频词",
-      "27次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic"
     ],
     "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -72206,61 +70519,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_70c3a01ac47e",
-    "word": "kid",
-    "quizMeaningZh": "小孩",
-    "meaningZh": "小孩",
-    "meaningDetailedZh": "小孩",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 156.85,
-    "zipfFrequency": 4.99,
-    "scoreBreakdown": {
-      "zipf": 4.99,
-      "priority": 1,
-      "gBonus": 30,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "教育",
-      "阅读",
-      "同义替换",
-      "c3~4"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_d1521176b39f",
     "word": "preserve",
     "quizMeaningZh": "保护",
@@ -75630,9 +73888,8 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "relation-possession",
-      "health-body",
-      "education-academic",
-      "communication-language"
+      "society-culture",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -75811,63 +74068,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_0b33322d2b02",
-    "word": "classroom",
-    "quizMeaningZh": "教室",
-    "meaningZh": "教室",
-    "meaningDetailedZh": "教室",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 156.25,
-    "zipfFrequency": 4.15,
-    "scoreBreakdown": {
-      "zipf": 4.15,
-      "priority": 2,
-      "gBonus": 35,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "教育",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次⑧",
-      "阅读",
-      "list22",
-      "list93"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -77552,60 +75752,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_f125509e96e3",
-    "word": "police",
-    "quizMeaningZh": "警察",
-    "meaningZh": "警察",
-    "meaningDetailedZh": "警察；警方",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 155.95,
-    "zipfFrequency": 5.33,
-    "scoreBreakdown": {
-      "zipf": 5.33,
-      "priority": 1,
-      "gBonus": 31,
-      "evidence": 4,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "法律",
-      "社会",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词5次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_f3b209571dca",
     "word": "honest",
     "quizMeaningZh": "诚实的",
@@ -77900,65 +76046,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adjective",
     "_semanticGroups": [
       "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_7a705aceb073",
-    "word": "welcome",
-    "quizMeaningZh": "欢迎",
-    "meaningZh": "欢迎",
-    "meaningDetailedZh": "欢迎",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 155.85,
-    "zipfFrequency": 4.99,
-    "scoreBreakdown": {
-      "zipf": 4.99,
-      "priority": 2,
-      "gBonus": 20,
-      "evidence": 6,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "旅行",
-      "社区",
-      "高频听力原文词",
-      "听力原文150次及以上",
-      "阅读",
-      "list42",
-      "list113"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "movement-travel",
-      "society-culture",
       "education-academic",
       "communication-language"
     ],
@@ -79897,11 +77984,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "health-body",
       "food-nutrition",
+      "abstract-conceptual",
       "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -84221,10 +82308,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adverb",
     "_semanticGroups": [
       "education-academic",
-      "work-economy",
       "communication-language"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -84281,63 +82367,6 @@ export const SEMANTIC_INDEX = [
       "health-body",
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_6943149811e9",
-    "word": "gym",
-    "quizMeaningZh": "健身房",
-    "meaningZh": "健身房",
-    "meaningDetailedZh": "健身房；体育馆",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 154.45,
-    "zipfFrequency": 4.43,
-    "scoreBreakdown": {
-      "zipf": 4.43,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "健康",
-      "社区",
-      "高频听力原文词",
-      "听力原文25~27次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "health-body",
-      "arts-entertainment",
-      "society-culture",
-      "communication-language",
-      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -85301,11 +83330,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
-      "environment-nature",
+      "time-sequence",
+      "quality-attribute",
+      "abstract-conceptual",
       "society-culture",
-      "education-academic",
-      "communication-language"
+      "work-economy",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -86382,63 +84412,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "movement-travel",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_bf2edcffbb90",
-    "word": "sing",
-    "quizMeaningZh": "唱歌",
-    "meaningZh": "唱歌",
-    "meaningDetailedZh": "唱歌",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 154.1,
-    "zipfFrequency": 4.54,
-    "scoreBreakdown": {
-      "zipf": 4.54,
-      "priority": 1,
-      "gBonus": 30,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "社会",
-      "阅读高频词",
-      "16次",
-      "阅读",
-      "list9",
-      "list80"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "society-culture",
       "education-academic",
       "communication-language"
     ],
@@ -87869,11 +85842,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "housing-shelter",
       "education-academic",
       "communication-language"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -88099,10 +86071,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "technology-science",
+      "change-process",
+      "quality-attribute"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -90646,10 +88617,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "work-economy",
-      "education-academic"
+      "communication-language",
+      "change-process",
+      "action-behavior",
+      "quality-attribute"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -92947,10 +90920,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
+      "emotion-affect",
       "society-culture",
-      "education-academic",
-      "communication-language"
+      "action-behavior"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -93139,10 +91111,14 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "cognition-opinion",
       "education-academic",
-      "work-economy",
+      "communication-language",
       "technology-science",
-      "communication-language"
+      "society-culture",
+      "work-economy",
+      "quantity-measurement",
+      "quality-attribute"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -95092,9 +93068,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
+      "time-sequence",
+      "action-behavior",
+      "work-economy",
       "education-academic"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -98786,65 +96765,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_5ebdc88b0afd",
-    "word": "hill",
-    "quizMeaningZh": "小山",
-    "meaningZh": "小山",
-    "meaningDetailedZh": "小山",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 151.3,
-    "zipfFrequency": 4.82,
-    "scoreBreakdown": {
-      "zipf": 4.82,
-      "priority": 2,
-      "gBonus": 20,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "环境",
-      "旅行",
-      "高频听力原文词",
-      "听力原文32~35次",
-      "阅读",
-      "list36",
-      "list107"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "movement-travel",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_243421761959",
     "word": "typically",
     "quizMeaningZh": "典型地",
@@ -101285,62 +99205,6 @@ export const SEMANTIC_INDEX = [
       "change-process",
       "work-economy",
       "technology-science",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_7c71ddc12e0c",
-    "word": "cash",
-    "quizMeaningZh": "现金",
-    "meaningZh": "现金",
-    "meaningDetailedZh": "现金",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 150.8,
-    "zipfFrequency": 4.92,
-    "scoreBreakdown": {
-      "zipf": 4.92,
-      "priority": 2,
-      "gBonus": 20,
-      "evidence": 5,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "消费",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词3次①",
-      "阅读高频词",
-      "20次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
       "education-academic",
       "communication-language"
     ],
@@ -103841,11 +101705,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "education-academic",
+      "action-behavior",
       "abstract-conceptual",
-      "work-economy",
-      "society-culture",
-      "communication-language"
+      "education-academic",
+      "work-economy"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -106608,11 +104471,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "time-sequence",
+      "change-process",
+      "action-behavior",
       "relation-possession",
-      "work-economy",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -106970,8 +104833,10 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "verb",
     "_semanticGroups": [
       "work-economy",
-      "education-academic",
-      "communication-language"
+      "action-behavior",
+      "change-process",
+      "abstract-conceptual",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -107083,64 +104948,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "education-academic",
       "work-economy",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_cfe150403118",
-    "word": "boat",
-    "quizMeaningZh": "船",
-    "meaningZh": "船",
-    "meaningDetailedZh": "船",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 149.65,
-    "zipfFrequency": 4.71,
-    "scoreBreakdown": {
-      "zipf": 4.71,
-      "priority": 2,
-      "gBonus": 20,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "旅行",
-      "交通",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词3次①",
-      "阅读",
-      "list63",
-      "list134"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic",
       "communication-language"
     ],
     "_confidence": "high",
@@ -109921,11 +107728,12 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "verb",
     "_semanticGroups": [
       "emotion-affect",
+      "arts-entertainment",
       "work-economy",
-      "health-body",
-      "technology-science",
-      "education-academic",
-      "communication-language"
+      "quantity-measurement",
+      "change-process",
+      "action-behavior",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -110516,63 +108324,6 @@ export const SEMANTIC_INDEX = [
       "society-culture",
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_4fefca12598e",
-    "word": "autumn",
-    "quizMeaningZh": "秋天",
-    "meaningZh": "秋天",
-    "meaningDetailedZh": "秋天",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 148.9,
-    "zipfFrequency": 4.26,
-    "scoreBreakdown": {
-      "zipf": 4.26,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "环境",
-      "旅行",
-      "高频听力原文词",
-      "听力原文10次",
-      "阅读高频词",
-      "14次①",
-      "季节"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "movement-travel",
-      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -114767,9 +112518,8 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "verb",
     "_semanticGroups": [
       "movement-travel",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "arts-entertainment",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -116108,62 +113858,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_9c4fdfdee071",
-    "word": "afternoon",
-    "quizMeaningZh": "下午",
-    "meaningZh": "下午",
-    "meaningDetailedZh": "下午",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 147.8,
-    "zipfFrequency": 4.72,
-    "scoreBreakdown": {
-      "zipf": 4.72,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "工作",
-      "旅行",
-      "家庭",
-      "阅读",
-      "list143",
-      "list144"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "movement-travel",
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_55d9067ef2bf",
     "word": "attached",
     "quizMeaningZh": "附上的",
@@ -116615,57 +114309,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_39184c4e10aa",
-    "word": "fifth",
-    "quizMeaningZh": "第五",
-    "meaningZh": "第五",
-    "meaningDetailedZh": "第五；五分之一",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 147.7,
-    "zipfFrequency": 4.78,
-    "scoreBreakdown": {
-      "zipf": 4.78,
-      "priority": 1,
-      "gBonus": 21,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "教育",
-      "序数词"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -119390,8 +117033,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "society-culture",
-      "work-economy",
+      "action-behavior",
+      "quality-attribute",
       "education-academic",
       "communication-language"
     ],
@@ -119859,9 +117502,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "sound-auditory",
       "education-academic",
-      "communication-language"
+      "time-sequence",
+      "change-process",
+      "action-behavior"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -120789,11 +118433,14 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adverb",
     "_semanticGroups": [
-      "quality-attribute",
       "society-culture",
-      "work-economy",
-      "education-academic",
-      "communication-language"
+      "abstract-conceptual",
+      "quantity-measurement",
+      "change-process",
+      "cause-effect",
+      "relation-possession",
+      "quality-attribute",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -121842,64 +119489,6 @@ export const SEMANTIC_INDEX = [
       "health-body",
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_5c057d0b32d2",
-    "word": "sky",
-    "quizMeaningZh": "天空",
-    "meaningZh": "天空",
-    "meaningDetailedZh": "天空",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 146.8,
-    "zipfFrequency": 4.72,
-    "scoreBreakdown": {
-      "zipf": 4.72,
-      "priority": 2,
-      "gBonus": 20,
-      "evidence": 5,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "环境",
-      "旅行",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词4次①",
-      "阅读高频词",
-      "28~30次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "movement-travel",
-      "communication-language",
-      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -124609,12 +122198,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "housing-shelter",
-      "society-culture",
-      "communication-language",
-      "education-academic"
+      "relation-possession",
+      "housing-shelter"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -125337,65 +122924,6 @@ export const SEMANTIC_INDEX = [
       "society-culture",
       "communication-language",
       "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_1163aaab11b0",
-    "word": "dutch",
-    "quizMeaningZh": "荷兰的",
-    "meaningZh": "荷兰的",
-    "meaningDetailedZh": "荷兰的；荷兰人",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 146.15,
-    "zipfFrequency": 4.41,
-    "scoreBreakdown": {
-      "zipf": 4.41,
-      "priority": 2,
-      "gBonus": 20,
-      "evidence": 6,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "旅行",
-      "社会",
-      "高频听力原文词",
-      "听力原文6次①",
-      "阅读",
-      "list61",
-      "list132"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "movement-travel",
-      "society-culture",
-      "education-academic",
-      "communication-language"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -126846,10 +124374,13 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "health-body",
+      "environment-nature",
+      "relation-possession",
       "clothing-appearance",
       "education-academic"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -127316,60 +124847,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_c4c59e4e15ff",
-    "word": "sixth",
-    "quizMeaningZh": "第六",
-    "meaningZh": "第六",
-    "meaningDetailedZh": "第六",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 145.7,
-    "zipfFrequency": 4.38,
-    "scoreBreakdown": {
-      "zipf": 4.38,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 6,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "社会",
-      "教育",
-      "阅读",
-      "list34",
-      "list105",
-      "序数词"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -128358,11 +125835,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
-      "education-academic",
-      "communication-language"
+      "general"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -130883,63 +128358,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_8a5e72a5aed9",
-    "word": "dry",
-    "quizMeaningZh": "干的",
-    "meaningZh": "干的",
-    "meaningDetailedZh": "“dry”常见含义为：干的；弄干。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 145.1,
-    "zipfFrequency": 4.74,
-    "scoreBreakdown": {
-      "zipf": 4.74,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 7,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "环境",
-      "健康",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词6次",
-      "阅读",
-      "同义替换",
-      "c9~10"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "environment-nature",
-      "health-body",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_5cc5139f2a4c",
     "word": "expire",
     "quizMeaningZh": "到期",
@@ -131040,59 +128458,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_163a0c534c0b",
-    "word": "ninth",
-    "quizMeaningZh": "第九",
-    "meaningZh": "第九",
-    "meaningDetailedZh": "第九",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 145.05,
-    "zipfFrequency": 4.07,
-    "scoreBreakdown": {
-      "zipf": 4.07,
-      "priority": 1,
-      "gBonus": 31,
-      "evidence": 5,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "教育",
-      "社会",
-      "序数词"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic",
-      "society-culture",
-      "communication-language"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -132865,63 +130230,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_d6016a756499",
-    "word": "card",
-    "quizMeaningZh": "卡片",
-    "meaningZh": "卡片",
-    "meaningDetailedZh": "“card”常见含义为：卡片。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 144.6,
-    "zipfFrequency": 5.04,
-    "scoreBreakdown": {
-      "zipf": 5.04,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "消费",
-      "公共服务",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词10次及以上",
-      "阅读高频词",
-      "20次",
-      "阅读",
-      "list8",
-      "list79"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -135080,61 +132388,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_124312b3cd6d",
-    "word": "businessman",
-    "quizMeaningZh": "商人",
-    "meaningZh": "商人",
-    "meaningDetailedZh": "商人",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 144.25,
-    "zipfFrequency": 3.95,
-    "scoreBreakdown": {
-      "zipf": 3.95,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "工作",
-      "阅读",
-      "list60",
-      "list131",
-      "听力",
-      "p12"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_90703295159a",
     "word": "perfume",
     "quizMeaningZh": "香水",
@@ -136036,9 +133289,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "cognition-opinion",
+      "communication-language",
       "education-academic",
-      "work-economy",
-      "communication-language"
+      "relation-possession",
+      "work-economy"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -140653,9 +137908,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "sound-auditory",
-      "housing-shelter",
       "work-economy",
+      "housing-shelter",
       "education-academic",
       "communication-language"
     ],
@@ -141599,12 +138853,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "verb",
     "_semanticGroups": [
-      "movement-travel",
-      "work-economy",
-      "education-academic",
-      "communication-language"
+      "time-sequence",
+      "action-behavior"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -145182,9 +142434,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "time-sequence",
-      "work-economy",
-      "education-academic",
-      "technology-science"
+      "change-process",
+      "action-behavior",
+      "quality-attribute"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -147563,62 +144815,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_72570ec63621",
-    "word": "cooking",
-    "quizMeaningZh": "烹饪",
-    "meaningZh": "烹饪",
-    "meaningDetailedZh": "烹饪；做饭",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 141.75,
-    "zipfFrequency": 4.45,
-    "scoreBreakdown": {
-      "zipf": 4.45,
-      "priority": 2,
-      "gBonus": 19,
-      "evidence": 6,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词4次②",
-      "阅读高频词",
-      "36~37次",
-      "阅读",
-      "list40",
-      "list111"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "food-nutrition",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -152083,109 +149279,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_f0c1e00dc974",
-    "word": "girl",
-    "quizMeaningZh": "女孩",
-    "meaningZh": "女孩",
-    "meaningDetailedZh": "“girl”常见含义为：女孩，姑娘。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 140.7,
-    "zipfFrequency": 5.38,
-    "scoreBreakdown": {
-      "zipf": 5.38,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "社会",
-      "高频听力原文词",
-      "听力原文41~45次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_cf2bd2f09996",
-    "word": "numbers",
-    "quizMeaningZh": "数字",
-    "meaningZh": "数字",
-    "meaningDetailedZh": "数字；数量；号码",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 140.7,
-    "zipfFrequency": 4.98,
-    "scoreBreakdown": {
-      "zipf": 4.98,
-      "priority": 1,
-      "gBonus": 19,
-      "evidence": 4,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词5次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "technology-science",
-      "quantity-measurement",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_2b22aa8b7230",
     "word": "understood",
     "quizMeaningZh": "理解",
@@ -156103,10 +153196,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "environment-nature",
+      "housing-shelter",
       "education-academic",
       "communication-language"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -157053,60 +154148,6 @@ export const SEMANTIC_INDEX = [
       "environment-nature",
       "technology-science",
       "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_d942822da1e8",
-    "word": "age",
-    "quizMeaningZh": "年龄",
-    "meaningZh": "年龄",
-    "meaningDetailedZh": "“age”常见含义为：年龄；时代。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 139.8,
-    "zipfFrequency": 5.32,
-    "scoreBreakdown": {
-      "zipf": 5.32,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "健康",
-      "社会",
-      "雅思写作词库",
-      "26_基础学术抽象名词_154"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "time-sequence",
-      "society-culture",
-      "health-body",
       "communication-language"
     ],
     "_confidence": "high",
@@ -159316,58 +156357,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_eace101a5e77",
-    "word": "wife",
-    "quizMeaningZh": "妻子",
-    "meaningZh": "妻子",
-    "meaningDetailedZh": "“wife”常见含义为：妻子。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 139.45,
-    "zipfFrequency": 5.23,
-    "scoreBreakdown": {
-      "zipf": 5.23,
-      "priority": 1,
-      "gBonus": 31,
-      "evidence": 4,
-      "collocation": 2,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "高频听力原文词",
-      "听力原文32~35次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_3e21ae25c4e2",
     "word": "essay",
     "quizMeaningZh": "文章",
@@ -159585,13 +156574,15 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "relation-possession",
-      "quality-attribute",
-      "work-economy",
       "society-culture",
+      "abstract-conceptual",
       "technology-science",
-      "education-academic",
-      "communication-language"
+      "action-behavior",
+      "relation-possession",
+      "quantity-measurement",
+      "change-process",
+      "cause-effect",
+      "quality-attribute"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -162456,12 +159447,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adverb",
     "_semanticGroups": [
-      "technology-science",
-      "society-culture",
-      "communication-language",
       "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -165423,60 +162411,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_0885ff9f77fb",
-    "word": "fix",
-    "quizMeaningZh": "修理",
-    "meaningZh": "修理",
-    "meaningDetailedZh": "“fix”常见含义为：修理；固定。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 138.25,
-    "zipfFrequency": 4.75,
-    "scoreBreakdown": {
-      "zipf": 4.75,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 6,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "工作",
-      "住房",
-      "阅读",
-      "同义替换",
-      "c3~4"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "work-economy",
-      "housing-shelter",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_3bbcbf93e07b",
     "word": "depth",
     "quizMeaningZh": "深度",
@@ -166607,62 +163541,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_c343bc6852db",
-    "word": "twentieth",
-    "quizMeaningZh": "第二十",
-    "meaningZh": "第二十",
-    "meaningDetailedZh": "第二十(的)",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 138,
-    "zipfFrequency": 3.8,
-    "scoreBreakdown": {
-      "zipf": 3.8,
-      "priority": 2,
-      "gBonus": 21,
-      "evidence": 6,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "教育",
-      "历史",
-      "阅读",
-      "list59",
-      "list130",
-      "序数词"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "writingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -169563,13 +166441,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "relation-possession",
-      "housing-shelter",
       "work-economy",
-      "education-academic",
-      "communication-language"
+      "relation-possession"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -170112,6 +166987,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adverb",
     "_semanticGroups": [
+      "time-sequence",
       "education-academic"
     ],
     "_confidence": "medium",
@@ -172007,7 +168883,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "movement-travel",
+      "society-culture",
       "education-academic"
     ],
     "_confidence": "medium",
@@ -174313,11 +171189,13 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "society-culture",
       "work-economy",
       "action-behavior",
-      "society-culture",
-      "education-academic",
-      "communication-language"
+      "technology-science",
+      "time-sequence",
+      "change-process",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -176734,12 +173612,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "work-economy",
-      "action-behavior",
-      "time-sequence",
-      "education-academic"
+      "time-sequence"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -178594,57 +175469,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_63cb1205e171",
-    "word": "box",
-    "quizMeaningZh": "盒子",
-    "meaningZh": "盒子",
-    "meaningDetailedZh": "“box”常见含义为：盒子；拳击。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 135.6,
-    "zipfFrequency": 5.04,
-    "scoreBreakdown": {
-      "zipf": 5.04,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "消费",
-      "工作",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词4次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_420de1da99f1",
     "word": "sacred",
     "quizMeaningZh": "神圣的",
@@ -179295,62 +176119,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_5fccc6c46528",
-    "word": "bread",
-    "quizMeaningZh": "面包",
-    "meaningZh": "面包",
-    "meaningDetailedZh": "“bread”常见含义为：面包。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 135.5,
-    "zipfFrequency": 4.5,
-    "scoreBreakdown": {
-      "zipf": 4.5,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "家庭",
-      "消费",
-      "高频听力原文词",
-      "听力原文13次",
-      "阅读高频词",
-      "8次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "food-nutrition",
-      "society-culture",
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -180595,57 +177363,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_f55e84dba333",
-    "word": "busy",
-    "quizMeaningZh": "忙碌的",
-    "meaningZh": "忙碌的",
-    "meaningDetailedZh": "“busy”常见含义为：忙碌的。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 135.25,
-    "zipfFrequency": 4.75,
-    "scoreBreakdown": {
-      "zipf": 4.75,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "工作",
-      "高频听力原文词",
-      "听力原文53~61次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "work-economy",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -182364,56 +179081,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_c3f6e9b1b49c",
-    "word": "singing",
-    "quizMeaningZh": "歌唱",
-    "meaningZh": "歌唱",
-    "meaningDetailedZh": "歌唱；唱歌",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 134.85,
-    "zipfFrequency": 4.59,
-    "scoreBreakdown": {
-      "zipf": 4.59,
-      "priority": 1,
-      "gBonus": 19,
-      "evidence": 4,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充",
-      "高频听力原文词",
-      "听力原文9次②"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "sound-auditory",
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_09a2ea77a483",
     "word": "warning",
     "quizMeaningZh": "警告",
@@ -183543,56 +180210,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_fbba4fd14deb",
-    "word": "boy",
-    "quizMeaningZh": "男孩",
-    "meaningZh": "男孩",
-    "meaningDetailedZh": "“boy”常见含义为：男孩。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 134.55,
-    "zipfFrequency": 5.17,
-    "scoreBreakdown": {
-      "zipf": 5.17,
-      "priority": 1,
-      "gBonus": 31,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "家庭",
-      "教育"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_b00e7121560f",
     "word": "simultaneously",
     "quizMeaningZh": "同时地",
@@ -183976,59 +180593,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_9f5b7ead8440",
-    "word": "neck",
-    "quizMeaningZh": "脖子",
-    "meaningZh": "脖子",
-    "meaningDetailedZh": "“neck”常见含义为：脖子；颈部。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 134.45,
-    "zipfFrequency": 4.63,
-    "scoreBreakdown": {
-      "zipf": 4.63,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 5,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "健康",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次①",
-      "阅读高频词",
-      "10次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "health-body",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -185940,11 +182504,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "society-culture",
-      "relation-possession",
+      "work-economy",
+      "time-sequence",
+      "quality-attribute",
       "housing-shelter",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -187473,63 +184037,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_fd3cb043bcae",
-    "word": "bear",
-    "quizMeaningZh": "熊",
-    "meaningZh": "熊",
-    "meaningDetailedZh": "“bear”常见含义为：熊。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 133.65,
-    "zipfFrequency": 4.71,
-    "scoreBreakdown": {
-      "zipf": 4.71,
-      "priority": 2,
-      "gBonus": 16,
-      "evidence": 7,
-      "collocation": 6,
-      "difficulty": 16,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "环境",
-      "旅行",
-      "高频听力原文词",
-      "听力原文90~109次",
-      "阅读",
-      "同义替换",
-      "c3~4"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "movement-travel",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_5f7ec305977f",
     "word": "fantastic",
     "quizMeaningZh": "极好的",
@@ -187955,58 +184462,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_d8e822aa8d74",
-    "word": "chat",
-    "quizMeaningZh": "聊天",
-    "meaningZh": "聊天",
-    "meaningDetailedZh": "“chat”常见含义为：聊天。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 133.55,
-    "zipfFrequency": 4.57,
-    "scoreBreakdown": {
-      "zipf": 4.57,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "科技",
-      "社交",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "technology-science",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -190011,10 +186466,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adjective",
     "_semanticGroups": [
       "time-sequence",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -190779,9 +187233,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "communication-language",
       "society-culture",
       "education-academic",
-      "communication-language"
+      "relation-possession"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -194214,10 +190669,9 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "society-culture",
       "abstract-conceptual",
-      "work-economy",
-      "health-body",
-      "education-academic",
-      "communication-language"
+      "quality-attribute",
+      "emotion-affect",
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -198368,9 +194822,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "verb",
     "_semanticGroups": [
-      "sound-auditory",
+      "communication-language",
       "technology-science",
-      "education-academic"
+      "quantity-measurement",
+      "change-process",
+      "cause-effect",
+      "sound-auditory"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -200652,12 +197109,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "sound-auditory",
       "work-economy",
-      "education-academic",
-      "communication-language"
+      "action-behavior"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -202449,61 +198904,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_b4098e614496",
-    "word": "boil",
-    "quizMeaningZh": "煮沸",
-    "meaningZh": "煮沸",
-    "meaningDetailedZh": "“boil”常见含义为：煮沸；煮。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 130.45,
-    "zipfFrequency": 3.83,
-    "scoreBreakdown": {
-      "zipf": 3.83,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "健康",
-      "家庭",
-      "消费",
-      "听力",
-      "p10"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "health-body",
-      "society-culture",
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_6c709bbf88c6",
     "word": "portray",
     "quizMeaningZh": "描绘",
@@ -204131,59 +200531,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "technology-science",
       "action-behavior",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_0d7317eb7911",
-    "word": "tea",
-    "quizMeaningZh": "茶",
-    "meaningZh": "茶",
-    "meaningDetailedZh": "“tea”常见含义为：茶。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 129.95,
-    "zipfFrequency": 4.73,
-    "scoreBreakdown": {
-      "zipf": 4.73,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "消费",
-      "旅行",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "food-nutrition",
-      "work-economy",
-      "movement-travel",
       "education-academic"
     ],
     "_confidence": "high",
@@ -206129,58 +202476,6 @@ export const SEMANTIC_INDEX = [
       "environment-nature",
       "food-nutrition",
       "sound-auditory",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_65fde9224838",
-    "word": "york",
-    "quizMeaningZh": "约克",
-    "meaningZh": "约克",
-    "meaningDetailedZh": "“york”常见含义为：约克（英国城市）。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 129.55,
-    "zipfFrequency": 5.37,
-    "scoreBreakdown": {
-      "zipf": 5.37,
-      "priority": 1,
-      "gBonus": 16,
-      "evidence": 5,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "旅行",
-      "阅读",
-      "list13",
-      "list84"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "movement-travel",
       "education-academic"
     ],
     "_confidence": "high",
@@ -209644,10 +205939,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "society-culture",
-      "work-economy",
+      "education-academic",
       "technology-science",
-      "education-academic"
+      "action-behavior"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -210295,60 +206589,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_332507473a34",
-    "word": "soap",
-    "quizMeaningZh": "肥皂",
-    "meaningZh": "肥皂",
-    "meaningDetailedZh": "“soap”常见含义为：肥皂。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 128.7,
-    "zipfFrequency": 4.18,
-    "scoreBreakdown": {
-      "zipf": 4.18,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 6,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "消费",
-      "高频听力原文词",
-      "听力原文19次",
-      "阅读",
-      "list6",
-      "list77"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -212064,10 +208304,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
+      "work-economy",
       "technology-science",
-      "education-academic"
+      "quantity-measurement",
+      "change-process"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -212333,64 +208575,6 @@ export const SEMANTIC_INDEX = [
       "environment-nature",
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_f44e194fe655",
-    "word": "sugar",
-    "quizMeaningZh": "糖",
-    "meaningZh": "糖",
-    "meaningDetailedZh": "“sugar”常见含义为：糖。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 128.2,
-    "zipfFrequency": 4.68,
-    "scoreBreakdown": {
-      "zipf": 4.68,
-      "priority": 2,
-      "gBonus": 16,
-      "evidence": 6,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "健康",
-      "消费",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词5次",
-      "阅读高频词",
-      "19次",
-      "阅读",
-      "list43",
-      "list114"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "health-body",
-      "work-economy",
-      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -213408,59 +209592,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "communication-language",
       "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_b1171bec59c7",
-    "word": "bike",
-    "quizMeaningZh": "自行车",
-    "meaningZh": "自行车",
-    "meaningDetailedZh": "“bike”常见含义为：自行车。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 127.95,
-    "zipfFrequency": 4.53,
-    "scoreBreakdown": {
-      "zipf": 4.53,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "交通",
-      "健康",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次⑥"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "health-body",
-      "communication-language",
       "education-academic"
     ],
     "_confidence": "high",
@@ -214606,10 +210737,7 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "relation-possession",
-      "work-economy",
-      "health-body",
-      "society-culture",
-      "communication-language",
+      "quality-attribute",
       "education-academic"
     ],
     "_confidence": "high",
@@ -218393,61 +214521,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_1699ee6ea8cd",
-    "word": "egg",
-    "quizMeaningZh": "鸡蛋",
-    "meaningZh": "鸡蛋",
-    "meaningDetailedZh": "“egg”常见含义为：鸡蛋，卵。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 126.9,
-    "zipfFrequency": 4.46,
-    "scoreBreakdown": {
-      "zipf": 4.46,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "健康",
-      "消费",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "health-body",
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_b4ac694549f3",
     "word": "optimism",
     "quizMeaningZh": "乐观主义",
@@ -218711,57 +214784,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_6dbc6763e91b",
-    "word": "deer",
-    "quizMeaningZh": "鹿",
-    "meaningZh": "鹿",
-    "meaningDetailedZh": "“deer”常见含义为：鹿。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 126.8,
-    "zipfFrequency": 4.12,
-    "scoreBreakdown": {
-      "zipf": 4.12,
-      "priority": 2,
-      "gBonus": 26,
-      "evidence": 5,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "环境",
-      "听力",
-      "p12"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -220973,105 +216995,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_22e268d71dd6",
-    "word": "dad",
-    "quizMeaningZh": "爸爸",
-    "meaningZh": "爸爸",
-    "meaningDetailedZh": "“dad”常见含义为：爸爸。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 126.25,
-    "zipfFrequency": 4.95,
-    "scoreBreakdown": {
-      "zipf": 4.95,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "家庭"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "communication-language"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_635a1a291caa",
-    "word": "fly",
-    "quizMeaningZh": "飞",
-    "meaningZh": "飞",
-    "meaningDetailedZh": "“fly”常见含义为：飞；乘飞机。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 126.25,
-    "zipfFrequency": 4.75,
-    "scoreBreakdown": {
-      "zipf": 4.75,
-      "priority": 1,
-      "gBonus": 16,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "旅行",
-      "交通",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词3次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_9f903f6dda01",
     "word": "legislation",
     "quizMeaningZh": "立法",
@@ -222289,58 +218212,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "work-economy",
       "action-behavior",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_7f838d6365fa",
-    "word": "arm",
-    "quizMeaningZh": "手臂",
-    "meaningZh": "手臂",
-    "meaningDetailedZh": "“arm”常见含义为：手臂；武装。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 125.95,
-    "zipfFrequency": 4.73,
-    "scoreBreakdown": {
-      "zipf": 4.73,
-      "priority": 1,
-      "gBonus": 20,
-      "evidence": 5,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "健康",
-      "阅读",
-      "剑19 Test 4 上（已修订）"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "health-body",
       "education-academic",
       "communication-language"
     ],
@@ -225964,59 +221835,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_c7fb01f3d845",
-    "word": "ice",
-    "quizMeaningZh": "冰",
-    "meaningZh": "冰",
-    "meaningDetailedZh": "“ice”常见含义为：冰。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 125,
-    "zipfFrequency": 5,
-    "scoreBreakdown": {
-      "zipf": 5,
-      "priority": 1,
-      "gBonus": 16,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "环境",
-      "旅行",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词4次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "movement-travel",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_983247cfeed6",
     "word": "layer",
     "quizMeaningZh": "层",
@@ -226410,54 +222228,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_c468ea41f289",
-    "word": "feet",
-    "quizMeaningZh": "脚",
-    "meaningZh": "脚",
-    "meaningDetailedZh": "“feet”的核心意思是“脚（复数）”。本词条按“noun”使用。例句提示：走了一整天,我的脚很疼。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 124.85,
-    "zipfFrequency": 4.99,
-    "scoreBreakdown": {
-      "zipf": 4.99,
-      "priority": 1,
-      "gBonus": 19,
-      "evidence": 4,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -229970,58 +225740,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_a89a410458db",
-    "word": "wine",
-    "quizMeaningZh": "葡萄酒",
-    "meaningZh": "葡萄酒",
-    "meaningDetailedZh": "“wine”常见含义为：葡萄酒。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 124.1,
-    "zipfFrequency": 4.74,
-    "scoreBreakdown": {
-      "zipf": 4.74,
-      "priority": 1,
-      "gBonus": 22,
-      "evidence": 4,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "消费",
-      "旅行",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "food-nutrition",
-      "work-economy",
-      "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_57e0f6f1148c",
     "word": "bathroom",
     "quizMeaningZh": "浴室",
@@ -230385,9 +226103,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "environment-nature",
+      "society-culture",
+      "relation-possession",
       "education-academic",
-      "communication-language"
+      "technology-science",
+      "environment-nature"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -231239,59 +226959,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "verb",
     "_semanticGroups": [
       "technology-science",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_d7ee8696d4f4",
-    "word": "song",
-    "quizMeaningZh": "歌曲",
-    "meaningZh": "歌曲",
-    "meaningDetailedZh": "“song”常见含义为：歌曲。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 123.9,
-    "zipfFrequency": 5.26,
-    "scoreBreakdown": {
-      "zipf": 5.26,
-      "priority": 1,
-      "gBonus": 13,
-      "evidence": 5,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "社会",
-      "阅读",
-      "list6",
-      "list77"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
       "education-academic",
       "communication-language"
     ],
@@ -232499,11 +228166,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "work-economy",
       "action-behavior",
       "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -232650,10 +228316,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "cognition-opinion",
-      "abstract-conceptual",
       "education-academic",
-      "technology-science"
+      "technology-science",
+      "environment-nature",
+      "quality-attribute"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -234597,59 +230263,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "environment-nature",
       "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_022b4f1b9005",
-    "word": "duck",
-    "quizMeaningZh": "鸭子",
-    "meaningZh": "鸭子",
-    "meaningDetailedZh": "“duck”常见含义为：鸭子；躲避。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 123.15,
-    "zipfFrequency": 4.21,
-    "scoreBreakdown": {
-      "zipf": 4.21,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "消费",
-      "家庭",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次⑥"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "society-culture",
-      "communication-language",
       "education-academic"
     ],
     "_confidence": "high",
@@ -237734,57 +233347,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_718095fd0faf",
-    "word": "aunt",
-    "quizMeaningZh": "阿姨",
-    "meaningZh": "阿姨",
-    "meaningDetailedZh": "“aunt”常见含义为：阿姨；姑妈；姨妈。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 122.4,
-    "zipfFrequency": 4.16,
-    "scoreBreakdown": {
-      "zipf": 4.16,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_61d8b7a2b381",
     "word": "recycling",
     "quizMeaningZh": "回收利用",
@@ -237941,52 +233503,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_19e685359b15",
-    "word": "says",
-    "quizMeaningZh": "说",
-    "meaningZh": "说",
-    "meaningDetailedZh": "“says”的核心意思是“说（第三人称单数）”。本词条按“verb”使用。例句提示：报告说经济正在好转。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "verb",
-    "difficulty": "中级核心",
-    "selectionScore": 122.35,
-    "zipfFrequency": 5.49,
-    "scoreBreakdown": {
-      "zipf": 5.49,
-      "priority": 0,
-      "gBonus": 19,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "communication-language",
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_5a97bb8dddd6",
     "word": "retrieve",
     "quizMeaningZh": "找回",
@@ -238089,57 +233605,6 @@ export const SEMANTIC_INDEX = [
       "society-culture",
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_93f65ed7553f",
-    "word": "orange",
-    "quizMeaningZh": "橙色",
-    "meaningZh": "橙色",
-    "meaningDetailedZh": "“orange”常见含义为：橙色；橙子。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 122.3,
-    "zipfFrequency": 4.62,
-    "scoreBreakdown": {
-      "zipf": 4.62,
-      "priority": 1,
-      "gBonus": 22,
-      "evidence": 4,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "消费",
-      "健康",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次⑪"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "health-body",
-      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -239641,57 +235106,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_212f85fa2099",
-    "word": "fox",
-    "quizMeaningZh": "狐狸",
-    "meaningZh": "狐狸",
-    "meaningDetailedZh": "“fox”常见含义为：狐狸。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 121.9,
-    "zipfFrequency": 4.66,
-    "scoreBreakdown": {
-      "zipf": 4.66,
-      "priority": 1,
-      "gBonus": 21,
-      "evidence": 4,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "reading"
-    ],
-    "topics": [
-      "环境",
-      "社会",
-      "阅读高频词",
-      "9次①"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -243226,58 +238640,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_296690b206c6",
-    "word": "app",
-    "quizMeaningZh": "应用程序",
-    "meaningZh": "应用程序",
-    "meaningDetailedZh": "“app”常见含义为：应用程序。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 120.9,
-    "zipfFrequency": 4.86,
-    "scoreBreakdown": {
-      "zipf": 4.86,
-      "priority": 1,
-      "gBonus": 25,
-      "evidence": 0,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "科技",
-      "消费"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "technology-science",
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_aac3508c4e5a",
     "word": "feat",
     "quizMeaningZh": "壮举",
@@ -243789,9 +239151,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "work-economy",
+      "action-behavior",
       "movement-travel",
-      "society-culture",
-      "education-academic"
+      "sound-auditory",
+      "arts-entertainment"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -247137,58 +242501,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_f527971aa77d",
-    "word": "leg",
-    "quizMeaningZh": "腿",
-    "meaningZh": "腿",
-    "meaningDetailedZh": "“leg”常见含义为：腿。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 119.9,
-    "zipfFrequency": 4.66,
-    "scoreBreakdown": {
-      "zipf": 4.66,
-      "priority": 1,
-      "gBonus": 16,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "健康",
-      "家庭",
-      "出现1次的答案词：听力目标分7分及以上重点掌握",
-      "答案词1次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "health-body",
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_9d9b20f02855",
     "word": "imbalance",
     "quizMeaningZh": "不平衡",
@@ -247439,56 +242751,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "communication-language",
       "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_46378b156935",
-    "word": "cook",
-    "quizMeaningZh": "烹饪",
-    "meaningZh": "烹饪",
-    "meaningDetailedZh": "“cook”常见含义为：烹饪；厨师。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 119.75,
-    "zipfFrequency": 4.65,
-    "scoreBreakdown": {
-      "zipf": 4.65,
-      "priority": 0,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "消费"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "food-nutrition",
-      "society-culture",
-      "work-economy",
-      "communication-language",
       "education-academic"
     ],
     "_confidence": "high",
@@ -250427,50 +245689,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_b62ff06acbb0",
-    "word": "days",
-    "quizMeaningZh": "天数",
-    "meaningZh": "天数",
-    "meaningDetailedZh": "“days”的核心意思是“天数；日子”。本词条按“noun”使用。例句提示：我在海滩度过了几天。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 119.15,
-    "zipfFrequency": 5.61,
-    "scoreBreakdown": {
-      "zipf": 5.61,
-      "priority": 0,
-      "gBonus": 19,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_9bf7bce7d531",
     "word": "dish",
     "quizMeaningZh": "盘子",
@@ -251707,54 +246925,6 @@ export const SEMANTIC_INDEX = [
       "quality-attribute",
       "work-economy",
       "society-culture",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_079d0cd5444e",
-    "word": "cry",
-    "quizMeaningZh": "哭",
-    "meaningZh": "哭",
-    "meaningDetailedZh": "“cry”常见含义为：哭；喊叫。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "verb",
-    "difficulty": "基础高频",
-    "selectionScore": 118.85,
-    "zipfFrequency": 4.59,
-    "scoreBreakdown": {
-      "zipf": 4.59,
-      "priority": 0,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 5
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "健康"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "verb",
-    "_semanticGroups": [
-      "sound-auditory",
-      "health-body",
       "education-academic",
       "communication-language"
     ],
@@ -253575,52 +248745,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_fafba1e1b9fd",
-    "word": "later",
-    "quizMeaningZh": "后来",
-    "meaningZh": "后来",
-    "meaningDetailedZh": "“later”常见含义为：后来；稍后。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adverb",
-    "difficulty": "基础高频",
-    "selectionScore": 118.35,
-    "zipfFrequency": 5.49,
-    "scoreBreakdown": {
-      "zipf": 5.49,
-      "priority": 0,
-      "gBonus": 9,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 8
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "生活高频"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adverb",
-    "_semanticGroups": [
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -256103,56 +251227,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_listening1179_fe31dae5ff64",
-    "word": "ATM",
-    "quizMeaningZh": "自动取款机",
-    "meaningZh": "自动取款机",
-    "meaningDetailedZh": "“ATM”在雅思听力中的常用含义是：自动取款机。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 117.75,
-    "zipfFrequency": 3.85,
-    "scoreBreakdown": {
-      "zipf": 3.85,
-      "priority": 2,
-      "gBonus": 31,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 13,
-      "source": 2,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "消费"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "writingPriority",
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "sound-auditory",
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_58fe5eaa2e80",
     "word": "variance",
     "quizMeaningZh": "差异",
@@ -256680,51 +251754,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_589a3e5d5f6a",
-    "word": "cup",
-    "quizMeaningZh": "杯子",
-    "meaningZh": "杯子",
-    "meaningDetailedZh": "“cup”常见含义为：杯子；奖杯。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 117.65,
-    "zipfFrequency": 5.11,
-    "scoreBreakdown": {
-      "zipf": 5.11,
-      "priority": 0,
-      "gBonus": 22,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "消费"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -257282,61 +252311,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_8ae07c987eb5",
-    "word": "soda",
-    "quizMeaningZh": "苏打水",
-    "meaningZh": "苏打水",
-    "meaningDetailedZh": "“soda”常见含义为：苏打水。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 117.6,
-    "zipfFrequency": 4.04,
-    "scoreBreakdown": {
-      "zipf": 4.04,
-      "priority": 1,
-      "gBonus": 26,
-      "evidence": 4,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "消费",
-      "健康",
-      "高频听力原文词",
-      "听力原文9次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "food-nutrition",
-      "work-economy",
-      "health-body",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_114a75d29f03",
     "word": "ceramics",
     "quizMeaningZh": "陶瓷工艺",
@@ -257380,9 +252354,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
       "technology-science",
-      "visual-spatial",
+      "clothing-appearance",
       "education-academic"
     ],
     "_confidence": "high",
@@ -257688,53 +252661,6 @@ export const SEMANTIC_INDEX = [
       "sound-auditory",
       "housing-shelter",
       "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_f689ca2d2a8a",
-    "word": "bus",
-    "quizMeaningZh": "公共汽车",
-    "meaningZh": "公共汽车",
-    "meaningDetailedZh": "“bus”常见含义为：公共汽车。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 117.45,
-    "zipfFrequency": 4.83,
-    "scoreBreakdown": {
-      "zipf": 4.83,
-      "priority": 0,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "交通"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic",
-      "communication-language"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -258462,56 +253388,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_excel_6e317bcd6839",
-    "word": "books",
-    "quizMeaningZh": "书",
-    "meaningZh": "书",
-    "meaningDetailedZh": "books: 书；“book”的复数；",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 117.25,
-    "zipfFrequency": 5.15,
-    "scoreBreakdown": {
-      "zipf": 5.15,
-      "priority": 2,
-      "gBonus": 9,
-      "evidence": 6,
-      "collocation": 0,
-      "difficulty": 13,
-      "source": -2,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "高频答案词：所有同学要求100%掌握",
-      "答案词7次",
-      "听力",
-      "p9"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -260698,7 +255574,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "sound-auditory",
+      "society-culture",
+      "work-economy",
+      "action-behavior",
       "education-academic",
       "communication-language"
     ],
@@ -262408,11 +257286,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "change-process",
       "cause-effect",
-      "society-culture",
-      "work-economy",
+      "relation-possession",
+      "quality-attribute",
       "education-academic",
-      "communication-language"
+      "society-culture"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -263333,7 +258212,7 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "technology-science",
-      "sound-auditory",
+      "quality-attribute",
       "education-academic"
     ],
     "_confidence": "high",
@@ -263588,55 +258467,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_383fc80c496f",
-    "word": "soccer",
-    "quizMeaningZh": "英式足球",
-    "meaningZh": "英式足球",
-    "meaningDetailedZh": "“soccer”常见含义为：英式足球。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 116.2,
-    "zipfFrequency": 4.48,
-    "scoreBreakdown": {
-      "zipf": 4.48,
-      "priority": 1,
-      "gBonus": 15,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "社会",
-      "高频听力原文词",
-      "听力原文12次"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -264443,7 +259273,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "sound-auditory",
+      "movement-travel",
+      "visual-spatial",
+      "quality-attribute",
       "abstract-conceptual",
       "work-economy",
       "education-academic",
@@ -265839,57 +260671,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_d10e174914df",
-    "word": "rome",
-    "quizMeaningZh": "罗马",
-    "meaningZh": "罗马",
-    "meaningDetailedZh": "“rome”常见含义为：罗马。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 115.75,
-    "zipfFrequency": 4.45,
-    "scoreBreakdown": {
-      "zipf": 4.45,
-      "priority": 1,
-      "gBonus": 16,
-      "evidence": 5,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "旅行",
-      "阅读",
-      "list2",
-      "list73"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -267719,9 +262500,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "housing-shelter",
-      "education-academic",
-      "communication-language"
+      "society-culture",
+      "action-behavior",
+      "time-sequence",
+      "change-process",
+      "relation-possession",
+      "work-economy"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -267815,11 +262599,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "cause-effect",
-      "action-behavior",
+      "visual-spatial",
       "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -268230,56 +263013,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_4a2fc953f5b7",
-    "word": "bin",
-    "quizMeaningZh": "垃圾桶",
-    "meaningZh": "垃圾桶",
-    "meaningDetailedZh": "“bin”常见含义为：垃圾桶，箱子。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 115.3,
-    "zipfFrequency": 4.22,
-    "scoreBreakdown": {
-      "zipf": 4.22,
-      "priority": 1,
-      "gBonus": 27,
-      "evidence": 0,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "writing"
-    ],
-    "topics": [
-      "环境",
-      "社区"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "society-culture",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -270026,56 +264759,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_excel_063bffb4b52b",
-    "word": "ways",
-    "quizMeaningZh": "方式",
-    "meaningZh": "方式",
-    "meaningDetailedZh": "ways: 方式；方法；方面；路线",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 114.9,
-    "zipfFrequency": 5.06,
-    "scoreBreakdown": {
-      "zipf": 5.06,
-      "priority": 2,
-      "gBonus": 9,
-      "evidence": 5,
-      "collocation": 0,
-      "difficulty": 13,
-      "source": -2,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "听力",
-      "p9"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "action-behavior",
-      "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -272628,54 +267311,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_110fc0005b62",
-    "word": "korean",
-    "quizMeaningZh": "韩国人",
-    "meaningZh": "韩国人",
-    "meaningDetailedZh": "“korean”常见含义为：韩国人；韩国的。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 114.35,
-    "zipfFrequency": 4.49,
-    "scoreBreakdown": {
-      "zipf": 4.49,
-      "priority": 0,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "旅行",
-      "社会"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "movement-travel",
-      "society-culture",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_ed3ebe29da0c",
     "word": "liable",
     "quizMeaningZh": "有责任的",
@@ -274869,8 +269504,8 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adverb",
     "_semanticGroups": [
-      "society-culture",
-      "communication-language"
+      "quantity-measurement",
+      "education-academic"
     ],
     "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -275381,102 +270016,6 @@ export const SEMANTIC_INDEX = [
       "work-economy",
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_176f4e517991",
-    "word": "cute",
-    "quizMeaningZh": "可爱的",
-    "meaningZh": "可爱的",
-    "meaningDetailedZh": "“cute”常见含义为：可爱的。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 113.75,
-    "zipfFrequency": 4.65,
-    "scoreBreakdown": {
-      "zipf": 4.65,
-      "priority": 0,
-      "gBonus": 21,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "消费"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "abstract-conceptual",
-      "society-culture",
-      "work-economy",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_663ba0822fa0",
-    "word": "pet",
-    "quizMeaningZh": "宠物",
-    "meaningZh": "宠物",
-    "meaningDetailedZh": "“pet”常见含义为：宠物。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 113.75,
-    "zipfFrequency": 4.45,
-    "scoreBreakdown": {
-      "zipf": 4.45,
-      "priority": 0,
-      "gBonus": 30,
-      "evidence": 0,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "家庭"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "communication-language",
-      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -276133,51 +270672,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_ee0c59950530",
-    "word": "sad",
-    "quizMeaningZh": "伤心的",
-    "meaningZh": "伤心的",
-    "meaningDetailedZh": "“sad”常见含义为：伤心的。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 113.6,
-    "zipfFrequency": 4.84,
-    "scoreBreakdown": {
-      "zipf": 4.84,
-      "priority": 0,
-      "gBonus": 21,
-      "evidence": 0,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "speaking"
-    ],
-    "topics": [
-      "家庭"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "society-culture",
-      "communication-language"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -279080,6 +273574,7 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "quality-attribute",
       "health-body",
       "society-culture",
       "education-academic"
@@ -279381,52 +273876,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_fb48c4aa69bd",
-    "word": "bag",
-    "quizMeaningZh": "袋子",
-    "meaningZh": "袋子",
-    "meaningDetailedZh": "“bag”常见含义为：袋子。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 112.85,
-    "zipfFrequency": 4.79,
-    "scoreBreakdown": {
-      "zipf": 4.79,
-      "priority": 0,
-      "gBonus": 22,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "writing"
-    ],
-    "topics": [
-      "消费",
-      "旅行"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "movement-travel"
     ],
     "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -280544,50 +274993,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_b8701cbf5bf9",
-    "word": "girls",
-    "quizMeaningZh": "女孩",
-    "meaningZh": "女孩",
-    "meaningDetailedZh": "“girls”的核心意思是“女孩；女儿”。本词条按“noun”使用。例句提示：女孩们在公园里玩。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 112.55,
-    "zipfFrequency": 5.17,
-    "scoreBreakdown": {
-      "zipf": 5.17,
-      "priority": 0,
-      "gBonus": 19,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_52d6b1ef86f2",
     "word": "fraud",
     "quizMeaningZh": "欺诈",
@@ -280735,50 +275140,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_fb9400b9c30b",
-    "word": "closed",
-    "quizMeaningZh": "关闭的",
-    "meaningZh": "关闭的",
-    "meaningDetailedZh": "“closed”的核心意思是“关闭的；封闭的”。本词条按“adjective”使用。例句提示：这家商店周日关门。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adjective",
-    "difficulty": "中级核心",
-    "selectionScore": 112.5,
-    "zipfFrequency": 4.9,
-    "scoreBreakdown": {
-      "zipf": 4.9,
-      "priority": 0,
-      "gBonus": 19,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -280934,56 +275295,6 @@ export const SEMANTIC_INDEX = [
       "technology-science",
       "education-academic",
       "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_ce90a2271a97",
-    "word": "ear",
-    "quizMeaningZh": "耳朵",
-    "meaningZh": "耳朵",
-    "meaningDetailedZh": "“ear”常见含义为：耳朵。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 112.45,
-    "zipfFrequency": 4.43,
-    "scoreBreakdown": {
-      "zipf": 4.43,
-      "priority": 1,
-      "gBonus": 12,
-      "evidence": 4,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "健康",
-      "高频答案词：所有同学要求100%掌握",
-      "答案词2次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "sound-auditory",
-      "health-body",
-      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -281742,7 +276053,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adjective",
     "_semanticGroups": [
       "time-sequence",
-      "sound-auditory",
       "education-academic",
       "communication-language"
     ],
@@ -281999,7 +276309,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "health-body",
       "environment-nature",
-      "sound-auditory",
       "education-academic",
       "communication-language"
     ],
@@ -283901,7 +278210,8 @@ export const SEMANTIC_INDEX = [
       "education-academic",
       "action-behavior",
       "work-economy",
-      "communication-language"
+      "technology-science",
+      "quantity-measurement"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -284254,54 +278564,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_a119c2297afd",
-    "word": "tenth",
-    "quizMeaningZh": "第十的",
-    "meaningZh": "第十的",
-    "meaningDetailedZh": "“tenth”常见含义为：第十的。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adjective",
-    "difficulty": "基础高频",
-    "selectionScore": 111.8,
-    "zipfFrequency": 3.92,
-    "scoreBreakdown": {
-      "zipf": 3.92,
-      "priority": 0,
-      "gBonus": 22,
-      "evidence": 5,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 4
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "教育",
-      "住房",
-      "序数词"
-    ],
-    "sourceEvidence": [
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adjective",
-    "_semanticGroups": [
-      "education-academic",
-      "housing-shelter"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -284797,9 +279059,11 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adverb",
     "_semanticGroups": [
       "work-economy",
-      "society-culture"
+      "cause-effect",
+      "action-behavior",
+      "communication-language"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -286003,52 +280267,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_b7c13d508639",
-    "word": "desk",
-    "quizMeaningZh": "书桌",
-    "meaningZh": "书桌",
-    "meaningDetailedZh": "“desk”常见含义为：书桌；办公桌。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 111.45,
-    "zipfFrequency": 4.43,
-    "scoreBreakdown": {
-      "zipf": 4.43,
-      "priority": 0,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "工作"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -289728,56 +283946,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_876399a2e139",
-    "word": "toy",
-    "quizMeaningZh": "玩具",
-    "meaningZh": "玩具",
-    "meaningDetailedZh": "“toy”常见含义为：玩具。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 110.5,
-    "zipfFrequency": 4.3,
-    "scoreBreakdown": {
-      "zipf": 4.3,
-      "priority": 0,
-      "gBonus": 30,
-      "evidence": 0,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "消费"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "work-economy",
-      "communication-language",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_4c3a7d4e1d46",
     "word": "aftermath",
     "quizMeaningZh": "后果",
@@ -291000,53 +285168,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_7b26f77e6ef8",
-    "word": "washington",
-    "quizMeaningZh": "华盛顿",
-    "meaningZh": "华盛顿",
-    "meaningDetailedZh": "“washington”常见含义为：华盛顿。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 110.2,
-    "zipfFrequency": 5.08,
-    "scoreBreakdown": {
-      "zipf": 5.08,
-      "priority": 0,
-      "gBonus": 16,
-      "evidence": 0,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "旅行",
-      "政府"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -296032,53 +290153,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_593937da9f16",
-    "word": "russian",
-    "quizMeaningZh": "俄罗斯人",
-    "meaningZh": "俄罗斯人",
-    "meaningDetailedZh": "“russian”常见含义为：俄罗斯人，俄语，俄罗斯的。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 109.15,
-    "zipfFrequency": 5.01,
-    "scoreBreakdown": {
-      "zipf": 5.01,
-      "priority": 0,
-      "gBonus": 16,
-      "evidence": 0,
-      "collocation": 5,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "旅行",
-      "教育"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_24647d89a27b",
     "word": "formally",
     "quizMeaningZh": "正式地",
@@ -297104,52 +291178,6 @@ export const SEMANTIC_INDEX = [
       "cause-effect"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_bd0fb9d9b10e",
-    "word": "cake",
-    "quizMeaningZh": "蛋糕",
-    "meaningZh": "蛋糕",
-    "meaningDetailedZh": "“cake”常见含义为：蛋糕。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 108.95,
-    "zipfFrequency": 4.53,
-    "scoreBreakdown": {
-      "zipf": 4.53,
-      "priority": 0,
-      "gBonus": 22,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "家庭",
-      "社交"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -299654,52 +293682,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_e14ae1516220",
-    "word": "beer",
-    "quizMeaningZh": "啤酒",
-    "meaningZh": "啤酒",
-    "meaningDetailedZh": "“beer”常见含义为：啤酒。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 108.5,
-    "zipfFrequency": 4.7,
-    "scoreBreakdown": {
-      "zipf": 4.7,
-      "priority": 0,
-      "gBonus": 21,
-      "evidence": 0,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "speaking"
-    ],
-    "topics": [
-      "消费"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "food-nutrition",
-      "work-economy",
-      "communication-language"
-    ],
-    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -302959,55 +296941,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_6e4fb05b2085",
-    "word": "pan",
-    "quizMeaningZh": "平底锅",
-    "meaningZh": "平底锅",
-    "meaningDetailedZh": "“pan”常见含义为：平底锅。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 107.85,
-    "zipfFrequency": 4.39,
-    "scoreBreakdown": {
-      "zipf": 4.39,
-      "priority": 0,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "家庭",
-      "消费"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "work-economy",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_84173912a92c",
     "word": "lit",
     "quizMeaningZh": "点燃的",
@@ -304482,10 +298415,12 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "noun",
     "_semanticGroups": [
+      "society-culture",
       "work-economy",
       "abstract-conceptual",
+      "environment-nature",
       "relation-possession",
-      "society-culture"
+      "education-academic"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -306152,10 +300087,14 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "work-economy",
+      "cognition-opinion",
+      "cause-effect",
+      "action-behavior",
+      "relation-possession",
+      "society-culture",
       "education-academic"
     ],
-    "_confidence": "medium",
+    "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -306738,9 +300677,11 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "noun",
     "_semanticGroups": [
-      "work-economy",
+      "cognition-opinion",
+      "communication-language",
       "education-academic",
-      "communication-language"
+      "work-economy",
+      "relation-possession"
     ],
     "_confidence": "high",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
@@ -307371,10 +301312,9 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "society-culture",
-      "education-academic",
-      "communication-language"
+      "education-academic"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -309360,52 +303300,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_6cca4220b2c8",
-    "word": "grandma",
-    "quizMeaningZh": "奶奶",
-    "meaningZh": "奶奶",
-    "meaningDetailedZh": "“grandma”常见含义为：奶奶；外婆。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 106.65,
-    "zipfFrequency": 4.11,
-    "scoreBreakdown": {
-      "zipf": 4.11,
-      "priority": 0,
-      "gBonus": 26,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "writing",
-      "speaking"
-    ],
-    "topics": [
-      "家庭"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "society-culture",
-      "communication-language"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_7008a673ce6a",
     "word": "nutrient",
     "quizMeaningZh": "营养素",
@@ -309454,51 +303348,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_309e5069339a",
-    "word": "o'clock",
-    "quizMeaningZh": "...点钟",
-    "meaningZh": "...点钟",
-    "meaningDetailedZh": "“o'clock”常见含义为：...点钟。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "adverb",
-    "difficulty": "基础高频",
-    "selectionScore": 106.6,
-    "zipfFrequency": 4.04,
-    "scoreBreakdown": {
-      "zipf": 4.04,
-      "priority": 0,
-      "gBonus": 22,
-      "evidence": 0,
-      "collocation": 3,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 8
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "交通"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "adverb",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -310574,11 +304423,9 @@ export const SEMANTIC_INDEX = [
     "legacy4500": false,
     "_posFamily": "adjective",
     "_semanticGroups": [
-      "work-economy",
-      "sound-auditory",
-      "education-academic"
+      "work-economy"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -310673,54 +304520,6 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "adjective",
     "_semanticGroups": [
       "action-behavior",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_d752b9d04068",
-    "word": "apple",
-    "quizMeaningZh": "苹果",
-    "meaningZh": "苹果",
-    "meaningDetailedZh": "“apple”常见含义为：苹果。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 106.4,
-    "zipfFrequency": 4.76,
-    "scoreBreakdown": {
-      "zipf": 4.76,
-      "priority": 0,
-      "gBonus": 16,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "speaking"
-    ],
-    "topics": [
-      "健康",
-      "生活高频"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "health-body",
       "education-academic",
       "communication-language"
     ],
@@ -311443,52 +305242,6 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "sound-auditory",
       "work-economy",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_1600740c91b0",
-    "word": "ends",
-    "quizMeaningZh": "结束",
-    "meaningZh": "结束",
-    "meaningDetailedZh": "“ends”的核心意思是“结束；末端（复数）”。本词条按“noun”使用。例句提示：把绳子的两端系在一起形成一个环。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 106.25,
-    "zipfFrequency": 4.75,
-    "scoreBreakdown": {
-      "zipf": 4.75,
-      "priority": 0,
-      "gBonus": 19,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "time-sequence",
-      "cause-effect",
       "education-academic"
     ],
     "_confidence": "high",
@@ -314327,55 +308080,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_b6e346593e5a",
-    "word": "madam",
-    "quizMeaningZh": "女士",
-    "meaningZh": "女士",
-    "meaningDetailedZh": "“madam”常见含义为：女士；夫人。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 105.85,
-    "zipfFrequency": 3.59,
-    "scoreBreakdown": {
-      "zipf": 3.59,
-      "priority": 1,
-      "gBonus": 20,
-      "evidence": 4,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 4,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "writing"
-    ],
-    "topics": [
-      "生活高频",
-      "高频听力原文词",
-      "听力原文7次①"
-    ],
-    "sourceEvidence": [
-      "listeningPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_listening1179_96d0955b7496",
     "word": "meteorological",
     "quizMeaningZh": "气象学的",
@@ -315432,52 +309136,6 @@ export const SEMANTIC_INDEX = [
       "education-academic"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_82ac205b3b54",
-    "word": "midnight",
-    "quizMeaningZh": "午夜",
-    "meaningZh": "午夜",
-    "meaningDetailedZh": "“midnight”常见含义为：午夜。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 105.65,
-    "zipfFrequency": 4.31,
-    "scoreBreakdown": {
-      "zipf": 4.31,
-      "priority": 0,
-      "gBonus": 22,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "交通",
-      "旅行"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -318798,50 +312456,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_cc237d980879",
-    "word": "legs",
-    "quizMeaningZh": "腿",
-    "meaningZh": "腿",
-    "meaningDetailedZh": "“legs”的核心意思是“腿（复数）”。本词条按“noun”使用。例句提示：他坐着时翘起了二郎腿。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 105.05,
-    "zipfFrequency": 4.67,
-    "scoreBreakdown": {
-      "zipf": 4.67,
-      "priority": 0,
-      "gBonus": 19,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_d21f2433ff83",
     "word": "testing",
     "quizMeaningZh": "测试；检验",
@@ -321812,54 +315426,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_557cd26810e8",
-    "word": "kent",
-    "quizMeaningZh": "肯特",
-    "meaningZh": "肯特",
-    "meaningDetailedZh": "“kent”常见含义为：肯特（地名）。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 104.55,
-    "zipfFrequency": 4.17,
-    "scoreBreakdown": {
-      "zipf": 4.17,
-      "priority": 0,
-      "gBonus": 27,
-      "evidence": 0,
-      "collocation": 2,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "writing"
-    ],
-    "topics": [
-      "旅行",
-      "社区"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "movement-travel",
-      "society-culture",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_listening1179_ec752d1d10b6",
     "word": "algebra",
     "quizMeaningZh": "代数",
@@ -323063,12 +316629,10 @@ export const SEMANTIC_INDEX = [
     "legacy4500": true,
     "_posFamily": "verb",
     "_semanticGroups": [
-      "housing-shelter",
-      "work-economy",
-      "education-academic",
-      "communication-language"
+      "environment-nature",
+      "action-behavior"
     ],
-    "_confidence": "high",
+    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -325669,51 +319233,6 @@ export const SEMANTIC_INDEX = [
       "communication-language"
     ],
     "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
-    "wordId": "word_95d8ab2c9f67",
-    "word": "faces",
-    "quizMeaningZh": "脸",
-    "meaningZh": "脸",
-    "meaningDetailedZh": "“faces”的核心意思是“脸（复数）”。本词条按“noun”使用。例句提示：孩子们脸上洋溢着快乐。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "中级核心",
-    "selectionScore": 103.85,
-    "zipfFrequency": 4.59,
-    "scoreBreakdown": {
-      "zipf": 4.59,
-      "priority": 0,
-      "gBonus": 19,
-      "evidence": 0,
-      "collocation": 0,
-      "difficulty": 16,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading"
-    ],
-    "topics": [
-      "实用补充"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "emotion-affect",
-      "education-academic"
-    ],
-    "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
@@ -331062,53 +324581,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_c6d5de5a1472",
-    "word": "cow",
-    "quizMeaningZh": "母牛",
-    "meaningZh": "母牛",
-    "meaningDetailedZh": "“cow”常见含义为：母牛；奶牛。",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 103.1,
-    "zipfFrequency": 4.14,
-    "scoreBreakdown": {
-      "zipf": 4.14,
-      "priority": 0,
-      "gBonus": 22,
-      "evidence": 0,
-      "collocation": 6,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening"
-    ],
-    "topics": [
-      "环境",
-      "健康"
-    ],
-    "sourceEvidence": [
-      "ieltsUse",
-      "topics",
-      "collocations"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "environment-nature",
-      "health-body",
-      "education-academic"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_a312f9f8c121",
     "word": "pepper",
     "quizMeaningZh": "胡椒",
@@ -333067,6 +326539,5824 @@ export const SEMANTIC_INDEX = [
     "_semanticGroups": [
       "society-culture",
       "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_4a7a5ff9e356",
+    "word": "little",
+    "quizMeaningZh": "小的；很少的",
+    "meaningZh": "小的；很少的",
+    "meaningDetailedZh": "小的；很少的",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "基础高频",
+    "selectionScore": 56.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 31.25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 3,
+      "comprehensionImportance": 55,
+      "contextFrequency": 93,
+      "coverageValue": 93,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "speaking"
+    ],
+    "topics": [
+      "家庭",
+      "消费",
+      "阅读",
+      "同义替换",
+      "听力",
+      "p3",
+      "p7",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "society-culture",
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_d46ed415789f",
+    "word": "abnormality",
+    "quizMeaningZh": "异常；畸形",
+    "meaningZh": "异常；畸形",
+    "meaningDetailedZh": "异常；畸形",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 55.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 30,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 76,
+      "coverageValue": 85,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "雅思写作词库",
+      "16_问题风险限制错误与负面_48条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "health-body",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_eee641f56c3d",
+    "word": "telecommute",
+    "quizMeaningZh": "远程办公",
+    "meaningZh": "远程办公",
+    "meaningDetailedZh": "远程办公",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 54.6,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 30,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 91,
+      "coverageValue": 64,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "出现1次的答案词：听力目标分7分及以上重点掌握",
+      "答案词1次⑫",
+      "写作",
+      "Task 2 - 工作题材",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_0c16baf0eded",
+    "word": "japanese",
+    "quizMeaningZh": "日本的；日语；日本人",
+    "meaningZh": "日本的；日语；日本人",
+    "meaningDetailedZh": "日本的；日语；日本人",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "基础高频",
+    "selectionScore": 54.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 32.5,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 66,
+      "coverageValue": 85,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "旅行",
+      "科技",
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "movement-travel",
+      "technology-science",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_320aa710f409",
+    "word": "italian",
+    "quizMeaningZh": "意大利的；意大利人",
+    "meaningZh": "意大利的；意大利人",
+    "meaningDetailedZh": "意大利的；意大利人",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "基础高频",
+    "selectionScore": 54,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 78,
+      "coverageValue": 89,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "speaking"
+    ],
+    "topics": [
+      "旅行",
+      "社会",
+      "阅读",
+      "list42",
+      "list113",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "movement-travel",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_dab0dee63ad3",
+    "word": "france",
+    "quizMeaningZh": "法国",
+    "meaningZh": "法国",
+    "meaningDetailedZh": "法国",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 53.8,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 22.5,
+      "listening": 5,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 82,
+      "coverageValue": 89,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "speaking"
+    ],
+    "topics": [
+      "旅行",
+      "文化",
+      "阅读",
+      "list28",
+      "list99",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_fe41e892a2b8",
+    "word": "marginalisation",
+    "quizMeaningZh": "边缘化",
+    "meaningZh": "边缘化",
+    "meaningDetailedZh": "边缘化",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 52.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 86,
+      "coverageValue": 60,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "社会",
+      "阅读",
+      "剑19 Test 4 下（已修订）",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "visual-spatial",
+      "sound-auditory",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_9ce70bd1d4b3",
+    "word": "ought",
+    "quizMeaningZh": "应该",
+    "meaningZh": "应该",
+    "meaningDetailedZh": "应该",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 52,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 30,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 40,
+      "contextFrequency": 96,
+      "coverageValue": 88,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "社会",
+      "高频听力原文词",
+      "听力原文19次",
+      "阅读高频词",
+      "7次①",
+      "阅读",
+      "list40",
+      "list111",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_d7af66c3eabd",
+    "word": "restatement",
+    "quizMeaningZh": "重申；重新表述",
+    "meaningZh": "重申；重新表述",
+    "meaningDetailedZh": "重申；重新表述",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 51.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 31.25,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 57,
+      "coverageValue": 85,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "教育",
+      "法律",
+      "政府",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_d8b9d454eca1",
+    "word": "israel",
+    "quizMeaningZh": "以色列",
+    "meaningZh": "以色列",
+    "meaningDetailedZh": "以色列",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 51.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 22.5,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 80,
+      "coverageValue": 70,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "阅读",
+      "list62",
+      "list133",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_081df50ca8d8",
+    "word": "graphics",
+    "quizMeaningZh": "图形",
+    "meaningZh": "图形",
+    "meaningDetailedZh": "图形",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 51.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 83,
+      "coverageValue": 54,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "高频答案词：所有同学要求100%掌握",
+      "答案词2次⑦",
+      "阅读高频词",
+      "8次③",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "cognition-opinion",
+      "technology-science",
+      "arts-entertainment",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_3fac38e63201",
+    "word": "olympics",
+    "quizMeaningZh": "一次；每个；国家",
+    "meaningZh": "一次；每个；国家",
+    "meaningDetailedZh": "一次；每个；国家",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 51.4,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 72,
+      "coverageValue": 75,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "出现1次的答案词：听力目标分7分及以上重点掌握",
+      "答案词1次⑥",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "health-body",
+      "movement-travel",
+      "arts-entertainment",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_1620c6035e58",
+    "word": "cohesion",
+    "quizMeaningZh": "凝聚力，结合",
+    "meaningZh": "凝聚力，结合",
+    "meaningDetailedZh": "凝聚力，结合",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 51.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 31.25,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 57,
+      "coverageValue": 78,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "社会",
+      "工作",
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_0ac4e8ae342a",
+    "word": "plagiarise",
+    "quizMeaningZh": "抄袭",
+    "meaningZh": "抄袭",
+    "meaningDetailedZh": "抄袭",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 51.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 86,
+      "coverageValue": 60,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "阅读",
+      "同义替换",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_8c8fa8880a1e",
+    "word": "underlie",
+    "quizMeaningZh": "构成…的基础",
+    "meaningZh": "构成…的基础",
+    "meaningDetailedZh": "构成…的基础",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 51.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 80,
+      "coverageValue": 76,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "社会",
+      "科技",
+      "阅读",
+      "同义替换",
+      "c1~2",
+      "list59",
+      "list131",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "cause-effect",
+      "society-culture",
+      "technology-science",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_be09f94ae485",
+    "word": "heighten",
+    "quizMeaningZh": "提高，增强",
+    "meaningZh": "提高，增强",
+    "meaningDetailedZh": "提高，增强",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 50.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 32.5,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 60,
+      "contextFrequency": 57,
+      "coverageValue": 85,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "教育",
+      "社会",
+      "健康",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "change-process",
+      "education-academic",
+      "society-culture",
+      "health-body",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_92c9501bf3a3",
+    "word": "found",
+    "quizMeaningZh": "建立；创办",
+    "meaningZh": "建立；创办",
+    "meaningDetailedZh": "建立；创办",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 50.8,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 86,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读",
+      "同义替换",
+      "c1~2",
+      "听力",
+      "p7",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "education-academic",
+      "action-behavior",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_22ae6ede06ba",
+    "word": "desertification",
+    "quizMeaningZh": "荒漠化",
+    "meaningZh": "荒漠化",
+    "meaningDetailedZh": "荒漠化",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 50.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 80,
+      "coverageValue": 52,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "环境",
+      "阅读",
+      "list28",
+      "list99",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "environment-nature",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_635bf3103516",
+    "word": "massachusetts",
+    "quizMeaningZh": "马萨诸塞州",
+    "meaningZh": "马萨诸塞州",
+    "meaningDetailedZh": "马萨诸塞州",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 50.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 78,
+      "coverageValue": 54,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读高频词",
+      "18次",
+      "阅读",
+      "剑 18 Test 3 上（已修订）",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_0381c2eb39e7",
+    "word": "persona",
+    "quizMeaningZh": "角色；形象",
+    "meaningZh": "角色；形象",
+    "meaningDetailedZh": "角色；形象",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 50.4,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 31.25,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 76,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "社会",
+      "科技",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "clothing-appearance",
+      "technology-science",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_b0e26827e63a",
+    "word": "america",
+    "quizMeaningZh": "美国；美洲",
+    "meaningZh": "美国；美洲",
+    "meaningDetailedZh": "美国；美洲",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 50.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 22.5,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 66,
+      "coverageValue": 85,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "旅行",
+      "工作",
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "work-economy",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_c2a5b8c3b402",
+    "word": "encode",
+    "quizMeaningZh": "编码；加密",
+    "meaningZh": "编码；加密",
+    "meaningDetailedZh": "编码；加密",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 50.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 76,
+      "coverageValue": 75,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "科技",
+      "雅思写作词库",
+      "20_科技系统工具模型与结构_50条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "technology-science",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_fed61c5032e3",
+    "word": "videoconference",
+    "quizMeaningZh": "视频会议",
+    "meaningZh": "视频会议",
+    "meaningDetailedZh": "视频会议",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 50.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 22.5,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 67,
+      "coverageValue": 83,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "科技",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "technology-science",
+      "communication-language",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_e56a471f7ae0",
+    "word": "causation",
+    "quizMeaningZh": "因果关系",
+    "meaningZh": "因果关系",
+    "meaningDetailedZh": "因果关系",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 50,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 75,
+      "coverageValue": 60,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "社会",
+      "法律",
+      "雅思写作词库",
+      "04-因果目的影响与结果_93条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "relation-possession",
+      "cause-effect",
+      "communication-language",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_45e3d5d23009",
+    "word": "sexuality",
+    "quizMeaningZh": "性取向；性",
+    "meaningZh": "性取向；性",
+    "meaningDetailedZh": "性取向；性",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "低频认识即可",
+    "selectionScore": 50,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 75,
+      "coverageValue": 60,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "社会",
+      "雅思写作词库",
+      "18_社会人群文化与身份_46条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段4"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "society-culture",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_58173f0423e4",
+    "word": "immobilise",
+    "quizMeaningZh": "使固定",
+    "meaningZh": "使固定",
+    "meaningDetailedZh": "使固定",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 50,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 80,
+      "coverageValue": 60,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "写作",
+      "Task 2 - 媒体题材",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_7e2d00b3ac67",
+    "word": "fluctuate",
+    "quizMeaningZh": "波动",
+    "meaningZh": "波动",
+    "meaningDetailedZh": "波动",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 49.8,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 85,
+      "contextFrequency": 47,
+      "coverageValue": 54,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "消费",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ec0967417f32",
+    "word": "paintwork",
+    "quizMeaningZh": "油漆表面；漆面",
+    "meaningZh": "油漆表面；漆面",
+    "meaningDetailedZh": "油漆表面；漆面",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 49.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 63,
+      "coverageValue": 76,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "交通",
+      "住房",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "quality-attribute",
+      "movement-travel",
+      "housing-shelter",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_cc2eb0eaa05b",
+    "word": "runaround",
+    "quizMeaningZh": "推诿，回避",
+    "meaningZh": "推诿，回避",
+    "meaningDetailedZh": "推诿，回避",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 49.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 63,
+      "coverageValue": 76,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "保险",
+      "G类书信",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_57f92721d489",
+    "word": "postbox",
+    "quizMeaningZh": "邮筒；信箱",
+    "meaningZh": "邮筒；信箱",
+    "meaningDetailedZh": "邮筒；信箱",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 49.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 72,
+      "coverageValue": 58,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "G类书信",
+      "出现1次的答案词：听力目标分7分及以上重点掌握",
+      "答案词1次④",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_b471e40e036c",
+    "word": "shortcoming",
+    "quizMeaningZh": "缺点；不足",
+    "meaningZh": "缺点；不足",
+    "meaningDetailedZh": "缺点；不足",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 49.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 75,
+      "coverageValue": 52,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读",
+      "同义替换",
+      "c1~2",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "quantity-measurement",
+      "action-behavior",
+      "quality-attribute",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_f602e1edec07",
+    "word": "gatherer",
+    "quizMeaningZh": "从事相关工作的人",
+    "meaningZh": "从事相关工作的人",
+    "meaningDetailedZh": "从事相关工作的人",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 49.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 75,
+      "coverageValue": 52,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读",
+      "list24",
+      "list95",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "environment-nature",
+      "cause-effect",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_fadcdb797829",
+    "word": "larder",
+    "quizMeaningZh": "食品储藏室",
+    "meaningZh": "食品储藏室",
+    "meaningDetailedZh": "食品储藏室",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 49.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 75,
+      "coverageValue": 52,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读",
+      "list50",
+      "list121",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "food-nutrition",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_19efe2802265",
+    "word": "hypothesize",
+    "quizMeaningZh": "假设；假定",
+    "meaningZh": "假设；假定",
+    "meaningDetailedZh": "假设；假定",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 49.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 75,
+      "coverageValue": 70,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "科技",
+      "教育",
+      "雅思写作词库",
+      "03_可能性观点与确定性_73条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "cognition-opinion",
+      "technology-science",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_8445d41b803f",
+    "word": "impair",
+    "quizMeaningZh": "损害；削弱",
+    "meaningZh": "损害；削弱",
+    "meaningDetailedZh": "损害；削弱",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 49.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 74,
+      "coverageValue": 72,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "法律",
+      "阅读",
+      "同义替换",
+      "c7~8",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "health-body",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_90fb78881cc8",
+    "word": "noticeboard",
+    "quizMeaningZh": "布告栏",
+    "meaningZh": "布告栏",
+    "meaningDetailedZh": "布告栏",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 49.4,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 21.25,
+      "listening": 5,
+      "reading": 0,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 74,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "社区",
+      "教育",
+      "出现1次的答案词：听力目标分7分及以上重点掌握",
+      "答案词1次⑨"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_65ebea085caa",
+    "word": "misidentify",
+    "quizMeaningZh": "错误识别；认错",
+    "meaningZh": "错误识别；认错",
+    "meaningDetailedZh": "错误识别；认错",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 49.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 30,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 57,
+      "coverageValue": 78,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "法律",
+      "科技",
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "technology-science",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_eef1ce38b4f9",
+    "word": "applied",
+    "quizMeaningZh": "应用的;实用的",
+    "meaningZh": "应用的;实用的",
+    "meaningDetailedZh": "应用的;实用的",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "中级核心",
+    "selectionScore": 49,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 26.25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 55,
+      "contextFrequency": 83,
+      "coverageValue": 54,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读高频词",
+      "63~71次",
+      "听力",
+      "p2",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "education-academic",
+      "technology-science"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_f394b30a1830",
+    "word": "permittee",
+    "quizMeaningZh": "持证人；被许可人",
+    "meaningZh": "持证人；被许可人",
+    "meaningDetailedZh": "持证人；被许可人",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 60,
+      "coverageValue": 74,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_89db2bacfb87",
+    "word": "trousers",
+    "quizMeaningZh": "裤子",
+    "meaningZh": "裤子",
+    "meaningDetailedZh": "裤子",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 72,
+      "coverageValue": 50,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "高频听力原文词",
+      "听力原文12次",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "clothing-appearance",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_7c838daaf215",
+    "word": "sitting",
+    "quizMeaningZh": "坐;会议",
+    "meaningZh": "坐;会议",
+    "meaningDetailedZh": "坐;会议",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 48.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 72,
+      "coverageValue": 50,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读高频词",
+      "36~37次",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_4faac7faa0ac",
+    "word": "minutes",
+    "quizMeaningZh": "分钟；会议记录",
+    "meaningZh": "分钟；会议记录",
+    "meaningDetailedZh": "分钟；会议记录",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 72,
+      "coverageValue": 50,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "高频答案词：所有同学要求100%掌握",
+      "答案词10次及以上",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "time-sequence",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_ed04ce0a1d53",
+    "word": "reforestation",
+    "quizMeaningZh": "重新造林",
+    "meaningZh": "重新造林",
+    "meaningDetailedZh": "重新造林",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 72,
+      "coverageValue": 50,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "环境",
+      "高频听力原文词",
+      "听力原文8次②",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "environment-nature",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_b458d8329f54",
+    "word": "asian",
+    "quizMeaningZh": "亚洲的；亚洲人",
+    "meaningZh": "亚洲的；亚洲人",
+    "meaningDetailedZh": "亚洲的；亚洲人",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "基础高频",
+    "selectionScore": 48.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 26.25,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 55,
+      "contextFrequency": 66,
+      "coverageValue": 85,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "社会",
+      "消费",
+      "旅行",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "society-culture",
+      "work-economy",
+      "movement-travel",
+      "communication-language",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ca220417034a",
+    "word": "randomize",
+    "quizMeaningZh": "随机化",
+    "meaningZh": "随机化",
+    "meaningDetailedZh": "随机化",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 48.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 72,
+      "coverageValue": 68,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "科技",
+      "雅思写作词库",
+      "27_基础学术动作动词_112条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "technology-science",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ee58f690ad76",
+    "word": "conceptualize",
+    "quizMeaningZh": "概念化；构思",
+    "meaningZh": "概念化；构思",
+    "meaningDetailedZh": "概念化；构思",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 48.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 75,
+      "coverageValue": 60,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "科技",
+      "雅思写作词库",
+      "02_解释定义概念与意义_45条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "cognition-opinion",
+      "education-academic",
+      "technology-science",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_c42006c2ccbe",
+    "word": "centralize",
+    "quizMeaningZh": "集中化",
+    "meaningZh": "集中化",
+    "meaningDetailedZh": "集中化",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 48.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 75,
+      "coverageValue": 60,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "工作",
+      "雅思写作词库",
+      "27_基础学术动作动词_112条",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_3ae74d0e0492",
+    "word": "described",
+    "quizMeaningZh": "描述的",
+    "meaningZh": "描述的",
+    "meaningDetailedZh": "描述的",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "中级核心",
+    "selectionScore": 48.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 55,
+      "contextFrequency": 83,
+      "coverageValue": 54,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "出现1次的答案词：听力目标分7分及以上重点掌握",
+      "答案词1次⑧",
+      "阅读高频词",
+      "80~89次",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "communication-language",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_7bb9b481817b",
+    "word": "killed",
+    "quizMeaningZh": "杀死的",
+    "meaningZh": "杀死的",
+    "meaningDetailedZh": "杀死的",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "中级核心",
+    "selectionScore": 48.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 55,
+      "contextFrequency": 83,
+      "coverageValue": 54,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "高频听力原文词",
+      "听力原文19次",
+      "阅读高频词",
+      "57~62次",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "environment-nature",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_62d1ff031461",
+    "word": "affected",
+    "quizMeaningZh": "受影响的",
+    "meaningZh": "受影响的",
+    "meaningDetailedZh": "受影响的",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 48.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 75,
+      "coverageValue": 52,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读",
+      "list7",
+      "list78",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "environment-nature",
+      "change-process",
+      "cause-effect",
+      "relation-possession",
+      "action-behavior",
+      "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_2e03795b0c7c",
+    "word": "notetaking",
+    "quizMeaningZh": "记笔记",
+    "meaningZh": "记笔记",
+    "meaningDetailedZh": "记笔记",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_69f37c35b03f",
+    "word": "powercut",
+    "quizMeaningZh": "停电",
+    "meaningZh": "停电",
+    "meaningDetailedZh": "停电",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "公共服务",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_21deae0d2b84",
+    "word": "salesclerk",
+    "quizMeaningZh": "售货员",
+    "meaningZh": "售货员",
+    "meaningDetailedZh": "售货员",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "消费",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_b41c448aaf22",
+    "word": "smokealarm",
+    "quizMeaningZh": "烟雾报警器",
+    "meaningZh": "烟雾报警器",
+    "meaningDetailedZh": "烟雾报警器",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "住房",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "housing-shelter",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_31b14dca2469",
+    "word": "stoplight",
+    "quizMeaningZh": "红绿灯",
+    "meaningZh": "红绿灯",
+    "meaningDetailedZh": "红绿灯",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "交通",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "movement-travel",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_9f962dc9adfa",
+    "word": "townhall",
+    "quizMeaningZh": "市政厅",
+    "meaningZh": "市政厅",
+    "meaningDetailedZh": "市政厅",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_c03a73095563",
+    "word": "digitalisation",
+    "quizMeaningZh": "数字化",
+    "meaningZh": "数字化",
+    "meaningDetailedZh": "数字化",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "科技",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "technology-science",
+      "quantity-measurement",
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_a00f82d8b27e",
+    "word": "cyberattack",
+    "quizMeaningZh": "网络攻击",
+    "meaningZh": "网络攻击",
+    "meaningDetailedZh": "网络攻击",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "科技",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "technology-science",
+      "relation-possession",
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_bd43eb38eae1",
+    "word": "forename",
+    "quizMeaningZh": "名（相对于姓）",
+    "meaningZh": "名（相对于姓）",
+    "meaningDetailedZh": "名（相对于姓）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_f1962693b66c",
+    "word": "stomachache",
+    "quizMeaningZh": "胃痛，肚子疼",
+    "meaningZh": "胃痛，肚子疼",
+    "meaningDetailedZh": "胃痛，肚子疼",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "health-body",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_d78a7f9e871f",
+    "word": "interrelationship",
+    "quizMeaningZh": "相互关系",
+    "meaningZh": "相互关系",
+    "meaningDetailedZh": "相互关系",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "relation-possession",
+      "sound-auditory",
+      "health-body",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_90371f493466",
+    "word": "composter",
+    "quizMeaningZh": "堆肥箱",
+    "meaningZh": "堆肥箱",
+    "meaningDetailedZh": "堆肥箱",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "环境",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "environment-nature",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_e6f6a9f72ab2",
+    "word": "exemplification",
+    "quizMeaningZh": "例证",
+    "meaningZh": "例证",
+    "meaningDetailedZh": "例证",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_9a0d21243c6c",
+    "word": "generalisation",
+    "quizMeaningZh": "概括，归纳",
+    "meaningZh": "概括，归纳",
+    "meaningDetailedZh": "概括，归纳",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_ec3be984d993",
+    "word": "microplastic",
+    "quizMeaningZh": "微塑料",
+    "meaningZh": "微塑料",
+    "meaningDetailedZh": "微塑料",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "环境",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "environment-nature",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_6b15ef618654",
+    "word": "paragraphing",
+    "quizMeaningZh": "分段",
+    "meaningZh": "分段",
+    "meaningDetailedZh": "分段",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_47132ca06c1b",
+    "word": "socialisation",
+    "quizMeaningZh": "社会化；社交",
+    "meaningZh": "社会化；社交",
+    "meaningDetailedZh": "社会化；社交",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 48.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "sound-auditory",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_1e3ed671310e",
+    "word": "reconciliation",
+    "quizMeaningZh": "和解；调和",
+    "meaningZh": "和解；调和",
+    "meaningDetailedZh": "和解；调和",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 57,
+      "coverageValue": 75,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "社会",
+      "政府",
+      "家庭",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "relation-possession",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ed1a3b9306d6",
+    "word": "liberalization",
+    "quizMeaningZh": "自由化",
+    "meaningZh": "自由化",
+    "meaningDetailedZh": "自由化",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 57,
+      "coverageValue": 75,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "经济",
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "relation-possession",
+      "abstract-conceptual",
+      "work-economy",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_e77e5ee820f9",
+    "word": "fascinate",
+    "quizMeaningZh": "使着迷",
+    "meaningZh": "使着迷",
+    "meaningDetailedZh": "使着迷",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 47.8,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 17.5,
+      "listening": 0,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 3,
+      "comprehensionImportance": 60,
+      "contextFrequency": 77,
+      "coverageValue": 74,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "speaking"
+    ],
+    "topics": [
+      "教育",
+      "科技",
+      "阅读",
+      "剑19 Test 2 下（已修订）",
+      "list70",
+      "list141",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "education-academic",
+      "technology-science",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_005618d62b61",
+    "word": "riding",
+    "quizMeaningZh": "骑马；骑（现在分词）",
+    "meaningZh": "骑马；骑（现在分词）",
+    "meaningDetailedZh": "骑马；骑（现在分词）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 47.5,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 15,
+      "listening": 5,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 75,
+      "coverageValue": 70,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading"
+    ],
+    "topics": [
+      "旅行",
+      "交通",
+      "阅读高频词",
+      "28~30次②",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_dd91aa249884",
+    "word": "popularize",
+    "quizMeaningZh": "普及",
+    "meaningZh": "普及",
+    "meaningDetailedZh": "普及",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 47.4,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 72,
+      "coverageValue": 50,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读",
+      "剑18 Test 2 上（已修订）",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "society-culture",
+      "environment-nature",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_listening1179_298d0899cdc6",
+    "word": "objectify",
+    "quizMeaningZh": "使客观化；物化",
+    "meaningZh": "使客观化；物化",
+    "meaningDetailedZh": "使客观化；物化",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "中级核心",
+    "selectionScore": 47.4,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 65,
+      "coverageValue": 64,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_e3e4c5d6a429",
+    "word": "collocation",
+    "quizMeaningZh": "搭配",
+    "meaningZh": "搭配",
+    "meaningDetailedZh": "搭配",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 47.3,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 65,
+      "contextFrequency": 51,
+      "coverageValue": 81,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_01c6fef811ce",
+    "word": "embargo",
+    "quizMeaningZh": "禁运",
+    "meaningZh": "禁运",
+    "meaningDetailedZh": "禁运",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.2,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 57,
+      "coverageValue": 68,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "环境",
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "environment-nature",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_8a49cb965fc6",
+    "word": "jobseeker",
+    "quizMeaningZh": "求职者",
+    "meaningZh": "求职者",
+    "meaningDetailedZh": "求职者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 22.5,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_326f13d28afb",
+    "word": "constituent",
+    "quizMeaningZh": "成分；选民",
+    "meaningZh": "成分；选民",
+    "meaningDetailedZh": "成分；选民",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 73,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "quality-attribute",
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_b9800593abd9",
+    "word": "legitimacy",
+    "quizMeaningZh": "合法性；正当性",
+    "meaningZh": "合法性；正当性",
+    "meaningDetailedZh": "合法性；正当性",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 73,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "法律",
+      "政府",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_c55f23d20c89",
+    "word": "policymaker",
+    "quizMeaningZh": "政策制定者",
+    "meaningZh": "政策制定者",
+    "meaningDetailedZh": "政策制定者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 73,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "社会",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "communication-language",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_99e83fc4640a",
+    "word": "oppression",
+    "quizMeaningZh": "压迫",
+    "meaningZh": "压迫",
+    "meaningDetailedZh": "压迫",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 53,
+      "coverageValue": 75,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "社会",
+      "法律",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_86492cefb217",
+    "word": "segregation",
+    "quizMeaningZh": "隔离；分离",
+    "meaningZh": "隔离；分离",
+    "meaningDetailedZh": "隔离；分离",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 53,
+      "coverageValue": 75,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "社会",
+      "法律",
+      "教育",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_819b4ee92d85",
+    "word": "persecution",
+    "quizMeaningZh": "迫害",
+    "meaningZh": "迫害",
+    "meaningDetailedZh": "迫害",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 53,
+      "coverageValue": 75,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "政府",
+      "社会",
+      "法律",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_4c6e6ddb2581",
+    "word": "underpayment",
+    "quizMeaningZh": "少付的工资或款项",
+    "meaningZh": "少付的工资或款项",
+    "meaningDetailedZh": "少付的工资或款项",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 47.1,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 22.5,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 65,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作薪酬",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "writingPriority",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_0c8cfe10af80",
+    "word": "dangle",
+    "quizMeaningZh": "悬挂；摇晃",
+    "meaningZh": "悬挂；摇晃",
+    "meaningDetailedZh": "悬挂；摇晃",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "低频认识即可",
+    "selectionScore": 47,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 17.5,
+      "listening": 0,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 3,
+      "comprehensionImportance": 60,
+      "contextFrequency": 75,
+      "coverageValue": 70,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "reading",
+      "speaking"
+    ],
+    "topics": [
+      "消费",
+      "工作",
+      "阅读",
+      "剑18 Test 1（已修订）",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段4"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic",
+      "communication-language"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_a5c96bc8a871",
+    "word": "deskjob",
+    "quizMeaningZh": "案头工作",
+    "meaningZh": "案头工作",
+    "meaningDetailedZh": "案头工作",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "健康",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "health-body",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ba3f35bf4684",
+    "word": "resolver",
+    "quizMeaningZh": "解决者",
+    "meaningZh": "解决者",
+    "meaningDetailedZh": "解决者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "银行",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "abstract-conceptual",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ab82d211b52e",
+    "word": "rangefinder",
+    "quizMeaningZh": "测距仪（用于测量距离的光学或电子工具）",
+    "meaningZh": "测距仪（用于测量距离的光学或电子工具）",
+    "meaningDetailedZh": "测距仪（用于测量距离的光学或电子工具）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "购物",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "technology-science",
+      "quantity-measurement",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_60544f23ab4c",
+    "word": "rampway",
+    "quizMeaningZh": "（供轮椅或货物用的）坡道",
+    "meaningZh": "（供轮椅或货物用的）坡道",
+    "meaningDetailedZh": "（供轮椅或货物用的）坡道",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "住房",
+      "购物",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "housing-shelter",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_c659c3547b4b",
+    "word": "pinboard",
+    "quizMeaningZh": "图钉板；公告板",
+    "meaningZh": "图钉板；公告板",
+    "meaningDetailedZh": "图钉板；公告板",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "学校",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_d068552c8536",
+    "word": "mapreader",
+    "quizMeaningZh": "地图阅读器（人或设备）",
+    "meaningZh": "地图阅读器（人或设备）",
+    "meaningDetailedZh": "地图阅读器（人或设备）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "交通",
+      "健康",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "technology-science",
+      "movement-travel",
+      "health-body"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_dcfcd3c1848b",
+    "word": "preceptor",
+    "quizMeaningZh": "实习指导老师",
+    "meaningZh": "实习指导老师",
+    "meaningDetailedZh": "实习指导老师",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "学校",
+      "健康",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic",
+      "health-body"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_81f92babd538",
+    "word": "mutiny",
+    "quizMeaningZh": "兵变；叛乱",
+    "meaningZh": "兵变；叛乱",
+    "meaningDetailedZh": "兵变；叛乱",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ab3d21d0d2fe",
+    "word": "exemplify",
+    "quizMeaningZh": "例证；举例说明",
+    "meaningZh": "例证；举例说明",
+    "meaningDetailedZh": "例证；举例说明",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "verb",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 23.75,
+      "listening": 0,
+      "reading": 0,
+      "writing": 5,
+      "speaking": 3,
+      "comprehensionImportance": 60,
+      "contextFrequency": 69,
+      "coverageValue": 56,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "writing",
+      "speaking"
+    ],
+    "topics": [
+      "教育",
+      "工作",
+      "雅思写作词库",
+      "02_解释定义概念与意义_45条"
+    ],
+    "sourceEvidence": [
+      "writingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "verb",
+    "_semanticGroups": [
+      "cognition-opinion",
+      "communication-language",
+      "education-academic",
+      "work-economy"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_2a3084e416b4",
+    "word": "milliner",
+    "quizMeaningZh": "女帽制造商或销售商",
+    "meaningZh": "女帽制造商或销售商",
+    "meaningDetailedZh": "女帽制造商或销售商",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "购物",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "technology-science",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_d3a342dd405f",
+    "word": "plantroom",
+    "quizMeaningZh": "设备机房；植物房",
+    "meaningZh": "设备机房；植物房",
+    "meaningDetailedZh": "设备机房；植物房",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "住房",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "environment-nature",
+      "technology-science",
+      "housing-shelter",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_2065354ed2a4",
+    "word": "passcode",
+    "quizMeaningZh": "密码；通行码",
+    "meaningZh": "密码；通行码",
+    "meaningDetailedZh": "密码；通行码",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_81a491b30464",
+    "word": "pushchair",
+    "quizMeaningZh": "婴儿推车",
+    "meaningZh": "婴儿推车",
+    "meaningDetailedZh": "婴儿推车",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "交通",
+      "购物",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_186e9ff804f0",
+    "word": "poolroom",
+    "quizMeaningZh": "台球室；游泳池机房",
+    "meaningZh": "台球室；游泳池机房",
+    "meaningDetailedZh": "台球室；游泳池机房",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "住房",
+      "休闲",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "housing-shelter",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_9308395042f0",
+    "word": "pillbox",
+    "quizMeaningZh": "药丸盒；碉堡",
+    "meaningZh": "药丸盒；碉堡",
+    "meaningDetailedZh": "药丸盒；碉堡",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "住房",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "health-body",
+      "housing-shelter",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_b501cd94f838",
+    "word": "pillowcase",
+    "quizMeaningZh": "枕套",
+    "meaningZh": "枕套",
+    "meaningDetailedZh": "枕套",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "购物",
+      "住房",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "housing-shelter",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_6c602533c1f2",
+    "word": "protectorate",
+    "quizMeaningZh": "保护国",
+    "meaningZh": "保护国",
+    "meaningDetailedZh": "保护国",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "G类书信",
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "environment-nature",
+      "relation-possession",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_5c70f12c6e83",
+    "word": "puppeteer",
+    "quizMeaningZh": "木偶操纵者",
+    "meaningZh": "木偶操纵者",
+    "meaningDetailedZh": "木偶操纵者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "餐饮",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_6ece9ecf35a4",
+    "word": "outpost",
+    "quizMeaningZh": "前哨；偏远据点",
+    "meaningZh": "前哨；偏远据点",
+    "meaningDetailedZh": "前哨；偏远据点",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "交通",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ea7f07a35aaf",
+    "word": "recognizer",
+    "quizMeaningZh": "识别器（能够辨认特定事物或人的设备或程序）",
+    "meaningZh": "识别器（能够辨认特定事物或人的设备或程序）",
+    "meaningDetailedZh": "识别器（能够辨认特定事物或人的设备或程序）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "银行",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "technology-science",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_35848857832a",
+    "word": "hatchway",
+    "quizMeaningZh": "舱口；天窗",
+    "meaningZh": "舱口；天窗",
+    "meaningDetailedZh": "舱口；天窗",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "住房",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "housing-shelter",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_17e4603a1174",
+    "word": "preserver",
+    "quizMeaningZh": "保存某物的人或物",
+    "meaningZh": "保存某物的人或物",
+    "meaningDetailedZh": "保存某物的人或物",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "学校",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_3d32e258cee5",
+    "word": "redeemer",
+    "quizMeaningZh": "救赎者（从困境或罪恶中拯救他人的人或事物）",
+    "meaningZh": "救赎者（从困境或罪恶中拯救他人的人或事物）",
+    "meaningDetailedZh": "救赎者（从困境或罪恶中拯救他人的人或事物）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "G类书信",
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_41a8d2fc538c",
+    "word": "ragpicker",
+    "quizMeaningZh": "拾荒者；捡破烂的人",
+    "meaningZh": "拾荒者；捡破烂的人",
+    "meaningDetailedZh": "拾荒者；捡破烂的人",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_29d252d7d463",
+    "word": "reasoner",
+    "quizMeaningZh": "善于推理的人；逻辑思考者",
+    "meaningZh": "善于推理的人；逻辑思考者",
+    "meaningDetailedZh": "善于推理的人；逻辑思考者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "学校",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "cognition-opinion",
+      "education-academic",
+      "work-economy"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_fa983c1431fb",
+    "word": "partaker",
+    "quizMeaningZh": "参与者；分享者",
+    "meaningZh": "参与者；分享者",
+    "meaningDetailedZh": "参与者；分享者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "餐饮",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "action-behavior",
+      "relation-possession",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_7fcec05ff3b7",
+    "word": "rejoinder",
+    "quizMeaningZh": "反驳；回答",
+    "meaningZh": "反驳；回答",
+    "meaningDetailedZh": "反驳；回答",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "G类书信",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "communication-language",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_0f63efe2686b",
+    "word": "parkade",
+    "quizMeaningZh": "多层停车场",
+    "meaningZh": "多层停车场",
+    "meaningDetailedZh": "多层停车场",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "交通",
+      "购物",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_885e5d9b6f38",
+    "word": "rentier",
+    "quizMeaningZh": "靠租金生活的人",
+    "meaningZh": "靠租金生活的人",
+    "meaningDetailedZh": "靠租金生活的人",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "住房",
+      "银行",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "abstract-conceptual",
+      "housing-shelter",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_d81c570c4e10",
+    "word": "priesthood",
+    "quizMeaningZh": "神职人员群体或职位",
+    "meaningZh": "神职人员群体或职位",
+    "meaningDetailedZh": "神职人员群体或职位",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "society-culture",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_2a4a8899d45b",
+    "word": "quayside",
+    "quizMeaningZh": "码头边",
+    "meaningZh": "码头边",
+    "meaningDetailedZh": "码头边",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "交通",
+      "餐饮",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_0932e5ac806b",
+    "word": "rattlesnake",
+    "quizMeaningZh": "响尾蛇（一种有毒的蛇，尾巴会发出响声）",
+    "meaningZh": "响尾蛇（一种有毒的蛇，尾巴会发出响声）",
+    "meaningDetailedZh": "响尾蛇（一种有毒的蛇，尾巴会发出响声）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "交通",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "sound-auditory",
+      "health-body",
+      "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_f267e1328ab4",
+    "word": "reagent",
+    "quizMeaningZh": "试剂（用于化学反应中检测或制取其他物质的物质）",
+    "meaningZh": "试剂（用于化学反应中检测或制取其他物质的物质）",
+    "meaningDetailedZh": "试剂（用于化学反应中检测或制取其他物质的物质）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "technology-science",
+      "health-body",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_0ab710c23e08",
+    "word": "replier",
+    "quizMeaningZh": "回复者",
+    "meaningZh": "回复者",
+    "meaningDetailedZh": "回复者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "购物",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_6c1b994c585d",
+    "word": "resistor",
+    "quizMeaningZh": "电阻器",
+    "meaningZh": "电阻器",
+    "meaningDetailedZh": "电阻器",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "学校",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_bd10529c3427",
+    "word": "responder",
+    "quizMeaningZh": "响应者",
+    "meaningZh": "响应者",
+    "meaningDetailedZh": "响应者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "健康",
+      "工作",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "health-body",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_7cf02ff5ca1d",
+    "word": "returnee",
+    "quizMeaningZh": "归来者",
+    "meaningZh": "归来者",
+    "meaningDetailedZh": "归来者",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "G类书信",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_2f7813c6ed6f",
+    "word": "holster",
+    "quizMeaningZh": "手枪皮套",
+    "meaningZh": "手枪皮套",
+    "meaningDetailedZh": "手枪皮套",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "高级加分",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 54,
+      "coverageValue": 66,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "工作",
+      "规则",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段2"
+    ],
+    "sourceEvidence": [
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_9f29827997f9",
+    "word": "latest",
+    "quizMeaningZh": "最新的；最近的",
+    "meaningZh": "最新的；最近的",
+    "meaningDetailedZh": "最新的；最近的",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "中级核心",
+    "selectionScore": 46.9,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 55,
+      "contextFrequency": 77,
+      "coverageValue": 50,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "听力",
+      "p9",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "arts-entertainment",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_ddc78c039f41",
+    "word": "scotland",
+    "quizMeaningZh": "苏格兰",
+    "meaningZh": "苏格兰",
+    "meaningDetailedZh": "苏格兰",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "noun",
+    "difficulty": "基础高频",
+    "selectionScore": 46.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 15,
+      "listening": 5,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 0,
+      "comprehensionImportance": 65,
+      "contextFrequency": 71,
+      "coverageValue": 70,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading"
+    ],
+    "topics": [
+      "旅行",
+      "阅读",
+      "list18",
+      "list89",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "noun",
+    "_semanticGroups": [
+      "movement-travel",
+      "education-academic"
     ],
     "_confidence": "medium",
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"

@@ -5,7 +5,6 @@ import { buildCurrentBatchCandidates, writeCandidateCacheSnapshot } from "./cand
 import { logCandidateBreakdownDebug } from "./candidate-breakdown.mjs";
 import { normalizeEntryMode } from "./entry-mode.mjs";
 import { resolveSpellingScope } from "./spelling-scope.mjs";
-import { recoverAndPersistSpellingErrorBank } from "./error-bank-recovery.mjs";
 import { syncLexiconMeta } from "./lexicon-meta.mjs";
 import { buildSpellingDebugDetails } from "./spelling-display.mjs";
 import { diagnoseSpellingError } from "./spelling-error-diagnosis.mjs";
@@ -205,9 +204,6 @@ export function createSpellingUiBridge(options = {}) {
   return {
     async init() {
       if (store?.open) await store.open();
-      if (store?.getAllRecords && words.length) {
-        await recoverAndPersistSpellingErrorBank(store, words, { scope: scopeConfig.scope });
-      }
       if (store?.getAllRecords) {
         const loadedRecords = await store.getAllRecords();
         const migratedRecords = [];

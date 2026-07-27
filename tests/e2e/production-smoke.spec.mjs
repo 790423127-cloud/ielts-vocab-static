@@ -51,6 +51,7 @@ test("home loads the full lexicon, changes word, and switches to phrases", async
   for (const sectionName of ["变形", "词族", "常见搭配", "短语搭配"]) {
     await expect(page.getByRole("region", { name: sectionName, exact: true })).toBeVisible();
   }
+  await expect(page.getByRole("tablist", { name: "词典详情分类" })).toHaveCount(0);
   const firstWord = (await currentWord.textContent())?.trim();
   expect(firstWord).toBeTruthy();
 
@@ -70,25 +71,34 @@ test("auto scroll advances without marking a learning status and can pause", asy
   await expect(currentWord).toBeVisible({ timeout: 45_000 });
   const firstWord = (await currentWord.textContent())?.trim();
 
-  await page.getByLabel("自动滚动间隔").selectOption("4");
+  await page.getByLabel("自动滚动间隔").selectOption("2");
   const toggle = page.locator(".auto-scroll-toggle");
   await expect(toggle).toHaveAccessibleName("开启自动滚动");
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
   await expect(toggle).toHaveAccessibleName("暂停自动滚动");
-  await expect.poll(async () => (await currentWord.textContent())?.trim(), { timeout: 7_000 }).not.toBe(firstWord);
+  await expect.poll(async () => (await currentWord.textContent())?.trim(), { timeout: 5_000 }).not.toBe(firstWord);
   await expect(page.locator(".page--word-flash .status.is-selected")).toHaveCount(0);
 
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-pressed", "false");
   const pausedWord = (await currentWord.textContent())?.trim();
-  await page.waitForTimeout(4_500);
+  await page.waitForTimeout(2_500);
   await expect(currentWord).toHaveText(pausedWord || "");
 });
 
 test("plural-reference searches open the base card without double plurals", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText("12,324 词", { timeout: 45_000 });
+  const vocabResponse = await page.request.get("/data/words.json");
+  expect(vocabResponse.ok()).toBeTruthy();
+  const vocabPayload = await vocabResponse.json();
+  const expectedCount = Array.isArray(vocabPayload?.words)
+    ? vocabPayload.words.filter(isBrushableWord).length
+    : 0;
+  await expect(page.getByRole("tab", { name: /单词刷词/ })).toContainText(
+    `${expectedCount.toLocaleString("en-US")} 词`,
+    { timeout: 45_000 }
+  );
 
   await page.locator("summary.top-pill").filter({ hasText: "词库管理" }).click();
   const search = page.getByPlaceholder("搜索单词并跳转");

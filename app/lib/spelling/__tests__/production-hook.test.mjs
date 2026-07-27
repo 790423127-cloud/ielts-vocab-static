@@ -5,11 +5,19 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import hookModule from "../../../hooks/useSpellingEngine.js";
+import { resolveSpellingLoadingState } from "../spelling-training-page-helpers.mjs";
 
 const {
   createInitialProductionSpellingState,
+  isSpellingStorageUnavailableError,
   mapSnapshotToProductionHookState
 } = hookModule;
+
+test("blocked or timed-out IndexedDB is treated as recoverable storage unavailability", () => {
+  assert.equal(isSpellingStorageUnavailableError(new Error("拼写进度库被其他标签页占用")), true);
+  assert.equal(isSpellingStorageUnavailableError(new Error("IndexedDB open failed")), true);
+  assert.equal(isSpellingStorageUnavailableError(new Error("candidate builder failed")), false);
+});
 
 test("production hook state exposes the required UI API fields", () => {
   const initial = createInitialProductionSpellingState();
@@ -86,4 +94,30 @@ test("production submit flow rejects duplicate in-flight attempts", () => {
   assert.match(submitBranch, /if \(submitInFlightRef\.current\) return null/);
   assert.match(submitBranch, /submitInFlightRef\.current = true/);
   assert.match(submitBranch, /finally \{\s*submitInFlightRef\.current = false/);
+});
+
+test("resolved empty practice sources leave the loading screen", () => {
+  const state = resolveSpellingLoadingState({
+    lexiconReady: true,
+    activeSourceLoading: false,
+    entryCount: 0,
+    engineReady: false
+  });
+
+  assert.equal(state.loading, false);
+  assert.equal(state.phase, "所选来源暂无内容");
+  assert.equal(state.showEnginePreparing, false);
+});
+
+test("non-empty practice sources wait for the spelling engine", () => {
+  const state = resolveSpellingLoadingState({
+    lexiconReady: true,
+    activeSourceLoading: false,
+    entryCount: 202,
+    engineReady: false
+  });
+
+  assert.equal(state.loading, true);
+  assert.equal(state.phase, "初始化训练引擎");
+  assert.equal(state.showEnginePreparing, true);
 });

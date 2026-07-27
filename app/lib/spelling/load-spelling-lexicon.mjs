@@ -38,8 +38,10 @@ async function fetchBrowserLexicon(options = {}) {
   let headwordVersion = "";
 
   if (needsHeadwords) {
-    const cachedWords = await loadWordsFromIndexedDB().catch(() => null);
-    const apiMeta = await fetchVocabMeta();
+    const [cachedWords, apiMeta] = await Promise.all([
+      loadWordsFromIndexedDB().catch(() => null),
+      fetchVocabMeta()
+    ]);
     const canUseCachedHeadwords =
       cachedWords?.words?.length &&
       apiMeta?.lexiconHash &&

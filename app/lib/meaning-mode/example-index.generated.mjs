@@ -1,24 +1,16 @@
 // Auto-generated Meaning Mode example index.
 // Source: .static-export-cache/words.json (READ-ONLY, never modified)
 // Matched against: public/data/meaning-6000.json (READ-ONLY, never modified)
-// Generated: 2026-07-22T07:25:12.831Z
+// Generated: 2026-07-26T04:44:41.197Z
 // Stats: 6000/6000 matched (100.0% coverage)
 // DO NOT EDIT MANUALLY — regenerate with: node app/lib/meaning-mode/build-example-index.mjs
 
 export const MEANING_EXAMPLE_INDEX = {
-  "word_5d80236c4600": {
-    "sourceWordId": "word_5d80236c4600",
-    "word": "first",
-    "example": "This is my first time here.",
-    "exampleCn": "这是我第一次来这里。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_0e57569bdb14": {
     "sourceWordId": "word_0e57569bdb14",
     "word": "already",
-    "example": "I have already finished the report.",
-    "exampleCn": "我已经完成了报告。",
+    "example": "I have already finished my homework.",
+    "exampleCn": "我已经完成了作业。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -73,7 +65,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_59891f491673": {
     "sourceWordId": "word_59891f491673",
     "word": "whole",
-    "example": "I read the whole book in .",
+    "example": "I read the whole book.",
     "exampleCn": "我一天读完了整本书。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -257,8 +249,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_911d3859e7f8": {
     "sourceWordId": "word_911d3859e7f8",
     "word": "financial",
-    "example": "I need to sort out my financial affairs before moving abroad.",
-    "exampleCn": "我在出国前需要处理好财务事务。",
+    "example": "She received financial support from the government.",
+    "exampleCn": "她获得了政府的财务支持。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -313,7 +305,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_da92431e9c01": {
     "sourceWordId": "word_da92431e9c01",
     "word": "ahead",
-    "example": "The deadline is ahead .",
+    "example": "The deadline is ahead.",
     "exampleCn": "截止日期在前方。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -513,8 +505,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5cafeaac64c9": {
     "sourceWordId": "word_5cafeaac64c9",
     "word": "independent",
-    "example": "She is financially independent and lives alone.",
-    "exampleCn": "她经济独立，独居。",
+    "example": "She is a very independent woman who runs her own business.",
+    "exampleCn": "她是一个非常独立的女性，经营着自己的生意。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -654,14 +646,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_10517687ee0c": {
-    "sourceWordId": "word_10517687ee0c",
-    "word": "all",
-    "example": "All passengers must show their tickets.",
-    "exampleCn": "所有乘客必须出示车票。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_52b43951bc72": {
     "sourceWordId": "word_52b43951bc72",
     "word": "forward",
@@ -707,14 +691,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "performance",
     "example": "The employee's performance improved this quarter.",
     "exampleCn": "这个季度员工的表现有所改善。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_3bbc9ad96500": {
-    "sourceWordId": "word_3bbc9ad96500",
-    "word": "ago",
-    "example": "I moved here two years.",
-    "exampleCn": "我两年前搬到这里。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -870,14 +846,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_61ccad19a5e4": {
-    "sourceWordId": "word_61ccad19a5e4",
-    "word": "end",
-    "example": "The course ends in June.",
-    "exampleCn": "课程在六月份结束。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_b76462c94795": {
     "sourceWordId": "word_b76462c94795",
     "word": "record",
@@ -897,7 +865,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_40f42559899b": {
     "sourceWordId": "word_40f42559899b",
     "word": "gain",
-    "example": "She gained experience from .",
+    "example": "She gained experience from.",
     "exampleCn": "她从这份工作中获得了经验。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -1113,7 +1081,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_c091ae22538c": {
     "sourceWordId": "word_c091ae22538c",
     "word": "accept",
-    "example": "I accept your offer for .",
+    "example": "I accept your offer.",
     "exampleCn": "我接受你的工作邀请。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -1139,14 +1107,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "check",
     "example": "Please check your answers before handing in the test.",
     "exampleCn": "交卷前请检查你的答案。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_f733f54ac445": {
-    "sourceWordId": "word_f733f54ac445",
-    "word": "cost",
-    "example": "The cost of living in the city is high.",
-    "exampleCn": "城市的生活成本高。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -1209,7 +1169,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_44f0a0a36528": {
     "sourceWordId": "word_44f0a0a36528",
     "word": "opportunity",
-    "example": "This job is a great opportunity .",
+    "example": "This job is a great opportunity.",
     "exampleCn": "这份工作对我来说是个好机会。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -1233,7 +1193,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f0d93c8279b2": {
     "sourceWordId": "word_f0d93c8279b2",
     "word": "sick",
-    "example": "I feel sick; I need a .",
+    "example": "I feel sick; I need.",
     "exampleCn": "我感觉不舒服，需要请一天假。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -1281,7 +1241,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_7e6607a4aef7": {
     "sourceWordId": "word_7e6607a4aef7",
     "word": "apply",
-    "example": "She will apply for .",
+    "example": "She will apply.",
     "exampleCn": "她将申请这份工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -1350,14 +1310,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_877889fd9050": {
-    "sourceWordId": "word_877889fd9050",
-    "word": "baby",
-    "example": "The baby is crying for milk.",
-    "exampleCn": "婴儿在哭着要奶喝。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_cfce50304f85": {
     "sourceWordId": "word_cfce50304f85",
     "word": "chance",
@@ -1387,14 +1339,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "effort",
     "example": "She put a lot of effort into the presentation.",
     "exampleCn": "她在演示中付出了很多努力。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_3abde6132f9d": {
-    "sourceWordId": "word_3abde6132f9d",
-    "word": "useful",
-    "example": "This dictionary is useful.",
-    "exampleCn": "这本词典很有用。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -1630,14 +1574,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_a3e1c7a7b80f": {
-    "sourceWordId": "word_a3e1c7a7b80f",
-    "word": "hit",
-    "example": "The ball hit the window and broke.",
-    "exampleCn": "球砸中了窗户，把它打碎了。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_008a4e96940e": {
     "sourceWordId": "word_008a4e96940e",
     "word": "safety",
@@ -1691,14 +1627,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "operate",
     "example": "The machine operates smoothly.",
     "exampleCn": "机器运行平稳。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_dc2180fcdb13": {
-    "sourceWordId": "word_dc2180fcdb13",
-    "word": "class",
-    "example": "I have an English class every Monday.",
-    "exampleCn": "我每周一有英语课。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -1822,14 +1750,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_d4547b06cc4a": {
-    "sourceWordId": "word_d4547b06cc4a",
-    "word": "guy",
-    "example": "The guy at reception helped me find the meeting room.",
-    "exampleCn": "接待处的那个小伙子帮我找到了会议室。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_15cf6f51c35b": {
     "sourceWordId": "word_15cf6f51c35b",
     "word": "obtain",
@@ -1857,15 +1777,15 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_19cbb76d848a": {
     "sourceWordId": "word_19cbb76d848a",
     "word": "somehow",
-    "example": "I managed to finish the report somehow.",
-    "exampleCn": "我不知怎么地设法完成了报告。",
+    "example": "We need to finish the project on time somehow.",
+    "exampleCn": "我们得设法按时完成这个项目。",
     "sourceField": "example",
     "matchType": "wordId"
   },
   "word_8eedcf521870": {
     "sourceWordId": "word_8eedcf521870",
     "word": "law",
-    "example": "Driving without a license is against .",
+    "example": "Driving without a license is against.",
     "exampleCn": "无证驾驶是违法的。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -1961,8 +1881,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_1f60a011b2fc": {
     "sourceWordId": "word_1f60a011b2fc",
     "word": "impossible",
-    "example": "It's impossible to finish this project on time.",
-    "exampleCn": "按时完成这个项目是不可能的。",
+    "example": "It is impossible to predict the future with certainty.",
+    "exampleCn": "不可能确切地预测未来。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -2078,14 +1998,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_96fdd1f0e20d": {
-    "sourceWordId": "word_96fdd1f0e20d",
-    "word": "date",
-    "example": "What is the date today?",
-    "exampleCn": "今天几号？",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_6ffe86e71a91": {
     "sourceWordId": "word_6ffe86e71a91",
     "word": "village",
@@ -2190,14 +2102,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_6546fd94944e": {
-    "sourceWordId": "word_6546fd94944e",
-    "word": "why",
-    "example": "Why did you choose this city?",
-    "exampleCn": "你为什么选择这个城市？",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_f6f8370b4578": {
     "sourceWordId": "word_f6f8370b4578",
     "word": "peak",
@@ -2233,7 +2137,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_9d353ebda1d1": {
     "sourceWordId": "word_9d353ebda1d1",
     "word": "offer",
-    "example": "The company offered me .",
+    "example": "The company offered.",
     "exampleCn": "公司给了我一份工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -2310,14 +2214,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_ce446bdcf172": {
-    "sourceWordId": "word_ce446bdcf172",
-    "word": "fun",
-    "example": "We had a lot of fun at the party.",
-    "exampleCn": "我们在派对上玩得很开心。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_807b072bea7b": {
     "sourceWordId": "word_807b072bea7b",
     "word": "overall",
@@ -2371,14 +2267,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "plan",
     "example": "We need a plan for the project.",
     "exampleCn": "我们需要一个项目计划。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_64e11a5497fc": {
-    "sourceWordId": "word_64e11a5497fc",
-    "word": "add",
-    "example": "Add some salt to the soup.",
-    "exampleCn": "往汤里加些盐。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -2489,8 +2377,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5f2b4898455d": {
     "sourceWordId": "word_5f2b4898455d",
     "word": "institution",
-    "example": "The banks are powerful financial institutions.",
-    "exampleCn": "银行是强大的金融机构。",
+    "example": "The university is a well-respected educational institution.",
+    "exampleCn": "这所大学是一所备受尊敬的教育机构。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -2505,8 +2393,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_28b444861b4c": {
     "sourceWordId": "word_28b444861b4c",
     "word": "contribution",
-    "example": "She made a significant contribution to the project.",
-    "exampleCn": "她对这个项目做出了重大贡献。",
+    "example": "His contribution to the team's success was recognized with an award.",
+    "exampleCn": "他对团队成功的贡献获得了奖项认可。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -2545,8 +2433,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_fc6186768d14": {
     "sourceWordId": "word_fc6186768d14",
     "word": "quickly",
-    "example": "I need to finish this report quickly.",
-    "exampleCn": "我需要快速完成这份报告。",
+    "example": "She quickly finished her homework and went out to play.",
+    "exampleCn": "她快速完成了作业，然后出去玩。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -2601,8 +2489,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_4179a15b7fb2": {
     "sourceWordId": "word_4179a15b7fb2",
     "word": "reward",
-    "example": "Employees receive a bonus as a reward for their hard work.",
-    "exampleCn": "员工因努力工作而获得奖金作为奖励。",
+    "example": "The police offered a reward for information leading to the arrest of the suspect.",
+    "exampleCn": "警方悬赏征集能导致嫌疑人被捕的信息。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -2787,14 +2675,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "deliberately",
     "example": "He deliberately avoided eye contact during the meeting.",
     "exampleCn": "他故意在会议中避免眼神接触。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_2880e7f7ca7e": {
-    "sourceWordId": "word_2880e7f7ca7e",
-    "word": "cool",
-    "example": "The weather is cool today, perfect for a walk.",
-    "exampleCn": "今天天气凉爽，适合散步。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -3126,14 +3006,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_56fe2c5453ac": {
-    "sourceWordId": "word_56fe2c5453ac",
-    "word": "job",
-    "example": "He found a new job as a software engineer.",
-    "exampleCn": "他找到了一份软件工程师的新工作。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_9b75c21d7520": {
     "sourceWordId": "word_9b75c21d7520",
     "word": "related",
@@ -3425,7 +3297,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_a3a4c8d5a70c": {
     "sourceWordId": "word_a3a4c8d5a70c",
     "word": "suitable",
-    "example": "This job is suitable .",
+    "example": "This job is suitable.",
     "exampleCn": "这份工作适合你。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -3537,8 +3409,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5c4c54a4ea02": {
     "sourceWordId": "word_5c4c54a4ea02",
     "word": "limited",
-    "example": "We have limited time to finish the project.",
-    "exampleCn": "我们完成项目的时间有限。",
+    "example": "The resources available are limited.",
+    "exampleCn": "可用的资源是有限的。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -3625,8 +3497,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5e8589d57f8c": {
     "sourceWordId": "word_5e8589d57f8c",
     "word": "transaction",
-    "example": "I need to check my bank transactions online.",
-    "exampleCn": "我需要在网上查看我的银行交易记录。",
+    "example": "The bank charges a fee for each international transaction.",
+    "exampleCn": "银行对每笔国际交易收取手续费。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -3985,7 +3857,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_7070e7e06d4b": {
     "sourceWordId": "word_7070e7e06d4b",
     "word": "feed",
-    "example": "I need to feed my cat twice .",
+    "example": "I need to feed my cat twice.",
     "exampleCn": "我需要每天喂猫两次。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -4006,19 +3878,11 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_7745ef79a072": {
-    "sourceWordId": "word_7745ef79a072",
-    "word": "club",
-    "example": "I joined a book club to meet new people.",
-    "exampleCn": "我加入了一个读书俱乐部来认识新朋友。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_55c0451c2079": {
     "sourceWordId": "word_55c0451c2079",
     "word": "completely",
-    "example": "I completely agree with your opinion on public transport.",
-    "exampleCn": "我完全同意你对公共交通的看法。",
+    "example": "The project was completely finished before the deadline.",
+    "exampleCn": "该项目在截止日期前完全完成。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -4041,7 +3905,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_6ca83a24fb9b": {
     "sourceWordId": "word_6ca83a24fb9b",
     "word": "difficulty",
-    "example": "He had difficulty finding .",
+    "example": "He had difficulty finding.",
     "exampleCn": "他找工作有困难。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -4145,7 +4009,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_0941e5ee5d44": {
     "sourceWordId": "word_0941e5ee5d44",
     "word": "compare",
-    "example": "Compare the prices before .",
+    "example": "Compare the prices before.",
     "exampleCn": "购买前比较一下价格。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -4153,8 +4017,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_e47511fc1bda": {
     "sourceWordId": "word_e47511fc1bda",
     "word": "successfully",
-    "example": "She successfully completed the training course.",
-    "exampleCn": "她成功完成了培训课程。",
+    "example": "He successfully completed the project on time.",
+    "exampleCn": "他成功地按时完成了项目。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -4310,14 +4174,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_5cf9dbc99582": {
-    "sourceWordId": "word_5cf9dbc99582",
-    "word": "art",
-    "example": "She is studying art at university.",
-    "exampleCn": "她在大学学习艺术。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_57eaba8d957d": {
     "sourceWordId": "word_57eaba8d957d",
     "word": "article",
@@ -4345,7 +4201,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_ee696da34197": {
     "sourceWordId": "word_ee696da34197",
     "word": "intend",
-    "example": "I intend to apply for .",
+    "example": "I intend to apply.",
     "exampleCn": "我打算申请这份工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -4419,14 +4275,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "nearby",
     "example": "There is a park nearby.",
     "exampleCn": "附近有一个公园。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_3a5021b463df": {
-    "sourceWordId": "word_3a5021b463df",
-    "word": "hair",
-    "example": "She has long, straight hair.",
-    "exampleCn": "她有一头长直发。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -5105,7 +4953,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f8f727a46941": {
     "sourceWordId": "word_f8f727a46941",
     "word": "consider",
-    "example": "Please consider my application for .",
+    "example": "Please consider my application.",
     "exampleCn": "请考虑我的工作申请。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -5278,14 +5126,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_8e12102ca4bc": {
-    "sourceWordId": "word_8e12102ca4bc",
-    "word": "ball",
-    "example": "Children played with a ball in the park.",
-    "exampleCn": "孩子们在公园里玩球。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_0a7c5b5fc720": {
     "sourceWordId": "word_0a7c5b5fc720",
     "word": "structure",
@@ -5334,14 +5174,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_7f7f08be5364": {
-    "sourceWordId": "word_7f7f08be5364",
-    "word": "fourth",
-    "example": "This is my fourth visit to London.",
-    "exampleCn": "这是我第四次来伦敦。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_e75e45a2b87d": {
     "sourceWordId": "word_e75e45a2b87d",
     "word": "funding",
@@ -5361,8 +5193,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_a48abd1bfeda": {
     "sourceWordId": "word_a48abd1bfeda",
     "word": "pregnant",
-    "example": "She is pregnant and needs regular check-.",
-    "exampleCn": "她怀孕了，需要定期检查。",
+    "example": "She is pregnant with her first child and is taking prenatal classes.",
+    "exampleCn": "她怀了第一个孩子，正在参加产前课程。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -5435,14 +5267,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "addition",
     "example": "In addition to the course, we offer workshops.",
     "exampleCn": "除了课程，我们还提供工作坊。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_c1dca7cfb5a0": {
-    "sourceWordId": "word_c1dca7cfb5a0",
-    "word": "brown",
-    "example": "She has brown hair and green eyes.",
-    "exampleCn": "她棕色的头发，绿色的眼睛。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -5633,8 +5457,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_0eead649a2c7": {
     "sourceWordId": "word_0eead649a2c7",
     "word": "independence",
-    "example": "Moving out gave her a sense of independence.",
-    "exampleCn": "搬出去住给了她一种独立感。",
+    "example": "Teenagers often strive for independence from their parents.",
+    "exampleCn": "青少年常常争取脱离父母独立。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -5750,14 +5574,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_4c8a3142b573": {
-    "sourceWordId": "word_4c8a3142b573",
-    "word": "copy",
-    "example": "Please make a copy of the document.",
-    "exampleCn": "请复印这份文件。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_601abda828b0": {
     "sourceWordId": "word_601abda828b0",
     "word": "journal",
@@ -5814,14 +5630,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_3080db0651e0": {
-    "sourceWordId": "word_3080db0651e0",
-    "word": "second",
-    "example": "I finished second in the race.",
-    "exampleCn": "我在比赛中获得第二名。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_ee89d601de12": {
     "sourceWordId": "word_ee89d601de12",
     "word": "novel",
@@ -5833,8 +5641,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_7c8e615a1998": {
     "sourceWordId": "word_7c8e615a1998",
     "word": "dominant",
-    "example": "The dominant theme in his speech was economic growth.",
-    "exampleCn": "他演讲的主要主题是经济增长。",
+    "example": "The dominant company in the market controls over 60% of sales.",
+    "exampleCn": "市场上的主导公司控制了超过60%的销售额。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -5937,8 +5745,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_fff33dc0ac75": {
     "sourceWordId": "word_fff33dc0ac75",
     "word": "maintenance",
-    "example": "The building requires regular maintenance.",
-    "exampleCn": "该建筑需要定期维护。",
+    "example": "Regular maintenance of the car can prevent costly repairs later.",
+    "exampleCn": "定期保养汽车可以避免日后昂贵的维修费用。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -6019,14 +5827,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "forever",
     "example": "I will remember this forever.",
     "exampleCn": "我会永远记住这一点。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_46e2662e18e4": {
-    "sourceWordId": "word_46e2662e18e4",
-    "word": "hide",
-    "example": "The kids like to hide in the garden.",
-    "exampleCn": "孩子们喜欢藏在花园里。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -6129,7 +5929,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5c13258af64d": {
     "sourceWordId": "word_5c13258af64d",
     "word": "medicine",
-    "example": "Take this medicine three times .",
+    "example": "Take this medicine three times.",
     "exampleCn": "这药一天吃三次。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -6182,14 +5982,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_b1b170a70024": {
-    "sourceWordId": "word_b1b170a70024",
-    "word": "beach",
-    "example": "We spent the day at the beach.",
-    "exampleCn": "我们在海滩度过了一天。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_fc7f824f8972": {
     "sourceWordId": "word_fc7f824f8972",
     "word": "impact",
@@ -6225,8 +6017,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_bc9e7f5642bf": {
     "sourceWordId": "word_bc9e7f5642bf",
     "word": "finance",
-    "example": "I need to check my personal finance before booking the flight.",
-    "exampleCn": "订机票前我需要检查一下个人财务状况。",
+    "example": "She works in finance and manages large investment portfolios.",
+    "exampleCn": "她在金融领域工作，管理着大型投资组合。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -6606,14 +6398,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_bf55677c35aa": {
-    "sourceWordId": "word_bf55677c35aa",
-    "word": "foot",
-    "example": "He put his foot on the accelerator.",
-    "exampleCn": "他把脚放在油门上。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_2d60798e8481": {
     "sourceWordId": "word_2d60798e8481",
     "word": "occur",
@@ -6681,7 +6465,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f881949ee7c8": {
     "sourceWordId": "word_f881949ee7c8",
     "word": "federal",
-    "example": "The federal government passed a .",
+    "example": "The federal government passed.",
     "exampleCn": "联邦政府通过了一项新法律。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -6721,8 +6505,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_66d6f2859e7a": {
     "sourceWordId": "word_66d6f2859e7a",
     "word": "independently",
-    "example": "Trainees must complete the final task independently.",
-    "exampleCn": "学员必须独立完成最后一项任务。",
+    "example": "She learned to live independently after moving abroad.",
+    "exampleCn": "移居国外后，她学会了独立生活。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -6857,15 +6641,15 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f78b9261dc97": {
     "sourceWordId": "word_f78b9261dc97",
     "word": "finish",
-    "example": "I need to finish my homework before dinner.",
-    "exampleCn": "我需要在晚饭前完成作业。",
+    "example": "I need to finish my homework before I can go out.",
+    "exampleCn": "我需要先完成作业才能出去。",
     "sourceField": "example",
     "matchType": "wordId"
   },
   "word_d85898555958": {
     "sourceWordId": "word_d85898555958",
     "word": "literally",
-    "example": "He literally ran all .",
+    "example": "He literally.",
     "exampleCn": "他 literally 一路跑着。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -6953,8 +6737,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_34f8d5563ac7": {
     "sourceWordId": "word_34f8d5563ac7",
     "word": "transparency",
-    "example": "The company's financial transparency helped build trust with clients.",
-    "exampleCn": "公司的财务透明度帮助建立了与客户的信任。",
+    "example": "The government promised greater transparency in its financial dealings.",
+    "exampleCn": "政府承诺在其财务交易中提高透明度。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -7049,7 +6833,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_c9f9e86d9398": {
     "sourceWordId": "word_c9f9e86d9398",
     "word": "recover",
-    "example": "She is recovering from .",
+    "example": "She is recovering from.",
     "exampleCn": "她正在从流感中恢复。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -7145,8 +6929,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_e4a5dff37f69": {
     "sourceWordId": "word_e4a5dff37f69",
     "word": "rush",
-    "example": "I had to rush to catch .",
-    "exampleCn": "我不得不匆忙赶公交车。",
+    "example": "Don't rush through your exam; take your time to read each question carefully.",
+    "exampleCn": "不要匆忙完成考试；慢慢来，仔细阅读每个问题。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -7353,7 +7137,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_847ab2db6228": {
     "sourceWordId": "word_847ab2db6228",
     "word": "equal",
-    "example": "All people are equal before .",
+    "example": "All people are equal before.",
     "exampleCn": "法律面前人人平等。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -7481,7 +7265,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_e17520117e0f": {
     "sourceWordId": "word_e17520117e0f",
     "word": "tough",
-    "example": "It's a tough job, but someone has to .",
+    "example": "It's a tough job, but someone.",
     "exampleCn": "这是一份艰苦的工作，但总得有人做。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -7617,7 +7401,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_4c27ae7c0ea9": {
     "sourceWordId": "word_4c27ae7c0ea9",
     "word": "sex",
-    "example": "The form asks for your name, age, .",
+    "example": "The form asks for your name, age,.",
     "exampleCn": "表格要求填写姓名、年龄和性别。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -7729,7 +7513,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_20c4b2d5df80": {
     "sourceWordId": "word_20c4b2d5df80",
     "word": "occasionally",
-    "example": "I occasionally go to .",
+    "example": "I occasionally.",
     "exampleCn": "我偶尔去健身房。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -7915,14 +7699,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "train",
     "example": "I take the train to work.",
     "exampleCn": "我坐火车上班。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_155dbd175970": {
-    "sourceWordId": "word_155dbd175970",
-    "word": "boss",
-    "example": "My boss gave me a new project.",
-    "exampleCn": "我的老板给了我一个新项目。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -8209,7 +7985,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_92620ad35193": {
     "sourceWordId": "word_92620ad35193",
     "word": "thought",
-    "example": "I thought about the problem .",
+    "example": "I thought about the problem.",
     "exampleCn": "我一整天都在思考那个问题。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -8321,8 +8097,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_89063342ee8b": {
     "sourceWordId": "word_89063342ee8b",
     "word": "task",
-    "example": "I have to finish this task before the deadline.",
-    "exampleCn": "我必须在截止日期前完成这个任务。",
+    "example": "The manager assigned each employee a specific task for the project.",
+    "exampleCn": "经理给每位员工分配了项目的具体任务。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -8449,8 +8225,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_8bd08f03be6b": {
     "sourceWordId": "word_8bd08f03be6b",
     "word": "incentive",
-    "example": "The company offers bonuses as an incentive for hard work.",
-    "exampleCn": "公司提供奖金作为努力工作的激励。",
+    "example": "The company offers bonuses as an incentive for employees to meet their targets.",
+    "exampleCn": "公司提供奖金作为激励员工达成目标的措施。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -8483,14 +8259,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "score",
     "example": "She scored 7.5 in IELTS.",
     "exampleCn": "她雅思得了7.5分。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_4e0ab357b145": {
-    "sourceWordId": "word_4e0ab357b145",
-    "word": "map",
-    "example": "Please look at the map before you leave.",
-    "exampleCn": "离开前请查看地图。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -8849,7 +8617,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_29949eb53ec5": {
     "sourceWordId": "word_29949eb53ec5",
     "word": "experiment",
-    "example": "We conducted an experiment in .",
+    "example": "We conducted an experiment.",
     "exampleCn": "我们在实验室做了一项实验。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -8873,7 +8641,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_34e749e55cc0": {
     "sourceWordId": "word_34e749e55cc0",
     "word": "bottom",
-    "example": "The key fell to the bottom of .",
+    "example": "The key fell to the bottom.",
     "exampleCn": "钥匙掉到了包底。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -9001,7 +8769,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_0b73ca905a3b": {
     "sourceWordId": "word_0b73ca905a3b",
     "word": "distinct",
-    "example": "There is a distinct difference between .",
+    "example": "There is a distinct difference between.",
     "exampleCn": "两者有明显的区别。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -9145,7 +8913,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_9b7a699135f1": {
     "sourceWordId": "word_9b7a699135f1",
     "word": "psychological",
-    "example": "The accident had a psychological impact .",
+    "example": "The accident had a psychological impact.",
     "exampleCn": "那次事故对他产生了心理影响。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -9235,14 +9003,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "shock",
     "example": "The news came as a shock.",
     "exampleCn": "这个消息令人震惊。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_70c3a01ac47e": {
-    "sourceWordId": "word_70c3a01ac47e",
-    "word": "kid",
-    "example": "The kids are playing in the park.",
-    "exampleCn": "孩子们在公园里玩。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -9689,8 +9449,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_2c0d338fa24f": {
     "sourceWordId": "word_2c0d338fa24f",
     "word": "aid",
-    "example": "The government provides financial aid to low-income families.",
-    "exampleCn": "政府向低收入家庭提供经济援助。",
+    "example": "The government provided financial aid to small businesses.",
+    "exampleCn": "政府向小企业提供了经济援助。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -9715,14 +9475,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "relief",
     "example": "The medicine brought relief.",
     "exampleCn": "药物带来了缓解。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_0b33322d2b02": {
-    "sourceWordId": "word_0b33322d2b02",
-    "word": "classroom",
-    "example": "The classroom was quiet during the exam.",
-    "exampleCn": "考试期间教室很安静。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -9817,7 +9569,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_70f7f080c3d5": {
     "sourceWordId": "word_70f7f080c3d5",
     "word": "opinion",
-    "example": "In my opinion, education is .",
+    "example": "In my opinion, education.",
     "exampleCn": "在我看来，教育是关键。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -9950,14 +9702,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_f125509e96e3": {
-    "sourceWordId": "word_f125509e96e3",
-    "word": "police",
-    "example": "The police arrested the suspect near the station.",
-    "exampleCn": "警方在车站附近逮捕了嫌疑人。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_f3b209571dca": {
     "sourceWordId": "word_f3b209571dca",
     "word": "honest",
@@ -9995,14 +9739,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "bold",
     "example": "It was a bold decision.",
     "exampleCn": "这是一个大胆的决定。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_7a705aceb073": {
-    "sourceWordId": "word_7a705aceb073",
-    "word": "welcome",
-    "example": "Welcome to our city!",
-    "exampleCn": "欢迎来到我们的城市！",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -10137,7 +9873,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_afb557ded940": {
     "sourceWordId": "word_afb557ded940",
     "word": "preference",
-    "example": "I have a preference .",
+    "example": "I have a preference.",
     "exampleCn": "我偏好茶。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -10257,8 +9993,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_929195e1ffe8": {
     "sourceWordId": "word_929195e1ffe8",
     "word": "hardship",
-    "example": "Many families faced financial hardship during the recession.",
-    "exampleCn": "许多家庭在经济衰退期间面临经济困难。",
+    "example": "Many families endured great hardship during the economic crisis.",
+    "exampleCn": "许多家庭在经济危机期间忍受了巨大的困难。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -10505,7 +10241,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_be26f8eaa267": {
     "sourceWordId": "word_be26f8eaa267",
     "word": "realise",
-    "example": "I didn't realise how late .",
+    "example": "I didn't realise how late.",
     "exampleCn": "我没意识到已经这么晚了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -10657,7 +10393,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_86276aa9a372": {
     "sourceWordId": "word_86276aa9a372",
     "word": "proud",
-    "example": "I am proud of .",
+    "example": "I am proud.",
     "exampleCn": "我为我的儿子感到自豪。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -10825,8 +10561,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5e26c0bcf995": {
     "sourceWordId": "word_5e26c0bcf995",
     "word": "besides",
-    "example": "Besides working full-time, he studies at night.",
-    "exampleCn": "除了全职工作,他晚上还学习。",
+    "example": "Besides English, she speaks French and German.",
+    "exampleCn": "除了英语，她还会说法语和德语。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -10835,14 +10571,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "coverage",
     "example": "The insurance provides full coverage.",
     "exampleCn": "保险提供全面覆盖。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_6943149811e9": {
-    "sourceWordId": "word_6943149811e9",
-    "word": "gym",
-    "example": "I go to the gym three times a week.",
-    "exampleCn": "我每周去健身房三次。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -10969,8 +10697,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_2fa4787c922b": {
     "sourceWordId": "word_2fa4787c922b",
     "word": "crisis",
-    "example": "The company faced a financial crisis and had to lay off staff.",
-    "exampleCn": "公司面临财务危机，不得不裁员。",
+    "example": "The country is facing an economic crisis.",
+    "exampleCn": "该国正面临经济危机。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -11115,14 +10843,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "sight",
     "example": "The sight of the mountains was breathtaking.",
     "exampleCn": "看到山脉的景色令人叹为观止。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_bf2edcffbb90": {
-    "sourceWordId": "word_bf2edcffbb90",
-    "word": "sing",
-    "example": "I like to sing in the shower.",
-    "exampleCn": "我喜欢在洗澡时唱歌。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -11313,8 +11033,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_612be2d067b9": {
     "sourceWordId": "word_612be2d067b9",
     "word": "tenant",
-    "example": "The tenant pays rent every month.",
-    "exampleCn": "租户每月支付租金。",
+    "example": "The tenant signed a one-year lease for the apartment.",
+    "exampleCn": "租户签了一年的公寓租约。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -11345,8 +11065,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f588ec8e0d6c": {
     "sourceWordId": "word_f588ec8e0d6c",
     "word": "stability",
-    "example": "Financial stability is important for a country's economy.",
-    "exampleCn": "金融稳定对一个国家的经济很重要。",
+    "example": "Economic stability is important for a country's development.",
+    "exampleCn": "经济稳定对一个国家的发展很重要。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -11681,8 +11401,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_c5f21c25f37a": {
     "sourceWordId": "word_c5f21c25f37a",
     "word": "united",
-    "example": "The united team worked together to finish the project.",
-    "exampleCn": "团结的团队一起工作以完成项目。",
+    "example": "The team remained united despite the challenges.",
+    "exampleCn": "尽管面临挑战，团队仍然团结一致。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -11833,7 +11553,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_63f5565721a3": {
     "sourceWordId": "word_63f5565721a3",
     "word": "license",
-    "example": "You need a license to drive .",
+    "example": "You need a license to drive.",
     "exampleCn": "你需要驾照才能开车。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -11993,8 +11713,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_b7f3520bab4c": {
     "sourceWordId": "word_b7f3520bab4c",
     "word": "burden",
-    "example": "The government needs to reduce the tax burden on working families.",
-    "exampleCn": "政府需要减轻工薪家庭的税收负担。",
+    "example": "The high cost of living is a burden for many families.",
+    "exampleCn": "高昂的生活成本对许多家庭来说是一个负担。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -12017,8 +11737,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_b46db4097cf6": {
     "sourceWordId": "word_b46db4097cf6",
     "word": "analyst",
-    "example": "The market analyst predicted a rise in prices.",
-    "exampleCn": "市场分析师预测价格会上涨。",
+    "example": "The financial analyst predicted a rise in the stock market.",
+    "exampleCn": "这位金融分析师预测股市将会上涨。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -12281,8 +12001,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_ffbaf3206b2b": {
     "sourceWordId": "word_ffbaf3206b2b",
     "word": "finished",
-    "example": "He looked finished after the long race.",
-    "exampleCn": "长跑后他看起来筋疲力尽。",
+    "example": "I finally finished my homework before the deadline.",
+    "exampleCn": "我终于在截止日期前完成了作业。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -12385,7 +12105,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_97334cf02355": {
     "sourceWordId": "word_97334cf02355",
     "word": "rubbish",
-    "example": "Please put the rubbish in .",
+    "example": "Please put the rubbish.",
     "exampleCn": "请把垃圾扔进垃圾桶。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -12782,14 +12502,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_5ebdc88b0afd": {
-    "sourceWordId": "word_5ebdc88b0afd",
-    "word": "hill",
-    "example": "We walked up the hill to see the view.",
-    "exampleCn": "我们走上小山去看风景。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_243421761959": {
     "sourceWordId": "word_243421761959",
     "word": "typically",
@@ -13115,14 +12827,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "modify",
     "example": "We need to modify the plan.",
     "exampleCn": "我们需要修改计划。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_7c71ddc12e0c": {
-    "sourceWordId": "word_7c71ddc12e0c",
-    "word": "cash",
-    "example": "Do you have cash?",
-    "exampleCn": "你有现金吗？",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -13457,8 +13161,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f68b95d26cd0": {
     "sourceWordId": "word_f68b95d26cd0",
     "word": "accomplishment",
-    "example": "Getting a promotion was a great accomplishment.",
-    "exampleCn": "升职是一项巨大的成就。",
+    "example": "Winning the award was a great accomplishment for her.",
+    "exampleCn": "赢得这个奖项对她来说是一项巨大的成就。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -13833,8 +13537,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_68d771aa2cc3": {
     "sourceWordId": "word_68d771aa2cc3",
     "word": "assistance",
-    "example": "Can I offer you any assistance?",
-    "exampleCn": "我能提供什么帮助吗？",
+    "example": "The government provided financial assistance to small businesses during the crisis.",
+    "exampleCn": "政府在危机期间向小企业提供了财政援助。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -13881,8 +13585,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_194900b35d50": {
     "sourceWordId": "word_194900b35d50",
     "word": "accomplish",
-    "example": "I need to accomplish my tasks before the deadline.",
-    "exampleCn": "我需要在截止日期前完成我的任务。",
+    "example": "She accomplished her goal of running a marathon.",
+    "exampleCn": "她完成了跑马拉松的目标。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -13899,14 +13603,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "choose",
     "example": "You should choose a university that suits your needs.",
     "exampleCn": "你应该选择一所符合你需求的大学。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_cfe150403118": {
-    "sourceWordId": "word_cfe150403118",
-    "word": "boat",
-    "example": "We took a boat trip along the river.",
-    "exampleCn": "我们乘船沿河旅行。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -14137,7 +13833,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_d91416977303": {
     "sourceWordId": "word_d91416977303",
     "word": "ritual",
-    "example": "Morning coffee is a daily ritual .",
+    "example": "Morning coffee is a daily ritual.",
     "exampleCn": "早上的咖啡是他的日常仪式。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -14281,8 +13977,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_85bd11f23285": {
     "sourceWordId": "word_85bd11f23285",
     "word": "stimulate",
-    "example": "Exercise stimulates blood circulation.",
-    "exampleCn": "锻炼刺激血液循环。",
+    "example": "The government plans to stimulate the economy by cutting taxes.",
+    "exampleCn": "政府计划通过减税刺激经济。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -14363,14 +14059,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "offensive",
     "example": "His comments were offensive.",
     "exampleCn": "他的评论很冒犯。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_4fefca12598e": {
-    "sourceWordId": "word_4fefca12598e",
-    "word": "autumn",
-    "example": "Autumn is my favorite season for the colors.",
-    "exampleCn": "秋天是我最喜欢的季节，因为颜色。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -14577,7 +14265,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_e6d7f98867b1": {
     "sourceWordId": "word_e6d7f98867b1",
     "word": "litter",
-    "example": "Please put your litter in .",
+    "example": "Please put your litter.",
     "exampleCn": "请把垃圾扔进垃圾桶。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -14945,8 +14633,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_1348d2116e43": {
     "sourceWordId": "word_1348d2116e43",
     "word": "accompany",
-    "example": "I will accompany you to the station.",
-    "exampleCn": "我会陪你去车站。",
+    "example": "Children under 12 must be accompanied by an adult.",
+    "exampleCn": "12岁以下儿童必须由成人陪同。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -14977,7 +14665,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_6f4395bcd8f8": {
     "sourceWordId": "word_6f4395bcd8f8",
     "word": "sweat",
-    "example": "I was sweating after .",
+    "example": "I was sweating after.",
     "exampleCn": "跑步后我出汗了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -15134,14 +14822,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_9c4fdfdee071": {
-    "sourceWordId": "word_9c4fdfdee071",
-    "word": "afternoon",
-    "example": "I have an appointment on Friday afternoon.",
-    "exampleCn": "我周五下午有个约会。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_55d9067ef2bf": {
     "sourceWordId": "word_55d9067ef2bf",
     "word": "attached",
@@ -15203,14 +14883,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "posture",
     "example": "Good posture is important for health.",
     "exampleCn": "好的姿势对健康很重要。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_39184c4e10aa": {
-    "sourceWordId": "word_39184c4e10aa",
-    "word": "fifth",
-    "example": "The fifth chapter is the most interesting.",
-    "exampleCn": "第五章最有趣。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -15577,8 +15249,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_1ef2fea48806": {
     "sourceWordId": "word_1ef2fea48806",
     "word": "inclusion",
-    "example": "The company's policy promotes inclusion of all employees.",
-    "exampleCn": "公司的政策促进所有员工的包容。",
+    "example": "The inclusion of practical examples in the textbook helped students understand the concepts better.",
+    "exampleCn": "教科书中包含实际例子帮助学生更好地理解概念。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -15641,8 +15313,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_60e0497120e0": {
     "sourceWordId": "word_listening1179_60e0497120e0",
     "word": "marking",
-    "example": "The marking of the exams will be completed next week.",
-    "exampleCn": "考试的评分将在下周完成。",
+    "example": "The teacher spent the weekend doing the marking for the final exams.",
+    "exampleCn": "老师周末都在批改期末考试试卷。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -15769,8 +15441,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_eda4ba7ff26a": {
     "sourceWordId": "word_eda4ba7ff26a",
     "word": "predominantly",
-    "example": "The city's population is predominantly young.",
-    "exampleCn": "该城市人口主要是年轻人。",
+    "example": "The population of the city is predominantly young adults.",
+    "exampleCn": "这个城市的人口主要是年轻人。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -15918,14 +15590,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_5c057d0b32d2": {
-    "sourceWordId": "word_5c057d0b32d2",
-    "word": "sky",
-    "example": "The sky was clear and blue.",
-    "exampleCn": "天空晴朗湛蓝。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_977c00115fab": {
     "sourceWordId": "word_977c00115fab",
     "word": "apparent",
@@ -16065,7 +15729,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_3d6449ca68ba": {
     "sourceWordId": "word_3d6449ca68ba",
     "word": "offshore",
-    "example": "They work on an offshore .",
+    "example": "They work on an offshore.",
     "exampleCn": "他们在离岸石油钻井平台上工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -16081,7 +15745,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_ab2102d3bb83": {
     "sourceWordId": "word_ab2102d3bb83",
     "word": "applicant",
-    "example": "All applicants must submit .",
+    "example": "All applicants must submit.",
     "exampleCn": "所有申请人都必须提交简历。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -16297,8 +15961,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_50fd611ae51c": {
     "sourceWordId": "word_50fd611ae51c",
     "word": "landlord",
-    "example": "My landlord fixed the broken heater yesterday.",
-    "exampleCn": "我的房东昨天修好了坏掉的暖气。",
+    "example": "The landlord fixed the broken heater within two days.",
+    "exampleCn": "房东在两天内修好了坏掉的暖气。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -16406,14 +16070,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_1163aaab11b0": {
-    "sourceWordId": "word_1163aaab11b0",
-    "word": "dutch",
-    "example": "He is from the Dutch embassy.",
-    "exampleCn": "他来自荷兰大使馆。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_a5ef69429ccf": {
     "sourceWordId": "word_a5ef69429ccf",
     "word": "scientist",
@@ -16481,7 +16137,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_2184a471b58b": {
     "sourceWordId": "word_2184a471b58b",
     "word": "civil",
-    "example": "Civil rights are protected .",
+    "example": "Civil rights are protected.",
     "exampleCn": "公民权利受法律保护。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -16553,7 +16209,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_25ebb7a4846b": {
     "sourceWordId": "word_25ebb7a4846b",
     "word": "password",
-    "example": "Enter your password to .",
+    "example": "Enter your password.",
     "exampleCn": "输入密码登录。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -16609,8 +16265,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_a95b0ff9c6e4": {
     "sourceWordId": "word_a95b0ff9c6e4",
     "word": "clothes",
-    "example": "He folded his clothes neatly.",
-    "exampleCn": "他把衣服叠得整整齐齐。",
+    "example": "She packed warm clothes for the winter trip.",
+    "exampleCn": "她为冬季旅行打包了保暖的衣服。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -16673,16 +16329,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_49b5e153d186": {
     "sourceWordId": "word_49b5e153d186",
     "word": "correspondence",
-    "example": "I have a long correspondence with my .",
+    "example": "I have a long correspondence with.",
     "exampleCn": "我和笔友有长期的通信。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_c4c59e4e15ff": {
-    "sourceWordId": "word_c4c59e4e15ff",
-    "word": "sixth",
-    "example": "This is the sixth time.",
-    "exampleCn": "这是第六次。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -16713,7 +16361,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_66d134bedd7b": {
     "sourceWordId": "word_66d134bedd7b",
     "word": "visibility",
-    "example": "Visibility is poor due .",
+    "example": "Visibility is poor.",
     "exampleCn": "由于大雾，能见度很差。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -16817,8 +16465,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_0ee69cb1d31d": {
     "sourceWordId": "word_0ee69cb1d31d",
     "word": "complement",
-    "example": "A good wine is a perfect complement to a fine meal.",
-    "exampleCn": "好酒是美食的完美补充。",
+    "example": "The new policy is a complement to the existing regulations.",
+    "exampleCn": "新政策是对现有法规的补充。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -17174,14 +16822,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_8a5e72a5aed9": {
-    "sourceWordId": "word_8a5e72a5aed9",
-    "word": "dry",
-    "example": "The weather is very dry in winter.",
-    "exampleCn": "冬天天气很干燥。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_5cc5139f2a4c": {
     "sourceWordId": "word_5cc5139f2a4c",
     "word": "expire",
@@ -17193,16 +16833,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_775201958993": {
     "sourceWordId": "word_775201958993",
     "word": "london",
-    "example": "I visited London last summer and saw the .",
+    "example": "I visited London last summer.",
     "exampleCn": "我去年夏天去了伦敦，看到了大本钟。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_163a0c534c0b": {
-    "sourceWordId": "word_163a0c534c0b",
-    "word": "ninth",
-    "example": "He came in ninth place.",
-    "exampleCn": "他得了第九名。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -17454,14 +17086,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_d6016a756499": {
-    "sourceWordId": "word_d6016a756499",
-    "word": "card",
-    "example": "I need to renew my library card.",
-    "exampleCn": "我需要续办我的借书卡。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_2ec2811d5191": {
     "sourceWordId": "word_2ec2811d5191",
     "word": "explanation",
@@ -17473,7 +17097,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_b027b4afe61b": {
     "sourceWordId": "word_b027b4afe61b",
     "word": "neutral",
-    "example": "Switzerland remained neutral during .",
+    "example": "Switzerland remained neutral during.",
     "exampleCn": "瑞士在战争中保持中立。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -17617,7 +17241,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_8d5a60eb8aab": {
     "sourceWordId": "word_8d5a60eb8aab",
     "word": "wake",
-    "example": "I usually wake up at 7 .",
+    "example": "I usually wake up at 7.",
     "exampleCn": "我通常早上七点醒来。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -17766,14 +17390,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_124312b3cd6d": {
-    "sourceWordId": "word_124312b3cd6d",
-    "word": "businessman",
-    "example": "The businessman traveled to London for a meeting.",
-    "exampleCn": "这位商人去伦敦参加会议。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_90703295159a": {
     "sourceWordId": "word_90703295159a",
     "word": "perfume",
@@ -17897,8 +17513,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_eae6ac2453bd": {
     "sourceWordId": "word_eae6ac2453bd",
     "word": "advisor",
-    "example": "I need to discuss my career plan with my advisor.",
-    "exampleCn": "我需要和我的顾问讨论职业规划。",
+    "example": "She works as a financial advisor for a large bank.",
+    "exampleCn": "她在一家大银行担任财务顾问。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -18545,8 +18161,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_a4b52f4884cd": {
     "sourceWordId": "word_listening1179_a4b52f4884cd",
     "word": "premises",
-    "example": "No smoking on the premises.",
-    "exampleCn": "场所内禁止吸烟。",
+    "example": "The company is moving to new premises next month.",
+    "exampleCn": "公司下个月将搬迁到新址。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -18649,7 +18265,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_3a8b4f11d461": {
     "sourceWordId": "word_3a8b4f11d461",
     "word": "baseball",
-    "example": "Baseball is a popular sport in .",
+    "example": "Baseball is a popular sport.",
     "exampleCn": "棒球在美国是一项受欢迎的运动。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -18673,7 +18289,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_fdd53b6f84ed": {
     "sourceWordId": "word_fdd53b6f84ed",
     "word": "grandmother",
-    "example": "My grandmother taught me how .",
+    "example": "My grandmother taught.",
     "exampleCn": "我的祖母教我如何缝纫。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -18681,8 +18297,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_33b6e434ca5c": {
     "sourceWordId": "word_33b6e434ca5c",
     "word": "hurry",
-    "example": "I have to hurry to catch .",
-    "exampleCn": "我得赶紧去赶公交车。",
+    "example": "We need to hurry or we'll miss the bus.",
+    "exampleCn": "我们得快点，否则会错过公交车。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -19185,8 +18801,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_66b8be35360b": {
     "sourceWordId": "word_66b8be35360b",
     "word": "completion",
-    "example": "The completion of the project took six months.",
-    "exampleCn": "项目的完成花了六个月。",
+    "example": "The completion of the bridge took two years.",
+    "exampleCn": "这座桥的完成花了两年时间。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -19473,7 +19089,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_b6d6cb8e81bb": {
     "sourceWordId": "word_b6d6cb8e81bb",
     "word": "fade",
-    "example": "The colors fade in .",
+    "example": "The colors fade.",
     "exampleCn": "颜色在阳光下褪色。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -19523,14 +19139,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "conceal",
     "example": "He tried to conceal his anger during the meeting.",
     "exampleCn": "他试图在会议中隐藏自己的愤怒。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_72570ec63621": {
-    "sourceWordId": "word_72570ec63621",
-    "word": "cooking",
-    "example": "I love cooking Italian food.",
-    "exampleCn": "我喜欢做意大利菜。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -19881,7 +19489,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_21a87d71c09b": {
     "sourceWordId": "word_21a87d71c09b",
     "word": "irish",
-    "example": "I met an Irish friend at .",
+    "example": "I met an Irish friend.",
     "exampleCn": "我在酒吧遇到一位爱尔兰朋友。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20017,7 +19625,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_8b5d1f38bfe8": {
     "sourceWordId": "word_8b5d1f38bfe8",
     "word": "accordance",
-    "example": "The contract was signed in accordance with .",
+    "example": "The contract was signed in accordance with.",
     "exampleCn": "合同是按照法律签署的。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20166,22 +19774,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_f0c1e00dc974": {
-    "sourceWordId": "word_f0c1e00dc974",
-    "word": "girl",
-    "example": "The little girl is playing in the park.",
-    "exampleCn": "那个小女孩在公园里玩。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_cf2bd2f09996": {
-    "sourceWordId": "word_cf2bd2f09996",
-    "word": "numbers",
-    "example": "Please write down your account numbers for verification.",
-    "exampleCn": "请写下您的账号以便核实。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_2b22aa8b7230": {
     "sourceWordId": "word_2b22aa8b7230",
     "word": "understood",
@@ -20233,7 +19825,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_6d10a83e4016": {
     "sourceWordId": "word_6d10a83e4016",
     "word": "skin",
-    "example": "Protect your skin from .",
+    "example": "Protect your skin from.",
     "exampleCn": "保护皮肤免受阳光伤害。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20473,7 +20065,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_8f87ec9c4a0b": {
     "sourceWordId": "word_8f87ec9c4a0b",
     "word": "monster",
-    "example": "My son is afraid of monsters under .",
+    "example": "My son is afraid of monsters under.",
     "exampleCn": "我儿子害怕床下的怪物。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20601,7 +20193,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_0912b82569a6": {
     "sourceWordId": "word_0912b82569a6",
     "word": "radio",
-    "example": "I listen to the radio in .",
+    "example": "I listen to the radio.",
     "exampleCn": "我在车里听收音机。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20617,7 +20209,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_d4a7a5effdb4": {
     "sourceWordId": "word_d4a7a5effdb4",
     "word": "reasoning",
-    "example": "Your reasoning does not make sense .",
+    "example": "Your reasoning does not make sense.",
     "exampleCn": "你的推理对我来说没有意义。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20633,7 +20225,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_ad73de84ea43": {
     "sourceWordId": "word_ad73de84ea43",
     "word": "exhaust",
-    "example": "The car exhaust pollutes .",
+    "example": "The car exhaust pollutes.",
     "exampleCn": "汽车尾气污染空气。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20737,7 +20329,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5ed429e84034": {
     "sourceWordId": "word_5ed429e84034",
     "word": "lag",
-    "example": "My internet connection started .",
+    "example": "My internet connection started.",
     "exampleCn": "我的网络连接开始延迟。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -20745,8 +20337,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5f6950c391f3": {
     "sourceWordId": "word_5f6950c391f3",
     "word": "remains",
-    "example": "The remains of the old castle attract many tourists.",
-    "exampleCn": "古城堡的遗迹吸引了许多游客。",
+    "example": "The remains of an ancient civilization were discovered in the desert.",
+    "exampleCn": "在沙漠中发现了一个古代文明的遗迹。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -20883,14 +20475,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "fossil",
     "example": "Fossil fuels are non-renewable.",
     "exampleCn": "化石燃料是不可再生的。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_d942822da1e8": {
-    "sourceWordId": "word_d942822da1e8",
-    "word": "age",
-    "example": "What is the retirement age in your country?",
-    "exampleCn": "你们国家的退休年龄是多少？",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -21177,7 +20761,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_aafcc8ac88fa": {
     "sourceWordId": "word_aafcc8ac88fa",
     "word": "distinction",
-    "example": "There is a clear distinction between .",
+    "example": "There is a clear distinction between.",
     "exampleCn": "两者之间有明显的区别。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -21203,14 +20787,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "pottery",
     "example": "I bought a piece of pottery at the local market.",
     "exampleCn": "我在当地市场买了一件陶器。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_eace101a5e77": {
-    "sourceWordId": "word_eace101a5e77",
-    "word": "wife",
-    "example": "My wife is a teacher.",
-    "exampleCn": "我妻子是一名教师。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -21241,8 +20817,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_aaa2e7a046ff": {
     "sourceWordId": "word_aaa2e7a046ff",
     "word": "dominance",
-    "example": "The company is trying to maintain its dominance in the market.",
-    "exampleCn": "该公司试图保持其在市场上的支配地位。",
+    "example": "The company's dominance in the market is unchallenged.",
+    "exampleCn": "该公司在市场上的支配地位无人挑战。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -21657,15 +21233,15 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_3563c78aecba": {
     "sourceWordId": "word_3563c78aecba",
     "word": "virtually",
-    "example": "The work is virtually complete.",
-    "exampleCn": "工作几乎完成了。",
+    "example": "The project is virtually complete.",
+    "exampleCn": "该项目几乎完成了。",
     "sourceField": "example",
     "matchType": "wordId"
   },
   "word_82ca0b6a73ad": {
     "sourceWordId": "word_82ca0b6a73ad",
     "word": "subscription",
-    "example": "I have a monthly subscription to .",
+    "example": "I have a monthly subscription.",
     "exampleCn": "我每月订阅健身房会员。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -21945,7 +21521,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_938032bf7e4b": {
     "sourceWordId": "word_938032bf7e4b",
     "word": "trading",
-    "example": "The trading floor was busy .",
+    "example": "The trading floor was busy.",
     "exampleCn": "交易大厅一整天都很繁忙。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -22083,14 +21659,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "rainfall",
     "example": "The annual rainfall here is very high.",
     "exampleCn": "这里的年降雨量很大。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_0885ff9f77fb": {
-    "sourceWordId": "word_0885ff9f77fb",
-    "word": "fix",
-    "example": "Can you fix the leaky faucet?",
-    "exampleCn": "你能修好漏水的水龙头吗？",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -22254,14 +21822,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_c343bc6852db": {
-    "sourceWordId": "word_c343bc6852db",
-    "word": "twentieth",
-    "example": "The twentieth century saw many inventions.",
-    "exampleCn": "二十世纪见证了许多发明。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_gt10500_10194": {
     "sourceWordId": "word_gt10500_10194",
     "word": "vocation",
@@ -22297,7 +21857,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_2b077c3a1467": {
     "sourceWordId": "word_2b077c3a1467",
     "word": "circumstance",
-    "example": "Under no circumstance should .",
+    "example": "Under no circumstance should.",
     "exampleCn": "在任何情况下你都不应该撒谎。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -22673,8 +22233,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10490": {
     "sourceWordId": "word_gt10500_10490",
     "word": "mediator",
-    "example": "The landlord and tenant hired a mediator to settle the dispute over the security deposit.",
-    "exampleCn": "房东和租户请了一位调解人来解决关于押金的纠纷。",
+    "example": "The mediator helped the two companies resolve their contract dispute without going to court.",
+    "exampleCn": "调解人帮助两家公司解决了合同纠纷，避免了诉讼。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -22753,8 +22313,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_4fcad7f1f1df": {
     "sourceWordId": "word_4fcad7f1f1df",
     "word": "sometimes",
-    "example": "Sometimes I like to read before.",
-    "exampleCn": "有时我喜欢睡前阅读。",
+    "example": "Sometimes I go for a run in the morning.",
+    "exampleCn": "有时我早上会去跑步。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -23025,8 +22585,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_58dc46e5171f": {
     "sourceWordId": "word_58dc46e5171f",
     "word": "customs",
-    "example": "You need to declare items at customs when traveling abroad.",
-    "exampleCn": "出国旅行时需要在海关申报物品。",
+    "example": "You must declare all goods to customs when you enter the country.",
+    "exampleCn": "入境时你必须向海关申报所有物品。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -23217,7 +22777,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_2ec968e51f85": {
     "sourceWordId": "word_2ec968e51f85",
     "word": "placement",
-    "example": "The agency found a job placement .",
+    "example": "The agency found a job placement.",
     "exampleCn": "中介为他找到了工作安置。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -23281,7 +22841,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_bf3d936ea1fe": {
     "sourceWordId": "word_bf3d936ea1fe",
     "word": "progression",
-    "example": "Career progression is important .",
+    "example": "Career progression is important.",
     "exampleCn": "职业发展对我很重要。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -23361,8 +22921,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_3f8fa6a70639": {
     "sourceWordId": "word_3f8fa6a70639",
     "word": "governance",
-    "example": "Good governance is essential for any successful organization.",
-    "exampleCn": "良好的治理对任何成功的组织都至关重要。",
+    "example": "Good governance is essential for the development of any country.",
+    "exampleCn": "良好的治理对任何国家的发展都至关重要。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -23441,7 +23001,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_excel_13d4b0ab5278": {
     "sourceWordId": "word_excel_13d4b0ab5278",
     "word": "innate",
-    "example": "Babies have an innate ability .",
+    "example": "Babies have an innate ability.",
     "exampleCn": "婴儿生来就有哭泣的能力。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -23457,7 +23017,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_9a92180d3f67": {
     "sourceWordId": "word_9a92180d3f67",
     "word": "bitter",
-    "example": "The coffee was too bitter .",
+    "example": "The coffee was too bitter.",
     "exampleCn": "这咖啡对我来说太苦了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -23713,8 +23273,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_89a32dfc1c2d": {
     "sourceWordId": "word_89a32dfc1c2d",
     "word": "following",
-    "example": "Please complete the following tasks by tomorrow.",
-    "exampleCn": "请在明天之前完成下列任务。",
+    "example": "Following the meeting, a report was issued.",
+    "exampleCn": "会议之后，发布了一份报告。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -23990,14 +23550,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_63cb1205e171": {
-    "sourceWordId": "word_63cb1205e171",
-    "word": "box",
-    "example": "He put the gift in a small.",
-    "exampleCn": "他把礼物放进一个小盒子里。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_420de1da99f1": {
     "sourceWordId": "word_420de1da99f1",
     "word": "sacred",
@@ -24081,7 +23633,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_8a4212d7f41c": {
     "sourceWordId": "word_listening1179_8a4212d7f41c",
     "word": "intuitive",
-    "example": "The interface is very intuitive .",
+    "example": "The interface is very intuitive.",
     "exampleCn": "这个界面使用起来非常直观。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -24091,14 +23643,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "border",
     "example": "They crossed the border into Canada.",
     "exampleCn": "他们穿越边境进入加拿大。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_5fccc6c46528": {
-    "sourceWordId": "word_5fccc6c46528",
-    "word": "bread",
-    "example": "I bought a loaf of bread from the bakery.",
-    "exampleCn": "我从面包店买了一条面包。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -24278,14 +23822,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_f55e84dba333": {
-    "sourceWordId": "word_f55e84dba333",
-    "word": "busy",
-    "example": "I'm too busy to go out tonight.",
-    "exampleCn": "我太忙了，今晚出不去。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_545b005e776a": {
     "sourceWordId": "word_545b005e776a",
     "word": "noise",
@@ -24425,7 +23961,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_b02dd0ddfb02": {
     "sourceWordId": "word_b02dd0ddfb02",
     "word": "bone",
-    "example": "He broke a bone in .",
+    "example": "He broke a bone.",
     "exampleCn": "他腿骨折了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -24531,14 +24067,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "link",
     "example": "There is a link between diet and health.",
     "exampleCn": "饮食和健康有联系。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_c3f6e9b1b49c": {
-    "sourceWordId": "word_c3f6e9b1b49c",
-    "word": "singing",
-    "example": "She enjoys singing in the choir.",
-    "exampleCn": "她喜欢在合唱团唱歌。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -24702,14 +24230,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_fbba4fd14deb": {
-    "sourceWordId": "word_fbba4fd14deb",
-    "word": "boy",
-    "example": "The boy is playing football in the park.",
-    "exampleCn": "那个男孩正在公园里踢足球。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_b00e7121560f": {
     "sourceWordId": "word_b00e7121560f",
     "word": "simultaneously",
@@ -24763,14 +24283,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "oblige",
     "example": "Could you oblige me by closing the window?",
     "exampleCn": "你能帮忙关上窗户吗？",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_9f5b7ead8440": {
-    "sourceWordId": "word_9f5b7ead8440",
-    "word": "neck",
-    "example": "She wore a scarf around her neck.",
-    "exampleCn": "她脖子上围了一条围巾。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -25049,8 +24561,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_09915": {
     "sourceWordId": "word_gt10500_09915",
     "word": "tenancy",
-    "example": "The tenancy agreement states that we must give two months' notice before moving.",
-    "exampleCn": "与住房相关的实用例句。",
+    "example": "The landlord and tenant signed a tenancy agreement for two years.",
+    "exampleCn": "房东和租户签订了两年的租赁协议。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -25278,14 +24790,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_fd3cb043bcae": {
-    "sourceWordId": "word_fd3cb043bcae",
-    "word": "bear",
-    "example": "We saw a bear in the forest.",
-    "exampleCn": "我们在森林里看到一只熊。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_5f7ec305977f": {
     "sourceWordId": "word_5f7ec305977f",
     "word": "fantastic",
@@ -25347,14 +24851,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "lucky",
     "example": "I was lucky to find a parking spot.",
     "exampleCn": "我很幸运找到了停车位。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_d8e822aa8d74": {
-    "sourceWordId": "word_d8e822aa8d74",
-    "word": "chat",
-    "example": "We had a nice chat over coffee.",
-    "exampleCn": "我们边喝咖啡边聊得很开心。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -25649,15 +25145,15 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_c8beaffcec5a": {
     "sourceWordId": "word_c8beaffcec5a",
     "word": "pressing",
-    "example": "We have a pressing deadline to meet.",
-    "exampleCn": "我们有一个紧迫的期限要完成。",
+    "example": "The most pressing issue is the lack of clean water.",
+    "exampleCn": "最紧迫的问题是缺乏清洁水。",
     "sourceField": "example",
     "matchType": "wordId"
   },
   "word_81bf8cff3287": {
     "sourceWordId": "word_81bf8cff3287",
     "word": "subtle",
-    "example": "There is a subtle difference between .",
+    "example": "There is a subtle difference between.",
     "exampleCn": "两者之间有一个细微的差别。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -26161,7 +25657,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_4d62d9b563bf": {
     "sourceWordId": "word_4d62d9b563bf",
     "word": "darkness",
-    "example": "The darkness made it hard .",
+    "example": "The darkness made it hard.",
     "exampleCn": "黑暗使得很难看清。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -26265,8 +25761,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_9c171e267090": {
     "sourceWordId": "word_9c171e267090",
     "word": "insecurity",
-    "example": "Job insecurity is a common concern for many workers today.",
-    "exampleCn": "工作不安全感是当今许多工人普遍关心的问题。",
+    "example": "Her constant need for reassurance stems from deep-seated insecurity.",
+    "exampleCn": "她不断需要 reassurance 源于根深蒂固的不安全感。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -26457,7 +25953,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_0963b2bfbf77": {
     "sourceWordId": "word_0963b2bfbf77",
     "word": "sheet",
-    "example": "Please change the sheets on .",
+    "example": "Please change the sheets.",
     "exampleCn": "请换一下床单。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -26713,7 +26209,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5179937a5934": {
     "sourceWordId": "word_5179937a5934",
     "word": "urge",
-    "example": "I urge you to apply for .",
+    "example": "I urge you to apply.",
     "exampleCn": "我敦促你申请这份工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -26881,8 +26377,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_29e60c5e58d1": {
     "sourceWordId": "word_listening1179_29e60c5e58d1",
     "word": "amplify",
-    "example": "The microphone amplifies the sound.",
-    "exampleCn": "麦克风放大了声音。",
+    "example": "The speaker used a microphone to amplify his voice so everyone could hear.",
+    "exampleCn": "演讲者使用麦克风放大声音，以便每个人都能听到。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -26953,7 +26449,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10015": {
     "sourceWordId": "word_gt10500_10015",
     "word": "caravan",
-    "example": "We rented a caravan and spent the weekend by the seaside, cooking and sleeping .",
+    "example": "We rented a caravan and spent the weekend by the seaside, cooking and sleeping.",
     "exampleCn": "我们租了一辆旅行拖车，在海边度过周末，在里面做饭睡觉。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -27217,8 +26713,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_0a655d98dc39": {
     "sourceWordId": "word_listening1179_0a655d98dc39",
     "word": "industrious",
-    "example": "She is an industrious worker who always meets her deadlines.",
-    "exampleCn": "她是个勤劳的员工，总能按时完成任务。",
+    "example": "The industrious student spent hours in the library preparing for the exam.",
+    "exampleCn": "那个勤奋的学生在图书馆花了数小时准备考试。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -27486,14 +26982,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_b4098e614496": {
-    "sourceWordId": "word_b4098e614496",
-    "word": "boil",
-    "example": "Boil the water before drinking.",
-    "exampleCn": "喝水前先把水烧开。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_6c709bbf88c6": {
     "sourceWordId": "word_6c709bbf88c6",
     "word": "portray",
@@ -27521,7 +27009,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_a3a675d5db82": {
     "sourceWordId": "word_a3a675d5db82",
     "word": "melt",
-    "example": "The ice cream melted in .",
+    "example": "The ice cream melted.",
     "exampleCn": "冰淇淋在阳光下融化了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -27705,7 +27193,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_05b120a1b4dd": {
     "sourceWordId": "word_05b120a1b4dd",
     "word": "diagnosis",
-    "example": "The doctor gave a diagnosis .",
+    "example": "The doctor gave a diagnosis.",
     "exampleCn": "医生诊断为流感。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -27731,14 +27219,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "steps",
     "example": "Please follow the steps in the manual.",
     "exampleCn": "请按照手册中的步骤操作。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_0d7317eb7911": {
-    "sourceWordId": "word_0d7317eb7911",
-    "word": "tea",
-    "example": "Would you like a cup of tea?",
-    "exampleCn": "你想喝杯茶吗？",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -28027,14 +27507,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "groundwater",
     "example": "Many rural communities rely on groundwater for drinking.",
     "exampleCn": "许多农村社区依赖地下水作为饮用水。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_65fde9224838": {
-    "sourceWordId": "word_65fde9224838",
-    "word": "york",
-    "example": "I visited York during my trip to .",
-    "exampleCn": "我在英国旅行时参观了约克。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -28545,8 +28017,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_32dd663a5149": {
     "sourceWordId": "word_32dd663a5149",
     "word": "electronics",
-    "example": "I bought some new electronics for my home office.",
-    "exampleCn": "我为家庭办公室买了一些新电子设备。",
+    "example": "Modern electronics have revolutionized the way we communicate.",
+    "exampleCn": "现代电子设备彻底改变了我们的交流方式。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -28641,16 +28113,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_37972a34ae77": {
     "sourceWordId": "word_37972a34ae77",
     "word": "chill",
-    "example": "There is a chill in .",
+    "example": "There is a chill.",
     "exampleCn": "空气中有一丝寒意。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_332507473a34": {
-    "sourceWordId": "word_332507473a34",
-    "word": "soap",
-    "example": "I need to buy some soap for the bathroom.",
-    "exampleCn": "我需要买些肥皂放在浴室。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -28817,7 +28281,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_cee461e43589": {
     "sourceWordId": "word_cee461e43589",
     "word": "fur",
-    "example": "She wore a coat made .",
+    "example": "She wore a coat made.",
     "exampleCn": "她穿了一件毛皮大衣。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -28905,8 +28369,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_25a053bf003e": {
     "sourceWordId": "word_25a053bf003e",
     "word": "developed",
-    "example": "The developed countries have advanced infrastructure.",
-    "exampleCn": "发达国家拥有先进的基础设施。",
+    "example": "Developed countries have higher living standards.",
+    "exampleCn": "发达国家有更高的生活水平。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -28947,14 +28411,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "recycle",
     "example": "We should recycle plastic bottles.",
     "exampleCn": "我们应该回收塑料瓶。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_f44e194fe655": {
-    "sourceWordId": "word_f44e194fe655",
-    "word": "sugar",
-    "example": "Too much sugar is bad for your health.",
-    "exampleCn": "摄入太多糖对健康有害。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -29110,14 +28566,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_b1171bec59c7": {
-    "sourceWordId": "word_b1171bec59c7",
-    "word": "bike",
-    "example": "I ride my bike to work every.",
-    "exampleCn": "我每天骑自行车上班。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_6d63e02ad279": {
     "sourceWordId": "word_6d63e02ad279",
     "word": "raw",
@@ -29161,7 +28609,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_6882696da11a": {
     "sourceWordId": "word_6882696da11a",
     "word": "mud",
-    "example": "The car got stuck in .",
+    "example": "The car got stuck.",
     "exampleCn": "车陷在泥里了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -29281,8 +28729,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_e86dbda37f20": {
     "sourceWordId": "word_e86dbda37f20",
     "word": "dependency",
-    "example": "He wants to break his financial dependency on his parents.",
-    "exampleCn": "他想打破对父母的经济依赖。",
+    "example": "The country's economic dependency on oil exports is a concern.",
+    "exampleCn": "该国经济对石油出口的依赖令人担忧。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -29329,7 +28777,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_44205da7a33f": {
     "sourceWordId": "word_44205da7a33f",
     "word": "oak",
-    "example": "The table is made .",
+    "example": "The table is made.",
     "exampleCn": "桌子是橡木做的。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -29846,14 +29294,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_1699ee6ea8cd": {
-    "sourceWordId": "word_1699ee6ea8cd",
-    "word": "egg",
-    "example": "I usually have eggs for breakfast.",
-    "exampleCn": "我早餐通常吃鸡蛋。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_b4ac694549f3": {
     "sourceWordId": "word_b4ac694549f3",
     "word": "optimism",
@@ -29891,14 +29331,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "speculation",
     "example": "There is speculation about the cause.",
     "exampleCn": "关于原因有各种猜测。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_6dbc6763e91b": {
-    "sourceWordId": "word_6dbc6763e91b",
-    "word": "deer",
-    "example": "We saw deer in the forest.",
-    "exampleCn": "我们在森林里看到了鹿。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -30137,7 +29569,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_417845389612": {
     "sourceWordId": "word_417845389612",
     "word": "failed",
-    "example": "The failed experiment taught us .",
+    "example": "The failed experiment taught.",
     "exampleCn": "这个失败的实验教会了我们很多。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -30227,22 +29659,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "shatter",
     "example": "The glass shattered when it fell.",
     "exampleCn": "玻璃掉下来摔碎了。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_22e268d71dd6": {
-    "sourceWordId": "word_22e268d71dd6",
-    "word": "dad",
-    "example": "My dad drives me to school every morning.",
-    "exampleCn": "我爸爸每天早上开车送我去学校。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_635a1a291caa": {
-    "sourceWordId": "word_635a1a291caa",
-    "word": "fly",
-    "example": "We will fly to London next week.",
-    "exampleCn": "我们下周飞往伦敦。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -30430,14 +29846,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_7f838d6365fa": {
-    "sourceWordId": "word_7f838d6365fa",
-    "word": "arm",
-    "example": "He broke his arm in an accident.",
-    "exampleCn": "他在事故中摔断了手臂。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_1a4d23014ea0": {
     "sourceWordId": "word_1a4d23014ea0",
     "word": "blog",
@@ -30481,7 +29889,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_843ef7f7f1c5": {
     "sourceWordId": "word_843ef7f7f1c5",
     "word": "demonstration",
-    "example": "There was a demonstration against the .",
+    "example": "There was a demonstration against.",
     "exampleCn": "有一场反对新法律的示威。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -30601,7 +30009,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_ee88600844aa": {
     "sourceWordId": "word_ee88600844aa",
     "word": "hourly",
-    "example": "The bus runs hourly from 6 a.m. to 10 .",
+    "example": "The bus runs hourly from 6 a.m. to 10.",
     "exampleCn": "公交车从早上6点到晚上10点每小时一班。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -30929,7 +30337,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10008": {
     "sourceWordId": "word_gt10500_10008",
     "word": "cutoff",
-    "example": "The bank's cutoff for same-day transfers is 3 .",
+    "example": "The bank's cutoff for same-day transfers is 3.",
     "exampleCn": "银行的当日转账截止时间是下午3点。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -30971,14 +30379,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "dispute",
     "example": "They are in a dispute over the contract.",
     "exampleCn": "他们对合同有争议。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_c7fb01f3d845": {
-    "sourceWordId": "word_c7fb01f3d845",
-    "word": "ice",
-    "example": "The roads are covered with.",
-    "exampleCn": "道路被冰覆盖。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -31035,14 +30435,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "tangible",
     "example": "We need tangible evidence to prove the case.",
     "exampleCn": "我们需要确凿的证据来证明此案。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_c468ea41f289": {
-    "sourceWordId": "word_c468ea41f289",
-    "word": "feet",
-    "example": "My feet hurt after walking .",
-    "exampleCn": "走了一整天,我的脚很疼。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -31241,7 +30633,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_8c44030e6722": {
     "sourceWordId": "word_8c44030e6722",
     "word": "tag",
-    "example": "Check the price tag before .",
+    "example": "Check the price tag before.",
     "exampleCn": "购买前请查看价格标签。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -31337,7 +30729,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_1d8cca246edf": {
     "sourceWordId": "word_1d8cca246edf",
     "word": "prototype",
-    "example": "They tested the prototype of the .",
+    "example": "They tested the prototype.",
     "exampleCn": "他们测试了新车的原型。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -31574,14 +30966,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_a89a410458db": {
-    "sourceWordId": "word_a89a410458db",
-    "word": "wine",
-    "example": "We ordered a bottle of red wine.",
-    "exampleCn": "我们点了一瓶红葡萄酒。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_57e0f6f1148c": {
     "sourceWordId": "word_57e0f6f1148c",
     "word": "bathroom",
@@ -31633,8 +31017,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_dd5340ecb919": {
     "sourceWordId": "word_dd5340ecb919",
     "word": "ecology",
-    "example": "Ecology is important for understanding nature.",
-    "exampleCn": "生态学对理解自然很重要。",
+    "example": "Ecology is an important subject for understanding environmental issues.",
+    "exampleCn": "生态学是理解环境问题的重要学科。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -31763,14 +31147,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "invoke",
     "example": "The lawyer invoked a clause in the contract.",
     "exampleCn": "律师援引了合同中的一项条款。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_d7ee8696d4f4": {
-    "sourceWordId": "word_d7ee8696d4f4",
-    "word": "song",
-    "example": "I like this song very much.",
-    "exampleCn": "我非常喜欢这首歌。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -31937,7 +31313,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_fe22c4db4a43": {
     "sourceWordId": "word_fe22c4db4a43",
     "word": "persistence",
-    "example": "Her persistence paid off in .",
+    "example": "Her persistence paid.",
     "exampleCn": "她的坚持最终得到了回报。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -31945,7 +31321,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10486": {
     "sourceWordId": "word_gt10500_10486",
     "word": "mailbox",
-    "example": "Our mailbox was damaged by the storm, so we need to install a .",
+    "example": "Our mailbox was damaged by the storm, so we need to install.",
     "exampleCn": "今天早上我在邮箱里发现了一个没有邮票的包裹。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -31953,8 +31329,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5f09dd004734": {
     "sourceWordId": "word_5f09dd004734",
     "word": "determined",
-    "example": "She is determined to finish the project.",
-    "exampleCn": "她决心完成这个项目。",
+    "example": "She is determined to succeed in her career.",
+    "exampleCn": "她决心在事业上取得成功。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -31977,8 +31353,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_8fcfed5fd439": {
     "sourceWordId": "word_8fcfed5fd439",
     "word": "genetics",
-    "example": "She is studying genetics at the university to become a researcher.",
-    "exampleCn": "她正在大学学习遗传学,希望成为研究员。",
+    "example": "Advances in genetics have led to new treatments for inherited diseases.",
+    "exampleCn": "遗传学的进步为遗传疾病的治疗带来了新方法。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -32009,7 +31385,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_eb799ac33250": {
     "sourceWordId": "word_eb799ac33250",
     "word": "enemy",
-    "example": "They faced many enemies during .",
+    "example": "They faced many enemies during.",
     "exampleCn": "他们在战争中面对许多敌人。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -32033,7 +31409,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_65219f9f6260": {
     "sourceWordId": "word_65219f9f6260",
     "word": "historian",
-    "example": "The historian wrote a book about .",
+    "example": "The historian wrote a book about.",
     "exampleCn": "历史学家写了一本关于战争的书。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -32278,14 +31654,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_022b4f1b9005": {
-    "sourceWordId": "word_022b4f1b9005",
-    "word": "duck",
-    "example": "I like roast duck.",
-    "exampleCn": "我喜欢烤鸭。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_845181341db6": {
     "sourceWordId": "word_845181341db6",
     "word": "famine",
@@ -32409,7 +31777,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_9fce2172ca92": {
     "sourceWordId": "word_9fce2172ca92",
     "word": "loose",
-    "example": "This shirt is loose .",
+    "example": "This shirt is loose.",
     "exampleCn": "这件衬衫我穿着宽松。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -32457,7 +31825,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_ecf2038bd70e": {
     "sourceWordId": "word_ecf2038bd70e",
     "word": "qualify",
-    "example": "You need to qualify for .",
+    "example": "You need to qualify.",
     "exampleCn": "你需要有资格做这份工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -32601,7 +31969,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_3019189ceee8": {
     "sourceWordId": "word_3019189ceee8",
     "word": "orient",
-    "example": "She oriented herself to the .",
+    "example": "She oriented herself.",
     "exampleCn": "她让自己适应了新工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -32750,14 +32118,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_718095fd0faf": {
-    "sourceWordId": "word_718095fd0faf",
-    "word": "aunt",
-    "example": "My aunt lives in the countryside.",
-    "exampleCn": "我姨妈住在乡下。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_61d8b7a2b381": {
     "sourceWordId": "word_61d8b7a2b381",
     "word": "recycling",
@@ -32782,14 +32142,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_19e685359b15": {
-    "sourceWordId": "word_19e685359b15",
-    "word": "says",
-    "example": "The report says the economy is improving.",
-    "exampleCn": "报告说经济正在好转。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_5a97bb8dddd6": {
     "sourceWordId": "word_5a97bb8dddd6",
     "word": "retrieve",
@@ -32803,14 +32155,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "iran",
     "example": "I have a colleague from Iran.",
     "exampleCn": "我有一位来自伊朗的同事。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_93f65ed7553f": {
-    "sourceWordId": "word_93f65ed7553f",
-    "word": "orange",
-    "example": "I like orange juice.",
-    "exampleCn": "我喜欢橙汁。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -32913,7 +32257,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_c0f04252292d": {
     "sourceWordId": "word_listening1179_c0f04252292d",
     "word": "stroller",
-    "example": "Please fold the stroller before boarding .",
+    "example": "Please fold the stroller before boarding.",
     "exampleCn": "上巴士前请折叠婴儿推车。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -33035,14 +32379,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "gunfire",
     "example": "We heard gunfire in the distance.",
     "exampleCn": "我们听到远处的枪声。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_212f85fa2099": {
-    "sourceWordId": "word_212f85fa2099",
-    "word": "fox",
-    "example": "A fox was seen in the garden last night.",
-    "exampleCn": "昨晚在花园里看到一只狐狸。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -33313,7 +32649,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_1ad374e62df0": {
     "sourceWordId": "word_1ad374e62df0",
     "word": "subsequently",
-    "example": "He graduated and subsequently found .",
+    "example": "He graduated and subsequently found.",
     "exampleCn": "他毕业后随后找到了工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -33513,7 +32849,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_ab9f8f957fa6": {
     "sourceWordId": "word_ab9f8f957fa6",
     "word": "ripe",
-    "example": "The fruit is ripe enough .",
+    "example": "The fruit is ripe enough.",
     "exampleCn": "水果已经成熟可以吃了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -33579,14 +32915,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "knee",
     "example": "She hurt her knee while running.",
     "exampleCn": "她跑步时伤了膝盖。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_296690b206c6": {
-    "sourceWordId": "word_296690b206c6",
-    "word": "app",
-    "example": "I downloaded a fitness.",
-    "exampleCn": "我下载了一个健身应用。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -33665,8 +32993,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_71475e03f71b": {
     "sourceWordId": "word_71475e03f71b",
     "word": "venue",
-    "example": "The wedding venue was beautiful.",
-    "exampleCn": "婚礼场地很漂亮。",
+    "example": "The conference will be held at a new venue in the city center.",
+    "exampleCn": "会议将在市中心的一个新场地举行。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -33697,7 +33025,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10048": {
     "sourceWordId": "word_gt10500_10048",
     "word": "outnumber",
-    "example": "In our English class, international students outnumber locals two .",
+    "example": "In our English class, international students outnumber locals.",
     "exampleCn": "在我们的英语课上，国际学生以二比一的数量超过本地学生。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -33745,7 +33073,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_727635274570": {
     "sourceWordId": "word_727635274570",
     "word": "liberate",
-    "example": "The soldiers liberated the prisoners .",
+    "example": "The soldiers liberated the prisoners.",
     "exampleCn": "士兵们解放了战俘。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -33753,7 +33081,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_fe4a6ca32aaf": {
     "sourceWordId": "word_fe4a6ca32aaf",
     "word": "honey",
-    "example": "I like honey in .",
+    "example": "I like honey.",
     "exampleCn": "我喜欢在茶里加蜂蜜。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -34025,7 +33353,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_919e11cc0f60": {
     "sourceWordId": "word_919e11cc0f60",
     "word": "profound",
-    "example": "The experience had a profound effect .",
+    "example": "The experience had a profound effect.",
     "exampleCn": "那次经历对我产生了深远影响。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -34182,14 +33510,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_f527971aa77d": {
-    "sourceWordId": "word_f527971aa77d",
-    "word": "leg",
-    "example": "I hurt my leg while playing football.",
-    "exampleCn": "我踢足球时伤了腿。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_9d9b20f02855": {
     "sourceWordId": "word_9d9b20f02855",
     "word": "imbalance",
@@ -34230,14 +33550,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_46378b156935": {
-    "sourceWordId": "word_46378b156935",
-    "word": "cook",
-    "example": "I like to cook Italian food at home.",
-    "exampleCn": "我喜欢在家做意大利菜。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_6b299bf4f44b": {
     "sourceWordId": "word_6b299bf4f44b",
     "word": "enforcement",
@@ -34249,7 +33561,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_b56bb4c6842e": {
     "sourceWordId": "word_b56bb4c6842e",
     "word": "protest",
-    "example": "They held a protest against the .",
+    "example": "They held a protest against.",
     "exampleCn": "他们举行抗议反对新法律。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -34686,14 +33998,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_b62ff06acbb0": {
-    "sourceWordId": "word_b62ff06acbb0",
-    "word": "days",
-    "example": "I spent a few days at the beach.",
-    "exampleCn": "我在海滩度过了几天。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_9bf7bce7d531": {
     "sourceWordId": "word_9bf7bce7d531",
     "word": "dish",
@@ -34825,7 +34129,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_9d30397b2119": {
     "sourceWordId": "word_9d30397b2119",
     "word": "bay",
-    "example": "The ship anchored in .",
+    "example": "The ship anchored.",
     "exampleCn": "船停泊在海湾。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -34883,14 +34187,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "hierarchical",
     "example": "The company has a hierarchical structure.",
     "exampleCn": "公司有等级制结构。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_079d0cd5444e": {
-    "sourceWordId": "word_079d0cd5444e",
-    "word": "cry",
-    "example": "The baby cried because it was hungry.",
-    "exampleCn": "婴儿因为饿了而哭。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -35009,7 +34305,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_aac474b6b560": {
     "sourceWordId": "word_aac474b6b560",
     "word": "wound",
-    "example": "He has a deep wound on .",
+    "example": "He has a deep wound.",
     "exampleCn": "他腿上有一个很深的伤口。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -35171,14 +34467,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "slump",
     "example": "House prices slumped during the recession.",
     "exampleCn": "经济衰退期间房价暴跌。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_fafba1e1b9fd": {
-    "sourceWordId": "word_fafba1e1b9fd",
-    "word": "later",
-    "example": "I'll call you later to confirm the appointment.",
-    "exampleCn": "我稍后打电话给你确认预约。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -35417,7 +34705,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_3dffc494661d": {
     "sourceWordId": "word_3dffc494661d",
     "word": "jar",
-    "example": "She stored the cookies in .",
+    "example": "She stored the cookies.",
     "exampleCn": "她把饼干存放在罐子里。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -35574,14 +34862,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_listening1179_fe31dae5ff64": {
-    "sourceWordId": "word_listening1179_fe31dae5ff64",
-    "word": "ATM",
-    "example": "There is an ATM in the bank lobby.",
-    "exampleCn": "银行大厅有一台自动取款机。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_58fe5eaa2e80": {
     "sourceWordId": "word_58fe5eaa2e80",
     "word": "variance",
@@ -35662,14 +34942,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_589a3e5d5f6a": {
-    "sourceWordId": "word_589a3e5d5f6a",
-    "word": "cup",
-    "example": "Would you like a cup of tea?",
-    "exampleCn": "你想喝杯茶吗？",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_b85c97e6906f": {
     "sourceWordId": "word_b85c97e6906f",
     "word": "entitled",
@@ -35705,7 +34977,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_5251d7992361": {
     "sourceWordId": "word_listening1179_5251d7992361",
     "word": "cork",
-    "example": "He pulled the cork out of the wine bottle with .",
+    "example": "He pulled the cork out of the wine bottle with.",
     "exampleCn": "他砰地一声拔出了酒瓶的软木塞。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -35758,19 +35030,11 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_8ae07c987eb5": {
-    "sourceWordId": "word_8ae07c987eb5",
-    "word": "soda",
-    "example": "I'd like a glass of soda.",
-    "exampleCn": "我想要一杯苏打水。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_114a75d29f03": {
     "sourceWordId": "word_114a75d29f03",
     "word": "ceramics",
-    "example": "She displayed her handmade ceramics at the local market.",
-    "exampleCn": "她在当地市场展示了她手工制作的陶瓷制品。",
+    "example": "The museum has a large collection of ancient Chinese ceramics.",
+    "exampleCn": "这家博物馆收藏了大量中国古代陶瓷。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -35817,16 +35081,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_611100300c8f": {
     "sourceWordId": "word_listening1179_611100300c8f",
     "word": "blinds",
-    "example": "Please close the blinds to block out .",
+    "example": "Please close the blinds to block.",
     "exampleCn": "请关上百叶窗遮挡阳光。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_f689ca2d2a8a": {
-    "sourceWordId": "word_f689ca2d2a8a",
-    "word": "bus",
-    "example": "I take the bus to work every.",
-    "exampleCn": "我每天乘公交上班。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -35905,7 +35161,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_9c145db5ced5": {
     "sourceWordId": "word_9c145db5ced5",
     "word": "pollutant",
-    "example": "Factories release pollutants into .",
+    "example": "Factories release pollutants into.",
     "exampleCn": "工厂向空气中排放污染物。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -35939,14 +35195,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "overwork",
     "example": "He was stressed due to overwork.",
     "exampleCn": "他因过度工作而压力大。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_excel_6e317bcd6839": {
-    "sourceWordId": "word_excel_6e317bcd6839",
-    "word": "books",
-    "example": "I read three books last week.",
-    "exampleCn": "我上周读了三本书。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -36289,8 +35537,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_1ff42b9980dd": {
     "sourceWordId": "word_listening1179_1ff42b9980dd",
     "word": "signatory",
-    "example": "All signatories must attend the meeting.",
-    "exampleCn": "所有签署方必须参加会议。",
+    "example": "All signatories to the climate accord must meet their emission targets.",
+    "exampleCn": "气候协议的所有签署方必须达到其排放目标。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -36553,8 +35801,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_64ec6cd458d5": {
     "sourceWordId": "word_64ec6cd458d5",
     "word": "determinant",
-    "example": "Experience is a key determinant of success.",
-    "exampleCn": "经验是成功的关键决定因素。",
+    "example": "Education is a key determinant of future success.",
+    "exampleCn": "教育是未来成功的关键决定因素。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -36617,7 +35865,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_fd0aa733efbd": {
     "sourceWordId": "word_fd0aa733efbd",
     "word": "gun",
-    "example": "Hunting with a gun is regulated .",
+    "example": "Hunting with a gun is regulated.",
     "exampleCn": "用枪打猎受法律管制。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -36673,7 +35921,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_63cccf49391e": {
     "sourceWordId": "word_63cccf49391e",
     "word": "click",
-    "example": "Click the link to apply for .",
+    "example": "Click the link to apply.",
     "exampleCn": "点击链接申请这份工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -36697,8 +35945,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_04baa4ff79c4": {
     "sourceWordId": "word_listening1179_04baa4ff79c4",
     "word": "nanotechnology",
-    "example": "Nanotechnology is being used to develop more efficient solar panels.",
-    "exampleCn": "纳米技术正被用于开发更高效的太阳能电池板。",
+    "example": "Nanotechnology has potential applications in medicine, electronics, and energy.",
+    "exampleCn": "纳米技术在医学、电子和能源领域有潜在应用。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -36742,14 +35990,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_383fc80c496f": {
-    "sourceWordId": "word_383fc80c496f",
-    "word": "soccer",
-    "example": "He plays soccer every weekend.",
-    "exampleCn": "他每个周末都踢足球。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_a5162fba1f35": {
     "sourceWordId": "word_a5162fba1f35",
     "word": "logo",
@@ -36769,7 +36009,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_66b4e0b0a14c": {
     "sourceWordId": "word_66b4e0b0a14c",
     "word": "slip",
-    "example": "Be careful not to slip on .",
+    "example": "Be careful not to slip.",
     "exampleCn": "小心不要在冰上滑倒。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -36873,8 +36113,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_32132b88895d": {
     "sourceWordId": "word_listening1179_32132b88895d",
     "word": "precarious",
-    "example": "He lives in a precarious financial situation.",
-    "exampleCn": "他生活在不稳定的财务状况中。",
+    "example": "The climber found himself in a precarious position on the cliff edge.",
+    "exampleCn": "登山者发现自己处于悬崖边缘的危险位置。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -37094,14 +36334,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_d10e174914df": {
-    "sourceWordId": "word_d10e174914df",
-    "word": "rome",
-    "example": "Rome is famous for its ancient history.",
-    "exampleCn": "罗马以其古老历史而闻名。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_9469bfb03c22": {
     "sourceWordId": "word_9469bfb03c22",
     "word": "intervene",
@@ -37217,7 +36449,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_73ee841a0017": {
     "sourceWordId": "word_listening1179_73ee841a0017",
     "word": "requisite",
-    "example": "You must have the requisite skills for .",
+    "example": "You must have the requisite skills.",
     "exampleCn": "你必须具备这份工作所需的技能。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -37265,7 +36497,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_e7ee86196210": {
     "sourceWordId": "word_e7ee86196210",
     "word": "scar",
-    "example": "The accident left a scar on .",
+    "example": "The accident left a scar.",
     "exampleCn": "事故在他腿上留下了伤疤。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -37385,8 +36617,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10322": {
     "sourceWordId": "word_gt10500_10322",
     "word": "handover",
-    "example": "The landlord conducted a thorough handover inspection with the new tenant last Friday.",
-    "exampleCn": "上周五房东与新租户进行了全面的交接检查。",
+    "example": "The smooth handover of the project ensured that there was no disruption to the workflow.",
+    "exampleCn": "项目的顺利移交确保了工作流程没有中断。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -37401,8 +36633,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_1e962c4cd342": {
     "sourceWordId": "word_1e962c4cd342",
     "word": "decided",
-    "example": "She made a decided effort to finish on time.",
-    "exampleCn": "她下了果断的决心按时完成。",
+    "example": "There is a decided improvement in his English since he started practicing daily.",
+    "exampleCn": "自从他开始每天练习，他的英语有了明显的进步。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -37467,14 +36699,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "newly",
     "example": "The newly opened store is very popular.",
     "exampleCn": "新开的店很受欢迎。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_4a2fc953f5b7": {
-    "sourceWordId": "word_4a2fc953f5b7",
-    "word": "bin",
-    "example": "Please put the recyclables in the blue.",
-    "exampleCn": "请将可回收物放入蓝色垃圾桶。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -37665,7 +36889,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_dec51a75c226": {
     "sourceWordId": "word_dec51a75c226",
     "word": "rainy",
-    "example": "The weather is rainy today, so I took .",
+    "example": "The weather is rainy today, so I took.",
     "exampleCn": "今天下雨，所以我搭了公交车。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -37747,14 +36971,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "s",
     "example": "This shirt is size.",
     "exampleCn": "这件衬衫是小号的。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_excel_063bffb4b52b": {
-    "sourceWordId": "word_excel_063bffb4b52b",
-    "word": "ways",
-    "example": "There are many ways to solve this problem.",
-    "exampleCn": "解决这个问题有很多方式。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -37937,7 +37153,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_721f12dcac68": {
     "sourceWordId": "word_721f12dcac68",
     "word": "jealous",
-    "example": "She was jealous of her friend's .",
+    "example": "She was jealous of her friend'.",
     "exampleCn": "她嫉妒朋友的新工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -38105,7 +37321,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_c985ff8f2a43": {
     "sourceWordId": "word_c985ff8f2a43",
     "word": "fax",
-    "example": "Please send the contract .",
+    "example": "Please send the contract.",
     "exampleCn": "请用传真发送合同。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -38155,14 +37371,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "honestly",
     "example": "Honestly, I don't know the answer.",
     "exampleCn": "老实说，我不知道答案。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_110fc0005b62": {
-    "sourceWordId": "word_110fc0005b62",
-    "word": "korean",
-    "example": "I enjoy eating Korean barbecue.",
-    "exampleCn": "我喜欢吃韩国烤肉。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -38257,7 +37465,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_5c0692fe8305": {
     "sourceWordId": "word_5c0692fe8305",
     "word": "cue",
-    "example": "The cue for the next speaker is .",
+    "example": "The cue for the next speaker.",
     "exampleCn": "下一个发言者的提示是点头。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -38281,7 +37489,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_81427d2a9282": {
     "sourceWordId": "word_81427d2a9282",
     "word": "toll",
-    "example": "The accident death toll rose .",
+    "example": "The accident death toll rose.",
     "exampleCn": "事故死亡人数上升到十人。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -38313,7 +37521,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_21371eff0c31": {
     "sourceWordId": "word_21371eff0c31",
     "word": "patiently",
-    "example": "She waited patiently for .",
+    "example": "She waited patiently.",
     "exampleCn": "她耐心地等公交。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -38505,8 +37713,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_7683327b5f84": {
     "sourceWordId": "word_7683327b5f84",
     "word": "partially",
-    "example": "The road is partially blocked.",
-    "exampleCn": "道路部分被堵住了。",
+    "example": "The project was only partially completed due to lack of funds.",
+    "exampleCn": "由于缺乏资金，该项目仅部分完成。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -38545,7 +37753,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_fe32eb601c54": {
     "sourceWordId": "word_fe32eb601c54",
     "word": "fierce",
-    "example": "There was fierce competition for .",
+    "example": "There was fierce competition.",
     "exampleCn": "这份工作竞争激烈。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -38587,22 +37795,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "fraught",
     "example": "The project was fraught with difficulties.",
     "exampleCn": "该项目充满困难。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_176f4e517991": {
-    "sourceWordId": "word_176f4e517991",
-    "word": "cute",
-    "example": "The puppy in the pet shop looks very cute.",
-    "exampleCn": "宠物店里的小狗看起来很可爱。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_663ba0822fa0": {
-    "sourceWordId": "word_663ba0822fa0",
-    "word": "pet",
-    "example": "Many people have a pet at home.",
-    "exampleCn": "很多人家里养宠物。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -38707,14 +37899,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "instructional",
     "example": "The instructional video explains the process step by step.",
     "exampleCn": "这个教学视频一步步解释了流程。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_ee0c59950530": {
-    "sourceWordId": "word_ee0c59950530",
-    "word": "sad",
-    "example": "She felt sad about the news.",
-    "exampleCn": "她对这个消息感到伤心。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39009,7 +38193,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_d1d4d8e296ac": {
     "sourceWordId": "word_d1d4d8e296ac",
     "word": "purse",
-    "example": "I left my purse on .",
+    "example": "I left my purse.",
     "exampleCn": "我把钱包落在公交车上了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -39153,7 +38337,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_e4532ba82ced": {
     "sourceWordId": "word_e4532ba82ced",
     "word": "brutality",
-    "example": "The film depicts the brutality .",
+    "example": "The film depicts the brutality.",
     "exampleCn": "这部电影描绘了战争的残酷。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -39169,8 +38353,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_af7b75857386": {
     "sourceWordId": "word_af7b75857386",
     "word": "pregnancy",
-    "example": "She had a healthy pregnancy and gave birth to a baby girl.",
-    "exampleCn": "她怀孕期间很健康，生下了一个女婴。",
+    "example": "During pregnancy, it is important to maintain a balanced diet and attend regular check-ups.",
+    "exampleCn": "怀孕期间，保持均衡饮食并定期检查非常重要。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39219,14 +38403,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "weeks",
     "example": "I have been here for three weeks.",
     "exampleCn": "我在这里待了三周。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_fb48c4aa69bd": {
-    "sourceWordId": "word_fb48c4aa69bd",
-    "word": "bag",
-    "example": "I packed my bag for the trip.",
-    "exampleCn": "我为旅行打包了包。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39393,7 +38569,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_bb4e947548d5": {
     "sourceWordId": "word_bb4e947548d5",
     "word": "pedal",
-    "example": "He pressed the pedal to stop .",
+    "example": "He pressed the pedal to stop.",
     "exampleCn": "他踩下踏板停车。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -39403,14 +38579,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "bead",
     "example": "She wore a necklace of glass beads.",
     "exampleCn": "她戴了一条玻璃珠项链。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_b8701cbf5bf9": {
-    "sourceWordId": "word_b8701cbf5bf9",
-    "word": "girls",
-    "example": "The girls are playing in the park.",
-    "exampleCn": "女孩们在公园里玩。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39438,14 +38606,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_fb9400b9c30b": {
-    "sourceWordId": "word_fb9400b9c30b",
-    "word": "closed",
-    "example": "The store is closed on Sundays.",
-    "exampleCn": "这家商店周日关门。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_99b243259b54": {
     "sourceWordId": "word_99b243259b54",
     "word": "relaxing",
@@ -39467,14 +38627,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "vulnerability",
     "example": "The city's vulnerability to floods was underestimated.",
     "exampleCn": "该城市对洪水的脆弱性被低估了。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_ce90a2271a97": {
-    "sourceWordId": "word_ce90a2271a97",
-    "word": "ear",
-    "example": "I have an ear infection.",
-    "exampleCn": "我耳朵感染了。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39593,8 +38745,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_3ee15b8a77ec": {
     "sourceWordId": "word_listening1179_3ee15b8a77ec",
     "word": "sequential",
-    "example": "The tasks are done in sequential order.",
-    "exampleCn": "任务按顺序完成。",
+    "example": "The data is stored in sequential order for easy retrieval.",
+    "exampleCn": "数据按顺序存储以便于检索。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39633,8 +38785,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_451b3a088b22": {
     "sourceWordId": "word_listening1179_451b3a088b22",
     "word": "contaminant",
-    "example": "The water test found traces of a harmful contaminant.",
-    "exampleCn": "水质检测发现有害污染物的痕迹。",
+    "example": "The water supply was found to contain chemical contaminants.",
+    "exampleCn": "供水系统被发现含有化学污染物。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39657,7 +38809,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_excel_ed574aa71eb8": {
     "sourceWordId": "word_excel_ed574aa71eb8",
     "word": "workers",
-    "example": "The workers finished their shift at 6 .",
+    "example": "The workers finished their shift at 6.",
     "exampleCn": "工人们在下午六点完成了他们的班次。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -39937,8 +39089,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10348": {
     "sourceWordId": "word_gt10500_10348",
     "word": "worksheet",
-    "example": "Complete the worksheet on fractions and hand it in by Friday.",
-    "exampleCn": "完成分数练习册，周五前上交。",
+    "example": "The students completed a worksheet to practice their grammar skills.",
+    "exampleCn": "学生们完成了一张工作表来练习语法技能。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -39995,14 +39147,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "resume",
     "example": "Please resume your work after lunch.",
     "exampleCn": "午饭后请继续工作。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_a119c2297afd": {
-    "sourceWordId": "word_a119c2297afd",
-    "word": "tenth",
-    "example": "He finished in tenth place in the race.",
-    "exampleCn": "他在比赛中获得第十名。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -40081,8 +39225,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f31b576e5488": {
     "sourceWordId": "word_f31b576e5488",
     "word": "financially",
-    "example": "She is financially dependent on her parents.",
-    "exampleCn": "她在经济上依赖父母。",
+    "example": "Many students struggle financially while studying abroad due to high living costs.",
+    "exampleCn": "许多留学生因生活成本高昂而在经济上陷入困境。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -40278,14 +39422,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_b7c13d508639": {
-    "sourceWordId": "word_b7c13d508639",
-    "word": "desk",
-    "example": "Please put the documents on my desk.",
-    "exampleCn": "请把文件放在我桌上。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_d3caacb9bddf": {
     "sourceWordId": "word_d3caacb9bddf",
     "word": "arctic",
@@ -40441,7 +39577,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_cd0442026533": {
     "sourceWordId": "word_cd0442026533",
     "word": "becoming",
-    "example": "That dress is very becoming .",
+    "example": "That dress is very becoming.",
     "exampleCn": "那条裙子你穿非常合身。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -40878,14 +40014,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_876399a2e139": {
-    "sourceWordId": "word_876399a2e139",
-    "word": "toy",
-    "example": "The child played with a .",
-    "exampleCn": "孩子玩玩具车。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_4c3a7d4e1d46": {
     "sourceWordId": "word_4c3a7d4e1d46",
     "word": "aftermath",
@@ -41075,14 +40203,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "deteriorate",
     "example": "The patient's health began to deteriorate.",
     "exampleCn": "病人的健康状况开始恶化。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_7b26f77e6ef8": {
-    "sourceWordId": "word_7b26f77e6ef8",
-    "word": "washington",
-    "example": "He works in Washington, .",
-    "exampleCn": "他在华盛顿特区工作。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -41625,7 +40745,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_182c7dd578fe": {
     "sourceWordId": "word_182c7dd578fe",
     "word": "brightly",
-    "example": "The sun shone brightly .",
+    "example": "The sun shone brightly.",
     "exampleCn": "太阳整天明亮地照耀。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -41665,7 +40785,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_977a47f280d5": {
     "sourceWordId": "word_977a47f280d5",
     "word": "mold",
-    "example": "The bread has mold .",
+    "example": "The bread has mold.",
     "exampleCn": "面包上长霉了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -41886,18 +41006,10 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_593937da9f16": {
-    "sourceWordId": "word_593937da9f16",
-    "word": "russian",
-    "example": "I'm learning Russian for my trip to Moscow.",
-    "exampleCn": "我正在为莫斯科之旅学习俄语。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_24647d89a27b": {
     "sourceWordId": "word_24647d89a27b",
     "word": "formally",
-    "example": "You should formally apply for .",
+    "example": "You should formally apply.",
     "exampleCn": "你应该正式申请这份工作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -42001,7 +41113,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_77bd22316378": {
     "sourceWordId": "word_77bd22316378",
     "word": "villa",
-    "example": "They rented a villa by .",
+    "example": "They rented a villa.",
     "exampleCn": "他们在海边租了一栋别墅。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -42059,14 +41171,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "reasons",
     "example": "There are many reasons to learn a language.",
     "exampleCn": "学习一门语言有很多理由。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_bd0fb9d9b10e": {
-    "sourceWordId": "word_bd0fb9d9b10e",
-    "word": "cake",
-    "example": "She baked a cake for my birthday.",
-    "exampleCn": "她为我生日烤了一个蛋糕。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -42401,7 +41505,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_411df96bc196": {
     "sourceWordId": "word_411df96bc196",
     "word": "salesman",
-    "example": "The salesman helped me choose .",
+    "example": "The salesman helped me choose.",
     "exampleCn": "男推销员帮我选了一辆车。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -42478,14 +41582,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_e14ae1516220": {
-    "sourceWordId": "word_e14ae1516220",
-    "word": "beer",
-    "example": "Would you like a beer?",
-    "exampleCn": "你想喝杯啤酒吗？",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_ebfcf63d7e6e": {
     "sourceWordId": "word_ebfcf63d7e6e",
     "word": "fairly",
@@ -42537,7 +41633,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_49dc3eba14f5": {
     "sourceWordId": "word_49dc3eba14f5",
     "word": "diagnostic",
-    "example": "They ran a diagnostic test on .",
+    "example": "They ran a diagnostic test.",
     "exampleCn": "他们对汽车进行了诊断测试。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -42697,7 +41793,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_a531d181f0ea": {
     "sourceWordId": "word_a531d181f0ea",
     "word": "tempt",
-    "example": "The offer tempted him to quit .",
+    "example": "The offer tempted him to quit.",
     "exampleCn": "那个提议诱惑他辞职。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -42769,7 +41865,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_687a1c21a322": {
     "sourceWordId": "word_687a1c21a322",
     "word": "girlfriend",
-    "example": "He introduced his girlfriend .",
+    "example": "He introduced his girlfriend.",
     "exampleCn": "他把他的女朋友介绍给我们。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -43014,14 +42110,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_6e4fb05b2085": {
-    "sourceWordId": "word_6e4fb05b2085",
-    "word": "pan",
-    "example": "I need a non-stick pan for cooking.",
-    "exampleCn": "我需要一个不粘锅来做饭。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_84173912a92c": {
     "sourceWordId": "word_84173912a92c",
     "word": "lit",
@@ -43193,7 +42281,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_excel_846d124b6785": {
     "sourceWordId": "word_excel_846d124b6785",
     "word": "flowers",
-    "example": "She bought some flowers for .",
+    "example": "She bought some flowers.",
     "exampleCn": "她为妈妈买了一些花。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -43265,8 +42353,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_240f795f3f95": {
     "sourceWordId": "word_240f795f3f95",
     "word": "asset",
-    "example": "Having good communication skills is a great asset in the workplace.",
-    "exampleCn": "拥有良好的沟通技巧在工作场所是一项巨大的财富。",
+    "example": "The company's main assets include its brand and intellectual property.",
+    "exampleCn": "公司的主要资产包括其品牌和知识产权。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -43521,7 +42609,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_dc006e2ae26e": {
     "sourceWordId": "word_dc006e2ae26e",
     "word": "clutch",
-    "example": "She clutched her bag nervously on .",
+    "example": "She clutched her bag nervously.",
     "exampleCn": "她在公交车上紧张地紧握着手提包。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -43537,8 +42625,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_f019cab46060": {
     "sourceWordId": "word_f019cab46060",
     "word": "unanimous",
-    "example": "The committee reached a unanimous decision.",
-    "exampleCn": "委员会达成了一致决定。",
+    "example": "The committee reached a unanimous decision to approve the proposal.",
+    "exampleCn": "委员会一致决定批准该提案。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -43633,8 +42721,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_cb5165764902": {
     "sourceWordId": "word_cb5165764902",
     "word": "adviser",
-    "example": "I consulted my financial adviser before investing.",
-    "exampleCn": "我在投资前咨询了我的财务顾问。",
+    "example": "The financial adviser recommended investing in a diversified portfolio.",
+    "exampleCn": "财务顾问建议投资多元化的投资组合。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -43737,8 +42825,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_1d3b0867142e": {
     "sourceWordId": "word_1d3b0867142e",
     "word": "homework",
-    "example": "I need to finish my homework before going.",
-    "exampleCn": "我需要在出去之前完成家庭作业。",
+    "example": "The teacher assigned a lot of homework over the weekend.",
+    "exampleCn": "老师周末布置了很多家庭作业。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -44070,27 +43158,11 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_6cca4220b2c8": {
-    "sourceWordId": "word_6cca4220b2c8",
-    "word": "grandma",
-    "example": "My grandma bakes the best cookies.",
-    "exampleCn": "我奶奶烤的饼干最好吃。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_7008a673ce6a": {
     "sourceWordId": "word_7008a673ce6a",
     "word": "nutrient",
     "example": "Fruits are rich in nutrients.",
     "exampleCn": "水果富含营养素。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_309e5069339a": {
-    "sourceWordId": "word_309e5069339a",
-    "word": "o'clock",
-    "example": "The meeting starts at 3 o'clock.",
-    "exampleCn": "会议三点开始。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -44265,8 +43337,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_listening1179_afebe3466940": {
     "sourceWordId": "word_listening1179_afebe3466940",
     "word": "contractual",
-    "example": "They have a contractual obligation to finish the project.",
-    "exampleCn": "他们有合同义务完成项目。",
+    "example": "The company has a contractual obligation to deliver the goods by Friday.",
+    "exampleCn": "公司有合同义务在周五前交货。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -44283,14 +43355,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "methodological",
     "example": "The methodological approach was sound.",
     "exampleCn": "方法论方法很合理。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_d752b9d04068": {
-    "sourceWordId": "word_d752b9d04068",
-    "word": "apple",
-    "example": "I ate an apple for breakfast.",
-    "exampleCn": "我早餐吃了一个苹果。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -44411,14 +43475,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "rectangular",
     "example": "We need a rectangular table for the meeting room.",
     "exampleCn": "我们需要一张长方形的桌子放在会议室。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_1600740c91b0": {
-    "sourceWordId": "word_1600740c91b0",
-    "word": "ends",
-    "example": "Tie both ends of the rope together to make a loop.",
-    "exampleCn": "把绳子的两端系在一起形成一个环。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -44601,7 +43657,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_afa04fa71fc4": {
     "sourceWordId": "word_afa04fa71fc4",
     "word": "parliament",
-    "example": "The parliament passed a .",
+    "example": "The parliament passed.",
     "exampleCn": "议会通过了一项新法律。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -44886,14 +43942,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_b6e346593e5a": {
-    "sourceWordId": "word_b6e346593e5a",
-    "word": "madam",
-    "example": "Dear Madam, I am writing to complain.",
-    "exampleCn": "尊敬的女士，我写信投诉。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_listening1179_96d0955b7496": {
     "sourceWordId": "word_listening1179_96d0955b7496",
     "word": "meteorological",
@@ -45067,14 +44115,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "semi",
     "example": "The truck driver parked the semi near the warehouse.",
     "exampleCn": "卡车司机把半挂车停在了仓库附近。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_82ac205b3b54": {
-    "sourceWordId": "word_82ac205b3b54",
-    "word": "midnight",
-    "example": "The last train leaves at midnight.",
-    "exampleCn": "最后一班火车午夜出发。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -45569,7 +44609,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_107379ca1133": {
     "sourceWordId": "word_107379ca1133",
     "word": "tattoo",
-    "example": "He got a tattoo on .",
+    "example": "He got a tattoo.",
     "exampleCn": "他在胳膊上纹了身。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -45619,14 +44659,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "heads",
     "example": "The department heads met to discuss the budget.",
     "exampleCn": "部门领导开会讨论预算。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_cc237d980879": {
-    "sourceWordId": "word_cc237d980879",
-    "word": "legs",
-    "example": "He crossed his legs while sitting.",
-    "exampleCn": "他坐着时翘起了二郎腿。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -46126,14 +45158,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_557cd26810e8": {
-    "sourceWordId": "word_557cd26810e8",
-    "word": "kent",
-    "example": "He lives in Kent.",
-    "exampleCn": "他住在肯特。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_listening1179_ec752d1d10b6": {
     "sourceWordId": "word_listening1179_ec752d1d10b6",
     "word": "algebra",
@@ -46193,7 +45217,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_d1d3706eb805": {
     "sourceWordId": "word_d1d3706eb805",
     "word": "particle",
-    "example": "Dust particles float in .",
+    "example": "Dust particles float.",
     "exampleCn": "灰尘微粒漂浮在空气中。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -46329,8 +45353,8 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_gt10500_10494": {
     "sourceWordId": "word_gt10500_10494",
     "word": "mistreat",
-    "example": "The tenant reported the landlord to the housing authority for mistreating the maintenance staff.",
-    "exampleCn": "租户向住房管理局举报房东虐待维修人员。",
+    "example": "The organization works to protect animals from being mistreated.",
+    "exampleCn": "该组织致力于保护动物免受虐待。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -46377,7 +45401,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_excel_1b16b1df538b": {
     "sourceWordId": "word_excel_1b16b1df538b",
     "word": "n",
-    "example": "Nitrogen is a gas, and its symbol .",
+    "example": "Nitrogen is a gas, and its symbol.",
     "exampleCn": "氮是一种气体，它的符号是n。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -46473,7 +45497,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_413260ea154e": {
     "sourceWordId": "word_413260ea154e",
     "word": "thief",
-    "example": "A thief stole my wallet on .",
+    "example": "A thief stole my wallet.",
     "exampleCn": "一个小偷在公交车上偷了我的钱包。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -46633,7 +45657,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_7057b8f6ef7f": {
     "sourceWordId": "word_7057b8f6ef7f",
     "word": "hat",
-    "example": "Wear a hat to protect from .",
+    "example": "Wear a hat to protect from.",
     "exampleCn": "戴上帽子防晒。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -46771,14 +45795,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "meagre",
     "example": "The company offered a meagre salary.",
     "exampleCn": "公司提供了微薄的薪水。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_95d8ab2c9f67": {
-    "sourceWordId": "word_95d8ab2c9f67",
-    "word": "faces",
-    "example": "The children had happy faces.",
-    "exampleCn": "孩子们脸上洋溢着快乐。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -47137,7 +46153,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_excel_238fa28a9497": {
     "sourceWordId": "word_excel_238fa28a9497",
     "word": "instructions",
-    "example": "Follow the instructions on .",
+    "example": "Follow the instructions.",
     "exampleCn": "按照盒子上的指令操作。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -47401,7 +46417,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_31fb90bbc557": {
     "sourceWordId": "word_31fb90bbc557",
     "word": "cocktail",
-    "example": "We ordered cocktails at .",
+    "example": "We ordered cocktails.",
     "exampleCn": "我们在酒吧点了鸡尾酒。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -47670,14 +46686,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_c6d5de5a1472": {
-    "sourceWordId": "word_c6d5de5a1472",
-    "word": "cow",
-    "example": "The farmer milks the cows every morning.",
-    "exampleCn": "农民每天早上给奶牛挤奶。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_a312f9f8c121": {
     "sourceWordId": "word_a312f9f8c121",
     "word": "pepper",
@@ -47689,7 +46697,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_aeaeb0ac7854": {
     "sourceWordId": "word_aeaeb0ac7854",
     "word": "thirsty",
-    "example": "I am thirsty after .",
+    "example": "I am thirsty after.",
     "exampleCn": "跑步后我口渴了。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -47785,7 +46793,7 @@ export const MEANING_EXAMPLE_INDEX = {
   "word_506b592267be": {
     "sourceWordId": "word_506b592267be",
     "word": "dash",
-    "example": "He made a dash for .",
+    "example": "He made a dash.",
     "exampleCn": "他冲向公交车。",
     "sourceField": "example",
     "matchType": "wordId"
@@ -48003,6 +47011,998 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "gracious",
     "example": "She was a gracious hostess.",
     "exampleCn": "她是一位亲切的女主人。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_4a7a5ff9e356": {
+    "sourceWordId": "word_4a7a5ff9e356",
+    "word": "little",
+    "example": "I have a little money left for the weekend.",
+    "exampleCn": "我周末剩下一点钱。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_d46ed415789f": {
+    "sourceWordId": "word_d46ed415789f",
+    "word": "abnormality",
+    "example": "The test showed no abnormality in the results.",
+    "exampleCn": "测试结果显示没有异常。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_eee641f56c3d": {
+    "sourceWordId": "word_eee641f56c3d",
+    "word": "telecommute",
+    "example": "Many staff telecommute twice a week under the new policy.",
+    "exampleCn": "根据新政策，许多员工每周远程办公两次。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_0c16baf0eded": {
+    "sourceWordId": "word_0c16baf0eded",
+    "word": "japanese",
+    "example": "She is learning Japanese.",
+    "exampleCn": "她为了工作在学习日语。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_320aa710f409": {
+    "sourceWordId": "word_320aa710f409",
+    "word": "italian",
+    "example": "She loves Italian food, especially pasta.",
+    "exampleCn": "她喜欢意大利菜，尤其是意面。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_dab0dee63ad3": {
+    "sourceWordId": "word_dab0dee63ad3",
+    "word": "france",
+    "example": "I'm planning to visit France next summer.",
+    "exampleCn": "我计划明年夏天去法国旅游。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_fe41e892a2b8": {
+    "sourceWordId": "word_listening1179_fe41e892a2b8",
+    "word": "marginalisation",
+    "example": "The policy aims to reduce marginalisation of minority groups.",
+    "exampleCn": "该政策旨在减少少数群体的边缘化。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_9ce70bd1d4b3": {
+    "sourceWordId": "word_9ce70bd1d4b3",
+    "word": "ought",
+    "example": "You ought to see a doctor.",
+    "exampleCn": "你应该去看医生。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_d7af66c3eabd": {
+    "sourceWordId": "word_d7af66c3eabd",
+    "word": "restatement",
+    "example": "The restatement clarified the policy.",
+    "exampleCn": "重新表述澄清了政策。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_d8b9d454eca1": {
+    "sourceWordId": "word_d8b9d454eca1",
+    "word": "israel",
+    "example": "I visited Israel last year.",
+    "exampleCn": "我去年访问了以色列。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_081df50ca8d8": {
+    "sourceWordId": "word_081df50ca8d8",
+    "word": "graphics",
+    "example": "The graphics in this video game are impressive.",
+    "exampleCn": "这款电子游戏的图形令人印象深刻。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_3fac38e63201": {
+    "sourceWordId": "word_3fac38e63201",
+    "word": "olympics",
+    "example": "The Olympics bring together athletes from all over the world.",
+    "exampleCn": "奥运会汇聚了来自世界各地的运动员。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_1620c6035e58": {
+    "sourceWordId": "word_1620c6035e58",
+    "word": "cohesion",
+    "example": "Team cohesion is important for success.",
+    "exampleCn": "团队凝聚力对成功很重要。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_0ac4e8ae342a": {
+    "sourceWordId": "word_listening1179_0ac4e8ae342a",
+    "word": "plagiarise",
+    "example": "If you plagiarise in your essay, you will fail the course.",
+    "exampleCn": "如果你在论文中抄袭，你这门课就会不及格。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_8c8fa8880a1e": {
+    "sourceWordId": "word_8c8fa8880a1e",
+    "word": "underlie",
+    "example": "These principles underlie our company policy.",
+    "exampleCn": "这些原则是我们的公司政策基础。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_be09f94ae485": {
+    "sourceWordId": "word_be09f94ae485",
+    "word": "heighten",
+    "example": "The music heightened the tension.",
+    "exampleCn": "音乐增强了紧张感。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_92c9501bf3a3": {
+    "sourceWordId": "word_92c9501bf3a3",
+    "word": "found",
+    "example": "They plan to found a new school in the area.",
+    "exampleCn": "他们计划在该地区创办一所新学校。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_22ae6ede06ba": {
+    "sourceWordId": "word_listening1179_22ae6ede06ba",
+    "word": "desertification",
+    "example": "Climate change accelerates desertification in many regions.",
+    "exampleCn": "气候变化加速了许多地区的荒漠化。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_635bf3103516": {
+    "sourceWordId": "word_635bf3103516",
+    "word": "massachusetts",
+    "example": "He moved to Massachusetts.",
+    "exampleCn": "他为了新工作搬到了马萨诸塞州。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_0381c2eb39e7": {
+    "sourceWordId": "word_0381c2eb39e7",
+    "word": "persona",
+    "example": "Her public persona is very different from her private self.",
+    "exampleCn": "她的公众形象与私下里的她大不相同。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_b0e26827e63a": {
+    "sourceWordId": "word_b0e26827e63a",
+    "word": "america",
+    "example": "She moved to America for a better.",
+    "exampleCn": "她为了更好的工作搬到了美国。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_c2a5b8c3b402": {
+    "sourceWordId": "word_c2a5b8c3b402",
+    "word": "encode",
+    "example": "The system can encode data to protect privacy.",
+    "exampleCn": "该系统可以编码数据以保护隐私。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_fed61c5032e3": {
+    "sourceWordId": "word_fed61c5032e3",
+    "word": "videoconference",
+    "example": "We had a videoconference with the overseas team.",
+    "exampleCn": "我们与海外团队开了视频会议。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_e56a471f7ae0": {
+    "sourceWordId": "word_e56a471f7ae0",
+    "word": "causation",
+    "example": "The study examined causation.",
+    "exampleCn": "这项研究考察了因果关系。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_45e3d5d23009": {
+    "sourceWordId": "word_45e3d5d23009",
+    "word": "sexuality",
+    "example": "The course discusses human sexuality.",
+    "exampleCn": "这门课程讨论人类性。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_58173f0423e4": {
+    "sourceWordId": "word_58173f0423e4",
+    "word": "immobilise",
+    "example": "A splint will immobilise the broken.",
+    "exampleCn": "夹板将固定断臂。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_7e2d00b3ac67": {
+    "sourceWordId": "word_7e2d00b3ac67",
+    "word": "fluctuate",
+    "example": "Prices fluctuate during holidays.",
+    "exampleCn": "节日期间价格波动。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ec0967417f32": {
+    "sourceWordId": "word_ec0967417f32",
+    "word": "paintwork",
+    "example": "The car's paintwork was badly scratched after the hailstorm.",
+    "exampleCn": "冰雹过后，汽车的漆面被严重刮伤。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_cc2eb0eaa05b": {
+    "sourceWordId": "word_cc2eb0eaa05b",
+    "word": "runaround",
+    "example": "The customer got the runaround from the insurance company when trying to file a claim.",
+    "exampleCn": "顾客在尝试申请理赔时被保险公司推诿。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_57f92721d489": {
+    "sourceWordId": "word_57f92721d489",
+    "word": "postbox",
+    "example": "I dropped the letter into the red postbox on the corner before the last collection.",
+    "exampleCn": "我在最后一次收件前把信投进了拐角处的红色邮筒。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_b471e40e036c": {
+    "sourceWordId": "word_b471e40e036c",
+    "word": "shortcoming",
+    "example": "One shortcoming of the plan is its high cost.",
+    "exampleCn": "该计划的一个缺点是成本高。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_f602e1edec07": {
+    "sourceWordId": "word_f602e1edec07",
+    "word": "gatherer",
+    "example": "The gatherer collected berries in the forest.",
+    "exampleCn": "采集者在森林里采集浆果。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_fadcdb797829": {
+    "sourceWordId": "word_fadcdb797829",
+    "word": "larder",
+    "example": "We keep canned goods in the larder.",
+    "exampleCn": "我们把罐头食品放在食品储藏室里。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_19efe2802265": {
+    "sourceWordId": "word_19efe2802265",
+    "word": "hypothesize",
+    "example": "Scientists hypothesize that the universe is expanding.",
+    "exampleCn": "科学家假设宇宙在膨胀。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_8445d41b803f": {
+    "sourceWordId": "word_8445d41b803f",
+    "word": "impair",
+    "example": "Smoking can impair your health.",
+    "exampleCn": "吸烟会损害健康。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_90fb78881cc8": {
+    "sourceWordId": "word_90fb78881cc8",
+    "word": "noticeboard",
+    "example": "Check the noticeboard for updates.",
+    "exampleCn": "查看布告栏了解最新信息。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_65ebea085caa": {
+    "sourceWordId": "word_65ebea085caa",
+    "word": "misidentify",
+    "example": "The witness misidentified the suspect.",
+    "exampleCn": "证人认错了嫌疑人。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_eef1ce38b4f9": {
+    "sourceWordId": "word_eef1ce38b4f9",
+    "word": "applied",
+    "example": "The applied research led to a new invention.",
+    "exampleCn": "应用研究促成了一项新发明。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_f394b30a1830": {
+    "sourceWordId": "word_f394b30a1830",
+    "word": "permittee",
+    "example": "Only the permittee is allowed to park in this reserved space.",
+    "exampleCn": "只有持证人才能在这个预留车位停车。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_89db2bacfb87": {
+    "sourceWordId": "word_89db2bacfb87",
+    "word": "trousers",
+    "example": "He bought a new pair of trousers.",
+    "exampleCn": "他买了一条新裤子。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_7c838daaf215": {
+    "sourceWordId": "word_7c838daaf215",
+    "word": "sitting",
+    "example": "We are sitting in the waiting room.",
+    "exampleCn": "我们正坐在候诊室。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_4faac7faa0ac": {
+    "sourceWordId": "word_4faac7faa0ac",
+    "word": "minutes",
+    "example": "The meeting minutes are due tomorrow.",
+    "exampleCn": "会议记录明天到期。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_ed04ce0a1d53": {
+    "sourceWordId": "word_listening1179_ed04ce0a1d53",
+    "word": "reforestation",
+    "example": "The government has launched a massive reforestation project.",
+    "exampleCn": "政府启动了一个大规模的重新造林项目。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_b458d8329f54": {
+    "sourceWordId": "word_b458d8329f54",
+    "word": "asian",
+    "example": "There are many Asian restaurants in this city.",
+    "exampleCn": "这个城市有很多亚洲餐馆。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ca220417034a": {
+    "sourceWordId": "word_ca220417034a",
+    "word": "randomize",
+    "example": "The computer will randomize the list.",
+    "exampleCn": "电脑会随机化列表。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ee58f690ad76": {
+    "sourceWordId": "word_ee58f690ad76",
+    "word": "conceptualize",
+    "example": "It's hard to conceptualize such a large project.",
+    "exampleCn": "很难概念化这么大的项目。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_c42006c2ccbe": {
+    "sourceWordId": "word_c42006c2ccbe",
+    "word": "centralize",
+    "example": "The company decided to centralize its operations.",
+    "exampleCn": "公司决定集中运营。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_3ae74d0e0492": {
+    "sourceWordId": "word_3ae74d0e0492",
+    "word": "described",
+    "example": "The scene described in the book is very vivid.",
+    "exampleCn": "书中描述的场景非常生动。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_7bb9b481817b": {
+    "sourceWordId": "word_7bb9b481817b",
+    "word": "killed",
+    "example": "The killed animals were removed from the road.",
+    "exampleCn": "被撞死的动物被从路上移走。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_62d1ff031461": {
+    "sourceWordId": "word_62d1ff031461",
+    "word": "affected",
+    "example": "The bad weather affected our travel plans.",
+    "exampleCn": "恶劣天气影响了我们的旅行计划。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_2e03795b0c7c": {
+    "sourceWordId": "word_listening1179_2e03795b0c7c",
+    "word": "notetaking",
+    "example": "Effective notetaking is essential for university students.",
+    "exampleCn": "有效的记笔记对大学生至关重要。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_69f37c35b03f": {
+    "sourceWordId": "word_listening1179_69f37c35b03f",
+    "word": "powercut",
+    "example": "We had a powercut last night.",
+    "exampleCn": "昨晚我们停电了。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_21deae0d2b84": {
+    "sourceWordId": "word_listening1179_21deae0d2b84",
+    "word": "salesclerk",
+    "example": "The salesclerk helped me find the right size.",
+    "exampleCn": "售货员帮我找到了合适的尺码。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_b41c448aaf22": {
+    "sourceWordId": "word_listening1179_b41c448aaf22",
+    "word": "smokealarm",
+    "example": "Make sure the smoke alarm works before you move.",
+    "exampleCn": "搬进去之前确保烟雾报警器正常工作。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_31b14dca2469": {
+    "sourceWordId": "word_listening1179_31b14dca2469",
+    "word": "stoplight",
+    "example": "Turn left at the next stoplight.",
+    "exampleCn": "在下一个红绿灯左转。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_9f962dc9adfa": {
+    "sourceWordId": "word_listening1179_9f962dc9adfa",
+    "word": "townhall",
+    "example": "The meeting will be held at the town hall.",
+    "exampleCn": "会议将在市政厅举行。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_c03a73095563": {
+    "sourceWordId": "word_listening1179_c03a73095563",
+    "word": "digitalisation",
+    "example": "The company is undergoing digitalisation of its records.",
+    "exampleCn": "这家公司正在进行记录的数字化。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_a00f82d8b27e": {
+    "sourceWordId": "word_listening1179_a00f82d8b27e",
+    "word": "cyberattack",
+    "example": "The company's data was compromised in a cyberattack.",
+    "exampleCn": "该公司数据在一次网络攻击中遭到泄露。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_bd43eb38eae1": {
+    "sourceWordId": "word_listening1179_bd43eb38eae1",
+    "word": "forename",
+    "example": "Please write your forename and surname.",
+    "exampleCn": "请写上你的名和姓。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_f1962693b66c": {
+    "sourceWordId": "word_listening1179_f1962693b66c",
+    "word": "stomachache",
+    "example": "I've had a terrible stomachache since morning.",
+    "exampleCn": "我从早上开始胃痛得厉害。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_d78a7f9e871f": {
+    "sourceWordId": "word_listening1179_d78a7f9e871f",
+    "word": "interrelationship",
+    "example": "The interrelationship between diet and health is complex.",
+    "exampleCn": "饮食与健康之间的相互关系很复杂。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_90371f493466": {
+    "sourceWordId": "word_listening1179_90371f493466",
+    "word": "composter",
+    "example": "The garden has a composter for kitchen waste.",
+    "exampleCn": "花园里有一个用于厨房垃圾的堆肥箱。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_e6f6a9f72ab2": {
+    "sourceWordId": "word_listening1179_e6f6a9f72ab2",
+    "word": "exemplification",
+    "example": "The report includes exemplification of the theory.",
+    "exampleCn": "报告包括该理论的例证。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_9a0d21243c6c": {
+    "sourceWordId": "word_listening1179_9a0d21243c6c",
+    "word": "generalisation",
+    "example": "Making a generalisation about all teenagers is unfair.",
+    "exampleCn": "对所有青少年一概而论是不公平的。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_ec3be984d993": {
+    "sourceWordId": "word_listening1179_ec3be984d993",
+    "word": "microplastic",
+    "example": "Microplastic particles have been found in drinking water sources worldwide.",
+    "exampleCn": "世界各地饮用水源中都发现了微塑料颗粒。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_6b15ef618654": {
+    "sourceWordId": "word_listening1179_6b15ef618654",
+    "word": "paragraphing",
+    "example": "Good paragraphing helps readability in essays.",
+    "exampleCn": "好的分段有助于文章的可读性。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_47132ca06c1b": {
+    "sourceWordId": "word_listening1179_47132ca06c1b",
+    "word": "socialisation",
+    "example": "Socialisation is important for children's development.",
+    "exampleCn": "社会化对儿童发展很重要。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_1e3ed671310e": {
+    "sourceWordId": "word_1e3ed671310e",
+    "word": "reconciliation",
+    "example": "They sought reconciliation after the argument.",
+    "exampleCn": "争吵后他们寻求和解。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ed1a3b9306d6": {
+    "sourceWordId": "word_ed1a3b9306d6",
+    "word": "liberalization",
+    "example": "Trade liberalization boosted economic growth.",
+    "exampleCn": "贸易自由化促进了经济增长。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_e77e5ee820f9": {
+    "sourceWordId": "word_e77e5ee820f9",
+    "word": "fascinate",
+    "example": "The documentary fascinated viewers with its rare wildlife footage.",
+    "exampleCn": "这部纪录片以罕见的野生动物画面吸引了观众。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_005618d62b61": {
+    "sourceWordId": "word_005618d62b61",
+    "word": "riding",
+    "example": "She enjoys horse riding.",
+    "exampleCn": "她喜欢骑马。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_dd91aa249884": {
+    "sourceWordId": "word_dd91aa249884",
+    "word": "popularize",
+    "example": "The government aims to popularize renewable energy among households.",
+    "exampleCn": "政府旨在向家庭普及可再生能源。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_listening1179_298d0899cdc6": {
+    "sourceWordId": "word_listening1179_298d0899cdc6",
+    "word": "objectify",
+    "example": "Advertising often objectifies women, reducing them to mere images.",
+    "exampleCn": "广告常常物化女性，将她们简化为单纯的图像。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_e3e4c5d6a429": {
+    "sourceWordId": "word_e3e4c5d6a429",
+    "word": "collocation",
+    "example": "Learning common collocations improves your writing.",
+    "exampleCn": "学习常见搭配能提高你的写作。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_01c6fef811ce": {
+    "sourceWordId": "word_01c6fef811ce",
+    "word": "embargo",
+    "example": "The trade embargo was lifted.",
+    "exampleCn": "贸易禁运被解除了。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_8a49cb965fc6": {
+    "sourceWordId": "word_8a49cb965fc6",
+    "word": "jobseeker",
+    "example": "Each jobseeker received help with their application.",
+    "exampleCn": "每位求职者都获得了申请方面的帮助。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_326f13d28afb": {
+    "sourceWordId": "word_326f13d28afb",
+    "word": "constituent",
+    "example": "The senator met with his constituents.",
+    "exampleCn": "参议员会见了他的选民。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_b9800593abd9": {
+    "sourceWordId": "word_b9800593abd9",
+    "word": "legitimacy",
+    "example": "The legitimacy of the election was questioned.",
+    "exampleCn": "选举的合法性受到质疑。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_c55f23d20c89": {
+    "sourceWordId": "word_c55f23d20c89",
+    "word": "policymaker",
+    "example": "Policymakers debated.",
+    "exampleCn": "政策制定者就新税法进行了辩论。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_99e83fc4640a": {
+    "sourceWordId": "word_99e83fc4640a",
+    "word": "oppression",
+    "example": "The people fought against oppression.",
+    "exampleCn": "人民反抗压迫。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_86492cefb217": {
+    "sourceWordId": "word_86492cefb217",
+    "word": "segregation",
+    "example": "Racial segregation is illegal in many countries.",
+    "exampleCn": "种族隔离在许多国家是非法的。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_819b4ee92d85": {
+    "sourceWordId": "word_819b4ee92d85",
+    "word": "persecution",
+    "example": "Many fled the country due to political persecution.",
+    "exampleCn": "许多人因政治迫害逃离该国。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_4c6e6ddb2581": {
+    "sourceWordId": "word_4c6e6ddb2581",
+    "word": "underpayment",
+    "example": "The employee reported an underpayment on her monthly payslip.",
+    "exampleCn": "这名员工报告说她的月度工资单存在少付款项。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_0c8cfe10af80": {
+    "sourceWordId": "word_0c8cfe10af80",
+    "word": "dangle",
+    "example": "The keys dangled from his hand.",
+    "exampleCn": "钥匙从他手上垂下来。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_a5c96bc8a871": {
+    "sourceWordId": "word_a5c96bc8a871",
+    "word": "deskjob",
+    "example": "After years of a desk job, she decided to become a fitness instructor.",
+    "exampleCn": "做了多年案头工作后，她决定成为健身教练。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ba3f35bf4684": {
+    "sourceWordId": "word_ba3f35bf4684",
+    "word": "resolver",
+    "example": "The customer service resolver handled the billing dispute promptly.",
+    "exampleCn": "客服解决者迅速处理了账单纠纷。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ab82d211b52e": {
+    "sourceWordId": "word_ab82d211b52e",
+    "word": "rangefinder",
+    "example": "When buying a camera for landscape photography, check if it has a built-in rangefinder for accurate focusing.",
+    "exampleCn": "购买拍摄风景的相机时，检查是否有内置测距仪以便准确对焦。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_60544f23ab4c": {
+    "sourceWordId": "word_60544f23ab4c",
+    "word": "rampway",
+    "example": "The new apartment building includes a wide rampway so that residents with strollers can enter easily.",
+    "exampleCn": "新公寓楼建了一条宽阔的坡道，方便推婴儿车的居民进入。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_c659c3547b4b": {
+    "sourceWordId": "word_c659c3547b4b",
+    "word": "pinboard",
+    "example": "I pinned the important reminder on the pinboard above my desk.",
+    "exampleCn": "我把重要提醒钉在书桌上方的公告板上。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_d068552c8536": {
+    "sourceWordId": "word_d068552c8536",
+    "word": "mapreader",
+    "example": "As a mapreader, he guided the hiking group through the forest trails.",
+    "exampleCn": "作为一名地图阅读者，他带领徒步团体穿越森林小径。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_dcfcd3c1848b": {
+    "sourceWordId": "word_dcfcd3c1848b",
+    "word": "preceptor",
+    "example": "My preceptor at the hospital explained how to fill out patient forms correctly.",
+    "exampleCn": "医院里的实习指导老师向我解释了如何正确填写患者表格。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_81f92babd538": {
+    "sourceWordId": "word_81f92babd538",
+    "word": "mutiny",
+    "example": "The captain was able to quell the mutiny by promising the crew better conditions upon reaching port.",
+    "exampleCn": "船长通过承诺船员到达港口后改善条件，平息了叛乱。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ab3d21d0d2fe": {
+    "sourceWordId": "word_ab3d21d0d2fe",
+    "word": "exemplify",
+    "example": "This case exemplifies the problem.",
+    "exampleCn": "这个案例例证了问题。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_2a3084e416b4": {
+    "sourceWordId": "word_2a3084e416b4",
+    "word": "milliner",
+    "example": "She bought a beautiful hat from the milliner on Main Street to wear at the royal wedding viewing party.",
+    "exampleCn": "她从主街的帽店买了一顶漂亮的帽子，准备在观看皇家婚礼的派对上戴。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_d3a342dd405f": {
+    "sourceWordId": "word_d3a342dd405f",
+    "word": "plantroom",
+    "example": "The building's plantroom houses the heating and cooling systems.",
+    "exampleCn": "大楼的设备机房内装有供暖和制冷系统。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_2065354ed2a4": {
+    "sourceWordId": "word_2065354ed2a4",
+    "word": "passcode",
+    "example": "Enter your passcode to unlock the office door after hours.",
+    "exampleCn": "下班后输入密码打开办公室门。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_81a491b30464": {
+    "sourceWordId": "word_81a491b30464",
+    "word": "pushchair",
+    "example": "She folded the pushchair and got on the bus with ease.",
+    "exampleCn": "她折叠起婴儿推车，轻松上了公交车。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_186e9ff804f0": {
+    "sourceWordId": "word_186e9ff804f0",
+    "word": "poolroom",
+    "example": "The community centre has a poolroom with two tables for residents.",
+    "exampleCn": "社区中心有一个台球室，里面有两张桌子供居民使用。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_9308395042f0": {
+    "sourceWordId": "word_9308395042f0",
+    "word": "pillbox",
+    "example": "I use a weekly pillbox to organize my vitamins and medication.",
+    "exampleCn": "我用一个按周划分的药丸盒来整理维生素和药物。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_b501cd94f838": {
+    "sourceWordId": "word_b501cd94f838",
+    "word": "pillowcase",
+    "example": "I need to buy new pillowcases because the old ones are torn.",
+    "exampleCn": "我需要买新枕套，因为旧的破了。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_6c602533c1f2": {
+    "sourceWordId": "word_6c602533c1f2",
+    "word": "protectorate",
+    "example": "The island became a British protectorate in the 19th century.",
+    "exampleCn": "该岛在19世纪成为英国的保护国。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_5c70f12c6e83": {
+    "sourceWordId": "word_5c70f12c6e83",
+    "word": "puppeteer",
+    "example": "The puppeteer put on an amazing show at the children's festival.",
+    "exampleCn": "木偶操纵者在儿童节上表演了一场精彩的节目。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_6ece9ecf35a4": {
+    "sourceWordId": "word_6ece9ecf35a4",
+    "word": "outpost",
+    "example": "The delivery driver had to drive three hours to reach the remote outpost.",
+    "exampleCn": "送货司机不得不开车三个小时才能到达那个偏远的据点。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ea7f07a35aaf": {
+    "sourceWordId": "word_ea7f07a35aaf",
+    "word": "recognizer",
+    "example": "The bank installed a fingerprint recognizer at the entrance for secure access.",
+    "exampleCn": "银行在入口处安装了指纹识别器以确保安全进入。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_35848857832a": {
+    "sourceWordId": "word_35848857832a",
+    "word": "hatchway",
+    "example": "During the fire drill, we were instructed to use the hatchway on the roof as an emergency exit.",
+    "exampleCn": "消防演习期间，我们被指示使用屋顶的舱口作为紧急出口。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_17e4603a1174": {
+    "sourceWordId": "word_17e4603a1174",
+    "word": "preserver",
+    "example": "As a history preserver, she volunteered at the local museum every weekend.",
+    "exampleCn": "作为历史保存者，她每个周末都在当地博物馆做志愿者。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_3d32e258cee5": {
+    "sourceWordId": "word_3d32e258cee5",
+    "word": "redeemer",
+    "example": "In the charity program, the volunteer acted as a redeemer for homeless families by providing shelter.",
+    "exampleCn": "在慈善项目中，这名志愿者充当了救赎者，为无家可归的家庭提供住所。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_41a8d2fc538c": {
+    "sourceWordId": "word_41a8d2fc538c",
+    "word": "ragpicker",
+    "example": "The ragpicker sorted through the trash to find recyclable materials.",
+    "exampleCn": "拾荒者翻找垃圾以寻找可回收材料。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_29d252d7d463": {
+    "sourceWordId": "word_29d252d7d463",
+    "word": "reasoner",
+    "example": "In the debate club, she is known as a sharp reasoner who can dismantle any argument.",
+    "exampleCn": "在辩论社里，她被认为是个敏锐的推理者，能拆解任何论点。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_fa983c1431fb": {
+    "sourceWordId": "word_fa983c1431fb",
+    "word": "partaker",
+    "example": "All partakers of the potluck dinner are asked to bring a dish.",
+    "exampleCn": "所有参加百乐餐的人都要带一道菜。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_7fcec05ff3b7": {
+    "sourceWordId": "word_7fcec05ff3b7",
+    "word": "rejoinder",
+    "example": "His sharp rejoinder left the committee members speechless.",
+    "exampleCn": "他尖锐的反驳让委员会成员哑口无言。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_0f63efe2686b": {
+    "sourceWordId": "word_0f63efe2686b",
+    "word": "parkade",
+    "example": "I left my car on the third level of the parkade downtown.",
+    "exampleCn": "我把车停在市中心多层停车场的三楼。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_885e5d9b6f38": {
+    "sourceWordId": "word_885e5d9b6f38",
+    "word": "rentier",
+    "example": "As a rentier, he doesn't need to work because he collects rent from his properties.",
+    "exampleCn": "作为一个靠租金生活的人，他不需要工作，因为他从房产收租。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_d81c570c4e10": {
+    "sourceWordId": "word_d81c570c4e10",
+    "word": "priesthood",
+    "example": "He devoted his life to the priesthood and served a small rural church.",
+    "exampleCn": "他将一生奉献给了神职，在一个小乡村教堂服务。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_2a4a8899d45b": {
+    "sourceWordId": "word_2a4a8899d45b",
+    "word": "quayside",
+    "example": "We walked along the quayside watching the boats come.",
+    "exampleCn": "我们沿着码头边散步，看着船只进港。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_0932e5ac806b": {
+    "sourceWordId": "word_0932e5ac806b",
+    "word": "rattlesnake",
+    "example": "Hikers should wear thick boots when exploring the desert to protect against rattlesnake bites.",
+    "exampleCn": "徒步者探索沙漠时应穿厚靴子以防响尾蛇咬伤。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_f267e1328ab4": {
+    "sourceWordId": "word_f267e1328ab4",
+    "word": "reagent",
+    "example": "The lab technician ordered a new reagent for the blood test kit used in the hospital.",
+    "exampleCn": "实验室技术员为医院用的血液测试盒订购了一种新试剂。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_0ab710c23e08": {
+    "sourceWordId": "word_0ab710c23e08",
+    "word": "replier",
+    "example": "The fastest replier to the email got the discount offer.",
+    "exampleCn": "最快回复邮件的人获得了折扣优惠。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_6c1b994c585d": {
+    "sourceWordId": "word_6c1b994c585d",
+    "word": "resistor",
+    "example": "The technician replaced the burnt resistor in the circuit board.",
+    "exampleCn": "技术员更换了电路板上烧毁的电阻器。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_bd10529c3427": {
+    "sourceWordId": "word_bd10529c3427",
+    "word": "responder",
+    "example": "The first responder arrived at the scene of the accident within minutes.",
+    "exampleCn": "急救响应者在几分钟内到达事故现场。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_7cf02ff5ca1d": {
+    "sourceWordId": "word_7cf02ff5ca1d",
+    "word": "returnee",
+    "example": "The returnee from abroad struggled to adapt to the local culture again.",
+    "exampleCn": "从国外归来的人努力再次适应本地文化。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_2f7813c6ed6f": {
+    "sourceWordId": "word_2f7813c6ed6f",
+    "word": "holster",
+    "example": "The security guard unclipped his holster and handed his gun to the armory officer.",
+    "exampleCn": "保安解开皮套，把枪交给了军械官。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_9f29827997f9": {
+    "sourceWordId": "word_9f29827997f9",
+    "word": "latest",
+    "example": "Have you seen the latest movie?",
+    "exampleCn": "你看过最新的电影了吗?",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_ddc78c039f41": {
+    "sourceWordId": "word_ddc78c039f41",
+    "word": "scotland",
+    "example": "Scotland is known for its beautiful landscapes.",
+    "exampleCn": "苏格兰以其美丽的风景而闻名。",
     "sourceField": "example",
     "matchType": "wordId"
   }

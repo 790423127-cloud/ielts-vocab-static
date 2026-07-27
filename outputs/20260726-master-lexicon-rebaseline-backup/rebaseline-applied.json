@@ -1,0 +1,3563 @@
+{
+  "mode": "apply",
+  "before": {
+    "wordCount": 13444,
+    "meaningCount": 6000,
+    "version": "v12-13757-manual-morphology-audit-v3",
+    "fileHash": "1c4418513e26cbe62b94012ee5729818cf5f1177f154499b84542fb5238c72ec"
+  },
+  "after": {
+    "wordCount": 13355,
+    "brushableCount": 12011,
+    "meaningCount": 6000,
+    "version": "v13-13355-user-curated-removal-20260726",
+    "fileHash": "80db5acad6207f6c45db4afe5680d5b87c035bd47c342dd778c4a84dee857796",
+    "lexiconHash": "4ad4ebf767701541e093612a72955f04df41c570bde1993c5e3286ec55c7ab4a"
+  },
+  "removedOrphanReferences": [
+    {
+      "id": "word_931e6adbafaa",
+      "word": "liked",
+      "baseWord": "like",
+      "baseWordId": "word_bab4f213e2c7",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_0e6859c8f293",
+      "word": "fewer",
+      "baseWord": "few",
+      "baseWordId": "word_7f28abb9b93f",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_f31368db4625",
+      "word": "nearest",
+      "baseWord": "near",
+      "baseWordId": "word_1702a5f35ff3",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_ceb3c64a33ca",
+      "word": "saw",
+      "baseWord": "see",
+      "baseWordId": "word_48653f7fec34",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_54d9a907339a",
+      "word": "said",
+      "baseWord": "say",
+      "baseWordId": "word_5c72a0ee3fec",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_65799f58a6f2",
+      "word": "men",
+      "baseWord": "man",
+      "baseWordId": "word_c37c2bfc05dc",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_335304dd0bae",
+      "word": "went",
+      "baseWord": "go",
+      "baseWordId": "word_excel_4cd0e21a9a07",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_cea34912af17",
+      "word": "eyes",
+      "baseWord": "eye",
+      "baseWordId": "word_1b04b06cab9b",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_f34f4f5f2b4e",
+      "word": "began",
+      "baseWord": "begin",
+      "baseWordId": "word_08bed611ee02",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_53ff2cb93723",
+      "word": "asked",
+      "baseWord": "ask",
+      "baseWordId": "word_c0079ec66ffc",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_3e47fd639e8c",
+      "word": "felt",
+      "baseWord": "feel",
+      "baseWordId": "word_1ad2e2b9438a",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_8904fdd2ae6e",
+      "word": "words",
+      "baseWord": "word",
+      "baseWordId": "word_d1914539669f",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_b62ff06acbb0",
+      "word": "days",
+      "baseWord": "day",
+      "baseWordId": "word_a972953c1fce",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_259bbdc209bf",
+      "word": "called",
+      "baseWord": "call",
+      "baseWordId": "word_c92261541f4a",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_df852b0d9ff9",
+      "word": "seen",
+      "baseWord": "see",
+      "baseWordId": "word_48653f7fec34",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_4af5ea99de0f",
+      "word": "going",
+      "baseWord": "go",
+      "baseWordId": "word_excel_4cd0e21a9a07",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_4f32204a685e",
+      "word": "things",
+      "baseWord": "thing",
+      "baseWordId": "word_aecada9f9b95",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_731af82f1b88",
+      "word": "cried",
+      "baseWord": "cry",
+      "baseWordId": "word_079d0cd5444e",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_52d19fa42e88",
+      "word": "children",
+      "baseWord": "child",
+      "baseWordId": "word_b8aff909c231",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_3c516f7639de",
+      "word": "wanted",
+      "baseWord": "want",
+      "baseWordId": "word_c0da970747e7",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_5779c5c24e90",
+      "word": "won",
+      "baseWord": "win",
+      "baseWordId": "word_2c5efd5e04cf",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_c468ea41f289",
+      "word": "feet",
+      "baseWord": "foot",
+      "baseWordId": "word_bf55677c35aa",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_95d8ab2c9f67",
+      "word": "faces",
+      "baseWord": "face",
+      "baseWordId": "word_4a80f3c6aa5c",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_4a7d233d9899",
+      "word": "russians",
+      "baseWord": "russian",
+      "baseWordId": "word_593937da9f16",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_19e685359b15",
+      "word": "says",
+      "baseWord": "say",
+      "baseWordId": "word_5c72a0ee3fec",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_8909d85df46d",
+      "word": "asking",
+      "baseWord": "ask",
+      "baseWordId": "word_c0079ec66ffc",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_cc237d980879",
+      "word": "legs",
+      "baseWord": "leg",
+      "baseWordId": "word_f527971aa77d",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_1600740c91b0",
+      "word": "ends",
+      "baseWord": "end",
+      "baseWordId": "word_61ccad19a5e4",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_a2d455a2e8eb",
+      "word": "begun",
+      "baseWord": "begin",
+      "baseWordId": "word_08bed611ee02",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_2a3b82146234",
+      "word": "hills",
+      "baseWord": "hill",
+      "baseWordId": "word_5ebdc88b0afd",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_86455293d3f4",
+      "word": "bodies",
+      "baseWord": "body",
+      "baseWordId": "word_e88111271a3a",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_4a7f9e00deff",
+      "word": "nearer",
+      "baseWord": "near",
+      "baseWordId": "word_1702a5f35ff3",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_4cc84caf5e30",
+      "word": "died",
+      "baseWord": "die",
+      "baseWordId": "word_9e9eb3eb6fd2",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_e1a34b9db1bc",
+      "word": "americans",
+      "baseWord": "american",
+      "baseWordId": "word_4ba29c38b20a",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_3b39641297a1",
+      "word": "cities",
+      "baseWord": "city",
+      "baseWordId": "word_fe56f25133e3",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_b8701cbf5bf9",
+      "word": "girls",
+      "baseWord": "girl",
+      "baseWordId": "word_f0c1e00dc974",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_cf2bd2f09996",
+      "word": "numbers",
+      "baseWord": "number",
+      "baseWordId": "word_e2d97751f2bd",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_d4392ced9dff",
+      "word": "foods",
+      "baseWord": "food",
+      "baseWordId": "word_014c6c02d5c9",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_9fd13a8c6c17",
+      "word": "fishes",
+      "baseWord": "fish",
+      "baseWordId": "word_36ed5d8a5844",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_f79e2ecc220d",
+      "word": "schools",
+      "baseWord": "school",
+      "baseWordId": "word_8ed626852693",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_da925a30e31f",
+      "word": "older",
+      "baseWord": "old",
+      "baseWordId": "word_excel_cba06b5736fa",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_325392e8dd28",
+      "word": "maps",
+      "baseWord": "map",
+      "baseWordId": "word_4e0ab357b145",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_6e317bcd6839",
+      "word": "books",
+      "baseWord": "book",
+      "baseWordId": "word_05570751a527",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_4856d3c19e55",
+      "word": "clubs",
+      "baseWord": "club",
+      "baseWordId": "word_7745ef79a072",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_7f14eadc8060",
+      "word": "birds",
+      "baseWord": "bird",
+      "baseWordId": "word_0d302c9e592b",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_7b3bb6b02210",
+      "word": "classes",
+      "baseWord": "class",
+      "baseWordId": "word_dc2180fcdb13",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_8dca9a9539aa",
+      "word": "tops",
+      "baseWord": "top",
+      "baseWordId": "word_bca7610cd796",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_2870b96cfef3",
+      "word": "doors",
+      "baseWord": "door",
+      "baseWordId": "word_1123cafafae2",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_aeb24056810d",
+      "word": "names",
+      "baseWord": "name",
+      "baseWordId": "word_36f45f4cac5e",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_45c24426524b",
+      "word": "greenest",
+      "baseWord": "green",
+      "baseWordId": "word_d93ea52826f3",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_bcde6928e538",
+      "word": "costs",
+      "baseWord": "cost",
+      "baseWordId": "word_f733f54ac445",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_2b922222376d",
+      "word": "sugars",
+      "baseWord": "sugar",
+      "baseWordId": "word_f44e194fe655",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_b433c45d27b9",
+      "word": "cooks",
+      "baseWord": "cook",
+      "baseWordId": "word_46378b156935",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_b54677b9e260",
+      "word": "rats",
+      "baseWord": "rat",
+      "baseWordId": "word_3f48579bf5ef",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_5d9a17cb70b9",
+      "word": "jobs",
+      "baseWord": "job",
+      "baseWordId": "word_56fe2c5453ac",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_ba24b7992d5d",
+      "word": "ages",
+      "baseWord": "age",
+      "baseWordId": "word_d942822da1e8",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_cd7ac4c61fd8",
+      "word": "games",
+      "baseWord": "game",
+      "baseWordId": "word_f3412f2d5691",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_3b5475495acf",
+      "word": "desks",
+      "baseWord": "desk",
+      "baseWordId": "word_b7c13d508639",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_3bfcbeeee9f7",
+      "word": "toys",
+      "baseWord": "toy",
+      "baseWordId": "word_876399a2e139",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_3be1d422a460",
+      "word": "pets",
+      "baseWord": "pet",
+      "baseWordId": "word_663ba0822fa0",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_8ecbaf607e96",
+      "word": "bags",
+      "baseWord": "bag",
+      "baseWordId": "word_fb48c4aa69bd",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_93253ae00ba9",
+      "word": "bikes",
+      "baseWord": "bike",
+      "baseWordId": "word_b1171bec59c7",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_502bb6587727",
+      "word": "babies",
+      "baseWord": "baby",
+      "baseWordId": "word_877889fd9050",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_d89c5a6a7d09",
+      "word": "beaches",
+      "baseWord": "beach",
+      "baseWordId": "word_b1b170a70024",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_c1bbfe449f16",
+      "word": "ducks",
+      "baseWord": "duck",
+      "baseWordId": "word_022b4f1b9005",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_0d62646ad2a4",
+      "word": "chatting",
+      "baseWord": "chat",
+      "baseWordId": "word_d8e822aa8d74",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_97e1f3fc7bea",
+      "word": "ears",
+      "baseWord": "ear",
+      "baseWordId": "word_ce90a2271a97",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_23da0d3b0b5a",
+      "word": "bees",
+      "baseWord": "bee",
+      "baseWordId": "word_c063e8461865",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_1c33629a9370",
+      "word": "missed",
+      "baseWord": "miss",
+      "baseWordId": "word_59fd7f3befda",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_c374c5b93ad0",
+      "word": "chefs",
+      "baseWord": "chef",
+      "baseWordId": "word_a129665da0c8",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_2ec716e4dc43",
+      "word": "kids",
+      "baseWord": "kid",
+      "baseWordId": "word_70c3a01ac47e",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_9780daa5e89d",
+      "word": "songs",
+      "baseWord": "song",
+      "baseWordId": "word_d7ee8696d4f4",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_6e0b5b262cf4",
+      "word": "boys",
+      "baseWord": "boy",
+      "baseWordId": "word_fbba4fd14deb",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_c6520d7c46b5",
+      "word": "cows",
+      "baseWord": "cow",
+      "baseWordId": "word_c6d5de5a1472",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_f8bd2d352d8c",
+      "word": "bins",
+      "baseWord": "bin",
+      "baseWordId": "word_4a2fc953f5b7",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_18aa392c7f78",
+      "word": "cakes",
+      "baseWord": "cake",
+      "baseWordId": "word_bd0fb9d9b10e",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_d6ecb8285875",
+      "word": "pans",
+      "baseWord": "pan",
+      "baseWordId": "word_6e4fb05b2085",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_6983e434cc38",
+      "word": "ate",
+      "baseWord": "eat",
+      "baseWordId": "word_337a1596bdc5",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_faa5af7cea8a",
+      "word": "bears",
+      "baseWord": "bear",
+      "baseWordId": "word_fd3cb043bcae",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_46da674b5b09",
+      "word": "eggs",
+      "baseWord": "egg",
+      "baseWordId": "word_1699ee6ea8cd",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_c62d18434681",
+      "word": "copies",
+      "baseWord": "copy",
+      "baseWordId": "word_4c8a3142b573",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_7d56069fc33f",
+      "word": "welcomed",
+      "baseWord": "welcome",
+      "baseWordId": "word_7a705aceb073",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_a157d36a7391",
+      "word": "named",
+      "baseWord": "name",
+      "baseWordId": "word_36f45f4cac5e",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_39deaf7caa6b",
+      "word": "bought",
+      "baseWord": "buy",
+      "baseWordId": "word_04ca00c94905",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_bf3460bdf158",
+      "word": "eats",
+      "baseWord": "eat",
+      "baseWordId": "word_337a1596bdc5",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_804f51f71254",
+      "word": "newer",
+      "baseWord": "new",
+      "baseWordId": "word_excel_11507a0e2f5e",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_90191e4114b0",
+      "word": "biggest",
+      "baseWord": "big",
+      "baseWordId": "word_excel_2a21fe6d592a",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_063bffb4b52b",
+      "word": "ways",
+      "baseWord": "way",
+      "baseWordId": "word_0ff110850d86",
+      "reason": "base-word-removed"
+    },
+    {
+      "id": "word_excel_9e5db53b5cf0",
+      "word": "bigger",
+      "baseWord": "big",
+      "baseWordId": "word_excel_2a21fe6d592a",
+      "reason": "base-word-removed"
+    }
+  ],
+  "curatedRemovedEntries": [
+    {
+      "id": "word_27a23622cf94",
+      "word": "third",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fafba1e1b9fd",
+      "word": "later",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bf2edcffbb90",
+      "word": "sing",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3abde6132f9d",
+      "word": "useful",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6dbc6763e91b",
+      "word": "deer",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_46e2662e18e4",
+      "word": "hide",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_10517687ee0c",
+      "word": "all",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b8aff909c231",
+      "word": "child",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_50a0087fb8ea",
+      "word": "banana",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d7ee8696d4f4",
+      "word": "song",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8e12102ca4bc",
+      "word": "ball",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_53dc51f33d69",
+      "word": "your",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c3a5aafa84fd",
+      "word": "nobody",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0885ff9f77fb",
+      "word": "fix",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c1dca7cfb5a0",
+      "word": "brown",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1ad2e2b9438a",
+      "word": "feel",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b598a6da198c",
+      "word": "really",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5fccc6c46528",
+      "word": "bread",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4fefca12598e",
+      "word": "autumn",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9f5b7ead8440",
+      "word": "neck",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_08bed611ee02",
+      "word": "begin",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_22e268d71dd6",
+      "word": "dad",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1702a5f35ff3",
+      "word": "near",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9c4fdfdee071",
+      "word": "afternoon",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_31bb4b2483a4",
+      "word": "dog",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_82ac205b3b54",
+      "word": "midnight",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_718095fd0faf",
+      "word": "aunt",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_689e32203420",
+      "word": "love",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b8635e9db00c",
+      "word": "zoo",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c0109c3e9c73",
+      "word": "january",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b1b170a70024",
+      "word": "beach",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0d7317eb7911",
+      "word": "tea",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bf55677c35aa",
+      "word": "foot",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8d7c9fdace73",
+      "word": "rabbit",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_39b442e32e61",
+      "word": "very",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d1914539669f",
+      "word": "word",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_383fc80c496f",
+      "word": "soccer",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3e426b38e3f7",
+      "word": "august",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5c72a0ee3fec",
+      "word": "say",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0e17a4e4ef0e",
+      "word": "with",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_57a143379b45",
+      "word": "saturday",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d6016a756499",
+      "word": "card",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7480e6f030a5",
+      "word": "ninety",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c67efd343af5",
+      "word": "policewoman",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_94814a29a4f1",
+      "word": "goodbye",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_96fdd1f0e20d",
+      "word": "date",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1b04b06cab9b",
+      "word": "eye",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fe56f25133e3",
+      "word": "city",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ce90a2271a97",
+      "word": "ear",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c68d1f7c8ae6",
+      "word": "red",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a8051cc039f7",
+      "word": "seventh",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9c52fd7587b4",
+      "word": "whom",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_58e723260f6b",
+      "word": "blue",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_53b85a076642",
+      "word": "me",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8a5e72a5aed9",
+      "word": "dry",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_965a71a9efc8",
+      "word": "thank",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_04ca00c94905",
+      "word": "buy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_53195179f415",
+      "word": "yellow",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5cf9dbc99582",
+      "word": "art",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_332507473a34",
+      "word": "soap",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_06a00e9ea889",
+      "word": "twelve",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_63cb1205e171",
+      "word": "box",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_15b6e46d8572",
+      "word": "herself",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0f23c728d9f6",
+      "word": "glasgow",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0d302c9e592b",
+      "word": "bird",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_589a3e5d5f6a",
+      "word": "cup",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b7e3decc8609",
+      "word": "ms",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6e4d1eff0b63",
+      "word": "pay",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_155dbd175970",
+      "word": "boss",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_482a153d15c6",
+      "word": "nine",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_014c6c02d5c9",
+      "word": "food",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8e8d7a370bbf",
+      "word": "bed",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0af8e1fc1ffc",
+      "word": "us",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_02e5c529da18",
+      "word": "february",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_db2f4b08f524",
+      "word": "home",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d942822da1e8",
+      "word": "age",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_48653f7fec34",
+      "word": "see",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e27eb9d768dc",
+      "word": "canada",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e440bd2e105f",
+      "word": "pig",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f0c1e00dc974",
+      "word": "girl",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3bba0ea50a04",
+      "word": "if",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5ebdc88b0afd",
+      "word": "hill",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_74e3d1ca730b",
+      "word": "eleven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7a705aceb073",
+      "word": "welcome",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fb48c4aa69bd",
+      "word": "bag",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_022b4f1b9005",
+      "word": "duck",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9f13a79dcce1",
+      "word": "per",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_2e2c4e322f69",
+      "word": "november",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cb93b435ab3a",
+      "word": "back",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_296690b206c6",
+      "word": "app",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f733f54ac445",
+      "word": "cost",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_aec0da51baea",
+      "word": "now",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_43907d268d0f",
+      "word": "too",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_557cd26810e8",
+      "word": "kent",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7778a83e5cef",
+      "word": "work",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c37c2bfc05dc",
+      "word": "man",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6123ccb64c60",
+      "word": "sun",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f44e194fe655",
+      "word": "sugar",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_25d959b80d3c",
+      "word": "mum",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_337a1596bdc5",
+      "word": "eat",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_090df9c76fbe",
+      "word": "march",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3a5021b463df",
+      "word": "hair",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f689ca2d2a8a",
+      "word": "bus",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_50f27de165ff",
+      "word": "china",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_663ba0822fa0",
+      "word": "pet",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cfe150403118",
+      "word": "boat",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f7aa54b7bf61",
+      "word": "friday",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ee319de3633c",
+      "word": "him",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7f7f08be5364",
+      "word": "fourth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d994a2e86ff2",
+      "word": "cat",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6fefca23a40a",
+      "word": "her",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_124312b3cd6d",
+      "word": "businessman",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_2edab2e47c5f",
+      "word": "its",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_84c03ee8c7bd",
+      "word": "my",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6766c61e5da1",
+      "word": "this",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_93f65ed7553f",
+      "word": "orange",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5d80236c4600",
+      "word": "first",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_56fe2c5453ac",
+      "word": "job",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8d187e88bee5",
+      "word": "thursday",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9671268ab38c",
+      "word": "june",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d8e822aa8d74",
+      "word": "chat",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_635a1a291caa",
+      "word": "fly",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3d8dbd280f19",
+      "word": "not",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_732a79fbebf7",
+      "word": "eight",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3080db0651e0",
+      "word": "second",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9e9eb3eb6fd2",
+      "word": "die",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cbc67cc77c86",
+      "word": "who",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c7fb01f3d845",
+      "word": "ice",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b7c13d508639",
+      "word": "desk",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3f48579bf5ef",
+      "word": "rat",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_2c5efd5e04cf",
+      "word": "win",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f527971aa77d",
+      "word": "leg",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_543236054ceb",
+      "word": "sir",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7c17b1bbb103",
+      "word": "seventy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e88111271a3a",
+      "word": "body",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_53623f11558f",
+      "word": "when",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1163aaab11b0",
+      "word": "dutch",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_991edc2a3308",
+      "word": "sorry",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c72ac86bb6db",
+      "word": "english",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_593937da9f16",
+      "word": "russian",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1e4e14aaeb5c",
+      "word": "about",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e4f0893e0f17",
+      "word": "frenchman",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_22e3e94538b0",
+      "word": "yourself",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_aecada9f9b95",
+      "word": "thing",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5eaadc5c3929",
+      "word": "etc",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_36ed5d8a5844",
+      "word": "fish",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d4547b06cc4a",
+      "word": "guy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f3412f2d5691",
+      "word": "game",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ce446bdcf172",
+      "word": "fun",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_760b78948399",
+      "word": "tuesday",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d10e174914df",
+      "word": "rome",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f55e84dba333",
+      "word": "busy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_690485c197cf",
+      "word": "grandson",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bc4f57968088",
+      "word": "chinese",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_62792977f3f5",
+      "word": "edinburgh",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_de79376e30f5",
+      "word": "germany",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c0da970747e7",
+      "word": "want",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7745ef79a072",
+      "word": "club",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d7049f2e5682",
+      "word": "twenty",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_65fde9224838",
+      "word": "york",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c92261541f4a",
+      "word": "call",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7b26f77e6ef8",
+      "word": "washington",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c8e580696581",
+      "word": "here",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3031d9ee22be",
+      "word": "april",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5b4e1898cf4d",
+      "word": "zero",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7f28abb9b93f",
+      "word": "few",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_912c052d598e",
+      "word": "four",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5c057d0b32d2",
+      "word": "sky",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_61ccad19a5e4",
+      "word": "end",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4a80f3c6aa5c",
+      "word": "face",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b6e346593e5a",
+      "word": "madam",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4718244de6e2",
+      "word": "father",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_07972c2a0a2a",
+      "word": "ok",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ecaaef44ea50",
+      "word": "may",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c4d532a55e9b",
+      "word": "mr",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_aaad0d7dbdaf",
+      "word": "car",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_348e67d27ca8",
+      "word": "sunday",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6546fd94944e",
+      "word": "why",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8339f47c89cb",
+      "word": "seventeen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_36f45f4cac5e",
+      "word": "name",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6cca4220b2c8",
+      "word": "grandma",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_aaa4bd9c127a",
+      "word": "moon",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8ed626852693",
+      "word": "school",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e8302cdfa1b3",
+      "word": "grandpa",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_079d0cd5444e",
+      "word": "cry",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7899fa0abfa1",
+      "word": "what",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e28f57d1e6ce",
+      "word": "mrs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0ff110850d86",
+      "word": "way",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_2880e7f7ca7e",
+      "word": "cool",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_faac74ef53c2",
+      "word": "policeman",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_627fc66e5180",
+      "word": "fourteen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_33265fd32f52",
+      "word": "hers",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a7780c8623e0",
+      "word": "five",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1699ee6ea8cd",
+      "word": "egg",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_24942334da0e",
+      "word": "seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_55eaa352d41c",
+      "word": "japan",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8afb2d934e06",
+      "word": "his",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_03786c4a41e4",
+      "word": "sixty",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4153b35237b6",
+      "word": "son",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c063e8461865",
+      "word": "bee",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bd0fb9d9b10e",
+      "word": "cake",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_05570751a527",
+      "word": "book",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3bbc9ad96500",
+      "word": "ago",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_877889fd9050",
+      "word": "baby",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_24c8821633ec",
+      "word": "ours",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d93ea52826f3",
+      "word": "green",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_70c3a01ac47e",
+      "word": "kid",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7c71ddc12e0c",
+      "word": "cash",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7f838d6365fa",
+      "word": "arm",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c0079ec66ffc",
+      "word": "ask",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1901630ab441",
+      "word": "eighteen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cbf196ba36f1",
+      "word": "eighty",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_59fd7f3befda",
+      "word": "miss",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3973af765e57",
+      "word": "himself",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ff2d8bbf7d0b",
+      "word": "eighteenth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f556ba950813",
+      "word": "can",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3d34e1bcf79a",
+      "word": "eighth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_dc2180fcdb13",
+      "word": "class",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0da32aaef1f9",
+      "word": "thirteen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_56b32eb43f17",
+      "word": "october",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8b4f512a6af7",
+      "word": "england",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0b33322d2b02",
+      "word": "classroom",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e193909994cd",
+      "word": "also",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cc9b82fd7652",
+      "word": "sit",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_309e5069339a",
+      "word": "o'clock",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_176f4e517991",
+      "word": "cute",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4c8a3142b573",
+      "word": "copy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_63082f542b35",
+      "word": "july",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_559d05ac9c79",
+      "word": "sea",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_49b476779c3d",
+      "word": "september",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6892fa269252",
+      "word": "cut",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_2081dae74216",
+      "word": "december",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_64e11a5497fc",
+      "word": "add",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_eace101a5e77",
+      "word": "wife",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6e7e57c5a1a6",
+      "word": "snow",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d4360dc7f6ca",
+      "word": "thirty",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_79580a48d1dc",
+      "word": "monday",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1d22ca059c7f",
+      "word": "use",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a89a410458db",
+      "word": "wine",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6943149811e9",
+      "word": "gym",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4e0ab357b145",
+      "word": "map",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f39bdaa49874",
+      "word": "fifteen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_39184c4e10aa",
+      "word": "fifth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9e8e41d9c147",
+      "word": "ant",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fd3cb043bcae",
+      "word": "bear",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_46378b156935",
+      "word": "cook",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bf811f835a07",
+      "word": "forty",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a3e1c7a7b80f",
+      "word": "hit",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_08e0196e5087",
+      "word": "okay",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ada75b480e84",
+      "word": "sofa",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4d1e8996264f",
+      "word": "six",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c4c59e4e15ff",
+      "word": "sixth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3cfee384ed7d",
+      "word": "unless",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_163a0c534c0b",
+      "word": "ninth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_49ce11a99804",
+      "word": "our",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bab4f213e2c7",
+      "word": "like",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c6d5de5a1472",
+      "word": "cow",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fd1b77582f34",
+      "word": "ten",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_876399a2e139",
+      "word": "toy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bca7610cd796",
+      "word": "top",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4ba29c38b20a",
+      "word": "american",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e14ae1516220",
+      "word": "beer",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7a732899006a",
+      "word": "low",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8a3839f937db",
+      "word": "nineteen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ee0c59950530",
+      "word": "sad",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6718b9b38897",
+      "word": "sixteen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_dae1a7c50f4c",
+      "word": "fifty",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a972953c1fce",
+      "word": "day",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c343bc6852db",
+      "word": "twentieth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fbba4fd14deb",
+      "word": "boy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e2d97751f2bd",
+      "word": "number",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1123cafafae2",
+      "word": "door",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a47a618b703f",
+      "word": "wednesday",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_9e289b1bdbea",
+      "word": "put",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b1171bec59c7",
+      "word": "bike",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_d752b9d04068",
+      "word": "apple",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4a2fc953f5b7",
+      "word": "bin",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a129665da0c8",
+      "word": "chef",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7904c80f5eba",
+      "word": "icy",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6e4fb05b2085",
+      "word": "pan",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_bcb2ea95b444",
+      "word": "pie",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_891d3a7b5b54",
+      "word": "kill",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_110fc0005b62",
+      "word": "korean",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b4098e614496",
+      "word": "boil",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8ae07c987eb5",
+      "word": "soda",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_212f85fa2099",
+      "word": "fox",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a119c2297afd",
+      "word": "tenth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f125509e96e3",
+      "word": "police",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_42abcc104c60",
+      "word": "evening",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_6678b4cd0498",
+      "word": "ourselves",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_2d427d986862",
+      "word": "themselves",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_837f561f66f8",
+      "word": "hundred",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_df6b003b969e",
+      "word": "thanks",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_758399937fef",
+      "word": "yours",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_72570ec63621",
+      "word": "cooking",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fb9400b9c30b",
+      "word": "closed",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c3f6e9b1b49c",
+      "word": "singing",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3466825ecb51",
+      "word": "matthew",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_7692c3ad3540",
+      "word": "one",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_8b5b9db0c13d",
+      "word": "three",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_fe31dae5ff64",
+      "word": "ATM",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_59981069c56a",
+      "word": "vowel",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_e272deecde72",
+      "word": "cold",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_11507a0e2f5e",
+      "word": "new",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_2a21fe6d592a",
+      "word": "big",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_cba06b5736fa",
+      "word": "old",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_cdc299378871",
+      "word": "but",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_7f5d1618e7d2",
+      "word": "hot",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_60789aa1f31f",
+      "word": "eleventh",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_6cbb59107de4",
+      "word": "twenty-fourth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_ccde0e7085db",
+      "word": "thirtieth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_4cd0e21a9a07",
+      "word": "go",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7360901e9a5f",
+      "word": "cod",
+      "reason": "user-curated-removal"
+    }
+  ],
+  "prunedRelations": [
+    {
+      "owner": "ourself",
+      "ownerId": "word_663a9eac0190",
+      "field": "forms",
+      "target": "ourselves"
+    },
+    {
+      "owner": "thankful",
+      "ownerId": "word_bf10cc78b68e",
+      "field": "wordFamily",
+      "target": "thank"
+    },
+    {
+      "owner": "secondly",
+      "ownerId": "word_9b49242245d4",
+      "field": "wordFamily",
+      "target": "second"
+    },
+    {
+      "owner": "themself",
+      "ownerId": "word_983be56b1dfb",
+      "field": "forms",
+      "target": "themselves"
+    },
+    {
+      "owner": "classic",
+      "ownerId": "word_254739eebec5",
+      "field": "wordFamily",
+      "target": "class"
+    },
+    {
+      "owner": "classical",
+      "ownerId": "word_f0597c8cb34c",
+      "field": "wordFamily",
+      "target": "class"
+    },
+    {
+      "owner": "close",
+      "ownerId": "word_c6f0ecc56c4a",
+      "field": "forms",
+      "target": "closed"
+    },
+    {
+      "owner": "firstly",
+      "ownerId": "word_958d7173729a",
+      "field": "wordFamily",
+      "target": "first"
+    },
+    {
+      "owner": "workbook",
+      "ownerId": "word_c0f321001765",
+      "field": "wordFamily",
+      "target": "work"
+    },
+    {
+      "owner": "workbook",
+      "ownerId": "word_c0f321001765",
+      "field": "wordFamily",
+      "target": "book"
+    },
+    {
+      "owner": "backing",
+      "ownerId": "word_975ef228445a",
+      "field": "wordFamily",
+      "target": "back"
+    },
+    {
+      "owner": "homemaker",
+      "ownerId": "word_3d85b458a565",
+      "field": "wordFamily",
+      "target": "home"
+    },
+    {
+      "owner": "schoolwork",
+      "ownerId": "word_c23b07dfc263",
+      "field": "wordFamily",
+      "target": "school"
+    },
+    {
+      "owner": "schoolwork",
+      "ownerId": "word_c23b07dfc263",
+      "field": "wordFamily",
+      "target": "work"
+    },
+    {
+      "owner": "facelift",
+      "ownerId": "word_8e9e9ad1887b",
+      "field": "wordFamily",
+      "target": "face"
+    },
+    {
+      "owner": "nonpayment",
+      "ownerId": "word_b629b9cb9643",
+      "field": "wordFamily",
+      "target": "pay"
+    },
+    {
+      "owner": "worksheet",
+      "ownerId": "word_gt10500_10348",
+      "field": "wordFamily",
+      "target": "work"
+    },
+    {
+      "owner": "consonant",
+      "ownerId": "word_listening1179_b05a85b32ccc",
+      "field": "wordFamily",
+      "target": "vowel"
+    }
+  ],
+  "removedMeaningItems": [
+    {
+      "wordId": "word_5d80236c4600",
+      "word": "first",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_10517687ee0c",
+      "word": "all",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_3bbc9ad96500",
+      "word": "ago",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_61ccad19a5e4",
+      "word": "end",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_f733f54ac445",
+      "word": "cost",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_877889fd9050",
+      "word": "baby",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_3abde6132f9d",
+      "word": "useful",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_a3e1c7a7b80f",
+      "word": "hit",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_dc2180fcdb13",
+      "word": "class",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_d4547b06cc4a",
+      "word": "guy",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_96fdd1f0e20d",
+      "word": "date",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_6546fd94944e",
+      "word": "why",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_ce446bdcf172",
+      "word": "fun",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_64e11a5497fc",
+      "word": "add",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_2880e7f7ca7e",
+      "word": "cool",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_56fe2c5453ac",
+      "word": "job",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_7745ef79a072",
+      "word": "club",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_5cf9dbc99582",
+      "word": "art",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_3a5021b463df",
+      "word": "hair",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_8e12102ca4bc",
+      "word": "ball",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_7f7f08be5364",
+      "word": "fourth",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_c1dca7cfb5a0",
+      "word": "brown",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_4c8a3142b573",
+      "word": "copy",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_3080db0651e0",
+      "word": "second",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_46e2662e18e4",
+      "word": "hide",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_b1b170a70024",
+      "word": "beach",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_bf55677c35aa",
+      "word": "foot",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_155dbd175970",
+      "word": "boss",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_4e0ab357b145",
+      "word": "map",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_70c3a01ac47e",
+      "word": "kid",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_0b33322d2b02",
+      "word": "classroom",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_f125509e96e3",
+      "word": "police",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_7a705aceb073",
+      "word": "welcome",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_6943149811e9",
+      "word": "gym",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_bf2edcffbb90",
+      "word": "sing",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_5ebdc88b0afd",
+      "word": "hill",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_7c71ddc12e0c",
+      "word": "cash",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_cfe150403118",
+      "word": "boat",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_4fefca12598e",
+      "word": "autumn",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_9c4fdfdee071",
+      "word": "afternoon",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_39184c4e10aa",
+      "word": "fifth",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_5c057d0b32d2",
+      "word": "sky",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_1163aaab11b0",
+      "word": "dutch",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_c4c59e4e15ff",
+      "word": "sixth",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_8a5e72a5aed9",
+      "word": "dry",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_163a0c534c0b",
+      "word": "ninth",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_d6016a756499",
+      "word": "card",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_124312b3cd6d",
+      "word": "businessman",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_72570ec63621",
+      "word": "cooking",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_f0c1e00dc974",
+      "word": "girl",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_cf2bd2f09996",
+      "word": "numbers",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_d942822da1e8",
+      "word": "age",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_eace101a5e77",
+      "word": "wife",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_0885ff9f77fb",
+      "word": "fix",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_c343bc6852db",
+      "word": "twentieth",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_63cb1205e171",
+      "word": "box",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_5fccc6c46528",
+      "word": "bread",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_f55e84dba333",
+      "word": "busy",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_c3f6e9b1b49c",
+      "word": "singing",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_fbba4fd14deb",
+      "word": "boy",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_9f5b7ead8440",
+      "word": "neck",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_fd3cb043bcae",
+      "word": "bear",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_d8e822aa8d74",
+      "word": "chat",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_b4098e614496",
+      "word": "boil",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_0d7317eb7911",
+      "word": "tea",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_65fde9224838",
+      "word": "york",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_332507473a34",
+      "word": "soap",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_f44e194fe655",
+      "word": "sugar",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_b1171bec59c7",
+      "word": "bike",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_1699ee6ea8cd",
+      "word": "egg",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_6dbc6763e91b",
+      "word": "deer",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_22e268d71dd6",
+      "word": "dad",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_635a1a291caa",
+      "word": "fly",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_7f838d6365fa",
+      "word": "arm",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_c7fb01f3d845",
+      "word": "ice",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_c468ea41f289",
+      "word": "feet",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_a89a410458db",
+      "word": "wine",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_d7ee8696d4f4",
+      "word": "song",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_022b4f1b9005",
+      "word": "duck",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_718095fd0faf",
+      "word": "aunt",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_19e685359b15",
+      "word": "says",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_93f65ed7553f",
+      "word": "orange",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_212f85fa2099",
+      "word": "fox",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_296690b206c6",
+      "word": "app",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_f527971aa77d",
+      "word": "leg",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_46378b156935",
+      "word": "cook",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_b62ff06acbb0",
+      "word": "days",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_079d0cd5444e",
+      "word": "cry",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_fafba1e1b9fd",
+      "word": "later",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_listening1179_fe31dae5ff64",
+      "word": "ATM",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_589a3e5d5f6a",
+      "word": "cup",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_8ae07c987eb5",
+      "word": "soda",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_f689ca2d2a8a",
+      "word": "bus",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_excel_6e317bcd6839",
+      "word": "books",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_383fc80c496f",
+      "word": "soccer",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_d10e174914df",
+      "word": "rome",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_4a2fc953f5b7",
+      "word": "bin",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_excel_063bffb4b52b",
+      "word": "ways",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_110fc0005b62",
+      "word": "korean",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_176f4e517991",
+      "word": "cute",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_663ba0822fa0",
+      "word": "pet",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_ee0c59950530",
+      "word": "sad",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_fb48c4aa69bd",
+      "word": "bag",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_b8701cbf5bf9",
+      "word": "girls",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_fb9400b9c30b",
+      "word": "closed",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_ce90a2271a97",
+      "word": "ear",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_a119c2297afd",
+      "word": "tenth",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_b7c13d508639",
+      "word": "desk",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_876399a2e139",
+      "word": "toy",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_7b26f77e6ef8",
+      "word": "washington",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_593937da9f16",
+      "word": "russian",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_bd0fb9d9b10e",
+      "word": "cake",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_e14ae1516220",
+      "word": "beer",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_6e4fb05b2085",
+      "word": "pan",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_6cca4220b2c8",
+      "word": "grandma",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_309e5069339a",
+      "word": "o'clock",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_d752b9d04068",
+      "word": "apple",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_1600740c91b0",
+      "word": "ends",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_b6e346593e5a",
+      "word": "madam",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_82ac205b3b54",
+      "word": "midnight",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_cc237d980879",
+      "word": "legs",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_557cd26810e8",
+      "word": "kent",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_95d8ab2c9f67",
+      "word": "faces",
+      "reason": "master-word-removed"
+    },
+    {
+      "wordId": "word_c6d5de5a1472",
+      "word": "cow",
+      "reason": "master-word-removed"
+    }
+  ],
+  "addedMeaningItems": [
+    {
+      "wordId": "word_4a7a5ff9e356",
+      "word": "little",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_d46ed415789f",
+      "word": "abnormality",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_eee641f56c3d",
+      "word": "telecommute",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_0c16baf0eded",
+      "word": "japanese",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_320aa710f409",
+      "word": "italian",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_dab0dee63ad3",
+      "word": "france",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_fe41e892a2b8",
+      "word": "marginalisation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_9ce70bd1d4b3",
+      "word": "ought",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_d7af66c3eabd",
+      "word": "restatement",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_d8b9d454eca1",
+      "word": "israel",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_081df50ca8d8",
+      "word": "graphics",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_3fac38e63201",
+      "word": "olympics",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_1620c6035e58",
+      "word": "cohesion",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_0ac4e8ae342a",
+      "word": "plagiarise",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_8c8fa8880a1e",
+      "word": "underlie",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_be09f94ae485",
+      "word": "heighten",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_92c9501bf3a3",
+      "word": "found",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_22ae6ede06ba",
+      "word": "desertification",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_635bf3103516",
+      "word": "massachusetts",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_0381c2eb39e7",
+      "word": "persona",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_b0e26827e63a",
+      "word": "america",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_c2a5b8c3b402",
+      "word": "encode",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_fed61c5032e3",
+      "word": "videoconference",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_e56a471f7ae0",
+      "word": "causation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_45e3d5d23009",
+      "word": "sexuality",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_58173f0423e4",
+      "word": "immobilise",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_7e2d00b3ac67",
+      "word": "fluctuate",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ec0967417f32",
+      "word": "paintwork",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_cc2eb0eaa05b",
+      "word": "runaround",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_57f92721d489",
+      "word": "postbox",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_b471e40e036c",
+      "word": "shortcoming",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_f602e1edec07",
+      "word": "gatherer",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_fadcdb797829",
+      "word": "larder",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_19efe2802265",
+      "word": "hypothesize",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_8445d41b803f",
+      "word": "impair",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_90fb78881cc8",
+      "word": "noticeboard",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_65ebea085caa",
+      "word": "misidentify",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_eef1ce38b4f9",
+      "word": "applied",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_f394b30a1830",
+      "word": "permittee",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_89db2bacfb87",
+      "word": "trousers",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_7c838daaf215",
+      "word": "sitting",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_4faac7faa0ac",
+      "word": "minutes",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_ed04ce0a1d53",
+      "word": "reforestation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_b458d8329f54",
+      "word": "asian",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ca220417034a",
+      "word": "randomize",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ee58f690ad76",
+      "word": "conceptualize",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_c42006c2ccbe",
+      "word": "centralize",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_3ae74d0e0492",
+      "word": "described",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_7bb9b481817b",
+      "word": "killed",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_62d1ff031461",
+      "word": "affected",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_2e03795b0c7c",
+      "word": "notetaking",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_69f37c35b03f",
+      "word": "powercut",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_21deae0d2b84",
+      "word": "salesclerk",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_b41c448aaf22",
+      "word": "smokealarm",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_31b14dca2469",
+      "word": "stoplight",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_9f962dc9adfa",
+      "word": "townhall",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_c03a73095563",
+      "word": "digitalisation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_a00f82d8b27e",
+      "word": "cyberattack",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_bd43eb38eae1",
+      "word": "forename",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_f1962693b66c",
+      "word": "stomachache",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_d78a7f9e871f",
+      "word": "interrelationship",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_90371f493466",
+      "word": "composter",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_e6f6a9f72ab2",
+      "word": "exemplification",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_9a0d21243c6c",
+      "word": "generalisation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_ec3be984d993",
+      "word": "microplastic",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_6b15ef618654",
+      "word": "paragraphing",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_47132ca06c1b",
+      "word": "socialisation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_1e3ed671310e",
+      "word": "reconciliation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ed1a3b9306d6",
+      "word": "liberalization",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_e77e5ee820f9",
+      "word": "fascinate",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_005618d62b61",
+      "word": "riding",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_dd91aa249884",
+      "word": "popularize",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_listening1179_298d0899cdc6",
+      "word": "objectify",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_e3e4c5d6a429",
+      "word": "collocation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_01c6fef811ce",
+      "word": "embargo",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_8a49cb965fc6",
+      "word": "jobseeker",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_326f13d28afb",
+      "word": "constituent",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_b9800593abd9",
+      "word": "legitimacy",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_c55f23d20c89",
+      "word": "policymaker",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_99e83fc4640a",
+      "word": "oppression",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_86492cefb217",
+      "word": "segregation",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_819b4ee92d85",
+      "word": "persecution",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_4c6e6ddb2581",
+      "word": "underpayment",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_0c8cfe10af80",
+      "word": "dangle",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_a5c96bc8a871",
+      "word": "deskjob",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ba3f35bf4684",
+      "word": "resolver",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ab82d211b52e",
+      "word": "rangefinder",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_60544f23ab4c",
+      "word": "rampway",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_c659c3547b4b",
+      "word": "pinboard",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_d068552c8536",
+      "word": "mapreader",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_dcfcd3c1848b",
+      "word": "preceptor",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_81f92babd538",
+      "word": "mutiny",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ab3d21d0d2fe",
+      "word": "exemplify",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_2a3084e416b4",
+      "word": "milliner",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_d3a342dd405f",
+      "word": "plantroom",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_2065354ed2a4",
+      "word": "passcode",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_81a491b30464",
+      "word": "pushchair",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_186e9ff804f0",
+      "word": "poolroom",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_9308395042f0",
+      "word": "pillbox",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_b501cd94f838",
+      "word": "pillowcase",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_6c602533c1f2",
+      "word": "protectorate",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_5c70f12c6e83",
+      "word": "puppeteer",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_6ece9ecf35a4",
+      "word": "outpost",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ea7f07a35aaf",
+      "word": "recognizer",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_35848857832a",
+      "word": "hatchway",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_17e4603a1174",
+      "word": "preserver",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_3d32e258cee5",
+      "word": "redeemer",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_41a8d2fc538c",
+      "word": "ragpicker",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_29d252d7d463",
+      "word": "reasoner",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_fa983c1431fb",
+      "word": "partaker",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_7fcec05ff3b7",
+      "word": "rejoinder",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_0f63efe2686b",
+      "word": "parkade",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_885e5d9b6f38",
+      "word": "rentier",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_d81c570c4e10",
+      "word": "priesthood",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_2a4a8899d45b",
+      "word": "quayside",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_0932e5ac806b",
+      "word": "rattlesnake",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_f267e1328ab4",
+      "word": "reagent",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_0ab710c23e08",
+      "word": "replier",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_6c1b994c585d",
+      "word": "resistor",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_bd10529c3427",
+      "word": "responder",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_7cf02ff5ca1d",
+      "word": "returnee",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_2f7813c6ed6f",
+      "word": "holster",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_9f29827997f9",
+      "word": "latest",
+      "reason": "replacement-for-retired-meaning-item"
+    },
+    {
+      "wordId": "word_ddc78c039f41",
+      "word": "scotland",
+      "reason": "replacement-for-retired-meaning-item"
+    }
+  ]
+}

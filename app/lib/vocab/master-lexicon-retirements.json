@@ -1,0 +1,463 @@
+{
+  "version": "v14-13353-user-curated-removal-20260726",
+  "generatedAt": "2026-07-26T10:22:43.513Z",
+  "previousRef": "10b50240719562289dd4ee3176f2b1e67a17b647",
+  "count": 91,
+  "entries": [
+    {
+      "id": "word_12f29832aa4b",
+      "word": "egypt",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f4983f3c36c3",
+      "word": "canadian",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_931e6adbafaa",
+      "word": "liked",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_0e6859c8f293",
+      "word": "fewer",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f31368db4625",
+      "word": "nearest",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_ceb3c64a33ca",
+      "word": "saw",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_54d9a907339a",
+      "word": "said",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_65799f58a6f2",
+      "word": "men",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_335304dd0bae",
+      "word": "went",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cea34912af17",
+      "word": "eyes",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_f34f4f5f2b4e",
+      "word": "began",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_53ff2cb93723",
+      "word": "asked",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3e47fd639e8c",
+      "word": "felt",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8904fdd2ae6e",
+      "word": "words",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b62ff06acbb0",
+      "word": "days",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_259bbdc209bf",
+      "word": "called",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_df852b0d9ff9",
+      "word": "seen",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4af5ea99de0f",
+      "word": "going",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4f32204a685e",
+      "word": "things",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_731af82f1b88",
+      "word": "cried",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_52d19fa42e88",
+      "word": "children",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3c516f7639de",
+      "word": "wanted",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_5779c5c24e90",
+      "word": "won",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_c468ea41f289",
+      "word": "feet",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_95d8ab2c9f67",
+      "word": "faces",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4a7d233d9899",
+      "word": "russians",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_19e685359b15",
+      "word": "says",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8909d85df46d",
+      "word": "asking",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cc237d980879",
+      "word": "legs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_1600740c91b0",
+      "word": "ends",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_a2d455a2e8eb",
+      "word": "begun",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_2a3b82146234",
+      "word": "hills",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_86455293d3f4",
+      "word": "bodies",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4a7f9e00deff",
+      "word": "nearer",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_4cc84caf5e30",
+      "word": "died",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_e1a34b9db1bc",
+      "word": "americans",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_3b39641297a1",
+      "word": "cities",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_b8701cbf5bf9",
+      "word": "girls",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_cf2bd2f09996",
+      "word": "numbers",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_d4392ced9dff",
+      "word": "foods",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_9fd13a8c6c17",
+      "word": "fishes",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_f79e2ecc220d",
+      "word": "schools",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_da925a30e31f",
+      "word": "older",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_325392e8dd28",
+      "word": "maps",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_6e317bcd6839",
+      "word": "books",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_4856d3c19e55",
+      "word": "clubs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_7f14eadc8060",
+      "word": "birds",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_7b3bb6b02210",
+      "word": "classes",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_8dca9a9539aa",
+      "word": "tops",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_2870b96cfef3",
+      "word": "doors",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_aeb24056810d",
+      "word": "names",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_45c24426524b",
+      "word": "greenest",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_bcde6928e538",
+      "word": "costs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_2b922222376d",
+      "word": "sugars",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_b433c45d27b9",
+      "word": "cooks",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_b54677b9e260",
+      "word": "rats",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_5d9a17cb70b9",
+      "word": "jobs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_ba24b7992d5d",
+      "word": "ages",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_cd7ac4c61fd8",
+      "word": "games",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_3b5475495acf",
+      "word": "desks",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_3bfcbeeee9f7",
+      "word": "toys",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_3be1d422a460",
+      "word": "pets",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_8ecbaf607e96",
+      "word": "bags",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_93253ae00ba9",
+      "word": "bikes",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_502bb6587727",
+      "word": "babies",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_d89c5a6a7d09",
+      "word": "beaches",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_c1bbfe449f16",
+      "word": "ducks",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_0d62646ad2a4",
+      "word": "chatting",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_97e1f3fc7bea",
+      "word": "ears",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_23da0d3b0b5a",
+      "word": "bees",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_1c33629a9370",
+      "word": "missed",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_c374c5b93ad0",
+      "word": "chefs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_2ec716e4dc43",
+      "word": "kids",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_9780daa5e89d",
+      "word": "songs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_6e0b5b262cf4",
+      "word": "boys",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_c6520d7c46b5",
+      "word": "cows",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_f8bd2d352d8c",
+      "word": "bins",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_18aa392c7f78",
+      "word": "cakes",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_d6ecb8285875",
+      "word": "pans",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_6983e434cc38",
+      "word": "ate",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_faa5af7cea8a",
+      "word": "bears",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_46da674b5b09",
+      "word": "eggs",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_c62d18434681",
+      "word": "copies",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_7d56069fc33f",
+      "word": "welcomed",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_a157d36a7391",
+      "word": "named",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_39deaf7caa6b",
+      "word": "bought",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_bf3460bdf158",
+      "word": "eats",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_804f51f71254",
+      "word": "newer",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_90191e4114b0",
+      "word": "biggest",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_063bffb4b52b",
+      "word": "ways",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_9e5db53b5cf0",
+      "word": "bigger",
+      "reason": "user-curated-removal"
+    }
+  ]
+}

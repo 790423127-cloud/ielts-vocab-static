@@ -6,7 +6,11 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { MASTER_LEXICON_EXPECTED_COUNT } from "../app/lib/vocab/master-lexicon-baseline.mjs";
+import {
+  MASTER_LEXICON_EXPECTED_COUNT,
+  MASTER_LEXICON_SHA256,
+  MASTER_LEXICON_VERSION
+} from "../app/lib/vocab/master-lexicon-baseline.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE_PATH = path.join(ROOT, ".static-export-cache", "words.json");
@@ -44,6 +48,12 @@ function main() {
   if (cache.wordsLength !== cache.count) errors.push("cache count metadata mismatch");
   if (cache.wordsLength !== MASTER_LEXICON_EXPECTED_COUNT) {
     errors.push(`cache count ${cache.wordsLength} !== baseline ${MASTER_LEXICON_EXPECTED_COUNT}`);
+  }
+  if (cache.version !== MASTER_LEXICON_VERSION) {
+    errors.push(`cache version ${cache.version} !== baseline ${MASTER_LEXICON_VERSION}`);
+  }
+  if (cache.fileHash !== MASTER_LEXICON_SHA256) {
+    errors.push(`cache file hash ${cache.fileHash} !== baseline ${MASTER_LEXICON_SHA256}`);
   }
 
   if (checkOnly) {

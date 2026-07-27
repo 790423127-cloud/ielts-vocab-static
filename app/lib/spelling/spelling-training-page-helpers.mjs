@@ -34,6 +34,28 @@ import {
   writePersonalWrongBookRecords as writeStoredPersonalWrongBookRecords
 } from "./spelling-training-storage.mjs";
 
+export function resolveSpellingLoadingState(options = {}) {
+  const lexiconReady = options.lexiconReady === true;
+  const activeSourceLoading = options.activeSourceLoading === true;
+  const entryCount = Math.max(0, Number(options.entryCount) || 0);
+  const engineReady = options.engineReady === true;
+
+  if (!lexiconReady) {
+    return { loading: true, phase: "读取主词库", showEnginePreparing: false };
+  }
+  if (activeSourceLoading) {
+    return { loading: true, phase: "恢复所选训练来源", showEnginePreparing: false };
+  }
+  if (entryCount > 0 && !engineReady) {
+    return { loading: true, phase: "初始化训练引擎", showEnginePreparing: true };
+  }
+  return {
+    loading: false,
+    phase: entryCount > 0 ? "训练已就绪" : "所选来源暂无内容",
+    showEnginePreparing: false
+  };
+}
+
 export function getUxPrefsKey(scope) {
   return spellingUxPrefsKey(scope);
 }

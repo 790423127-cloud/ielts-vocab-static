@@ -9,6 +9,7 @@ import WordStudyActions from "./WordStudyActions";
 import WordStudyContent from "./WordStudyContent";
 import WordStudyOverview from "./WordStudyOverview";
 import WordStudyProgress from "./WordStudyProgress";
+import WordStudyWorkspace from "./WordStudyWorkspace";
 import { getWordStudyProgressLabel } from "../lib/vocab/word-study-overview.mjs";
 
 function getRelatedWords(item, displayFamily, activeWordPool) {
@@ -344,9 +345,22 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
   );
 
   return (
-    <div className={`word-flash-shell${showInsight ? "" : " is-insight-collapsed"}`}>
-      <div className="word-study-layout">
-        <section className="word-study-column" aria-label="单词学习区">
+    <WordStudyWorkspace
+      showInsight={showInsight}
+      overview={showInsight ? (
+        <WordStudyOverview
+          wordLibraryStats={wordLibraryStats}
+          filter={filter}
+          filterName={getFilterName(filter)}
+          studyWords={studyWords}
+          currentPosition={safeStudyPosition}
+          isExternalIdictationItem={isExternalIdictationItem}
+          relatedWords={relatedWords}
+          speakSmallText={speakSmallText}
+          onClose={() => setShowInsight(false)}
+        />
+      ) : null}
+    >
           <WordStudyProgress
             label={getWordStudyProgressLabel(filter, isExternalIdictationItem)}
             title={getFilterName(filter)}
@@ -376,6 +390,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                     aria-label="自动滚动间隔"
                     title="自动滚动间隔"
                   >
+                    <option value={2}>2秒</option>
                     <option value={4}>4秒</option>
                     <option value={6}>6秒</option>
                     <option value={10}>10秒</option>
@@ -460,22 +475,6 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             markStatus={markStatus}
             tidyReview={tidyReview}
           />
-        </section>
-
-        {showInsight ? (
-          <WordStudyOverview
-            wordLibraryStats={wordLibraryStats}
-            filter={filter}
-            filterName={getFilterName(filter)}
-            studyWords={studyWords}
-            currentPosition={safeStudyPosition}
-            isExternalIdictationItem={isExternalIdictationItem}
-            relatedWords={relatedWords}
-            speakSmallText={speakSmallText}
-            onClose={() => setShowInsight(false)}
-          />
-        ) : null}
-      </div>
-    </div>
+    </WordStudyWorkspace>
   );
 }

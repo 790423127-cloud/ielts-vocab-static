@@ -98,12 +98,14 @@ export function mergeWordContentWithUserState(
   const freshIds = new Set(mergedWords.map(wordIdentity).filter(Boolean));
   for (const cached of Array.isArray(cachedWords) ? cachedWords : []) {
     const key = wordIdentity(cached);
-    const isPersonalWrongSupplement =
+    const isPersonalSupplement =
       cached?.addedFromPersonalWrongBook === true ||
       cached?.source === "personal_wrong_book" ||
+      cached?.addedFromReadingWords === true ||
+      cached?.source === "personal-reading" ||
       cached?.supplemental === true;
 
-    if (key && !freshIds.has(key) && isPersonalWrongSupplement) {
+    if (key && !freshIds.has(key) && isPersonalSupplement) {
       mergedWords.push({ ...cached });
       freshIds.add(key);
     }

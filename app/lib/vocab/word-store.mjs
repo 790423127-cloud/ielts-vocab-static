@@ -16,6 +16,9 @@ export const BIG_WORDS_META_KEY = "words_meta_v2";
 export const BIG_WORDS_CHUNK_PREFIX = "words_chunk_v2_";
 export const BIG_WORD_USER_STATE_KEY = "word_user_state_v1";
 export const BIG_LEXICON_TIDY_AUDIT_KEY = "lexicon_tidy_audit_v1";
+export const BIG_WORDS_IMPORT_BACKUP_META_KEY = "words_import_backup_meta_v1";
+export const BIG_WORDS_IMPORT_BACKUP_STATE_KEY = "words_import_backup_state_v1";
+export const BIG_WORDS_IMPORT_BACKUP_CHUNK_PREFIX = "words_import_backup_chunk_v1_";
 export const BIG_WORDS_CHUNK_SIZE = 250;
 
 function openBigStore() {
@@ -26,14 +29,30 @@ function openBigStore() {
     }
 
     const request = indexedDB.open(BIG_STORE_DB, 1);
+    let settled = false;
+    const timeout = globalThis.setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      reject(new Error("IndexedDB 打开超时，可能被其他标签页占用"));
+    }, 5000);
+    const finish = (callback) => {
+      if (settled) return false;
+      settled = true;
+      globalThis.clearTimeout(timeout);
+      callback();
+      return true;
+    };
     request.onupgradeneeded = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains(BIG_STORE_NAME)) {
         db.createObjectStore(BIG_STORE_NAME);
       }
     };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error || new Error("IndexedDB 打开失败"));
+    request.onsuccess = () => {
+      if (!finish(() => resolve(request.result))) request.result.close();
+    };
+    request.onerror = () => finish(() => reject(request.error || new Error("IndexedDB 打开失败")));
+    request.onblocked = () => finish(() => reject(new Error("IndexedDB 被其他标签页占用")));
   });
 }
 
@@ -356,6 +375,111 @@ export async function saveWordsToIndexedDB(nextWords, sourceMeta = {}) {
   return true;
 }
 
+export async function saveWordsToIndexedDBWithBackup(
+  nextWords,
+  previousWords,
+  sourceMeta = {},
+  backupDetails = {}
+) {
+  const nextList = Array.isArray(nextWords) ? nextWords : [];
+  const previousList = Array.isArray(previousWords) ? previousWords : [];
+  if (!previousList.length) {
+    throw new Error("主词库备份为空，已停止写入");
+  }
+
+  const [preparedNext, preparedBackup] = await Promise.all([
+    prepareWordStoreSnapshot(nextList),
+    prepareWordStoreSnapshot(previousList)
+  ]);
+  const db = await openBigStore();
+
+  try {
+    const [oldMeta, oldBackupMeta] = await readStoredValues(db, [
+      BIG_WORDS_META_KEY,
+      BIG_WORDS_IMPORT_BACKUP_META_KEY
+    ]).catch(() => [null, null]);
+    const oldChunks = Number(oldMeta?.chunks || 0);
+    const oldBackupChunks = Number(oldBackupMeta?.chunks || 0);
+    const transaction = db.transaction(BIG_STORE_NAME, "readwrite");
+    const store = transaction.objectStore(BIG_STORE_NAME);
+    const done = transactionDone(transaction);
+
+    store.delete(BIG_WORDS_KEY);
+    for (let index = 0; index < preparedNext.chunkCount; index += 1) {
+      store.put(preparedNext.serializedChunks[index], `${BIG_WORDS_CHUNK_PREFIX}${index}`);
+    }
+    store.put(preparedNext.userState, BIG_WORD_USER_STATE_KEY);
+    store.put({
+      ...buildWordCacheMeta(nextList, sourceMeta),
+      chunks: preparedNext.chunkCount,
+      chunkSize: preparedNext.chunkSize,
+      totalCount: preparedNext.totalCount,
+      contentHash: preparedNext.contentHash,
+      updatedAt: Date.now()
+    }, BIG_WORDS_META_KEY);
+    for (let index = preparedNext.chunkCount; index < oldChunks; index += 1) {
+      store.delete(`${BIG_WORDS_CHUNK_PREFIX}${index}`);
+    }
+
+    for (let index = 0; index < preparedBackup.chunkCount; index += 1) {
+      store.put(
+        preparedBackup.serializedChunks[index],
+        `${BIG_WORDS_IMPORT_BACKUP_CHUNK_PREFIX}${index}`
+      );
+    }
+    store.put(preparedBackup.userState, BIG_WORDS_IMPORT_BACKUP_STATE_KEY);
+    store.put({
+      ...buildWordCacheMeta(previousList, sourceMeta),
+      chunks: preparedBackup.chunkCount,
+      chunkSize: preparedBackup.chunkSize,
+      totalCount: preparedBackup.totalCount,
+      contentHash: preparedBackup.contentHash,
+      createdAt: Date.now(),
+      reason: String(backupDetails.reason || "personal-reading-import")
+    }, BIG_WORDS_IMPORT_BACKUP_META_KEY);
+    for (let index = preparedBackup.chunkCount; index < oldBackupChunks; index += 1) {
+      store.delete(`${BIG_WORDS_IMPORT_BACKUP_CHUNK_PREFIX}${index}`);
+    }
+
+    await done;
+  } finally {
+    db.close();
+  }
+
+  return true;
+}
+
+export async function loadWordsImportBackupFromIndexedDB() {
+  let db;
+  try {
+    db = await openBigStore();
+  } catch (error) {
+    return cacheResult("storage-error", { error, reason: error?.message || "IndexedDB打开失败" });
+  }
+
+  try {
+    const [meta, state] = await readStoredValues(db, [
+      BIG_WORDS_IMPORT_BACKUP_META_KEY,
+      BIG_WORDS_IMPORT_BACKUP_STATE_KEY
+    ]);
+    const chunkCount = Number(meta?.chunks || 0);
+    if (!chunkCount) return cacheResult("cache-miss");
+    const chunkKeys = Array.from(
+      { length: chunkCount },
+      (_, index) => `${BIG_WORDS_IMPORT_BACKUP_CHUNK_PREFIX}${index}`
+    );
+    const chunks = await readStoredValues(db, chunkKeys);
+    return validateWordCacheChunks(meta, chunks, state || {});
+  } catch (error) {
+    return cacheResult("storage-error", {
+      error,
+      reason: error?.message || "主词库导入备份读取失败"
+    });
+  } finally {
+    db.close();
+  }
+}
+
 export async function saveWordUserStateToIndexedDB(words) {
   const db = await openBigStore();
 
@@ -405,14 +529,16 @@ export async function saveLexiconTidyAuditToIndexedDB(audit) {
 }
 
 export async function loadActiveWordsForSync() {
-  const stored = await loadWordsFromIndexedDB();
+  const [stored, apiMeta] = await Promise.all([
+    loadWordsFromIndexedDB(),
+    fetch("/api/vocab-meta", { cache: "no-store" })
+      .then((response) => response?.ok ? response.json().catch(() => null) : null)
+      .catch(() => null)
+  ]);
   let words = stored?.words || [];
   let meta = stored?.meta || {};
 
   try {
-    const metaResponse = await fetch("/api/vocab-meta", { cache: "no-store" });
-    const apiMeta = metaResponse?.ok ? await metaResponse.json().catch(() => null) : null;
-
     if (words.length && apiMeta?.lexiconHash && isWordCacheCurrent(meta, apiMeta)) {
       return { words, meta: { ...meta, ...apiMeta } };
     }

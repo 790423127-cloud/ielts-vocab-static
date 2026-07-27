@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260715_d30_laptop_height_v1";
+export const STATIC_RESPONSIVE_VERSION = "20260727_mobile_first_screen_v2";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 
 const LOCKED_DESKTOP_RULE =

@@ -119,8 +119,18 @@ function normalizePhraseItems(value) {
 }
 
 function sanitizeWordItem(item) {
+  const stableId = String(item?.wordId || item?.id || "").trim();
+
   return {
+    id: String(item?.id || stableId).trim(),
+    wordId: stableId,
     word: String(item?.word || "").trim(),
+    entryType: String(item?.entryType || "").trim(),
+    studyMode: String(item?.studyMode || "").trim(),
+    baseWord: String(item?.baseWord || "").trim(),
+    baseWordId: String(item?.baseWordId || "").trim(),
+    redirectToWord: String(item?.redirectToWord || "").trim(),
+    relationType: String(item?.relationType || "").trim(),
     phonetic: String(item?.phonetic || "").trim(),
     pos: String(item?.pos || "").trim(),
     meaning: String(item?.meaning || "").trim(),
@@ -135,6 +145,7 @@ function sanitizeWordItem(item) {
     category: String(item?.category || "IELTS G类").trim(),
     status: String(item?.status || "").trim(),
     favorite: Boolean(item?.favorite),
+    otherMeanings: Array.isArray(item?.otherMeanings) ? item.otherMeanings : [],
     forms: Array.isArray(item?.forms) ? item.forms : [],
     wordFamily: Array.isArray(item?.wordFamily) ? item.wordFamily : []
   };
@@ -258,7 +269,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260715_d30_laptop_height_v1";
+const STATIC_EXPORT_VERSION = "20260727_mobile_first_screen_v2";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -278,14 +289,14 @@ const STATIC_INDEX_HTML = `<!doctype html>
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>主词库刷词</strong><span>专注学习</span></div>
     <nav class="static-brand-nav" aria-label="主要学习模式">
-      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./reading-g.html">G类阅读提升</a>
+      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./ielts-538.html">538考点</a><a href="./reading-words.html">阅读生词</a>
     </nav>
   </header>
   <aside class="static-shell-sidebar" aria-label="学习导航">
     <nav><a class="active" href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav>
     <div class="static-shell-divider"></div>
     <span class="static-shell-label">专项学习</span>
-    <nav><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
+    <nav><a href="./ielts-538.html">538考点</a><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./reading-words.html">阅读生词栏</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
     <nav class="static-shell-bottom"><a href="./index.html">设置</a></nav>
   </aside>
   <main class="app">
@@ -298,6 +309,7 @@ const STATIC_INDEX_HTML = `<!doctype html>
         <button id="editWordBtn" class="top-btn">修改</button>
         <button id="deleteWordBtn" class="top-btn danger-top">删除</button>
         <button id="syncBtn" class="top-btn sync-top">云同步</button>
+        <a href="./ielts-538.html" class="top-btn">538考点</a>
         <a href="./basic.html" class="top-btn">零基础单词</a>
         <a href="./reading-g.html" class="top-btn">G类阅读提升</a>
         <a href="./meaning.html" class="top-btn">看词选意思·6000</a>
@@ -641,6 +653,39 @@ body{background:var(--bg)}
 @media(min-width:1600px){
   .bottom{min-height:90px;padding:14px 28px}.status{min-width:128px;min-height:54px;font-size:17px}.progress{height:10px}.count{font-size:16px}
 }
+
+/* D2.5 mobile first-screen study flow.
+ * Keep the primary card and learning actions in the initial viewport while
+ * retaining morphology and collocations below for optional scrolling.
+ */
+@media(max-width:900px){
+  :root{--workspace-header:58px}
+  .static-brand-bar{height:var(--workspace-header);grid-template-columns:minmax(118px,1fr) minmax(0,1.6fr);grid-template-rows:58px}
+  .static-brand{grid-column:1;grid-row:1;padding-inline:12px;font-size:13px}
+  .static-session-context{display:none}
+  .static-brand-nav{grid-column:2;grid-row:1;max-width:100%;padding-inline:4px;overflow-x:auto;overscroll-behavior-inline:contain}
+  .static-brand-nav a{min-width:max-content;padding-inline:8px;font-size:12px}
+  .app{min-height:calc(100svh - var(--workspace-header));padding:8px 10px calc(12px + env(safe-area-inset-bottom))}
+  .top{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;min-height:0;padding-bottom:7px}
+  .top>.top-btn,.top>.top-tools-toggle{width:100%;min-height:38px;padding:7px 8px}
+  .top-actions{grid-column:1/-1}
+  .hero{display:contents}
+  .example-card{order:1;margin:8px auto 5px;padding:7px 0 9px}
+  .example-head{grid-template-columns:28px minmax(0,1fr);gap:7px}
+  .example-en{font-size:clamp(17px,4.8vw,20px);line-height:1.25}
+  .example-cn{margin-top:4px;padding-left:35px;font-size:13px;line-height:1.3}
+  .star{order:2;width:28px;height:28px;margin:3px auto 0;font-size:23px}
+  .unfamiliar-alert{order:2;margin:4px auto;padding:6px 10px;font-size:12px}
+  .sound-main{order:3;width:34px;height:34px;margin:2px auto 3px}
+  .word{order:4;margin-inline:auto;font-size:clamp(42px,14vw,58px);line-height:1}
+  .basic-line{order:5;margin-top:5px;font-size:16px;line-height:1.25;text-align:center}
+  .load-info,.swipe-hint{display:none}
+  .bottom,body.mobile-mode .bottom{order:6;width:100%;margin-top:8px;padding:8px 0 calc(8px + env(safe-area-inset-bottom));gap:7px}
+  .progress-row{gap:8px}.progress{height:6px}.count{font-size:12px}
+  .actions{gap:8px}.status{min-height:44px;font-size:15px}
+  .forms-box{order:7;width:100%;margin-top:10px;padding:12px}
+  .blocks{order:8;width:100%;margin-top:10px}
+}
 `;
 
 const STATIC_APP_JS = `const APP_VERSION="${STATIC_EXPORT_VERSION}";
@@ -648,6 +693,7 @@ const IDICTATION_ENTRY_COUNTS={listening:${IDICTATION_FREQUENCY_META.sources.lis
 const PROGRESS_KEY="static_vocab_progress_v15_entry_edgetts_cache_fallback";
 const OLD_WORDS_KEY="static_vocab_words_v1";
 const OLD_SESSION_KEY="static_vocab_session_v1";
+const READING_MAIN_SUPPLEMENT_KEY="static_personal_reading_main_v1";
 const AUDIO_CACHE_NAME="static_vocab_audio_"+APP_VERSION;
 const CLOUDBASE_SYNC_CODE_KEY="static_vocab_cloudbase_sync_code_v1";
 const TOP_TOOLS_PREF_PREFIX="static_vocab_top_tools_collapsed_v1_";
@@ -994,6 +1040,32 @@ function getVocabId(){
 function safeLsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function safeLsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){console.warn("localStorage full",k,e);return false}}
 function safeLsRemove(k){try{localStorage.removeItem(k)}catch(e){}}
+function isInflectedReferenceWord(word){
+  if(!word)return false;
+  if(word.entryType==="inflected-form"&&word.studyMode==="reference")return true;
+  const hasBase=Boolean(norm(word.baseWord)||String(word.baseWordId||"").trim()||norm(word.redirectToWord));
+  return word.studyMode==="reference"&&hasBase&&/(?:plural|past tense|past participle|present participle|comparative|superlative|third-person|inflected form)/i.test(String(word.relationType||""));
+}
+function brushableWords(list){
+  return (Array.isArray(list)?list:[]).filter(function(word){return !isInflectedReferenceWord(word)});
+}
+function mergeReadingMainSupplements(baseWords){
+  let supplements=[];
+  try{
+    const payload=JSON.parse(safeLsGet(READING_MAIN_SUPPLEMENT_KEY)||"null");
+    supplements=Array.isArray(payload)?payload:(Array.isArray(payload&&payload.words)?payload.words:[]);
+  }catch(e){supplements=[]}
+  if(!supplements.length)return baseWords;
+  const known=new Set(baseWords.map(function(entry){return norm(entry&&entry.word)}));
+  const merged=baseWords.slice();
+  supplements.forEach(function(entry){
+    const wordKey=norm(entry&&entry.word);
+    if(!wordKey||known.has(wordKey))return;
+    known.add(wordKey);
+    merged.push(entry);
+  });
+  return merged;
+}
 
 function splitListText(v){
   return String(v||"").split(/[\\n,，;；]+/).map(function(x){return x.trim()}).filter(Boolean);
@@ -2352,13 +2424,16 @@ async function boot(){
     ]);
     if(!res.ok) throw new Error("words json failed");
     const data=await res.json();
-    words=Array.isArray(data.words)?data.words:data;
+    const physicalWords=applyDeletedWords(applyWordEdits(mergeReadingMainSupplements(Array.isArray(data.words)?data.words:data)));
     if(idictationRes&&idictationRes.ok) idictationPayload=await idictationRes.json();
     else await ensureIdictationPayload();
+    safeLsRemove("static_vocab_words_v1");
     // 静态版不再保存完整 10000 词，只合并“修改过的单词”。
     safeLsRemove("static_vocab_words_v1");
-    words=applyDeletedWords(applyWordEdits(words));
-    vocabId=computeVocabId(words);
+    // Keep the physical-store ID stable for existing cross-device progress, while
+    // matching the local app's study-card count by hiding pure inflection references.
+    vocabId=computeVocabId(physicalWords);
+    words=brushableWords(physicalWords);
     loadProgress();
     buildFilterOptions();
     if(window.matchMedia&&window.matchMedia("(max-width: 900px)").matches&&!(progress.updatedAt>0)) mobileMode=true;
@@ -2392,6 +2467,8 @@ const SHELL=[
   "./basic.html",
   "./meaning.html",
   "./reading-g.html",
+  "./reading-words.html",
+  "./ielts-538.html",
   "./assets/style.css?v=${STATIC_EXPORT_VERSION}",
   "./assets/app.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/spelling.css?v=${STATIC_EXPORT_VERSION}",
@@ -2399,6 +2476,9 @@ const SHELL=[
   "./assets/basic.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/meaning-static.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-g.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/reading-words.css?v=${STATIC_EXPORT_VERSION}",
+  "./assets/reading-words.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/ielts-538.js?v=${STATIC_EXPORT_VERSION}",
   "./sync-config.js?v=${STATIC_EXPORT_VERSION}",
   "./data/words.json",
   "./data/phrases.json",
@@ -2407,6 +2487,7 @@ const SHELL=[
   "./data/reading-g-vocab.json",
   "./data/reading-g-paraphrases.json",
   "./data/reading-g-import-report.json",
+  "./data/ielts-538-words.json",
   "./manifest.webmanifest?v=${STATIC_EXPORT_VERSION}"
 ];
 
@@ -2446,7 +2527,7 @@ self.addEventListener("fetch",function(event){
     return;
   }
 
-  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
+  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
     event.respondWith(
       fetch(req).then(function(res){
         if(res&&res.ok) caches.open(CACHE_NAME).then(function(cache){cache.put(req,res.clone()).catch(function(){})});
@@ -2605,6 +2686,14 @@ function buildExport(words, audioIndex, options = {}) {
       data: readFileSync(publicAssetPath("reading-g.html"), "utf-8")
     },
     {
+      name: "reading-words.html",
+      data: readFileSync(publicAssetPath("reading-words.html"), "utf-8")
+    },
+    {
+      name: "ielts-538.html",
+      data: readFileSync(publicAssetPath("ielts-538.html"), "utf-8")
+    },
+    {
       name: "assets/spelling.css",
       data: readFileSync(publicAssetPath("assets", "spelling.css"), "utf-8")
     },
@@ -2623,6 +2712,18 @@ function buildExport(words, audioIndex, options = {}) {
     {
       name: "assets/reading-g.js",
       data: readFileSync(publicAssetPath("assets", "reading-g.js"), "utf-8")
+    },
+    {
+      name: "assets/reading-words.css",
+      data: readFileSync(publicAssetPath("assets", "reading-words.css"), "utf-8")
+    },
+    {
+      name: "assets/reading-words.js",
+      data: readFileSync(publicAssetPath("assets", "reading-words.js"), "utf-8")
+    },
+    {
+      name: "assets/ielts-538.js",
+      data: readFileSync(publicAssetPath("assets", "ielts-538.js"), "utf-8")
     },
     {
       name: "assets/style.css",
@@ -2690,6 +2791,16 @@ function buildExport(words, audioIndex, options = {}) {
       )
     },
     {
+      name: "data/ielts-538-words.json",
+      data: JSON.stringify(
+        readJson(publicAssetPath("data", "ielts-538-words.json"), {
+          version: "ielts-538-v1",
+          count: 0,
+          words: []
+        })
+      )
+    },
+    {
       name: "data/idictation-frequency.json",
       data: JSON.stringify({
         batchSize: IDICTATION_FREQUENCY_BATCH_SIZE,
@@ -2712,12 +2823,14 @@ function buildExport(words, audioIndex, options = {}) {
 index.html          主词库刷单词入口
 basic.html          零基础单词（独立词库）
 reading-g.html      G类阅读提升（静态便携版：词义/短语/同义MCQ）
+ielts-538.html      538考点（376词、Section、推荐标记和同义改写）
 meaning.html        看词选意思 · 核心6000
 spelling.html       独立拼写训练入口
 assets/style.css    刷单词样式
 assets/app.js       刷单词逻辑
 assets/basic.js     零基础刷词逻辑
 assets/reading-g.js G类阅读提升（含同义MCQ）
+assets/ielts-538.js 538考点静态学习逻辑
 assets/meaning-static.js  选义训练逻辑
 assets/spelling.css 拼写训练样式
 assets/spelling.js  拼写训练逻辑
@@ -2730,6 +2843,7 @@ data/basic-words.json  零基础词库
 data/reading-g-vocab.json  G类阅读提升词库
 data/reading-g-paraphrases.json  高可信同义关系
 data/reading-g-import-report.json  导入审计报告
+data/ielts-538-words.json 538考点词库与同义改写
 data/meaning-6000.json 选义训练词库
 data/idictation-frequency.json  爱听写频率词表
 audio/*.mp3         本地音频缓存

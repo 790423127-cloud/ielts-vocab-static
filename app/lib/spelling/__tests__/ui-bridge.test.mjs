@@ -45,6 +45,28 @@ test("UI bridge persists legacy error-bank migration during initialization", asy
   assert.ok(persisted.srs.nextReviewAt > now);
 });
 
+test("UI bridge reads training records once and leaves error-bank recovery to its owner hook", async () => {
+  const baseStore = createMemoryStore();
+  let recordReadCount = 0;
+  const store = {
+    ...baseStore,
+    async getAllRecords() {
+      recordReadCount += 1;
+      return baseStore.getAllRecords();
+    }
+  };
+  const bridge = createSpellingUiBridge({
+    words: [{ word: "alpha", wordId: "word_a", meaning: "第一项" }],
+    flashcardState: { statuses: {} },
+    store,
+    now
+  });
+
+  await bridge.init();
+
+  assert.equal(recordReadCount, 1);
+});
+
 test("UI bridge exposes current question, hint, progress, and locks wrong answers on the same word", async () => {
   const bridge = createSpellingUiBridge({
     words: [{ word: "abandon", meaning: "放弃" }],

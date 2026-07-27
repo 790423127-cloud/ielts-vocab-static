@@ -49,6 +49,16 @@ function resolveCorrectAdvanceDelay(autoNextOnCorrect, turboMode) {
   return turboMode ? TURBO_ADVANCE_DELAY_MS : CORRECT_ADVANCE_DELAY_MS;
 }
 
+export function isSpellingStorageUnavailableError(error) {
+  const message = String(error?.message || error || "").toLowerCase();
+  return (
+    message.includes("indexeddb") ||
+    message.includes("进度库") ||
+    message.includes("object store") ||
+    message.includes("transaction")
+  );
+}
+
 export function createInitialProductionSpellingState() {
   return {
     currentWord: null,
@@ -158,6 +168,7 @@ export function useSpellingEngine(words = [], options = {}) {
   const [feedbackDetail, setFeedbackDetail] = useState("");
   const [lastDiagnosis, setLastDiagnosis] = useState(null);
   const [awaitingAdvance, setAwaitingAdvance] = useState(false);
+  const [storageWarning, setStorageWarning] = useState("");
   const flashcardState = useMemo(() => buildProductionFlashcardState(words), [words]);
   const lexiconMeta = options.lexiconMeta || null;
   const candidateOptions = options.candidateOptions || null;
@@ -194,6 +205,7 @@ export function useSpellingEngine(words = [], options = {}) {
       setFeedbackDetail("");
       setLastDiagnosis(null);
       setAwaitingAdvance(false);
+      setStorageWarning("");
       pendingAdvanceRef.current = null;
       return undefined;
     }
@@ -209,7 +221,7 @@ export function useSpellingEngine(words = [], options = {}) {
 
     let cancelled = false;
 
-    const bridge = createSpellingUiBridge({
+    const createBridge = (store) => createSpellingUiBridge({
       words: activeWords,
       flashcardState: flashcardStateRef.current,
       debugMode: debugModeRef.current,
@@ -219,8 +231,10 @@ export function useSpellingEngine(words = [], options = {}) {
       currentBatchId: categoryScope?.currentBatchId || "",
       category: categoryScope?.label || "",
       source: categoryScope?.practiceSource || "category",
-      errorBankTotal: Number(categoryScope?.errorBankTotal) || 0
+      errorBankTotal: Number(categoryScope?.errorBankTotal) || 0,
+      ...(store ? { store } : {})
     });
+    const bridge = createBridge();
 
     bridgeRef.current = bridge;
 
@@ -229,10 +243,25 @@ export function useSpellingEngine(words = [], options = {}) {
       setStatusText(statusTextFor("idle"));
       setFeedbackDetail("");
       setLastDiagnosis(null);
+      setStorageWarning("");
     }
 
-    bridge.init()
-      .then((nextSnapshot) => {
+    const initialize = async () => {
+      try {
+        return { nextSnapshot: await bridge.init(), warning: "" };
+      } catch (error) {
+        if (!isSpellingStorageUnavailableError(error)) throw error;
+        const fallbackBridge = createBridge({});
+        bridgeRef.current = fallbackBridge;
+        return {
+          nextSnapshot: await fallbackBridge.init(),
+          warning: "本地拼写进度库暂时被其他标签页占用，本轮已进入临时模式；关闭其他旧页面后重新打开可恢复正常保存。"
+        };
+      }
+    };
+
+    initialize()
+      .then(({ nextSnapshot, warning }) => {
         if (cancelled || generation !== initGenerationRef.current) return;
         startTransition(() => {
           setSnapshot(nextSnapshot);
@@ -241,6 +270,7 @@ export function useSpellingEngine(words = [], options = {}) {
           setStatusText(statusTextFor(nextSnapshot.uiState));
           setFeedbackDetail("");
           setLastDiagnosis(null);
+          setStorageWarning(warning);
         });
       })
       .catch((error) => {
@@ -493,6 +523,7 @@ export function useSpellingEngine(words = [], options = {}) {
 
   return {
     ...mapped,
+    storageWarning,
     refresh,
     getHint: showHint,
     continueAfterCorrect,
@@ -514,6 +545,7 @@ export {
 
 export default {
   createInitialProductionSpellingState,
+  isSpellingStorageUnavailableError,
   mapSnapshotToProductionHookState,
   buildProductionFlashcardState,
   useSpellingEngine

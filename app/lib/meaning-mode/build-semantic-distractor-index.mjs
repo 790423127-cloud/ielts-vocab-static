@@ -27,7 +27,7 @@ function normalizePosFamily(pos) {
   if (!pos) return "unknown";
   const p = String(pos).trim().toLowerCase();
   if (p.startsWith("noun") || p === "n" || p === "n.") return "noun";
-  if (p.startsWith("verb") || p === "v" || p === "v.") return "verb";
+  if (p.startsWith("verb") || p === "v" || p === "v." || p === "modal") return "verb";
   if (p.startsWith("adjectiv") || p === "adj" || p === "adj.") return "adjective";
   if (p.startsWith("adverb") || p === "adv" || p === "adv.") return "adverb";
   if (p.includes("noun")) return "noun";

@@ -18,7 +18,7 @@ export async function POST(req) {
   if (guard) return guard;
 
   try {
-    const { words, items, force = false } = await req.json();
+    const { words, items, force = false, maxSplitDepth = 3 } = await req.json();
     if (!Array.isArray(words) && !Array.isArray(items)) {
       return Response.json({ error: "words or items must be an array" }, { status: 400 });
     }
@@ -72,7 +72,8 @@ export async function POST(req) {
     if (inputItems.length) {
       const generated = await requestDeepseekProfiles(inputItems, {
         timeoutMs: 75000,
-        maxTokens: 14000
+        maxTokens: 14000,
+        maxSplitDepth: Math.max(0, Math.min(3, Number(maxSplitDepth) || 0))
       });
       invalid = generated.invalid;
       usage = generated.usage;

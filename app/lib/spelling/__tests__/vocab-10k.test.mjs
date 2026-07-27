@@ -21,6 +21,10 @@ test("10k vocabulary plan defines required categories with targets and examples"
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 const wordsFile = path.join(projectRoot, ".static-export-cache", "words.json");
+const retirements = JSON.parse(
+  fs.readFileSync(path.join(projectRoot, "app", "lib", "vocab", "master-lexicon-retirements.json"), "utf8")
+);
+const retiredWords = new Set(retirements.entries.map((entry) => String(entry.word || "").toLowerCase()));
 
 test("current words.json can be analyzed without mutation under strict 10k rules", () => {
   const raw = fs.readFileSync(wordsFile, "utf8");
@@ -36,9 +40,11 @@ test("current words.json can be analyzed without mutation under strict 10k rules
   assert.equal(report.rawCount, expectedCount);
   assert.equal(actualUniqueHeadwords.size, expectedCount);
   assert.equal(report.validHeadwordCount, expectedCount - report.invalidCount);
-  assert.ok(report.invalidSamples.some((entry) => entry.word === "one"));
-  assert.ok(report.invalidSamples.some((entry) => entry.word === "two"));
-  assert.ok(report.invalidSamples.some((entry) => entry.word === "three"));
+  for (const sentinel of ["one", "two", "three"]) {
+    if (!retiredWords.has(sentinel)) {
+      assert.ok(report.invalidSamples.some((entry) => entry.word === sentinel), sentinel);
+    }
+  }
   assert.ok(report.invalidSamples.every((entry) => entry.reason === "not_strict_headword"));
   assert.ok(expectedCount >= 10_500);
   assert.equal(report.gapToTarget, 0);

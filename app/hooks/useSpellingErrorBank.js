@@ -6,6 +6,26 @@ import { mergeErrorBankRecords, summarizeErrorBankItems } from "../lib/spelling/
 import { recoverAndPersistSpellingErrorBank } from "../lib/spelling/error-bank-recovery.mjs";
 import { SpellingIndexedDbStore } from "../lib/spelling/indexeddb-store.mjs";
 
+const recoveryByLexicon = new WeakMap();
+
+function recoverErrorBankOnce(store, lexiconEntries, scope) {
+  let scopedRecoveries = recoveryByLexicon.get(lexiconEntries);
+  if (!scopedRecoveries) {
+    scopedRecoveries = new Map();
+    recoveryByLexicon.set(lexiconEntries, scopedRecoveries);
+  }
+
+  if (scopedRecoveries.has(scope)) return scopedRecoveries.get(scope);
+
+  const recovery = recoverAndPersistSpellingErrorBank(store, lexiconEntries, { scope })
+    .catch((error) => {
+      if (scopedRecoveries.get(scope) === recovery) scopedRecoveries.delete(scope);
+      throw error;
+    });
+  scopedRecoveries.set(scope, recovery);
+  return recovery;
+}
+
 export function useSpellingErrorBank(lexiconEntries = [], options = {}) {
   const scope = options.scope || "word";
   const activeOnly = options.activeOnly === true;
@@ -44,7 +64,7 @@ export function useSpellingErrorBank(lexiconEntries = [], options = {}) {
           && recovery.promiseLexiconEntries === lexiconEntries
         );
         if (!matchingRecovery) {
-          recovery.promise = recoverAndPersistSpellingErrorBank(store, lexiconEntries, { scope });
+          recovery.promise = recoverErrorBankOnce(store, lexiconEntries, scope);
           recovery.promiseScope = scope;
           recovery.promiseLexiconEntries = lexiconEntries;
         }

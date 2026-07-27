@@ -102,7 +102,7 @@ test("fresh word content preserves cached user progress fields", () => {
   assert.equal(formatOfflineVocabNotice({ version: "v1" }), "当前使用离线词库缓存，版本：v1");
 });
 
-test("fresh word merge keeps personal wrong supplemental entries only", () => {
+test("fresh word merge keeps personal wrong and reading supplemental entries only", () => {
   const fresh = [{ id: "word_1", word: "work", meaning: "工作" }];
   const cached = [
     { id: "word_1", word: "work", status: "熟悉" },
@@ -114,14 +114,23 @@ test("fresh word merge keeps personal wrong supplemental entries only", () => {
       addedFromPersonalWrongBook: true,
       source: "personal_wrong_book",
       supplemental: true
+    },
+    {
+      id: "word_personal_reading",
+      word: "microhabitat",
+      meaning: "微生境",
+      addedFromReadingWords: true,
+      source: "personal-reading",
+      supplemental: true
     }
   ];
 
   const merged = mergeWordContentWithUserState(fresh, cached);
-  assert.equal(merged.length, 2);
+  assert.equal(merged.length, 3);
   assert.equal(merged[0].status, "熟悉");
   assert.equal(merged.some((entry) => entry.word === "stale-cache-only"), false);
   assert.equal(merged.some((entry) => entry.word === "unlistedword"), true);
+  assert.equal(merged.some((entry) => entry.word === "microhabitat"), true);
 });
 
 test("main lexicon merge excludes redundant personal-wrong cache supplements", () => {

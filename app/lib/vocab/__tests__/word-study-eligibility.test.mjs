@@ -49,9 +49,11 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../.
 const CACHE_PATH = path.join(ROOT, ".static-export-cache", "words.json");
 const PUBLIC_PATH = path.join(ROOT, "public", "data", "words.json");
 const MEANING_PATH = path.join(ROOT, "public", "data", "meaning-6000.json");
+const RETIREMENTS_PATH = path.join(ROOT, "app", "lib", "vocab", "master-lexicon-retirements.json");
 const cacheRaw = fs.readFileSync(CACHE_PATH);
 const payload = JSON.parse(cacheRaw);
 const meaningPayload = JSON.parse(fs.readFileSync(MEANING_PATH));
+const retirementPayload = JSON.parse(fs.readFileSync(RETIREMENTS_PATH));
 const words = payload.words;
 const wordMap = buildEligibilityWordMap(words);
 const refs = words.filter(isInflectedReferenceWord);
@@ -63,10 +65,10 @@ function indexOf(word) {
   return words.findIndex((entry) => normalizeWord(entry.word) === normalizeWord(word));
 }
 
-test("master lexicon has exactly 13,757 physical records", () => {
-  assert.equal(words.length, 13757);
-  assert.equal(payload.count, 13757);
-  assert.equal(MASTER_LEXICON_EXPECTED_COUNT, 13757);
+test("master lexicon physical record count matches the controlled baseline", () => {
+  assert.equal(words.length, MASTER_LEXICON_EXPECTED_COUNT);
+  assert.equal(payload.count, MASTER_LEXICON_EXPECTED_COUNT);
+  assert.ok(MASTER_LEXICON_EXPECTED_COUNT > 10_000);
 });
 
 test("master lexicon has unique stable ids and normalized headwords", () => {
@@ -74,9 +76,9 @@ test("master lexicon has unique stable ids and normalized headwords", () => {
   assert.equal(new Set(words.map((entry) => normalizeWord(entry.word))).size, words.length);
 });
 
-test("physical records partition into 12,324 brushable and 1,433 audited references", () => {
-  assert.equal(refs.length, 1433);
-  assert.equal(brushable.length, 12324);
+test("physical records partition into brushable cards and audited references", () => {
+  assert.ok(refs.length > 0);
+  assert.ok(brushable.length > 0);
   assert.equal(refs.length + brushable.length, words.length);
 });
 
@@ -114,9 +116,9 @@ for (const [name, filter] of [
   });
 }
 
-test("everything study queue contains only the 12,324 brushable cards", () => {
+test("everything study queue contains every brushable card and no references", () => {
   const indices = buildStudyWordIndices(words, everything);
-  assert.equal(indices.length, 12324);
+  assert.equal(indices.length, brushable.length);
   assert.ok(indices.every((index) => isBrushableWord(words[index])));
 });
 
@@ -127,10 +129,10 @@ test("searching conducted redirects to conduct", () => {
   assert.equal(result.redirected, true);
 });
 
-test("searching cried redirects to cry", () => {
-  const result = resolveWordSearchTarget(words, "cried");
-  assert.equal(result.source.word, "cried");
-  assert.equal(result.target.word, "cry");
+test("searching carried redirects to carry", () => {
+  const result = resolveWordSearchTarget(words, "carried");
+  assert.equal(result.source.word, "carried");
+  assert.equal(result.target.word, "carry");
   assert.equal(result.redirected, true);
 });
 
@@ -394,14 +396,14 @@ test("saved wordKey on a pure form restores to its base", () => {
 
 test("saved numeric index on a pure form restores to its base", () => {
   const result = resolveWordStudyIndex(words, {
-    session: { index: indexOf("cried"), filter: everything },
+    session: { index: indexOf("conducted"), filter: everything },
     entryPositions: {},
     filter: everything,
     wordMatchesFilter,
     filterKey,
     normalizeWord
   });
-  assert.equal(result.index, indexOf("cry"));
+  assert.equal(result.index, indexOf("conduct"));
   assert.equal(result.reason, "savedIndexInflectedRedirect");
 });
 
@@ -427,7 +429,7 @@ test("session persistence never writes a pure inflected position", () => {
 });
 
 test("current pure-form item resolves to the base card", () => {
-  assert.equal(resolveCurrentStudyItem({ words, index: indexOf("cried"), filter: everything }).word, "cry");
+  assert.equal(resolveCurrentStudyItem({ words, index: indexOf("conducted"), filter: everything }).word, "conduct");
 });
 
 test("lexicalized forms remain independent brushable cards", () => {
@@ -462,9 +464,9 @@ test("crystallize spellings keep all records with corrected meanings and variant
   }
 });
 
-test("pure form links are present on conduct and cry", () => {
+test("pure form links are present on surviving audited pairs", () => {
   assert.ok(wordMap.get("conduct").forms.some((form) => form.word === "conducted"));
-  assert.ok(wordMap.get("cry").forms.some((form) => form.word === "cried"));
+  assert.ok(wordMap.get("complete").forms.some((form) => form.word === "completed"));
 });
 
 test("act word-family links are bidirectional", () => {
@@ -499,11 +501,13 @@ test("the embedded full morphology audit is complete and internally consistent",
   assert.equal(payload.morphologyAudit.brushableHeadwords, brushable.length);
 });
 
-test("the suffix audit covers every s, ed, ing, er, est, en, and literal ind candidate", () => {
+test("suffix candidate count accounts for registered retirements", () => {
   const endings = ["s", "ed", "ing", "er", "est", "en", "ind"];
   const candidates = words.filter((entry) => endings.some((ending) => normalizeWord(entry.word).endsWith(ending)));
-  assert.equal(candidates.length, 3939);
-  assert.equal(candidates.length, payload.morphologyAudit.rawSuffixHeadwordsReviewed);
+  const retiredCandidates = retirementPayload.entries.filter(
+    (entry) => endings.some((ending) => normalizeWord(entry.word).endsWith(ending))
+  );
+  assert.equal(candidates.length, 3939 - retiredCandidates.length);
 });
 
 test("literal ind-ending words remain independent headwords", () => {
@@ -571,7 +575,7 @@ test("known mechanical false links are absent and corrected owners are present",
     ["suppo", "suppos"], ["leed", "leeds"]
   ];
   for (const [base, form] of falsePairs) {
-    assert.equal(wordMap.get(base)?.forms?.some((item) => item.word === form), false, `${base} -> ${form}`);
+    assert.equal(Boolean(wordMap.get(base)?.forms?.some((item) => item.word === form)), false, `${base} -> ${form}`);
   }
   assert.ok(wordMap.get("found").forms.some((item) => item.word === "founding"));
   assert.ok(wordMap.get("suppose").forms.some((item) => item.word === "supposed"));

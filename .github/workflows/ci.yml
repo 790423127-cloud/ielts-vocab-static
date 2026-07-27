@@ -26,7 +26,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          python3 -m py_compile scripts/apply-static-cloud-deep-fix.py 2>&1 | tee static-fix.log
+          python3 scripts/repair-static-applicator.py 2>&1 | tee static-fix.log
+          python3 -m py_compile scripts/apply-static-cloud-deep-fix.py 2>&1 | tee -a static-fix.log
           python3 scripts/apply-static-cloud-deep-fix.py 2>&1 | tee -a static-fix.log
           git diff --check 2>&1 | tee -a static-fix.log
           git config user.name github-actions[bot]

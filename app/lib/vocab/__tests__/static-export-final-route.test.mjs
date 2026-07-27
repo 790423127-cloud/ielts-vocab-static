@@ -46,7 +46,7 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("assets/app.js"), /staticStudyCard\.addEventListener\("touchend"/);
   assert.match(entries.get("assets/app.js"), /!\("ontouchstart" in window\)&&"PointerEvent" in window/);
   assert.doesNotMatch(entries.get("assets/app.js"), /pointer-touch-v3/);
-  assert.match(entries.get("assets/style.css"), /static-study-card\{min-width:0;touch-action:pan-y/);
+  assert.match(entries.get("assets/style.css"), /static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y/);
   assert.match(entries.get("index.html"), new RegExp(STATIC_RESPONSIVE_VERSION));
   assert.match(entries.get("index.html"), /id="staticStudyCard"/);
   assert.match(entries.get("index.html"), /staticBuildVersion/);

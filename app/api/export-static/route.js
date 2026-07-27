@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { requireLocalAdmin, requireLocalRead } from "../../lib/api/local-admin-guard.mjs";
+import { patchStaticExportZip, STATIC_RESPONSIVE_VERSION } from "../../lib/static-export-responsive.mjs";
 
 import { existsSync, readFileSync } from "fs";
 import path from "path";
@@ -2865,6 +2866,22 @@ audio/*.mp3         本地音频缓存
   };
 }
 
+
+function createVerifiedStaticZipResponse(result, extraHeaders = {}) {
+  const zip = patchStaticExportZip(result.zip);
+  return new Response(zip, {
+    headers: {
+      "Content-Type": "application/zip",
+      "Content-Disposition": 'attachment; filename="static-site.zip"',
+      "Content-Length": String(zip.length),
+      "X-Word-Count": String(result.count),
+      "X-Audio-Count": String(result.audioCount),
+      "X-Static-Export-Version": STATIC_RESPONSIVE_VERSION,
+      ...extraHeaders
+    }
+  });
+}
+
 export async function POST(req) {
   const guard = requireLocalAdmin(req);
   if (guard) return guard;
@@ -2890,14 +2907,7 @@ export async function POST(req) {
       scanAudioFallback: !fastWithoutAudio
     });
 
-    return new Response(result.zip, {
-      headers: {
-        "Content-Type": "application/zip",
-        "Content-Disposition": `attachment; filename="static-site.zip"`,
-        "X-Word-Count": String(result.count),
-        "X-Audio-Count": String(result.audioCount)
-      }
-    });
+    return createVerifiedStaticZipResponse(result);
   } catch (error) {
     return Response.json(
       {
@@ -2936,15 +2946,7 @@ export async function GET(req) {
       scanAudioFallback: !fastWithoutAudio
     });
 
-    return new Response(result.zip, {
-      headers: {
-        "Content-Type": "application/zip",
-        "Content-Disposition": `attachment; filename="static-site.zip"`,
-        "X-Word-Count": String(result.count),
-        "X-Audio-Count": String(result.audioCount),
-        "X-Export-Source": "server-cache"
-      }
-    });
+    return createVerifiedStaticZipResponse(result, { "X-Export-Source": "server-cache" });
   } catch (error) {
     return Response.json(
       {

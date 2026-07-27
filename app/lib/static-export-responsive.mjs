@@ -1,12 +1,12 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260728_static_mobile_swipe_v2";
+export const STATIC_RESPONSIVE_VERSION = "20260728_static_mobile_swipe_v3";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
-export const STATIC_SWIPE_FIX_MARKER = "D2.7 static pointer swipe hotfix";
-export const STATIC_SWIPE_MIN_DISTANCE = 40;
-export const STATIC_SWIPE_MAX_DURATION_MS = 1000;
-export const STATIC_SWIPE_AXIS_RATIO = 1.15;
+export const STATIC_SWIPE_FIX_MARKER = "D2.8 verified static pointer and touch swipe";
+export const STATIC_SWIPE_MIN_DISTANCE = 36;
+export const STATIC_SWIPE_MAX_DURATION_MS = 1400;
+export const STATIC_SWIPE_AXIS_RATIO = 1.08;
 
 const LOCKED_DESKTOP_RULE =
   ".app{height:calc(100svh - var(--workspace-header));min-height:calc(100svh - var(--workspace-header));overflow:hidden}";
@@ -51,7 +51,8 @@ const LAPTOP_HEIGHT_CSS = `
 const MOBILE_ENTRY_CSS = `
 
 /* ${STATIC_FILTER_FIX_MARKER} */
-.hero{touch-action:pan-y;overscroll-behavior-x:contain}
+.hero{touch-action:pan-y pinch-zoom;overscroll-behavior-x:contain;-webkit-user-select:none;user-select:none}
+.static-build-version{position:fixed;right:8px;bottom:6px;z-index:2;padding:3px 7px;border-radius:999px;background:rgba(255,255,255,.72);color:rgba(22,53,47,.55);font-size:10px;line-height:1.2;pointer-events:none}
 @media (max-width:900px){
   .entry-panel{align-items:flex-end;padding:8px}
   .entry-card{width:100%;max-width:none;max-height:84svh;border-radius:24px 24px 0 0;padding:16px}
@@ -124,52 +125,76 @@ const CURATED_FILTER_FUNCTION = `function buildFilterOptions(){
 
 const POINTER_SWIPE_CONTROLLER = `/* ${STATIC_SWIPE_FIX_MARKER} */
 const STATIC_SWIPE_INTERACTIVE_SELECTOR="button,a,input,textarea,select,option,label,[contenteditable=true],[role=button]";
-let swipePointerId=null;
-let swipeStartX=0;
-let swipeStartY=0;
-let swipeStartedAt=0;
-let swipeCancelled=false;
+let staticSwipeId=null;
+let staticSwipeStartX=0;
+let staticSwipeStartY=0;
+let staticSwipeStartedAt=0;
+let staticSwipeCancelled=false;
 function resetStaticSwipe(){
-  swipePointerId=null;
-  swipeStartX=0;
-  swipeStartY=0;
-  swipeStartedAt=0;
-  swipeCancelled=false;
+  staticSwipeId=null;
+  staticSwipeStartX=0;
+  staticSwipeStartY=0;
+  staticSwipeStartedAt=0;
+  staticSwipeCancelled=false;
 }
 function isStaticSwipeInteractiveTarget(target){
   return !!(target&&typeof target.closest==="function"&&target.closest(STATIC_SWIPE_INTERACTIVE_SELECTOR));
 }
-els.swipeArea.addEventListener("pointerdown",function(e){
-  if(!e.isPrimary||isStaticSwipeInteractiveTarget(e.target))return;
-  if(e.pointerType==="mouse"&&e.button!==0)return;
-  swipePointerId=e.pointerId;
-  swipeStartX=e.clientX;
-  swipeStartY=e.clientY;
-  swipeStartedAt=Date.now();
-  swipeCancelled=false;
-  if(typeof els.swipeArea.setPointerCapture==="function"){
-    try{els.swipeArea.setPointerCapture(e.pointerId)}catch(error){}
-  }
-},{passive:true});
-els.swipeArea.addEventListener("pointermove",function(e){
-  if(e.pointerId!==swipePointerId)return;
-  const dx=e.clientX-swipeStartX;
-  const dy=e.clientY-swipeStartY;
-  if(Math.abs(dy)>18&&Math.abs(dy)>Math.abs(dx)*1.25)swipeCancelled=true;
-},{passive:true});
-els.swipeArea.addEventListener("pointerup",function(e){
-  if(e.pointerId!==swipePointerId)return;
-  const dx=e.clientX-swipeStartX;
-  const dy=e.clientY-swipeStartY;
-  const duration=Date.now()-swipeStartedAt;
-  const cancelled=swipeCancelled;
+function beginStaticSwipe(id,x,y,target){
+  if(isStaticSwipeInteractiveTarget(target))return false;
+  staticSwipeId=id;
+  staticSwipeStartX=x;
+  staticSwipeStartY=y;
+  staticSwipeStartedAt=Date.now();
+  staticSwipeCancelled=false;
+  return true;
+}
+function moveStaticSwipe(id,x,y){
+  if(id!==staticSwipeId)return;
+  const dx=x-staticSwipeStartX;
+  const dy=y-staticSwipeStartY;
+  if(Math.abs(dy)>16&&Math.abs(dy)>Math.abs(dx)*1.18)staticSwipeCancelled=true;
+}
+function finishStaticSwipe(id,x,y){
+  if(id!==staticSwipeId)return;
+  const dx=x-staticSwipeStartX;
+  const dy=y-staticSwipeStartY;
+  const duration=Date.now()-staticSwipeStartedAt;
+  const cancelled=staticSwipeCancelled;
   resetStaticSwipe();
   if(cancelled)return;
   if(duration<=${STATIC_SWIPE_MAX_DURATION_MS}&&Math.abs(dx)>=${STATIC_SWIPE_MIN_DISTANCE}&&Math.abs(dx)>Math.abs(dy)*${STATIC_SWIPE_AXIS_RATIO}){
     dx<0?step(1):step(-1);
   }
-},{passive:true});
-els.swipeArea.addEventListener("pointercancel",resetStaticSwipe,{passive:true});`;
+}
+if("PointerEvent" in window){
+  els.swipeArea.addEventListener("pointerdown",function(e){
+    if(!e.isPrimary)return;
+    if(e.pointerType==="mouse"&&e.button!==0)return;
+    beginStaticSwipe(e.pointerId,e.clientX,e.clientY,e.target);
+  },{passive:true});
+  window.addEventListener("pointermove",function(e){moveStaticSwipe(e.pointerId,e.clientX,e.clientY)},{passive:true});
+  window.addEventListener("pointerup",function(e){finishStaticSwipe(e.pointerId,e.clientX,e.clientY)},{passive:true});
+  window.addEventListener("pointercancel",resetStaticSwipe,{passive:true});
+}else{
+  els.swipeArea.addEventListener("touchstart",function(e){
+    if(e.touches.length!==1)return;
+    const t=e.touches[0];
+    beginStaticSwipe("touch",t.clientX,t.clientY,e.target);
+  },{passive:true});
+  window.addEventListener("touchmove",function(e){
+    if(!e.touches.length)return;
+    const t=e.touches[0];
+    moveStaticSwipe("touch",t.clientX,t.clientY);
+  },{passive:true});
+  window.addEventListener("touchend",function(e){
+    if(!e.changedTouches.length)return;
+    const t=e.changedTouches[0];
+    finishStaticSwipe("touch",t.clientX,t.clientY);
+  },{passive:true});
+  window.addEventListener("touchcancel",resetStaticSwipe,{passive:true});
+}
+window.__STATIC_VOCAB_BUILD__={version:APP_VERSION,swipeEngine:"pointer-touch-v3"};`;
 
 const LEGACY_TOUCH_SWIPE_RE = /let sx=0,sy=0,st=0;[\s\S]*?els\.swipeArea\.addEventListener\("touchcancel",stopHoldStep,\{passive:true\}\);/;
 
@@ -230,11 +255,20 @@ export function patchStaticAppJs(js) {
   next = next.replace(/function buildFilterOptions\(\)\{[\s\S]*?\}\s*function passFilterWith/, `${CURATED_FILTER_FUNCTION}\n\nfunction passFilterWith`);
 
   if (!next.includes(STATIC_SWIPE_FIX_MARKER)) {
-    next = LEGACY_TOUCH_SWIPE_RE.test(next)
-      ? next.replace(LEGACY_TOUCH_SWIPE_RE, POINTER_SWIPE_CONTROLLER)
-      : `${next}\n${POINTER_SWIPE_CONTROLLER}\n`;
+    if (!LEGACY_TOUCH_SWIPE_RE.test(next)) {
+      throw new Error("Static export swipe source signature changed; refusing to export an unverified ZIP");
+    }
+    next = next.replace(LEGACY_TOUCH_SWIPE_RE, POINTER_SWIPE_CONTROLLER);
   }
 
+  next = next.replace(
+    'navigator.serviceWorker.register("./sw.js?v="+APP_VERSION).catch(function(){});',
+    'navigator.serviceWorker.register("./sw.js?v="+APP_VERSION,{updateViaCache:"none"}).then(function(registration){return registration.update()}).catch(function(){});'
+  );
+
+  if (!next.includes(STATIC_SWIPE_FIX_MARKER) || !next.includes('window.addEventListener("pointerup"') || !next.includes('window.addEventListener("touchend"')) {
+    throw new Error("Static export swipe verification failed");
+  }
   return next;
 }
 
@@ -245,7 +279,14 @@ export function patchLegacyStaticAppJs(js) {
 }
 
 export function patchStaticHtml(html) {
-  return replaceVersionQuery(html);
+  let next = replaceVersionQuery(html);
+  if (!next.includes('http-equiv="Cache-Control"')) {
+    next = next.replace("</head>", '  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />\n  <meta http-equiv="Pragma" content="no-cache" />\n</head>');
+  }
+  if (!next.includes('id="staticBuildVersion"')) {
+    next = next.replace("</body>", `<div id="staticBuildVersion" class="static-build-version" aria-label="静态网站版本">静态版本 ${STATIC_RESPONSIVE_VERSION}</div>\n</body>`);
+  }
+  return next;
 }
 
 export function patchStaticServiceWorker(sw) {
@@ -362,5 +403,34 @@ function patchEntry(entry) {
 }
 
 export function patchStaticExportZip(input) {
-  return createStoredZip(readStoredZipEntries(input).map(patchEntry));
+  const entries = readStoredZipEntries(input)
+    .filter((entry) => entry.name !== "build-info.json")
+    .map(patchEntry);
+  entries.push({
+    name: "build-info.json",
+    data: Buffer.from(JSON.stringify({
+      version: STATIC_RESPONSIVE_VERSION,
+      swipeEngine: "pointer-touch-v3",
+      generatedAt: new Date().toISOString()
+    }, null, 2), "utf8")
+  });
+
+  const byName = new Map(entries.map((entry) => [entry.name, entry.data.toString("utf8")]));
+  const appJs = byName.get("assets/app.js") || "";
+  const css = byName.get("assets/style.css") || "";
+  const html = byName.get("index.html") || "";
+  const sw = byName.get("sw.js") || "";
+  if (!appJs.includes(STATIC_SWIPE_FIX_MARKER) || !appJs.includes("pointer-touch-v3")) {
+    throw new Error("Final static ZIP does not contain the verified swipe controller");
+  }
+  if (!css.includes("touch-action:pan-y pinch-zoom")) {
+    throw new Error("Final static ZIP does not contain the mobile touch-action rule");
+  }
+  if (!html.includes(STATIC_RESPONSIVE_VERSION) || !html.includes("staticBuildVersion")) {
+    throw new Error("Final static ZIP does not expose its deployment version");
+  }
+  if (!sw.includes(STATIC_RESPONSIVE_VERSION)) {
+    throw new Error("Final static ZIP service worker version is stale");
+  }
+  return createStoredZip(entries);
 }

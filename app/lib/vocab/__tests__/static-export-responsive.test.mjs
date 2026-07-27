@@ -99,7 +99,8 @@ test("static CSS unlocks desktop height and adds compact laptop, mobile entry an
   assert.match(patched, /max-height:720px/);
   assert.match(patched, new RegExp(STATIC_FILTER_FIX_MARKER));
   assert.match(patched, /\.entry-grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-  assert.match(patched, /\.hero\{touch-action:pan-y;overscroll-behavior-x:contain\}/);
+  assert.match(patched, /\.hero\{touch-action:pan-y pinch-zoom;overscroll-behavior-x:contain/);
+  assert.match(patched, /\.static-build-version\{/);
   assert.equal(patchStaticCss(patched), patched, "responsive CSS patch must be idempotent");
 });
 
@@ -134,24 +135,26 @@ test("static categories use curated learning labels instead of raw workbook labe
   assert.doesNotMatch(patched, /uniq\(words\.flatMap/);
 });
 
-test("static mobile swipe uses pointer events while preserving vertical scrolling", () => {
+test("static mobile swipe uses pointer events with touch fallback while preserving vertical scrolling", () => {
   const patched = patchStaticAppJs(STATIC_FILTER_SOURCE);
 
   assert.match(patched, new RegExp(STATIC_SWIPE_FIX_MARKER));
   assert.match(patched, /addEventListener\("pointerdown"/);
-  assert.match(patched, /addEventListener\("pointerup"/);
+  assert.match(patched, /window\.addEventListener\("pointerup"/);
   assert.match(patched, /STATIC_SWIPE_INTERACTIVE_SELECTOR/);
-  assert.doesNotMatch(patched, /addEventListener\("touchstart"/);
+  assert.match(patched, /addEventListener\("touchstart"/);
+  assert.match(patched, /window\.addEventListener\("touchend"/);
   assert.doesNotMatch(patched, /Math\.abs\(dx\)>55/);
 
   assert.equal(resolveStaticSwipeStep({ dx: -70, dy: 8, durationMs: 280 }), 1);
   assert.equal(resolveStaticSwipeStep({ dx: 72, dy: 9, durationMs: 300 }), -1);
   assert.equal(resolveStaticSwipeStep({ dx: -35, dy: 2, durationMs: 200 }), 0);
   assert.equal(resolveStaticSwipeStep({ dx: -70, dy: 65, durationMs: 240 }), 0);
-  assert.equal(resolveStaticSwipeStep({ dx: -80, dy: 4, durationMs: 1200 }), 0);
+  assert.equal(resolveStaticSwipeStep({ dx: -80, dy: 4, durationMs: 1200 }), 1);
+  assert.equal(resolveStaticSwipeStep({ dx: -80, dy: 4, durationMs: 1500 }), 0);
 });
 
-test("ZIP transformer patches CSS, app JS, HTML and service worker", () => {
+test("ZIP transformer patches CSS, app JS, realistic HTML and service worker", () => {
   const originalZip = createStoredZip([
     {
       name: "assets/style.css",
@@ -163,7 +166,7 @@ test("ZIP transformer patches CSS, app JS, HTML and service worker", () => {
     },
     {
       name: "index.html",
-      data: Buffer.from('<link rel="stylesheet" href="./assets/style.css?v=old" />')
+      data: Buffer.from('<!doctype html><html><head><link rel="stylesheet" href="./assets/style.css?v=old" /></head><body><main></main></body></html>')
     },
     {
       name: "sw.js",
@@ -182,13 +185,22 @@ test("ZIP transformer patches CSS, app JS, HTML and service worker", () => {
 
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_RESPONSIVE_MARKER));
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_FILTER_FIX_MARKER));
-  assert.match(entries.get("assets/style.css"), /touch-action:pan-y/);
+  assert.match(entries.get("assets/style.css"), /touch-action:pan-y pinch-zoom/);
   assert.match(entries.get("assets/app.js"), /index=-1/);
   assert.match(entries.get("assets/app.js"), /基础必会/);
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));
   assert.match(entries.get("assets/app.js"), /pointerup/);
-  assert.doesNotMatch(entries.get("assets/app.js"), /touchstart/);
+  assert.match(entries.get("assets/app.js"), /touchstart/);
+  assert.match(entries.get("build-info.json"), /pointer-touch-v3/);
   assert.match(entries.get("index.html"), new RegExp(`v=${STATIC_RESPONSIVE_VERSION}`));
+  assert.match(entries.get("index.html"), /staticBuildVersion/);
   assert.match(entries.get("sw.js"), new RegExp(`static_vocab_shell_${STATIC_RESPONSIVE_VERSION}`));
   assert.equal(entries.get("data/words.json"), '{"words":[]}');
+});
+
+test("static export refuses to append swipe code outside the verified app scope", () => {
+  assert.throws(
+    () => patchStaticAppJs('const APP_VERSION="old";const unrelated=true;'),
+    /refusing to export an unverified ZIP/
+  );
 });

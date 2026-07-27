@@ -102,6 +102,17 @@ export function useSpellingErrorBank(lexiconEntries = [], options = {}) {
     refresh();
   }, [refresh]);
 
+  useEffect(() => {
+    function handleErrorBankChanged(event) {
+      const changedScope = String(event?.detail?.scope || "");
+      if (changedScope && changedScope !== scope) return;
+      void refresh();
+    }
+
+    window.addEventListener("ielts:spelling-error-bank-changed", handleErrorBankChanged);
+    return () => window.removeEventListener("ielts:spelling-error-bank-changed", handleErrorBankChanged);
+  }, [refresh, scope]);
+
   const summary = summarizeErrorBankItems(items);
 
   return {

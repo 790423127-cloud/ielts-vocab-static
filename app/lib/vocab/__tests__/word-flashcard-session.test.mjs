@@ -20,6 +20,7 @@ import {
 
 const pagePath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../page.jsx");
 const pageSource = fs.readFileSync(pagePath, "utf8");
+const readingWordsSource = fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../reading-words/page.jsx"), "utf8");
 
 const words = [
   { word: "alpha", status: "" },
@@ -31,6 +32,13 @@ test("page word storage wrappers are safe before browser hydration", () => {
   assert.equal(safeLocalStorageGet("test-key"), null);
   assert.equal(safeLocalStorageSet("test-key", "value"), false);
   assert.doesNotThrow(() => safeLocalStorageRemove("test-key"));
+});
+
+test("paid AI start remains clickable so it can explain missing confirmation", () => {
+  assert.match(readingWordsSource, /if \(!aiConfirmed\) \{/);
+  assert.match(readingWordsSource, /请先勾选付费确认/);
+  assert.match(readingWordsSource, /disabled=\{aiRunning \|\| !aiTargetWords\.length \|\| !mainReady\}/);
+  assert.doesNotMatch(readingWordsSource, /disabled=\{!aiConfirmed \|\|/);
 });
 
 test("home page imports the unified quality queue used after vocab hydration", () => {

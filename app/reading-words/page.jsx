@@ -145,6 +145,7 @@ export default function ReadingWordsPage() {
     message: ""
   });
   const aiControlRef = useRef({ controller: null, stopped: false });
+  const aiConfirmRef = useRef(null);
   const mainLexiconRef = useRef({ words: [], meta: {}, index: new Map() });
   const mainMutationInFlightRef = useRef(false);
 
@@ -520,7 +521,19 @@ export default function ReadingWordsPage() {
   };
 
   const runAiCompletion = async () => {
-    if (aiRunning || !aiConfirmed) return;
+    if (aiRunning) return;
+    if (!aiConfirmed) {
+      setAiRun({
+        status: "confirm-required",
+        processed: 0,
+        total: aiTargetWords.length,
+        filled: 0,
+        failed: 0,
+        message: "请先勾选付费确认，再开始处理；未确认前不会发起 AI 请求。"
+      });
+      aiConfirmRef.current?.focus();
+      return;
+    }
     if (!mainReady || mainMutationInFlightRef.current) {
       setAiRun({
         status: "error",
@@ -854,7 +867,7 @@ export default function ReadingWordsPage() {
             实际费用取决于你当前 DeepSeek 模型和控制台单价，本页面无法准确换算金额。
           </p>
           <label className={styles.confirmRow}>
-            <input type="checkbox" checked={aiConfirmed} onChange={(event) => setAiConfirmed(event.target.checked)} disabled={aiRunning} />
+            <input ref={aiConfirmRef} type="checkbox" checked={aiConfirmed} onChange={(event) => setAiConfirmed(event.target.checked)} disabled={aiRunning} />
             <span>我确认只补全上述阅读生词，并了解缓存未命中可能产生费用。</span>
           </label>
           {aiRun.total || aiRun.message ? (
@@ -864,7 +877,7 @@ export default function ReadingWordsPage() {
             </div>
           ) : null}
           <div className={styles.aiActions}>
-            <button type="button" className={styles.aiButton} onClick={runAiCompletion} disabled={!aiConfirmed || aiRunning || !aiTargetWords.length || !mainReady}>
+            <button type="button" className={styles.aiButton} onClick={runAiCompletion} disabled={aiRunning || !aiTargetWords.length || !mainReady}>
               <Sparkles aria-hidden="true" />开始处理 {aiTargetWords.length} 个词
             </button>
             {aiRunning ? <button type="button" className={styles.stopButton} onClick={stopAiRun}>停止补全</button> : null}

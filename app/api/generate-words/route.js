@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
 
 import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
+import { shouldReuseAiProfileCache } from "../../lib/ai/ai-profile-cache-contract.mjs";
 import {
   AiProfileError,
   isUsableAiProfile,
@@ -48,7 +49,10 @@ export async function POST(req) {
     for (const { word } of cleanItems) {
       const key = normalizeProfileKey(word);
       const cached = cache[key];
-      if (!force && isUsableAiProfile(cached)) {
+      if (shouldReuseAiProfileCache(cached, {
+        force,
+        usable: isUsableAiProfile(cached)
+      })) {
         resolvedByKey.set(key, {
           ...withAiClientCollocationPayload({ ...cached, word }),
           aiReplaceExisting: false,

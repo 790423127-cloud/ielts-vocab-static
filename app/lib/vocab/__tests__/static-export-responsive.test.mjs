@@ -7,13 +7,38 @@ import {
   patchStaticCss,
   patchStaticExportZip,
   readStoredZipEntries,
+  resolveStaticSwipeStep,
   STATIC_FILTER_FIX_MARKER,
   STATIC_RESPONSIVE_MARKER,
-  STATIC_RESPONSIVE_VERSION
+  STATIC_RESPONSIVE_VERSION,
+  STATIC_SWIPE_FIX_MARKER
 } from "../../static-export-responsive.mjs";
 
 const LOCKED_RULE =
   ".app{height:calc(100svh - var(--workspace-header));min-height:calc(100svh - var(--workspace-header));overflow:hidden}";
+
+const LEGACY_TOUCH_SOURCE = `let sx=0,sy=0,st=0;
+els.swipeArea.addEventListener("touchstart",function(e){
+  const t=e.changedTouches[0];
+  sx=t.clientX;
+  sy=t.clientY;
+  st=Date.now();
+},{passive:true});
+els.swipeArea.addEventListener("touchmove",function(e){
+  const t=e.changedTouches[0];
+  const dx=t.clientX-sx;
+  const dy=t.clientY-sy;
+},{passive:true});
+els.swipeArea.addEventListener("touchend",function(e){
+  const t=e.changedTouches[0];
+  const dx=t.clientX-sx;
+  const dy=t.clientY-sy;
+  const dt=Date.now()-st;
+  if(dt<700&&Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.4){
+    dx<0?step(1):step(-1);
+  }
+},{passive:true});
+els.swipeArea.addEventListener("touchcancel",stopHoldStep,{passive:true});`;
 
 const STATIC_FILTER_SOURCE = `const APP_VERSION="old";
 function topToolsViewportKey(){
@@ -61,9 +86,10 @@ function switchFilter(nextFilter){
 }
 if(progress.currentWord) restoreFocusWord=progress.currentWord;
 applyIndexForFilter(filter,{allowFirstFallback:false});
-restoreFocusWord=remote.currentWord;`;
+restoreFocusWord=remote.currentWord;
+${LEGACY_TOUCH_SOURCE}`;
 
-test("static CSS unlocks desktop height and adds compact laptop and mobile entry layouts", () => {
+test("static CSS unlocks desktop height and adds compact laptop, mobile entry and swipe layouts", () => {
   const patched = patchStaticCss(`body{margin:0}@media(min-width:901px){${LOCKED_RULE}}`);
 
   assert.equal(patched.includes(LOCKED_RULE), false);
@@ -73,6 +99,7 @@ test("static CSS unlocks desktop height and adds compact laptop and mobile entry
   assert.match(patched, /max-height:720px/);
   assert.match(patched, new RegExp(STATIC_FILTER_FIX_MARKER));
   assert.match(patched, /\.entry-grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(patched, /\.hero\{touch-action:pan-y;overscroll-behavior-x:contain\}/);
   assert.equal(patchStaticCss(patched), patched, "responsive CSS patch must be idempotent");
 });
 
@@ -107,6 +134,23 @@ test("static categories use curated learning labels instead of raw workbook labe
   assert.doesNotMatch(patched, /uniq\(words\.flatMap/);
 });
 
+test("static mobile swipe uses pointer events while preserving vertical scrolling", () => {
+  const patched = patchStaticAppJs(STATIC_FILTER_SOURCE);
+
+  assert.match(patched, new RegExp(STATIC_SWIPE_FIX_MARKER));
+  assert.match(patched, /addEventListener\("pointerdown"/);
+  assert.match(patched, /addEventListener\("pointerup"/);
+  assert.match(patched, /STATIC_SWIPE_INTERACTIVE_SELECTOR/);
+  assert.doesNotMatch(patched, /addEventListener\("touchstart"/);
+  assert.doesNotMatch(patched, /Math\.abs\(dx\)>55/);
+
+  assert.equal(resolveStaticSwipeStep({ dx: -70, dy: 8, durationMs: 280 }), 1);
+  assert.equal(resolveStaticSwipeStep({ dx: 72, dy: 9, durationMs: 300 }), -1);
+  assert.equal(resolveStaticSwipeStep({ dx: -35, dy: 2, durationMs: 200 }), 0);
+  assert.equal(resolveStaticSwipeStep({ dx: -70, dy: 65, durationMs: 240 }), 0);
+  assert.equal(resolveStaticSwipeStep({ dx: -80, dy: 4, durationMs: 1200 }), 0);
+});
+
 test("ZIP transformer patches CSS, app JS, HTML and service worker", () => {
   const originalZip = createStoredZip([
     {
@@ -138,8 +182,12 @@ test("ZIP transformer patches CSS, app JS, HTML and service worker", () => {
 
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_RESPONSIVE_MARKER));
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_FILTER_FIX_MARKER));
+  assert.match(entries.get("assets/style.css"), /touch-action:pan-y/);
   assert.match(entries.get("assets/app.js"), /index=-1/);
   assert.match(entries.get("assets/app.js"), /基础必会/);
+  assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));
+  assert.match(entries.get("assets/app.js"), /pointerup/);
+  assert.doesNotMatch(entries.get("assets/app.js"), /touchstart/);
   assert.match(entries.get("index.html"), new RegExp(`v=${STATIC_RESPONSIVE_VERSION}`));
   assert.match(entries.get("sw.js"), new RegExp(`static_vocab_shell_${STATIC_RESPONSIVE_VERSION}`));
   assert.equal(entries.get("data/words.json"), '{"words":[]}');

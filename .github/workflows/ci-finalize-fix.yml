@@ -32,9 +32,20 @@ jobs:
         run: npm ci
 
       - name: Verify regression tests
+        shell: bash
         run: |
-          node --test app/lib/vocab/__tests__/word-flashcard-session.test.mjs
-          npm run lint:errors
+          set -o pipefail
+          node --test app/lib/vocab/__tests__/word-flashcard-session.test.mjs 2>&1 | tee finalize-test.log
+          npm run lint:errors 2>&1 | tee -a finalize-test.log
+
+      - name: Upload finalizer diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: finalize-fix-diagnostics-${{ github.run_id }}
+          path: finalize-test.log
+          if-no-files-found: ignore
+          retention-days: 1
 
       - name: Remove finalizer and commit
         shell: bash

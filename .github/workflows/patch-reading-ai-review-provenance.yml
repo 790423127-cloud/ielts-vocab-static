@@ -1,0 +1,238 @@
+name: Patch reading AI review provenance
+
+on:
+  push:
+    branches: [fix/reading-ai-review-provenance]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/reading-ai-review-provenance
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Apply review provenance patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          storage_path = Path('app/lib/reading-words/storage.mjs')
+          storage = storage_path.read_text(encoding='utf-8')
+
+          version_line = 'export const READING_WORDS_BACKUP_VERSION = 1;\n'
+          if 'READING_AI_REVIEW_SOURCE' not in storage:
+              if version_line not in storage:
+                  raise SystemExit('storage version marker not found')
+              storage = storage.replace(
+                  version_line,
+                  version_line + 'const READING_AI_REVIEW_SOURCE = "reading-ai";\n',
+                  1
+              )
+
+          old_flags = '''    formsReviewed: input.formsReviewed === true,
+              wordFamilyReviewed: input.wordFamilyReviewed === true,
+              synonymsReviewed: input.synonymsReviewed === true,
+          '''
+          new_flags = '''    formsReviewed: input.formsReviewed === true && cleanText(input.formsReviewSource) === READING_AI_REVIEW_SOURCE,
+              formsReviewSource: cleanText(input.formsReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
+              wordFamilyReviewed: input.wordFamilyReviewed === true && cleanText(input.wordFamilyReviewSource) === READING_AI_REVIEW_SOURCE,
+              wordFamilyReviewSource: cleanText(input.wordFamilyReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
+              synonymsReviewed: input.synonymsReviewed === true && cleanText(input.synonymsReviewSource) === READING_AI_REVIEW_SOURCE,
+              synonymsReviewSource: cleanText(input.synonymsReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
+          '''
+          if old_flags not in storage:
+              raise SystemExit('legacy reading review flags block not found')
+          storage = storage.replace(old_flags, new_flags, 1)
+
+          old_merge = '''  if (Array.isArray(profile.forms)) next.formsReviewed = true;
+            if (Array.isArray(profile.wordFamily)) next.wordFamilyReviewed = true;
+            if (Array.isArray(profile.synonyms)) next.synonymsReviewed = true;
+          '''
+          new_merge = '''  if (Array.isArray(profile.forms)) {
+              next.formsReviewed = true;
+              next.formsReviewSource = READING_AI_REVIEW_SOURCE;
+            }
+            if (Array.isArray(profile.wordFamily)) {
+              next.wordFamilyReviewed = true;
+              next.wordFamilyReviewSource = READING_AI_REVIEW_SOURCE;
+            }
+            if (Array.isArray(profile.synonyms)) {
+              next.synonymsReviewed = true;
+              next.synonymsReviewSource = READING_AI_REVIEW_SOURCE;
+            }
+          '''
+          if old_merge not in storage:
+              raise SystemExit('reading AI merge review block not found')
+          storage = storage.replace(old_merge, new_merge, 1)
+          storage_path.write_text(storage, encoding='utf-8')
+
+          sync_path = Path('app/lib/reading-words/main-lexicon-sync.mjs')
+          sync = sync_path.read_text(encoding='utf-8')
+          relation_constant = '''const RELATION_REVIEW_FIELDS = [
+            ["forms", "formsReviewed"],
+            ["wordFamily", "wordFamilyReviewed"],
+            ["synonyms", "synonymsReviewed"]
+          ];
+
+          '''
+          if relation_constant not in sync:
+              raise SystemExit('main relation review constant not found')
+          sync = sync.replace(relation_constant, '', 1)
+
+          inherited_loop = '''  for (const [field, reviewedField] of RELATION_REVIEW_FIELDS) {
+              if ((Array.isArray(mainEntry[field]) && mainEntry[field].length) || mainEntry[reviewedField] === true) {
+                next[reviewedField] = true;
+              }
+            }
+          '''
+          if inherited_loop not in sync:
+              raise SystemExit('main-to-reading review inheritance loop not found')
+          sync = sync.replace(inherited_loop, '', 1)
+          sync_path.write_text(sync, encoding='utf-8')
+
+          test_path = Path('app/lib/vocab/__tests__/word-flashcard-session.test.mjs')
+          test_source = test_path.read_text(encoding='utf-8')
+          old_import = '''import {
+            mergeAiProfileIntoMainEntry,
+            needsReadingAiProcessing
+          } from "../../reading-words/main-lexicon-sync.mjs";
+          '''
+          new_import = '''import {
+            applyMainEntryToReadingWord,
+            mergeAiProfileIntoMainEntry,
+            needsReadingAiProcessing
+          } from "../../reading-words/main-lexicon-sync.mjs";
+          '''
+          if old_import not in test_source:
+              raise SystemExit('reading main sync test import not found')
+          test_source = test_source.replace(old_import, new_import, 1)
+
+          insertion = r'''
+          test("legacy or main-lexicon review flags do not mark a reading word complete", () => {
+            const legacy = normalizeReadingWord({
+              word: "brochure",
+              pos: "noun",
+              meaning: "小册子",
+              definition: "a small book containing information",
+              example: "Please pick up a travel brochure at the counter.",
+              exampleCn: "请在柜台拿一份旅行小册子。",
+              formsReviewed: true,
+              wordFamilyReviewed: true,
+              synonymsReviewed: true
+            });
+            const linked = applyMainEntryToReadingWord(legacy, {
+              word: "brochure",
+              forms: [],
+              wordFamily: [],
+              synonyms: [],
+              formsReviewed: true,
+              wordFamilyReviewed: true,
+              synonymsReviewed: true
+            });
+
+            assert.equal(linked.formsReviewed, false);
+            assert.equal(linked.wordFamilyReviewed, false);
+            assert.equal(linked.synonymsReviewed, false);
+            assert.deepEqual(getReadingWordMissingFields(linked), ["forms", "wordFamily", "synonyms"]);
+          });
+
+          test("reading AI review provenance survives normalization and avoids repeat processing", () => {
+            const base = normalizeReadingWord({
+              word: "brochure",
+              pos: "noun",
+              meaning: "小册子",
+              definition: "a small book containing information",
+              example: "Please pick up a travel brochure at the counter.",
+              exampleCn: "请在柜台拿一份旅行小册子。"
+            });
+            const reviewed = mergeReadingWordAiProfile(base, {
+              forms: [],
+              wordFamily: [],
+              synonyms: []
+            });
+            const reloaded = normalizeReadingWord(reviewed);
+
+            assert.equal(reloaded.formsReviewed, true);
+            assert.equal(reloaded.formsReviewSource, "reading-ai");
+            assert.equal(reloaded.wordFamilyReviewed, true);
+            assert.equal(reloaded.wordFamilyReviewSource, "reading-ai");
+            assert.equal(reloaded.synonymsReviewed, true);
+            assert.equal(reloaded.synonymsReviewSource, "reading-ai");
+            assert.deepEqual(getReadingWordMissingFields(reloaded), []);
+          });
+
+          test("reading AI results fill missing main-lexicon fields without overwriting existing content", () => {
+            const merged = mergeAiProfileIntoMainEntry({
+              word: "brochure",
+              meaning: "已有释义",
+              forms: [],
+              wordFamily: [],
+              synonyms: [],
+              ieltsUse: [],
+              topics: [],
+              difficulty: ""
+            }, {
+              meaning: "AI 新释义",
+              forms: [{ word: "brochures", type: "plural" }],
+              wordFamily: [],
+              synonyms: ["leaflet"],
+              ieltsUse: ["Reading"],
+              topics: ["旅行"],
+              difficulty: "基础高频"
+            });
+
+            assert.equal(merged.meaning, "已有释义");
+            assert.deepEqual(merged.forms, [{ word: "brochures", type: "plural" }]);
+            assert.deepEqual(merged.wordFamily, []);
+            assert.deepEqual(merged.synonyms, ["leaflet"]);
+            assert.deepEqual(merged.ieltsUse, ["Reading"]);
+            assert.deepEqual(merged.topics, ["旅行"]);
+            assert.equal(merged.difficulty, "基础高频");
+            assert.equal(merged.formsReviewed, true);
+            assert.equal(merged.wordFamilyReviewed, true);
+            assert.equal(merged.synonymsReviewed, true);
+          });
+          '''
+          marker = 'test("home page imports the unified quality queue used after vocab hydration", () => {'
+          if marker not in test_source:
+              raise SystemExit('test insertion marker not found')
+          test_source = test_source.replace(marker, insertion + '\n' + marker, 1)
+          test_path.write_text(test_source, encoding='utf-8')
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify focused tests and lint
+        run: |
+          node --test app/lib/vocab/__tests__/word-flashcard-session.test.mjs
+          npm run lint:errors
+
+      - name: Commit implementation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/lib/reading-words/storage.mjs app/lib/reading-words/main-lexicon-sync.mjs app/lib/vocab/__tests__/word-flashcard-session.test.mjs
+          if git diff --cached --quiet; then
+            echo "No implementation changes to commit"
+            exit 0
+          fi
+          git commit -m "fix: keep reading AI review provenance separate"
+          git push origin HEAD:fix/reading-ai-review-provenance

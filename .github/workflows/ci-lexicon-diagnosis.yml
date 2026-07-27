@@ -1,0 +1,32 @@
+name: Lexicon CI diagnosis
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate diagnosis
+        run: node scripts/ci-diagnose-lexicon.mjs
+
+      - name: Upload diagnosis
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-lexicon-diagnosis-${{ github.run_id }}
+          path: reports/ci-lexicon-diagnosis.json
+          if-no-files-found: error
+          retention-days: 1

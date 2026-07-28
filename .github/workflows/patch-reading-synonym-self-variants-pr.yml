@@ -31,11 +31,34 @@ jobs:
           set -o pipefail
           python - <<'PY' 2>&1 | tee /tmp/reading-synonym-patch.log
           from pathlib import Path
+          import re
+
+          admin_path = Path('app/lib/vocab/admin-ai-content-profile.mjs')
+          admin_text = admin_path.read_text(encoding='utf-8')
+          admin_text, count = re.subn(
+              r'synonyms:\s*normalizeAiStringArray\(entry\.synonyms,\s*\{\s*max:\s*4\s*\}\)\s*\.filter\(\(item\)\s*=>\s*key\(item\)\s*!==\s*key\(word\)\),',
+              'synonyms: normalizeAiSynonyms(entry.synonyms, word),',
+              admin_text,
+              count=1
+          )
+          if count != 1:
+              raise SystemExit('admin generated synonym regex marker not found')
+          admin_path.write_text(admin_text, encoding='utf-8')
+
           workflow = Path('.github/workflows/patch-reading-synonym-self-variants.yml').read_text(encoding='utf-8')
           start = workflow.index("          python - <<'PY'\n") + len("          python - <<'PY'\n")
           end = workflow.index("\n          PY\n", start)
           block = workflow[start:end]
           script = "\n".join(line[10:] if line.startswith("          ") else line for line in block.splitlines())
+          failing_block = '''if old not in text:
+            raise SystemExit("admin generated synonym marker not found")
+          Path(admin).write_text(text.replace(old, new, 1), encoding="utf-8")'''
+          resilient_block = '''if old in text:
+            text = text.replace(old, new, 1)
+          Path(admin).write_text(text, encoding="utf-8")'''
+          if failing_block not in script:
+              raise SystemExit('embedded admin failure block not found')
+          script = script.replace(failing_block, resilient_block, 1)
           exec(compile(script, 'reading-synonym-patch.py', 'exec'))
           PY
       - name: Upload patch diagnostics

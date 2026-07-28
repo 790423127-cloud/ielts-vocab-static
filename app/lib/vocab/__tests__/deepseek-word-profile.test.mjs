@@ -10,6 +10,7 @@ import {
   shouldReuseAiProfileCache
 } from "../../ai/ai-profile-cache-contract.mjs";
 import { buildAiWordProfilePrompt } from "../../ai/vocab-profile-prompt.mjs";
+import { normalizeAiGeneratedEntry } from "../admin-ai-content-profile.mjs";
 
 function rawProfile(inputId, word, { collocationCount = 4 } = {}) {
   return {
@@ -144,6 +145,19 @@ test("two genuine translated collocations are usable and do not discard the whol
   );
 });
 
+test("AI profiles remove self-equivalent synonym spellings before cache or client delivery", () => {
+  const airmail = normalizeAiGeneratedEntry({
+    ...rawProfile("item-1", "Airmail"),
+    synonyms: ["air mail", "air-mail", "airpost"]
+  }, "Airmail");
+  const encyclopaedia = normalizeAiGeneratedEntry({
+    ...rawProfile("item-2", "Encyclopaedia"),
+    synonyms: ["encyclopedia", "compendium"]
+  }, "Encyclopaedia");
+  assert.deepEqual(airmail.synonyms, ["airpost"]);
+  assert.deepEqual(encyclopaedia.synonyms, ["compendium"]);
+});
+
 test("legacy cache without an explicit synonyms array is not reused as a completed review", () => {
   const legacyCache = {
     forms: [],
@@ -170,4 +184,6 @@ test("the unified prompt requests useful ranges and forbids filler", () => {
   assert.match(prompt, /Never invent filler/i);
   assert.match(prompt, /Escape all line breaks/i);
   assert.match(prompt, /Echo input_id exactly/);
+  assert.match(prompt, /capitalization\/spacing\/hyphen\/apostrophe variants/i);
+  assert.match(prompt, /British\/American spelling variants/i);
 });

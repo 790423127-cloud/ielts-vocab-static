@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const VERSION = "20260727_mobile_first_screen_v1";
+  const VERSION = "20260728_reading_synonym_variants_v2";
   const READING_KEY = "ielts-personal-reading-words-v1";
   const MAIN_SUPPLEMENT_KEY = "static_personal_reading_main_v1";
   const TRANSFER_TYPE = "ielts-reading-words-transfer";
@@ -31,6 +31,29 @@
     return clean(value).toLowerCase().replace(/[’‘]/g, "'").replace(/[“”]/g, '"');
   }
 
+  const SYNONYM_VARIANT_GROUPS = [
+    ["encyclopaedia", "encyclopedia"], ["encyclopaedic", "encyclopedic"],
+    ["paediatric", "pediatric"], ["aesthetic", "esthetic"],
+    ["anaesthesia", "anesthesia"], ["archaeology", "archeology"],
+    ["foetus", "fetus"], ["haemoglobin", "hemoglobin"],
+    ["diarrhoea", "diarrhea"], ["manoeuvre", "maneuver"],
+    ["orthopaedic", "orthopedic"], ["oesophagus", "esophagus"],
+    ["colour", "color"], ["favourite", "favorite"], ["honour", "honor"],
+    ["labour", "labor"], ["neighbour", "neighbor"], ["behaviour", "behavior"],
+    ["centre", "center"], ["metre", "meter"], ["theatre", "theater"],
+    ["organise", "organize"], ["organisation", "organization"],
+    ["analyse", "analyze"], ["defence", "defense"], ["licence", "license"],
+    ["travelling", "traveling"], ["travelled", "traveled"], ["traveller", "traveler"],
+    ["catalogue", "catalog"], ["dialogue", "dialog"], ["programme", "program"], ["grey", "gray"]
+  ];
+  const SYNONYM_VARIANT_KEY = new Map();
+  SYNONYM_VARIANT_GROUPS.forEach((group) => group.forEach((variant) => SYNONYM_VARIANT_KEY.set(variant, group[0])));
+
+  function synonymEquivalenceKey(value) {
+    const compact = clean(value).toLowerCase().replace(/[’‘`]/g, "'").replace(/[^a-z0-9]+/g, "");
+    return SYNONYM_VARIANT_KEY.get(compact) || compact;
+  }
+
   function id(prefix) {
     return `${prefix}-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`}`;
   }
@@ -45,11 +68,12 @@
 
   function normalizeSynonyms(value, word) {
     const list = Array.isArray(value) ? value : String(value || "").split(/[,，;；\n]+/);
-    const seen = new Set([key(word)]);
+    const headwordKey = synonymEquivalenceKey(word);
+    const seen = new Set();
     return list.map((item) => clean(typeof item === "string" ? item : item?.word || item?.replacement))
       .filter((item) => {
-        const normalized = key(item);
-        if (!normalized || seen.has(normalized)) return false;
+        const normalized = synonymEquivalenceKey(item);
+        if (!normalized || normalized === headwordKey || seen.has(normalized)) return false;
         seen.add(normalized);
         return true;
       }).slice(0, 8);

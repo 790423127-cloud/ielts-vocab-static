@@ -1,10 +1,10 @@
 {
   "version": "meaning-6000-v6-user-curated-removal",
-  "generatedAt": "2026-07-26T10:22:43.513Z",
+  "generatedAt": "2026-07-28T12:03:33.072Z",
   "count": 6000,
-  "sourceLexiconVersion": "v15-13353-ci-repaired-20260727",
-  "sourceLexiconCount": 13353,
-  "sourceLexiconSha256": "76a231482624c01427e1a276e16538fffb0c6963157df87c09066783dfbe3d27",
+  "sourceLexiconVersion": "v16-13351-user-curated-removal-20260728",
+  "sourceLexiconCount": 13351,
+  "sourceLexiconSha256": "5ff10254b873c64a216caec4d8c082a463e4920333b14b9998a29d16606ae63c",
   "selectionPolicy": "ielts-gt-quality-frequency-v4",
   "items": [
     {

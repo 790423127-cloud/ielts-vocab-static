@@ -1,8 +1,8 @@
 {
-  "version": "v14-13353-user-curated-removal-20260726",
-  "generatedAt": "2026-07-26T10:22:43.513Z",
-  "previousRef": "10b50240719562289dd4ee3176f2b1e67a17b647",
-  "count": 91,
+  "version": "v16-13351-user-curated-removal-20260728",
+  "generatedAt": "2026-07-28T12:03:33.072Z",
+  "previousRef": "4d1c212e5b1ef10fb4545cfc3c1eecf74b94cd6f",
+  "count": 93,
   "entries": [
     {
       "id": "word_12f29832aa4b",
@@ -457,6 +457,16 @@
     {
       "id": "word_excel_9e5db53b5cf0",
       "word": "bigger",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7240225b8f36",
+      "word": "inc",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_26bd604bd179",
+      "word": "indian",
       "reason": "user-curated-removal"
     }
   ]

@@ -1,3 +1,5 @@
+import { filterDistinctSynonymTerms } from "../vocab/synonym-equivalence.mjs";
+
 export const READING_WORDS_STORAGE_KEY = "ielts-personal-reading-words-v1";
 export const READING_WORDS_ROLLBACK_KEY = "ielts-personal-reading-words-rollback-v1";
 export const READING_WORDS_BACKUP_VERSION = 1;
@@ -62,18 +64,7 @@ export function normalizeReadingWordKey(value) {
 }
 
 export function normalizeReadingSynonyms(value, headword = "") {
-  const values = Array.isArray(value) ? value : String(value || "").split(/[,，;；|\n]+/);
-  const headwordKey = normalizeReadingWordKey(headword);
-  const seen = new Set();
-  return values
-    .map((item) => cleanText(typeof item === "string" ? item : item?.word || item?.replacement))
-    .filter((item) => {
-      const key = normalizeReadingWordKey(item);
-      if (!key || key === headwordKey || seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    })
-    .slice(0, 8);
+  return filterDistinctSynonymTerms(value, headword, { max: 8 });
 }
 
 function createStableId(idFactory) {

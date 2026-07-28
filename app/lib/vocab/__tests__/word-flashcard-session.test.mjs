@@ -21,6 +21,7 @@ import {
   getReadingWordMissingFields,
   isReadingWordIncomplete,
   mergeReadingWordAiProfile,
+  normalizeReadingSynonyms,
   normalizeReadingWord
 } from "../../reading-words/storage.mjs";
 import {
@@ -50,6 +51,23 @@ test("paid AI start remains clickable so it can explain missing confirmation", (
   assert.match(readingWordsSource, /请先勾选付费确认/);
   assert.match(readingWordsSource, /disabled=\{aiRunning \|\| !aiTargetWords\.length \|\| !mainReady\}/);
   assert.doesNotMatch(readingWordsSource, /disabled=\{!aiConfirmed \|\|/);
+});
+
+test("reading synonyms exclude formatting and British/American variants of the headword", () => {
+  assert.deepEqual(normalizeReadingSynonyms(["air mail", "air-mail", "airpost"], "Airmail"), ["airpost"]);
+  assert.deepEqual(normalizeReadingSynonyms(["encyclopedia", "compendium"], "Encyclopaedia"), ["compendium"]);
+  assert.deepEqual(normalizeReadingSynonyms(["e-mail", "message"], "Email"), ["message"]);
+});
+
+test("legacy reading records are cleaned on normalization without another AI call", () => {
+  const normalized = normalizeReadingWord({
+    word: "Airmail",
+    synonyms: ["air mail", "airpost"],
+    synonymsReviewed: true,
+    synonymsReviewSource: "reading-ai"
+  });
+  assert.deepEqual(normalized.synonyms, ["airpost"]);
+  assert.equal(normalized.synonymsReviewed, true);
 });
 
 test("reading relations stay pending until data exists or an AI review marker is stored", () => {

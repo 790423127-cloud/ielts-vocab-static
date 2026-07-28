@@ -1,0 +1,317 @@
+name: Patch reading synonym self variants
+
+on:
+  push:
+    branches:
+      - fix/reading-synonym-self-variants
+    paths:
+      - .github/reading-synonym-self-variants-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/reading-synonym-self-variants
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Patch synonym equivalence contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          helper = '''const ORTHOGRAPHIC_VARIANT_GROUPS = Object.freeze([
+            ["encyclopaedia", "encyclopedia"],
+            ["encyclopaedic", "encyclopedic"],
+            ["paediatric", "pediatric"],
+            ["paediatrics", "pediatrics"],
+            ["aesthetic", "esthetic"],
+            ["anaesthesia", "anesthesia"],
+            ["anaesthetic", "anesthetic"],
+            ["archaeology", "archeology"],
+            ["foetus", "fetus"],
+            ["haemoglobin", "hemoglobin"],
+            ["diarrhoea", "diarrhea"],
+            ["manoeuvre", "maneuver"],
+            ["mediaeval", "medieval"],
+            ["orthopaedic", "orthopedic"],
+            ["oesophagus", "esophagus"],
+            ["colour", "color"],
+            ["favourite", "favorite"],
+            ["honour", "honor"],
+            ["labour", "labor"],
+            ["neighbour", "neighbor"],
+            ["behaviour", "behavior"],
+            ["centre", "center"],
+            ["metre", "meter"],
+            ["theatre", "theater"],
+            ["organise", "organize"],
+            ["organisation", "organization"],
+            ["analyse", "analyze"],
+            ["defence", "defense"],
+            ["licence", "license"],
+            ["travelling", "traveling"],
+            ["travelled", "traveled"],
+            ["traveller", "traveler"],
+            ["catalogue", "catalog"],
+            ["dialogue", "dialog"],
+            ["programme", "program"],
+            ["grey", "gray"]
+          ]);
+
+          const ORTHOGRAPHIC_VARIANT_KEY = new Map();
+          for (const group of ORTHOGRAPHIC_VARIANT_GROUPS) {
+            const canonical = group[0];
+            for (const variant of group) ORTHOGRAPHIC_VARIANT_KEY.set(variant, canonical);
+          }
+
+          export function cleanSynonymTerm(value) {
+            return String(value ?? "").normalize("NFC").trim().replace(/\\s+/g, " ");
+          }
+
+          export function synonymEquivalenceKey(value) {
+            const compact = cleanSynonymTerm(value)
+              .toLowerCase()
+              .replace(/[’‘`]/g, "'")
+              .replace(/[^a-z0-9]+/g, "");
+            return ORTHOGRAPHIC_VARIANT_KEY.get(compact) || compact;
+          }
+
+          export function areSynonymTermsEquivalent(left, right) {
+            const leftKey = synonymEquivalenceKey(left);
+            return Boolean(leftKey && leftKey === synonymEquivalenceKey(right));
+          }
+
+          export function filterDistinctSynonymTerms(value, headword = "", { max = 8 } = {}) {
+            const values = Array.isArray(value) ? value : String(value || "").split(/[,，;；|\\n]+/);
+            const headwordKey = synonymEquivalenceKey(headword);
+            const seen = new Set();
+            const result = [];
+            for (const item of values) {
+              const term = cleanSynonymTerm(typeof item === "string" ? item : item?.word || item?.replacement);
+              const termKey = synonymEquivalenceKey(term);
+              if (!termKey || termKey === headwordKey || seen.has(termKey)) continue;
+              seen.add(termKey);
+              result.push(term);
+              if (result.length >= max) break;
+            }
+            return result;
+          }
+          '''
+          Path("app/lib/vocab/synonym-equivalence.mjs").write_text(helper, encoding="utf-8")
+
+          def replace(path, old, new):
+            file = Path(path)
+            text = file.read_text(encoding="utf-8")
+            if old not in text:
+              raise SystemExit(f"signature not found in {path}: {old[:80]!r}")
+            file.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          storage = "app/lib/reading-words/storage.mjs"
+          text = Path(storage).read_text(encoding="utf-8")
+          if not text.startswith('import { filterDistinctSynonymTerms }'):
+            text = 'import { filterDistinctSynonymTerms } from "../vocab/synonym-equivalence.mjs";\n\n' + text
+          old = '''export function normalizeReadingSynonyms(value, headword = "") {
+            const values = Array.isArray(value) ? value : String(value || "").split(/[,，;；|\\n]+/);
+            const headwordKey = normalizeReadingWordKey(headword);
+            const seen = new Set();
+            return values
+              .map((item) => cleanText(typeof item === "string" ? item : item?.word || item?.replacement))
+              .filter((item) => {
+                const key = normalizeReadingWordKey(item);
+                if (!key || key === headwordKey || seen.has(key)) return false;
+                seen.add(key);
+                return true;
+              })
+              .slice(0, 8);
+          }'''
+          new = '''export function normalizeReadingSynonyms(value, headword = "") {
+            return filterDistinctSynonymTerms(value, headword, { max: 8 });
+          }'''
+          if old not in text:
+            raise SystemExit("storage synonym normalizer signature not found")
+          Path(storage).write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          admin = "app/lib/vocab/admin-ai-content-profile.mjs"
+          text = Path(admin).read_text(encoding="utf-8")
+          if not text.startswith('import { filterDistinctSynonymTerms }'):
+            text = 'import { filterDistinctSynonymTerms } from "./synonym-equivalence.mjs";\n\n' + text
+          marker = '''export function normalizeAiPhraseItems(value, { max = AI_COLLOCATION_LIMIT, requireChinese = false } = {}) {'''
+          addition = '''export function normalizeAiSynonyms(value, headword = "") {
+            return filterDistinctSynonymTerms(value, headword, { max: 4 });
+          }
+
+          export function normalizeAiPhraseItems(value, { max = AI_COLLOCATION_LIMIT, requireChinese = false } = {}) {'''
+          if marker not in text:
+            raise SystemExit("admin normalizeAiPhraseItems marker not found")
+          text = text.replace(marker, addition, 1)
+          old = '''  return {
+              ...entry,
+              [AI_COLLOCATION_TRANSPORT_FIELDS.common]: normalizeAiPhraseItems(entry.collocations),
+              [AI_COLLOCATION_TRANSPORT_FIELDS.phrase]: normalizeAiPhraseItems(entry.phraseCollocations)
+            };'''
+          new = '''  return {
+              ...entry,
+              synonyms: normalizeAiSynonyms(entry.synonyms, entry.word),
+              [AI_COLLOCATION_TRANSPORT_FIELDS.common]: normalizeAiPhraseItems(entry.collocations),
+              [AI_COLLOCATION_TRANSPORT_FIELDS.phrase]: normalizeAiPhraseItems(entry.phraseCollocations)
+            };'''
+          if old not in text:
+            raise SystemExit("admin client payload marker not found")
+          text = text.replace(old, new, 1)
+          old = '''    synonyms: normalizeAiStringArray(entry.synonyms, { max: 4 })
+              .filter((item) => key(item) !== key(word)),'''
+          new = '''    synonyms: normalizeAiSynonyms(entry.synonyms, word),'''
+          if old not in text:
+            raise SystemExit("admin generated synonym marker not found")
+          Path(admin).write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          prompt = "app/lib/ai/vocab-profile-prompt.mjs"
+          text = Path(prompt).read_text(encoding="utf-8")
+          text = text.replace('ielts-g-main-plus-detailed-senses-v4', 'ielts-g-main-plus-detailed-senses-v5', 1)
+          old = '7. Return 0-4 reliable synonyms that can replace the headword in its primary sense. Use an empty array when no safe replacement exists; never add merely related words.'
+          new = '7. Return 0-4 reliable synonyms that can replace the headword in its primary sense. Use an empty array when no safe replacement exists. Never return the headword itself, capitalization/spacing/hyphen/apostrophe variants, or British/American spelling variants (for example airmail/air mail and encyclopaedia/encyclopedia); never add merely related words.'
+          if old not in text:
+            raise SystemExit("prompt synonym rule not found")
+          Path(prompt).write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          static_js = "public/assets/reading-words.js"
+          text = Path(static_js).read_text(encoding="utf-8")
+          text = text.replace('const VERSION = "20260727_mobile_first_screen_v1";', 'const VERSION = "20260728_reading_synonym_variants_v2";', 1)
+          key_marker = '''  function id(prefix) {'''
+          static_helper = '''  const SYNONYM_VARIANT_GROUPS = [
+              ["encyclopaedia", "encyclopedia"], ["encyclopaedic", "encyclopedic"],
+              ["paediatric", "pediatric"], ["aesthetic", "esthetic"],
+              ["anaesthesia", "anesthesia"], ["archaeology", "archeology"],
+              ["foetus", "fetus"], ["haemoglobin", "hemoglobin"],
+              ["diarrhoea", "diarrhea"], ["manoeuvre", "maneuver"],
+              ["orthopaedic", "orthopedic"], ["oesophagus", "esophagus"],
+              ["colour", "color"], ["favourite", "favorite"], ["honour", "honor"],
+              ["labour", "labor"], ["neighbour", "neighbor"], ["behaviour", "behavior"],
+              ["centre", "center"], ["metre", "meter"], ["theatre", "theater"],
+              ["organise", "organize"], ["organisation", "organization"],
+              ["analyse", "analyze"], ["defence", "defense"], ["licence", "license"],
+              ["travelling", "traveling"], ["travelled", "traveled"], ["traveller", "traveler"],
+              ["catalogue", "catalog"], ["dialogue", "dialog"], ["programme", "program"], ["grey", "gray"]
+            ];
+            const SYNONYM_VARIANT_KEY = new Map();
+            SYNONYM_VARIANT_GROUPS.forEach((group) => group.forEach((variant) => SYNONYM_VARIANT_KEY.set(variant, group[0])));
+
+            function synonymEquivalenceKey(value) {
+              const compact = clean(value).toLowerCase().replace(/[’‘`]/g, "'").replace(/[^a-z0-9]+/g, "");
+              return SYNONYM_VARIANT_KEY.get(compact) || compact;
+            }
+
+            function id(prefix) {'''
+          if key_marker not in text:
+            raise SystemExit("static id marker not found")
+          text = text.replace(key_marker, static_helper, 1)
+          old = '''  function normalizeSynonyms(value, word) {
+              const list = Array.isArray(value) ? value : String(value || "").split(/[,，;；\\n]+/);
+              const seen = new Set([key(word)]);
+              return list.map((item) => clean(typeof item === "string" ? item : item?.word || item?.replacement))
+                .filter((item) => {
+                  const normalized = key(item);
+                  if (!normalized || seen.has(normalized)) return false;
+                  seen.add(normalized);
+                  return true;
+                }).slice(0, 8);
+            }'''
+          new = '''  function normalizeSynonyms(value, word) {
+              const list = Array.isArray(value) ? value : String(value || "").split(/[,，;；\\n]+/);
+              const headwordKey = synonymEquivalenceKey(word);
+              const seen = new Set();
+              return list.map((item) => clean(typeof item === "string" ? item : item?.word || item?.replacement))
+                .filter((item) => {
+                  const normalized = synonymEquivalenceKey(item);
+                  if (!normalized || normalized === headwordKey || seen.has(normalized)) return false;
+                  seen.add(normalized);
+                  return true;
+                }).slice(0, 8);
+            }'''
+          if old not in text:
+            raise SystemExit("static normalizeSynonyms signature not found")
+          Path(static_js).write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          html = "public/reading-words.html"
+          text = Path(html).read_text(encoding="utf-8").replace('20260727_mobile_first_screen_v1', '20260728_reading_synonym_variants_v2')
+          Path(html).write_text(text, encoding="utf-8")
+
+          word_test = "app/lib/vocab/__tests__/word-flashcard-session.test.mjs"
+          text = Path(word_test).read_text(encoding="utf-8")
+          old = '''  mergeReadingWordAiProfile,
+            normalizeReadingWord
+          } from "../../reading-words/storage.mjs";'''
+          new = '''  mergeReadingWordAiProfile,
+            normalizeReadingSynonyms,
+            normalizeReadingWord
+          } from "../../reading-words/storage.mjs";'''
+          if old not in text:
+            raise SystemExit("word test import marker not found")
+          text = text.replace(old, new, 1)
+          marker = '''test("reading relations stay pending until data exists or an AI review marker is stored", () => {'''
+          addition = '''test("reading synonyms exclude formatting and British/American variants of the headword", () => {
+            assert.deepEqual(normalizeReadingSynonyms(["air mail", "air-mail", "airpost"], "Airmail"), ["airpost"]);
+            assert.deepEqual(normalizeReadingSynonyms(["encyclopedia", "compendium"], "Encyclopaedia"), ["compendium"]);
+            assert.deepEqual(normalizeReadingSynonyms(["e-mail", "message"], "Email"), ["message"]);
+          });
+
+          test("legacy reading records are cleaned on normalization without another AI call", () => {
+            const normalized = normalizeReadingWord({
+              word: "Airmail",
+              synonyms: ["air mail", "airpost"],
+              synonymsReviewed: true,
+              synonymsReviewSource: "reading-ai"
+            });
+            assert.deepEqual(normalized.synonyms, ["airpost"]);
+            assert.equal(normalized.synonymsReviewed, true);
+          });
+
+          test("reading relations stay pending until data exists or an AI review marker is stored", () => {'''
+          if marker not in text:
+            raise SystemExit("word test insertion marker not found")
+          Path(word_test).write_text(text.replace(marker, addition, 1), encoding="utf-8")
+
+          deepseek_test = "app/lib/vocab/__tests__/deepseek-word-profile.test.mjs"
+          text = Path(deepseek_test).read_text(encoding="utf-8")
+          import_marker = 'import { buildAiWordProfilePrompt } from "../../ai/vocab-profile-prompt.mjs";'
+          import_new = import_marker + '\nimport { normalizeAiGeneratedEntry } from "../admin-ai-content-profile.mjs";'
+          if import_marker not in text:
+            raise SystemExit("deepseek test import marker not found")
+          text = text.replace(import_marker, import_new, 1)
+          marker = '''test("legacy cache without an explicit synonyms array is not reused as a completed review", () => {'''
+          addition = '''test("AI profiles remove self-equivalent synonym spellings before cache or client delivery", () => {
+            const airmail = normalizeAiGeneratedEntry({
+              ...rawProfile("item-1", "Airmail"),
+              synonyms: ["air mail", "air-mail", "airpost"]
+            }, "Airmail");
+            const encyclopaedia = normalizeAiGeneratedEntry({
+              ...rawProfile("item-2", "Encyclopaedia"),
+              synonyms: ["encyclopedia", "compendium"]
+            }, "Encyclopaedia");
+            assert.deepEqual(airmail.synonyms, ["airpost"]);
+            assert.deepEqual(encyclopaedia.synonyms, ["compendium"]);
+          });
+
+          test("legacy cache without an explicit synonyms array is not reused as a completed review", () => {'''
+          if marker not in text:
+            raise SystemExit("deepseek test insertion marker not found")
+          text = text.replace(marker, addition, 1)
+          text = text.replace('  assert.match(prompt, /Echo input_id exactly/);', '  assert.match(prompt, /Echo input_id exactly/);\n  assert.match(prompt, /capitalization\\/spacing\\/hyphen\\/apostrophe variants/i);\n  assert.match(prompt, /British\\/American spelling variants/i);', 1)
+          Path(deepseek_test).write_text(text, encoding="utf-8")
+          PY
+      - name: Run targeted regression tests
+        run: node --test app/lib/vocab/__tests__/word-flashcard-session.test.mjs app/lib/vocab/__tests__/deepseek-word-profile.test.mjs
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app public
+          git commit -m "fix: exclude headword spelling variants from reading synonyms"
+          git push origin HEAD:fix/reading-synonym-self-variants

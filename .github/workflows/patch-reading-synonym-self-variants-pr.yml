@@ -25,8 +25,11 @@ jobs:
         with:
           node-version: 20
       - name: Execute the reviewed patch script
+        id: apply_patch
+        continue-on-error: true
         run: |
-          python - <<'PY'
+          set -o pipefail
+          python - <<'PY' 2>&1 | tee /tmp/reading-synonym-patch.log
           from pathlib import Path
           workflow = Path('.github/workflows/patch-reading-synonym-self-variants.yml').read_text(encoding='utf-8')
           start = workflow.index("          python - <<'PY'\n") + len("          python - <<'PY'\n")
@@ -35,9 +38,17 @@ jobs:
           script = "\n".join(line[10:] if line.startswith("          ") else line for line in block.splitlines())
           exec(compile(script, 'reading-synonym-patch.py', 'exec'))
           PY
+      - name: Upload patch diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reading-synonym-patch-diagnostics
+          path: /tmp/reading-synonym-patch.log
       - name: Run targeted regression tests
+        if: steps.apply_patch.outcome == 'success'
         run: node --test app/lib/vocab/__tests__/word-flashcard-session.test.mjs app/lib/vocab/__tests__/deepseek-word-profile.test.mjs
       - name: Commit patch
+        if: steps.apply_patch.outcome == 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

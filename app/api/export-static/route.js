@@ -298,14 +298,14 @@ const STATIC_INDEX_HTML = `<!doctype html>
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>主词库刷词</strong><span>专注学习</span></div>
     <nav class="static-brand-nav" aria-label="主要学习模式">
-      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./ielts-538.html">538考点</a><a href="./reading-words.html">阅读生词本</a>
+      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./ielts-538.html">538考点</a><a href="./reading-paraphrases.html">阅读同义替换</a><a href="./reading-words.html">阅读生词本</a>
     </nav>
   </header>
   <aside class="static-shell-sidebar" aria-label="学习导航">
     <nav><a class="active" href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav>
     <div class="static-shell-divider"></div>
     <span class="static-shell-label">专项学习</span>
-    <nav><a href="./ielts-538.html">538考点</a><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./reading-words.html">阅读生词本</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
+    <nav><a href="./ielts-538.html">538考点</a><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./reading-paraphrases.html">阅读同义替换</a><a href="./reading-words.html">阅读生词本</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
     <nav class="static-shell-bottom"><a href="./index.html">设置</a></nav>
   </aside>
   <main class="app">
@@ -3234,6 +3234,7 @@ const SHELL=[
   "./basic.html",
   "./meaning.html",
   "./reading-g.html",
+  "./reading-paraphrases.html",
   "./reading-words.html",
   "./ielts-538.html",
   "./assets/style.css?v=${STATIC_EXPORT_VERSION}",
@@ -3243,6 +3244,8 @@ const SHELL=[
   "./assets/basic.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/meaning-static.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-g.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/reading-paraphrases.css?v=${STATIC_EXPORT_VERSION}",
+  "./assets/reading-paraphrases.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-words.css?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-words.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/ielts-538.js?v=${STATIC_EXPORT_VERSION}",
@@ -3296,7 +3299,7 @@ self.addEventListener("fetch",function(event){
     return;
   }
 
-  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
+  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-paraphrases.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
     event.respondWith(
       fetch(req).then(function(res){
         if(res&&res.ok) caches.open(CACHE_NAME).then(function(cache){cache.put(req,res.clone()).catch(function(){})});
@@ -3458,6 +3461,10 @@ function buildExport(words, audioIndex, options = {}) {
       data: readFileSync(publicAssetPath("reading-g.html"), "utf-8")
     },
     {
+      name: "reading-paraphrases.html",
+      data: readFileSync(publicAssetPath("reading-paraphrases.html"), "utf-8")
+    },
+    {
       name: "reading-words.html",
       data: readFileSync(publicAssetPath("reading-words.html"), "utf-8")
     },
@@ -3484,6 +3491,14 @@ function buildExport(words, audioIndex, options = {}) {
     {
       name: "assets/reading-g.js",
       data: readFileSync(publicAssetPath("assets", "reading-g.js"), "utf-8")
+    },
+    {
+      name: "assets/reading-paraphrases.css",
+      data: readFileSync(publicAssetPath("assets", "reading-paraphrases.css"), "utf-8")
+    },
+    {
+      name: "assets/reading-paraphrases.js",
+      data: readFileSync(publicAssetPath("assets", "reading-paraphrases.js"), "utf-8")
     },
     {
       name: "assets/reading-words.css",
@@ -3603,6 +3618,7 @@ function buildExport(words, audioIndex, options = {}) {
 index.html          主词库刷单词入口
 basic.html          零基础单词（独立词库）
 reading-g.html      G类阅读提升（静态便携版：词义/短语/同义MCQ）
+reading-paraphrases.html  阅读同义替换记录本（导入、刷词和腾讯云进度同步）
 ielts-538.html      538考点（376词、Section、推荐标记和同义改写）
 meaning.html        看词选意思 · 核心6000
 spelling.html       独立拼写训练入口
@@ -3610,6 +3626,7 @@ assets/style.css    刷单词样式
 assets/app.js       刷单词逻辑
 assets/basic.js     零基础刷词逻辑
 assets/reading-g.js G类阅读提升（含同义MCQ）
+assets/reading-paraphrases.css/js 阅读同义替换记录本
 assets/ielts-538.js 538考点静态学习逻辑
 assets/meaning-static.js  选义训练逻辑
 assets/spelling.css 拼写训练样式

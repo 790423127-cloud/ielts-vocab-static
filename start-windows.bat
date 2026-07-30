@@ -15,34 +15,37 @@ if not exist node_modules\.bin\next.cmd (
   call npm.cmd install
 )
 
-set "PORT_PID="
-for /f "tokens=5" %%P in ('netstat -ano ^| findstr /R /C:":3000 .*LISTENING"') do (
-  set "PORT_PID=%%P"
-)
-
-if defined PORT_PID (
-  echo.
-  echo Port 3000 is already in use by process %PORT_PID%.
-  echo If the website is already open, choose O.
-  echo If Chrome is stuck on an old server, choose R to restart port 3000.
-  echo.
-  choice /C OR /M "Open existing site (O) or restart port 3000 (R)?"
-  if errorlevel 2 (
-    taskkill /PID %PORT_PID% /F
-    timeout /t 2 >nul
-  ) else (
-    start "" %APP_URL%
-    pause
-    exit /b 0
-  )
-)
-
 set "NEED_BUILD=0"
 if not exist ".next\BUILD_ID" set "NEED_BUILD=1"
 if exist ".next\BUILD_ID" (
   for /f %%B in ('powershell.exe -NoProfile -Command "$build=(Get-Item '.next\BUILD_ID').LastWriteTimeUtc; $paths=@('app','public','package.json','next.config.mjs','middleware.js'); $newer=Get-ChildItem -LiteralPath $paths -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTimeUtc -gt $build } | Select-Object -First 1; if($newer){'1'}else{'0'}"') do set "NEED_BUILD=%%B"
 )
 
+set "PORT_PID="
+for /f "tokens=5" %%P in ('netstat -ano ^| findstr /R /C:":3000 .*LISTENING"') do (
+  set "PORT_PID=%%P"
+)
+
+if defined PORT_PID (
+  if "%NEED_BUILD%"=="1" (
+    goto restart_existing
+  ) else (
+    if not exist ".next\.running-build-id" goto restart_existing
+    fc /b ".next\BUILD_ID" ".next\.running-build-id" >nul 2>nul
+    if errorlevel 1 goto restart_existing
+    start "" %APP_URL%
+    exit /b 0
+  )
+)
+
+goto prepare_build
+
+:restart_existing
+echo Website files or the production build changed. Restarting the local server automatically...
+taskkill /PID %PORT_PID% /F >nul 2>nul
+powershell.exe -NoProfile -Command "Start-Sleep -Seconds 1"
+
+:prepare_build
 if "%NEED_BUILD%"=="1" (
   echo.
   echo Website files changed. Building the fast production version...
@@ -58,6 +61,8 @@ if "%NEED_BUILD%"=="1" (
 echo.
 echo Starting fast production website...
 echo Open this in browser: %APP_URL%
+copy /y ".next\BUILD_ID" ".next\.running-build-id" >nul
 start "" %APP_URL%
 call npm.cmd start
+del /q ".next\.running-build-id" >nul 2>nul
 pause

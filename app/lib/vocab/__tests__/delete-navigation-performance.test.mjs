@@ -126,6 +126,41 @@ test("删除当前范围最后一个词时自然停在前一个词", () => {
   assert.equal(result.words[result.index].word, "a");
 });
 
+test("fixed difficulty queue keeps the same visible position after deleting its third word", () => {
+  const words = Array.from({ length: 3005 }, (_, index) => ({
+    id: `word-${index}`,
+    word: `word-${index}`,
+    difficulty: "中级核心"
+  }));
+  const orderedQueue = [
+    17,
+    29,
+    2500,
+    41,
+    53,
+    ...Array.from({ length: 3000 }, (_, index) => index)
+      .filter((index) => ![17, 29, 2500, 41, 53].includes(index))
+  ].map((originalIndex) => ({ ...words[originalIndex], originalIndex }));
+
+  const result = buildAtomicDeletionNavigation({
+    words,
+    currentIndex: 2500,
+    filter: { type: "difficulty", value: "中级核心" },
+    orderedQueue,
+    wordMatchesFilter: () => true,
+    normalizeWord
+  });
+
+  assert.equal(result.deletedCount, 1);
+  assert.equal(result.queuePosition, 2);
+  assert.equal(result.words[result.index].word, "word-41");
+  assert.equal(result.queueIndices[result.queuePosition], result.index);
+  assert.deepEqual(
+    result.queueIndices.slice(0, 4).map((index) => result.words[index].word),
+    ["word-17", "word-29", "word-41", "word-53"]
+  );
+});
+
 test("整理页删除后继续进入排序中的下一词", () => {
   const words = [
     { word: "fabrication", category: "IELTS Reading", topics: ["社会"] },
@@ -201,14 +236,21 @@ test("整理页删除按钮复用 Delete 快捷键的原子导航流程", () => 
   assert.doesNotMatch(source, /onClick=\{tidyReview\.onDelete\}/);
 });
 
-test("删除状态和筛选后继使用 flushSync 一次提交，避免绘制范围外单词", () => {
-  const source = readFileSync(
+test("删除状态、固定队列快照和后继位置由主页统一使用 flushSync 一次提交", () => {
+  const pageSource = readFileSync(
+    new URL("../../../page.jsx", import.meta.url),
+    "utf8"
+  );
+  const navigationSource = readFileSync(
     new URL("../../../hooks/useWordFlashNavigation.js", import.meta.url),
     "utf8"
   );
 
-  assert.match(source, /import \{ flushSync \} from "react-dom"/);
-  assert.match(source, /flushSync\(\(\) => \{/);
-  assert.match(source, /latest\.words = deletionNavigation\.words/);
-  assert.match(source, /setIndex\(deletionNavigation\.index\)/);
+  assert.match(pageSource, /import \{ flushSync \} from "react-dom"/);
+  assert.match(pageSource, /orderedQueue:\s*latest\.studyWords/);
+  assert.match(pageSource, /flushSync\(\(\) => \{/);
+  assert.match(pageSource, /latest\.words = deletionResult\.words/);
+  assert.match(pageSource, /createWordStudyOrderSnapshot\(/);
+  assert.doesNotMatch(navigationSource, /buildAtomicDeletionNavigation/);
+  assert.doesNotMatch(navigationSource, /flushSync/);
 });

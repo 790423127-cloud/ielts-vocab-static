@@ -8,6 +8,7 @@ import {
   orderStudyWordIndices,
   readWordStudyOrderCursors,
   readWordStudyOrderPreferences,
+  remapWordStudyOrderSnapshotsAfterDeletion,
   reconcileWordStudyOrderSnapshot,
   updateWordStudyOrderSnapshotCursor,
   writeWordStudyOrderCursors,
@@ -63,6 +64,22 @@ test("family order keeps explicit family members together", () => {
   assert.deepEqual(positions, [positions[0], positions[0] + 1, positions[0] + 2]);
 });
 
+test("family order joins members that share a root outside the active entry", () => {
+  const words = [
+    { word: "continuity", familyRoot: "continu" },
+    { word: "unrelated" },
+    { word: "continuous", familyRoot: "continu" }
+  ];
+  const ordered = orderStudyWordIndices([0, 1, 2], words, {
+    mode: WORD_STUDY_ORDER_MODE.FAMILY
+  });
+  const positions = [0, 2]
+    .map((index) => ordered.indexOf(index))
+    .sort((left, right) => left - right);
+
+  assert.deepEqual(positions, [positions[0], positions[0] + 1]);
+});
+
 test("association order joins expressions, synonyms and concrete scenes", () => {
   const ordered = orderStudyWordIndices(
     WORDS.map((_, index) => index),
@@ -77,6 +94,23 @@ test("association order joins expressions, synonyms and concrete scenes", () => 
     .sort((left, right) => left - right);
   assert.deepEqual(mailPositions, [mailPositions[0], mailPositions[0] + 1, mailPositions[0] + 2]);
   assert.deepEqual(vacancyPositions, [vacancyPositions[0], vacancyPositions[0] + 1, vacancyPositions[0] + 2]);
+});
+
+test("association order keeps explicit links together when difficulty is also active", () => {
+  const words = [
+    { word: "alpha", synonyms: [{ word: "beta" }], studyDifficultyScore: 10 },
+    { word: "unrelated", studyDifficultyScore: 50 },
+    { word: "beta", studyDifficultyScore: 90 }
+  ];
+  const ordered = orderStudyWordIndices([0, 1, 2], words, {
+    mode: WORD_STUDY_ORDER_MODE.ASSOCIATION,
+    difficultyMode: WORD_STUDY_DIFFICULTY_MODE.EASY_TO_HARD
+  });
+  const positions = [0, 2]
+    .map((index) => ordered.indexOf(index))
+    .sort((left, right) => left - right);
+
+  assert.deepEqual(positions, [positions[0], positions[0] + 1]);
 });
 
 test("difficulty order is relative inside one entry instead of sorting formal categories", () => {
@@ -217,6 +251,21 @@ test("fixed family and association snapshots keep their first generated order", 
   assert.equal(reconciled.changed, false);
 });
 
+test("fixed snapshots use compact indices instead of duplicating every stable id", () => {
+  const indices = WORDS.map((_, index) => index);
+  const snapshot = createWordStudyOrderSnapshot(indices, WORDS);
+  const legacySize = JSON.stringify({
+    version: 1,
+    keys: WORDS.map((word) => `word:${word.word}`),
+    cursorKey: `word:${WORDS[0].word}`
+  }).length;
+
+  assert.equal(snapshot.version, 2);
+  assert.deepEqual(snapshot.indices, indices);
+  assert.equal("keys" in snapshot, false);
+  assert.ok(JSON.stringify(snapshot).length < legacySize);
+});
+
 test("fixed snapshots resume their cursor and append newly eligible words", () => {
   const initialOrder = [5, 8, 2];
   const initial = createWordStudyOrderSnapshot(initialOrder, WORDS, {
@@ -235,7 +284,7 @@ test("fixed snapshots resume their cursor and append newly eligible words", () =
   assert.equal(reconciled.snapshot.cursorKey, "word:opening");
 });
 
-test("stable ids preserve a fixed order when physical indices move", () => {
+test("compact snapshots regenerate safely when the physical pool changes", () => {
   const initialPool = [
     { id: "word-a", word: "alpha" },
     { id: "word-b", word: "beta" }
@@ -253,5 +302,82 @@ test("stable ids preserve a fixed order when physical indices move", () => {
     { fallbackOrder: [0, 1, 2] }
   );
 
+  assert.deepEqual(reconciled.indices, [0, 1, 2]);
+  assert.equal(reconciled.changed, true);
+});
+
+test("compact snapshots preserve their first order when words are appended", () => {
+  const initialPool = [
+    { id: "word-a", word: "alpha" },
+    { id: "word-b", word: "beta" }
+  ];
+  const snapshot = createWordStudyOrderSnapshot([1, 0], initialPool);
+  const appendedPool = [
+    ...initialPool,
+    { id: "word-c", word: "gamma" }
+  ];
+  const reconciled = reconcileWordStudyOrderSnapshot(
+    snapshot,
+    [0, 1, 2],
+    appendedPool,
+    { fallbackOrder: [0, 1, 2] }
+  );
+
+  assert.deepEqual(reconciled.indices, [1, 0, 2]);
+  assert.equal(reconciled.changed, true);
+});
+
+test("deletion remaps every saved fixed order without regenerating its sequence", () => {
+  const previousPool = [
+    { id: "word-a", word: "alpha" },
+    { id: "word-b", word: "beta" },
+    { id: "word-c", word: "gamma" },
+    { id: "word-d", word: "delta" }
+  ];
+  const snapshots = {
+    "family|easy-to-hard": createWordStudyOrderSnapshot(
+      [2, 1, 3, 0],
+      previousPool,
+      { cursorIndex: 1 }
+    ),
+    "association|hard-to-easy": createWordStudyOrderSnapshot(
+      [3, 0, 2, 1],
+      previousPool,
+      { cursorIndex: 3 }
+    )
+  };
+  const nextPool = [previousPool[0], previousPool[2], previousPool[3]];
+  const remapped = remapWordStudyOrderSnapshotsAfterDeletion(
+    snapshots,
+    previousPool,
+    nextPool
+  );
+
+  assert.deepEqual(remapped["family|easy-to-hard"].indices, [1, 2, 0]);
+  assert.equal(remapped["family|easy-to-hard"].cursorKey, "id:word-c");
+  assert.deepEqual(remapped["association|hard-to-easy"].indices, [2, 0, 1]);
+  assert.equal(remapped["association|hard-to-easy"].cursorKey, "id:word-d");
+});
+
+test("legacy stable-id snapshots migrate without losing their previous order", () => {
+  const shiftedPool = [
+    { id: "word-new", word: "new" },
+    { id: "word-a", word: "alpha" },
+    { id: "word-b", word: "beta" }
+  ];
+  const legacySnapshot = {
+    version: 1,
+    keys: ["id:word-b", "id:word-a"],
+    cursorKey: "id:word-b"
+  };
+  const reconciled = reconcileWordStudyOrderSnapshot(
+    legacySnapshot,
+    [0, 1, 2],
+    shiftedPool,
+    { fallbackOrder: [0, 1, 2] }
+  );
+
   assert.deepEqual(reconciled.indices, [2, 1, 0]);
+  assert.equal(reconciled.cursorIndex, 2);
+  assert.equal(reconciled.snapshot.version, 2);
 });

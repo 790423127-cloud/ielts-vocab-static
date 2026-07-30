@@ -50,12 +50,17 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.doesNotMatch(entries.get("assets/app.js"), /createMediaElementSource/);
   assert.match(entries.get("assets/app.js"), /function previewWordForFilter/);
   assert.match(entries.get("assets/app.js"), /count<=0\)return ""/);
+  assert.match(entries.get("assets/app.js"), /function seekProgressPosition/);
+  assert.match(entries.get("assets/app.js"), /progressSeek\.oninput/);
+  assert.match(entries.get("assets/app.js"), /progressJumpForm\.onsubmit/);
   assert.doesNotMatch(entries.get("assets/app.js"), /saved\?words\.find/);
   assert.match(entries.get("assets/app.js"), /!\("ontouchstart" in window\)&&"PointerEvent" in window/);
   assert.doesNotMatch(entries.get("assets/app.js"), /pointer-touch-v3/);
   assert.match(entries.get("assets/style.css"), /static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y/);
   assert.match(entries.get("index.html"), new RegExp(STATIC_RESPONSIVE_VERSION));
   assert.match(entries.get("index.html"), /id="staticStudyCard"/);
+  assert.match(entries.get("index.html"), /id="progressSeek"/);
+  assert.match(entries.get("index.html"), /id="progressJumpInput"/);
   assert.match(entries.get("index.html"), /staticBuildVersion/);
   assert.match(entries.get("sw.js"), new RegExp(STATIC_RESPONSIVE_VERSION));
   assert.match(entries.get("sw.js"), /url\.pathname\.endsWith\("\/reading-words\.html"\)/);
@@ -72,6 +77,9 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
     "stored reading words must load only after synonym variants are initialized"
   );
   assert.match(entries.get("assets/reading-words.css"), /repeat\(6,minmax\(0,1fr\)\)/);
+  const tidyAudit = JSON.parse(entries.get("data/lexicon-tidy-audit.json"));
+  assert.equal(tidyAudit.version, 1);
+  assert.ok(Object.keys(tidyAudit.records || {}).length > 0);
   assert.match(entries.get("build-info.json"), new RegExp(STATIC_SWIPE_ENGINE));
   assert.match(entries.get("build-info.json"), /ielts-538/);
 });

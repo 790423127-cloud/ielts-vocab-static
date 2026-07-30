@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import {
   WORD_STUDY_ORDER_MODE,
   normalizeWordStudyOrderMode,
@@ -44,7 +44,7 @@ export function useWordStudyOrdering(orderKey) {
   const [preferences, setPreferences] = useState({});
   const [cursors, setCursors] = useState({});
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setPreferences(readBrowserPreferences());
     setCursors(readBrowserCursors());
   }, []);

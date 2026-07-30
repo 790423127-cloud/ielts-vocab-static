@@ -577,11 +577,11 @@ export function createLocalOps(ctx) {
     }
   }
 
-  function deleteCurrentWord() {
+  function deleteCurrentWord(preparedDeletion = null) {
     const latest = latestStateRef.current || {};
     if (isExternalIdictationItem || isIdictationFlashFilter(latest.filter || filter)) {
       setToast("爱听写独立入口来自表格，不从总词库删除。");
-      return;
+      return null;
     }
 
     const sourceWords = Array.isArray(latest.words) && latest.words.length ? latest.words : words;
@@ -590,14 +590,14 @@ export function createLocalOps(ctx) {
 
     if (!currentWord) {
       setToast("没有当前单词");
-      return;
+      return null;
     }
 
     const targetKey = normalizeWord(currentWord.word);
 
     if (!targetKey) {
       setToast("当前单词无效，无法删除");
-      return;
+      return null;
     }
 
     const sameCount = sourceWords.filter((word) => normalizeWord(word.word) === targetKey).length;
@@ -608,10 +608,17 @@ export function createLocalOps(ctx) {
       `删除后会立即保存；重新发布后手机端也会移除。`
     );
 
-    if (!ok) return;
+    if (!ok) return null;
 
-    const next = sourceWords.filter((word) => normalizeWord(word.word) !== targetKey);
-    const nextIndex = Math.min(targetIndex, Math.max(0, next.length - 1));
+    const canUsePreparedDeletion = preparedDeletion?.targetKey === targetKey
+      && Array.isArray(preparedDeletion.words)
+      && Number.isInteger(preparedDeletion.index);
+    const next = canUsePreparedDeletion
+      ? preparedDeletion.words
+      : sourceWords.filter((word) => normalizeWord(word.word) !== targetKey);
+    const nextIndex = canUsePreparedDeletion
+      ? preparedDeletion.index
+      : Math.min(targetIndex, Math.max(0, next.length - 1));
 
     recordLocalChange("删除当前单词", sourceWords, next);
     setWords(next);
@@ -619,6 +626,14 @@ export function createLocalOps(ctx) {
     persistConfirmedChange(next, sourceWords, "delete-current-word");
 
     setToast(`已彻底删除：${currentWord.word}（${sameCount} 条记录）｜已生成修改记录，可撤回`);
+    return {
+      ...(canUsePreparedDeletion ? preparedDeletion : {}),
+      deleted: true,
+      words: next,
+      index: nextIndex,
+      deletedCount: sameCount,
+      targetKey
+    };
   }
 
   return { recordLocalChange, undoLastLocalChange, clearLastLocalChangeLog, undoOneLocalChangeItem, applyLocalResult, localCleanWordList, localDedupeWords, localMergeWordForms, localOptimizeWordList, openEditCurrentWord, updateEditDraft, saveEditCurrentWord, localCleanCurrentTtsSymbols, localScanTtsSymbols, localCleanTtsSymbols, localRepairTruncatedHeadwords, clearWrongAiRepairFlags, localScanObscureDerivedWords, localScanAndRepairWrongWords, deleteCurrentWord };

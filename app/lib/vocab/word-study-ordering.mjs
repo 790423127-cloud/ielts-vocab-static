@@ -36,14 +36,19 @@ export const WORD_STUDY_RELATION_MODES = Object.freeze(
 
 export const WORD_STUDY_ORDER_STORAGE_KEY = "ielts_vocab_word_order_modes_v1";
 export const WORD_STUDY_ORDER_CURSOR_STORAGE_KEY = "ielts_vocab_word_order_cursors_v1";
-export const WORD_STUDY_ORDER_SNAPSHOT_VERSION = 1;
+export const WORD_STUDY_ORDER_SNAPSHOT_VERSION = 2;
 
 const TOKEN_STOP_WORDS = new Set([
   "a", "an", "and", "as", "at", "be", "by", "for", "from", "in", "into",
   "of", "on", "or", "the", "to", "with", "about", "after", "before", "during",
+  "ability", "area", "change", "common", "different", "example", "form",
+  "general", "important", "include", "kind", "level", "main", "make", "made",
+  "means", "part", "place", "process", "provide", "result", "set", "state",
+  "type", "way",
   "related", "service", "services", "someone", "something", "system", "systems",
   "thing", "things", "people", "person", "use", "used", "using", "work", "working"
 ]);
+const SNAPSHOT_POOL_SIGNATURE_CACHE = new WeakMap();
 
 const SCENE_RULES = [
   ["求职招聘", /求职|招聘|职业|雇佣|工资|薪水|面试|简历|job (?:vacancy|position)|career|employ|recruit|vacancy|salary|interview|resume|occupation/i, /求职|招聘|employment/i],
@@ -123,6 +128,49 @@ function deterministicHash(value) {
   return hash >>> 0;
 }
 
+function snapshotSourceSignature(pool, idictation, sourceCount = null) {
+  const list = Array.isArray(pool) ? pool : [];
+  const resolvedSourceCount = Number.isInteger(sourceCount)
+    ? Math.max(0, Math.min(sourceCount, list.length))
+    : list.length;
+  const source = resolvedSourceCount === list.length
+    ? list
+    : list.slice(0, resolvedSourceCount);
+  const cacheKey = idictation ? "idictation" : "standard";
+  const cached = resolvedSourceCount === list.length
+    ? SNAPSHOT_POOL_SIGNATURE_CACHE.get(list)?.[cacheKey]
+    : "";
+  if (cached) return cached;
+
+  const poolIndices = source.map((word, poolIndex) => (
+    idictation && Number.isInteger(word?.originalIndex)
+      ? word.originalIndex
+      : poolIndex
+  ));
+  const entries = resolveIndexedWords(poolIndices, source, idictation)
+    .sort((left, right) => left.sourceIndex - right.sourceIndex);
+  let hash = 2166136261;
+
+  entries.forEach((entry) => {
+    const value = `${entry.sourceIndex}:${wordStudyOrderEntryKey(
+      entry.word,
+      entry.sourceIndex,
+      { idictation }
+    )}|`;
+    for (let index = 0; index < value.length; index += 1) {
+      hash ^= value.charCodeAt(index);
+      hash = Math.imul(hash, 16777619);
+    }
+  });
+
+  const signature = `${entries.length}:${(hash >>> 0).toString(36)}`;
+  if (resolvedSourceCount === list.length) {
+    const previous = SNAPSHOT_POOL_SIGNATURE_CACHE.get(list) || {};
+    SNAPSHOT_POOL_SIGNATURE_CACHE.set(list, { ...previous, [cacheKey]: signature });
+  }
+  return signature;
+}
+
 function resolveIndexedWords(indices, pool, idictation) {
   const list = Array.isArray(pool) ? pool : [];
   const byIndex = new Map();
@@ -169,16 +217,19 @@ function createUnionFind(size) {
 
 function groupConnectedEntries(entries, linkResolver) {
   const keyToPosition = new Map();
-  entries.forEach((entry, position) => {
-    const key = normalizeKey(entry.word?.word);
-    if (key && !keyToPosition.has(key)) keyToPosition.set(key, position);
-  });
-
   const unionFind = createUnionFind(entries.length);
   entries.forEach((entry, position) => {
-    linkResolver(entry.word).forEach((linkedKey) => {
-      const linkedPosition = keyToPosition.get(linkedKey);
-      if (Number.isInteger(linkedPosition)) unionFind.union(position, linkedPosition);
+    const keys = new Set([
+      normalizeKey(entry.word?.word),
+      ...linkResolver(entry.word)
+    ].filter(Boolean));
+    keys.forEach((key) => {
+      const linkedPosition = keyToPosition.get(key);
+      if (Number.isInteger(linkedPosition)) {
+        unionFind.union(position, linkedPosition);
+      } else {
+        keyToPosition.set(key, position);
+      }
     });
   });
 
@@ -324,7 +375,7 @@ function orderSceneEntries(entries) {
     });
 
     const strongest = [...scores.entries()]
-      .filter(([, score]) => score >= 32)
+      .filter(([, score]) => score >= 96)
       .sort((left, right) => right[1] - left[1]
         || profiles[left[0]].entry.order - profiles[right[0]].entry.order)[0];
     currentPosition = strongest?.[0] ?? Math.min(...remaining);
@@ -341,7 +392,7 @@ function buildAssociationGroups(entries) {
   for (const component of components) {
     const scene = component.map((entry) => sceneKeyForWord(entry.word)).find(Boolean);
     if (!scene) {
-      standalone.push(...component);
+      standalone.push(component);
       continue;
     }
     if (!sceneBuckets.has(scene)) sceneBuckets.set(scene, []);
@@ -351,7 +402,7 @@ function buildAssociationGroups(entries) {
   return [...sceneBuckets.values()]
     .sort((left, right) => groupSortValue(left) - groupSortValue(right))
     .map(orderSceneEntries)
-    .concat(standalone.map((entry) => [entry]));
+    .concat(standalone.sort((left, right) => groupSortValue(left) - groupSortValue(right)));
 }
 
 export function normalizeWordStudyOrderMode(value) {
@@ -496,7 +547,7 @@ export function createWordStudyOrderSnapshot(orderedIndices, pool, {
   cursorIndex = null
 } = {}) {
   const byIndex = wordBySourceIndex(pool, idictation);
-  const keys = [];
+  const indices = [];
   const seen = new Set();
 
   (Array.isArray(orderedIndices) ? orderedIndices : []).forEach((sourceIndex) => {
@@ -505,18 +556,26 @@ export function createWordStudyOrderSnapshot(orderedIndices, pool, {
     const key = wordStudyOrderEntryKey(word, sourceIndex, { idictation });
     if (!key || seen.has(key)) return;
     seen.add(key);
-    keys.push(key);
+    indices.push(sourceIndex);
   });
 
   const cursorWord = byIndex.get(cursorIndex);
   const cursorKey = cursorWord
     ? wordStudyOrderEntryKey(cursorWord, cursorIndex, { idictation })
-    : keys[0] || "";
+    : indices.length
+      ? wordStudyOrderEntryKey(byIndex.get(indices[0]), indices[0], { idictation })
+      : "";
 
   return {
     version: WORD_STUDY_ORDER_SNAPSHOT_VERSION,
-    keys,
-    cursorKey: keys.includes(cursorKey) ? cursorKey : keys[0] || ""
+    indices,
+    sourceCount: Array.isArray(pool) ? pool.length : 0,
+    sourceSignature: snapshotSourceSignature(pool, idictation),
+    cursorKey: seen.has(cursorKey)
+      ? cursorKey
+      : indices.length
+        ? wordStudyOrderEntryKey(byIndex.get(indices[0]), indices[0], { idictation })
+        : ""
   };
 }
 
@@ -531,47 +590,81 @@ export function reconcileWordStudyOrderSnapshot(
 ) {
   const byIndex = wordBySourceIndex(pool, idictation);
   const eligibleByKey = new Map();
+  const eligibleIndices = new Set();
 
   (Array.isArray(currentIndices) ? currentIndices : []).forEach((sourceIndex) => {
     const word = byIndex.get(sourceIndex);
     if (!word) return;
     const key = wordStudyOrderEntryKey(word, sourceIndex, { idictation });
-    if (key && !eligibleByKey.has(key)) eligibleByKey.set(key, sourceIndex);
+    if (key && !eligibleByKey.has(key)) {
+      eligibleByKey.set(key, sourceIndex);
+      eligibleIndices.add(sourceIndex);
+    }
   });
 
-  const keys = [];
-  const seen = new Set();
-  const appendKey = (key) => {
-    if (!key || seen.has(key) || !eligibleByKey.has(key)) return;
-    seen.add(key);
-    keys.push(key);
+  const indices = [];
+  const seenIndices = new Set();
+  const appendIndex = (sourceIndex) => {
+    if (
+      !Number.isInteger(sourceIndex)
+      || seenIndices.has(sourceIndex)
+      || !eligibleIndices.has(sourceIndex)
+    ) return;
+    seenIndices.add(sourceIndex);
+    indices.push(sourceIndex);
   };
 
-  (Array.isArray(snapshot?.keys) ? snapshot.keys : []).forEach(appendKey);
+  const currentSignature = snapshotSourceSignature(pool, idictation);
+  const snapshotSourceCount = Number(snapshot?.sourceCount);
+  const appendedPoolMatches = Number.isInteger(snapshotSourceCount)
+    && snapshotSourceCount >= 0
+    && snapshotSourceCount <= (Array.isArray(pool) ? pool.length : 0)
+    && snapshot?.sourceSignature === snapshotSourceSignature(
+      pool,
+      idictation,
+      snapshotSourceCount
+    );
+  const compactSnapshotMatches = Number(snapshot?.version) === WORD_STUDY_ORDER_SNAPSHOT_VERSION
+    && Array.isArray(snapshot?.indices)
+    && (
+      snapshot?.sourceSignature === currentSignature
+      || appendedPoolMatches
+    );
+
+  if (compactSnapshotMatches) {
+    snapshot.indices.forEach(appendIndex);
+  } else {
+    // Version 1 snapshots are migrated once by their stable word keys.
+    (Array.isArray(snapshot?.keys) ? snapshot.keys : []).forEach((key) => {
+      appendIndex(eligibleByKey.get(key));
+    });
+  }
+
   (Array.isArray(fallbackOrder) ? fallbackOrder : []).forEach((sourceIndex) => {
-    const word = byIndex.get(sourceIndex);
-    if (word) appendKey(wordStudyOrderEntryKey(word, sourceIndex, { idictation }));
+    appendIndex(sourceIndex);
   });
-  eligibleByKey.forEach((_, key) => appendKey(key));
+  (Array.isArray(currentIndices) ? currentIndices : []).forEach(appendIndex);
 
   const requestedCursorKey = String(snapshot?.cursorKey || "");
-  const cursorKey = keys.includes(requestedCursorKey)
-    ? requestedCursorKey
-    : keys[0] || "";
-  const nextSnapshot = {
-    version: WORD_STUDY_ORDER_SNAPSHOT_VERSION,
-    keys,
-    cursorKey
-  };
-  const previousKeys = Array.isArray(snapshot?.keys) ? snapshot.keys : [];
+  const requestedCursorIndex = eligibleByKey.get(requestedCursorKey);
+  const cursorIndex = seenIndices.has(requestedCursorIndex)
+    ? requestedCursorIndex
+    : indices[0];
+  const nextSnapshot = createWordStudyOrderSnapshot(indices, pool, {
+    idictation,
+    cursorIndex
+  });
+  const previousIndices = Array.isArray(snapshot?.indices) ? snapshot.indices : [];
   const changed = Number(snapshot?.version) !== WORD_STUDY_ORDER_SNAPSHOT_VERSION
-    || snapshot?.cursorKey !== cursorKey
-    || previousKeys.length !== keys.length
-    || previousKeys.some((key, index) => key !== keys[index]);
+    || snapshot?.sourceCount !== nextSnapshot.sourceCount
+    || snapshot?.sourceSignature !== nextSnapshot.sourceSignature
+    || snapshot?.cursorKey !== nextSnapshot.cursorKey
+    || previousIndices.length !== indices.length
+    || previousIndices.some((sourceIndex, index) => sourceIndex !== indices[index]);
 
   return {
-    indices: keys.map((key) => eligibleByKey.get(key)),
-    cursorIndex: eligibleByKey.get(cursorKey),
+    indices,
+    cursorIndex,
     snapshot: nextSnapshot,
     changed
   };
@@ -585,8 +678,65 @@ export function updateWordStudyOrderSnapshotCursor(
 ) {
   if (!snapshot || !word) return snapshot;
   const cursorKey = wordStudyOrderEntryKey(word, sourceIndex, { idictation });
-  if (!snapshot.keys?.includes(cursorKey) || snapshot.cursorKey === cursorKey) return snapshot;
+  const containsWord = Number(snapshot?.version) === WORD_STUDY_ORDER_SNAPSHOT_VERSION
+    ? snapshot.indices?.includes(sourceIndex)
+    : snapshot.keys?.includes(cursorKey);
+  if (!containsWord || snapshot.cursorKey === cursorKey) return snapshot;
   return { ...snapshot, cursorKey };
+}
+
+export function remapWordStudyOrderSnapshotsAfterDeletion(
+  snapshots,
+  previousPool,
+  nextPool,
+  { idictation = false } = {}
+) {
+  const previousByIndex = wordBySourceIndex(previousPool, idictation);
+  const nextByKey = new Map();
+
+  wordBySourceIndex(nextPool, idictation).forEach((word, sourceIndex) => {
+    const key = wordStudyOrderEntryKey(word, sourceIndex, { idictation });
+    if (key && !nextByKey.has(key)) nextByKey.set(key, sourceIndex);
+  });
+
+  return Object.fromEntries(
+    Object.entries(snapshots && typeof snapshots === "object" ? snapshots : {})
+      .map(([snapshotKey, snapshot]) => {
+        const orderedKeys = Number(snapshot?.version) === WORD_STUDY_ORDER_SNAPSHOT_VERSION
+          && Array.isArray(snapshot?.indices)
+          ? snapshot.indices.map((sourceIndex) => {
+            const word = previousByIndex.get(sourceIndex);
+            return word
+              ? wordStudyOrderEntryKey(word, sourceIndex, { idictation })
+              : "";
+          })
+          : Array.isArray(snapshot?.keys)
+            ? snapshot.keys
+            : [];
+        const indices = [];
+        const seen = new Set();
+
+        orderedKeys.forEach((key) => {
+          const sourceIndex = nextByKey.get(key);
+          if (!Number.isInteger(sourceIndex) || seen.has(sourceIndex)) return;
+          seen.add(sourceIndex);
+          indices.push(sourceIndex);
+        });
+
+        const requestedCursorIndex = nextByKey.get(String(snapshot?.cursorKey || ""));
+        const cursorIndex = seen.has(requestedCursorIndex)
+          ? requestedCursorIndex
+          : indices[0];
+
+        return [
+          snapshotKey,
+          createWordStudyOrderSnapshot(indices, nextPool, {
+            idictation,
+            cursorIndex
+          })
+        ];
+      })
+  );
 }
 
 export function readWordStudyOrderPreferences(storageGet) {

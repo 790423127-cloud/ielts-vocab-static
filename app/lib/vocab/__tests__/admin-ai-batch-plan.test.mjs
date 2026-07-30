@@ -131,8 +131,8 @@ test("quality lane summary explains required work separately from enrichment", (
     contentMissing: 2,
     contentInvalid: 0,
     classificationMissing: 1,
-    enrichmentThin: 4,
-    enrichmentStandard: 0,
+    enrichmentThin: 0,
+    enrichmentStandard: 4,
     enrichmentRich: 0,
     familyReview: 0,
     familyPromotion: 0,
@@ -199,8 +199,8 @@ test("one-by-one paid mode remains bounded for manual review", () => {
 });
 
 test("enrichment plan selects ready thin words, prioritizes favorites and excludes invalid queues", () => {
-  const thin = completeWord("thin");
-  const favorite = completeWord("favorite", { favorite: true });
+  const thin = completeWord("thin", { phraseCollocations: [] });
+  const favorite = completeWord("favorite", { favorite: true, phraseCollocations: [] });
   const rich = completeWord("rich", {
     collocations: Array.from({ length: 4 }, (_, index) => ({ phrase: `rich common ${index}`, chinese: `常见${index}` })),
     phraseCollocations: Array.from({ length: 4 }, (_, index) => ({ phrase: `rich phrase ${index}`, chinese: `短语${index}` }))

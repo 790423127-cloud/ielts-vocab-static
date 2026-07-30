@@ -9,6 +9,14 @@ import {
   WORD_STUDY_DIFFICULTY_MODES
 } from "../lib/vocab/word-internal-difficulty.mjs";
 
+function completeSelectAction(control) {
+  if (!control) return;
+  control.blur();
+  window.requestAnimationFrame(() => {
+    if (document.activeElement === control) control.blur();
+  });
+}
+
 export default function WordStudyOrderControls({
   mode,
   difficultyMode = WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
@@ -25,7 +33,12 @@ export default function WordStudyOrderControls({
       <select
         className="top-pill word-order-select"
         value={mode}
-        onChange={(event) => onModeChange?.(event.target.value)}
+        onChange={(event) => {
+          const nextMode = event.currentTarget.value;
+          const control = event.currentTarget;
+          onModeChange?.(nextMode);
+          completeSelectAction(control);
+        }}
         aria-label="排列关系"
         title="现有、随机、词族和场景关联排列"
       >
@@ -40,11 +53,16 @@ export default function WordStudyOrderControls({
           className={`top-pill word-difficulty-select${
             difficultyMode !== WORD_STUDY_DIFFICULTY_MODE.DEFAULT ? " is-active" : ""
           }`}
-          value={difficultyDisabled ? WORD_STUDY_DIFFICULTY_MODE.DEFAULT : difficultyMode}
-          onChange={(event) => onDifficultyModeChange?.(event.target.value)}
+          value={difficultyMode}
+          onChange={(event) => {
+            const nextMode = event.currentTarget.value;
+            const control = event.currentTarget;
+            onDifficultyModeChange?.(nextMode);
+            completeSelectAction(control);
+          }}
           aria-label="入口内部难度"
           title={random
-            ? "随机模式每次重新排列，不叠加难度"
+            ? "随机模式本轮暂时忽略难度；退出随机后恢复当前难度设置"
             : "只在当前词汇入口内部划分相对较易、常规和相对较难"}
           disabled={difficultyDisabled}
         >

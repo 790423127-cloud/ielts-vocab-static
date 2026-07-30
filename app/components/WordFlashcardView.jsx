@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Bookmark, Library, PanelRightOpen, Pause, Play, Search } from "lucide-react";
 import VirtualList from "./VirtualList";
 import VocabAdminToolsPanel from "./VocabAdminToolsPanel";
@@ -128,12 +128,21 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     prevWord,
     toggleFavorite,
     markStatus,
+    seekStudyPosition,
     tidyReview
   } = chrome;
 
   const relatedWords = useMemo(
     () => getRelatedWords(item, displayFamily, activeWordPool),
     [activeWordPool, displayFamily, item]
+  );
+  const handleStudyPositionCommit = useCallback((position) => {
+    setAutoScrollActive(false);
+    seekStudyPosition?.(position);
+  }, [seekStudyPosition]);
+  const getStudyPositionPreview = useCallback(
+    (position) => studyWords[position - 1]?.word || "",
+    [studyWords]
   );
 
   nextWordRef.current = nextWord;
@@ -314,7 +323,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
         <div className="filter-group">
           <div className="filter-title">爱听写频率</div>
           <div className="filter-chips">
-            {IDICTATION_FLASH_FILTERS.map((entry) => <button type="button" key={entry.value} className={`chip-btn ${filter.type === "idictation" && filter.value === entry.value ? "active" : ""}`} onClick={() => setLibraryFilter("idictation", entry.value)}>{entry.label}</button>)}
+            {IDICTATION_FLASH_FILTERS.map((entry) => <button type="button" key={entry.value} className={`chip-btn ${filter.type === "idictation" && filter.value === entry.value ? "active" : ""}`} onClick={() => setLibraryFilter("idictation", entry.value)}>{entry.title}</button>)}
           </div>
         </div>
 
@@ -381,6 +390,8 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             current={isStudyEmpty ? 0 : safeStudyPosition + 1}
             total={studyWords.length}
             percent={progressPercent}
+            onPositionCommit={handleStudyPositionCommit}
+            getPositionPreview={getStudyPositionPreview}
             actions={(
               <header className="topbar">
                 <WordStudyOrderControls

@@ -1,33 +1,9 @@
 // Auto-generated sense relation catalog for Meaning Mode — Phase 5.
 // Maps words to concept axes and values for semantic relationship classification.
-// Generated: 2026-07-10T11:29:14.930Z
+// Generated: 2026-07-30T11:01:45.652Z
 // DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-sense-relation-catalog.cjs
 
 export const SENSE_RELATION_CATALOG = [
-  {
-    "wordId": "word_5d80236c4600",
-    "word": "first",
-    "senseId": "word_5d80236c4600-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第一；首先",
-    "meaningDetailedZh": "第一；首先",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第一",
-      "一首",
-      "首先"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
   {
     "wordId": "word_0e57569bdb14",
     "word": "already",
@@ -774,10 +750,7 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "财务",
-      "务的",
-      "的金",
-      "金融",
-      "融的"
+      "务的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -1061,7 +1034,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_f80db021e422-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "支持；资助",
-    "meaningDetailedZh": "支持；资助",
+    "meaningDetailedZh": "支持；资助；支撑；供养或维持",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -1069,7 +1042,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "支持",
       "持资",
-      "资助"
+      "资助",
+      "助支",
+      "支撑",
+      "撑供"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -1429,7 +1405,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_e9dc7d0e34f5-sense-1",
     "posFamily": "adjective",
     "quizMeaningZh": "当前的；流通的",
-    "meaningDetailedZh": "当前的；流通的",
+    "meaningDetailedZh": "当前的；通行的；水流；洋流；电流",
     "conceptAxis": "temporal-position",
     "conceptValue": "present",
     "relationFamily": "time-and-temporality",
@@ -1437,9 +1413,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "当前",
       "前的",
-      "的流",
-      "流通",
-      "通的"
+      "的通",
+      "通行",
+      "行的",
+      "的水"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -2007,33 +1984,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_10517687ee0c",
-    "word": "all",
-    "senseId": "word_10517687ee0c-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "所有的；全部的",
-    "meaningDetailedZh": "所有的；全部的",
-    "conceptAxis": "completeness",
-    "conceptValue": "complete",
-    "relationFamily": "completeness-and-extent",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "所有",
-      "有的",
-      "的全",
-      "全部",
-      "部的"
-    ],
-    "allowedDistractorRelations": [
-      "same-axis-different-value",
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "keyword-mapped"
-    ],
-    "confidence": "medium"
-  },
-  {
     "wordId": "word_52b43951bc72",
     "word": "forward",
     "senseId": "word_52b43951bc72-sense-1",
@@ -2182,29 +2132,6 @@ export const SENSE_RELATION_CATALOG = [
       "auto-derived"
     ],
     "confidence": "low"
-  },
-  {
-    "wordId": "word_3bbc9ad96500",
-    "word": "ago",
-    "senseId": "word_3bbc9ad96500-sense-1",
-    "posFamily": "adverb",
-    "quizMeaningZh": "以前",
-    "meaningDetailedZh": "以前",
-    "conceptAxis": "temporal-position",
-    "conceptValue": "past",
-    "relationFamily": "time-and-temporality",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "以前"
-    ],
-    "allowedDistractorRelations": [
-      "same-axis-different-value",
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "keyword-mapped"
-    ],
-    "confidence": "medium"
   },
   {
     "wordId": "word_3ac8dc635361",
@@ -2672,37 +2599,12 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_61ccad19a5e4",
-    "word": "end",
-    "senseId": "word_61ccad19a5e4-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "结束，终点；结束",
-    "meaningDetailedZh": "结束，终点；结束",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "结束",
-      "束终",
-      "终点",
-      "点结"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_b76462c94795",
     "word": "record",
     "senseId": "word_b76462c94795-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "记录；录制",
-    "meaningDetailedZh": "记录；录制",
+    "meaningDetailedZh": "记录；录制；首次记载或记录实例",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -2710,7 +2612,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "记录",
       "录录",
-      "录制"
+      "录制",
+      "制首",
+      "首次",
+      "次记"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -3495,30 +3400,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_f733f54ac445",
-    "word": "cost",
-    "senseId": "word_f733f54ac445-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "成本；花费",
-    "meaningDetailedZh": "成本；花费",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "成本",
-      "本花",
-      "花费"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_189428343e7e",
     "word": "visit",
     "senseId": "word_189428343e7e-sense-1",
@@ -4094,7 +3975,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_b222f95aedc4-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "股票；库存；储备",
-    "meaningDetailedZh": "股票；库存；储备",
+    "meaningDetailedZh": "股票；库存；储备；（鱼类等的）种群或资源量",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -4104,7 +3985,8 @@ export const SENSE_RELATION_CATALOG = [
       "票库",
       "库存",
       "存储",
-      "储备"
+      "储备",
+      "备鱼"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -4138,30 +4020,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_877889fd9050",
-    "word": "baby",
-    "senseId": "word_877889fd9050-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "婴儿；宝宝",
-    "meaningDetailedZh": "婴儿；宝宝",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "婴儿",
-      "儿宝",
-      "宝宝"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_cfce50304f85",
@@ -4254,29 +4112,6 @@ export const SENSE_RELATION_CATALOG = [
       "努力",
       "力尽",
       "尽力"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_3abde6132f9d",
-    "word": "useful",
-    "senseId": "word_3abde6132f9d-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "有用的",
-    "meaningDetailedZh": "有用的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "有用",
-      "用的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -4990,30 +4825,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "medium"
   },
   {
-    "wordId": "word_a3e1c7a7b80f",
-    "word": "hit",
-    "senseId": "word_a3e1c7a7b80f-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "打；击；碰撞",
-    "meaningDetailedZh": "打；击；碰撞",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "打击",
-      "击碰",
-      "碰撞"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_008a4e96940e",
     "word": "safety",
     "senseId": "word_008a4e96940e-sense-1",
@@ -5175,31 +4986,6 @@ export const SENSE_RELATION_CATALOG = [
       "操作",
       "作运",
       "运营"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_dc2180fcdb13",
-    "word": "class",
-    "senseId": "word_dc2180fcdb13-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "班级；课；阶级",
-    "meaningDetailedZh": "班级；课；阶级",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "班级",
-      "级课",
-      "课阶",
-      "阶级"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -5573,32 +5359,6 @@ export const SENSE_RELATION_CATALOG = [
       "控制",
       "制管",
       "管理"
-    ],
-    "allowedDistractorRelations": [
-      "same-axis-different-value",
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "keyword-mapped"
-    ],
-    "confidence": "medium"
-  },
-  {
-    "wordId": "word_d4547b06cc4a",
-    "word": "guy",
-    "senseId": "word_d4547b06cc4a-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "家伙，小伙子",
-    "meaningDetailedZh": "家伙，小伙子",
-    "conceptAxis": "size-scale",
-    "conceptValue": "small",
-    "relationFamily": "size-and-scale",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "家伙",
-      "伙小",
-      "小伙",
-      "伙子"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -6358,32 +6118,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_96fdd1f0e20d",
-    "word": "date",
-    "senseId": "word_96fdd1f0e20d-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "日期；约会；定日期",
-    "meaningDetailedZh": "日期；约会；定日期",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "日期",
-      "期约",
-      "约会",
-      "会定",
-      "定日"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_6ffe86e71a91",
     "word": "village",
     "senseId": "word_6ffe86e71a91-sense-1",
@@ -6687,29 +6421,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "选择"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_6546fd94944e",
-    "word": "why",
-    "senseId": "word_6546fd94944e-sense-1",
-    "posFamily": "adverb",
-    "quizMeaningZh": "为什么",
-    "meaningDetailedZh": "为什么",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "为什",
-      "什么"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -7061,32 +6772,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "medium"
   },
   {
-    "wordId": "word_ce446bdcf172",
-    "word": "fun",
-    "senseId": "word_ce446bdcf172-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "乐趣；有趣的事",
-    "meaningDetailedZh": "乐趣；有趣的事",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "乐趣",
-      "趣有",
-      "有趣",
-      "趣的",
-      "的事"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_807b072bea7b",
     "word": "overall",
     "senseId": "word_807b072bea7b-sense-1",
@@ -7200,14 +6885,16 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_17880057f259-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "表面；浮现",
-    "meaningDetailedZh": "表面；浮现",
+    "meaningDetailedZh": "表面；地表；浮现",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
       "表面",
-      "面浮",
+      "面地",
+      "地表",
+      "表浮",
       "浮现"
     ],
     "allowedDistractorRelations": [
@@ -7256,28 +6943,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "计划"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_64e11a5497fc",
-    "word": "add",
-    "senseId": "word_64e11a5497fc-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "添加",
-    "meaningDetailedZh": "添加",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "添加"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -7608,9 +7273,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "机构",
-      "构制",
-      "制度"
+      "机构"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -7656,12 +7319,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "贡献",
-      "献捐",
-      "捐款",
-      "款促",
-      "促成",
-      "成因"
+      "贡献"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -7947,9 +7605,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "奖励",
-      "励回",
-      "回报"
+      "奖励"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -8508,29 +8164,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "故意",
       "意地"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_2880e7f7ca7e",
-    "word": "cool",
-    "senseId": "word_2880e7f7ca7e-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "凉爽；酷",
-    "meaningDetailedZh": "凉爽；酷",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "凉爽",
-      "爽酷"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -9514,30 +9147,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "最终"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_56fe2c5453ac",
-    "word": "job",
-    "senseId": "word_56fe2c5453ac-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "工作；职位",
-    "meaningDetailedZh": "工作；职位",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "工作",
-      "作职",
-      "职位"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -10626,7 +10235,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_4f2e582a99ae-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "计划；方案；阴谋",
-    "meaningDetailedZh": "计划；方案；阴谋",
+    "meaningDetailedZh": "计划；方案；制度；机制；阴谋",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -10635,8 +10244,9 @@ export const SENSE_RELATION_CATALOG = [
       "计划",
       "划方",
       "方案",
-      "案阴",
-      "阴谋"
+      "案制",
+      "制度",
+      "度机"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -10747,17 +10357,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_77f66e6487c8-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "收费；充电；指控",
-    "meaningDetailedZh": "收费；充电；指控",
+    "meaningDetailedZh": "收费；费用；充电；指控",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
       "收费",
-      "费充",
+      "费费",
+      "费用",
+      "用充",
       "充电",
-      "电指",
-      "指控"
+      "电指"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -11685,7 +11296,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_15a61b86aa0d-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "科目；主题",
-    "meaningDetailedZh": "科目；主题",
+    "meaningDetailedZh": "科目；主题；研究对象；受……影响或约束",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -11693,7 +11304,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "科目",
       "目主",
-      "主题"
+      "主题",
+      "题研",
+      "研究",
+      "究对"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -11975,7 +11589,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_a5a31e626779-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "代理人；中介",
-    "meaningDetailedZh": "代理人；中介",
+    "meaningDetailedZh": "代理人；中介；造成变化的因素或致病因子",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -11984,7 +11598,9 @@ export const SENSE_RELATION_CATALOG = [
       "代理",
       "理人",
       "人中",
-      "中介"
+      "中介",
+      "介作",
+      "作用"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -12185,31 +11801,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_7745ef79a072",
-    "word": "club",
-    "senseId": "word_7745ef79a072-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "俱乐部；社团",
-    "meaningDetailedZh": "俱乐部；社团",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "俱乐",
-      "乐部",
-      "部社",
-      "社团"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_55c0451c2079",
     "word": "completely",
     "senseId": "word_55c0451c2079-sense-1",
@@ -12312,7 +11903,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_3ecec9645440-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "练习，实践",
-    "meaningDetailedZh": "练习，实践",
+    "meaningDetailedZh": "练习；实践；惯例",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -12320,7 +11911,9 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "练习",
       "习实",
-      "实践"
+      "实践",
+      "践惯",
+      "惯例"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -12432,7 +12025,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_94da7c98af6b-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "范围；山脉",
-    "meaningDetailedZh": "范围；山脉",
+    "meaningDetailedZh": "范围；山脉；服务或设备的覆盖范围",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -12440,7 +12033,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "范围",
       "围山",
-      "山脉"
+      "山脉",
+      "脉覆",
+      "覆盖",
+      "盖范"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -13104,28 +12700,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "high"
   },
   {
-    "wordId": "word_5cf9dbc99582",
-    "word": "art",
-    "senseId": "word_5cf9dbc99582-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "艺术",
-    "meaningDetailedZh": "艺术",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "艺术"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_57eaba8d957d",
     "word": "article",
     "senseId": "word_57eaba8d957d-sense-1",
@@ -13324,7 +12898,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_b4d6446b72e7-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "声称；要求；索赔",
-    "meaningDetailedZh": "声称；要求；索赔",
+    "meaningDetailedZh": "声称；要求；索赔；正式申领福利、退款或款项",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -13334,7 +12908,8 @@ export const SENSE_RELATION_CATALOG = [
       "称要",
       "要求",
       "求索",
-      "索赔"
+      "索赔",
+      "赔申"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -13440,28 +13015,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_3a5021b463df",
-    "word": "hair",
-    "senseId": "word_3a5021b463df-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "头发",
-    "meaningDetailedZh": "头发",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "头发"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_d752452aeb23",
@@ -16077,26 +15630,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_8e12102ca4bc",
-    "word": "ball",
-    "senseId": "word_8e12102ca4bc-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "球",
-    "meaningDetailedZh": "球",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_0a7c5b5fc720",
     "word": "structure",
     "senseId": "word_0a7c5b5fc720-sense-1",
@@ -16241,28 +15774,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_7f7f08be5364",
-    "word": "fourth",
-    "senseId": "word_7f7f08be5364-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第四",
-    "meaningDetailedZh": "第四",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第四"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_e75e45a2b87d",
@@ -16558,29 +16069,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_c1dca7cfb5a0",
-    "word": "brown",
-    "senseId": "word_c1dca7cfb5a0-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "棕色的",
-    "meaningDetailedZh": "棕色的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "棕色",
-      "色的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_9b8dc7d13cf2",
@@ -17150,11 +16638,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "social-and-relational",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "独立",
-      "立自",
-      "自主",
-      "主自",
-      "自立"
+      "独立"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -17507,30 +16991,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_4c8a3142b573",
-    "word": "copy",
-    "senseId": "word_4c8a3142b573-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "副本；复制",
-    "meaningDetailedZh": "副本；复制",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "副本",
-      "本复",
-      "复制"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_601abda828b0",
     "word": "journal",
     "senseId": "word_601abda828b0-sense-1",
@@ -17685,29 +17145,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "肩膀"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_3080db0651e0",
-    "word": "second",
-    "senseId": "word_3080db0651e0-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第二；秒",
-    "meaningDetailedZh": "第二；秒",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第二",
-      "二秒"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -18003,7 +17440,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_c6b0999819b0-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "账单；法案",
-    "meaningDetailedZh": "账单；法案",
+    "meaningDetailedZh": "账单；法案；把……宣传或描述为",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -18011,7 +17448,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "账单",
       "单法",
-      "法案"
+      "法案",
+      "案把",
+      "把…",
+      "……"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -18079,12 +17519,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "维护",
-      "护保",
-      "保养",
-      "养维",
-      "维持",
-      "持赡"
+      "维护"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -18336,28 +17771,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_46e2662e18e4",
-    "word": "hide",
-    "senseId": "word_46e2662e18e4-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "隐藏",
-    "meaningDetailedZh": "隐藏",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "隐藏"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_231aebd35dff",
@@ -18821,28 +18234,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_b1b170a70024",
-    "word": "beach",
-    "senseId": "word_b1b170a70024-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "海滩",
-    "meaningDetailedZh": "海滩",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "海滩"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_fc7f824f8972",
     "word": "impact",
     "senseId": "word_fc7f824f8972-sense-1",
@@ -18953,9 +18344,7 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "金融",
       "融财",
-      "财政",
-      "政资",
-      "资金"
+      "财政"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -20107,29 +19496,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_bf55677c35aa",
-    "word": "foot",
-    "senseId": "word_bf55677c35aa-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "脚；英尺",
-    "meaningDetailedZh": "脚；英尺",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "脚英",
-      "英尺"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_2d60798e8481",
     "word": "occur",
     "senseId": "word_2d60798e8481-sense-1",
@@ -20183,25 +19549,27 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_07be46774f04-sense-1",
     "posFamily": "adjective",
     "quizMeaningZh": "适度的；温和的",
-    "meaningDetailedZh": "适度的；温和的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
+    "meaningDetailedZh": "适度的；中等的；缓和；调节",
+    "conceptAxis": "quality-grade",
+    "conceptValue": "mediocre",
+    "relationFamily": "quality-and-grade",
     "synonymKeys": [],
     "ambiguityKeys": [
       "适度",
       "度的",
-      "的温",
-      "温和",
-      "和的"
+      "的中",
+      "中等",
+      "等的",
+      "的缓"
     ],
     "allowedDistractorRelations": [
+      "same-axis-different-value",
       "adjacent-contrast"
     ],
     "sourceEvidence": [
-      "auto-derived"
+      "keyword-mapped"
     ],
-    "confidence": "low"
+    "confidence": "medium"
   },
   {
     "wordId": "word_56468c0e4160",
@@ -20856,9 +20224,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "完成",
-      "成结",
-      "结束"
+      "完成"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -20898,22 +20264,27 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_153e97c56c88-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "人；结束",
-    "meaningDetailedZh": "人；结束",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
+    "meaningDetailedZh": "方法；手段；财富；意思是（mean 的第三人称单数）",
+    "conceptAxis": "economic-value",
+    "conceptValue": "expensive",
+    "relationFamily": "economic-and-value",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "人结",
-      "结束"
+      "方法",
+      "法手",
+      "手段",
+      "段财",
+      "财富",
+      "富意"
     ],
     "allowedDistractorRelations": [
+      "same-axis-different-value",
       "adjacent-contrast"
     ],
     "sourceEvidence": [
-      "auto-derived"
+      "keyword-mapped"
     ],
-    "confidence": "low"
+    "confidence": "medium"
   },
   {
     "wordId": "word_f571103cc1de",
@@ -21036,7 +20407,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_411b17a0c49e-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "主人；主持人",
-    "meaningDetailedZh": "主人；主持人",
+    "meaningDetailedZh": "主人；主持人；宿主或寄主",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -21045,7 +20416,9 @@ export const SENSE_RELATION_CATALOG = [
       "主人",
       "人主",
       "主持",
-      "持人"
+      "持人",
+      "人宿",
+      "宿主"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -21145,7 +20518,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "透明",
-      "明透",
       "明度"
     ],
     "allowedDistractorRelations": [
@@ -21738,8 +21110,11 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
+      "冲奔",
+      "奔匆",
       "匆忙",
-      "忙冲"
+      "忙行",
+      "行事"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -24070,28 +23445,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_155dbd175970",
-    "word": "boss",
-    "senseId": "word_155dbd175970-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "老板",
-    "meaningDetailedZh": "老板",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "老板"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_89bb7906f704",
     "word": "connection",
     "senseId": "word_89bb7906f704-sense-1",
@@ -24536,7 +23889,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_a5a0ed15b039-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "浪费；废物",
-    "meaningDetailedZh": "浪费；废物",
+    "meaningDetailedZh": "浪费；废物；浪费的；废弃的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -24544,7 +23897,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "浪费",
       "费废",
-      "废物"
+      "废物",
+      "物浪",
+      "费的",
+      "的废"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -25779,30 +25135,6 @@ export const SENSE_RELATION_CATALOG = [
       "分数",
       "数得",
       "得分"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_4e0ab357b145",
-    "word": "map",
-    "senseId": "word_4e0ab357b145-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "地图；映射",
-    "meaningDetailedZh": "地图；映射",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "地图",
-      "图映",
-      "映射"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -28053,29 +27385,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_70c3a01ac47e",
-    "word": "kid",
-    "senseId": "word_70c3a01ac47e-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "小孩",
-    "meaningDetailedZh": "小孩",
-    "conceptAxis": "size-scale",
-    "conceptValue": "small",
-    "relationFamily": "size-and-scale",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "小孩"
-    ],
-    "allowedDistractorRelations": [
-      "same-axis-different-value",
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "keyword-mapped"
-    ],
-    "confidence": "medium"
-  },
-  {
     "wordId": "word_d1521176b39f",
     "word": "preserve",
     "senseId": "word_d1521176b39f-sense-1",
@@ -28329,15 +27638,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_95976b356e2c-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "屏幕；筛选",
-    "meaningDetailedZh": "屏幕；筛选",
+    "meaningDetailedZh": "屏幕；遮挡；筛查；检测",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
       "屏幕",
-      "幕筛",
-      "筛选"
+      "幕遮",
+      "遮挡",
+      "挡筛",
+      "筛查",
+      "查检"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -29424,8 +28736,6 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "帮助",
-      "助援",
       "援助"
     ],
     "allowedDistractorRelations": [
@@ -29501,28 +28811,6 @@ export const SENSE_RELATION_CATALOG = [
       "缓解",
       "解救",
       "救济"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_0b33322d2b02",
-    "word": "classroom",
-    "senseId": "word_0b33322d2b02-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "教室",
-    "meaningDetailedZh": "教室",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "教室"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -29682,15 +28970,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_ec414ee25e5c-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "繁殖；饲养",
-    "meaningDetailedZh": "繁殖；饲养",
+    "meaningDetailedZh": "品种；繁殖；饲养；培育",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
+      "品种",
+      "种繁",
       "繁殖",
       "殖饲",
-      "饲养"
+      "饲养",
+      "养培"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -30089,14 +29380,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_7c966a29a7a8-sense-1",
     "posFamily": "adverb",
     "quizMeaningZh": "市中心",
-    "meaningDetailedZh": "市中心",
+    "meaningDetailedZh": "在市中心；市中心的；市中心",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
+      "在市",
       "市中",
-      "中心"
+      "中心",
+      "心市",
+      "心的",
+      "的市"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -30205,30 +29500,6 @@ export const SENSE_RELATION_CATALOG = [
       "曾经",
       "经一",
       "一旦"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_f125509e96e3",
-    "word": "police",
-    "senseId": "word_f125509e96e3-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "警察；警方",
-    "meaningDetailedZh": "警察；警方",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "警察",
-      "察警",
-      "警方"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -30366,28 +29637,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_7a705aceb073",
-    "word": "welcome",
-    "senseId": "word_7a705aceb073-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "欢迎",
-    "meaningDetailedZh": "欢迎",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "欢迎"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_e1abd0288107",
@@ -31160,9 +30409,9 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "difficulty-and-effort",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "艰难",
-      "难困",
-      "困苦"
+      "困难",
+      "难艰",
+      "艰苦"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -32191,7 +31440,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_7760a7b2ba91-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "基础；基地",
-    "meaningDetailedZh": "基础；基地",
+    "meaningDetailedZh": "基础；基地；工作或研究站",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -32199,7 +31448,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "基础",
       "础基",
-      "基地"
+      "基地",
+      "地工",
+      "工作",
+      "作站"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -32871,18 +32123,17 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_c634a4601204-sense-1",
     "posFamily": "adjective",
     "quizMeaningZh": "从事相关工作的人",
-    "meaningDetailedZh": "从事相关工作的人",
+    "meaningDetailedZh": "已婚的；婚姻的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "从事",
-      "事相",
-      "相关",
-      "关工",
-      "工作",
-      "作的"
+      "已婚",
+      "婚的",
+      "的婚",
+      "婚姻",
+      "姻的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -32904,9 +32155,11 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "此外",
-      "外而",
-      "而且"
+      "除…",
+      "……",
+      "…之",
+      "之外",
+      "外还"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -32933,32 +32186,6 @@ export const SENSE_RELATION_CATALOG = [
       "范围",
       "围报",
       "报道"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_6943149811e9",
-    "word": "gym",
-    "senseId": "word_6943149811e9-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "健身房；体育馆",
-    "meaningDetailedZh": "健身房；体育馆",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "健身",
-      "身房",
-      "房体",
-      "体育",
-      "育馆"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -33785,28 +33012,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_bf2edcffbb90",
-    "word": "sing",
-    "senseId": "word_bf2edcffbb90-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "唱歌",
-    "meaningDetailedZh": "唱歌",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "唱歌"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_5fd9ccf1e1f2",
     "word": "principle",
     "senseId": "word_5fd9ccf1e1f2-sense-1",
@@ -34223,7 +33428,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_f96545e2e363-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "燃料；加油",
-    "meaningDetailedZh": "燃料；加油",
+    "meaningDetailedZh": "燃料；加油；加剧；推动",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -34231,7 +33436,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "燃料",
       "料加",
-      "加油"
+      "加油",
+      "油加",
+      "加剧",
+      "剧推"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -34384,9 +33592,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "租户",
-      "户房",
-      "房客"
+      "租户"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -35508,7 +34714,10 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "联合",
-      "合的"
+      "合的",
+      "的团",
+      "团结",
+      "结的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -36447,9 +35656,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "负担",
-      "担重",
-      "重担"
+      "负担"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -36520,8 +35727,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "分析",
-      "析家",
-      "家分",
       "析师"
     ],
     "allowedDistractorRelations": [
@@ -37337,9 +36542,6 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "毁灭",
-      "灭的",
-      "的完",
       "完成",
       "成的"
     ],
@@ -38866,29 +38068,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_5ebdc88b0afd",
-    "word": "hill",
-    "senseId": "word_5ebdc88b0afd-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "小山",
-    "meaningDetailedZh": "小山",
-    "conceptAxis": "size-scale",
-    "conceptValue": "small",
-    "relationFamily": "size-and-scale",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "小山"
-    ],
-    "allowedDistractorRelations": [
-      "same-axis-different-value",
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "keyword-mapped"
-    ],
-    "confidence": "medium"
-  },
-  {
     "wordId": "word_243421761959",
     "word": "typically",
     "senseId": "word_243421761959-sense-1",
@@ -39897,28 +39076,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_7c71ddc12e0c",
-    "word": "cash",
-    "senseId": "word_7c71ddc12e0c-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "现金",
-    "meaningDetailedZh": "现金",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "现金"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_00d105020dc7",
     "word": "quarter",
     "senseId": "word_00d105020dc7-sense-1",
@@ -40916,9 +40073,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "成就",
-      "就成",
-      "成绩"
+      "成就"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -42063,11 +41218,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "帮助",
-      "助援",
-      "援助",
-      "助协",
-      "协助"
+      "帮助"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -42206,9 +41357,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "完成",
-      "成达",
-      "达成"
+      "完成"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -42258,26 +41407,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "选择"
     ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_cfe150403118",
-    "word": "boat",
-    "senseId": "word_cfe150403118-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "船",
-    "meaningDetailedZh": "船",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
     "allowedDistractorRelations": [
       "adjacent-contrast"
     ],
@@ -43423,9 +42552,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "刺激",
-      "激激",
-      "激励"
+      "刺激"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -43672,28 +42799,6 @@ export const SENSE_RELATION_CATALOG = [
       "的进",
       "进攻",
       "攻的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_4fefca12598e",
-    "word": "autumn",
-    "senseId": "word_4fefca12598e-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "秋天",
-    "meaningDetailedZh": "秋天",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "秋天"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -44319,13 +43424,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_e6d7f98867b1-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "垃圾",
-    "meaningDetailedZh": "垃圾",
+    "meaningDetailedZh": "垃圾；一窝幼崽；森林枯枝落叶层",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "垃圾"
+      "垃圾",
+      "圾一",
+      "一窝",
+      "窝幼",
+      "幼崽",
+      "崽枯"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -45433,9 +44543,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "陪伴",
-      "伴伴",
-      "伴随"
+      "陪伴"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -45993,28 +45101,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_9c4fdfdee071",
-    "word": "afternoon",
-    "senseId": "word_9c4fdfdee071-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "下午",
-    "meaningDetailedZh": "下午",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "下午"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_55d9067ef2bf",
     "word": "attached",
     "senseId": "word_55d9067ef2bf-sense-1",
@@ -46195,32 +45281,6 @@ export const SENSE_RELATION_CATALOG = [
       "姿势",
       "势姿",
       "姿态"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_39184c4e10aa",
-    "word": "fifth",
-    "senseId": "word_39184c4e10aa-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第五；五分之一",
-    "meaningDetailedZh": "第五；五分之一",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第五",
-      "五五",
-      "五分",
-      "分之",
-      "之一"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -47336,9 +46396,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "scope-and-inclusion",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "包含",
-      "含包",
-      "包容"
+      "包含"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -47527,8 +46585,8 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "评分",
-      "分标",
-      "标记"
+      "分批",
+      "批改"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -47916,9 +46974,9 @@ export const SENSE_RELATION_CATALOG = [
       "主要",
       "要地",
       "地占",
-      "占优",
-      "优势",
-      "势地"
+      "占主",
+      "主导",
+      "导地"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -48360,28 +47418,6 @@ export const SENSE_RELATION_CATALOG = [
       "形状",
       "状塑",
       "塑造"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_5c057d0b32d2",
-    "word": "sky",
-    "senseId": "word_5c057d0b32d2-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "天空",
-    "meaningDetailedZh": "天空",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "天空"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -49840,31 +48876,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_1163aaab11b0",
-    "word": "dutch",
-    "senseId": "word_1163aaab11b0-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "荷兰的；荷兰人",
-    "meaningDetailedZh": "荷兰的；荷兰人",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "荷兰",
-      "兰的",
-      "的荷",
-      "兰人"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_a5ef69429ccf",
     "word": "scientist",
     "senseId": "word_a5ef69429ccf-sense-1",
@@ -50667,28 +49678,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_c4c59e4e15ff",
-    "word": "sixth",
-    "senseId": "word_c4c59e4e15ff-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第六",
-    "meaningDetailedZh": "第六",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第六"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_2eb5b5f51d9f",
     "word": "geography",
     "senseId": "word_2eb5b5f51d9f-sense-1",
@@ -51085,8 +50074,7 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "补充",
-      "充补",
-      "补足"
+      "充物"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -52168,30 +51156,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_8a5e72a5aed9",
-    "word": "dry",
-    "senseId": "word_8a5e72a5aed9-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "干的；弄干",
-    "meaningDetailedZh": "干的；弄干",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "干的",
-      "的弄",
-      "弄干"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_5cc5139f2a4c",
     "word": "expire",
     "senseId": "word_5cc5139f2a4c-sense-1",
@@ -52228,28 +51192,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "伦敦"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_163a0c534c0b",
-    "word": "ninth",
-    "senseId": "word_163a0c534c0b-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第九",
-    "meaningDetailedZh": "第九",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第九"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -53002,28 +51944,6 @@ export const SENSE_RELATION_CATALOG = [
       "思考",
       "考想",
       "想法"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_d6016a756499",
-    "word": "card",
-    "senseId": "word_d6016a756499-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "卡片",
-    "meaningDetailedZh": "卡片",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "卡片"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -53936,7 +52856,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_3afb234225d9-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "压力；拉紧；应变",
-    "meaningDetailedZh": "压力；拉紧；应变",
+    "meaningDetailedZh": "压力；拉紧；应变；菌株或品系",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -53946,29 +52866,8 @@ export const SENSE_RELATION_CATALOG = [
       "力拉",
       "拉紧",
       "紧应",
-      "应变"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_124312b3cd6d",
-    "word": "businessman",
-    "senseId": "word_124312b3cd6d-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "商人",
-    "meaningDetailedZh": "商人",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "商人"
+      "应变",
+      "变菌"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -54349,9 +53248,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "顾问",
-      "问导",
-      "导师"
+      "顾问"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -56316,10 +55213,11 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "房屋",
-      "屋经",
-      "经营",
-      "营场",
-      "场所"
+      "屋及",
+      "及附",
+      "附属",
+      "属建",
+      "建筑"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -57700,7 +56598,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_bf6d45b36123-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "歧视；区别",
-    "meaningDetailedZh": "歧视；区别",
+    "meaningDetailedZh": "歧视；区别；辨别",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -57708,7 +56606,9 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "歧视",
       "视区",
-      "区别"
+      "区别",
+      "别辨",
+      "辨别"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -57825,7 +56725,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_6243fc53a078-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "拼写；咒语",
-    "meaningDetailedZh": "拼写；咒语",
+    "meaningDetailedZh": "拼写；咒语；一段时间或一阵",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -57833,7 +56733,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "拼写",
       "写咒",
-      "咒语"
+      "咒语",
+      "语一",
+      "一段",
+      "段时"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -58267,9 +57170,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "完成",
-      "成结",
-      "结束"
+      "完成"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -58747,16 +57648,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_7ecbf08d1eae-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "增加；安装；山",
-    "meaningDetailedZh": "增加；安装；山",
+    "meaningDetailedZh": "登上；安装；增加；山",
     "conceptAxis": "change-direction",
     "conceptValue": "growth",
     "relationFamily": "change-and-development",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "增加",
-      "加安",
+      "登上",
+      "上安",
       "安装",
-      "装山"
+      "装增",
+      "增加",
+      "加山"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -59289,30 +58192,6 @@ export const SENSE_RELATION_CATALOG = [
       "隐藏",
       "藏掩",
       "掩盖"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_72570ec63621",
-    "word": "cooking",
-    "senseId": "word_72570ec63621-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "烹饪；做饭",
-    "meaningDetailedZh": "烹饪；做饭",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "烹饪",
-      "饪做",
-      "做饭"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -60273,16 +59152,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_71391cc5c68d-sense-1",
     "posFamily": "adjective",
     "quizMeaningZh": "非常；强壮的",
-    "meaningDetailedZh": "非常；强壮的",
-    "conceptAxis": "power-level",
-    "conceptValue": "strong",
-    "relationFamily": "power-and-control",
+    "meaningDetailedZh": "压倒性的；势不可挡的；巨大的",
+    "conceptAxis": "size-scale",
+    "conceptValue": "large",
+    "relationFamily": "size-and-scale",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "非常",
-      "常强",
-      "强壮",
-      "壮的"
+      "压倒",
+      "倒性",
+      "性的",
+      "的势",
+      "势不",
+      "不可"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -61249,56 +60130,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_f0c1e00dc974",
-    "word": "girl",
-    "senseId": "word_f0c1e00dc974-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "女孩，姑娘",
-    "meaningDetailedZh": "女孩，姑娘",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "女孩",
-      "孩姑",
-      "姑娘"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_cf2bd2f09996",
-    "word": "numbers",
-    "senseId": "word_cf2bd2f09996-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "数字；数量；号码",
-    "meaningDetailedZh": "数字；数量；号码",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "数字",
-      "字数",
-      "数量",
-      "量号",
-      "号码"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_2b22aa8b7230",
     "word": "understood",
     "senseId": "word_2b22aa8b7230-sense-1",
@@ -62123,7 +60954,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_fc43178e7fa6-sense-1",
     "posFamily": "adjective",
     "quizMeaningZh": "感知到的",
-    "meaningDetailedZh": "感知到的",
+    "meaningDetailedZh": "感知到的；被认为的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -62131,7 +60962,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "感知",
       "知到",
-      "到的"
+      "到的",
+      "的被",
+      "被认",
+      "认为"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -63004,9 +61838,10 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "遗体",
-      "体残",
-      "残骸"
+      "剩余",
+      "余物",
+      "物遗",
+      "遗迹"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -63440,30 +62275,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_d942822da1e8",
-    "word": "age",
-    "senseId": "word_d942822da1e8-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "年龄；时代",
-    "meaningDetailedZh": "年龄；时代",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "年龄",
-      "龄时",
-      "时代"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_2fdb8b4becd7",
     "word": "fighting",
     "senseId": "word_2fdb8b4becd7-sense-1",
@@ -63731,16 +62542,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_17a4c3a9a873-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "其他的；制作",
-    "meaningDetailedZh": "其他的；制作",
+    "meaningDetailedZh": "调查结果；发现（复数）",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "其他",
-      "他的",
-      "的制",
-      "制作"
+      "调查",
+      "查结",
+      "结果",
+      "果发",
+      "发现",
+      "现复"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -64412,28 +63225,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_eace101a5e77",
-    "word": "wife",
-    "senseId": "word_eace101a5e77-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "妻子",
-    "meaningDetailedZh": "妻子",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "妻子"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_3e21ae25c4e2",
     "word": "essay",
     "senseId": "word_3e21ae25c4e2-sense-1",
@@ -64521,8 +63312,8 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "支配",
-      "配优",
-      "优势"
+      "配地",
+      "地位"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -65757,17 +64548,14 @@ export const SENSE_RELATION_CATALOG = [
     "word": "virtually",
     "senseId": "word_3563c78aecba-sense-1",
     "posFamily": "adverb",
-    "quizMeaningZh": "几乎；虚拟地",
-    "meaningDetailedZh": "几乎；虚拟地",
+    "quizMeaningZh": "几乎",
+    "meaningDetailedZh": "几乎",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "几乎",
-      "乎虚",
-      "虚拟",
-      "拟地"
+      "几乎"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -66294,25 +65082,27 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_f6130e0daa04-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "自己的；免费的",
-    "meaningDetailedZh": "自己的；免费的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
+    "meaningDetailedZh": "采用；收养（过去式/过去分词）",
+    "conceptAxis": "temporal-position",
+    "conceptValue": "past",
+    "relationFamily": "time-and-temporality",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "自己",
-      "己的",
-      "的免",
-      "免费",
-      "费的"
+      "采用",
+      "用收",
+      "收养",
+      "养过",
+      "过去",
+      "去式"
     ],
     "allowedDistractorRelations": [
+      "same-axis-different-value",
       "adjacent-contrast"
     ],
     "sourceEvidence": [
-      "auto-derived"
+      "keyword-mapped"
     ],
-    "confidence": "low"
+    "confidence": "medium"
   },
   {
     "wordId": "word_eb2e1618c140",
@@ -67081,30 +65871,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_0885ff9f77fb",
-    "word": "fix",
-    "senseId": "word_0885ff9f77fb-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "修理；固定",
-    "meaningDetailedZh": "修理；固定",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "修理",
-      "理固",
-      "固定"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_3bbcbf93e07b",
     "word": "depth",
     "senseId": "word_3bbcbf93e07b-sense-1",
@@ -67562,30 +66328,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "沙漠"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_c343bc6852db",
-    "word": "twentieth",
-    "senseId": "word_c343bc6852db-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第二十(的)",
-    "meaningDetailedZh": "第二十(的)",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第二",
-      "二十",
-      "十的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -68472,8 +67214,8 @@ export const SENSE_RELATION_CATALOG = [
     "word": "rear",
     "senseId": "word_ce8b7c45906e-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "后面的；后方的",
-    "meaningDetailedZh": "后面的；后方的",
+    "quizMeaningZh": "饲养；养育",
+    "meaningDetailedZh": "后面的；后方；饲养；养育",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -68483,7 +67225,8 @@ export const SENSE_RELATION_CATALOG = [
       "面的",
       "的后",
       "后方",
-      "方的"
+      "方饲",
+      "饲养"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -68840,7 +67583,10 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "调解",
-      "解人"
+      "解人",
+      "人调",
+      "调停",
+      "停者"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -69899,9 +68645,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "海关",
-      "关关",
-      "关税"
+      "海关"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -71986,18 +70730,17 @@ export const SENSE_RELATION_CATALOG = [
     "word": "following",
     "senseId": "word_89a32dfc1c2d-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "下列的；接着的",
-    "meaningDetailedZh": "下列的；接着的",
+    "quizMeaningZh": "在...之后",
+    "meaningDetailedZh": "在...之后",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "下列",
-      "列的",
-      "的接",
-      "接着",
-      "着的"
+      "在.",
+      "..",
+      ".之",
+      "之后"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -72813,30 +71556,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_63cb1205e171",
-    "word": "box",
-    "senseId": "word_63cb1205e171-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "盒子；拳击",
-    "meaningDetailedZh": "盒子；拳击",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "盒子",
-      "子拳",
-      "拳击"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_420de1da99f1",
     "word": "sacred",
     "senseId": "word_420de1da99f1-sense-1",
@@ -73113,28 +71832,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "边境"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_5fccc6c46528",
-    "word": "bread",
-    "senseId": "word_5fccc6c46528-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "面包",
-    "meaningDetailedZh": "面包",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "面包"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -73662,29 +72359,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "史前",
       "前的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_f55e84dba333",
-    "word": "busy",
-    "senseId": "word_f55e84dba333-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "忙碌的",
-    "meaningDetailedZh": "忙碌的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "忙碌",
-      "碌的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -74456,30 +73130,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_c3f6e9b1b49c",
-    "word": "singing",
-    "senseId": "word_c3f6e9b1b49c-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "歌唱；唱歌",
-    "meaningDetailedZh": "歌唱；唱歌",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "歌唱",
-      "唱唱",
-      "唱歌"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_09a2ea77a483",
     "word": "warning",
     "senseId": "word_09a2ea77a483-sense-1",
@@ -74961,28 +73611,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "medium"
   },
   {
-    "wordId": "word_fbba4fd14deb",
-    "word": "boy",
-    "senseId": "word_fbba4fd14deb-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "男孩",
-    "meaningDetailedZh": "男孩",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "男孩"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_b00e7121560f",
     "word": "simultaneously",
     "senseId": "word_b00e7121560f-sense-1",
@@ -75143,30 +73771,6 @@ export const SENSE_RELATION_CATALOG = [
       "迫使",
       "使帮",
       "帮忙"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_9f5b7ead8440",
-    "word": "neck",
-    "senseId": "word_9f5b7ead8440-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "脖子；颈部",
-    "meaningDetailedZh": "脖子；颈部",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "脖子",
-      "子颈",
-      "颈部"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -76003,11 +74607,8 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "租赁",
-      "赁期",
-      "期租",
-      "租约",
-      "约关",
-      "关系"
+      "赁租",
+      "租期"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -76679,26 +75280,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_fd3cb043bcae",
-    "word": "bear",
-    "senseId": "word_fd3cb043bcae-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "熊",
-    "meaningDetailedZh": "熊",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_5f7ec305977f",
     "word": "fantastic",
     "senseId": "word_5f7ec305977f-sense-1",
@@ -76757,15 +75338,17 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_21a59bb72ca0-sense-1",
     "posFamily": "adjective",
     "quizMeaningZh": "长的；时间",
-    "meaningDetailedZh": "长的；时间",
+    "meaningDetailedZh": "持久的；长期的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "长的",
-      "的时",
-      "时间"
+      "持久",
+      "久的",
+      "的长",
+      "长期",
+      "期的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -76884,28 +75467,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "幸运",
       "运的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_d8e822aa8d74",
-    "word": "chat",
-    "senseId": "word_d8e822aa8d74-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "聊天",
-    "meaningDetailedZh": "聊天",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "聊天"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -77676,16 +76237,19 @@ export const SENSE_RELATION_CATALOG = [
     "word": "sales",
     "senseId": "word_53d4d6ff42ff-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "一些；时间",
-    "meaningDetailedZh": "一些；时间",
+    "quizMeaningZh": "销售；销售额；出售（复数）",
+    "meaningDetailedZh": "销售；销售额；出售（复数）",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "一些",
-      "些时",
-      "时间"
+      "销售",
+      "售销",
+      "售额",
+      "额出",
+      "出售",
+      "售复"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -77810,8 +76374,7 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "紧迫",
-      "迫的",
-      "的压"
+      "迫的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -78147,9 +76710,9 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "法令",
-      "令条",
-      "条例"
+      "条例",
+      "例法",
+      "法令"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -82380,29 +80943,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_fe7f29efae2f",
-    "word": "ireland",
-    "senseId": "word_fe7f29efae2f-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "爱尔兰",
-    "meaningDetailedZh": "爱尔兰",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "爱尔",
-      "尔兰"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_6591f15e4807",
     "word": "spectrum",
     "senseId": "word_6591f15e4807-sense-1",
@@ -82562,8 +81102,8 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "勤劳",
-      "劳的"
+      "勤奋",
+      "奋的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -83354,29 +81894,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_b4098e614496",
-    "word": "boil",
-    "senseId": "word_b4098e614496-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "煮沸；煮",
-    "meaningDetailedZh": "煮沸；煮",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "煮沸",
-      "沸煮"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_6c709bbf88c6",
     "word": "portray",
     "senseId": "word_6c709bbf88c6-sense-1",
@@ -84111,26 +82628,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_0d7317eb7911",
-    "word": "tea",
-    "senseId": "word_0d7317eb7911-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "茶",
-    "meaningDetailedZh": "茶",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_dc66d63382fa",
     "word": "bundle",
     "senseId": "word_dc66d63382fa-sense-1",
@@ -84709,13 +83206,15 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_e9cf5f4f8d35-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "樱桃",
-    "meaningDetailedZh": "樱桃",
+    "meaningDetailedZh": "樱桃；樱桃树",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "樱桃"
+      "樱桃",
+      "桃樱",
+      "桃树"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -84981,32 +83480,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "地下",
       "下水"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_65fde9224838",
-    "word": "york",
-    "senseId": "word_65fde9224838-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "约克（英国城市）",
-    "meaningDetailedZh": "约克（英国城市）",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "约克",
-      "克英",
-      "英国",
-      "国城",
-      "城市"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -86561,6 +85034,8 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "电子",
+      "子学",
+      "学电",
       "子设",
       "设备"
     ],
@@ -86852,28 +85327,6 @@ export const SENSE_RELATION_CATALOG = [
       "寒冷",
       "冷放",
       "放松"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_332507473a34",
-    "word": "soap",
-    "senseId": "word_332507473a34-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "肥皂",
-    "meaningDetailedZh": "肥皂",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "肥皂"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -87627,25 +86080,23 @@ export const SENSE_RELATION_CATALOG = [
     "word": "developed",
     "senseId": "word_25a053bf003e-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "时间；更多",
-    "meaningDetailedZh": "时间；更多",
-    "conceptAxis": "quantity-amount",
-    "conceptValue": "abundant",
-    "relationFamily": "quantity-and-amount",
+    "quizMeaningZh": "发达的",
+    "meaningDetailedZh": "发达的",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "时间",
-      "间更",
-      "更多"
+      "发达",
+      "达的"
     ],
     "allowedDistractorRelations": [
-      "same-axis-different-value",
       "adjacent-contrast"
     ],
     "sourceEvidence": [
-      "keyword-mapped"
+      "auto-derived"
     ],
-    "confidence": "medium"
+    "confidence": "low"
   },
   {
     "wordId": "word_7c571778e6af",
@@ -87771,26 +86222,6 @@ export const SENSE_RELATION_CATALOG = [
       "收利",
       "利用"
     ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_f44e194fe655",
-    "word": "sugar",
-    "senseId": "word_f44e194fe655-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "糖",
-    "meaningDetailedZh": "糖",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
     "allowedDistractorRelations": [
       "adjacent-contrast"
     ],
@@ -88244,29 +86675,6 @@ export const SENSE_RELATION_CATALOG = [
       "批评",
       "评挑",
       "挑剔"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_b1171bec59c7",
-    "word": "bike",
-    "senseId": "word_b1171bec59c7-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "自行车",
-    "meaningDetailedZh": "自行车",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "自行",
-      "行车"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -88770,9 +87178,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "依赖",
-      "赖从",
-      "从属"
+      "依赖"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -88813,13 +87219,15 @@ export const SENSE_RELATION_CATALOG = [
     "word": "bark",
     "senseId": "word_3ccf4e2f2270-sense-1",
     "posFamily": "verb",
-    "quizMeaningZh": "吠叫",
-    "meaningDetailedZh": "吠叫",
+    "quizMeaningZh": "树皮",
+    "meaningDetailedZh": "树皮；吠叫",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
+      "树皮",
+      "皮吠",
       "吠叫"
     ],
     "allowedDistractorRelations": [
@@ -90472,29 +88880,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_1699ee6ea8cd",
-    "word": "egg",
-    "senseId": "word_1699ee6ea8cd-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "鸡蛋，卵",
-    "meaningDetailedZh": "鸡蛋，卵",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "鸡蛋",
-      "蛋卵"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_b4ac694549f3",
     "word": "optimism",
     "senseId": "word_b4ac694549f3-sense-1",
@@ -90602,26 +88987,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "猜测"
     ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_6dbc6763e91b",
-    "word": "deer",
-    "senseId": "word_6dbc6763e91b-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "鹿",
-    "meaningDetailedZh": "鹿",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
     "allowedDistractorRelations": [
       "adjacent-contrast"
     ],
@@ -91152,8 +89517,8 @@ export const SENSE_RELATION_CATALOG = [
     "word": "coat",
     "senseId": "word_2edea7edbf60-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "外套；涂层",
-    "meaningDetailedZh": "外套；涂层",
+    "quizMeaningZh": "动物、种子或细胞的外层；外壳",
+    "meaningDetailedZh": "外套；涂层；动物、种子或细胞的外层",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -91161,7 +89526,10 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "外套",
       "套涂",
-      "涂层"
+      "涂层",
+      "层外",
+      "外层",
+      "外壳"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -91615,52 +89983,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_22e268d71dd6",
-    "word": "dad",
-    "senseId": "word_22e268d71dd6-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "爸爸",
-    "meaningDetailedZh": "爸爸",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "爸爸"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_635a1a291caa",
-    "word": "fly",
-    "senseId": "word_635a1a291caa-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "飞；乘飞机",
-    "meaningDetailedZh": "飞；乘飞机",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "飞乘",
-      "乘飞",
-      "飞机"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_9f903f6dda01",
     "word": "legislation",
     "senseId": "word_9f903f6dda01-sense-1",
@@ -91834,13 +90156,16 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_be97e5ff3996-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "激怒",
-    "meaningDetailedZh": "激怒",
+    "meaningDetailedZh": "刺激；使恼怒",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "激怒"
+      "刺激",
+      "激使",
+      "使恼",
+      "恼怒"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -92206,30 +90531,6 @@ export const SENSE_RELATION_CATALOG = [
       "人畏",
       "畏惧",
       "惧的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_7f838d6365fa",
-    "word": "arm",
-    "senseId": "word_7f838d6365fa-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "手臂；武装",
-    "meaningDetailedZh": "手臂；武装",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "手臂",
-      "臂武",
-      "武装"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -93858,26 +92159,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_c7fb01f3d845",
-    "word": "ice",
-    "senseId": "word_c7fb01f3d845-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "冰",
-    "meaningDetailedZh": "冰",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_983247cfeed6",
     "word": "layer",
     "senseId": "word_983247cfeed6-sense-1",
@@ -94039,29 +92320,6 @@ export const SENSE_RELATION_CATALOG = [
       "可触",
       "触摸",
       "摸的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_c468ea41f289",
-    "word": "feet",
-    "senseId": "word_c468ea41f289-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "脚（复数）",
-    "meaningDetailedZh": "脚（复数）",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "脚复",
-      "复数"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -94713,16 +92971,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_057860901448-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "让步；特许权",
-    "meaningDetailedZh": "让步；特许权",
+    "meaningDetailedZh": "优惠；减价票；让步；特许权",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "让步",
-      "步特",
-      "特许",
-      "许权"
+      "优惠",
+      "惠减",
+      "减价",
+      "价票",
+      "票让",
+      "让步"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -95479,7 +93739,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_f4907d7f2b4c-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "穿透；渗透",
-    "meaningDetailedZh": "穿透；渗透",
+    "meaningDetailedZh": "穿透；渗透；深入或进入内部",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -95487,7 +93747,9 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "穿透",
       "透渗",
-      "渗透"
+      "渗透",
+      "透深",
+      "深入"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -95632,29 +93894,6 @@ export const SENSE_RELATION_CATALOG = [
       "具刀",
       "刀叉",
       "叉勺"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_a89a410458db",
-    "word": "wine",
-    "senseId": "word_a89a410458db-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "葡萄酒",
-    "meaningDetailedZh": "葡萄酒",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "葡萄",
-      "萄酒"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -96206,7 +94445,7 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_2962985ebcff-sense-1",
     "posFamily": "verb",
     "quizMeaningZh": "援引，调用，唤起",
-    "meaningDetailedZh": "援引，调用，唤起",
+    "meaningDetailedZh": "援引；调用；唤起",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -96217,28 +94456,6 @@ export const SENSE_RELATION_CATALOG = [
       "调用",
       "用唤",
       "唤起"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_d7ee8696d4f4",
-    "word": "song",
-    "senseId": "word_d7ee8696d4f4-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "歌曲",
-    "meaningDetailedZh": "歌曲",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "歌曲"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -96788,19 +95005,19 @@ export const SENSE_RELATION_CATALOG = [
     "word": "determined",
     "senseId": "word_5f09dd004734-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "下定决心的；坚定的",
-    "meaningDetailedZh": "下定决心的；坚定的",
+    "quizMeaningZh": "坚定的；有决心的",
+    "meaningDetailedZh": "坚定的；有决心的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "下定",
-      "定决",
+      "坚定",
+      "定的",
+      "的有",
+      "有决",
       "决心",
-      "心的",
-      "的坚",
-      "坚定"
+      "心的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -97774,30 +95991,6 @@ export const SENSE_RELATION_CATALOG = [
       "汽油",
       "油煤",
       "煤气"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_022b4f1b9005",
-    "word": "duck",
-    "senseId": "word_022b4f1b9005-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "鸭子；躲避",
-    "meaningDetailedZh": "鸭子；躲避",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "鸭子",
-      "子躲",
-      "躲避"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -98819,15 +97012,16 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_578188e5c7a4-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "服务；人们",
-    "meaningDetailedZh": "服务；人们",
+    "meaningDetailedZh": "座位；座位安排",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "服务",
-      "务人",
-      "人们"
+      "座位",
+      "位座",
+      "位安",
+      "安排"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -99225,32 +97419,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_718095fd0faf",
-    "word": "aunt",
-    "senseId": "word_718095fd0faf-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "阿姨；姑妈；姨妈",
-    "meaningDetailedZh": "阿姨；姑妈；姨妈",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "阿姨",
-      "姨姑",
-      "姑妈",
-      "妈姨",
-      "姨妈"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_61d8b7a2b381",
     "word": "recycling",
     "senseId": "word_61d8b7a2b381-sense-1",
@@ -99322,33 +97490,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_19e685359b15",
-    "word": "says",
-    "senseId": "word_19e685359b15-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "说（第三人称单数）",
-    "meaningDetailedZh": "说（第三人称单数）",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "说第",
-      "第三",
-      "三人",
-      "人称",
-      "称单",
-      "单数"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_5a97bb8dddd6",
     "word": "retrieve",
     "senseId": "word_5a97bb8dddd6-sense-1",
@@ -99385,30 +97526,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "伊朗"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_93f65ed7553f",
-    "word": "orange",
-    "senseId": "word_93f65ed7553f-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "橙色；橙子",
-    "meaningDetailedZh": "橙色；橙子",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "橙色",
-      "色橙",
-      "橙子"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -100090,28 +98207,6 @@ export const SENSE_RELATION_CATALOG = [
       "炮火",
       "火枪",
       "枪声"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_212f85fa2099",
-    "word": "fox",
-    "senseId": "word_212f85fa2099-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "狐狸",
-    "meaningDetailedZh": "狐狸",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "狐狸"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -101740,30 +99835,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_296690b206c6",
-    "word": "app",
-    "senseId": "word_296690b206c6-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "应用程序",
-    "meaningDetailedZh": "应用程序",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "应用",
-      "用程",
-      "程序"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_aac3508c4e5a",
     "word": "feat",
     "senseId": "word_aac3508c4e5a-sense-1",
@@ -101982,18 +100053,14 @@ export const SENSE_RELATION_CATALOG = [
     "word": "venue",
     "senseId": "word_71475e03f71b-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "场地；举办地点",
-    "meaningDetailedZh": "场地；举办地点",
+    "quizMeaningZh": "场地",
+    "meaningDetailedZh": "场地",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "场地",
-      "地举",
-      "举办",
-      "办地",
-      "地点"
+      "场地"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -103564,26 +101631,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_f527971aa77d",
-    "word": "leg",
-    "senseId": "word_f527971aa77d-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "腿",
-    "meaningDetailedZh": "腿",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_9d9b20f02855",
     "word": "imbalance",
     "senseId": "word_9d9b20f02855-sense-1",
@@ -103691,30 +101738,6 @@ export const SENSE_RELATION_CATALOG = [
       "女发",
       "发言",
       "言人"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_46378b156935",
-    "word": "cook",
-    "senseId": "word_46378b156935-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "烹饪；厨师",
-    "meaningDetailedZh": "烹饪；厨师",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "烹饪",
-      "饪厨",
-      "厨师"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -105086,30 +103109,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_b62ff06acbb0",
-    "word": "days",
-    "senseId": "word_b62ff06acbb0-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "天数；日子",
-    "meaningDetailedZh": "天数；日子",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "天数",
-      "数日",
-      "日子"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_9bf7bce7d531",
     "word": "dish",
     "senseId": "word_9bf7bce7d531-sense-1",
@@ -105699,29 +103698,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_079d0cd5444e",
-    "word": "cry",
-    "senseId": "word_079d0cd5444e-sense-1",
-    "posFamily": "verb",
-    "quizMeaningZh": "哭；喊叫",
-    "meaningDetailedZh": "哭；喊叫",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "哭喊",
-      "喊叫"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_bfed2fbe88e8",
@@ -106583,30 +104559,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_fafba1e1b9fd",
-    "word": "later",
-    "senseId": "word_fafba1e1b9fd-sense-1",
-    "posFamily": "adverb",
-    "quizMeaningZh": "后来；稍后",
-    "meaningDetailedZh": "后来；稍后",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "后来",
-      "来稍",
-      "稍后"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_bae28940f089",
     "word": "educated",
     "senseId": "word_bae28940f089-sense-1",
@@ -107421,15 +105373,16 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_1609eae66866-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "一些；服务",
-    "meaningDetailedZh": "一些；服务",
+    "meaningDetailedZh": "广告；广告宣传",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "一些",
-      "些服",
-      "服务"
+      "广告",
+      "告广",
+      "告宣",
+      "宣传"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -107794,31 +105747,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_listening1179_fe31dae5ff64",
-    "word": "ATM",
-    "senseId": "word_listening1179_fe31dae5ff64-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "自动取款机",
-    "meaningDetailedZh": "自动取款机",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "自动",
-      "动取",
-      "取款",
-      "款机"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_58fe5eaa2e80",
     "word": "variance",
     "senseId": "word_58fe5eaa2e80-sense-1",
@@ -108066,30 +105994,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_589a3e5d5f6a",
-    "word": "cup",
-    "senseId": "word_589a3e5d5f6a-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "杯子；奖杯",
-    "meaningDetailedZh": "杯子；奖杯",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "杯子",
-      "子奖",
-      "奖杯"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_b85c97e6906f",
     "word": "entitled",
     "senseId": "word_b85c97e6906f-sense-1",
@@ -108118,15 +106022,19 @@ export const SENSE_RELATION_CATALOG = [
     "word": "bite",
     "senseId": "word_623cab83f8bf-sense-1",
     "posFamily": "verb",
-    "quizMeaningZh": "咬，一口",
-    "meaningDetailedZh": "咬，一口",
+    "quizMeaningZh": "咬；咬伤",
+    "meaningDetailedZh": "咬；咬伤；一口；（寒冷）刺痛",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "咬一",
-      "一口"
+      "咬咬",
+      "咬伤",
+      "伤一",
+      "一口",
+      "口寒",
+      "寒冷"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -108354,29 +106262,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_8ae07c987eb5",
-    "word": "soda",
-    "senseId": "word_8ae07c987eb5-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "苏打水",
-    "meaningDetailedZh": "苏打水",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "苏打",
-      "打水"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_114a75d29f03",
     "word": "ceramics",
     "senseId": "word_114a75d29f03-sense-1",
@@ -108389,9 +106274,7 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "陶瓷",
-      "瓷工",
-      "工艺",
-      "艺陶",
+      "瓷陶",
       "瓷制",
       "制品"
     ],
@@ -108540,30 +106423,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "百叶",
       "叶窗"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_f689ca2d2a8a",
-    "word": "bus",
-    "senseId": "word_f689ca2d2a8a-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "公共汽车",
-    "meaningDetailedZh": "公共汽车",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "公共",
-      "共汽",
-      "汽车"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -108892,26 +106751,6 @@ export const SENSE_RELATION_CATALOG = [
       "度工",
       "工作"
     ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_excel_6e317bcd6839",
-    "word": "books",
-    "senseId": "word_excel_6e317bcd6839-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "书",
-    "meaningDetailedZh": "书",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [],
     "allowedDistractorRelations": [
       "adjacent-contrast"
     ],
@@ -109971,10 +107810,7 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "签署",
-      "署方",
-      "方签",
-      "签约",
-      "约国"
+      "署方"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -111071,13 +108907,18 @@ export const SENSE_RELATION_CATALOG = [
     "senseId": "word_f12e916b8ec8-sense-1",
     "posFamily": "noun",
     "quizMeaningZh": "指纹",
-    "meaningDetailedZh": "指纹",
+    "meaningDetailedZh": "指纹；用于识别的特征图谱",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "指纹"
+      "指纹",
+      "纹特",
+      "特征",
+      "征图",
+      "图谱",
+      "谱识"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -111327,30 +109168,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_383fc80c496f",
-    "word": "soccer",
-    "senseId": "word_383fc80c496f-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "英式足球",
-    "meaningDetailedZh": "英式足球",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "英式",
-      "式足",
-      "足球"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_a5162fba1f35",
@@ -111722,8 +109539,8 @@ export const SENSE_RELATION_CATALOG = [
     "word": "precarious",
     "senseId": "word_listening1179_32132b88895d-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "不稳定的，危险的",
-    "meaningDetailedZh": "不稳定的，危险的",
+    "quizMeaningZh": "不稳定的",
+    "meaningDetailedZh": "不稳定的",
     "conceptAxis": "change-direction",
     "conceptValue": "stable",
     "relationFamily": "change-and-development",
@@ -111731,10 +109548,7 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "不稳",
       "稳定",
-      "定的",
-      "的危",
-      "危险",
-      "险的"
+      "定的"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -112389,28 +110203,6 @@ export const SENSE_RELATION_CATALOG = [
       "司附",
       "附属",
       "属的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_d10e174914df",
-    "word": "rome",
-    "senseId": "word_d10e174914df-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "罗马",
-    "meaningDetailedZh": "罗马",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "罗马"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -113279,7 +111071,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "交接"
+      "移交"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -113319,19 +111111,15 @@ export const SENSE_RELATION_CATALOG = [
     "word": "decided",
     "senseId": "word_1e962c4cd342-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "决定了的；果断的",
-    "meaningDetailedZh": "决定了的；果断的",
+    "quizMeaningZh": "明确的",
+    "meaningDetailedZh": "明确的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "决定",
-      "定了",
-      "了的",
-      "的果",
-      "果断",
-      "断的"
+      "明确",
+      "确的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -113500,17 +111288,19 @@ export const SENSE_RELATION_CATALOG = [
     "word": "alright",
     "senseId": "word_e36b54dbb82a-sense-1",
     "posFamily": "adverb",
-    "quizMeaningZh": "好吧；没问题",
-    "meaningDetailedZh": "好吧；没问题",
+    "quizMeaningZh": "好的；没问题；令人满意的",
+    "meaningDetailedZh": "好的；没问题；令人满意的",
     "conceptAxis": "quality-grade",
     "conceptValue": "good",
     "relationFamily": "quality-and-grade",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "好吧",
-      "吧没",
+      "好的",
+      "的没",
       "没问",
-      "问题"
+      "问题",
+      "题令",
+      "令人"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -113545,31 +111335,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_4a2fc953f5b7",
-    "word": "bin",
-    "senseId": "word_4a2fc953f5b7-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "垃圾桶，箱子",
-    "meaningDetailedZh": "垃圾桶，箱子",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "垃圾",
-      "圾桶",
-      "桶箱",
-      "箱子"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_5b13cfb84cd3",
@@ -114351,61 +112116,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "蝴蝶"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_excel_043a718774c5",
-    "word": "s",
-    "senseId": "word_excel_043a718774c5-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "abbr. 小号的（型号） n. 硫",
-    "meaningDetailedZh": "abbr. 小号的（型号） n. 硫",
-    "conceptAxis": "size-scale",
-    "conceptValue": "small",
-    "relationFamily": "size-and-scale",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "ab",
-      "bb",
-      "br",
-      "r.",
-      ".小",
-      "小号"
-    ],
-    "allowedDistractorRelations": [
-      "same-axis-different-value",
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "keyword-mapped"
-    ],
-    "confidence": "medium"
-  },
-  {
-    "wordId": "word_excel_063bffb4b52b",
-    "word": "ways",
-    "senseId": "word_excel_063bffb4b52b-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "方式；方法；方面；路线",
-    "meaningDetailedZh": "方式；方法；方面；路线",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "方式",
-      "式方",
-      "方法",
-      "法方",
-      "方面",
-      "面路"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -115633,31 +113343,6 @@ export const SENSE_RELATION_CATALOG = [
       "说实",
       "实在",
       "在的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_110fc0005b62",
-    "word": "korean",
-    "senseId": "word_110fc0005b62-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "韩国人；韩国的",
-    "meaningDetailedZh": "韩国人；韩国的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "韩国",
-      "国人",
-      "人韩",
-      "国的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -116972,51 +114657,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "medium"
   },
   {
-    "wordId": "word_176f4e517991",
-    "word": "cute",
-    "senseId": "word_176f4e517991-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "可爱的",
-    "meaningDetailedZh": "可爱的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "可爱",
-      "爱的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_663ba0822fa0",
-    "word": "pet",
-    "senseId": "word_663ba0822fa0-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "宠物",
-    "meaningDetailedZh": "宠物",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "宠物"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_dfe5f8ee05e4",
     "word": "therapeutic",
     "senseId": "word_dfe5f8ee05e4-sense-1",
@@ -117332,29 +114972,6 @@ export const SENSE_RELATION_CATALOG = [
       "指导",
       "导性",
       "性的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_ee0c59950530",
-    "word": "sad",
-    "senseId": "word_ee0c59950530-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "伤心的",
-    "meaningDetailedZh": "伤心的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "伤心",
-      "心的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -118721,8 +116338,8 @@ export const SENSE_RELATION_CATALOG = [
     "word": "pregnancy",
     "senseId": "word_af7b75857386-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "怀孕，妊娠",
-    "meaningDetailedZh": "怀孕，妊娠",
+    "quizMeaningZh": "怀孕；妊娠",
+    "meaningDetailedZh": "怀孕；妊娠",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -118876,28 +116493,6 @@ export const SENSE_RELATION_CATALOG = [
     "ambiguityKeys": [
       "周复",
       "复数"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_fb48c4aa69bd",
-    "word": "bag",
-    "senseId": "word_fb48c4aa69bd-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "袋子",
-    "meaningDetailedZh": "袋子",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "袋子"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -119447,30 +117042,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_b8701cbf5bf9",
-    "word": "girls",
-    "senseId": "word_b8701cbf5bf9-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "女孩；女儿",
-    "meaningDetailedZh": "女孩；女儿",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "女孩",
-      "孩女",
-      "女儿"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_52d6b1ef86f2",
     "word": "fraud",
     "senseId": "word_52d6b1ef86f2-sense-1",
@@ -119538,31 +117109,6 @@ export const SENSE_RELATION_CATALOG = [
       "就感",
       "感履",
       "履行"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_fb9400b9c30b",
-    "word": "closed",
-    "senseId": "word_fb9400b9c30b-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "关闭的；封闭的",
-    "meaningDetailedZh": "关闭的；封闭的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "关闭",
-      "闭的",
-      "的封",
-      "封闭"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -119646,28 +117192,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_ce90a2271a97",
-    "word": "ear",
-    "senseId": "word_ce90a2271a97-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "耳朵",
-    "meaningDetailedZh": "耳朵",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "耳朵"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_d62861379555",
@@ -120010,13 +117534,16 @@ export const SENSE_RELATION_CATALOG = [
     "word": "sequential",
     "senseId": "word_listening1179_3ee15b8a77ec-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "顺序的",
-    "meaningDetailedZh": "顺序的",
+    "quizMeaningZh": "连续的，顺序的",
+    "meaningDetailedZh": "连续的，顺序的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
+      "连续",
+      "续的",
+      "的顺",
       "顺序",
       "序的"
     ],
@@ -121066,12 +118593,8 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "练习",
-      "习册",
-      "册工",
       "工作",
-      "作纸",
-      "纸用"
+      "作表"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -121256,29 +118779,6 @@ export const SENSE_RELATION_CATALOG = [
       "恢复",
       "复简",
       "简历"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_a119c2297afd",
-    "word": "tenth",
-    "senseId": "word_a119c2297afd-sense-1",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第十的",
-    "meaningDetailedZh": "第十的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "第十",
-      "十的"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -121501,18 +119001,18 @@ export const SENSE_RELATION_CATALOG = [
     "word": "financially",
     "senseId": "word_f31b576e5488-sense-1",
     "posFamily": "adverb",
-    "quizMeaningZh": "经济上；财务上",
-    "meaningDetailedZh": "经济上；财务上",
+    "quizMeaningZh": "财务上；经济上",
+    "meaningDetailedZh": "财务上；经济上",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "经济",
-      "济上",
-      "上财",
       "财务",
-      "务上"
+      "务上",
+      "上经",
+      "经济",
+      "济上"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -122093,31 +119593,6 @@ export const SENSE_RELATION_CATALOG = [
     "synonymKeys": [],
     "ambiguityKeys": [
       "衬衫"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_b7c13d508639",
-    "word": "desk",
-    "senseId": "word_b7c13d508639-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "书桌；办公桌",
-    "meaningDetailedZh": "书桌；办公桌",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "书桌",
-      "桌办",
-      "办公",
-      "公桌"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -123933,28 +121408,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_876399a2e139",
-    "word": "toy",
-    "senseId": "word_876399a2e139-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "玩具",
-    "meaningDetailedZh": "玩具",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "玩具"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_4c3a7d4e1d46",
     "word": "aftermath",
     "senseId": "word_4c3a7d4e1d46-sense-1",
@@ -124539,29 +121992,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_7b26f77e6ef8",
-    "word": "washington",
-    "senseId": "word_7b26f77e6ef8-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "华盛顿",
-    "meaningDetailedZh": "华盛顿",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "华盛",
-      "盛顿"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_4e96da8f6f47",
@@ -127010,33 +124440,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_593937da9f16",
-    "word": "russian",
-    "senseId": "word_593937da9f16-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "俄罗斯人，俄语，俄罗斯的",
-    "meaningDetailedZh": "俄罗斯人，俄语，俄罗斯的",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "俄罗",
-      "罗斯",
-      "斯人",
-      "人俄",
-      "俄语",
-      "语俄"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_24647d89a27b",
     "word": "formally",
     "senseId": "word_24647d89a27b-sense-1",
@@ -127540,28 +124943,6 @@ export const SENSE_RELATION_CATALOG = [
       "原因",
       "因理",
       "理由"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_bd0fb9d9b10e",
-    "word": "cake",
-    "senseId": "word_bd0fb9d9b10e-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "蛋糕",
-    "meaningDetailedZh": "蛋糕",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "蛋糕"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -128812,28 +126193,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_e14ae1516220",
-    "word": "beer",
-    "senseId": "word_e14ae1516220-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "啤酒",
-    "meaningDetailedZh": "啤酒",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "啤酒"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_ebfcf63d7e6e",
@@ -130457,29 +127816,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_6e4fb05b2085",
-    "word": "pan",
-    "senseId": "word_6e4fb05b2085-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "平底锅",
-    "meaningDetailedZh": "平底锅",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "平底",
-      "底锅"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_84173912a92c",
     "word": "lit",
     "senseId": "word_84173912a92c-sense-1",
@@ -131196,28 +128532,22 @@ export const SENSE_RELATION_CATALOG = [
     "word": "asset",
     "senseId": "word_240f795f3f95-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "资产，财产，有价值的东西",
-    "meaningDetailedZh": "资产，财产，有价值的东西",
-    "conceptAxis": "economic-value",
-    "conceptValue": "moderate",
-    "relationFamily": "economic-and-value",
+    "quizMeaningZh": "资产",
+    "meaningDetailedZh": "资产",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "资产",
-      "产财",
-      "财产",
-      "产有",
-      "有价",
-      "价值"
+      "资产"
     ],
     "allowedDistractorRelations": [
-      "same-axis-different-value",
       "adjacent-contrast"
     ],
     "sourceEvidence": [
-      "keyword-mapped"
+      "auto-derived"
     ],
-    "confidence": "medium"
+    "confidence": "low"
   },
   {
     "wordId": "word_557e6e16cc2a",
@@ -132031,8 +129361,8 @@ export const SENSE_RELATION_CATALOG = [
     "word": "unanimous",
     "senseId": "word_f019cab46060-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "全体一致的；一致同意的",
-    "meaningDetailedZh": "全体一致的；一致同意的",
+    "quizMeaningZh": "全体一致的",
+    "meaningDetailedZh": "全体一致的",
     "conceptAxis": "similarity-degree",
     "conceptValue": "identical",
     "relationFamily": "comparison-and-similarity",
@@ -132041,9 +129371,7 @@ export const SENSE_RELATION_CATALOG = [
       "全体",
       "体一",
       "一致",
-      "致的",
-      "的一",
-      "致同"
+      "致的"
     ],
     "allowedDistractorRelations": [
       "same-axis-different-value",
@@ -133664,30 +130992,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_6cca4220b2c8",
-    "word": "grandma",
-    "senseId": "word_6cca4220b2c8-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "奶奶；外婆",
-    "meaningDetailedZh": "奶奶；外婆",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "奶奶",
-      "奶外",
-      "外婆"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_7008a673ce6a",
     "word": "nutrient",
     "senseId": "word_7008a673ce6a-sense-1",
@@ -133704,30 +131008,6 @@ export const SENSE_RELATION_CATALOG = [
       "素营",
       "养物",
       "物质"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_309e5069339a",
-    "word": "o'clock",
-    "senseId": "word_309e5069339a-sense-1",
-    "posFamily": "adverb",
-    "quizMeaningZh": "...点钟",
-    "meaningDetailedZh": "...点钟",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "..",
-      ".点",
-      "点钟"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -134262,8 +131542,8 @@ export const SENSE_RELATION_CATALOG = [
     "word": "contractual",
     "senseId": "word_listening1179_afebe3466940-sense-1",
     "posFamily": "adjective",
-    "quizMeaningZh": "合同的，契约的",
-    "meaningDetailedZh": "合同的，契约的",
+    "quizMeaningZh": "合同的；契约的",
+    "meaningDetailedZh": "合同的；契约的",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
@@ -134324,28 +131604,6 @@ export const SENSE_RELATION_CATALOG = [
       "方法",
       "法论",
       "论的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_d752b9d04068",
-    "word": "apple",
-    "senseId": "word_d752b9d04068-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "苹果",
-    "meaningDetailedZh": "苹果",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "苹果"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -134701,32 +131959,6 @@ export const SENSE_RELATION_CATALOG = [
       "长方",
       "方形",
       "形的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_1600740c91b0",
-    "word": "ends",
-    "senseId": "word_1600740c91b0-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "结束；末端（复数）",
-    "meaningDetailedZh": "结束；末端（复数）",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "结束",
-      "束末",
-      "末端",
-      "端复",
-      "复数"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -135526,27 +132758,32 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "medium"
   },
   {
-    "wordId": "word_33254b73d3bf",
-    "word": "ass",
-    "senseId": "word_33254b73d3bf-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "驴；笨蛋",
-    "meaningDetailedZh": "驴；笨蛋",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
+    "wordId": "word_d7658b5fe9d8",
+    "word": "forgotten",
+    "senseId": "word_d7658b5fe9d8-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "被遗忘的；忘记（过去分词）",
+    "meaningDetailedZh": "被遗忘的；忘记（过去分词）",
+    "conceptAxis": "temporal-position",
+    "conceptValue": "past",
+    "relationFamily": "time-and-temporality",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "驴笨",
-      "笨蛋"
+      "被遗",
+      "遗忘",
+      "忘的",
+      "的忘",
+      "忘记",
+      "记过"
     ],
     "allowedDistractorRelations": [
+      "same-axis-different-value",
       "adjacent-contrast"
     ],
     "sourceEvidence": [
-      "auto-derived"
+      "keyword-mapped"
     ],
-    "confidence": "low"
+    "confidence": "medium"
   },
   {
     "wordId": "word_excel_e49a417471c3",
@@ -136164,30 +133401,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_b6e346593e5a",
-    "word": "madam",
-    "senseId": "word_b6e346593e5a-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "女士；夫人",
-    "meaningDetailedZh": "女士；夫人",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "女士",
-      "士夫",
-      "夫人"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_listening1179_96d0955b7496",
     "word": "meteorological",
     "senseId": "word_listening1179_96d0955b7496-sense-1",
@@ -136728,28 +133941,6 @@ export const SENSE_RELATION_CATALOG = [
       "keyword-mapped"
     ],
     "confidence": "medium"
-  },
-  {
-    "wordId": "word_82ac205b3b54",
-    "word": "midnight",
-    "senseId": "word_82ac205b3b54-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "午夜",
-    "meaningDetailedZh": "午夜",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "午夜"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
   },
   {
     "wordId": "word_7655d31eab14",
@@ -138411,46 +135602,20 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_cc237d980879",
-    "word": "legs",
-    "senseId": "word_cc237d980879-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "腿（复数）",
-    "meaningDetailedZh": "腿（复数）",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "腿复",
-      "复数"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_d21f2433ff83",
     "word": "testing",
     "senseId": "word_d21f2433ff83-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "测试；知道的行为",
-    "meaningDetailedZh": "测试；知道的行为",
+    "quizMeaningZh": "测试；检验",
+    "meaningDetailedZh": "测试；检验",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
       "测试",
-      "试知",
-      "知道",
-      "道的",
-      "的行",
-      "行为"
+      "试检",
+      "检验"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -139754,17 +136919,19 @@ export const SENSE_RELATION_CATALOG = [
     "word": "acts",
     "senseId": "word_5c657bebb29e-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "新的；书；早的",
-    "meaningDetailedZh": "新的；书；早的",
+    "quizMeaningZh": "行动；行为；表演（复数/第三人称单数）",
+    "meaningDetailedZh": "行动；行为；表演（复数/第三人称单数）",
     "conceptAxis": "general",
     "conceptValue": "unknown",
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "新的",
-      "的书",
-      "书早",
-      "早的"
+      "行动",
+      "动行",
+      "行为",
+      "为表",
+      "表演",
+      "演复"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -139943,30 +137110,6 @@ export const SENSE_RELATION_CATALOG = [
       "采用",
       "用收",
       "收养"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_557cd26810e8",
-    "word": "kent",
-    "senseId": "word_557cd26810e8-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "肯特（地名）",
-    "meaningDetailedZh": "肯特（地名）",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "肯特",
-      "特地",
-      "地名"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -140590,12 +137733,7 @@ export const SENSE_RELATION_CATALOG = [
     "relationFamily": "general",
     "synonymKeys": [],
     "ambiguityKeys": [
-      "虐待",
-      "待不",
-      "不公",
-      "公正",
-      "正地",
-      "地对"
+      "虐待"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -141281,23 +138419,28 @@ export const SENSE_RELATION_CATALOG = [
     "word": "vat",
     "senseId": "word_c37fa9d746f5-sense-1",
     "posFamily": "noun",
-    "quizMeaningZh": "增值税",
-    "meaningDetailedZh": "增值税",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
+    "quizMeaningZh": "大桶；缸；增值税（VAT）",
+    "meaningDetailedZh": "大桶；缸；增值税（VAT）",
+    "conceptAxis": "size-scale",
+    "conceptValue": "large",
+    "relationFamily": "size-and-scale",
     "synonymKeys": [],
     "ambiguityKeys": [
+      "大桶",
+      "桶缸",
+      "缸增",
       "增值",
-      "值税"
+      "值税",
+      "税V"
     ],
     "allowedDistractorRelations": [
+      "same-axis-different-value",
       "adjacent-contrast"
     ],
     "sourceEvidence": [
-      "auto-derived"
+      "keyword-mapped"
     ],
-    "confidence": "low"
+    "confidence": "medium"
   },
   {
     "wordId": "word_60c301805f21",
@@ -141917,29 +139060,6 @@ export const SENSE_RELATION_CATALOG = [
       "的不",
       "不足",
       "足的"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
-    "wordId": "word_95d8ab2c9f67",
-    "word": "faces",
-    "senseId": "word_95d8ab2c9f67-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "脸（复数）",
-    "meaningDetailedZh": "脸（复数）",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "脸复",
-      "复数"
     ],
     "allowedDistractorRelations": [
       "adjacent-contrast"
@@ -144667,30 +141787,6 @@ export const SENSE_RELATION_CATALOG = [
     "confidence": "low"
   },
   {
-    "wordId": "word_c6d5de5a1472",
-    "word": "cow",
-    "senseId": "word_c6d5de5a1472-sense-1",
-    "posFamily": "noun",
-    "quizMeaningZh": "母牛；奶牛",
-    "meaningDetailedZh": "母牛；奶牛",
-    "conceptAxis": "general",
-    "conceptValue": "unknown",
-    "relationFamily": "general",
-    "synonymKeys": [],
-    "ambiguityKeys": [
-      "母牛",
-      "牛奶",
-      "奶牛"
-    ],
-    "allowedDistractorRelations": [
-      "adjacent-contrast"
-    ],
-    "sourceEvidence": [
-      "auto-derived"
-    ],
-    "confidence": "low"
-  },
-  {
     "wordId": "word_a312f9f8c121",
     "word": "pepper",
     "senseId": "word_a312f9f8c121-sense-1",
@@ -145681,6 +142777,3094 @@ export const SENSE_RELATION_CATALOG = [
       "auto-derived"
     ],
     "confidence": "low"
+  },
+  {
+    "wordId": "word_4a7a5ff9e356",
+    "word": "little",
+    "senseId": "word_4a7a5ff9e356-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "小的；很少的",
+    "meaningDetailedZh": "小的；很少的",
+    "conceptAxis": "size-scale",
+    "conceptValue": "small",
+    "relationFamily": "size-and-scale",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "小的",
+      "的很",
+      "很少",
+      "少的"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_d46ed415789f",
+    "word": "abnormality",
+    "senseId": "word_d46ed415789f-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "异常；畸形",
+    "meaningDetailedZh": "异常；畸形",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "异常",
+      "常畸",
+      "畸形"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_eee641f56c3d",
+    "word": "telecommute",
+    "senseId": "word_eee641f56c3d-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "远程办公",
+    "meaningDetailedZh": "远程办公",
+    "conceptAxis": " distance-proximity",
+    "conceptValue": "distant",
+    "relationFamily": "spatial-and-distance",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "远程",
+      "程办",
+      "办公"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_0c16baf0eded",
+    "word": "japanese",
+    "senseId": "word_0c16baf0eded-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "日本的；日语；日本人",
+    "meaningDetailedZh": "日本的；日语；日本人",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "日本",
+      "本的",
+      "的日",
+      "日语",
+      "语日",
+      "本人"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_320aa710f409",
+    "word": "italian",
+    "senseId": "word_320aa710f409-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "意大利的；意大利人",
+    "meaningDetailedZh": "意大利的；意大利人",
+    "conceptAxis": "size-scale",
+    "conceptValue": "large",
+    "relationFamily": "size-and-scale",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "意大",
+      "大利",
+      "利的",
+      "的意",
+      "利人"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_dab0dee63ad3",
+    "word": "france",
+    "senseId": "word_dab0dee63ad3-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "法国",
+    "meaningDetailedZh": "法国",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "法国"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_fe41e892a2b8",
+    "word": "marginalisation",
+    "senseId": "word_listening1179_fe41e892a2b8-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "边缘化",
+    "meaningDetailedZh": "边缘化",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "边缘",
+      "缘化"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_9ce70bd1d4b3",
+    "word": "ought",
+    "senseId": "word_9ce70bd1d4b3-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "应该",
+    "meaningDetailedZh": "应该",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "应该"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_d7af66c3eabd",
+    "word": "restatement",
+    "senseId": "word_d7af66c3eabd-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "重申；重新表述",
+    "meaningDetailedZh": "重申；重新表述",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "重申",
+      "申重",
+      "重新",
+      "新表",
+      "表述"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_d8b9d454eca1",
+    "word": "israel",
+    "senseId": "word_d8b9d454eca1-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "以色列",
+    "meaningDetailedZh": "以色列",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "以色",
+      "色列"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_081df50ca8d8",
+    "word": "graphics",
+    "senseId": "word_081df50ca8d8-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "图形",
+    "meaningDetailedZh": "图形",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "图形"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_3fac38e63201",
+    "word": "olympics",
+    "senseId": "word_3fac38e63201-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "一次；每个；国家",
+    "meaningDetailedZh": "奥林匹克运动会",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "奥林",
+      "林匹",
+      "匹克",
+      "克运",
+      "运动",
+      "动会"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_1620c6035e58",
+    "word": "cohesion",
+    "senseId": "word_1620c6035e58-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "凝聚力，结合",
+    "meaningDetailedZh": "凝聚力，结合",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "凝聚",
+      "聚力",
+      "力结",
+      "结合"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_0ac4e8ae342a",
+    "word": "plagiarise",
+    "senseId": "word_listening1179_0ac4e8ae342a-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "抄袭",
+    "meaningDetailedZh": "抄袭",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "抄袭"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_8c8fa8880a1e",
+    "word": "underlie",
+    "senseId": "word_8c8fa8880a1e-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "构成…的基础",
+    "meaningDetailedZh": "构成…的基础",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "构成",
+      "成…",
+      "…的",
+      "的基",
+      "基础"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_be09f94ae485",
+    "word": "heighten",
+    "senseId": "word_be09f94ae485-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "提高，增强",
+    "meaningDetailedZh": "提高，增强",
+    "conceptAxis": "power-level",
+    "conceptValue": "strong",
+    "relationFamily": "power-and-control",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "提高",
+      "高增",
+      "增强"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_92c9501bf3a3",
+    "word": "found",
+    "senseId": "word_92c9501bf3a3-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "建立；创办",
+    "meaningDetailedZh": "建立；创办",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "建立",
+      "立创",
+      "创办"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_22ae6ede06ba",
+    "word": "desertification",
+    "senseId": "word_listening1179_22ae6ede06ba-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "荒漠化",
+    "meaningDetailedZh": "荒漠化",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "荒漠",
+      "漠化"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_635bf3103516",
+    "word": "massachusetts",
+    "senseId": "word_635bf3103516-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "马萨诸塞州",
+    "meaningDetailedZh": "马萨诸塞州",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "马萨",
+      "萨诸",
+      "诸塞",
+      "塞州"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_0381c2eb39e7",
+    "word": "persona",
+    "senseId": "word_0381c2eb39e7-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "角色；形象",
+    "meaningDetailedZh": "角色；形象",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "角色",
+      "色形",
+      "形象"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_b0e26827e63a",
+    "word": "america",
+    "senseId": "word_b0e26827e63a-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "美国；美洲",
+    "meaningDetailedZh": "美国；美洲",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "美国",
+      "国美",
+      "美洲"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_c2a5b8c3b402",
+    "word": "encode",
+    "senseId": "word_c2a5b8c3b402-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "编码；加密",
+    "meaningDetailedZh": "编码；加密",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "编码",
+      "码加",
+      "加密"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_fed61c5032e3",
+    "word": "videoconference",
+    "senseId": "word_fed61c5032e3-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "视频会议",
+    "meaningDetailedZh": "视频会议",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "视频",
+      "频会",
+      "会议"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_e56a471f7ae0",
+    "word": "causation",
+    "senseId": "word_e56a471f7ae0-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "因果关系",
+    "meaningDetailedZh": "因果关系",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "因果",
+      "果关",
+      "关系"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_45e3d5d23009",
+    "word": "sexuality",
+    "senseId": "word_45e3d5d23009-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "性取向；性",
+    "meaningDetailedZh": "性取向；性",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "性取",
+      "取向",
+      "向性"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_58173f0423e4",
+    "word": "immobilise",
+    "senseId": "word_58173f0423e4-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "使固定",
+    "meaningDetailedZh": "使固定",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "使固",
+      "固定"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_7e2d00b3ac67",
+    "word": "fluctuate",
+    "senseId": "word_7e2d00b3ac67-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "波动",
+    "meaningDetailedZh": "波动",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "波动"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_ec0967417f32",
+    "word": "paintwork",
+    "senseId": "word_ec0967417f32-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "油漆表面；漆面",
+    "meaningDetailedZh": "油漆表面；漆面",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "油漆",
+      "漆表",
+      "表面",
+      "面漆",
+      "漆面"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_cc2eb0eaa05b",
+    "word": "runaround",
+    "senseId": "word_cc2eb0eaa05b-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "推诿，回避",
+    "meaningDetailedZh": "推诿，回避",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "推诿",
+      "诿回",
+      "回避"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_57f92721d489",
+    "word": "postbox",
+    "senseId": "word_57f92721d489-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "邮筒；信箱",
+    "meaningDetailedZh": "邮筒；信箱",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "邮筒",
+      "筒信",
+      "信箱"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_b471e40e036c",
+    "word": "shortcoming",
+    "senseId": "word_b471e40e036c-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "缺点；不足",
+    "meaningDetailedZh": "缺点；不足",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "缺点",
+      "点不",
+      "不足"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_f602e1edec07",
+    "word": "gatherer",
+    "senseId": "word_f602e1edec07-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "从事相关工作的人",
+    "meaningDetailedZh": "从事相关工作的人",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "从事",
+      "事相",
+      "相关",
+      "关工",
+      "工作",
+      "作的"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_fadcdb797829",
+    "word": "larder",
+    "senseId": "word_fadcdb797829-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "食品储藏室",
+    "meaningDetailedZh": "食品储藏室",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "食品",
+      "品储",
+      "储藏",
+      "藏室"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_19efe2802265",
+    "word": "hypothesize",
+    "senseId": "word_19efe2802265-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "假设；假定",
+    "meaningDetailedZh": "假设；假定",
+    "conceptAxis": "truth-value",
+    "conceptValue": "false",
+    "relationFamily": "truth-and-accuracy",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "假设",
+      "设假",
+      "假定"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_8445d41b803f",
+    "word": "impair",
+    "senseId": "word_8445d41b803f-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "损害；削弱",
+    "meaningDetailedZh": "损害；削弱",
+    "conceptAxis": "power-level",
+    "conceptValue": "weak",
+    "relationFamily": "power-and-control",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "损害",
+      "害削",
+      "削弱"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_90fb78881cc8",
+    "word": "noticeboard",
+    "senseId": "word_90fb78881cc8-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "布告栏",
+    "meaningDetailedZh": "布告栏",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "布告",
+      "告栏"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_65ebea085caa",
+    "word": "misidentify",
+    "senseId": "word_65ebea085caa-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "错误识别；认错",
+    "meaningDetailedZh": "错误识别；认错",
+    "conceptAxis": "truth-value",
+    "conceptValue": "false",
+    "relationFamily": "truth-and-accuracy",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "错误",
+      "误识",
+      "识别",
+      "别认",
+      "认错"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_eef1ce38b4f9",
+    "word": "applied",
+    "senseId": "word_eef1ce38b4f9-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "应用的;实用的",
+    "meaningDetailedZh": "应用的;实用的",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "应用",
+      "用的",
+      "的实",
+      "实用"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_f394b30a1830",
+    "word": "permittee",
+    "senseId": "word_f394b30a1830-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "持证人；被许可人",
+    "meaningDetailedZh": "持证人；被许可人",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "持证",
+      "证人",
+      "人被",
+      "被许",
+      "许可",
+      "可人"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_89db2bacfb87",
+    "word": "trousers",
+    "senseId": "word_89db2bacfb87-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "裤子",
+    "meaningDetailedZh": "裤子",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "裤子"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_7c838daaf215",
+    "word": "sitting",
+    "senseId": "word_7c838daaf215-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "坐;会议",
+    "meaningDetailedZh": "坐;会议",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "坐会",
+      "会议"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_4faac7faa0ac",
+    "word": "minutes",
+    "senseId": "word_4faac7faa0ac-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "分钟；会议记录",
+    "meaningDetailedZh": "分钟；会议记录",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "分钟",
+      "钟会",
+      "会议",
+      "议记",
+      "记录"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_ed04ce0a1d53",
+    "word": "reforestation",
+    "senseId": "word_listening1179_ed04ce0a1d53-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "重新造林",
+    "meaningDetailedZh": "重新造林",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "重新",
+      "新造",
+      "造林"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_b458d8329f54",
+    "word": "asian",
+    "senseId": "word_b458d8329f54-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "亚洲的；亚洲人",
+    "meaningDetailedZh": "亚洲的；亚洲人",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "亚洲",
+      "洲的",
+      "的亚",
+      "洲人"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_ca220417034a",
+    "word": "randomize",
+    "senseId": "word_ca220417034a-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "随机化",
+    "meaningDetailedZh": "随机化",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "随机",
+      "机化"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_ee58f690ad76",
+    "word": "conceptualize",
+    "senseId": "word_ee58f690ad76-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "概念化；构思",
+    "meaningDetailedZh": "概念化；构思",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "概念",
+      "念化",
+      "化构",
+      "构思"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_c42006c2ccbe",
+    "word": "centralize",
+    "senseId": "word_c42006c2ccbe-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "集中化",
+    "meaningDetailedZh": "集中化",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "集中",
+      "中化"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_3ae74d0e0492",
+    "word": "described",
+    "senseId": "word_3ae74d0e0492-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "描述的",
+    "meaningDetailedZh": "描述的",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "描述",
+      "述的"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_7bb9b481817b",
+    "word": "killed",
+    "senseId": "word_7bb9b481817b-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "杀死的",
+    "meaningDetailedZh": "杀死的",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "杀死",
+      "死的"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_62d1ff031461",
+    "word": "affected",
+    "senseId": "word_62d1ff031461-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "受影响的",
+    "meaningDetailedZh": "受影响的",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "受影",
+      "影响",
+      "响的"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_2e03795b0c7c",
+    "word": "notetaking",
+    "senseId": "word_listening1179_2e03795b0c7c-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "记笔记",
+    "meaningDetailedZh": "记笔记",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "记笔",
+      "笔记"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_69f37c35b03f",
+    "word": "powercut",
+    "senseId": "word_listening1179_69f37c35b03f-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "停电",
+    "meaningDetailedZh": "停电",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "停电"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_21deae0d2b84",
+    "word": "salesclerk",
+    "senseId": "word_listening1179_21deae0d2b84-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "售货员",
+    "meaningDetailedZh": "售货员",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "售货",
+      "货员"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_b41c448aaf22",
+    "word": "smokealarm",
+    "senseId": "word_listening1179_b41c448aaf22-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "烟雾报警器",
+    "meaningDetailedZh": "烟雾报警器",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "烟雾",
+      "雾报",
+      "报警",
+      "警器"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_31b14dca2469",
+    "word": "stoplight",
+    "senseId": "word_listening1179_31b14dca2469-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "红绿灯",
+    "meaningDetailedZh": "红绿灯",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "红绿",
+      "绿灯"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_9f962dc9adfa",
+    "word": "townhall",
+    "senseId": "word_listening1179_9f962dc9adfa-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "市政厅",
+    "meaningDetailedZh": "市政厅",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "市政",
+      "政厅"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_c03a73095563",
+    "word": "digitalisation",
+    "senseId": "word_listening1179_c03a73095563-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "数字化",
+    "meaningDetailedZh": "数字化",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "数字",
+      "字化"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_a00f82d8b27e",
+    "word": "cyberattack",
+    "senseId": "word_listening1179_a00f82d8b27e-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "网络攻击",
+    "meaningDetailedZh": "网络攻击",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "网络",
+      "络攻",
+      "攻击"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_bd43eb38eae1",
+    "word": "forename",
+    "senseId": "word_listening1179_bd43eb38eae1-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "名（相对于姓）",
+    "meaningDetailedZh": "名（相对于姓）",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "名相",
+      "相对",
+      "对于",
+      "于姓"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_f1962693b66c",
+    "word": "stomachache",
+    "senseId": "word_listening1179_f1962693b66c-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "胃痛，肚子疼",
+    "meaningDetailedZh": "胃痛，肚子疼",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "胃痛",
+      "痛肚",
+      "肚子",
+      "子疼"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_d78a7f9e871f",
+    "word": "interrelationship",
+    "senseId": "word_listening1179_d78a7f9e871f-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "相互关系",
+    "meaningDetailedZh": "相互关系",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "相互",
+      "互关",
+      "关系"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_90371f493466",
+    "word": "composter",
+    "senseId": "word_listening1179_90371f493466-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "堆肥箱",
+    "meaningDetailedZh": "堆肥箱",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "堆肥",
+      "肥箱"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_e6f6a9f72ab2",
+    "word": "exemplification",
+    "senseId": "word_listening1179_e6f6a9f72ab2-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "例证",
+    "meaningDetailedZh": "例证",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "例证"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_9a0d21243c6c",
+    "word": "generalisation",
+    "senseId": "word_listening1179_9a0d21243c6c-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "概括，归纳",
+    "meaningDetailedZh": "概括，归纳",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "概括",
+      "括归",
+      "归纳"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_ec3be984d993",
+    "word": "microplastic",
+    "senseId": "word_listening1179_ec3be984d993-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "微塑料",
+    "meaningDetailedZh": "微塑料",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "微塑",
+      "塑料"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_6b15ef618654",
+    "word": "paragraphing",
+    "senseId": "word_listening1179_6b15ef618654-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "分段",
+    "meaningDetailedZh": "分段",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "分段"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_47132ca06c1b",
+    "word": "socialisation",
+    "senseId": "word_listening1179_47132ca06c1b-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "社会化；社交",
+    "meaningDetailedZh": "社会化；社交",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "社会",
+      "会化",
+      "化社",
+      "社交"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_1e3ed671310e",
+    "word": "reconciliation",
+    "senseId": "word_1e3ed671310e-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "和解；调和",
+    "meaningDetailedZh": "和解；调和",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "和解",
+      "解调",
+      "调和"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_ed1a3b9306d6",
+    "word": "liberalization",
+    "senseId": "word_ed1a3b9306d6-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "自由化",
+    "meaningDetailedZh": "自由化",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "自由",
+      "由化"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_e77e5ee820f9",
+    "word": "fascinate",
+    "senseId": "word_e77e5ee820f9-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "使着迷",
+    "meaningDetailedZh": "使着迷",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "使着",
+      "着迷"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_005618d62b61",
+    "word": "riding",
+    "senseId": "word_005618d62b61-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "骑马；骑（现在分词）",
+    "meaningDetailedZh": "骑马；骑（现在分词）",
+    "conceptAxis": "temporal-position",
+    "conceptValue": "present",
+    "relationFamily": "time-and-temporality",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "骑马",
+      "马骑",
+      "骑现",
+      "现在",
+      "在分",
+      "分词"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_dd91aa249884",
+    "word": "popularize",
+    "senseId": "word_dd91aa249884-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "普及",
+    "meaningDetailedZh": "普及",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "普及"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_listening1179_298d0899cdc6",
+    "word": "objectify",
+    "senseId": "word_listening1179_298d0899cdc6-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "使客观化；物化",
+    "meaningDetailedZh": "使客观化；物化",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "物化"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_e3e4c5d6a429",
+    "word": "collocation",
+    "senseId": "word_e3e4c5d6a429-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "搭配",
+    "meaningDetailedZh": "搭配",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "搭配"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_01c6fef811ce",
+    "word": "embargo",
+    "senseId": "word_01c6fef811ce-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "禁运",
+    "meaningDetailedZh": "禁运",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "禁运"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_8a49cb965fc6",
+    "word": "jobseeker",
+    "senseId": "word_8a49cb965fc6-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "求职者",
+    "meaningDetailedZh": "求职者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "求职",
+      "职者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_326f13d28afb",
+    "word": "constituent",
+    "senseId": "word_326f13d28afb-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "成分；选民",
+    "meaningDetailedZh": "成分；选民",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "成分",
+      "分选",
+      "选民"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_b9800593abd9",
+    "word": "legitimacy",
+    "senseId": "word_b9800593abd9-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "合法性；正当性",
+    "meaningDetailedZh": "合法性；正当性",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "合法",
+      "法性",
+      "性正",
+      "正当",
+      "当性"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_c55f23d20c89",
+    "word": "policymaker",
+    "senseId": "word_c55f23d20c89-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "政策制定者",
+    "meaningDetailedZh": "政策制定者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "政策",
+      "策制",
+      "制定",
+      "定者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_99e83fc4640a",
+    "word": "oppression",
+    "senseId": "word_99e83fc4640a-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "压迫",
+    "meaningDetailedZh": "压迫",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "压迫"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_86492cefb217",
+    "word": "segregation",
+    "senseId": "word_86492cefb217-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "隔离；分离",
+    "meaningDetailedZh": "隔离；分离",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "隔离",
+      "离分",
+      "分离"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_819b4ee92d85",
+    "word": "persecution",
+    "senseId": "word_819b4ee92d85-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "迫害",
+    "meaningDetailedZh": "迫害",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "迫害"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_4c6e6ddb2581",
+    "word": "underpayment",
+    "senseId": "word_4c6e6ddb2581-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "少付的工资或款项",
+    "meaningDetailedZh": "少付的工资或款项",
+    "conceptAxis": "quantity-amount",
+    "conceptValue": "scarce",
+    "relationFamily": "quantity-and-amount",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "少付",
+      "付的",
+      "的工",
+      "工资",
+      "资或",
+      "或款"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_0c8cfe10af80",
+    "word": "dangle",
+    "senseId": "word_0c8cfe10af80-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "悬挂；摇晃",
+    "meaningDetailedZh": "悬挂；摇晃",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "悬挂",
+      "挂摇",
+      "摇晃"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_a5c96bc8a871",
+    "word": "deskjob",
+    "senseId": "word_a5c96bc8a871-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "案头工作",
+    "meaningDetailedZh": "案头工作",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "案头",
+      "头工",
+      "工作"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_ba3f35bf4684",
+    "word": "resolver",
+    "senseId": "word_ba3f35bf4684-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "解决者",
+    "meaningDetailedZh": "解决者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "解决",
+      "决者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_ab82d211b52e",
+    "word": "rangefinder",
+    "senseId": "word_ab82d211b52e-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "测距仪（用于测量距离的光学或电子工具）",
+    "meaningDetailedZh": "测距仪（用于测量距离的光学或电子工具）",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "测距",
+      "距仪",
+      "仪用",
+      "用于",
+      "于测",
+      "测量"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_60544f23ab4c",
+    "word": "rampway",
+    "senseId": "word_60544f23ab4c-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "（供轮椅或货物用的）坡道",
+    "meaningDetailedZh": "（供轮椅或货物用的）坡道",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "供轮",
+      "轮椅",
+      "椅或",
+      "或货",
+      "货物",
+      "物用"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_c659c3547b4b",
+    "word": "pinboard",
+    "senseId": "word_c659c3547b4b-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "图钉板；公告板",
+    "meaningDetailedZh": "图钉板；公告板",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "图钉",
+      "钉板",
+      "板公",
+      "公告",
+      "告板"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_d068552c8536",
+    "word": "mapreader",
+    "senseId": "word_d068552c8536-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "地图阅读器（人或设备）",
+    "meaningDetailedZh": "地图阅读器（人或设备）",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "地图",
+      "图阅",
+      "阅读",
+      "读器",
+      "器人",
+      "人或"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_dcfcd3c1848b",
+    "word": "preceptor",
+    "senseId": "word_dcfcd3c1848b-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "实习指导老师",
+    "meaningDetailedZh": "实习指导老师",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "实习",
+      "习指",
+      "指导",
+      "导老",
+      "老师"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_81f92babd538",
+    "word": "mutiny",
+    "senseId": "word_81f92babd538-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "兵变；叛乱",
+    "meaningDetailedZh": "兵变；叛乱",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "兵变",
+      "变叛",
+      "叛乱"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_ab3d21d0d2fe",
+    "word": "exemplify",
+    "senseId": "word_ab3d21d0d2fe-sense-1",
+    "posFamily": "verb",
+    "quizMeaningZh": "例证；举例说明",
+    "meaningDetailedZh": "例证；举例说明",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "例证",
+      "证举",
+      "举例",
+      "例说",
+      "说明"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_2a3084e416b4",
+    "word": "milliner",
+    "senseId": "word_2a3084e416b4-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "女帽制造商或销售商",
+    "meaningDetailedZh": "女帽制造商或销售商",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "女帽",
+      "帽制",
+      "制造",
+      "造商",
+      "商或",
+      "或销"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_d3a342dd405f",
+    "word": "plantroom",
+    "senseId": "word_d3a342dd405f-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "设备机房；植物房",
+    "meaningDetailedZh": "设备机房；植物房",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "设备",
+      "备机",
+      "机房",
+      "房植",
+      "植物",
+      "物房"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_2065354ed2a4",
+    "word": "passcode",
+    "senseId": "word_2065354ed2a4-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "密码；通行码",
+    "meaningDetailedZh": "密码；通行码",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "密码",
+      "码通",
+      "通行",
+      "行码"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_81a491b30464",
+    "word": "pushchair",
+    "senseId": "word_81a491b30464-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "婴儿推车",
+    "meaningDetailedZh": "婴儿推车",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "婴儿",
+      "儿推",
+      "推车"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_186e9ff804f0",
+    "word": "poolroom",
+    "senseId": "word_186e9ff804f0-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "台球室；游泳池机房",
+    "meaningDetailedZh": "台球室；游泳池机房",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "台球",
+      "球室",
+      "室游",
+      "游泳",
+      "泳池",
+      "池机"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_9308395042f0",
+    "word": "pillbox",
+    "senseId": "word_9308395042f0-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "药丸盒；碉堡",
+    "meaningDetailedZh": "药丸盒；碉堡",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "药丸",
+      "丸盒",
+      "盒碉",
+      "碉堡"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_b501cd94f838",
+    "word": "pillowcase",
+    "senseId": "word_b501cd94f838-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "枕套",
+    "meaningDetailedZh": "枕套",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "枕套"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_6c602533c1f2",
+    "word": "protectorate",
+    "senseId": "word_6c602533c1f2-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "保护国",
+    "meaningDetailedZh": "保护国",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "保护",
+      "护国"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_5c70f12c6e83",
+    "word": "puppeteer",
+    "senseId": "word_5c70f12c6e83-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "木偶操纵者",
+    "meaningDetailedZh": "木偶操纵者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "木偶",
+      "偶操",
+      "操纵",
+      "纵者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_6ece9ecf35a4",
+    "word": "outpost",
+    "senseId": "word_6ece9ecf35a4-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "前哨；偏远据点",
+    "meaningDetailedZh": "前哨；偏远据点",
+    "conceptAxis": " distance-proximity",
+    "conceptValue": "distant",
+    "relationFamily": "spatial-and-distance",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "前哨",
+      "哨偏",
+      "偏远",
+      "远据",
+      "据点"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_ea7f07a35aaf",
+    "word": "recognizer",
+    "senseId": "word_ea7f07a35aaf-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "识别器（能够辨认特定事物或人的设备或程序）",
+    "meaningDetailedZh": "识别器（能够辨认特定事物或人的设备或程序）",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "识别",
+      "别器",
+      "器能",
+      "能够",
+      "够辨",
+      "辨认"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_35848857832a",
+    "word": "hatchway",
+    "senseId": "word_35848857832a-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "舱口；天窗",
+    "meaningDetailedZh": "舱口；天窗",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "舱口",
+      "口天",
+      "天窗"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_17e4603a1174",
+    "word": "preserver",
+    "senseId": "word_17e4603a1174-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "保存某物的人或物",
+    "meaningDetailedZh": "保存某物的人或物",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "保存",
+      "存某",
+      "某物",
+      "物的",
+      "的人",
+      "人或"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_3d32e258cee5",
+    "word": "redeemer",
+    "senseId": "word_3d32e258cee5-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "救赎者（从困境或罪恶中拯救他人的人或事物）",
+    "meaningDetailedZh": "救赎者（从困境或罪恶中拯救他人的人或事物）",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "救赎",
+      "赎者",
+      "者从",
+      "从困",
+      "困境",
+      "境或"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_41a8d2fc538c",
+    "word": "ragpicker",
+    "senseId": "word_41a8d2fc538c-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "拾荒者；捡破烂的人",
+    "meaningDetailedZh": "拾荒者；捡破烂的人",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "拾荒",
+      "荒者",
+      "者捡",
+      "捡破",
+      "破烂",
+      "烂的"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_29d252d7d463",
+    "word": "reasoner",
+    "senseId": "word_29d252d7d463-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "善于推理的人；逻辑思考者",
+    "meaningDetailedZh": "善于推理的人；逻辑思考者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "善于",
+      "于推",
+      "推理",
+      "理的",
+      "的人",
+      "人逻"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_fa983c1431fb",
+    "word": "partaker",
+    "senseId": "word_fa983c1431fb-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "参与者；分享者",
+    "meaningDetailedZh": "参与者；分享者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "参与",
+      "与者",
+      "者分",
+      "分享",
+      "享者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_7fcec05ff3b7",
+    "word": "rejoinder",
+    "senseId": "word_7fcec05ff3b7-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "反驳；回答",
+    "meaningDetailedZh": "反驳；回答",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "反驳",
+      "驳回",
+      "回答"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_0f63efe2686b",
+    "word": "parkade",
+    "senseId": "word_0f63efe2686b-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "多层停车场",
+    "meaningDetailedZh": "多层停车场",
+    "conceptAxis": "quantity-amount",
+    "conceptValue": "abundant",
+    "relationFamily": "quantity-and-amount",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "多层",
+      "层停",
+      "停车",
+      "车场"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_885e5d9b6f38",
+    "word": "rentier",
+    "senseId": "word_885e5d9b6f38-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "靠租金生活的人",
+    "meaningDetailedZh": "靠租金生活的人",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "靠租",
+      "租金",
+      "金生",
+      "生活",
+      "活的",
+      "的人"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_d81c570c4e10",
+    "word": "priesthood",
+    "senseId": "word_d81c570c4e10-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "神职人员群体或职位",
+    "meaningDetailedZh": "神职人员群体或职位",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "神职",
+      "职人",
+      "人员",
+      "员群",
+      "群体",
+      "体或"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_2a4a8899d45b",
+    "word": "quayside",
+    "senseId": "word_2a4a8899d45b-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "码头边",
+    "meaningDetailedZh": "码头边",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "码头",
+      "头边"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_0932e5ac806b",
+    "word": "rattlesnake",
+    "senseId": "word_0932e5ac806b-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "响尾蛇（一种有毒的蛇，尾巴会发出响声）",
+    "meaningDetailedZh": "响尾蛇（一种有毒的蛇，尾巴会发出响声）",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "响尾",
+      "尾蛇",
+      "蛇一",
+      "一种",
+      "种有",
+      "有毒"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_f267e1328ab4",
+    "word": "reagent",
+    "senseId": "word_f267e1328ab4-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "试剂（用于化学反应中检测或制取其他物质的物质）",
+    "meaningDetailedZh": "试剂（用于化学反应中检测或制取其他物质的物质）",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "试剂",
+      "剂用",
+      "用于",
+      "于化",
+      "化学",
+      "学反"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_0ab710c23e08",
+    "word": "replier",
+    "senseId": "word_0ab710c23e08-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "回复者",
+    "meaningDetailedZh": "回复者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "回复",
+      "复者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_6c1b994c585d",
+    "word": "resistor",
+    "senseId": "word_6c1b994c585d-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "电阻器",
+    "meaningDetailedZh": "电阻器",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "电阻",
+      "阻器"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_bd10529c3427",
+    "word": "responder",
+    "senseId": "word_bd10529c3427-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "响应者",
+    "meaningDetailedZh": "响应者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "响应",
+      "应者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_7cf02ff5ca1d",
+    "word": "returnee",
+    "senseId": "word_7cf02ff5ca1d-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "归来者",
+    "meaningDetailedZh": "归来者",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "归来",
+      "来者"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_2f7813c6ed6f",
+    "word": "holster",
+    "senseId": "word_2f7813c6ed6f-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "手枪皮套",
+    "meaningDetailedZh": "手枪皮套",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "手枪",
+      "枪皮",
+      "皮套"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_9f29827997f9",
+    "word": "latest",
+    "senseId": "word_9f29827997f9-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "最新的；最近的",
+    "meaningDetailedZh": "最新的；最近的",
+    "conceptAxis": " distance-proximity",
+    "conceptValue": "near",
+    "relationFamily": "spatial-and-distance",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "最新",
+      "新的",
+      "的最",
+      "最近",
+      "近的"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_ddc78c039f41",
+    "word": "scotland",
+    "senseId": "word_ddc78c039f41-sense-1",
+    "posFamily": "noun",
+    "quizMeaningZh": "苏格兰",
+    "meaningDetailedZh": "苏格兰",
+    "conceptAxis": "general",
+    "conceptValue": "unknown",
+    "relationFamily": "general",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "苏格",
+      "格兰"
+    ],
+    "allowedDistractorRelations": [
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "auto-derived"
+    ],
+    "confidence": "low"
+  },
+  {
+    "wordId": "word_303ec5b45041",
+    "word": "lower",
+    "senseId": "word_303ec5b45041-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "较低的；放下",
+    "meaningDetailedZh": "较低的；降低；放下",
+    "conceptAxis": "change-direction",
+    "conceptValue": "decline",
+    "relationFamily": "change-and-development",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "较低",
+      "低的",
+      "的降",
+      "降低",
+      "低放",
+      "放下"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "wordId": "word_30afd042b971",
+    "word": "grown",
+    "senseId": "word_30afd042b971-sense-1",
+    "posFamily": "adjective",
+    "quizMeaningZh": "成长（过去分词）",
+    "meaningDetailedZh": "成长（过去分词）",
+    "conceptAxis": "temporal-position",
+    "conceptValue": "past",
+    "relationFamily": "time-and-temporality",
+    "synonymKeys": [],
+    "ambiguityKeys": [
+      "成长",
+      "长过",
+      "过去",
+      "去分",
+      "分词"
+    ],
+    "allowedDistractorRelations": [
+      "same-axis-different-value",
+      "adjacent-contrast"
+    ],
+    "sourceEvidence": [
+      "keyword-mapped"
+    ],
+    "confidence": "medium"
   }
 ];
 

@@ -439,10 +439,11 @@ export default function ReadingWordsPage() {
       if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
       const target = event.target;
       const tagName = String(target?.tagName || "").toLowerCase();
+      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
       if (
         tagName === "input"
         || tagName === "textarea"
-        || tagName === "select"
+        || (tagName === "select" && !isHorizontalArrow)
         || target?.isContentEditable
       ) return;
       if (!selectedWord || visibleWords.length < 2) return;
@@ -456,8 +457,8 @@ export default function ReadingWordsPage() {
       }
     }
 
-    window.addEventListener("keydown", handleReadingWordNavigation);
-    return () => window.removeEventListener("keydown", handleReadingWordNavigation);
+    window.addEventListener("keydown", handleReadingWordNavigation, true);
+    return () => window.removeEventListener("keydown", handleReadingWordNavigation, true);
   }, [moveSelection, selectedWord, visibleWords.length]);
 
   const patchSelectedWord = (patch) => {

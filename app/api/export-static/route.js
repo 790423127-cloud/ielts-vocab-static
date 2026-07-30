@@ -272,7 +272,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260730_internal_difficulty_v5";
+const STATIC_EXPORT_VERSION = "20260730_word_order_logic_v10";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -386,8 +386,19 @@ const STATIC_INDEX_HTML = `<!doctype html>
         <button id="unknownBtn" class="status unknown">不熟 <span>0</span></button>
       </div>
       <div class="progress-row">
-        <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
-        <div id="count" class="count">0 / 0</div>
+        <div class="progress">
+          <div id="progressFill" class="progress-fill"></div>
+          <input id="progressSeek" type="range" min="1" max="1" value="1" aria-label="拖动跳转到词表位置" disabled />
+        </div>
+        <button id="count" class="count" type="button" aria-label="精确跳转位置">0 / 0</button>
+        <output id="progressPreview" class="progress-preview hidden"></output>
+        <form id="progressJumpForm" class="progress-jump hidden">
+          <label for="progressJumpInput">跳转到第</label>
+          <input id="progressJumpInput" type="number" min="1" max="1" step="1" inputmode="numeric" />
+          <span id="progressJumpTotal">/ 0</span>
+          <button type="submit">跳转</button>
+          <button id="progressJumpCancel" type="button" aria-label="取消位置跳转">×</button>
+        </form>
       </div>
     </footer>
 
@@ -664,15 +675,26 @@ body{background:var(--bg)}
 .status{min-width:112px;min-height:50px;padding:0 22px;border-radius:7px;font-size:16px;font-weight:800;line-height:1.2}
 .known{box-shadow:0 2px 8px rgba(18,102,83,.16)}
 .unknown{border-color:#df9f82;background:#fff0e8;color:#a83d1c}
-.progress-row{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;margin:0}
-.progress{height:9px;border-radius:5px;background:#d3ded9;box-shadow:inset 0 1px 2px rgba(22,54,46,.08)}
+.progress-row{position:relative;width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:10px;margin:0}
+.progress{position:relative;height:9px;overflow:visible;border-radius:5px;background:#d3ded9;box-shadow:inset 0 1px 2px rgba(22,54,46,.08)}
 .progress-fill{border-radius:5px}
-.count{min-width:88px;color:#52645e;font-size:15px;font-weight:750;text-align:right}
+.progress input[type="range"]{position:absolute;z-index:2;top:50%;left:0;width:100%;height:32px;margin:0;padding:0;transform:translateY(-50%);appearance:none;border:0;outline:0;background:transparent;cursor:ew-resize;touch-action:none}
+.progress input[type="range"]::-webkit-slider-runnable-track{height:6px;background:transparent}
+.progress input[type="range"]::-webkit-slider-thumb{width:16px;height:16px;margin-top:-5px;appearance:none;border:2px solid #fff;border-radius:50%;background:#237567;box-shadow:0 1px 5px rgba(16,70,58,.28)}
+.progress input[type="range"]::-moz-range-track{height:6px;border:0;background:transparent}
+.progress input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2px solid #fff;border-radius:50%;background:#237567;box-shadow:0 1px 5px rgba(16,70,58,.28)}
+.progress-preview{display:block;max-width:112px;padding:3px 7px;overflow:hidden;border:1px solid rgba(35,117,103,.28);border-radius:6px;background:#e7f7f2;color:#16362e;font-size:10px;font-weight:750;line-height:1.35;text-overflow:ellipsis;white-space:nowrap}
+.count{min-width:88px;padding:3px 5px;border:0;border-radius:5px;background:transparent;color:#52645e;font-size:15px;font-weight:750;text-align:right;cursor:pointer}
+.count:hover,.count:focus-visible{background:#e7f7f2}
+.count:disabled{cursor:default}
+.progress-jump{position:absolute;z-index:20;right:0;bottom:calc(100% + 8px);display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#52645e;box-shadow:0 10px 28px rgba(22,50,44,.16);font-size:12px;white-space:nowrap}
+.progress-jump input{width:82px;height:32px;padding:0 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#16362e;font:inherit;font-weight:750}
+.progress-jump button{min-width:32px;height:32px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:#e7f7f2;color:#237567;font:inherit;font-weight:750}
 @media(max-width:900px){
   .bottom,body.mobile-mode .bottom{min-height:0;grid-template-columns:1fr;gap:10px;padding:10px 0 calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#fff}
   .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .status{width:100%;min-width:0;min-height:52px;padding-inline:12px;font-size:16px}
-  .progress-row{grid-row:1}.progress{height:8px}.count{min-width:72px;font-size:14px}
+  .progress-row{grid-row:1;grid-template-columns:minmax(0,1fr) auto auto;gap:7px}.progress{height:8px}.progress input[type="range"]{height:38px}.progress input[type="range"]::-webkit-slider-thumb{width:20px;height:20px;margin-top:-7px}.progress input[type="range"]::-moz-range-thumb{width:18px;height:18px}.count{min-width:72px;font-size:14px}.progress-preview{max-width:82px}.progress-jump{right:0;left:0;justify-content:center}
 }
 @media(min-width:1600px){
   .bottom{min-height:90px;padding:14px 28px}.status{min-width:128px;min-height:54px;font-size:17px}.progress{height:10px}.count{font-size:16px}
@@ -777,6 +799,12 @@ const els={
   phraseCollocations:document.getElementById("phraseCollocations"),
   count:document.getElementById("count"),
   progressFill:document.getElementById("progressFill"),
+  progressSeek:document.getElementById("progressSeek"),
+  progressPreview:document.getElementById("progressPreview"),
+  progressJumpForm:document.getElementById("progressJumpForm"),
+  progressJumpInput:document.getElementById("progressJumpInput"),
+  progressJumpTotal:document.getElementById("progressJumpTotal"),
+  progressJumpCancel:document.getElementById("progressJumpCancel"),
   favoriteBtn:document.getElementById("favoriteBtn"),
   unknownBtn:document.getElementById("unknownBtn"),
   unfamiliarAlert:document.getElementById("unfamiliarAlert"),
@@ -940,33 +968,120 @@ function wordOrderEntryKey(word){
   return "word:"+norm(word&&word.word);
 }
 
+let wordOrderSignatureCache={pool:null,length:-1,value:""};
+function wordOrderSourceSignature(sourceCount){
+  const resolvedCount=Number.isInteger(sourceCount)
+    ?Math.max(0,Math.min(sourceCount,words.length))
+    :words.length;
+  if(resolvedCount===words.length&&wordOrderSignatureCache.pool===words&&wordOrderSignatureCache.length===words.length){
+    return wordOrderSignatureCache.value;
+  }
+  const ordered=[...(words||[]).slice(0,resolvedCount)].sort(function(a,b){return a.originalIndex-b.originalIndex});
+  let hash=2166136261;
+  ordered.forEach(function(word){
+    const value=String(word.originalIndex)+":"+wordOrderEntryKey(word)+"|";
+    for(let i=0;i<value.length;i+=1){
+      hash^=value.charCodeAt(i);
+      hash=Math.imul(hash,16777619);
+    }
+  });
+  const value=ordered.length+":"+(hash>>>0).toString(36);
+  if(resolvedCount===words.length){
+    wordOrderSignatureCache={pool:words,length:words.length,value:value};
+  }
+  return value;
+}
+
 function createWordOrderSnapshot(ordered,cursorIndex){
-  const keys=[];
+  const indices=[];
   const seen=new Set();
   ordered.forEach(function(word){
     const key=wordOrderEntryKey(word);
-    if(key&&!seen.has(key)){seen.add(key);keys.push(key)}
+    if(key&&!seen.has(key)){seen.add(key);indices.push(word.originalIndex)}
   });
   const cursor=ordered.find(function(word){return word.originalIndex===cursorIndex});
-  const cursorKey=cursor?wordOrderEntryKey(cursor):(keys[0]||"");
-  return {version:1,keys:keys,cursorKey:keys.includes(cursorKey)?cursorKey:(keys[0]||"")};
+  const first=ordered.find(function(word){return word.originalIndex===indices[0]});
+  const cursorKey=cursor?wordOrderEntryKey(cursor):(first?wordOrderEntryKey(first):"");
+  return {
+    version:2,
+    indices:indices,
+    sourceCount:words.length,
+    sourceSignature:wordOrderSourceSignature(),
+    cursorKey:seen.has(cursorKey)?cursorKey:(first?wordOrderEntryKey(first):"")
+  };
 }
 
 function reconcileWordOrderSnapshot(snapshot,source,fallback){
   const byKey=new Map();
+  const byIndex=new Map();
   source.forEach(function(word){const key=wordOrderEntryKey(word);if(key&&!byKey.has(key))byKey.set(key,word)});
-  const keys=[];
-  const seen=new Set();
-  function append(key){if(key&&!seen.has(key)&&byKey.has(key)){seen.add(key);keys.push(key)}}
-  arr(snapshot&&snapshot.keys).forEach(append);
-  (fallback||source).forEach(function(word){append(wordOrderEntryKey(word))});
+  source.forEach(function(word){if(Number.isInteger(word.originalIndex))byIndex.set(word.originalIndex,word)});
+  const items=[];
+  const seenIndices=new Set();
+  function appendWord(word){
+    if(!word||!Number.isInteger(word.originalIndex)||seenIndices.has(word.originalIndex))return;
+    seenIndices.add(word.originalIndex);
+    items.push(word);
+  }
+  const compactMatches=Number(snapshot&&snapshot.version)===2
+    &&Array.isArray(snapshot&&snapshot.indices)
+    &&(
+      snapshot.sourceSignature===wordOrderSourceSignature()
+      ||(
+        Number.isInteger(Number(snapshot.sourceCount))
+        &&Number(snapshot.sourceCount)>=0
+        &&Number(snapshot.sourceCount)<=words.length
+        &&snapshot.sourceSignature===wordOrderSourceSignature(Number(snapshot.sourceCount))
+      )
+    );
+  if(compactMatches){
+    snapshot.indices.forEach(function(sourceIndex){appendWord(byIndex.get(sourceIndex))});
+  }else{
+    arr(snapshot&&snapshot.keys).forEach(function(key){appendWord(byKey.get(key))});
+  }
+  (fallback||source).forEach(appendWord);
+  source.forEach(appendWord);
   const requested=String(snapshot&&snapshot.cursorKey||"");
-  const cursorKey=keys.includes(requested)?requested:(keys[0]||"");
+  const requestedWord=byKey.get(requested);
+  const cursorWord=requestedWord&&seenIndices.has(requestedWord.originalIndex)?requestedWord:items[0];
+  const cursorIndex=cursorWord?cursorWord.originalIndex:null;
   return {
-    items:keys.map(function(key){return byKey.get(key)}),
-    cursorIndex:byKey.has(cursorKey)?byKey.get(cursorKey).originalIndex:null,
-    snapshot:{version:1,keys:keys,cursorKey:cursorKey}
+    items:items,
+    cursorIndex:cursorIndex,
+    snapshot:createWordOrderSnapshot(items,cursorIndex)
   };
+}
+
+function remapWordOrderSnapshotsAfterDeletion(snapshots,previousWords){
+  const nextByKey=new Map();
+  words.forEach(function(word,sourceIndex){
+    const key=wordOrderEntryKey(word);
+    if(key&&!nextByKey.has(key))nextByKey.set(key,sourceIndex);
+  });
+  const result={};
+  Object.keys(snapshots||{}).forEach(function(snapshotKey){
+    const snapshot=snapshots[snapshotKey]||{};
+    const orderedKeys=Number(snapshot.version)===2&&Array.isArray(snapshot.indices)
+      ?snapshot.indices.map(function(sourceIndex){
+        const word=previousWords[sourceIndex];
+        return word?wordOrderEntryKey(word):"";
+      })
+      :arr(snapshot.keys);
+    const seen=new Set();
+    const ordered=[];
+    orderedKeys.forEach(function(key){
+      const sourceIndex=nextByKey.get(key);
+      if(!Number.isInteger(sourceIndex)||seen.has(sourceIndex))return;
+      seen.add(sourceIndex);
+      ordered.push(Object.assign({},words[sourceIndex],{originalIndex:sourceIndex}));
+    });
+    const requestedCursorIndex=nextByKey.get(String(snapshot.cursorKey||""));
+    const cursorIndex=seen.has(requestedCursorIndex)
+      ?requestedCursorIndex
+      :(ordered[0]&&ordered[0].originalIndex);
+    result[snapshotKey]=createWordOrderSnapshot(ordered,cursorIndex);
+  });
+  return result;
 }
 
 function relationWord(value){
@@ -997,12 +1112,15 @@ function deterministicHash(value){
 
 function connectedGroups(entries,linksForWord){
   const parent=entries.map(function(_,i){return i});
-  const byWord=new Map();
-  entries.forEach(function(entry,i){const key=norm(entry.word);if(key&&!byWord.has(key))byWord.set(key,i)});
+  const byKey=new Map();
   function find(i){while(parent[i]!==i){parent[i]=parent[parent[i]];i=parent[i]}return i}
   function join(a,b){const ar=find(a),br=find(b);if(ar!==br)parent[br]=ar}
   entries.forEach(function(entry,i){
-    linksForWord(entry).forEach(function(key){const target=byWord.get(key);if(Number.isInteger(target))join(i,target)});
+    uniq([norm(entry.word)].concat(linksForWord(entry)).filter(Boolean)).forEach(function(key){
+      const target=byKey.get(key);
+      if(Number.isInteger(target))join(i,target);
+      else byKey.set(key,i);
+    });
   });
   const groups=new Map();
   entries.forEach(function(entry,i){const root=find(i);if(!groups.has(root))groups.set(root,[]);groups.get(root).push(entry)});
@@ -1017,7 +1135,7 @@ function explicitAssociationLinks(word){
   return relationKeys(word.synonyms).concat(relationKeys(word.relatedWords),relationKeys(word.associations));
 }
 
-const ASSOCIATION_TOKEN_STOP={a:1,an:1,and:1,as:1,at:1,be:1,by:1,for:1,from:1,in:1,into:1,of:1,on:1,or:1,the:1,to:1,with:1,about:1,after:1,before:1,during:1,related:1,service:1,services:1,someone:1,something:1,system:1,systems:1,thing:1,things:1,people:1,person:1,use:1,used:1,using:1,work:1,working:1};
+const ASSOCIATION_TOKEN_STOP={a:1,an:1,and:1,as:1,at:1,be:1,by:1,for:1,from:1,in:1,into:1,of:1,on:1,or:1,the:1,to:1,with:1,about:1,after:1,before:1,during:1,ability:1,area:1,change:1,common:1,different:1,example:1,form:1,general:1,important:1,include:1,kind:1,level:1,main:1,make:1,made:1,means:1,part:1,place:1,process:1,provide:1,result:1,set:1,state:1,type:1,way:1,related:1,service:1,services:1,someone:1,something:1,system:1,systems:1,thing:1,things:1,people:1,person:1,use:1,used:1,using:1,work:1,working:1};
 
 function englishTokens(value){
   return norm(value).split(/[^a-z0-9']+/i).map(norm).filter(function(token){return token.length>2&&!ASSOCIATION_TOKEN_STOP[token]});
@@ -1096,7 +1214,7 @@ function orderSceneWords(source){
         scores.set(candidate,(scores.get(candidate)||0)+weight+bonus);
       });
     });
-    const strongest=Array.from(scores.entries()).filter(function(item){return item[1]>=32}).sort(function(a,b){return b[1]-a[1]||profiles[a[0]].word.originalIndex-profiles[b[0]].word.originalIndex})[0];
+    const strongest=Array.from(scores.entries()).filter(function(item){return item[1]>=96}).sort(function(a,b){return b[1]-a[1]||profiles[a[0]].word.originalIndex-profiles[b[0]].word.originalIndex})[0];
     currentPosition=strongest?strongest[0]:Math.min.apply(null,Array.from(remaining));
   }
   return ordered;
@@ -1133,7 +1251,7 @@ function generateStudyList(source,pref){
     const standalone=[];
     connectedGroups(eligible,explicitAssociationLinks).forEach(function(group){
       const scene=group.map(sceneForWord).find(Boolean)||"";
-      if(!scene){group.forEach(function(word){standalone.push([word])});return}
+      if(!scene){standalone.push(group);return}
       if(!sceneBuckets.has(scene))sceneBuckets.set(scene,[]);
       sceneBuckets.get(scene).push.apply(sceneBuckets.get(scene),group);
     });
@@ -1171,7 +1289,18 @@ function orderStudyList(source,activeFilter){
   const fresh=generateStudyList(source,pref);
   const snapshotKey=wordOrderSnapshotKey(pref.mode,pref.difficultyMode);
   if(!isFixedWordOrderMode(pref.mode,pref.difficultyMode)||!pref.snapshots[snapshotKey])return fresh;
-  return reconcileWordOrderSnapshot(pref.snapshots[snapshotKey],fresh,fresh).items;
+  const previous=pref.snapshots[snapshotKey];
+  const resolved=reconcileWordOrderSnapshot(previous,fresh,fresh);
+  const previousIndices=arr(previous&&previous.indices);
+  const nextIndices=arr(resolved.snapshot&&resolved.snapshot.indices);
+  const changed=Number(previous&&previous.version)!==2
+    ||previous.sourceCount!==resolved.snapshot.sourceCount
+    ||previous.sourceSignature!==resolved.snapshot.sourceSignature
+    ||previous.cursorKey!==resolved.snapshot.cursorKey
+    ||previousIndices.length!==nextIndices.length
+    ||previousIndices.some(function(value,index){return value!==nextIndices[index]});
+  if(changed)saveWordOrderSnapshot(activeFilter,snapshotKey,resolved.snapshot);
+  return resolved.items;
 }
 
 function syncWordOrderControls(){
@@ -1590,9 +1719,42 @@ function deleteCurrentWord(){
   if(!baseKey){toast("当前单词无效，无法删除");return}
   const sameCount=words.filter(function(item){return norm(item.word)===baseKey}).length;
   if(!confirm("确定删除这个单词？\\n\\n"+w.word+"\\n\\n将从本机词库隐藏/删除 "+sameCount+" 条同名单词记录。电脑端正式删除后重新发布，会彻底移除。"))return;
+  const oldIndex=index;
+  const previousWords=words;
+  const pref=wordOrderPreference(filter);
+  const oldOrderedQueue=list();
+  const oldQueuePosition=oldOrderedQueue.findIndex(function(item){return item.originalIndex===oldIndex});
+  const oldToNewIndex=new Map();
+  const nextWords=[];
+  words.forEach(function(item,sourceIndex){
+    if(norm(item.word)===baseKey)return;
+    oldToNewIndex.set(sourceIndex,nextWords.length);
+    nextWords.push(item);
+  });
   saveDeletedWord(baseKey);
-  words=words.filter(function(item){return norm(item.word)!==baseKey});
-  index=Math.min(index,Math.max(0,words.length-1));
+  words=nextWords;
+  const remappedSnapshots=remapWordOrderSnapshotsAfterDeletion(pref.snapshots,previousWords);
+  Object.keys(remappedSnapshots).forEach(function(snapshotKey){
+    saveWordOrderSnapshot(filter,snapshotKey,remappedSnapshots[snapshotKey]);
+  });
+  if(isFixedWordOrderMode(pref.mode,pref.difficultyMode)){
+    let survivorsBeforeCurrent=0;
+    const preservedQueue=[];
+    oldOrderedQueue.forEach(function(item,queuePosition){
+      const nextIndex=oldToNewIndex.get(item.originalIndex);
+      if(!Number.isInteger(nextIndex))return;
+      if(queuePosition<oldQueuePosition)survivorsBeforeCurrent+=1;
+      preservedQueue.push(Object.assign({},words[nextIndex],{originalIndex:nextIndex}));
+    });
+    const nextQueuePosition=Math.min(survivorsBeforeCurrent,preservedQueue.length-1);
+    index=preservedQueue.length
+      ?preservedQueue[Math.max(0,nextQueuePosition)].originalIndex
+      :Math.min(oldIndex,Math.max(0,words.length-1));
+    const snapshotKey=wordOrderSnapshotKey(pref.mode,pref.difficultyMode);
+    saveWordOrderSnapshot(filter,snapshotKey,createWordOrderSnapshot(preservedQueue,index));
+  }else{
+    index=Math.min(oldIndex,Math.max(0,words.length-1));
+  }
   persistNow();
   render();
   toast("已删除："+w.word+"（"+sameCount+" 条记录）");
@@ -1721,7 +1883,10 @@ function persistNow(){
       const snapshot=pref.snapshots[snapshotKey];
       if(isFixedWordOrderMode(pref.mode,pref.difficultyMode)&&snapshot){
         const cursorKey=wordOrderEntryKey(w);
-        if(arr(snapshot.keys).includes(cursorKey)&&snapshot.cursorKey!==cursorKey){
+        const containsWord=Number(snapshot.version)===2
+          ?arr(snapshot.indices).includes(w.originalIndex)
+          :arr(snapshot.keys).includes(cursorKey);
+        if(containsWord&&snapshot.cursorKey!==cursorKey){
           saveWordOrderCursor(filter,snapshotKey,cursorKey);
         }
       }
@@ -2112,6 +2277,12 @@ function render(){
     els.loadInfo.textContent="可以切换分类或查看熟悉词库。";
     els.count.textContent="0 / 0";
     els.progressFill.style.width="0%";
+    if(els.progressSeek){
+      els.progressSeek.max="1";
+      els.progressSeek.value="1";
+      els.progressSeek.disabled=true;
+    }
+    if(els.progressJumpForm)els.progressJumpForm.classList.add("hidden");
     persistSoon();
     return;
   }
@@ -2135,8 +2306,55 @@ function render(){
   const pos=Math.max(0,l.findIndex(function(x){return x.originalIndex===index}));
   els.count.textContent=(pos+1)+" / "+l.length;
   els.progressFill.style.width=(l.length?((pos+1)/l.length*100):0)+"%";
+  els.count.setAttribute("aria-label","精确跳转位置，当前第 "+(pos+1)+" / "+l.length+" 个词");
+  if(els.progressSeek){
+    els.progressSeek.max=String(Math.max(1,l.length));
+    els.progressSeek.value=String(pos+1);
+    els.progressSeek.disabled=l.length<2;
+    els.progressSeek.setAttribute("aria-valuetext","第 "+(pos+1)+" / "+l.length+" 个词："+(w.word||""));
+  }
+  if(els.progressJumpInput){
+    els.progressJumpInput.max=String(Math.max(1,l.length));
+    els.progressJumpInput.value=String(pos+1);
+  }
+  if(els.progressJumpTotal)els.progressJumpTotal.textContent="/ "+l.length;
   prewarm(w.audio);
   persistSoon();
+}
+
+function clampProgressPosition(value,total){
+  const max=Math.max(0,Math.floor(Number(total)||0));
+  if(!max)return 0;
+  const parsed=Math.round(Number(value));
+  if(!Number.isFinite(parsed))return 1;
+  return Math.min(max,Math.max(1,parsed));
+}
+
+function previewProgressPosition(value){
+  const l=list();
+  const position=clampProgressPosition(value,l.length);
+  const target=l[position-1];
+  if(!target)return;
+  els.count.textContent=position+" / "+l.length;
+  els.progressFill.style.width=(position/l.length*100)+"%";
+  if(els.progressPreview){
+    els.progressPreview.textContent=target.word||Math.round(position/l.length*100)+"%";
+    els.progressPreview.classList.remove("hidden");
+  }
+  els.progressSeek.setAttribute("aria-valuetext","第 "+position+" / "+l.length+" 个词："+(target.word||""));
+}
+
+function seekProgressPosition(value){
+  const l=list();
+  const position=clampProgressPosition(value,l.length);
+  const target=l[position-1];
+  if(!target)return;
+  restoreFocusWord="";
+  index=target.originalIndex;
+  if(els.progressPreview)els.progressPreview.classList.add("hidden");
+  render();
+  persistNow();
+  scheduleCloudSync();
 }
 
 function step(n){
@@ -2728,7 +2946,7 @@ function changeWordOrderCombination(nextMode,nextDifficultyMode,label){
   nextDifficultyMode=isIdictationFilter(filter)?"default":normalizeDifficultyMode(nextDifficultyMode);
   if(nextMode==="random"){
     const seed=Date.now();
-    saveWordOrderPreference(filter,nextMode,nextDifficultyMode,{seed:seed});
+    saveWordOrderPreference(filter,nextMode,previous.difficultyMode,{seed:seed});
     const next=generateStudyList(source,{mode:nextMode,difficultyMode:"default",seed:seed,snapshots:{}});
     if(next.length)index=next[0].originalIndex;
   }else if(isFixedWordOrderMode(nextMode,nextDifficultyMode)){
@@ -2751,13 +2969,54 @@ function changeWordOrderCombination(nextMode,nextDifficultyMode,label){
   render();
   toast("已切换为"+label);
 }
+function completeToolbarSelectAction(control){
+  if(!control)return;
+  control.blur();
+  requestAnimationFrame(function(){
+    if(document.activeElement===control)control.blur();
+  });
+}
 if(els.orderSelect) els.orderSelect.onchange=function(e){
   const pref=wordOrderPreference(filter);
   changeWordOrderCombination(e.target.value,pref.difficultyMode,e.target.options[e.target.selectedIndex].text);
+  completeToolbarSelectAction(e.target);
 };
 if(els.difficultyOrderSelect) els.difficultyOrderSelect.onchange=function(e){
   const pref=wordOrderPreference(filter);
   changeWordOrderCombination(pref.mode,e.target.value,e.target.options[e.target.selectedIndex].text);
+  completeToolbarSelectAction(e.target);
+};
+if(els.progressSeek){
+  els.progressSeek.oninput=function(e){previewProgressPosition(e.target.value)};
+  els.progressSeek.onchange=function(e){seekProgressPosition(e.target.value)};
+  els.progressSeek.onpointercancel=function(){
+    if(els.progressPreview)els.progressPreview.classList.add("hidden");
+    render();
+  };
+}
+if(els.count)els.count.onclick=function(){
+  const l=list();
+  if(l.length<2||!els.progressJumpForm)return;
+  const open=els.progressJumpForm.classList.contains("hidden");
+  els.progressJumpForm.classList.toggle("hidden",!open);
+  if(open){
+    els.progressJumpInput.focus();
+    els.progressJumpInput.select();
+  }
+};
+if(els.progressJumpForm)els.progressJumpForm.onsubmit=function(e){
+  e.preventDefault();
+  seekProgressPosition(els.progressJumpInput.value);
+  els.progressJumpForm.classList.add("hidden");
+};
+if(els.progressJumpCancel)els.progressJumpCancel.onclick=function(){
+  els.progressJumpForm.classList.add("hidden");
+};
+if(els.progressJumpInput)els.progressJumpInput.onkeydown=function(e){
+  if(e.key==="Escape"){
+    e.preventDefault();
+    els.progressJumpForm.classList.add("hidden");
+  }
 };
 if(els.meaningVisibilityBtn) els.meaningVisibilityBtn.onclick=function(){
   setMeaningsHidden(!meaningsHidden());
@@ -2837,10 +3096,10 @@ els.swipeArea.addEventListener("touchcancel",stopHoldStep,{passive:true});
 window.addEventListener("keydown",function(e){
   const tag=e.target&&e.target.tagName?e.target.tagName.toLowerCase():"";
   const isTyping=tag==="input"||tag==="textarea"||tag==="select"||(e.target&&e.target.isContentEditable);
-  if(isTyping||e.ctrlKey||e.metaKey||e.altKey)return;
-
   const key=e.key||"";
   const code=e.code||"";
+  const isHorizontalArrow=key==="ArrowLeft"||code==="ArrowLeft"||key==="ArrowRight"||code==="ArrowRight";
+  if((isTyping&&!isHorizontalArrow)||e.ctrlKey||e.metaKey||e.altKey)return;
   const isDelete=key==="Delete"||code==="Delete"||e.keyCode===46||e.which===46;
   const isZero=key==="0"||code==="Digit0"||code==="Numpad0";
   const isOne=key==="1"||code==="Digit1"||code==="Numpad1";
@@ -2977,6 +3236,7 @@ const SHELL=[
   "./data/phrases.json",
   "./data/idictation-frequency.json",
   "./data/basic-words.json",
+  "./data/lexicon-tidy-audit.json",
   "./data/reading-g-vocab.json",
   "./data/reading-g-paraphrases.json",
   "./data/reading-g-import-report.json",
@@ -3020,7 +3280,7 @@ self.addEventListener("fetch",function(event){
     return;
   }
 
-  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
+  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
     event.respondWith(
       fetch(req).then(function(res){
         if(res&&res.ok) caches.open(CACHE_NAME).then(function(cache){cache.put(req,res.clone()).catch(function(){})});
@@ -3149,6 +3409,11 @@ function buildExport(words, audioIndex, options = {}) {
     count: 0,
     words: []
   });
+  const tidyAuditManifest = readJson(publicAssetPath("data", "lexicon-tidy-audit.json"), {
+    version: 1,
+    updatedAt: 0,
+    records: {}
+  });
   const meaningManifest = readJson(publicAssetPath("data", "meaning-6000.json"), {
     version: "meaning-6000",
     count: 0,
@@ -3253,6 +3518,10 @@ function buildExport(words, audioIndex, options = {}) {
       data: JSON.stringify(basicManifest)
     },
     {
+      name: "data/lexicon-tidy-audit.json",
+      data: JSON.stringify(tidyAuditManifest)
+    },
+    {
       name: "data/meaning-6000.json",
       data: JSON.stringify(meaningManifest)
     },
@@ -3335,6 +3604,7 @@ sync-config.js      CloudBase 云同步配置
 data/words.json     主词库数据
 data/phrases.json   独立短语层
 data/basic-words.json  零基础词库
+data/lexicon-tidy-audit.json  主词库整理复核记录
 data/reading-g-vocab.json  G类阅读提升词库
 data/reading-g-paraphrases.json  高可信同义关系
 data/reading-g-import-report.json  导入审计报告

@@ -10,6 +10,7 @@ import {
   findTidyCandidate,
   getTidyAuditKey,
   matchesTidyScope,
+  mergeLexiconTidyAudits,
   mergeTidyAuditRecords
 } from "../lexicon-tidy-review.mjs";
 
@@ -143,4 +144,34 @@ test("基础候选和数据问题可以分开查看", () => {
   ], ["good"]);
   assert.equal(matchesTidyScope(result.candidateByIndex.get(0), LEXICON_TIDY_FILTERS.BASIC), true);
   assert.equal(matchesTidyScope(result.candidateByIndex.get(1), LEXICON_TIDY_FILTERS.ISSUES), true);
+});
+
+test("已确认的正式复核记录覆盖浏览器旧删除记录", () => {
+  const target = word("good", { id: "stable-good" });
+  const key = getTidyAuditKey(target, 0);
+  const merged = mergeLexiconTidyAudits(
+    mergeTidyAuditRecords(createEmptyLexiconTidyAudit(), [{
+      auditKey: key,
+      record: { decision: "keep", reviewedAt: 20 }
+    }]),
+    mergeTidyAuditRecords(createEmptyLexiconTidyAudit(), [{
+      auditKey: key,
+      record: { decision: "deleted", deletedAt: 10 }
+    }])
+  );
+  const result = buildLexiconTidyReview([target], {
+    audit: merged,
+    removableKeys: new Set(["good"])
+  });
+
+  assert.equal(result.counts.review, 0);
+  assert.equal(result.counts.manuallyKept, 1);
+});
+
+test("明确标记的词汇化复合词不是异常词头", () => {
+  const target = word("Surface Mail", { lexicalizedCompound: true });
+  const result = review([target]);
+
+  assert.equal(result.counts.review, 0);
+  assert.equal(result.counts.issues, 0);
 });

@@ -1,10 +1,10 @@
 {
   "version": "meaning-6000-v6-user-curated-removal",
-  "generatedAt": "2026-07-30T04:28:27.017Z",
+  "generatedAt": "2026-07-30T13:15:00.000Z",
   "count": 6000,
-  "sourceLexiconVersion": "v20-13355-reading-compound-curated-removal-20260730",
-  "sourceLexiconCount": 13355,
-  "sourceLexiconSha256": "6e896fc3a786966c0a8ce15a5355bf504e6c2f6bbeffa83d6a48397995cd22f0",
+  "sourceLexiconVersion": "v22-13353-quality-queues-zero-20260730",
+  "sourceLexiconCount": 13353,
+  "sourceLexiconSha256": "d8f1a3d0457b49ae88028ec45f5c084fd6ae7d16156c2f79cb9c85182ddddfdb",
   "selectionPolicy": "ielts-gt-quality-frequency-v4",
   "items": [
     {
@@ -225228,45 +225228,6 @@
       "legacy4500": false
     },
     {
-      "wordId": "word_excel_043a718774c5",
-      "word": "s",
-      "quizMeaningZh": "abbr. 小号的 n. 硫",
-      "meaningZh": "abbr. 小号的 n. 硫",
-      "meaningDetailedZh": "s: abbr. 小号的（型号） n. 硫",
-      "meaningSource": "master-lexicon",
-      "posFamily": "noun",
-      "difficulty": "基础高频",
-      "selectionScore": 114.9,
-      "zipfFrequency": 5.86,
-      "scoreBreakdown": {
-        "zipf": 5.86,
-        "priority": 1,
-        "gBonus": 4,
-        "evidence": 5,
-        "collocation": 0,
-        "difficulty": 13,
-        "source": -2,
-        "rarePenalty": 0,
-        "longPenalty": 0,
-        "legacyBonus": 0,
-        "curatedSenseBonus": 0,
-        "posBalanceBonus": 0
-      },
-      "tags": [
-        "reading"
-      ],
-      "topics": [
-        "c7~8"
-      ],
-      "sourceEvidence": [
-        "readingPriority",
-        "excelSourceTags",
-        "ieltsUse",
-        "topics"
-      ],
-      "legacy4500": false
-    },
-    {
       "wordId": "word_6a8c2a612778",
       "word": "pronounced",
       "quizMeaningZh": "显著的",
@@ -281900,6 +281861,47 @@
       ],
       "sourceEvidence": [
         "listeningPriority",
+        "readingPriority",
+        "excelSourceTags",
+        "ieltsUse",
+        "topics"
+      ]
+    },
+    {
+      "wordId": "word_30afd042b971",
+      "word": "grown",
+      "quizMeaningZh": "成长（过去分词）",
+      "meaningZh": "成长（过去分词）",
+      "meaningDetailedZh": "成长（过去分词）",
+      "meaningSource": "master-lexicon-rebaseline",
+      "posFamily": "adjective",
+      "difficulty": "中级核心",
+      "selectionScore": 46.7,
+      "scoreBreakdown": {
+        "ieltsExamWeight": 25,
+        "listening": 5,
+        "reading": 5,
+        "writing": 5,
+        "speaking": 0,
+        "comprehensionImportance": 55,
+        "contextFrequency": 75,
+        "coverageValue": 52,
+        "noisePenalty": 0
+      },
+      "tags": [
+        "listening",
+        "reading",
+        "writing"
+      ],
+      "topics": [
+        "实用补充",
+        "阅读",
+        "list4",
+        "list75",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段1"
+      ],
+      "sourceEvidence": [
         "readingPriority",
         "excelSourceTags",
         "ieltsUse",

@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { flushSync } from "react-dom";
 import {
   sortWordIndicesForFilter,
   wordMatchesFilter
 } from "../lib/vocab/word-flashcard-study-pool.mjs";
 import { orderStudyWordIndices } from "../lib/vocab/word-study-ordering.mjs";
-import { normalizeWord } from "../lib/vocab/page-word-helpers.mjs";
-import {
-  buildAtomicDeletionNavigation,
-  resolveMissingQueuePosition
-} from "../lib/vocab/word-navigation-index.mjs";
+import { resolveMissingQueuePosition } from "../lib/vocab/word-navigation-index.mjs";
 
 /**
  * Word flashcard navigation: markStatus, prev/next, shuffle, keyboard shortcuts.
@@ -249,41 +244,14 @@ export function useWordFlashNavigation({
           return;
         }
 
-        const activeFilter = latest.filter || { type: "all", value: "" };
-        const deletionNavigation = buildAtomicDeletionNavigation({
-          words: latest.words,
-          currentIndex: latest.index,
-          filter: activeFilter,
-          wordMatchesFilter: matchesStudyWord,
-          normalizeWord,
-          sortQueue: sortWordIndicesForFilter
-        });
-
         quickStatusLockRef.current = true;
-        studySessionRef.current.userAdjusted = true;
-        studySessionRef.current.restoreTargetIndex = null;
-        studySessionRef.current.persistBlocked = false;
-        studySessionRef.current.settling = false;
+        const deletionResult = typeof deleteCurrentWord === "function"
+          ? deleteCurrentWord()
+          : null;
 
-        if (deletionNavigation && typeof deleteCurrentWord === "function") {
-          // The legacy delete path also sets a raw master-lexicon index. Flush the
-          // deletion and the exact filtered successor as one React commit so no
-          // out-of-range word can be painted between them.
-          flushSync(() => {
-            deleteCurrentWord();
-            latest.words = deletionNavigation.words;
-            latest.index = deletionNavigation.index;
-            latest.isStudyEmpty = deletionNavigation.queueLength === 0;
-            setIndex(deletionNavigation.index);
-          });
-
-          persistWordFlashSessionNow(
-            deletionNavigation.index,
-            activeFilter,
-            deletionNavigation.words
-          );
-        } else if (typeof deleteCurrentWord === "function") {
-          deleteCurrentWord();
+        if (!deletionResult?.deleted) {
+          quickStatusLockRef.current = false;
+          return;
         }
 
         window.setTimeout(() => {
@@ -338,7 +306,8 @@ export function useWordFlashNavigation({
 
     function handleKeyDown(event) {
       if (flashStudyMode !== "word") return;
-      if (isTypingTarget(event.target)) return;
+      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
+      if (isTypingTarget(event.target) && !isHorizontalArrow) return;
 
       if (event.key === "Tab") {
         if (event.repeat) return;
@@ -363,8 +332,8 @@ export function useWordFlashNavigation({
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [flashStudyMode]);
 
   return {

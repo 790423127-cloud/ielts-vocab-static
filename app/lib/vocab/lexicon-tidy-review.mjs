@@ -36,6 +36,14 @@ function isStrictStandaloneHeadword(value) {
   return Boolean(key && /^[a-z][a-z'-]*$/.test(key));
 }
 
+function isValidTidyHeadword(word) {
+  if (isStrictStandaloneHeadword(word?.word)) return true;
+  return Boolean(
+    word?.lexicalizedCompound === true &&
+    /^[a-z][a-z'-]*(?:\s+[a-z][a-z'-]*)+$/i.test(String(word?.word || "").trim())
+  );
+}
+
 function isLowValueNounCandidate(word) {
   const pos = String(word?.pos || "").trim().toLowerCase();
   const isNoun = /(^|[\s/;,])(proper\s+)?noun\b/.test(pos) || pos.includes("名词");
@@ -128,7 +136,7 @@ export function buildLexiconTidyReview(words, options = {}) {
     const reasonCodes = [];
     if (isSimple) reasonCodes.push("removable_basic");
     if (key && (duplicateCounts.get(key) || 0) > 1) reasonCodes.push("duplicate_headword");
-    if (!isStrictStandaloneHeadword(word?.word)) reasonCodes.push("invalid_headword");
+    if (!isValidTidyHeadword(word)) reasonCodes.push("invalid_headword");
 
     const hasDataIssue = reasonCodes.some((code) => code !== "removable_basic");
     if (isSimple) counts.simpleDetected += 1;
@@ -166,4 +174,16 @@ export function mergeTidyAuditRecords(audit, entries = []) {
     if (entry?.auditKey && entry?.record) records[entry.auditKey] = { ...(records[entry.auditKey] || {}), ...entry.record };
   }
   return { version: LEXICON_TIDY_AUDIT_VERSION, updatedAt: Date.now(), records };
+}
+
+export function mergeLexiconTidyAudits(defaultAudit, browserAudit) {
+  const defaults = normalizeLexiconTidyAudit(defaultAudit);
+  const local = normalizeLexiconTidyAudit(browserAudit);
+  return normalizeLexiconTidyAudit({
+    updatedAt: Math.max(defaults.updatedAt, local.updatedAt),
+    records: {
+      ...local.records,
+      ...defaults.records
+    }
+  });
 }

@@ -1,8 +1,8 @@
 {
-  "version": "v20-13355-reading-compound-curated-removal-20260730",
-  "generatedAt": "2026-07-30T04:28:27.017Z",
-  "previousRef": "63f36fe",
-  "count": 103,
+  "version": "v22-13353-quality-queues-zero-20260730",
+  "generatedAt": "2026-07-30T13:15:00.000Z",
+  "previousRef": "7a958e514a608c55c5d9a7a918af9bb42741fa59",
+  "count": 105,
   "entries": [
     {
       "id": "word_12f29832aa4b",
@@ -523,6 +523,16 @@
     {
       "id": "word_fe7f29efae2f",
       "word": "ireland",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_043a718774c5",
+      "word": "s",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_3fc4ccfe7458",
+      "word": "two",
       "reason": "user-curated-removal"
     }
   ]

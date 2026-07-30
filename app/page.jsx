@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useSearchParams } from "next/navigation";
 import { useHomeWordSpeech } from "./hooks/useHomeWordSpeech.js";
 import { useHomeAudioPrefill } from "./hooks/useHomeAudioPrefill.js";
@@ -53,6 +54,7 @@ import {
   resolveCurrentStudyItem,
   resolveWordStudyIndex
 } from "./lib/vocab/word-flashcard-session.mjs";
+import { buildAtomicDeletionNavigation } from "./lib/vocab/word-navigation-index.mjs";
 import {
   isBrushableWord,
   isInflectedReferenceWord,
@@ -63,6 +65,7 @@ import {
   createWordStudyOrderSnapshot,
   hasWordStudyInternalDifficulty,
   isFixedWordStudyOrderMode,
+  remapWordStudyOrderSnapshotsAfterDeletion,
   reconcileWordStudyOrderSnapshot,
   updateWordStudyOrderSnapshotCursor,
   orderStudyWordIndices,
@@ -72,6 +75,7 @@ import {
   WORD_STUDY_DIFFICULTY_MODE,
   normalizeWordStudyDifficultyMode
 } from "./lib/vocab/word-internal-difficulty.mjs";
+import { wordStudyIndexAtPosition } from "./lib/vocab/word-study-position.mjs";
 import { SPEECH_WARM_DELAYS_MS } from "./lib/vocab-speech.mjs";
 import {
   compactBrowserStorageForCurrentWords,
@@ -500,7 +504,8 @@ function Home() {
   const activeWordOrderSnapshot = wordOrderSnapshots[activeWordOrderSnapshotKey] || null;
   const reconciledWordOrder = useMemo(() => {
     if (
-      !isFixedWordStudyOrderMode(wordOrderMode, wordOrderDifficultyMode)
+      !baseStudyWordIndices.length
+      || !isFixedWordStudyOrderMode(wordOrderMode, wordOrderDifficultyMode)
       || !activeWordOrderSnapshot
     ) {
       return null;
@@ -517,6 +522,7 @@ function Home() {
   }, [
     activeWordOrderSnapshot,
     activeWordPool,
+    baseStudyWordIndices.length,
     generatedStudyWordIndices,
     idictationFlashSourceKey,
     wordOrderDifficultyMode,
@@ -676,6 +682,25 @@ function Home() {
   const isIndexInsideStudyQueue = currentStudyPosition >= 0;
   const safeStudyPosition = isIndexInsideStudyQueue ? currentStudyPosition : 0;
   const isStudyEmpty = studyWordIndices.length === 0;
+  const seekStudyPosition = useCallback((position) => {
+    const targetIndex = wordStudyIndexAtPosition(studyWordIndices, position);
+    if (!Number.isInteger(targetIndex)) return;
+
+    const sessionState = studySessionRef.current;
+    sessionState.userAdjusted = true;
+    sessionState.restoreTargetIndex = null;
+    sessionState.persistBlocked = false;
+    sessionState.settling = false;
+    latestStateRef.current.index = targetIndex;
+    setIndex(targetIndex);
+    persistWordFlashSessionNow(targetIndex);
+  }, [
+    latestStateRef,
+    persistWordFlashSessionNow,
+    setIndex,
+    studySessionRef,
+    studyWordIndices
+  ]);
   const wordOrderDifficultyAvailable = useMemo(
     () => wordOrderDifficultyEnabled && hasWordStudyInternalDifficulty(
       baseStudyWordIndices,
@@ -1047,12 +1072,83 @@ function Home() {
     const activeFilter = latest.filter || filter;
     const sourceWords = Array.isArray(latest.words) && latest.words.length ? latest.words : words;
     const targetIndex = Number.isInteger(latest.index) ? latest.index : index;
+    const deletionPlan = buildAtomicDeletionNavigation({
+      words: sourceWords,
+      currentIndex: targetIndex,
+      filter: activeFilter,
+      wordMatchesFilter: matchesActiveFilter,
+      normalizeWord,
+      orderedQueue: latest.studyWords
+    });
 
-    if (activeFilter?.type === LEXICON_TIDY_FILTER_TYPE) {
-      recordTidyDeletedWords(sourceWords, targetIndex);
+    if (!deletionPlan) {
+      return deleteCurrentWord();
     }
-    deleteCurrentWord();
-  }, [deleteCurrentWord, filter, index, recordTidyDeletedWords, words]);
+
+    let deletionResult = null;
+    flushSync(() => {
+      deletionResult = deleteCurrentWord(deletionPlan);
+      if (!deletionResult?.deleted) return;
+
+      latest.words = deletionResult.words;
+      latest.index = deletionResult.index;
+      latest.isStudyEmpty = deletionResult.queueLength === 0;
+      latest.studyWords = deletionResult.queueIndices.map((sourceIndex) => ({
+        ...deletionResult.words[sourceIndex],
+        originalIndex: sourceIndex
+      }));
+
+      if (activeFilter?.type === LEXICON_TIDY_FILTER_TYPE) {
+        recordTidyDeletedWords(sourceWords, targetIndex);
+      }
+
+      const remappedSnapshots = remapWordStudyOrderSnapshotsAfterDeletion(
+        wordOrderSnapshots,
+        sourceWords,
+        deletionResult.words
+      );
+      if (isFixedWordStudyOrderMode(wordOrderMode, wordOrderDifficultyMode)) {
+        remappedSnapshots[activeWordOrderSnapshotKey] = createWordStudyOrderSnapshot(
+          deletionResult.queueIndices,
+          deletionResult.words,
+          { cursorIndex: deletionResult.index }
+        );
+      }
+      Object.entries(remappedSnapshots).forEach(([snapshotKey, snapshot]) => {
+        saveWordOrderSnapshot(snapshotKey, snapshot);
+        saveWordOrderCursor(snapshotKey, snapshot.cursorKey);
+      });
+    });
+
+    if (!deletionResult?.deleted) return deletionResult;
+
+    const sessionState = studySessionRef.current;
+    sessionState.userAdjusted = true;
+    sessionState.restoreTargetIndex = null;
+    sessionState.persistBlocked = false;
+    sessionState.settling = false;
+    persistWordFlashSessionNow(
+      deletionResult.index,
+      activeFilter,
+      deletionResult.words
+    );
+    return deletionResult;
+  }, [
+    activeWordOrderSnapshotKey,
+    deleteCurrentWord,
+    filter,
+    index,
+    matchesActiveFilter,
+    persistWordFlashSessionNow,
+    recordTidyDeletedWords,
+    saveWordOrderCursor,
+    saveWordOrderSnapshot,
+    studySessionRef,
+    wordOrderDifficultyMode,
+    wordOrderMode,
+    wordOrderSnapshots,
+    words
+  ]);
 
   const {
     markStatus,
@@ -1455,6 +1551,7 @@ function Home() {
             prevWord,
             toggleFavorite,
             markStatus,
+            seekStudyPosition,
             tidyReview: {
               active: filter.type === LEXICON_TIDY_FILTER_TYPE,
               ready: lexiconTidyReady,

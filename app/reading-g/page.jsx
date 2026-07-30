@@ -905,7 +905,12 @@ export default function ReadingGVocabPage() {
     function onKeyDown(event) {
       if (phase !== "ready") return;
       const tag = document.activeElement?.tagName?.toLowerCase();
-      if (tag === "input" || tag === "textarea" || tag === "select") return;
+      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
+      if (
+        tag === "input"
+        || tag === "textarea"
+        || (tag === "select" && !isHorizontalArrow)
+      ) return;
 
       if (event.key === "ArrowRight" || event.key === "ArrowDown") {
         event.preventDefault();
@@ -937,8 +942,8 @@ export default function ReadingGVocabPage() {
       }
     }
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     phase,

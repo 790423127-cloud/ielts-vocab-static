@@ -11,6 +11,7 @@ import {
   getTidyAuditKey,
   matchesTidyScope,
   mergeTidyAuditRecords,
+  mergeLexiconTidyAudits,
   normalizeLexiconTidyAudit,
   normalizeTidyWordKey
 } from "../lib/vocab/lexicon-tidy-review.mjs";
@@ -40,10 +41,11 @@ export function useLexiconTidyReview({ words, setToast }) {
     let cancelled = false;
     Promise.all([
       loadLexiconTidyAuditFromIndexedDB().catch(() => createEmptyLexiconTidyAudit()),
-      fetch("/data/basic-words.json").then((response) => response.ok ? response.json() : null).catch(() => null)
-    ]).then(([savedAudit, source]) => {
+      fetch("/data/basic-words.json").then((response) => response.ok ? response.json() : null).catch(() => null),
+      fetch("/data/lexicon-tidy-audit.json").then((response) => response.ok ? response.json() : null).catch(() => null)
+    ]).then(([savedAudit, source, defaultAudit]) => {
       if (cancelled) return;
-      const nextAudit = normalizeLexiconTidyAudit(savedAudit);
+      const nextAudit = mergeLexiconTidyAudits(defaultAudit, savedAudit);
       auditRef.current = nextAudit;
       setAudit(nextAudit);
       setReferenceData(source);

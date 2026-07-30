@@ -73,6 +73,7 @@ export function useOrderedStudyRows({
   const reconciled = useMemo(() => {
     if (
       !enabled
+      || baseIndices.length === 0
       || !isFixedWordStudyOrderMode(mode, activeDifficultyMode)
       || !activeSnapshot
     ) {
@@ -85,6 +86,7 @@ export function useOrderedStudyRows({
   }, [
     activeDifficultyMode,
     activeSnapshot,
+    baseIndices.length,
     enabled,
     generatedIndices,
     idictation,
@@ -109,6 +111,7 @@ export function useOrderedStudyRows({
   useEffect(() => {
     if (
       !enabled
+      || baseIndices.length === 0
       || !isFixedWordStudyOrderMode(mode, activeDifficultyMode)
       || !activeSnapshot
     ) {
@@ -129,6 +132,7 @@ export function useOrderedStudyRows({
   }, [
     activeDifficultyMode,
     activeSnapshot,
+    baseIndices.length,
     currentIndex,
     enabled,
     idictation,

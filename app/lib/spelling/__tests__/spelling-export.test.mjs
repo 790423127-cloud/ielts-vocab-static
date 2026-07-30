@@ -211,7 +211,7 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
   assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
   assert.doesNotMatch(spellingSource, /href="\/spelling-(?:words|phrases)"/);
-  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260730_internal_difficulty_v5"/);
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260730_word_order_logic_v10"/);
   assert.match(exportRoute, /href="\.\/reading-words\.html">阅读生词本<\/a>/);
   assert.match(exportRoute, /wordId: stableId/);
   assert.match(exportRoute, /otherMeanings: Array\.isArray\(item\?\.otherMeanings\)/);
@@ -227,10 +227,15 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(exportRoute, /audio=new Audio\(url\)/);
   assert.match(exportRoute, /audio\.playsInline=true/);
   assert.doesNotMatch(exportRoute, /createMediaElementSource/);
+  assert.match(exportRoute, /function completeToolbarSelectAction\(control\)/);
+  assert.match(exportRoute, /if\(document\.activeElement===control\)control\.blur\(\)/);
+  assert.match(exportRoute, /const oldOrderedQueue=list\(\)/);
+  assert.match(exportRoute, /remapWordOrderSnapshotsAfterDeletion\(pref\.snapshots,previousWords\)/);
+  assert.match(exportRoute, /saveWordOrderSnapshot\(filter,snapshotKey,createWordOrderSnapshot\(preservedQueue,index\)\)/);
   assert.match(spellingScript, /audioPlayer = new Audio\(url\)/);
   assert.match(spellingScript, /audioPlayer\.playsInline = true/);
   assert.doesNotMatch(spellingScript, /createMediaElementSource/);
   assert.match(exportRoute, /D2\.3 high-visibility study action dock/);
   assert.match(exportRoute, /\.status\{min-width:112px;min-height:50px/);
-  assert.match(exportRoute, /\.progress\{height:9px/);
+  assert.match(exportRoute, /\.progress\{position:relative;height:9px/);
 });

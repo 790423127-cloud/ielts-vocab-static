@@ -75,3 +75,60 @@ test("538 and iDictation keep their original classification behavior", () => {
   assert.match(basicPage, /difficultyEnabled:\s*lexicon\s*!==\s*"ielts538"/);
   assert.match(mainPage, /wordOrderDifficultyEnabled\s*=\s*!idictationFlashSourceKey/);
 });
+
+test("word-order controls release focus and horizontal arrows remain word navigation", () => {
+  const controls = fs.readFileSync(
+    path.join(ROOT, "app", "components", "WordStudyOrderControls.jsx"),
+    "utf8"
+  );
+  const navigation = fs.readFileSync(
+    path.join(ROOT, "app", "hooks", "useWordFlashNavigation.js"),
+    "utf8"
+  );
+  const staticExport = fs.readFileSync(
+    path.join(ROOT, "app", "api", "export-static", "route.js"),
+    "utf8"
+  );
+  const globalStyles = fs.readFileSync(path.join(ROOT, "app", "globals.css"), "utf8");
+
+  assert.match(controls, /control\.blur\(\)/);
+  assert.match(navigation, /isTypingTarget\(event\.target\)\s*&&\s*!isHorizontalArrow/);
+  assert.match(staticExport, /isTyping&&!isHorizontalArrow/);
+  assert.match(staticExport, /completeToolbarSelectAction\(e\.target\)/);
+  assert.match(staticExport, /document\.activeElement===control/);
+  assert.match(globalStyles, /\.word-difficulty-select/);
+  assert.match(globalStyles, /\.word-order-controls\s*\{[\s\S]*flex:\s*0 0 auto/);
+});
+
+test("an unloaded pool cannot erase a saved fixed-order snapshot and random is isolated", () => {
+  const orderedRowsHook = fs.readFileSync(
+    path.join(ROOT, "app", "hooks", "useOrderedStudyRows.js"),
+    "utf8"
+  );
+  const mainPage = fs.readFileSync(path.join(ROOT, "app", "page.jsx"), "utf8");
+  const staticExport = fs.readFileSync(
+    path.join(ROOT, "app", "api", "export-static", "route.js"),
+    "utf8"
+  );
+
+  assert.match(
+    orderedRowsHook,
+    /baseIndices\.length\s*===\s*0[\s\S]*!isFixedWordStudyOrderMode/
+  );
+  assert.match(
+    mainPage,
+    /!baseStudyWordIndices\.length[\s\S]*!isFixedWordStudyOrderMode/
+  );
+  assert.doesNotMatch(
+    mainPage,
+    /setWordOrderMode\(nextMode,\s*\{\s*seed\s*\}\);[\s\S]*setWordDifficultyMode\(WORD_STUDY_DIFFICULTY_MODE\.DEFAULT\)/
+  );
+  assert.doesNotMatch(
+    orderedRowsHook,
+    /setMode\(nextMode,\s*\{\s*seed:\s*nextSeed\s*\}\);[\s\S]*setDifficultyMode\(WORD_STUDY_DIFFICULTY_MODE\.DEFAULT\)/
+  );
+  assert.match(
+    staticExport,
+    /saveWordOrderPreference\(filter,nextMode,previous\.difficultyMode,\{seed:seed\}\)/
+  );
+});

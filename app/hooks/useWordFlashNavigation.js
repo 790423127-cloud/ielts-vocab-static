@@ -3,10 +3,10 @@
 import { useEffect, useRef } from "react";
 import { flushSync } from "react-dom";
 import {
-  getFilterName,
   sortWordIndicesForFilter,
   wordMatchesFilter
 } from "../lib/vocab/word-flashcard-study-pool.mjs";
+import { orderStudyWordIndices } from "../lib/vocab/word-study-ordering.mjs";
 import { normalizeWord } from "../lib/vocab/page-word-helpers.mjs";
 import {
   buildAtomicDeletionNavigation,
@@ -21,7 +21,6 @@ export function useWordFlashNavigation({
   flashStudyModeRef,
   studySessionRef,
   latestStateRef,
-  studyWords,
   words,
   setWords,
   index,
@@ -30,7 +29,6 @@ export function useWordFlashNavigation({
   setToast,
   item,
   isExternalIdictationItem,
-  idictationFlashSourceKey,
   persistWordFlashSessionNow,
   speakWord,
   speakExample,
@@ -64,15 +62,9 @@ export function useWordFlashNavigation({
     const sourceWords = Array.isArray(latest?.words) ? latest.words : [];
     const activeFilter = latest?.filter || filter;
 
-    // 爱听写使用 10 亿偏移后的虚拟索引，必须保留 studyWords 中的 originalIndex。
-    if (visibleStudyWords.some((word) => word?.__idictationFlash)) {
-      return visibleStudyWords
-        .map((word) => word?.originalIndex)
-        .filter((value) => Number.isInteger(value));
-    }
-
-    // 整理页已经按简单到较难生成队列，导航必须沿用同一顺序。
-    if (activeFilter?.type === "tidy" && visibleStudyWords.length) {
+    // 页面已经按“现有 / 随机 / 词族 / 场景关联”生成稳定队列。
+    // 所有导航都沿用这份队列，避免重新按主词库物理顺序计算。
+    if (visibleStudyWords.length) {
       return visibleStudyWords
         .map((word) => word?.originalIndex)
         .filter((value) => Number.isInteger(value));
@@ -161,7 +153,14 @@ export function useWordFlashNavigation({
       if (matchesStudyWord(simulatedWords[wordIndex], filter, wordIndex)) candidateIndices.push(wordIndex);
     }
 
-    const sortedCandidateIndices = sortWordIndicesForFilter(candidateIndices, simulatedWords, filter);
+    const sortedCandidateIndices = orderStudyWordIndices(
+      sortWordIndicesForFilter(candidateIndices, simulatedWords, filter),
+      simulatedWords,
+      {
+        mode: latest.wordOrderMode,
+        seed: latest.wordOrderSeed
+      }
+    );
     let targetIndex = currentOriginalIndex;
     if (sortedCandidateIndices.length) {
       const currentCandidatePosition = sortedCandidateIndices.indexOf(currentOriginalIndex);
@@ -208,58 +207,6 @@ export function useWordFlashNavigation({
 
     updateCurrent({ favorite: !item.favorite });
     setToast(item.favorite ? "已取消收藏" : "已收藏");
-  }
-
-  function shuffleStudyWords() {
-    studySessionRef.current.userAdjusted = true;
-    studySessionRef.current.restoreTargetIndex = null;
-    studySessionRef.current.persistBlocked = false;
-    studySessionRef.current.settling = false;
-
-    if (idictationFlashSourceKey) {
-      if (studyWords.length < 2) {
-        setToast("当前范围单词太少，无法随机");
-        return;
-      }
-
-      const random = studyWords[Math.floor(Math.random() * studyWords.length)];
-      latestStateRef.current.index = random.originalIndex;
-      setIndex(random.originalIndex);
-      persistWordFlashSessionNow(random.originalIndex);
-      setToast(`${getFilterName(filter)} 已随机跳转；表格顺序保持不变`);
-      return;
-    }
-
-    const currentMatches = words
-      .map((word, originalIndex) => ({ word, originalIndex }))
-      .filter(({ word, originalIndex }) => matchesStudyWord(word, filter, originalIndex));
-
-    if (currentMatches.length < 2) {
-      setToast("当前范围单词太少，无法随机");
-      return;
-    }
-
-    const targetIndices = currentMatches.map((entry) => entry.originalIndex);
-    const shuffledWords = currentMatches.map((entry) => entry.word);
-
-    for (let i = shuffledWords.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledWords[i], shuffledWords[j]] = [shuffledWords[j], shuffledWords[i]];
-    }
-
-    setWords((prev) => {
-      const next = [...prev];
-      targetIndices.forEach((targetIndex, orderIndex) => {
-        next[targetIndex] = shuffledWords[orderIndex];
-      });
-      return next;
-    });
-
-    const randomIndex = targetIndices[0];
-    latestStateRef.current.index = randomIndex;
-    setIndex(randomIndex);
-    persistWordFlashSessionNow(randomIndex);
-    setToast(`${getFilterName(filter)} 已随机打乱`);
   }
 
   markStatusRef.current = markStatus;
@@ -425,7 +372,6 @@ export function useWordFlashNavigation({
     nextWord,
     prevWord,
     toggleFavorite,
-    shuffleStudyWords,
     updateCurrent
   };
 }

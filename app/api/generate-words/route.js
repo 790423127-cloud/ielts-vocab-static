@@ -74,10 +74,14 @@ export async function POST(req) {
     let invalid = [];
 
     if (inputItems.length) {
+      const requestedSplitDepth = Number(maxSplitDepth);
+      const boundedSplitDepth = Number.isFinite(requestedSplitDepth)
+        ? Math.max(0, Math.min(3, Math.trunc(requestedSplitDepth)))
+        : 3;
       const generated = await requestDeepseekProfiles(inputItems, {
         timeoutMs: 75000,
         maxTokens: 14000,
-        maxSplitDepth: Math.max(0, Math.min(3, Number(maxSplitDepth) || 0))
+        maxSplitDepth: boundedSplitDepth
       });
       invalid = generated.invalid;
       usage = generated.usage;

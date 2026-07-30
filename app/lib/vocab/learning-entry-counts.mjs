@@ -1,5 +1,5 @@
 import { IDICTATION_FREQUENCY_META } from "../spelling/idictation-frequency.mjs";
-import { isBrushableWord, isInflectedReferenceWord } from "./word-study-eligibility.mjs";
+import { isBrushableWord } from "./word-study-eligibility.mjs";
 import {
   isMissingAiFields,
   isMissingClassification
@@ -105,24 +105,10 @@ function countFromTallies(filter, tallies) {
   return tallies.all;
 }
 
-function normalizeWordKey(value) {
-  return String(value || "").normalize("NFKC").trim().toLowerCase().replace(/\s+/g, " ");
-}
-
-function getIdictationEntryCount(sourceKey, getIdictationSource, words) {
+function getIdictationEntryCount(sourceKey, getIdictationSource) {
   const source = getIdictationSource(sourceKey);
   if (source?.entries?.length) {
-    const referenceKeys = new Set(
-      (Array.isArray(words) ? words : [])
-        .filter(isInflectedReferenceWord)
-        .map((word) => normalizeWordKey(word.word))
-    );
-    return source.entries.filter((entry) => {
-      const candidates = [entry.word, entry.expectedAnswer, ...(entry.acceptedAnswers || [])]
-        .map(normalizeWordKey)
-        .filter(Boolean);
-      return !candidates.some((key) => referenceKeys.has(key));
-    }).length;
+    return source.entries.length;
   }
 
   // The full frequency payload is lazy-loaded. Use its generated metadata so
@@ -153,7 +139,7 @@ export function buildLearningEntryCounts(words, learningEntries, {
       const key = filterKey(entry.filter);
 
       if (isIdictationFlashFilter(entry.filter)) {
-        counts.set(key, getIdictationEntryCount(entry.filter.value, getIdictationSource, words));
+        counts.set(key, getIdictationEntryCount(entry.filter.value, getIdictationSource));
         continue;
       }
 

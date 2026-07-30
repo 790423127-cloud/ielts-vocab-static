@@ -3,6 +3,7 @@
 import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import { sanitizeAiWordCollocations } from "../lib/vocab/admin-ai-content-profile.mjs";
 import { hasLexiconContentChange } from "../lib/vocab/lexicon-content-change.mjs";
+import { formalLexiconWords } from "../lib/vocab/lexicon-delete-intent.mjs";
 import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "../lib/vocab/lexicon-guard-shared.mjs";
 import { PHRASE_FLASH_STUDY_MODE_KEY } from "../lib/vocab/phrase-flashcard-keys.mjs";
 import {
@@ -31,6 +32,9 @@ import {
   cleanExampleField,
   exampleFieldsNeedCleanup
 } from "../lib/vocab/example-clean.mjs";
+import { primeSpellingLexiconCache } from "../lib/spelling/load-spelling-lexicon.mjs";
+
+const sanitizedRuntimeContentKeys = new Set();
 
 /** Repair noisy examples and invalid/duplicated collocations when hydrating client cache. */
 function sanitizeRuntimeWords(words = []) {
@@ -64,6 +68,18 @@ function sanitizeRuntimeWords(words = []) {
     return nextWord;
   });
   return changed ? next : words;
+}
+
+function sanitizeRuntimeWordsOnce(words = [], meta = {}) {
+  const contentKey = String(
+    meta?.contentHash || meta?.wordsHash || meta?.lexiconHash || ""
+  ).trim();
+  const cacheKey = contentKey ? `${words.length}:${contentKey}` : "";
+  if (cacheKey && sanitizedRuntimeContentKeys.has(cacheKey)) return words;
+
+  const next = sanitizeRuntimeWords(words);
+  if (cacheKey && next === words) sanitizedRuntimeContentKeys.add(cacheKey);
+  return next;
 }
 
 /**
@@ -129,7 +145,7 @@ export function useHomeVocabBootstrap({ setToast }) {
     savedAt: ""
   });
 
-  const persistWordsImmediately = useCallback((nextWords) => {
+  const persistWordsImmediately = useCallback((nextWords, options = {}) => {
     if (!Array.isArray(nextWords)) return Promise.resolve({ ok: false, status: "invalid-words" });
     const existing = persistPromiseBySnapshotRef.current.get(nextWords);
     if (existing) return existing;
@@ -142,9 +158,10 @@ export function useHomeVocabBootstrap({ setToast }) {
             setToast?.(message);
           }
         });
-        const serverResult = await postExportCache(nextWords, cacheMetaRef.current, {
+        const serverResult = await postExportCache(formalLexiconWords(nextWords), cacheMetaRef.current, {
           source: "main-lexicon-content-edit",
-          forceRefresh: true
+          forceRefresh: true,
+          ...(options.deletionIntent ? { deletionIntent: options.deletionIntent } : {})
         });
 
         if (!serverResult?.ok) {
@@ -263,8 +280,8 @@ export function useHomeVocabBootstrap({ setToast }) {
       try {
         const stored = await withTimeout(loadWordsFromIndexedDB(), 2500, null);
         if (stored?.words?.length) {
-          cachedWords = sanitizeRuntimeWords(stored.words);
-          cachedNeedsRepair = cachedWords !== stored.words;
+          cachedWords = stored.words;
+          cachedNeedsRepair = false;
           cachedMeta = stored.meta || null;
 
           if (!cancelled) {
@@ -295,6 +312,9 @@ export function useHomeVocabBootstrap({ setToast }) {
           }
           if (!cancelled) {
             cacheMetaRef.current = currentMeta;
+            primeSpellingLexiconCache(cachedWords, {
+              headwordVersion: currentMeta.version || "indexeddb-cache"
+            });
             setVocabRuntime({ status: "online", ...apiMeta });
           }
           return;
@@ -320,14 +340,18 @@ export function useHomeVocabBootstrap({ setToast }) {
         };
         const onlineWordsWithStoredState = applyStoredUserState(payload.words, stored);
         const mergedOnlineWords = mergeWordContentWithUserState(onlineWordsWithStoredState, cachedWords || [], {
-          includePersonalSupplements: false
+          includePersonalSupplements: true,
+          supplementKinds: ["personal-reading"]
         });
-        const onlineWords = sanitizeRuntimeWords(mergedOnlineWords);
+        const onlineWords = sanitizeRuntimeWordsOnce(mergedOnlineWords, mergedMeta);
         const onlineNeedsRepair = onlineWords !== mergedOnlineWords;
 
         cacheMetaRef.current = mergedMeta;
         if (!cancelled) {
           hydratedWordsRef.current = onlineWords;
+          primeSpellingLexiconCache(onlineWords, {
+            headwordVersion: mergedMeta.version
+          });
           startTransition(() => setWordsState(onlineWords));
           setVocabRuntime({ status: "online", ...mergedMeta });
         }
@@ -336,9 +360,10 @@ export function useHomeVocabBootstrap({ setToast }) {
           if (cancelled) return;
 
           const mergedWordsForCache = mergeWordContentWithUserState(payload.words, cachedWords || onlineWords, {
-            includePersonalSupplements: false
+            includePersonalSupplements: true,
+            supplementKinds: ["personal-reading"]
           });
-          const wordsForCache = sanitizeRuntimeWords(mergedWordsForCache);
+          const wordsForCache = sanitizeRuntimeWordsOnce(mergedWordsForCache, mergedMeta);
           if (
             cachedNeedsRepair ||
             onlineNeedsRepair ||
@@ -353,11 +378,14 @@ export function useHomeVocabBootstrap({ setToast }) {
         if (cancelled) return;
         const stored = await withTimeout(loadWordsFromIndexedDB(), 2500, null);
         if (stored?.words?.length) {
-          cachedWords = sanitizeRuntimeWords(stored.words);
+          cachedWords = sanitizeRuntimeWordsOnce(stored.words, stored.meta);
           cachedNeedsRepair = cachedWords !== stored.words;
           cachedMeta = stored.meta || null;
           if (cachedMeta) cacheMetaRef.current = cachedMeta;
           hydratedWordsRef.current = cachedWords;
+          primeSpellingLexiconCache(cachedWords, {
+            headwordVersion: cachedMeta?.version || "indexeddb-cache"
+          });
           startTransition(() => setWordsState(cachedWords));
           if (cachedNeedsRepair) saveWordsToIndexedDB(cachedWords, cachedMeta || {}).catch(() => {});
         }

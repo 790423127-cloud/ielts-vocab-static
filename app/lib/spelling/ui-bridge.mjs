@@ -213,7 +213,9 @@ export function createSpellingUiBridge(options = {}) {
           if (migrated.changed || rolled.changed) migratedRecords.push(rolled.record);
           return rolled.record;
         }));
-        if (store?.putRecord) {
+        if (migratedRecords.length && store?.putRecords) {
+          await store.putRecords(migratedRecords);
+        } else if (store?.putRecord) {
           for (const migratedRecord of migratedRecords) {
             await store.putRecord(migratedRecord);
           }

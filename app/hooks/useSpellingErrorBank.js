@@ -31,6 +31,7 @@ export function useSpellingErrorBank(lexiconEntries = [], options = {}) {
   const activeOnly = options.activeOnly === true;
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState("");
   const recoveryRef = useRef({
     scope: "",
@@ -99,7 +100,14 @@ export function useSpellingErrorBank(lexiconEntries = [], options = {}) {
   }, [lexiconEntries, activeOnly, scope]);
 
   useEffect(() => {
-    refresh();
+    let active = true;
+    setInitialized(false);
+    refresh().finally(() => {
+      if (active) setInitialized(true);
+    });
+    return () => {
+      active = false;
+    };
   }, [refresh]);
 
   const summary = summarizeErrorBankItems(items);
@@ -110,6 +118,7 @@ export function useSpellingErrorBank(lexiconEntries = [], options = {}) {
     count: summary.distinct,
     totalWrongAttempts: summary.totalWrongAttempts,
     loading,
+    initialized,
     error,
     refresh
   };

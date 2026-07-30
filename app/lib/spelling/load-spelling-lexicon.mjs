@@ -108,6 +108,22 @@ export function clearSpellingLexiconCache() {
   spellingLexiconPromise = new Map();
 }
 
+export function getCachedSpellingLexicon(options = {}) {
+  return spellingLexiconCache.get(getLexiconCacheKey(options)) || null;
+}
+
+export function primeSpellingLexiconCache(headwords = [], options = {}) {
+  const words = asWordList(headwords);
+  if (!words.length) return null;
+
+  const merged = mergeSpellingLexicon(words, [], {
+    headwordVersion: String(options.headwordVersion || options.version || "home-runtime"),
+    phraseVersion: ""
+  });
+  spellingLexiconCache.set("word", merged);
+  return merged;
+}
+
 export async function loadSpellingLexicon(options = {}) {
   const cacheKey = getLexiconCacheKey(options);
 

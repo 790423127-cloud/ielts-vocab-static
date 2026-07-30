@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260728_static_mobile_swipe_538_v4";
+export const STATIC_RESPONSIVE_VERSION = "20260730_compact_word_order_v2";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
 export const STATIC_SWIPE_FIX_MARKER = "D2.9 static 538 touch-first swipe";
@@ -63,6 +63,7 @@ const MOBILE_ENTRY_CSS = `
   .entry-desc{font-size:11px;line-height:1.35}
   .entry-meta{font-size:11px}
   .top-select{max-width:100%;min-width:0}
+  .top-actions .order-select{width:min(132px,100%);min-width:0;max-width:132px;justify-self:start}
 }
 `;
 
@@ -423,6 +424,9 @@ export function patchStaticExportZip(input) {
   const css = byName.get("assets/style.css") || "";
   const html = byName.get("index.html") || "";
   const sw = byName.get("sw.js") || "";
+  const readingHtml = byName.get("reading-words.html") || "";
+  const readingJs = byName.get("assets/reading-words.js") || "";
+  const readingCss = byName.get("assets/reading-words.css") || "";
   if (!appJs.includes(STATIC_SWIPE_FIX_MARKER) || !appJs.includes(STATIC_SWIPE_ENGINE)) {
     throw new Error("Final static ZIP does not contain the verified 538-style swipe controller");
   }
@@ -434,6 +438,19 @@ export function patchStaticExportZip(input) {
   }
   if (!sw.includes(STATIC_RESPONSIVE_VERSION)) {
     throw new Error("Final static ZIP service worker version is stale");
+  }
+  if (!sw.includes('url.pathname.endsWith("/reading-words.html")')) {
+    throw new Error("Final static ZIP does not support offline reading-words navigation");
+  }
+  if (
+    !readingHtml.includes(STATIC_RESPONSIVE_VERSION) ||
+    !readingHtml.includes('id="deleteBtn"') ||
+    !readingHtml.includes('id="favoriteBtn"') ||
+    !readingJs.includes("deleteCurrentReadingWord") ||
+    !readingJs.includes("shouldHandleDeleteShortcut") ||
+    !readingCss.includes("repeat(6,minmax(0,1fr))")
+  ) {
+    throw new Error("Final static ZIP reading-words page is missing verified mobile controls");
   }
   return createStoredZip(entries);
 }

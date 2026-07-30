@@ -17,10 +17,13 @@ function fixture() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "export-cache-atomic-"));
   const cacheFile = path.join(root, "cache", "words.json");
   const publicFile = path.join(root, "public", "data", "words.json");
+  const retirementFile = path.join(root, "app", "lib", "vocab", "master-lexicon-retirements.json");
   fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
   fs.mkdirSync(path.dirname(publicFile), { recursive: true });
+  fs.mkdirSync(path.dirname(retirementFile), { recursive: true });
   fs.writeFileSync(cacheFile, "old-cache", "utf8");
   fs.writeFileSync(publicFile, "old-public", "utf8");
+  fs.writeFileSync(retirementFile, "old-retirements", "utf8");
   const words = [
     { id: "a", word: "alpha", meaning: "甲" },
     { id: "b", word: "beta", meaning: "乙" }
@@ -34,6 +37,7 @@ function fixture() {
     root,
     cacheFile,
     publicFile,
+    retirementFile,
     words,
     prepared,
     cleanup() {
@@ -45,6 +49,7 @@ function fixture() {
 function assertOriginalFiles(testFixture) {
   assert.equal(fs.readFileSync(testFixture.cacheFile, "utf8"), "old-cache");
   assert.equal(fs.readFileSync(testFixture.publicFile, "utf8"), "old-public");
+  assert.equal(fs.readFileSync(testFixture.retirementFile, "utf8"), "old-retirements");
 }
 
 function assertNoTransactionFiles(root) {
@@ -174,6 +179,42 @@ test("second official replacement failure rolls the first replacement back", () 
   }
 });
 
+test("retirement replacement failure rolls both official word files back", () => {
+  const current = fixture();
+  const retirementText = `${JSON.stringify({
+    version: "v-test",
+    generatedAt: "2026-07-29T00:00:00.000Z",
+    count: 1,
+    entries: [{ id: "a", word: "alpha", reason: "user-curated-removal" }]
+  }, null, 2)}\n`;
+  let injected = false;
+  try {
+    assert.throws(() => publishLexiconPair({
+      cacheFile: current.cacheFile,
+      publicFile: current.publicFile,
+      payloadText: current.prepared.text,
+      expectedCount: current.words.length,
+      retirementFile: current.retirementFile,
+      retirementText,
+      transactionId: "retirement-replacement-failure",
+      fsApi: {
+        ...fs,
+        renameSync(from, to) {
+          if (!injected && from.endsWith(".tmp") && to === current.retirementFile) {
+            injected = true;
+            throw new Error("retirement replacement failed");
+          }
+          return fs.renameSync(from, to);
+        }
+      }
+    }), /retirement replacement failed/);
+    assertOriginalFiles(current);
+    assertNoTransactionFiles(current.root);
+  } finally {
+    current.cleanup();
+  }
+});
+
 test("invalid temporary JSON or hash never replaces official files", () => {
   const current = fixture();
   let writeCount = 0;
@@ -226,4 +267,29 @@ test("successful publish writes byte-identical files and fresh content hashes", 
   } finally {
     current.cleanup();
   }
+});
+
+test("payload rebuild preserves audited top-level metadata without preserving stale hashes", () => {
+  const prepared = buildExportCachePayload({
+    words: [{ id: "a", word: "alpha" }],
+    version: "v-new",
+    savedAt: "2026-07-29T00:00:00.000Z",
+    metadata: {
+      version: "v-old",
+      count: 999,
+      savedAt: "old",
+      lexiconHash: "old-lexicon-hash",
+      integrityHash: "old-integrity-hash",
+      morphologyAudit: {
+        version: "manual-morphology-audit-v5-20260728",
+        rawSuffixHeadwordsReviewed: 3889
+      }
+    }
+  });
+
+  assert.equal(prepared.payload.version, "v-new");
+  assert.equal(prepared.payload.count, 1);
+  assert.equal(prepared.payload.morphologyAudit.rawSuffixHeadwordsReviewed, 3889);
+  assert.notEqual(prepared.payload.lexiconHash, "old-lexicon-hash");
+  assert.notEqual(prepared.payload.integrityHash, "old-integrity-hash");
 });

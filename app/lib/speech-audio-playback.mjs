@@ -13,6 +13,9 @@ export const SPEECH_ACTIVITY_RMS_DB = -65;
 export const SPEECH_ANALYSIS_WINDOW_SECONDS = 0.01;
 export const SPEECH_TAIL_PADDING_SECONDS = 0.12;
 export const SPEECH_TAIL_MIN_TRIM_SECONDS = 0.18;
+export const SPEECH_NOISE_NOTCH_FREQUENCY_HZ = 11760;
+export const SPEECH_NOISE_NOTCH_Q = 6.5;
+export const SPEECH_LOWPASS_FREQUENCY_HZ = 10500;
 /** @deprecated use EDGE_PLAYBACK_GAIN — kept for tests/imports */
 export const EDGE_SENTENCE_PLAYBACK_GAIN = EDGE_PLAYBACK_GAIN;
 /** @deprecated use EDGE_PLAYBACK_GAIN — kept for tests/imports */
@@ -49,6 +52,20 @@ function getMasterGain(context) {
   }
 
   return masterGainNode;
+}
+
+function createSpeechNoiseFilters(context) {
+  const lowpass = context.createBiquadFilter();
+  lowpass.type = "lowpass";
+  lowpass.frequency.value = SPEECH_LOWPASS_FREQUENCY_HZ;
+  lowpass.Q.value = Math.SQRT1_2;
+
+  const notch = context.createBiquadFilter();
+  notch.type = "notch";
+  notch.frequency.value = SPEECH_NOISE_NOTCH_FREQUENCY_HZ;
+  notch.Q.value = SPEECH_NOISE_NOTCH_Q;
+
+  return { lowpass, notch };
 }
 
 export function primeSpeechAudioPlayback() {
@@ -201,6 +218,7 @@ async function playWithWebAudio(url, options = {}) {
   source.buffer = audioBuffer;
 
   const gainNode = context.createGain();
+  const filters = createSpeechNoiseFilters(context);
   const gain = resolvePlaybackGain(options);
   const playbackWindow = resolveCleanPlaybackWindow(audioBuffer);
   const startedAt = context.currentTime;
@@ -210,15 +228,19 @@ async function playWithWebAudio(url, options = {}) {
   gainNode.gain.setValueAtTime(gain, fadeStartsAt);
   gainNode.gain.linearRampToValueAtTime(0, endsAt);
 
-  source.connect(gainNode);
+  source.connect(filters.lowpass);
+  filters.lowpass.connect(filters.notch);
+  filters.notch.connect(gainNode);
   gainNode.connect(getMasterGain(context));
-  const playback = { source, gainNode };
+  const playback = { source, gainNode, filters };
   activeWebAudioPlayback = playback;
 
   source.onended = () => {
     if (activeWebAudioPlayback === playback) activeWebAudioPlayback = null;
     try {
       source.disconnect();
+      filters.lowpass.disconnect();
+      filters.notch.disconnect();
       gainNode.disconnect();
     } catch {}
   };

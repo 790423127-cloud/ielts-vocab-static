@@ -8,6 +8,7 @@ import { useHomeLexiconAdmin } from "./hooks/useHomeLexiconAdmin.js";
 import { useHomeVocabBootstrap } from "./hooks/useHomeVocabBootstrap.js";
 import { useWordFlashSession } from "./hooks/useWordFlashSession.js";
 import { useWordFlashNavigation } from "./hooks/useWordFlashNavigation.js";
+import { useWordStudyOrdering } from "./hooks/useWordStudyOrdering.js";
 import { useLexiconTidyReview } from "./hooks/useLexiconTidyReview.js";
 import {
   formatOfflineVocabNotice,
@@ -20,7 +21,8 @@ import WordFlashcardView from "./components/WordFlashcardView";
 import StableLoadingState from "./components/StableLoadingState";
 import {
   ensureIdictationFrequencyData,
-  getIdictationSource
+  getIdictationSource,
+  isIdictationFrequencyLoaded
 } from "./lib/spelling/idictation-frequency.mjs";
 import {
   effectiveStudyIndex,
@@ -56,6 +58,10 @@ import {
   isInflectedReferenceWord,
   resolveWordSearchTarget
 } from "./lib/vocab/word-study-eligibility.mjs";
+import {
+  WORD_STUDY_ORDER_MODES,
+  orderStudyWordIndices
+} from "./lib/vocab/word-study-ordering.mjs";
 import { SPEECH_WARM_DELAYS_MS } from "./lib/vocab-speech.mjs";
 import {
   compactBrowserStorageForCurrentWords,
@@ -259,9 +265,11 @@ function Home() {
   const wantOpenAiToolsQuery = searchParams?.get("openAiTools") === "1";
   const [toolsOpen, setToolsOpen] = useState(false);
   const [aiToolsOpen, setAiToolsOpen] = useState(false);
+  const [libraryStatsOpen, setLibraryStatsOpen] = useState(false);
 
   const warmTtsTimersRef = useRef([]);
   const warmTtsBatchRef = useRef(0);
+  const filterSwitchRequestRef = useRef(0);
   const flashStudyModeRef = useRef(flashStudyMode);
   const latestStateRef = useRef({
     loading: false,
@@ -413,6 +421,10 @@ function Home() {
 
   useEffect(() => {
     if (!idictationFlashSourceKey) return;
+    if (isIdictationFrequencyLoaded()) {
+      setIdictationFlashReady(true);
+      return;
+    }
 
     let cancelled = false;
     setIdictationFlashReady(false);
@@ -420,7 +432,9 @@ function Home() {
       .then(() => {
         if (!cancelled) setIdictationFlashReady(true);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!cancelled) setToast("爱听写词表加载失败，请稍后重试");
+      });
 
     return () => {
       cancelled = true;
@@ -430,11 +444,31 @@ function Home() {
     if (!isWordFlashActive || !idictationFlashSourceKey) return null;
     return new Map(activeWordPool.map((word) => [word.originalIndex, word]));
   }, [isWordFlashActive, idictationFlashSourceKey, activeWordPool]);
-  const studyWordIndices = useMemo(
+  const activeOrderKey = filterKey(filter);
+  const {
+    mode: wordOrderMode,
+    seed: wordOrderSeed,
+    setMode: setWordOrderMode
+  } = useWordStudyOrdering(activeOrderKey);
+  const baseStudyWordIndices = useMemo(
     () => (isWordFlashActive
       ? buildStudyWordIndices(activeWordPool, filter, { idictation: Boolean(idictationFlashSourceKey), matchesWord: matchesActiveFilter })
       : []),
     [isWordFlashActive, activeWordPool, filter, idictationFlashSourceKey, matchesActiveFilter]
+  );
+  const studyWordIndices = useMemo(
+    () => orderStudyWordIndices(baseStudyWordIndices, activeWordPool, {
+      mode: wordOrderMode,
+      seed: wordOrderSeed,
+      idictation: Boolean(idictationFlashSourceKey)
+    }),
+    [
+      baseStudyWordIndices,
+      activeWordPool,
+      wordOrderMode,
+      wordOrderSeed,
+      idictationFlashSourceKey
+    ]
   );
   const studyWords = useMemo(
     () => (isWordFlashActive
@@ -469,7 +503,9 @@ function Home() {
     index: effectiveIndex,
     words,
     filter,
-    studyWords
+    studyWords,
+    wordOrderMode,
+    wordOrderSeed
   };
 
   flashStudyModeRef.current = flashStudyMode;
@@ -509,7 +545,11 @@ function Home() {
   };
   const item = isStudyEmpty
     ? emptyItem
-    : resolvedStudyItem || (studySessionRef.current.restored ? emptyItem : studyWords[0] || DEMO_WORDS[0]);
+    : resolvedStudyItem || (idictationFlashSourceKey
+      ? studyWords[0] || emptyItem
+      : studySessionRef.current.restored
+        ? emptyItem
+        : studyWords[0] || DEMO_WORDS[0]);
   const isExternalIdictationItem = Boolean(item?.__idictationFlash);
   const studyRangeDetail = isWordLexiconLoading
     ? "正在读取正式词库，请稍候。"
@@ -616,11 +656,12 @@ function Home() {
 
   const wordLibraryStats = useMemo(() => {
     if (!isWordFlashActive) {
-      return { total: 0, physical: 0, references: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0, repairMissing: 0, headwordRepair: 0, enrichmentThin: 0, familyReview: 0, familyPromotion: 0 };
+      return { total: 0, physical: 0, references: 0, studyReferences: 0, pending: 0, blurry: 0, unfamiliar: 0, familiar: 0, todayReviewed: 0, missing: 0, classifyMissing: 0, repairMissing: 0, headwordRepair: 0, enrichmentThin: 0, familyReview: 0, familyPromotion: 0 };
     }
 
     let total = 0;
     let references = 0;
+    let studyReferences = 0;
     let pending = 0;
     let blurry = 0;
     let unfamiliar = 0;
@@ -633,7 +674,10 @@ function Home() {
     let enrichmentThin = 0;
     let familyReview = 0;
     let familyPromotion = 0;
-    const knownHeadwords = new Set(libraryWordMap.keys());
+    const shouldCalculateQualityStats = libraryStatsOpen || toolsOpen || aiToolsOpen;
+    const knownHeadwords = shouldCalculateQualityStats
+      ? new Set(libraryWordMap.keys())
+      : null;
 
     for (const word of words) {
       if (isInflectedReferenceWord(word)) {
@@ -642,26 +686,40 @@ function Home() {
       }
       if (!isBrushableWord(word)) continue;
       total += 1;
-      if (word.status !== "熟悉") pending += 1;
-      if (word.status === "模糊") blurry += 1;
-      if (word.status === "不熟") unfamiliar += 1;
-      if (word.status === "熟悉") familiar += 1;
+      const isStudyReference = word.studyMode === "reference";
+      if (isStudyReference) {
+        studyReferences += 1;
+      } else {
+        if (word.status !== "熟悉") pending += 1;
+        if (word.status === "模糊") blurry += 1;
+        if (word.status === "不熟") unfamiliar += 1;
+        if (word.status === "熟悉") familiar += 1;
+      }
       if (word.lastReviewedAt && new Date(word.lastReviewedAt).toDateString() === new Date().toDateString()) todayReviewed += 1;
       if (hasHeadwordRepair(word.word)) headwordRepair += 1;
-      const quality = getWordQualityEvaluation(word, {
-        needsRepair: isLikelyWrongAiWord(word),
-        knownHeadwords
-      });
-      if (quality.lane === "completion") missing += 1;
-      if (quality.lane === "classification") classifyMissing += 1;
-      if (quality.lane === "repair") repairMissing += 1;
-      if (quality.needsOptionalEnrichment) enrichmentThin += 1;
-      if (quality.needsFamilyReview) familyReview += 1;
-      if (quality.hasFamilyPromotionCandidate) familyPromotion += 1;
+      if (shouldCalculateQualityStats) {
+        const quality = getWordQualityEvaluation(word, {
+          needsRepair: isLikelyWrongAiWord(word),
+          knownHeadwords
+        });
+        if (quality.lane === "completion") missing += 1;
+        if (quality.lane === "classification") classifyMissing += 1;
+        if (quality.lane === "repair") repairMissing += 1;
+        if (quality.needsOptionalEnrichment) enrichmentThin += 1;
+        if (quality.needsFamilyReview) familyReview += 1;
+        if (quality.hasFamilyPromotionCandidate) familyPromotion += 1;
+      }
     }
 
-    return { total, physical: words.length, references, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing, repairMissing, headwordRepair, enrichmentThin, familyReview, familyPromotion };
-  }, [isWordFlashActive, words, libraryWordMap]);
+    return { total, physical: words.length, references, studyReferences, pending, blurry, unfamiliar, familiar, todayReviewed, missing, classifyMissing, repairMissing, headwordRepair, enrichmentThin, familyReview, familyPromotion };
+  }, [
+    isWordFlashActive,
+    words,
+    libraryWordMap,
+    libraryStatsOpen,
+    toolsOpen,
+    aiToolsOpen
+  ]);
 
   const familiarCount = wordLibraryStats.familiar;
   const missingCount = wordLibraryStats.missing;
@@ -807,8 +865,7 @@ function Home() {
     markStatus,
     nextWord,
     prevWord,
-    toggleFavorite,
-    shuffleStudyWords
+    toggleFavorite
   } = useWordFlashNavigation({
     flashStudyMode,
     flashStudyModeRef,
@@ -864,12 +921,16 @@ function Home() {
     counts.set("tidy:basic", lexiconTidyReview.counts.basic);
     counts.set("tidy:issues", lexiconTidyReview.counts.issues);
     return counts;
-  }, [isWordFlashActive, words, lexiconTidyReview.counts.review, lexiconTidyReview.counts.basic, lexiconTidyReview.counts.issues]);
+  }, [
+    isWordFlashActive,
+    words,
+    lexiconTidyReview.counts.review,
+    lexiconTidyReview.counts.basic,
+    lexiconTidyReview.counts.issues
+  ]);
 
   const learningEntryGroups = useMemo(() => {
     if (!isWordFlashActive) return [];
-
-    const activeCurrentWord = words[index]?.word || "";
 
     return LEARNING_ENTRIES.map((group) => ({
       ...group,
@@ -878,8 +939,13 @@ function Home() {
         const count = learningEntryCounts.get(entryFilterKey) ?? 0;
         let currentWordLabel = "";
 
-        if (isSameFilter(filter, entry.filter)) {
-          currentWordLabel = activeCurrentWord;
+        if (count <= 0) {
+          currentWordLabel = "";
+        } else if (isSameFilter(filter, entry.filter)) {
+          const activeWord = resolvedStudyItem;
+          if (activeWord && matchesActiveFilter(activeWord, entry.filter, index)) {
+            currentWordLabel = activeWord.word || "";
+          }
         } else {
           const currentKey = entryPositionsRef.current[entryFilterKey] || "";
 
@@ -888,7 +954,11 @@ function Home() {
               const source = idictationFlashReady ? getIdictationSource(entry.filter.value) : null;
               currentWordLabel = source?.entries?.find((word) => normalizeWord(word.word) === currentKey)?.word || "";
             } else {
-              currentWordLabel = libraryWordMap.get(currentKey)?.word || "";
+              const savedWord = libraryWordMap.get(currentKey);
+              const savedIndex = savedWord ? words.indexOf(savedWord) : -1;
+              if (savedWord && matchesActiveFilter(savedWord, entry.filter, savedIndex)) {
+                currentWordLabel = savedWord.word || "";
+              }
             }
           }
         }
@@ -900,9 +970,23 @@ function Home() {
         };
       })
     }));
-  }, [isWordFlashActive, words, filter, index, learningEntryCounts, libraryWordMap, idictationFlashReady, entryPositionsRef]);
+  }, [
+    isWordFlashActive,
+    words,
+    filter,
+    index,
+    resolvedStudyItem,
+    matchesActiveFilter,
+    learningEntryCounts,
+    libraryWordMap,
+    idictationFlashReady,
+    entryPositionsRef
+  ]);
 
-  function setLibraryFilter(type, value) {
+  async function setLibraryFilter(type, value) {
+    const requestId = filterSwitchRequestRef.current + 1;
+    filterSwitchRequestRef.current = requestId;
+
     if (type === LEXICON_TIDY_FILTER_TYPE && !lexiconTidyReady) {
       setToast("正在准备这份词库整理清单，请稍等一下");
       return;
@@ -914,6 +998,23 @@ function Home() {
     persistWordFlashSessionNow();
 
     const nextFilter = { type, value };
+    if (isIdictationFlashFilter(nextFilter)) {
+      if (!isIdictationFrequencyLoaded()) {
+        setToast(`正在加载${value === "reading" ? "爱听写阅读" : "爱听写听力"}词表…`);
+        try {
+          await ensureIdictationFrequencyData();
+        } catch {
+          if (filterSwitchRequestRef.current === requestId) {
+            setToast("爱听写词表加载失败，请稍后重试");
+          }
+          return;
+        }
+
+        if (filterSwitchRequestRef.current !== requestId) return;
+      }
+      setIdictationFlashReady(true);
+    }
+
     const studyPool = buildStudyPoolForFilter(nextFilter, words);
     const targetPool = isIdictationFlashFilter(nextFilter)
       ? buildIdictationFlashWords(nextFilter.value, words, libraryWordMap)
@@ -1096,6 +1197,7 @@ function Home() {
             isSameFilter,
             resolveStudyWordEntry,
             wordLibraryStats,
+            onLibraryOpenChange: setLibraryStatsOpen,
             familiarCount,
             missingCount,
             classifyMissingCount,
@@ -1150,7 +1252,9 @@ function Home() {
             DIFFICULTY_OPTIONS,
             IELTS_USE_OPTIONS,
             IDICTATION_FLASH_FILTERS,
-            shuffleStudyWords,
+            wordOrderModes: WORD_STUDY_ORDER_MODES,
+            wordOrderMode,
+            setWordOrderMode,
             nextWord,
             prevWord,
             toggleFavorite,

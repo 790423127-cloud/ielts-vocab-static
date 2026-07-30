@@ -1,8 +1,8 @@
 {
-  "version": "v16-13351-user-curated-removal-20260728",
-  "generatedAt": "2026-07-28T12:03:33.072Z",
-  "previousRef": "4d1c212e5b1ef10fb4545cfc3c1eecf74b94cd6f",
-  "count": 93,
+  "version": "v20-13355-reading-compound-curated-removal-20260730",
+  "generatedAt": "2026-07-30T04:28:27.017Z",
+  "previousRef": "63f36fe",
+  "count": 103,
   "entries": [
     {
       "id": "word_12f29832aa4b",
@@ -467,6 +467,62 @@
     {
       "id": "word_26bd604bd179",
       "word": "indian",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_7692c3ad3540",
+      "word": "one",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_listening1179_8b5b9db0c13d",
+      "word": "three",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_d7049f2e5682",
+      "word": "twenty",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_837f561f66f8",
+      "word": "hundred",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_listening1179_fe31dae5ff64",
+      "word": "ATM",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_listening1179_59981069c56a",
+      "word": "vowel",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_6cf0c12e",
+      "word": "samphire",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_646031ef",
+      "word": "motorbike",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_79e7eec2b73f",
+      "word": "british",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fe7f29efae2f",
+      "word": "ireland",
       "reason": "user-curated-removal"
     }
   ]

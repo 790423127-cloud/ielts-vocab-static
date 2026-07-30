@@ -5,7 +5,6 @@ import {
 } from "./word-flashcard-session.mjs";
 import {
   isBrushableWord,
-  isInflectedReferenceWord,
   resolveBrushableWord
 } from "./word-study-eligibility.mjs";
 import {
@@ -110,7 +109,6 @@ export function buildIdictationFlashWords(sourceKey, libraryWords = [], libraryW
 
   return source.entries.flatMap((entry, sourceIndex) => {
     const libraryWord = findIdictationLibraryWord(entry, lookup);
-    if (isInflectedReferenceWord(libraryWord)) return [];
     const answerText = Array.isArray(entry.acceptedAnswers) && entry.acceptedAnswers.length
       ? entry.acceptedAnswers.join(" / ")
       : entry.expectedAnswer || "";
@@ -224,7 +222,7 @@ export const LEARNING_ENTRIES = [
   {
     group: "今天优先",
     items: [
-      { title: "待学词浏览", desc: "自由浏览未标记、模糊和不熟词；翻页不会自动标记熟悉。", filter: { type: "all", value: "" } },
+      { title: "待学词浏览", desc: "从全部可刷词中排除已认识词和专项参考词；翻页不会自动标记熟悉。", filter: { type: "all", value: "" } },
       { title: "不熟词", desc: "所有标记不熟的词，优先复习。", filter: { type: "status", value: "不熟" } },
       { title: "收藏词", desc: "写作、口语、书信可直接用的重点词。", filter: { type: "status", value: "收藏" } }
     ]

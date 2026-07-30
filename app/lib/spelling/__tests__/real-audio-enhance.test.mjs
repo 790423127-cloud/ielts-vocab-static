@@ -8,10 +8,13 @@ import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 
 import {
+  EDGE_AUDIO_ENHANCE_VERSION,
   REAL_AUDIO_ENHANCE_VERSION,
   enhanceRealAudioBuffer,
   isRealAudioEnhanceAvailable,
-  needsRealAudioEnhance
+  needsEdgeAudioEnhance,
+  needsRealAudioEnhance,
+  resolveEdgeEnhanceFilter
 } from "../../real-audio-enhance.mjs";
 
 const require = createRequire(import.meta.url);
@@ -37,6 +40,23 @@ test("needsRealAudioEnhance only targets cached real-audio entries missing enhan
     false
   );
   assert.equal(needsRealAudioEnhance({ realAudio: false, hasAudio: true, filename: "a.mp3" }), false);
+});
+
+test("edge enhancement removes the persistent 11.76 kHz TTS tone without reprocessing real audio", () => {
+  assert.notEqual(EDGE_AUDIO_ENHANCE_VERSION, REAL_AUDIO_ENHANCE_VERSION);
+  assert.match(EDGE_AUDIO_ENHANCE_VERSION, /11760/);
+  assert.match(resolveEdgeEnhanceFilter(), /equalizer=f=11760:t=h:w=1800:g=-60/);
+  assert.equal(needsEdgeAudioEnhance({ realAudio: false, hasAudio: true, filename: "edge.mp3" }), true);
+  assert.equal(
+    needsEdgeAudioEnhance({
+      realAudio: false,
+      hasAudio: true,
+      filename: "edge.mp3",
+      audioEnhanceVersion: EDGE_AUDIO_ENHANCE_VERSION
+    }),
+    false
+  );
+  assert.equal(needsEdgeAudioEnhance({ realAudio: true, hasAudio: true, filename: "real.mp3" }), false);
 });
 
 test("enhanceRealAudioBuffer normalizes a cached real-audio sample when ffmpeg is available", async (t) => {

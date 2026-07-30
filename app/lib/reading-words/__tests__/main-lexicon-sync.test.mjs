@@ -1,10 +1,57 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  backfillReadingWordsIntoMain,
+  buildReadingSynonymDisplay,
+  ensureReadingWordMainEntry,
   mergeAiProfileIntoMainEntry,
   needsReadingAiProcessing,
   reconcileReadingImportsWithMain
 } from "../main-lexicon-sync.mjs";
+
+test("legacy reading words missing from the formal lexicon are backfilled once", () => {
+  const readingWords = [
+    {
+      id: "reading-airmail",
+      word: "Airmail",
+      meaning: "航空邮件",
+      importCount: 2
+    },
+    {
+      id: "reading-retain",
+      word: "retain",
+      meaning: "保留"
+    }
+  ];
+  const mainWords = [{
+    id: "main-retain",
+    wordId: "main-retain",
+    word: "retain",
+    pos: "verb",
+    status: "不熟"
+  }];
+
+  const first = backfillReadingWordsIntoMain(readingWords, mainWords, {
+    now: "2026-07-29T00:00:00.000Z"
+  });
+  const second = backfillReadingWordsIntoMain(first.words, first.mainWords, {
+    now: "2026-07-30T00:00:00.000Z"
+  });
+
+  assert.equal(first.addedToMain, 1);
+  assert.equal(first.mainWords.length, 2);
+  assert.equal(first.mainWords[0].id, "main-retain");
+  assert.equal(first.mainWords[0].status, "不熟");
+  assert.equal(first.mainWords[1].id, "reading-airmail");
+  assert.equal(first.mainWords[1].source, "personal-reading");
+  assert.equal(first.mainWords[1].supplemental, false);
+  assert.equal(first.mainWords[1].readingImportCount, 2);
+  assert.equal(first.words[0].mainWordId, "reading-airmail");
+  assert.equal(first.words[1].mainWordId, "main-retain");
+  assert.equal(second.addedToMain, 0);
+  assert.equal(second.mainChanged, false);
+  assert.equal(second.mainWords.length, 2);
+});
 
 test("existing main entry supplies canonical pos, forms and family without changing its stable id", () => {
   const result = reconcileReadingImportsWithMain(
@@ -31,7 +78,7 @@ test("existing main entry supplies canonical pos, forms and family without chang
   assert.equal(result.mainWords[0].id, "main-retain");
 });
 
-test("new reading word becomes a personal main-lexicon supplement and repeated imports become high frequency", () => {
+test("new reading word becomes a formal main-lexicon headword and repeated imports become high frequency", () => {
   const first = reconcileReadingImportsWithMain(
     [],
     [{ word: "microhabitat" }],
@@ -50,7 +97,8 @@ test("new reading word becomes a personal main-lexicon supplement and repeated i
 
   assert.equal(first.addedToMain, 1);
   assert.equal(first.mainWords[0].source, "personal-reading");
-  assert.equal(first.mainWords[0].supplemental, true);
+  assert.equal(first.mainWords[0].supplemental, false);
+  assert.equal(first.mainWords[0].entryType, "headword");
   assert.equal(first.mainWords[0].id, "reading-microhabitat");
   assert.equal(second.addedToMain, 0);
   assert.equal(second.duplicates, 2);
@@ -84,4 +132,41 @@ test("AI classification is written to main entry only and preserves ids and user
   assert.deepEqual(after.ieltsUse, ["阅读"]);
   assert.deepEqual(after.topics, ["环境"]);
   assert.equal(after.difficulty, "高级");
+});
+
+test("AI can create a missing formal main entry before writing classification", () => {
+  const result = ensureReadingWordMainEntry(
+    {
+      id: "reading-airmail",
+      wordId: "reading-airmail",
+      word: "Airmail",
+      meaning: "航空邮件",
+      pos: "noun"
+    },
+    [{ id: "main-existing", word: "atlas" }],
+    { now: "2026-07-29T00:00:00.000Z" }
+  );
+
+  assert.equal(result.added, true);
+  assert.equal(result.mainIndex, 1);
+  assert.equal(result.mainEntry.id, "reading-airmail");
+  assert.equal(result.mainEntry.word, "Airmail");
+  assert.equal(result.mainEntry.meaning, "航空邮件");
+  assert.equal(result.mainWords.length, 2);
+
+  const classified = mergeAiProfileIntoMainEntry(result.mainEntry, {
+    ieltsUse: ["阅读"],
+    topics: ["通信"],
+    difficulty: "基础高频"
+  });
+  assert.deepEqual(classified.ieltsUse, ["阅读"]);
+  assert.deepEqual(classified.topics, ["通信"]);
+  assert.equal(classified.difficulty, "基础高频");
+});
+
+test("synonym display uses the formal main-entry meaning", () => {
+  assert.deepEqual(
+    buildReadingSynonymDisplay("broad", { word: "broad", meaning: "广泛的；宽的" }),
+    { word: "broad", meaning: "广泛的；宽的" }
+  );
 });

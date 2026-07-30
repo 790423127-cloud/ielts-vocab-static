@@ -20,6 +20,59 @@ function put(store, value) {
   store.put(value);
 }
 
+function putSpellingRecord(transaction, stores, record) {
+  put(transaction.objectStore(stores.spellingProgress), record);
+
+  if (record.errorBank?.everWrong) {
+    put(transaction.objectStore(stores.errorBank), {
+      wordId: record.wordId,
+      ...record.errorBank,
+      updatedAt: record.updatedAt,
+      revision: record.revision,
+      deviceId: record.deviceId,
+      version: record.version,
+      lastSyncAt: record.lastSyncAt
+    });
+  } else {
+    transaction.objectStore(stores.errorBank).delete(record.wordId);
+  }
+
+  if (
+    record.today?.repairState === "in_repair"
+    || ["must_repair", "waiting_second"].includes(record.today?.repairState)
+  ) {
+    put(transaction.objectStore(stores.todayRepairQueue), {
+      wordId: record.wordId,
+      repairState: record.today.repairState,
+      sessionDate: record.today.sessionDate,
+      nextEligibleAt: record.today.nextEligibleAt,
+      minOtherWordsBeforeNext: record.today.minOtherWordsBeforeNext,
+      lastSeenSequence: record.today.lastSeenSequence,
+      updatedAt: record.updatedAt,
+      deviceId: record.deviceId,
+      version: record.version,
+      lastSyncAt: record.lastSyncAt
+    });
+  } else {
+    transaction.objectStore(stores.todayRepairQueue).delete(record.wordId);
+  }
+
+  if (record.srs?.nextReviewAt > 0) {
+    put(transaction.objectStore(stores.srsReviewQueue), {
+      wordId: record.wordId,
+      stage: record.srs.stage,
+      nextReviewAt: record.srs.nextReviewAt,
+      lastReviewedAt: record.srs.lastReviewedAt,
+      updatedAt: record.updatedAt,
+      deviceId: record.deviceId,
+      version: record.version,
+      lastSyncAt: record.lastSyncAt
+    });
+  } else {
+    transaction.objectStore(stores.srsReviewQueue).delete(record.wordId);
+  }
+}
+
 function ensureIndex(store, name, keyPath) {
   if (!store.indexNames.contains(name)) {
     store.createIndex(name, keyPath, { unique: false });
@@ -128,65 +181,28 @@ export class SpellingIndexedDbStore {
   }
 
   async putRecord(record) {
+    const [nextRecord] = await this.putRecords([record]);
+    return nextRecord;
+  }
+
+  async putRecords(records = []) {
+    const sourceRecords = Array.isArray(records) ? records.filter(Boolean) : [];
+    if (!sourceRecords.length) return [];
+
     const db = await this.open();
     const tx = db.transaction(Object.values(this.stores), "readwrite");
-    const nextRecord = withSpellingSyncMetadata(record, {
-      deviceId: this.deviceId,
-      version: this.recordVersion,
-      dirty: record.dirty
+    const nextRecords = sourceRecords.map((record) => {
+      const nextRecord = withSpellingSyncMetadata(record, {
+        deviceId: this.deviceId,
+        version: this.recordVersion,
+        dirty: record.dirty
+      });
+      putSpellingRecord(tx, this.stores, nextRecord);
+      return nextRecord;
     });
 
-    put(tx.objectStore(this.stores.spellingProgress), nextRecord);
-
-    if (nextRecord.errorBank?.everWrong) {
-      put(tx.objectStore(this.stores.errorBank), {
-        wordId: nextRecord.wordId,
-        ...nextRecord.errorBank,
-        updatedAt: nextRecord.updatedAt,
-        revision: nextRecord.revision,
-        deviceId: nextRecord.deviceId,
-        version: nextRecord.version,
-        lastSyncAt: nextRecord.lastSyncAt
-      });
-    } else {
-      tx.objectStore(this.stores.errorBank).delete(nextRecord.wordId);
-    }
-
-    if (nextRecord.today?.repairState === "in_repair"
-      || ["must_repair", "waiting_second"].includes(nextRecord.today?.repairState)) {
-      put(tx.objectStore(this.stores.todayRepairQueue), {
-        wordId: nextRecord.wordId,
-        repairState: nextRecord.today.repairState,
-        sessionDate: nextRecord.today.sessionDate,
-        nextEligibleAt: nextRecord.today.nextEligibleAt,
-        minOtherWordsBeforeNext: nextRecord.today.minOtherWordsBeforeNext,
-        lastSeenSequence: nextRecord.today.lastSeenSequence,
-        updatedAt: nextRecord.updatedAt,
-        deviceId: nextRecord.deviceId,
-        version: nextRecord.version,
-        lastSyncAt: nextRecord.lastSyncAt
-      });
-    } else {
-      tx.objectStore(this.stores.todayRepairQueue).delete(nextRecord.wordId);
-    }
-
-    if (nextRecord.srs?.nextReviewAt > 0) {
-      put(tx.objectStore(this.stores.srsReviewQueue), {
-        wordId: nextRecord.wordId,
-        stage: nextRecord.srs.stage,
-        nextReviewAt: nextRecord.srs.nextReviewAt,
-        lastReviewedAt: nextRecord.srs.lastReviewedAt,
-        updatedAt: nextRecord.updatedAt,
-        deviceId: nextRecord.deviceId,
-        version: nextRecord.version,
-        lastSyncAt: nextRecord.lastSyncAt
-      });
-    } else {
-      tx.objectStore(this.stores.srsReviewQueue).delete(nextRecord.wordId);
-    }
-
     await transactionDone(tx);
-    return nextRecord;
+    return nextRecords;
   }
 
   async getAllRecords() {

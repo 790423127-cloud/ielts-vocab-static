@@ -43,6 +43,7 @@ import {
   shouldRunFullStudyRestore
 } from "../lib/vocab/study-session.mjs";
 import StudyRangeSummary from "./StudyRangeSummary.jsx";
+import StudyMeaningToggle from "./StudyMeaningToggle.jsx";
 import VirtualList from "./VirtualList.jsx";
 import {
   playSpeechAudio,
@@ -739,13 +740,14 @@ export default function PhraseFlashcardPanel() {
         <div className="previous">
           <div className="previous-label">上一个词组</div>
           <div className="previous-word phrase-previous-word">{prevItem?.word || "—"}</div>
-          <div className="previous-meta">{fallback(prevItem?.meaning, "释义")}</div>
+          <div className="previous-meta study-answer-content">{fallback(prevItem?.meaning, "释义")}</div>
         </div>
 
         <div className="top-actions">
           <button className="top-pill shuffle-pill" type="button" onClick={shuffleStudy} disabled={isStudyEmpty}>
             随机
           </button>
+          <StudyMeaningToggle />
           <a className="top-pill spelling-entry-link" href="/spelling-words">单词拼写训练</a>
           <a className="top-pill spelling-entry-link" href="/spelling-phrases">词组拼写训练</a>
 
@@ -916,7 +918,7 @@ export default function PhraseFlashcardPanel() {
             </button>
           </div>
 
-          <div className={`phrase-example-box flash-training-example ${exampleOpen ? "open" : "collapsed"}`}>
+          <div className={`phrase-example-box flash-training-example study-answer-content ${exampleOpen ? "open" : "collapsed"}`}>
             {exampleOpen ? (
               <div
                 className="example-clickable"
@@ -962,16 +964,16 @@ export default function PhraseFlashcardPanel() {
             </div>
           </div>
 
-          <div className="phrase-basic-line">
+          <div className="phrase-basic-line study-answer-content">
             {item.phonetic ? <span className="phonetic">{item.phonetic}</span> : null}
             {item.phonetic ? <span className="dot">·</span> : null}
             <span className="phrase-meaning">{fallback(item.meaning, "等待释义")}</span>
           </div>
 
-          {item.definition ? <div className="phrase-definition">{item.definition}</div> : null}
+          {item.definition ? <div className="phrase-definition study-answer-content">{item.definition}</div> : null}
 
           {(item.ieltsUse?.length || item.topics?.length) ? (
-            <div className="phrase-tags">
+            <div className="phrase-tags study-answer-content">
               {(item.ieltsUse || []).map((tag) => (
                 <span className="phrase-tag" key={`use-${tag}`}>{tag}</span>
               ))}

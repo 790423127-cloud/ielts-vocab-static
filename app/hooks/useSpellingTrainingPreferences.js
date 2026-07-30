@@ -143,6 +143,7 @@ export function useSpellingTrainingPreferences(scope = "word") {
   }, []);
 
   return {
+    preferencesHydrated: hydratedScope === normalizedScope,
     rangeSettingsExpanded,
     setRangeSettingsExpanded,
     ...uxPrefs,

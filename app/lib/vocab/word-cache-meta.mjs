@@ -74,7 +74,7 @@ export function isWordCacheCurrent(cacheMeta = {}, apiMeta = {}) {
 export function mergeWordContentWithUserState(
   freshWords = [],
   cachedWords = [],
-  { includePersonalSupplements = true } = {}
+  { includePersonalSupplements = true, supplementKinds = null } = {}
 ) {
   const cachedById = new Map();
   for (const entry of Array.isArray(cachedWords) ? cachedWords : []) {
@@ -95,15 +95,20 @@ export function mergeWordContentWithUserState(
 
   if (!includePersonalSupplements) return mergedWords;
 
+  const allowedKinds = Array.isArray(supplementKinds) ? new Set(supplementKinds) : null;
   const freshIds = new Set(mergedWords.map(wordIdentity).filter(Boolean));
   for (const cached of Array.isArray(cachedWords) ? cachedWords : []) {
     const key = wordIdentity(cached);
+    const supplementKind =
+      cached?.addedFromReadingWords === true || cached?.source === "personal-reading"
+        ? "personal-reading"
+        : cached?.addedFromPersonalWrongBook === true || cached?.source === "personal_wrong_book"
+          ? "personal-wrong"
+          : cached?.supplemental === true
+            ? "other"
+            : "";
     const isPersonalSupplement =
-      cached?.addedFromPersonalWrongBook === true ||
-      cached?.source === "personal_wrong_book" ||
-      cached?.addedFromReadingWords === true ||
-      cached?.source === "personal-reading" ||
-      cached?.supplemental === true;
+      Boolean(supplementKind) && (!allowedKinds || allowedKinds.has(supplementKind));
 
     if (key && !freshIds.has(key) && isPersonalSupplement) {
       mergedWords.push({ ...cached });

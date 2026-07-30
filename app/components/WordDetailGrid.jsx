@@ -29,7 +29,8 @@ function PhraseRows({ items, typeLabel, speechLabel, speakSmallText }) {
         disabled={!pair.phrase}
         onClick={() => speakSmallText(pair.phrase, speechLabel)}
       >
-        <Volume2 aria-hidden="true" />{pair.phrase}
+        <Volume2 aria-hidden="true" />
+        <span className="word-dictionary-row__term">{pair.phrase}</span>
       </button>
       <small>{pair.chinese || ""}</small>
     </div>
@@ -58,14 +59,15 @@ export default function WordDetailGrid({
     : normalizeAiPhraseItems(phraseCollocationFallback);
 
   return (
-    <section className="word-dictionary-panel" aria-label="词典详情">
+    <section className="word-dictionary-panel study-answer-content" aria-label="词典详情">
       <div className="word-dictionary-grid">
         <DetailCard id="word-dictionary-forms-panel" title="变形" icon={GitBranch}>
           {displayForms.length ? displayForms.map((form) => (
             <div className="word-dictionary-row" key={`${form.word}-${form.type}`}>
               <span>{getFormChineseType(form.type)}</span>
               <button type="button" onClick={() => speakSmallText(form.word, "变形")}>
-                <Volume2 aria-hidden="true" />{form.word}
+                <Volume2 aria-hidden="true" />
+                <span className="word-dictionary-row__term">{form.word}</span>
               </button>
               <small>{getFormHint(form)} · {getFormExplanation(item.word, item.meaning, form)}</small>
             </div>
@@ -77,7 +79,8 @@ export default function WordDetailGrid({
             <div className="word-dictionary-row" key={`${family.word}-${family.pos}`}>
               <span>{getPosDisplay(family.pos)}</span>
               <button type="button" onClick={() => speakSmallText(family.word, "词族")}>
-                <Volume2 aria-hidden="true" />{family.word}
+                <Volume2 aria-hidden="true" />
+                <span className="word-dictionary-row__term">{family.word}</span>
               </button>
               <small>{family.meaning || "同词族词条"}</small>
             </div>

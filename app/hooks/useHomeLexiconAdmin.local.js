@@ -17,6 +17,7 @@ import {
   wordToEditDraft
 } from "../lib/vocab/page-word-helpers.mjs";
 import { buildLocalChangeLog } from "../lib/vocab/local-change-log.mjs";
+import { buildLexiconDeletionIntent } from "../lib/vocab/lexicon-delete-intent.mjs";
 import { filterKey, isIdictationFlashFilter } from "../lib/vocab/word-flashcard-study-pool.mjs";
 
 
@@ -37,6 +38,14 @@ export function createLocalOps(ctx) {
     return log;
   }
 
+  function persistConfirmedChange(nextWords, beforeWords, action) {
+    const deletionIntent = buildLexiconDeletionIntent(beforeWords, nextWords, {
+      action,
+      confirmed: true
+    });
+    return persistWordsImmediately(nextWords, deletionIntent ? { deletionIntent } : undefined);
+  }
+
   function undoLastLocalChange() {
     if (!lastLocalChange?.beforeWords?.length) {
       setToast("没有可撤回的本地操作");
@@ -54,7 +63,7 @@ export function createLocalOps(ctx) {
 
     setWords(lastLocalChange.beforeWords);
     resetWordStudySessionState();
-    persistWordsImmediately(lastLocalChange.beforeWords);
+    persistConfirmedChange(lastLocalChange.beforeWords, words, "undo-local-change");
     setToast(`已撤回：${lastLocalChange.actionName}`);
     setLastLocalChange(null);
   }
@@ -143,7 +152,7 @@ export function createLocalOps(ctx) {
     const nextChanges = lastLocalChange.changes.filter((_, index) => index !== changeIndex);
 
     setWords(nextWords);
-    persistWordsImmediately(nextWords);
+    persistConfirmedChange(nextWords, words, "undo-added-word");
     setLastLocalChange({
       ...lastLocalChange,
       afterWords: nextWords,
@@ -170,10 +179,27 @@ export function createLocalOps(ctx) {
       return false;
     }
 
+    const deletionIntent = buildLexiconDeletionIntent(words, nextWords, {
+      action: "confirmed-local-cleanup",
+      confirmed: true
+    });
+    if (deletionIntent) {
+      const preview = deletionIntent.removed
+        .slice(0, 8)
+        .map((entry) => entry.word)
+        .join("、");
+      const confirmed = confirm(
+        `这项整理将从正式主词库删除 ${deletionIntent.removed.length} 条记录。\n\n` +
+        `${preview}${deletionIntent.removed.length > 8 ? "……" : ""}\n\n` +
+        "删除前会自动保存可恢复备份，是否继续？"
+      );
+      if (!confirmed) return false;
+    }
+
     recordLocalChange(actionName, words, nextWords);
     setWords(nextWords);
     if (studyOrderChanged) resetWordStudySessionState();
-    persistWordsImmediately(nextWords);
+    persistWordsImmediately(nextWords, deletionIntent ? { deletionIntent } : undefined);
     setDuplicateInfo(message);
     setToast(`${message}｜已生成修改记录，可撤回`);
     return true;
@@ -590,7 +616,7 @@ export function createLocalOps(ctx) {
     recordLocalChange("删除当前单词", sourceWords, next);
     setWords(next);
     setIndex(nextIndex);
-    persistWordsImmediately(next);
+    persistConfirmedChange(next, sourceWords, "delete-current-word");
 
     setToast(`已彻底删除：${currentWord.word}（${sameCount} 条记录）｜已生成修改记录，可撤回`);
   }

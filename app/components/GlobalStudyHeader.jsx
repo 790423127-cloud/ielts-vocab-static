@@ -34,7 +34,7 @@ const PAGE_CONTEXT = [
   { test: (path) => path === "/basic", title: "零基础词库", meta: "独立进度" },
   { test: (path) => path === "/ielts-538", title: "538考点", meta: "独立进度 · 376词" },
   { test: (path) => path === "/reading-g", title: "G类阅读提升", meta: "独立进度" },
-  { test: (path) => path === "/reading-words", title: "阅读生词栏", meta: "个人独立词库" }
+  { test: (path) => path === "/reading-words", title: "阅读生词本", meta: "个人独立词库" }
 ];
 
 const NAV_GROUPS = [
@@ -63,7 +63,7 @@ const NAV_GROUPS = [
       { href: "/reading-g", label: "G类阅读提升", icon: BookOpen, matches: (path) => path === "/reading-g" },
       { label: "G类写作提升", icon: FileText, disabled: true },
       { href: "/expressions", label: "口语话题词汇", icon: MessageSquareText, matches: () => false },
-      { href: "/reading-words", label: "阅读生词栏", icon: FileText, matches: (path) => path === "/reading-words" }
+      { href: "/reading-words", label: "阅读生词本", icon: FileText, matches: (path) => path === "/reading-words" }
     ]
   },
   {

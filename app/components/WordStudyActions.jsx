@@ -16,7 +16,8 @@ export default function WordStudyActions({
   prevWord,
   nextWord,
   markStatus,
-  tidyReview
+  tidyReview,
+  showDirectionArrows = false
 }) {
   if (tidyReview?.active) {
     return (
@@ -44,8 +45,14 @@ export default function WordStudyActions({
 
   return (
     <footer className="bottom bottombar" aria-label="学习操作">
-      <button className="study-step-button study-step-button--previous" type="button" disabled={isStudyEmpty} onClick={prevWord}>
-        上一个
+      <button
+        className="study-step-button study-step-button--previous"
+        type="button"
+        disabled={isStudyEmpty}
+        onClick={prevWord}
+        title={showDirectionArrows ? "上一个（快捷键：←）" : undefined}
+      >
+        {showDirectionArrows ? "← 上一个" : "上一个"}
       </button>
       <div className="actions">
         <button
@@ -73,8 +80,14 @@ export default function WordStudyActions({
           {isExternalIdictationItem ? "跳过" : item.status === "不熟" ? "取消不熟" : "不熟"}
         </button>
       </div>
-      <button className="study-step-button study-step-button--next" type="button" disabled={isStudyEmpty} onClick={nextWord}>
-        下一个
+      <button
+        className="study-step-button study-step-button--next"
+        type="button"
+        disabled={isStudyEmpty}
+        onClick={nextWord}
+        title={showDirectionArrows ? "下一个（快捷键：→）" : undefined}
+      >
+        {showDirectionArrows ? "下一个 →" : "下一个"}
       </button>
     </footer>
   );

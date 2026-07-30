@@ -1181,6 +1181,14 @@ input[type="file"] {
   opacity: .92;
 }
 
+html[data-study-meanings-hidden="true"] .study-answer-content {
+  display: none !important;
+}
+
+.spelling-focus-stack--preparing {
+  pointer-events: none;
+}
+
 .spelling-stats-sidebar {
   display: none;
 }
@@ -7284,6 +7292,13 @@ body > main {
   height: 14px;
 }
 
+.page--word-flash .top-actions > .word-order-select {
+  width: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  flex: 0 0 140px;
+}
+
 .page--word-flash .menu-panel {
   z-index: 1400;
   max-height: min(720px, calc(100dvh - 130px));
@@ -7698,6 +7713,7 @@ body > main {
 .word-dictionary-module {
   min-width: 0;
   overflow: hidden;
+  container-type: inline-size;
   border: 1px solid var(--study-border);
   border-radius: 9px;
   background: var(--study-card);
@@ -7741,8 +7757,11 @@ body > main {
 }
 
 .word-dictionary-row button {
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   gap: 6px;
+  justify-self: stretch;
   overflow: hidden;
   color: var(--study-green-deep);
   font-size: calc(13px * var(--font-scale));
@@ -7751,10 +7770,40 @@ body > main {
   white-space: nowrap;
 }
 
+.word-dictionary-row__term {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .word-dictionary-row button svg {
   width: 15px;
   height: 15px;
   flex: 0 0 auto;
+}
+
+@container (max-width: 360px) {
+  .word-dictionary-module .word-dictionary-row {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 4px 8px;
+    padding: 4px 0;
+  }
+
+  .word-dictionary-row small {
+    grid-column: 2;
+    padding-bottom: 4px;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .word-dictionary-row__term {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
 }
 
 .word-dictionary-empty {
@@ -8750,6 +8799,13 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
     height: 44px;
     padding: 0 5px;
     font-size: calc(11px * var(--font-scale));
+  }
+
+  .page--word-flash .top-actions > .word-order-select {
+    width: 126px;
+    min-width: 126px;
+    max-width: 126px;
+    flex-basis: 126px;
   }
 }
 

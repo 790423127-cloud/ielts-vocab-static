@@ -108,7 +108,8 @@ function mergeRetirementEntries(existingEntries, addedEntries) {
     merged.push({
       ...(id ? { id } : {}),
       word,
-      reason: String(entry?.reason || "user-curated-removal")
+      reason: String(entry?.reason || "user-curated-removal"),
+      ...(entry?.morphologyAuditIncluded === false ? { morphologyAuditIncluded: false } : {})
     });
   }
 
@@ -127,7 +128,9 @@ function buildMorphologyAudit(words, retirementEntries, previousAudit, generated
     version: `manual-morphology-audit-v${nextVersion}-${auditDate}`,
     rawSuffixHeadwordsReviewed:
       words.filter((entry) => isSuffixAuditCandidate(entry?.word)).length +
-      retirementEntries.filter((entry) => isSuffixAuditCandidate(entry?.word)).length,
+      retirementEntries.filter(
+        (entry) => entry?.morphologyAuditIncluded !== false && isSuffixAuditCandidate(entry?.word)
+      ).length,
     storedFormLinksReviewed: words.reduce(
       (sum, entry) => sum + (Array.isArray(entry?.forms) ? entry.forms.length : 0),
       0
@@ -147,7 +150,7 @@ function atomicWrite(filePath, content) {
   fs.renameSync(tempPath, filePath);
 }
 
-function buildPlan({ version, generatedAt, previousRef }) {
+function buildPlan({ version, generatedAt, previousRef, allowAdditions = false }) {
   const publicFile = readJson(PUBLIC_PATH);
   const cacheFile = readJson(CACHE_PATH);
   const meaningFile = readJson(MEANING_PATH);
@@ -191,9 +194,9 @@ function buildPlan({ version, generatedAt, previousRef }) {
   const addedSincePrevious = currentWords.filter(
     (entry) => !previousWordKeys.has(normalizeWord(entry.word))
   );
-  if (addedSincePrevious.length) {
+  if (addedSincePrevious.length && !allowAdditions) {
     throw new Error(
-      `历史版本之后还新增了 ${addedSincePrevious.length} 个词，当前脚本只适用于纯删除基线重建。`
+      `历史版本之后还新增了 ${addedSincePrevious.length} 个词；确认这些词应进入正式主词库后，使用 --allow-additions 重建基线。`
     );
   }
 
@@ -403,6 +406,12 @@ function buildPlan({ version, generatedAt, previousRef }) {
         word: entry.word,
         reason: "user-curated-removal"
       })),
+      addedEntries: addedSincePrevious.map((entry) => ({
+        id: stableId(entry),
+        word: entry.word,
+        source: entry.source || "",
+        addedFromReadingWords: entry.addedFromReadingWords === true
+      })),
       prunedRelations,
       removedMeaningItems: removedMeaningItems.map((item) => ({
         wordId: item.wordId,
@@ -422,13 +431,14 @@ const version = readArg("--version");
 const generatedAt = readArg("--generated-at");
 const previousRef = readArg("--previous-ref");
 const apply = process.argv.includes("--apply");
+const allowAdditions = process.argv.includes("--allow-additions");
 const reportPathArg = readArg("--report");
 
 if (!version || !generatedAt || !previousRef) {
   throw new Error("请提供 --version <新版本>、--generated-at <ISO 时间> 和 --previous-ref <删除前 Git 版本>。");
 }
 
-const plan = buildPlan({ version, generatedAt, previousRef });
+const plan = buildPlan({ version, generatedAt, previousRef, allowAdditions });
 const reportContent = `${JSON.stringify(plan.report, null, 2)}\n`;
 
 if (apply) {
@@ -451,6 +461,7 @@ console.log(
         mode: plan.report.mode,
         before: plan.report.before,
         after: plan.report.after,
+        addedCount: plan.report.addedEntries.length,
         curatedRemovedCount: plan.report.curatedRemovedEntries.length,
         removedOrphanReferenceCount: plan.report.removedOrphanReferences.length,
         prunedRelationCount: plan.report.prunedRelations.length,

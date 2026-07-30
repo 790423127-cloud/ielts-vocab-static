@@ -51,7 +51,7 @@ export default function SpellingStatsSidebar({
   spellingEntries,
   handleExportCurrentBatch,
   practiceSource,
-  currentCategoryEntries,
+  currentCategoryCount,
   handleExportCurrentCategory,
   batchSelection,
   srsReview,
@@ -213,7 +213,7 @@ export default function SpellingStatsSidebar({
             type="button"
             className="spelling-export-btn"
             data-testid="spelling-export-current-category-json"
-            disabled={!currentCategoryEntries.length}
+            disabled={!currentCategoryCount}
             onMouseDown={trainingControls.markSettingsInteraction}
             onClick={() => handleExportCurrentCategory("json")}
           >
@@ -223,7 +223,7 @@ export default function SpellingStatsSidebar({
             type="button"
             className="spelling-export-btn"
             data-testid="spelling-export-current-category-txt"
-            disabled={!currentCategoryEntries.length}
+            disabled={!currentCategoryCount}
             onMouseDown={trainingControls.markSettingsInteraction}
             onClick={() => handleExportCurrentCategory("txt")}
           >
@@ -235,8 +235,8 @@ export default function SpellingStatsSidebar({
     <p className="spelling-export-panel__meta">
       词库：{lexicon?.counts?.headwords || 0} 词 · {lexicon?.counts?.phrases || 0} 组
       {spellingEntries.length ? ` · 当前批次 ${spellingEntries.length} 条` : ""}
-      {practiceSource === "category" && currentCategoryEntries.length
-        ? ` · 当前分类：${batchSelection.label} ${currentCategoryEntries.length} 条`
+      {practiceSource === "category" && currentCategoryCount
+        ? ` · 当前分类：${batchSelection.label} ${currentCategoryCount} 条`
         : ""}
     </p>
   </section>

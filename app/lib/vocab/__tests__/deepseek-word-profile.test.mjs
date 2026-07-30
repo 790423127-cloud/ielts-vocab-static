@@ -132,6 +132,26 @@ test("a malformed multi-word response is split so later words are still processe
   );
 });
 
+test("maxSplitDepth zero performs exactly one request and never retries a malformed batch", async () => {
+  let calls = 0;
+  await withMockedDeepseek(
+    async () => {
+      calls += 1;
+      return mockDeepseekResponse([], { content: '{"items":[{"broken":"line\n' });
+    },
+    async () => {
+      await assert.rejects(
+        requestDeepseekProfiles([
+          { inputId: "item-1", word: "alpha" },
+          { inputId: "item-2", word: "beta" }
+        ], { maxSplitDepth: 0 }),
+        /JSON|parse|解析|截断/i
+      );
+      assert.equal(calls, 1);
+    }
+  );
+});
+
 test("two genuine translated collocations are usable and do not discard the whole profile", async () => {
   await withMockedDeepseek(
     async () => mockDeepseekResponse([rawProfile("item-1", "alpha", { collocationCount: 2 })]),

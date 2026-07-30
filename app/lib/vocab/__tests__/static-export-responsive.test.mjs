@@ -172,7 +172,19 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
     },
     {
       name: "sw.js",
-      data: Buffer.from('const CACHE_NAME="static_vocab_shell_old";const A="./assets/style.css?v=old";')
+      data: Buffer.from('const CACHE_NAME="static_vocab_shell_old";const A="./assets/style.css?v=old";url.pathname.endsWith("/reading-words.html");')
+    },
+    {
+      name: "reading-words.html",
+      data: Buffer.from('<link rel="stylesheet" href="./assets/reading-words.css?v=old"><button id="favoriteBtn"></button><button id="deleteBtn"></button>')
+    },
+    {
+      name: "assets/reading-words.js",
+      data: Buffer.from("function deleteCurrentReadingWord(){}function shouldHandleDeleteShortcut(){}")
+    },
+    {
+      name: "assets/reading-words.css",
+      data: Buffer.from(".study-actions{grid-template-columns:repeat(6,minmax(0,1fr))}")
     },
     {
       name: "data/words.json",
@@ -188,6 +200,7 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_RESPONSIVE_MARKER));
   assert.match(entries.get("assets/style.css"), new RegExp(STATIC_FILTER_FIX_MARKER));
   assert.match(entries.get("assets/style.css"), /static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y/);
+  assert.match(entries.get("assets/style.css"), /\.top-actions \.order-select\{width:min\(132px,100%\);min-width:0;max-width:132px;justify-self:start\}/);
   assert.match(entries.get("assets/app.js"), /index=-1/);
   assert.match(entries.get("assets/app.js"), /基础必会/);
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));

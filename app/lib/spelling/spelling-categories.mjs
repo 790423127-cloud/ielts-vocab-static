@@ -267,6 +267,60 @@ export function filterBySpellingScope(entries = [], scopeKind = "word") {
   return list.filter((entry) => resolveSpellingEntryScope(entry) === scope);
 }
 
+function resolveListeningReadingMatches(entry = {}) {
+  const difficulty = readEntryField(entry, "difficulty");
+  const explicitlyListeningPriority = readEntryField(entry, "listeningPriority") === true;
+  const explicitlyWritingPriority = readEntryField(entry, "writingPriority") === true;
+  if (
+    !explicitlyListeningPriority &&
+    !explicitlyWritingPriority &&
+    (!HIGH_FREQUENCY_DIFFICULTIES.has(difficulty) || !isReliableHighFrequencyEntry(entry))
+  ) {
+    return null;
+  }
+
+  const uses = readEntryField(entry, "ieltsUse");
+  const normalizedUses = new Set(
+    (Array.isArray(uses) ? uses : []).map((use) => String(use || "").trim().toLowerCase())
+  );
+  const isListening = explicitlyListeningPriority || normalizedUses.has("listening");
+  const isReading = normalizedUses.has("reading");
+  const isWriting = explicitlyWritingPriority ||
+    normalizedUses.has("writing") ||
+    normalizedUses.has("写作") ||
+    normalizedUses.has("writing task 2") ||
+    normalizedUses.has("task 2") ||
+    normalizedUses.has("task2") ||
+    normalizedUses.has("写作task 2") ||
+    normalizedUses.has("写作task2") ||
+    normalizedUses.has("写作g类书信") ||
+    normalizedUses.has("g类书信");
+  const isTask2 = normalizedUses.has("task 2") ||
+    normalizedUses.has("task2") ||
+    normalizedUses.has("writing task 2") ||
+    normalizedUses.has("写作task 2") ||
+    normalizedUses.has("写作task2");
+  const isSpeaking = normalizedUses.has("speaking") || normalizedUses.has("口语");
+  const topics = readEntryField(entry, "topics");
+  const normalizedTopics = new Set(
+    (Array.isArray(topics) ? topics : []).map((topic) => String(topic || "").trim().toLowerCase())
+  );
+  const isLifeWork = normalizedUses.has("生活高频") ||
+    normalizedUses.has("工作高频") ||
+    ["工作", "住房", "交通", "健康", "消费", "旅行", "社区", "公共服务"]
+      .some((topic) => normalizedTopics.has(topic.toLowerCase()));
+
+  return {
+    listening: isListening,
+    listening_reading: isListening || isReading,
+    reading: isReading,
+    writing: isWriting,
+    task2: isTask2,
+    speaking: isSpeaking,
+    life_work: isLifeWork
+  };
+}
+
 export function matchSpellingCategory(entry, categoryType = "all", categoryValue = "") {
   const type = String(categoryType || "all").trim();
   const value = String(categoryValue || "").trim();
@@ -285,50 +339,10 @@ export function matchSpellingCategory(entry, categoryType = "all", categoryValue
   }
 
   if (type === "lr_high_frequency") {
-    const difficulty = readEntryField(entry, "difficulty");
-    const explicitlyListeningPriority = readEntryField(entry, "listeningPriority") === true;
-    const explicitlyWritingPriority = readEntryField(entry, "writingPriority") === true;
-    if (!explicitlyListeningPriority &&
-        !explicitlyWritingPriority &&
-        (!HIGH_FREQUENCY_DIFFICULTIES.has(difficulty) || !isReliableHighFrequencyEntry(entry))) return false;
-
-    const uses = readEntryField(entry, "ieltsUse");
-    const normalizedUses = new Set(
-      (Array.isArray(uses) ? uses : []).map((use) => String(use || "").trim().toLowerCase())
-    );
-    const isListening = explicitlyListeningPriority || normalizedUses.has("listening");
-    const isReading = normalizedUses.has("reading");
-    const isWriting = explicitlyWritingPriority ||
-      normalizedUses.has("writing") ||
-      normalizedUses.has("写作") ||
-      normalizedUses.has("writing task 2") ||
-      normalizedUses.has("task 2") ||
-      normalizedUses.has("task2") ||
-      normalizedUses.has("写作task 2") ||
-      normalizedUses.has("写作task2") ||
-      normalizedUses.has("写作g类书信") ||
-      normalizedUses.has("g类书信");
-    const isTask2 = normalizedUses.has("task 2") ||
-      normalizedUses.has("task2") ||
-      normalizedUses.has("writing task 2") ||
-      normalizedUses.has("写作task 2") ||
-      normalizedUses.has("写作task2");
-    const isSpeaking = normalizedUses.has("speaking") || normalizedUses.has("口语");
-    const topics = readEntryField(entry, "topics");
-    const normalizedTopics = new Set(
-      (Array.isArray(topics) ? topics : []).map((topic) => String(topic || "").trim().toLowerCase())
-    );
-    const isLifeWork = normalizedUses.has("生活高频") ||
-      normalizedUses.has("工作高频") ||
-      ["工作", "住房", "交通", "健康", "消费", "旅行", "社区", "公共服务"].some((topic) => normalizedTopics.has(topic.toLowerCase()));
-
-    if (value === "reading") return isReading;
-    if (value === "writing") return isWriting;
-    if (value === "task2") return isTask2;
-    if (value === "speaking") return isSpeaking;
-    if (value === "life_work") return isLifeWork;
-    if (value === "listening_reading") return isListening || isReading;
-    return isListening;
+    const matches = resolveListeningReadingMatches(entry);
+    if (!matches) return false;
+    const mode = Object.prototype.hasOwnProperty.call(matches, value) ? value : "listening";
+    return Boolean(matches[mode]);
   }
 
   if (type === "ielts_use") {
@@ -407,6 +421,21 @@ export function listSpellingBatchOptions(entries = [], options = {}) {
     label: `第 ${index + 1} 批 · ${batch.length} 词`,
     count: batch.length
   }));
+}
+
+export function listSpellingBatchOptionsFromSelection(selection = {}) {
+  const batchCount = Math.max(1, Number(selection.batchCount) || 1);
+  const batchSize = Math.max(1, Number(selection.batchSize) || SPELLING_BATCH_SIZE);
+  const total = Math.max(0, Number(selection.totalInCategory) || 0);
+
+  return Array.from({ length: batchCount }, (_, index) => {
+    const count = Math.max(0, Math.min(batchSize, total - (index * batchSize)));
+    return {
+      value: index,
+      label: `第 ${index + 1} 批 · ${count} 词`,
+      count
+    };
+  });
 }
 
 export function countEntriesBySpellingCategory(entries = [], categoryType = "difficulty", scopeKind = "") {
@@ -511,10 +540,11 @@ export function countEntriesBySpellingCategories(entries = [], categoryTypes = [
     }
 
     if (counts.lr_high_frequency) {
+      const matches = resolveListeningReadingMatches(entry);
+      if (!matches) continue;
       for (const option of SPELLING_LISTENING_READING_OPTIONS) {
-        if (matchSpellingCategory(entry, "lr_high_frequency", option.value)) {
-          counts.lr_high_frequency.set(option.value, (counts.lr_high_frequency.get(option.value) || 0) + 1);
-        }
+        if (!matches[option.value]) continue;
+        counts.lr_high_frequency.set(option.value, (counts.lr_high_frequency.get(option.value) || 0) + 1);
       }
     }
   }

@@ -1,7 +1,6 @@
 "use client";
 
 import SpellingFeedbackPanel from "./SpellingFeedbackPanel.jsx";
-import StableLoadingState from "./StableLoadingState.jsx";
 import layoutStyles from "./SpellingTrainingLayout.module.css";
 
 export default function SpellingFocusCard({
@@ -53,14 +52,27 @@ export default function SpellingFocusCard({
   return (
 <section className="spelling-focus-card" aria-label="拼写训练主体">
   {isSpellingLoading ? (
-    <div className="spelling-empty-state spelling-empty-state--hero">
-      <StableLoadingState
-        mark="S"
-        eyebrow="拼写训练"
-        title="正在准备本轮训练"
-        note={loadingDetail || "读取所选词库并恢复批次位置"}
-        compact
-      />
+    <div
+      className="spelling-focus-stack spelling-focus-stack--preparing"
+      aria-busy="true"
+      aria-label="正在准备本轮训练"
+    >
+      <section className={layoutStyles.spellingPreparingPanel}>
+        <div className={layoutStyles.spellingPreparingMark} aria-hidden="true">S</div>
+        <div className={layoutStyles.spellingPreparingCopy}>
+          <p>拼写训练</p>
+          <h2>正在准备本轮训练</h2>
+          <span>{loadingDetail || "读取所选词库并恢复批次位置"}</span>
+        </div>
+        <div className={layoutStyles.spellingPreparingProgress} aria-hidden="true">
+          <span />
+        </div>
+        <div className={layoutStyles.spellingPreparingSkeleton} aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+      </section>
     </div>
   ) : isBatchComplete && !current ? (
     <section className="spelling-completion-summary" aria-label="本批次学习结果">
@@ -233,7 +245,7 @@ export default function SpellingFocusCard({
     </details>
   ) : null}
 
-  <footer className="spelling-training-footer">
+  {!isSpellingLoading ? <footer className="spelling-training-footer">
     <div className="spelling-progress spelling-progress--hero" aria-label="当前批次进度">
       <div className="spelling-progress-text">
         进度：{completedCount} / {sessionTotal || 0} {practiceSource === "personal_wrong_book" ? "词" : ""}
@@ -298,7 +310,7 @@ export default function SpellingFocusCard({
     >
       {actionNotice || "\u00A0"}
     </p>
-  </footer>
+  </footer> : null}
 </section>
 
   );

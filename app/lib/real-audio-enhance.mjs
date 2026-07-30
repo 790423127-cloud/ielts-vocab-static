@@ -7,6 +7,7 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
 export const REAL_AUDIO_ENHANCE_VERSION = "enhance-v4";
+export const EDGE_AUDIO_ENHANCE_VERSION = "enhance-v5-notch-11760";
 
 /** Target loudness for commons / wav real-voice clips (LUFS). */
 export const REAL_AUDIO_TARGET_LUFS = -14;
@@ -35,6 +36,14 @@ const DICTIONARY_ENHANCE_FILTER = [
   "alimiter=limit=0.99"
 ].join(",");
 
+const EDGE_ENHANCE_FILTER = [
+  "highpass=f=80",
+  "equalizer=f=11760:t=h:w=1800:g=-60",
+  "lowpass=f=12000",
+  `loudnorm=I=${REAL_AUDIO_TARGET_LUFS}:TP=-1.0:LRA=11`,
+  "alimiter=limit=0.98"
+].join(",");
+
 export function resolveEnhanceFilter(entry = {}, source = "") {
   const entrySource = String(entry?.source || source || "");
   if (entrySource === "real-dictionary") {
@@ -46,6 +55,10 @@ export function resolveEnhanceFilter(entry = {}, source = "") {
 export function resolveEnhanceBitrate(entry = {}, source = "") {
   const entrySource = String(entry?.source || source || "");
   return entrySource === "real-dictionary" ? "192k" : "128k";
+}
+
+export function resolveEdgeEnhanceFilter() {
+  return EDGE_ENHANCE_FILTER;
 }
 
 function runFfmpeg(args, timeoutMs = 20000) {
@@ -96,7 +109,7 @@ export function needsRealAudioEnhance(entry = {}) {
 
 export function needsEdgeAudioEnhance(entry = {}) {
   if (!entry?.hasAudio || !entry?.filename || entry?.realAudio) return false;
-  return entry.audioEnhanceVersion !== REAL_AUDIO_ENHANCE_VERSION;
+  return entry.audioEnhanceVersion !== EDGE_AUDIO_ENHANCE_VERSION;
 }
 
 export function needsSpeechAudioEnhance(entry = {}) {

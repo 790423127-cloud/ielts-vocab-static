@@ -3,11 +3,13 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs
 import path from "path";
 import { spawn } from "child_process";
 import {
+  EDGE_AUDIO_ENHANCE_VERSION,
   REAL_AUDIO_ENHANCE_VERSION,
   enhanceRealAudioBuffer,
   needsEdgeAudioEnhance,
   needsRealAudioEnhance,
   resolveEnhanceBitrate,
+  resolveEdgeEnhanceFilter,
   resolveEnhanceFilter
 } from "./real-audio-enhance.mjs";
 
@@ -669,13 +671,16 @@ export function resolveReadableAudioEntry(text, index = {}, options = {}) {
 export function audioEntryResponseHeaders(entry = {}, source = "") {
   const extension = String(entry.filename || "").split(".").pop() || "mp3";
   const cacheToken = entry.audioEnhanceVersion || String(entry.updatedAt || "") || REAL_AUDIO_CACHE_VERSION;
+  const expectedEnhanceVersion = entry.realAudio
+    ? REAL_AUDIO_ENHANCE_VERSION
+    : EDGE_AUDIO_ENHANCE_VERSION;
   return {
     "Content-Type": entry.contentType || contentTypeFromExtension(extension),
     "Cache-Control": "public, max-age=31536000, immutable",
     "X-Audio-Source": source || entry.source || "cache",
     "X-Audio-Provider": entry.provider || "",
     "X-Audio-Real": entry.realAudio ? "1" : "0",
-    "X-Audio-Enhanced": entry.audioEnhanceVersion === REAL_AUDIO_ENHANCE_VERSION ? "1" : "0",
+    "X-Audio-Enhanced": entry.audioEnhanceVersion === expectedEnhanceVersion ? "1" : "0",
     "X-Audio-Enhance-Version": entry.audioEnhanceVersion || "",
     "X-Audio-Cache-Token": cacheToken,
     "X-Audio-Updated-At": String(entry.updatedAt || ""),
@@ -683,12 +688,12 @@ export function audioEntryResponseHeaders(entry = {}, source = "") {
   };
 }
 
-async function enhanceCachedSpeechFile(filepath) {
+async function enhanceCachedSpeechFile(filepath, options = {}) {
   if (!existsSync(filepath)) return { enhanced: false };
 
   const extension = path.extname(filepath).slice(1) || "mp3";
   const original = readFileSync(filepath);
-  const result = await enhanceRealAudioBuffer(original, extension);
+  const result = await enhanceRealAudioBuffer(original, extension, options);
   if (!result?.buffer?.length || !result.enhanced) {
     return { enhanced: false };
   }
@@ -703,7 +708,7 @@ async function enhanceCachedSpeechFile(filepath) {
 function applyEdgeAudioIndexEntry(audioIndex, key, baseEntry = {}) {
   audioIndex[key] = {
     ...baseEntry,
-    audioEnhanceVersion: REAL_AUDIO_ENHANCE_VERSION,
+    audioEnhanceVersion: EDGE_AUDIO_ENHANCE_VERSION,
     contentType: "audio/mpeg",
     updatedAt: Date.now()
   };
@@ -791,7 +796,9 @@ export async function ensureEdgeAudio(text, audioIndex, options = {}) {
     };
 
     if (needsEdgeAudioEnhance(cachedEntry)) {
-      await enhanceCachedSpeechFile(filepath, cachedEntry);
+      await enhanceCachedSpeechFile(filepath, {
+        filter: resolveEdgeEnhanceFilter()
+      });
       applyEdgeAudioIndexEntry(audioIndex, key, cachedEntry);
     } else {
       audioIndex[key] = cachedEntry;
@@ -827,7 +834,9 @@ export async function ensureEdgeAudio(text, audioIndex, options = {}) {
       updatedAt: Date.now()
     };
 
-    await enhanceCachedSpeechFile(filepath, generatedEntry);
+    await enhanceCachedSpeechFile(filepath, {
+      filter: resolveEdgeEnhanceFilter()
+    });
     applyEdgeAudioIndexEntry(audioIndex, key, generatedEntry);
   }
 
@@ -845,7 +854,9 @@ export async function ensureEnhancedEdgeAudioFile(entry = {}) {
   }
 
   const filepath = path.join(cacheDir(), entry.filename || "");
-  const result = await enhanceCachedSpeechFile(filepath, entry);
+  const result = await enhanceCachedSpeechFile(filepath, {
+    filter: resolveEdgeEnhanceFilter()
+  });
   if (!result.enhanced) {
     return { ok: false, enhanced: false, reason: "enhance-failed" };
   }
@@ -886,7 +897,7 @@ export async function ensureReadableSpeechCacheEntry(text, audioIndex = {}, opti
     if (repaired.ok && repaired.enhanced) {
       audioIndex[key] = {
         ...entry,
-        audioEnhanceVersion: REAL_AUDIO_ENHANCE_VERSION,
+        audioEnhanceVersion: EDGE_AUDIO_ENHANCE_VERSION,
         contentType: repaired.contentType || entry.contentType || "audio/mpeg",
         updatedAt: Date.now()
       };

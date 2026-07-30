@@ -314,7 +314,10 @@ function isSplittableContentError(error) {
 }
 
 async function resolveProfiles(items, options, depth = 0) {
-  const maxDepth = Math.max(1, Number(options.maxSplitDepth) || 6);
+  const requestedDepth = Number(options.maxSplitDepth);
+  const maxDepth = Number.isFinite(requestedDepth)
+    ? Math.max(0, Math.trunc(requestedDepth))
+    : 6;
   let batchResult;
 
   try {

@@ -120,3 +120,85 @@ test("getDueSrsReviews uses the nextReviewAt index range", async () => {
     upperOpen: false
   });
 });
+
+test("putRecords writes progress and derived queues in one transaction", async () => {
+  const writes = new Map();
+  const deletes = new Map();
+  let transactionCount = 0;
+  let transactionMode = "";
+  let transactionStores = [];
+
+  const db = {
+    transaction(storeNames, mode) {
+      transactionCount += 1;
+      transactionMode = mode;
+      transactionStores = storeNames;
+      const transaction = {
+        objectStore(storeName) {
+          return {
+            put(value) {
+              const items = writes.get(storeName) || [];
+              items.push(value);
+              writes.set(storeName, items);
+            },
+            delete(wordId) {
+              const ids = deletes.get(storeName) || [];
+              ids.push(wordId);
+              deletes.set(storeName, ids);
+            }
+          };
+        }
+      };
+      queueMicrotask(() => transaction.oncomplete?.());
+      return transaction;
+    }
+  };
+  const store = new SpellingIndexedDbStore({
+    indexedDB: {},
+    deviceId: "device-b",
+    scope: "word"
+  });
+  store.open = async () => db;
+
+  const records = [
+    {
+      wordId: "alpha",
+      updatedAt: 100,
+      revision: 2,
+      spelling: {},
+      today: {
+        repairState: "in_repair",
+        sessionDate: "2026-06-18",
+        nextEligibleAt: 200,
+        minOtherWordsBeforeNext: 2,
+        lastSeenSequence: 1
+      },
+      errorBank: { everWrong: true, active: true },
+      srs: { stage: 1, nextReviewAt: 300, lastReviewedAt: 150 }
+    },
+    {
+      wordId: "beta",
+      updatedAt: 110,
+      revision: 1,
+      spelling: {},
+      today: { repairState: "mastered" },
+      errorBank: { everWrong: false },
+      srs: { stage: 0, nextReviewAt: 0, lastReviewedAt: 0 }
+    }
+  ];
+
+  const persisted = await store.putRecords(records);
+
+  assert.equal(transactionCount, 1);
+  assert.equal(transactionMode, "readwrite");
+  assert.deepEqual(transactionStores, Object.values(store.stores));
+  assert.equal(writes.get(store.stores.spellingProgress).length, 2);
+  assert.equal(writes.get(store.stores.errorBank).length, 1);
+  assert.equal(writes.get(store.stores.todayRepairQueue).length, 1);
+  assert.equal(writes.get(store.stores.srsReviewQueue).length, 1);
+  assert.deepEqual(deletes.get(store.stores.errorBank), ["beta"]);
+  assert.deepEqual(deletes.get(store.stores.todayRepairQueue), ["beta"]);
+  assert.deepEqual(deletes.get(store.stores.srsReviewQueue), ["beta"]);
+  assert.equal(persisted[0].deviceId, "device-b");
+  assert.equal(persisted[1].deviceId, "device-b");
+});

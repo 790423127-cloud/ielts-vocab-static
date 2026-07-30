@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bookmark, Library, PanelRightOpen, Pause, Play, Search, Shuffle } from "lucide-react";
+import { Bookmark, Library, PanelRightOpen, Pause, Play, Search } from "lucide-react";
 import VirtualList from "./VirtualList";
 import VocabAdminToolsPanel from "./VocabAdminToolsPanel";
+import StudyMeaningToggle from "./StudyMeaningToggle";
 import WordDetailGrid from "./WordDetailGrid";
 import WordStudyActions from "./WordStudyActions";
 import WordStudyContent from "./WordStudyContent";
@@ -79,6 +80,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     isSameFilter,
     resolveStudyWordEntry,
     wordLibraryStats,
+    onLibraryOpenChange,
     familiarCount,
     missingCount,
     classifyMissingCount,
@@ -115,7 +117,9 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     DIFFICULTY_OPTIONS,
     IELTS_USE_OPTIONS,
     IDICTATION_FLASH_FILTERS,
-    shuffleStudyWords,
+    wordOrderModes,
+    wordOrderMode,
+    setWordOrderMode,
     nextWord,
     prevWord,
     toggleFavorite,
@@ -206,7 +210,9 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
       <summary className="top-pill">学习范围</summary>
       <div className="menu-panel wide">
         <h2 className="panel-title">学习入口</h2>
-        <p className="panel-desc">主词库保持统一，只切换学习范围和独立进度。</p>
+        <p className="panel-desc">
+          全部可刷词是独立学习卡总数；待学词浏览会排除已认识词和专项参考词。其他入口可能互相重叠，不需要相加。
+        </p>
         <div className="current-filter">当前：{getFilterName(filter)} · {studyWords.length} 个词</div>
         {learningEntryGroups.map((group) => (
           <div className="entry-group" key={group.group}>
@@ -232,12 +238,16 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
   );
 
   const libraryMenu = (
-    <details className="menu word-study-menu" ref={libraryMenuRef}>
+    <details
+      className="menu word-study-menu"
+      ref={libraryMenuRef}
+      onToggle={(event) => onLibraryOpenChange?.(event.currentTarget.open)}
+    >
       <summary className="top-pill"><Library aria-hidden="true" />词库管理</summary>
       <div className="menu-panel wide">
         <h2 className="panel-title">词库管理</h2>
         <p className="panel-desc">
-          可刷 {wordLibraryStats.total} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 待学习 {wordLibraryStats.pending} · 不熟 {wordLibraryStats.unfamiliar} · 已认识 {familiarCount} · 必须补全 {missingCount} · 结构异常 {repairMissingCount} · 仅缺分类 {classifyMissingCount} · 可选丰富 {enrichmentThinCount} · 词族复核 {familyReviewCount} · 独立词候选 {familyPromotionCount} · 待整理 {tidyReview?.stats?.review || 0} · 音频 {audioStats.state === "error" ? "核对失败" : audioStats.state !== "ready" ? "核对中" : `${audioStats.has}/${audioStats.total}`}
+          可刷 {wordLibraryStats.total} · 普通待学 {wordLibraryStats.pending} · 已认识 {familiarCount} · 专项参考 {wordLibraryStats.studyReferences} · 词形参考 {wordLibraryStats.references} · 总记录 {wordLibraryStats.physical} · 不熟 {wordLibraryStats.unfamiliar} · 必须补全 {missingCount} · 结构异常 {repairMissingCount} · 仅缺分类 {classifyMissingCount} · 可选丰富 {enrichmentThinCount} · 词族复核 {familyReviewCount} · 独立词候选 {familyPromotionCount} · 待整理 {tidyReview?.stats?.review || 0} · 音频 {audioStats.state === "error" ? "核对失败" : audioStats.state !== "ready" ? "核对中" : `${audioStats.has}/${audioStats.total}`}
         </p>
         <div className="current-filter">当前学习范围：{getFilterName(filter)} · {studyWords.length} 个词</div>
 
@@ -369,7 +379,17 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             percent={progressPercent}
             actions={(
               <header className="topbar">
-                <button type="button" className="top-pill shuffle-pill" onClick={shuffleStudyWords}><Shuffle aria-hidden="true" />随机</button>
+                <select
+                  className="top-pill word-order-select"
+                  value={wordOrderMode}
+                  onChange={(event) => setWordOrderMode(event.target.value)}
+                  aria-label="单词排列方式"
+                  title="只调整当前学习范围的刷词顺序，不修改主词库"
+                >
+                  {wordOrderModes.map((mode) => (
+                    <option key={mode.value} value={mode.value}>{mode.label}</option>
+                  ))}
+                </select>
                 <div className={`auto-scroll-control${autoScrollActive ? " is-active" : ""}`}>
                   <button
                     type="button"
@@ -396,6 +416,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                     <option value={10}>10秒</option>
                   </select>
                 </div>
+                <StudyMeaningToggle />
                 {rangeMenu}
                 {libraryMenu}
                 <VocabAdminToolsPanel

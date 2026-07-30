@@ -18,6 +18,10 @@ import {
   computeLexiconHash,
   validateExportCacheWrite
 } from "../../lib/vocab/lexicon-guard.mjs";
+import {
+  buildLexiconRetirementPayload,
+  validateLexiconDeletionIntent
+} from "../../lib/vocab/lexicon-delete-intent.mjs";
 import { stripWordUserState } from "../../lib/vocab/word-cache-meta.mjs";
 
 function cacheDir() {
@@ -28,6 +32,10 @@ function cachePath() {
   return path.join(cacheDir(), "words.json");
 }
 
+function retirementPath() {
+  return path.join(process.cwd(), "app", "lib", "vocab", "master-lexicon-retirements.json");
+}
+
 function readCache() {
   try {
     if (!existsSync(cachePath())) return null;
@@ -35,6 +43,36 @@ function readCache() {
   } catch {
     return null;
   }
+}
+
+function readRetirements() {
+  try {
+    if (!existsSync(retirementPath())) return { count: 0, entries: [] };
+    return JSON.parse(readFileSync(retirementPath(), "utf-8") || "null");
+  } catch {
+    return null;
+  }
+}
+
+function writeDeletionBackup(current, deletion, savedAt) {
+  if (!deletion?.removed?.length || !current?.words?.length) return null;
+  mkdirSync(cacheDir(), { recursive: true });
+  const timestamp = String(savedAt || new Date().toISOString()).replace(/[:.]/g, "-");
+  const backupName = `words.before-delete-${timestamp}-${randomUUID()}.backup`;
+  const backupPath = path.join(cacheDir(), backupName);
+  const metadataPath = `${backupPath}.meta.backup`;
+  writeFileSync(backupPath, `${JSON.stringify(current, null, 2)}\n`, "utf8");
+  writeFileSync(metadataPath, `${JSON.stringify({
+    createdAt: savedAt,
+    action: deletion.action,
+    beforeCount: deletion.beforeCount,
+    afterCount: deletion.afterCount,
+    removed: deletion.removed
+  }, null, 2)}\n`, "utf8");
+  return {
+    file: backupName,
+    metadataFile: path.basename(metadataPath)
+  };
 }
 
 const DEFAULT_FILE_SYSTEM = {
@@ -50,8 +88,13 @@ function sha256(text) {
   return createHash("sha256").update(text).digest("hex");
 }
 
-export function buildExportCachePayload({ words, version, savedAt }) {
+export function buildExportCachePayload({ words, version, savedAt, metadata = {} }) {
+  const preservedMetadata = { ...(metadata || {}) };
+  for (const field of ["words", "count", "version", "savedAt", "lexiconHash", "integrityHash"]) {
+    delete preservedMetadata[field];
+  }
   const payload = {
+    ...preservedMetadata,
     version: String(version || "").trim(),
     words,
     count: words.length,
@@ -85,6 +128,8 @@ export function publishLexiconPair({
   publicFile,
   payloadText,
   expectedCount,
+  retirementFile = "",
+  retirementText = "",
   fsApi = DEFAULT_FILE_SYSTEM,
   transactionId = randomUUID()
 }) {
@@ -98,12 +143,21 @@ export function publishLexiconPair({
   );
   const cacheRollback = `${cacheFile}.${transactionId}.rollback`;
   const publicRollback = `${publicFile}.${transactionId}.rollback`;
-  const temporaryPaths = [cacheTemp, publicTemp];
-  const rollbackPaths = [cacheRollback, publicRollback];
+  const hasRetirementUpdate = Boolean(retirementFile && retirementText);
+  const retirementTemp = hasRetirementUpdate
+    ? path.join(path.dirname(retirementFile), `.${path.basename(retirementFile)}.${transactionId}.tmp`)
+    : "";
+  const retirementRollback = hasRetirementUpdate
+    ? `${retirementFile}.${transactionId}.rollback`
+    : "";
+  const temporaryPaths = [cacheTemp, publicTemp, retirementTemp].filter(Boolean);
+  const rollbackPaths = [cacheRollback, publicRollback, retirementRollback].filter(Boolean);
   let cacheBackedUp = false;
   let publicBackedUp = false;
+  let retirementBackedUp = false;
   let cacheInstalled = false;
   let publicInstalled = false;
+  let retirementInstalled = false;
   let committed = false;
 
   const removeIfPresent = (filePath) => {
@@ -113,10 +167,16 @@ export function publishLexiconPair({
   try {
     fsApi.mkdirSync(path.dirname(cacheFile), { recursive: true });
     fsApi.mkdirSync(path.dirname(publicFile), { recursive: true });
+    if (hasRetirementUpdate) fsApi.mkdirSync(path.dirname(retirementFile), { recursive: true });
     fsApi.writeFileSync(cacheTemp, payloadText, "utf8");
     fsApi.writeFileSync(publicTemp, payloadText, "utf8");
+    if (hasRetirementUpdate) fsApi.writeFileSync(retirementTemp, retirementText, "utf8");
 
-    if (!fsApi.existsSync(cacheTemp) || !fsApi.existsSync(publicTemp)) {
+    if (
+      !fsApi.existsSync(cacheTemp) ||
+      !fsApi.existsSync(publicTemp) ||
+      (hasRetirementUpdate && !fsApi.existsSync(retirementTemp))
+    ) {
       throw new Error("待发布临时文件缺失");
     }
     const cachePrepared = fsApi.readFileSync(cacheTemp);
@@ -130,6 +190,18 @@ export function publishLexiconPair({
       throw new Error("待发布临时文件hash与内存内容不一致");
     }
 
+    if (hasRetirementUpdate) {
+      const preparedRetirements = fsApi.readFileSync(retirementTemp, "utf8");
+      const parsedRetirements = JSON.parse(preparedRetirements);
+      if (
+        !Array.isArray(parsedRetirements?.entries) ||
+        Number(parsedRetirements?.count) !== parsedRetirements.entries.length ||
+        sha256(preparedRetirements) !== sha256(retirementText)
+      ) {
+        throw new Error("待发布退役记录校验失败");
+      }
+    }
+
     if (fsApi.existsSync(cacheFile)) {
       fsApi.renameSync(cacheFile, cacheRollback);
       cacheBackedUp = true;
@@ -138,11 +210,19 @@ export function publishLexiconPair({
       fsApi.renameSync(publicFile, publicRollback);
       publicBackedUp = true;
     }
+    if (hasRetirementUpdate && fsApi.existsSync(retirementFile)) {
+      fsApi.renameSync(retirementFile, retirementRollback);
+      retirementBackedUp = true;
+    }
 
     fsApi.renameSync(cacheTemp, cacheFile);
     cacheInstalled = true;
     fsApi.renameSync(publicTemp, publicFile);
     publicInstalled = true;
+    if (hasRetirementUpdate) {
+      fsApi.renameSync(retirementTemp, retirementFile);
+      retirementInstalled = true;
+    }
 
     const finalCache = fsApi.readFileSync(cacheFile);
     const finalPublic = fsApi.readFileSync(publicFile);
@@ -150,12 +230,19 @@ export function publishLexiconPair({
       throw new Error("正式词库发布后字节不一致");
     }
     validatePreparedPayload(Buffer.from(finalCache).toString("utf8"), expectedCount);
+    if (hasRetirementUpdate) {
+      const finalRetirements = fsApi.readFileSync(retirementFile, "utf8");
+      if (sha256(finalRetirements) !== sha256(retirementText)) {
+        throw new Error("退役记录发布后内容不一致");
+      }
+    }
     committed = true;
   } catch (error) {
     const rollbackErrors = [];
     for (const [installed, target] of [
       [cacheInstalled, cacheFile],
-      [publicInstalled, publicFile]
+      [publicInstalled, publicFile],
+      [retirementInstalled, retirementFile]
     ]) {
       if (!installed) continue;
       try {
@@ -166,7 +253,8 @@ export function publishLexiconPair({
     }
     for (const [backedUp, rollbackFile, target] of [
       [cacheBackedUp, cacheRollback, cacheFile],
-      [publicBackedUp, publicRollback, publicFile]
+      [publicBackedUp, publicRollback, publicFile],
+      [retirementBackedUp, retirementRollback, retirementFile]
     ]) {
       if (!backedUp) continue;
       try {
@@ -229,6 +317,22 @@ export async function POST(req) {
     }
 
     const current = readCache();
+    const deletionValidation = validateLexiconDeletionIntent(
+      current?.words || [],
+      words,
+      body.deletionIntent
+    );
+    if (!deletionValidation.ok) {
+      return Response.json(
+        {
+          ok: false,
+          error: deletionValidation.error,
+          detail: deletionValidation.detail || ""
+        },
+        { status: deletionValidation.status || 409 }
+      );
+    }
+
     const validation = validateExportCacheWrite({ ...body, words }, current);
     if (!validation.ok) {
       console.error("[export-cache] rejected write:", validation.error, validation.detail || "");
@@ -249,12 +353,40 @@ export async function POST(req) {
         LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES
     ).trim();
     const publicWordsPath = path.join(process.cwd(), "public", "data", "words.json");
-    const prepared = buildExportCachePayload({ words, version, savedAt });
+    const prepared = buildExportCachePayload({
+      words,
+      version,
+      savedAt,
+      metadata: current || {}
+    });
+    const currentRetirements = readRetirements();
+    if (deletionValidation.removed.length && !currentRetirements) {
+      return Response.json(
+        {
+          ok: false,
+          error: "无法读取主词库退役记录",
+          detail: "为了避免已删除单词被后续同步重新加入，本次写入已停止。"
+        },
+        { status: 409 }
+      );
+    }
+    const retirementPayload = deletionValidation.removed.length
+      ? buildLexiconRetirementPayload(currentRetirements, deletionValidation.removed, {
+          version,
+          savedAt
+        })
+      : null;
+    const retirementText = retirementPayload
+      ? `${JSON.stringify(retirementPayload, null, 2)}\n`
+      : "";
+    const deletionBackup = writeDeletionBackup(current, deletionValidation, savedAt);
     const published = publishLexiconPair({
       cacheFile: cachePath(),
       publicFile: publicWordsPath,
       payloadText: prepared.text,
-      expectedCount: words.length
+      expectedCount: words.length,
+      retirementFile: retirementPayload ? retirementPath() : "",
+      retirementText
     });
 
     return Response.json({
@@ -264,7 +396,8 @@ export async function POST(req) {
       version,
       lexiconHash: prepared.payload.lexiconHash,
       integrityHash: prepared.payload.integrityHash,
-      fileHash: published.fileHash
+      fileHash: published.fileHash,
+      deletionBackup
     });
   } catch (error) {
     return Response.json(

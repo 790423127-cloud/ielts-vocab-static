@@ -44,6 +44,13 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_ENGINE));
   assert.match(entries.get("assets/app.js"), /staticStudyCard\.addEventListener\("touchstart"/);
   assert.match(entries.get("assets/app.js"), /staticStudyCard\.addEventListener\("touchend"/);
+  assert.match(entries.get("assets/app.js"), /audio=new Audio\(url\)/);
+  assert.match(entries.get("assets/app.js"), /audio\.playsInline=true/);
+  assert.match(entries.get("assets/app.js"), /audio\.volume=1/);
+  assert.doesNotMatch(entries.get("assets/app.js"), /createMediaElementSource/);
+  assert.match(entries.get("assets/app.js"), /function previewWordForFilter/);
+  assert.match(entries.get("assets/app.js"), /count<=0\)return ""/);
+  assert.doesNotMatch(entries.get("assets/app.js"), /saved\?words\.find/);
   assert.match(entries.get("assets/app.js"), /!\("ontouchstart" in window\)&&"PointerEvent" in window/);
   assert.doesNotMatch(entries.get("assets/app.js"), /pointer-touch-v3/);
   assert.match(entries.get("assets/style.css"), /static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y/);
@@ -51,6 +58,20 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("index.html"), /id="staticStudyCard"/);
   assert.match(entries.get("index.html"), /staticBuildVersion/);
   assert.match(entries.get("sw.js"), new RegExp(STATIC_RESPONSIVE_VERSION));
+  assert.match(entries.get("sw.js"), /url\.pathname\.endsWith\("\/reading-words\.html"\)/);
+  assert.match(entries.get("reading-words.html"), /id="favoriteBtn"/);
+  assert.match(entries.get("reading-words.html"), /id="deleteBtn"/);
+  assert.match(entries.get("assets/reading-words.js"), /deleteCurrentReadingWord/);
+  assert.match(entries.get("assets/reading-words.js"), /shouldHandleDeleteShortcut/);
+  assert.match(entries.get("assets/reading-words.js"), /synonymListHtml/);
+  assert.match(entries.get("assets/reading-words.js"), /linked\?\.meaning/);
+  assert.match(entries.get("assets/reading-words.css"), /\.synonym-row/);
+  assert.ok(
+    entries.get("assets/reading-words.js").indexOf("const SYNONYM_VARIANT_KEY") <
+      entries.get("assets/reading-words.js").indexOf("words = readReadingWords()"),
+    "stored reading words must load only after synonym variants are initialized"
+  );
+  assert.match(entries.get("assets/reading-words.css"), /repeat\(6,minmax\(0,1fr\)\)/);
   assert.match(entries.get("build-info.json"), new RegExp(STATIC_SWIPE_ENGINE));
   assert.match(entries.get("build-info.json"), /ielts-538/);
 });

@@ -84,14 +84,99 @@ export function buildPersonalReadingMainEntry(readingWord = {}, options = {}) {
     formsReviewed: readingWord.formsReviewed === true || Boolean(readingWord.forms?.length),
     wordFamilyReviewed: readingWord.wordFamilyReviewed === true || Boolean(readingWord.wordFamily?.length),
     synonymsReviewed: readingWord.synonymsReviewed === true || Boolean(readingWord.synonyms?.length),
+    entryType: "headword",
     source: "personal-reading",
-    supplemental: true,
+    supplemental: false,
     addedFromReadingWords: true,
     readingImportCount: Math.max(1, Number(readingWord.importCount) || 1),
     addedAt: cleanText(options.now) || new Date().toISOString()
   };
 
   return entry;
+}
+
+export function ensureReadingWordMainEntry(readingWord = {}, currentMainWords = [], options = {}) {
+  const mainWords = Array.isArray(currentMainWords) ? currentMainWords : [];
+  const wordKey = normalizeReadingWordKey(readingWord?.word);
+  const existingIndex = mainWords.findIndex(
+    (entry) => normalizeReadingWordKey(entry?.word) === wordKey
+  );
+  if (existingIndex >= 0) {
+    return {
+      mainWords,
+      mainEntry: mainWords[existingIndex],
+      mainIndex: existingIndex,
+      added: false
+    };
+  }
+
+  const usedIds = options.usedIds instanceof Set
+    ? options.usedIds
+    : new Set(
+      mainWords.flatMap((entry) => [cleanText(entry?.id), cleanText(entry?.wordId)]).filter(Boolean)
+    );
+  const mainEntry = buildPersonalReadingMainEntry(readingWord, {
+    ...options,
+    usedIds
+  });
+  return {
+    mainWords: [...mainWords, mainEntry],
+    mainEntry,
+    mainIndex: mainWords.length,
+    added: true
+  };
+}
+
+export function backfillReadingWordsIntoMain(
+  readingWords = [],
+  currentMainWords = [],
+  options = {}
+) {
+  const now = cleanText(options.now) || new Date().toISOString();
+  const usedIds = new Set(
+    (Array.isArray(currentMainWords) ? currentMainWords : [])
+      .flatMap((entry) => [cleanText(entry?.id), cleanText(entry?.wordId)])
+      .filter(Boolean)
+  );
+  let mainWords = Array.isArray(currentMainWords) ? [...currentMainWords] : [];
+  let addedToMain = 0;
+
+  const words = (Array.isArray(readingWords) ? readingWords : []).map((readingWord) => {
+    if (!normalizeReadingWordKey(readingWord?.word)) return readingWord;
+    const ensured = ensureReadingWordMainEntry(readingWord, mainWords, {
+      ...options,
+      usedIds,
+      now
+    });
+    mainWords = ensured.mainWords;
+    if (ensured.added) addedToMain += 1;
+    return applyMainEntryToReadingWord(
+      readingWord,
+      ensured.mainEntry,
+      ensured.added ? now : ""
+    );
+  });
+
+  return {
+    words,
+    mainWords,
+    mainChanged: addedToMain > 0,
+    addedToMain
+  };
+}
+
+export function buildReadingSynonymDisplay(item, mainEntry = {}) {
+  const word = cleanText(
+    typeof item === "string"
+      ? item
+      : item?.word || item?.replacement
+  );
+  const meaning = cleanText(
+    typeof item === "object" && item
+      ? item.meaning || item.meaningZh || item.chineseMeaning
+      : ""
+  ) || cleanText(mainEntry?.meaning || mainEntry?.chineseMeaning);
+  return { word, meaning };
 }
 
 export function reconcileReadingImportsWithMain(

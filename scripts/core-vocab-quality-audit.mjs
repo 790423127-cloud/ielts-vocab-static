@@ -72,7 +72,15 @@ function readLexicon(filePath) {
 
 function isPhraseEntry(entry) {
   const word = normalizeHeadword(entry?.word);
-  return Boolean(entry?.isPhrase || entry?.entryType === "phrase" || entry?.pos === "phrase" || word.includes(" "));
+  const isReviewedCompoundHeadword =
+    entry?.entryType === "headword" &&
+    entry?.lexicalizedCompound === true;
+  return Boolean(
+    entry?.isPhrase ||
+    entry?.entryType === "phrase" ||
+    entry?.pos === "phrase" ||
+    (word.includes(" ") && !isReviewedCompoundHeadword)
+  );
 }
 
 function isExplicitProperName(entry) {

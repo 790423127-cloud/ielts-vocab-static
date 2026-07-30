@@ -7,6 +7,7 @@ import {
   REAL_AUDIO_PREFILL_CURSOR_KEY,
   isSimpleDictionaryWord,
   normalizeWord,
+  runWhenBrowserIdle,
   safeLocalStorageGet,
   safeLocalStorageRemove,
   safeLocalStorageSet
@@ -563,16 +564,37 @@ export function useHomeAudioPrefill({
     const firstKey = normalizeWord(words[0]?.word);
     const lastKey = normalizeWord(words[words.length - 1]?.word);
     const hydrationKey = `${words.length}:${firstKey}:${lastKey}`;
-    if (audioStatusHydrationKeyRef.current === hydrationKey) return;
+    const pendingKey = `pending:${hydrationKey}`;
+    if (
+      audioStatusHydrationKeyRef.current === hydrationKey ||
+      audioStatusHydrationKeyRef.current === pendingKey
+    ) return;
 
-    audioStatusHydrationKeyRef.current = hydrationKey;
-    void refreshAudioCacheStats({
-      quiet: true,
-      includeStatus: true,
-      statusOnly: true
-    }).then((data) => {
-      if (!data) audioStatusHydrationKeyRef.current = "";
+    audioStatusHydrationKeyRef.current = pendingKey;
+    let cancelled = false;
+    runWhenBrowserIdle(() => {
+      if (cancelled) {
+        if (audioStatusHydrationKeyRef.current === pendingKey) {
+          audioStatusHydrationKeyRef.current = "";
+        }
+        return;
+      }
+      audioStatusHydrationKeyRef.current = hydrationKey;
+      void refreshAudioCacheStats({
+        quiet: true,
+        includeStatus: true,
+        statusOnly: true
+      }).then((data) => {
+        if (!data) audioStatusHydrationKeyRef.current = "";
+      });
     });
+
+    return () => {
+      cancelled = true;
+      if (audioStatusHydrationKeyRef.current === pendingKey) {
+        audioStatusHydrationKeyRef.current = "";
+      }
+    };
   }, [words, refreshAudioCacheStats]);
 
   async function cleanupFallbackAudioCache() {

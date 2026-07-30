@@ -1,6 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import {
+  getIdictationSource,
+  primeIdictationFrequencyData
+} from "../../spelling/idictation-frequency.mjs";
 import { buildLearningEntryCounts } from "../learning-entry-counts.mjs";
+import {
+  buildIdictationFlashWords,
+  buildLibraryWordMap
+} from "../word-flashcard-study-pool.mjs";
 
 function filterKey(filter) {
   if (!filter || typeof filter !== "object") return "all";
@@ -120,4 +128,45 @@ test("buildLearningEntryCounts uses idictation metadata before the lazy payload 
 
   assert.equal(counts.get("idictation:listening"), 3906);
   assert.equal(counts.get("idictation:reading"), 3396);
+});
+
+test("idictation browsing keeps independent answer words that overlap main inflection references", () => {
+  primeIdictationFrequencyData({
+    sources: {
+      listening: {
+        label: "爱听写听力",
+        uniqueWords: 1,
+        entries: [{
+          id: "listening-activities",
+          word: "activities",
+          expectedAnswer: "activities",
+          acceptedAnswers: ["activities", "activity"],
+          meaning: "活动",
+          example: "Children enjoy outdoor activities.",
+          exampleCn: "孩子们喜欢户外活动。"
+        }]
+      }
+    }
+  });
+
+  const words = [{
+    word: "activities",
+    entryType: "inflected-form",
+    studyMode: "reference",
+    baseWord: "activity",
+    relationType: "plural"
+  }];
+  const pool = buildIdictationFlashWords("listening", words, buildLibraryWordMap(words));
+  const counts = buildLearningEntryCounts(words, [{
+    group: "爱听写",
+    items: [{ title: "爱听写听力", filter: { type: "idictation", value: "listening" } }]
+  }], {
+    filterKey,
+    isIdictationFlashFilter: (filter) => filter?.type === "idictation",
+    getIdictationSource
+  });
+
+  assert.equal(pool.length, 1);
+  assert.equal(pool[0].word, "activities");
+  assert.equal(counts.get("idictation:listening"), 1);
 });

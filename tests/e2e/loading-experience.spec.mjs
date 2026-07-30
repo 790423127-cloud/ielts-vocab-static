@@ -11,8 +11,16 @@ const nextScenarios = [
   { route: "/expressions", dataPattern: "**/data/speaking-writing-phrases-700.json*" },
   { route: "/meaning", dataPattern: "**/data/meaning-6000.json*" },
   { route: "/meaning-en", dataPattern: "**/data/meaning-6000.json*" },
-  { route: "/spelling-words", dataPattern: "**/api/vocab-data*" },
-  { route: "/spelling-phrases", dataPattern: "**/data/phrases.json*" }
+  {
+    route: "/spelling-words",
+    dataPattern: "**/api/vocab-data*",
+    loadingSelector: ".spelling-focus-stack--preparing"
+  },
+  {
+    route: "/spelling-phrases",
+    dataPattern: "**/data/phrases.json*",
+    loadingSelector: ".spelling-focus-stack--preparing"
+  }
 ];
 
 const staticScenarios = [
@@ -46,16 +54,39 @@ async function expectNoHorizontalOverflow(page) {
   expect(overflow.page).toBeLessThanOrEqual(overflow.viewport + 1);
 }
 
+async function startSpellingPlaceholderWatch(page) {
+  await page.evaluate(() => {
+    window.__spellingPreparingPanelPainted = false;
+    window.__spellingPreparingPanelWatch = window.setInterval(() => {
+      const panel = document.querySelector('[class*="spellingPreparingPanel"]');
+      if (!panel) return;
+      const rect = panel.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        window.__spellingPreparingPanelPainted = true;
+      }
+    }, 16);
+  });
+}
+
+async function stopSpellingPlaceholderWatch(page) {
+  return page.evaluate(() => {
+    window.clearInterval(window.__spellingPreparingPanelWatch);
+    return window.__spellingPreparingPanelPainted === true;
+  });
+}
+
 for (const scenario of nextScenarios) {
   test(`${scenario.route} uses the stable loading experience`, async ({ page }) => {
     const runtimeErrors = captureRuntimeErrors(page);
     await delayRequest(page, scenario.dataPattern);
     await page.goto(scenario.route);
 
-    const loadingState = page.locator(".system-loading-state").first();
+    const loadingState = page.locator(scenario.loadingSelector || ".system-loading-state").first();
     await expect(loadingState).toBeVisible({ timeout: 10_000 });
     await expect(loadingState).not.toContainText(/\d+\s*%/);
-    await expect(loadingState.locator("h1")).toHaveCSS("font-size", /^(2[0-8]|1\d)px$/);
+    if (!scenario.loadingSelector) {
+      await expect(loadingState.locator("h1")).toHaveCSS("font-size", /^(2[0-8]|1\d)px$/);
+    }
     await expectNoHorizontalOverflow(page);
 
     await expect(loadingState).toBeHidden({ timeout: 45_000 });
@@ -81,6 +112,55 @@ for (const scenario of staticScenarios) {
     expect(runtimeErrors).toEqual([]);
   });
 }
+
+test("home navigation enters spelling without flashing the short-lived preparation panel", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".word-flash-shell .word")).toBeVisible({ timeout: 45_000 });
+
+  await startSpellingPlaceholderWatch(page);
+  await page.getByRole("link", { name: "拼写训练" }).first().click();
+  await expect(page.getByTestId("spelling-input")).toBeEnabled({ timeout: 15_000 });
+  expect(await stopSpellingPlaceholderWatch(page)).toBe(false);
+
+  await page.getByRole("link", { name: "选义训练" }).first().click();
+  await expect(page).toHaveURL(/\/meaning$/);
+
+  await startSpellingPlaceholderWatch(page);
+  await page.getByRole("link", { name: "拼写训练" }).first().click();
+  await expect(page.getByTestId("spelling-input")).toBeEnabled({ timeout: 15_000 });
+  expect(await stopSpellingPlaceholderWatch(page)).toBe(false);
+});
+
+test("saved stats sidebar preference does not shift the spelling preparation panel", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "ielts-vocab:spelling-ux:word",
+      JSON.stringify({ statsSidebarOpen: true })
+    );
+  });
+  await delayRequest(page, "**/api/vocab-data*");
+  await page.goto("/spelling-words");
+
+  const loadingPanel = page.locator('[class*="spellingPreparingPanel"]');
+  const layout = page.locator(".spelling-page-layout");
+  await expect(loadingPanel).toBeVisible({ timeout: 10_000 });
+
+  const initialCenter = await loadingPanel.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return rect.left + (rect.width / 2);
+  });
+  await page.waitForTimeout(250);
+  const hydratedCenter = await loadingPanel.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return rect.left + (rect.width / 2);
+  });
+
+  await expect(layout).not.toHaveClass(/is-sidebar-open/);
+  expect(Math.abs(hydratedCenter - initialCenter)).toBeLessThanOrEqual(1);
+
+  await expect(page.getByTestId("spelling-input")).toBeEnabled({ timeout: 45_000 });
+  await expect(layout).toHaveClass(/is-sidebar-open/);
+});
 
 test("all learning routes fit a phone viewport after loading", async ({ page }) => {
   test.setTimeout(120_000);

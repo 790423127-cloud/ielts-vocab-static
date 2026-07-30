@@ -1,10 +1,10 @@
 {
   "version": "meaning-6000-v6-user-curated-removal",
-  "generatedAt": "2026-07-28T12:03:33.072Z",
+  "generatedAt": "2026-07-30T04:28:27.017Z",
   "count": 6000,
-  "sourceLexiconVersion": "v16-13351-user-curated-removal-20260728",
-  "sourceLexiconCount": 13351,
-  "sourceLexiconSha256": "5ff10254b873c64a216caec4d8c082a463e4920333b14b9998a29d16606ae63c",
+  "sourceLexiconVersion": "v20-13355-reading-compound-curated-removal-20260730",
+  "sourceLexiconCount": 13355,
+  "sourceLexiconSha256": "6e896fc3a786966c0a8ce15a5355bf504e6c2f6bbeffa83d6a48397995cd22f0",
   "selectionPolicy": "ielts-gt-quality-frequency-v4",
   "items": [
     {
@@ -167945,48 +167945,6 @@
       "legacy4500": true
     },
     {
-      "wordId": "word_fe7f29efae2f",
-      "word": "ireland",
-      "quizMeaningZh": "爱尔兰",
-      "meaningZh": "爱尔兰",
-      "meaningDetailedZh": "爱尔兰",
-      "meaningSource": "curated-quiz-sense",
-      "posFamily": "noun",
-      "difficulty": "基础高频",
-      "selectionScore": 130.9,
-      "zipfFrequency": 4.66,
-      "scoreBreakdown": {
-        "zipf": 4.66,
-        "priority": 1,
-        "gBonus": 21,
-        "evidence": 0,
-        "collocation": 4,
-        "difficulty": 13,
-        "source": 0,
-        "rarePenalty": 0,
-        "longPenalty": 0,
-        "legacyBonus": 11,
-        "curatedSenseBonus": 5,
-        "posBalanceBonus": 0
-      },
-      "tags": [
-        "listening",
-        "reading",
-        "writing"
-      ],
-      "topics": [
-        "旅行"
-      ],
-      "sourceEvidence": [
-        "writingPriority",
-        "ieltsUse",
-        "topics",
-        "collocations",
-        "quizSenses"
-      ],
-      "legacy4500": true
-    },
-    {
       "wordId": "word_6591f15e4807",
       "word": "spectrum",
       "quizMeaningZh": "光谱",
@@ -281901,6 +281859,47 @@
         "G类完整学习计划·阶段1"
       ],
       "sourceEvidence": [
+        "readingPriority",
+        "excelSourceTags",
+        "ieltsUse",
+        "topics"
+      ]
+    },
+    {
+      "wordId": "word_303ec5b45041",
+      "word": "lower",
+      "quizMeaningZh": "较低的；放下",
+      "meaningZh": "较低的；放下",
+      "meaningDetailedZh": "较低的；放下",
+      "meaningSource": "master-lexicon-rebaseline",
+      "posFamily": "adjective",
+      "difficulty": "中级核心",
+      "selectionScore": 46.7,
+      "scoreBreakdown": {
+        "ieltsExamWeight": 16.25,
+        "listening": 5,
+        "reading": 5,
+        "writing": 0,
+        "speaking": 0,
+        "comprehensionImportance": 60,
+        "contextFrequency": 76,
+        "coverageValue": 70,
+        "noisePenalty": 0
+      },
+      "tags": [
+        "listening",
+        "reading"
+      ],
+      "topics": [
+        "消费",
+        "听力",
+        "p4",
+        "p12",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段1"
+      ],
+      "sourceEvidence": [
+        "listeningPriority",
         "readingPriority",
         "excelSourceTags",
         "ieltsUse",

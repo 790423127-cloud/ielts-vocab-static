@@ -7,6 +7,7 @@ import {
   dedupePhrasePracticeEntries,
   filterBySpellingCategory,
   filterBySpellingScope,
+  listSpellingBatchOptionsFromSelection,
   orderSpellingEntries,
   selectSpellingBatch,
   splitSpellingBatches
@@ -91,6 +92,20 @@ test("selectSpellingBatch returns phrase batches by difficulty and ielts scene",
   assert.equal(first.batchCount, 1);
   assert.equal(first.batchEntryCount, 300);
   assert.equal(first.entries[0].entryType, "word");
+});
+
+test("batch picker options reuse the selected category totals", () => {
+  const options = listSpellingBatchOptionsFromSelection({
+    batchCount: 3,
+    batchSize: 400,
+    totalInCategory: 950
+  });
+
+  assert.deepEqual(options, [
+    { value: 0, label: "第 1 批 · 400 词", count: 400 },
+    { value: 1, label: "第 2 批 · 400 词", count: 400 },
+    { value: 2, label: "第 3 批 · 150 词", count: 150 }
+  ]);
 });
 
 test("phrase practice dedupes article-only variants without merging distinct quantifier phrases", () => {

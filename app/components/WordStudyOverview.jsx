@@ -63,7 +63,7 @@ export default function WordStudyOverview({
         </dl>
       </section>
 
-      <section className="word-overview-card word-related-card">
+      <section className="word-overview-card word-related-card study-answer-content">
         <h3>相关单词</h3>
         {relatedWords.length ? (
           <ul>

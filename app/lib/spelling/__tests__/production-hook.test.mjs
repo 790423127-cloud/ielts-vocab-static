@@ -5,6 +5,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import hookModule from "../../../hooks/useSpellingEngine.js";
+import {
+  clearSpellingLexiconCache,
+  getCachedSpellingLexicon,
+  loadSpellingLexicon,
+  primeSpellingLexiconCache
+} from "../load-spelling-lexicon.mjs";
 import { resolveSpellingLoadingState } from "../spelling-training-page-helpers.mjs";
 
 const {
@@ -46,6 +52,27 @@ test("equal-sized spelling entries produce different engine identities", () => {
   assert.notEqual(firstKey, secondKey);
 });
 
+test("home runtime words prime the spelling cache before route entry", async () => {
+  clearSpellingLexiconCache();
+  const words = [
+    { id: "word-alpha", word: "alpha", meaning: "第一个" },
+    { id: "word-beta", word: "beta", meaning: "第二个" }
+  ];
+
+  const primed = primeSpellingLexiconCache(words, {
+    headwordVersion: "home-v1"
+  });
+  assert.strictEqual(getCachedSpellingLexicon({ scope: "word" }), primed);
+  const loaded = await loadSpellingLexicon({ scope: "word" });
+
+  assert.strictEqual(loaded, primed);
+  assert.strictEqual(loaded.headwords, words);
+  assert.equal(loaded.counts.headwords, 2);
+  assert.equal(loaded.counts.phrases, 0);
+
+  clearSpellingLexiconCache();
+});
+
 test("batch changes clear the previous word before the new engine is ready", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/hooks/useSpellingEngine.js"), "utf8");
@@ -57,6 +84,56 @@ test("batch changes clear the previous word before the new engine is ready", () 
   assert.match(resetBlock, /setSnapshot\(null\)/);
   assert.match(resetBlock, /setInputValue\(""\)/);
   assert.match(resetBlock, /setAwaitingAdvance\(false\)/);
+});
+
+test("late error-bank metadata cannot cancel an in-flight engine initialization", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const source = fs.readFileSync(path.join(root, "app/hooks/useSpellingEngine.js"), "utf8");
+  const effectStart = source.indexOf("useEffect(() => {", source.indexOf("const engineDepsKey"));
+  const effectEnd = source.indexOf("\n\n  function refresh", effectStart);
+  const initializationEffect = source.slice(effectStart, effectEnd);
+
+  assert.match(initializationEffect, /const activeCategoryScope = categoryScopeRef\.current/);
+  assert.match(initializationEffect, /errorBankTotal: Number\(activeCategoryScope\?\.errorBankTotal\)/);
+  assert.match(initializationEffect, /\}, \[engineDepsKey\]\);/);
+  assert.doesNotMatch(initializationEffect, /categoryScope\?\.(errorBankTotal|label|practiceSource)/);
+});
+
+test("spelling route reveals its header and footer only after one shared readiness gate", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const page = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const focus = fs.readFileSync(path.join(root, "app/components/SpellingFocusCard.jsx"), "utf8");
+  const preferences = fs.readFileSync(path.join(root, "app/hooks/useSpellingTrainingPreferences.js"), "utf8");
+  const errorBankHook = fs.readFileSync(path.join(root, "app/hooks/useSpellingErrorBank.js"), "utf8");
+  const srsReviewHook = fs.readFileSync(path.join(root, "app/hooks/useSpellingSrsReview.js"), "utf8");
+
+  assert.match(preferences, /preferencesHydrated: hydratedScope === normalizedScope/);
+  assert.match(errorBankHook, /initialized/);
+  assert.match(srsReviewHook, /initialized/);
+  assert.match(page, /practiceSource === "error_bank"\s*\? !errorBank\.initialized/);
+  assert.match(page, /practiceSource === "srs_review"\s*\? !srsReview\.initialized/);
+  assert.match(page, /const isPagePreparing = isSpellingLoading \|\| !supportingDataReady/);
+  assert.match(page, /<main className="spelling-page-shell" aria-busy=\{isPagePreparing\}>/);
+  assert.match(page, /\{!isPagePreparing \? \(\s*<header className="spelling-topbar"/);
+  assert.match(page, /isSpellingLoading=\{isPagePreparing\}/);
+  assert.match(focus, /\{!isSpellingLoading \? <footer className="spelling-training-footer">/);
+  assert.doesNotMatch(
+    page,
+    /if \(!spelling\.ready\) return;\s*refreshErrorBank\(\);\s*refreshSrsReview\(\);/
+  );
+});
+
+test("category entry does not reload the full lexicon for personal-wrong reconciliation", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const page = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const reconciliationStart = page.indexOf("personalWrongLexiconReconciledRef.current = true");
+  const reconciliationEnd = page.indexOf("\n  }, [personalWrongHydrated", reconciliationStart);
+  const reconciliationEffect = page.slice(reconciliationStart, reconciliationEnd);
+
+  assert.match(page, /practiceSource !== "personal_wrong_book"/);
+  assert.match(page, /\[personalWrongHydrated, personalWrongRecords, practiceSource, scope\]/);
+  assert.doesNotMatch(reconciliationEffect, /loadSpellingLexicon\(\{ force: true, scope \}\)/);
+  assert.match(reconciliationEffect, /syncPersonalWrongRecordsToLocalLexicon/);
 });
 
 test("mobile range controls mark touch interaction before changing filters", () => {

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SatelliteLexiconFlashcard from "../components/SatelliteLexiconFlashcard";
 import StableLoadingState from "../components/StableLoadingState";
+import { useOrderedStudyRows } from "../hooks/useOrderedStudyRows.js";
 import {
   LAYER_META,
   loadReadingGParaphrases,
@@ -257,7 +258,7 @@ export default function ReadingGVocabPage() {
     [paraphraseGroups]
   );
 
-  const studyList = useMemo(() => {
+  const baseStudyList = useMemo(() => {
     if (isQuizMode) return [];
     if (filter.type === "paraphrase") {
       const keys = new Set();
@@ -280,6 +281,14 @@ export default function ReadingGVocabPage() {
     }
     return buildRgStudyList(items, filter, statusMap, learnMode);
   }, [items, filter, statusMap, verifiedParas, isQuizMode, learnMode]);
+  const wordOrdering = useOrderedStudyRows({
+    orderKey: `reading-g:${filterKey(filter)}:${learnMode}`,
+    rows: baseStudyList,
+    pool: items,
+    currentIndex: index,
+    enabled: !isQuizMode
+  });
+  const studyList = wordOrdering.rows;
 
   const currentStudyPosition = useMemo(
     () => studyList.findIndex((row) => row.originalIndex === index),
@@ -435,6 +444,19 @@ export default function ReadingGVocabPage() {
     },
     [filter, items, quizPos]
   );
+
+  const changeWordOrderMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeMode(nextMode);
+    if (!Number.isInteger(nextIndex)) return;
+    setIndex(nextIndex);
+    persistSession(nextIndex);
+  }, [persistSession, wordOrdering]);
+  const changeWordDifficultyMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeDifficultyMode(nextMode);
+    if (!Number.isInteger(nextIndex)) return;
+    setIndex(nextIndex);
+    persistSession(nextIndex);
+  }, [persistSession, wordOrdering]);
 
   const speakText = useCallback(async (text, kind = "word") => {
     const value = String(text || "").trim();
@@ -1093,6 +1115,11 @@ export default function ReadingGVocabPage() {
       onSpeakExample={() => speakText(item?.example, "sentence")}
       onSpeakSmall={(text) => speakText(text, "phrase")}
       onShuffle={shuffleStudy}
+      wordOrderMode={wordOrdering.mode}
+      wordOrderDifficultyMode={wordOrdering.difficultyMode}
+      wordOrderDifficultyAvailable={wordOrdering.difficultyAvailable}
+      onWordOrderModeChange={changeWordOrderMode}
+      onWordDifficultyModeChange={changeWordDifficultyMode}
       onPrev={() => goToStudyOffset(-1)}
       onNext={() => goToStudyOffset(1)}
       overviewWords={studyList.map(({ entry }) => ({

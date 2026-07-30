@@ -59,9 +59,19 @@ import {
   resolveWordSearchTarget
 } from "./lib/vocab/word-study-eligibility.mjs";
 import {
-  WORD_STUDY_ORDER_MODES,
-  orderStudyWordIndices
+  WORD_STUDY_ORDER_MODE,
+  createWordStudyOrderSnapshot,
+  hasWordStudyInternalDifficulty,
+  isFixedWordStudyOrderMode,
+  reconcileWordStudyOrderSnapshot,
+  updateWordStudyOrderSnapshotCursor,
+  orderStudyWordIndices,
+  wordStudyOrderSnapshotKey
 } from "./lib/vocab/word-study-ordering.mjs";
+import {
+  WORD_STUDY_DIFFICULTY_MODE,
+  normalizeWordStudyDifficultyMode
+} from "./lib/vocab/word-internal-difficulty.mjs";
 import { SPEECH_WARM_DELAYS_MS } from "./lib/vocab-speech.mjs";
 import {
   compactBrowserStorageForCurrentWords,
@@ -447,28 +457,169 @@ function Home() {
   const activeOrderKey = filterKey(filter);
   const {
     mode: wordOrderMode,
+    difficultyMode: storedWordDifficultyMode,
     seed: wordOrderSeed,
-    setMode: setWordOrderMode
+    snapshots: wordOrderSnapshots,
+    setMode: setWordOrderMode,
+    setDifficultyMode: setWordDifficultyMode,
+    saveSnapshot: saveWordOrderSnapshot,
+    saveCursor: saveWordOrderCursor
   } = useWordStudyOrdering(activeOrderKey);
+  const wordOrderDifficultyEnabled = !idictationFlashSourceKey;
+  const wordOrderDifficultyMode = wordOrderDifficultyEnabled
+    ? storedWordDifficultyMode
+    : WORD_STUDY_DIFFICULTY_MODE.DEFAULT;
   const baseStudyWordIndices = useMemo(
     () => (isWordFlashActive
       ? buildStudyWordIndices(activeWordPool, filter, { idictation: Boolean(idictationFlashSourceKey), matchesWord: matchesActiveFilter })
       : []),
     [isWordFlashActive, activeWordPool, filter, idictationFlashSourceKey, matchesActiveFilter]
   );
-  const studyWordIndices = useMemo(
+  const generatedStudyWordIndices = useMemo(
     () => orderStudyWordIndices(baseStudyWordIndices, activeWordPool, {
       mode: wordOrderMode,
+      difficultyMode: wordOrderDifficultyMode,
+      difficultyEnabled: wordOrderDifficultyEnabled,
       seed: wordOrderSeed,
       idictation: Boolean(idictationFlashSourceKey)
     }),
     [
       baseStudyWordIndices,
       activeWordPool,
+      wordOrderDifficultyEnabled,
+      wordOrderDifficultyMode,
       wordOrderMode,
       wordOrderSeed,
       idictationFlashSourceKey
     ]
+  );
+  const activeWordOrderSnapshotKey = wordStudyOrderSnapshotKey(
+    wordOrderMode,
+    wordOrderDifficultyMode
+  );
+  const activeWordOrderSnapshot = wordOrderSnapshots[activeWordOrderSnapshotKey] || null;
+  const reconciledWordOrder = useMemo(() => {
+    if (
+      !isFixedWordStudyOrderMode(wordOrderMode, wordOrderDifficultyMode)
+      || !activeWordOrderSnapshot
+    ) {
+      return null;
+    }
+    return reconcileWordStudyOrderSnapshot(
+      activeWordOrderSnapshot,
+      generatedStudyWordIndices,
+      activeWordPool,
+      {
+        idictation: Boolean(idictationFlashSourceKey),
+        fallbackOrder: generatedStudyWordIndices
+      }
+    );
+  }, [
+    activeWordOrderSnapshot,
+    activeWordPool,
+    generatedStudyWordIndices,
+    idictationFlashSourceKey,
+    wordOrderDifficultyMode,
+    wordOrderMode
+  ]);
+  const studyWordIndices = reconciledWordOrder?.indices || generatedStudyWordIndices;
+
+  useEffect(() => {
+    if (!reconciledWordOrder?.changed) return;
+    saveWordOrderSnapshot(activeWordOrderSnapshotKey, reconciledWordOrder.snapshot);
+  }, [
+    activeWordOrderSnapshotKey,
+    reconciledWordOrder,
+    saveWordOrderSnapshot
+  ]);
+
+  const activateWordOrder = useCallback((nextMode, nextDifficultyMode) => {
+    const idictation = Boolean(idictationFlashSourceKey);
+    const difficultyEnabled = !idictation;
+    const normalizedDifficultyMode = difficultyEnabled
+      ? normalizeWordStudyDifficultyMode(nextDifficultyMode)
+      : WORD_STUDY_DIFFICULTY_MODE.DEFAULT;
+    let targetIndex = null;
+
+    if (nextMode === WORD_STUDY_ORDER_MODE.RANDOM) {
+      const seed = Date.now();
+      const nextOrder = orderStudyWordIndices(baseStudyWordIndices, activeWordPool, {
+        mode: nextMode,
+        difficultyMode: WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
+        difficultyEnabled: false,
+        seed,
+        idictation
+      });
+      setWordOrderMode(nextMode, { seed });
+      targetIndex = nextOrder[0];
+    } else if (isFixedWordStudyOrderMode(nextMode, normalizedDifficultyMode)) {
+      const freshOrder = orderStudyWordIndices(baseStudyWordIndices, activeWordPool, {
+        mode: nextMode,
+        difficultyMode: normalizedDifficultyMode,
+        difficultyEnabled,
+        idictation
+      });
+      const nextSnapshotKey = wordStudyOrderSnapshotKey(
+        nextMode,
+        normalizedDifficultyMode
+      );
+      const existingSnapshot = wordOrderSnapshots[nextSnapshotKey];
+      if (existingSnapshot) {
+        const reconciled = reconcileWordStudyOrderSnapshot(
+          existingSnapshot,
+          freshOrder,
+          activeWordPool,
+          { idictation, fallbackOrder: freshOrder }
+        );
+        saveWordOrderSnapshot(nextSnapshotKey, reconciled.snapshot);
+        saveWordOrderCursor(nextSnapshotKey, reconciled.snapshot.cursorKey);
+        targetIndex = reconciled.cursorIndex ?? reconciled.indices[0];
+      } else {
+        const snapshot = createWordStudyOrderSnapshot(freshOrder, activeWordPool, {
+          idictation,
+          cursorIndex: freshOrder[0]
+        });
+        saveWordOrderSnapshot(nextSnapshotKey, snapshot);
+        saveWordOrderCursor(nextSnapshotKey, snapshot.cursorKey);
+        targetIndex = freshOrder[0];
+      }
+      setWordOrderMode(nextMode);
+      setWordDifficultyMode(normalizedDifficultyMode);
+    } else {
+      setWordOrderMode(nextMode);
+      setWordDifficultyMode(normalizedDifficultyMode);
+    }
+
+    if (!Number.isInteger(targetIndex)) return;
+    const sessionState = studySessionRef.current;
+    sessionState.userAdjusted = true;
+    sessionState.restoreTargetIndex = null;
+    sessionState.persistBlocked = false;
+    sessionState.settling = false;
+    latestStateRef.current.index = targetIndex;
+    setIndex(targetIndex);
+    persistWordFlashSessionNow(targetIndex);
+  }, [
+    activeWordPool,
+    baseStudyWordIndices,
+    idictationFlashSourceKey,
+    latestStateRef,
+    persistWordFlashSessionNow,
+    saveWordOrderCursor,
+    saveWordOrderSnapshot,
+    setIndex,
+    setWordDifficultyMode,
+    setWordOrderMode,
+    studySessionRef,
+    wordOrderSnapshots
+  ]);
+  const handleWordOrderModeChange = useCallback(
+    (nextMode) => activateWordOrder(nextMode, wordOrderDifficultyMode),
+    [activateWordOrder, wordOrderDifficultyMode]
+  );
+  const handleWordDifficultyModeChange = useCallback(
+    (nextDifficultyMode) => activateWordOrder(wordOrderMode, nextDifficultyMode),
+    [activateWordOrder, wordOrderMode]
   );
   const studyWords = useMemo(
     () => (isWordFlashActive
@@ -484,6 +635,35 @@ function Home() {
     () => studyWordIndices.indexOf(effectiveIndex),
     [studyWordIndices, effectiveIndex]
   );
+
+  useEffect(() => {
+    if (
+      !activeWordOrderSnapshot
+      || !isFixedWordStudyOrderMode(wordOrderMode, wordOrderDifficultyMode)
+    ) {
+      return;
+    }
+    const currentWord = resolveStudyWordEntry(activeWordPool, effectiveIndex, activeWordByIndex);
+    const nextSnapshot = updateWordStudyOrderSnapshotCursor(
+      activeWordOrderSnapshot,
+      currentWord,
+      effectiveIndex,
+      { idictation: Boolean(idictationFlashSourceKey) }
+    );
+    if (nextSnapshot !== activeWordOrderSnapshot) {
+      saveWordOrderCursor(activeWordOrderSnapshotKey, nextSnapshot.cursorKey);
+    }
+  }, [
+    activeWordByIndex,
+    activeWordOrderSnapshot,
+    activeWordOrderSnapshotKey,
+    activeWordPool,
+    effectiveIndex,
+    idictationFlashSourceKey,
+    saveWordOrderCursor,
+    wordOrderDifficultyMode,
+    wordOrderMode
+  ]);
   const resolvedStudyItem = useMemo(
     () => resolveCurrentStudyItem({
       words,
@@ -496,6 +676,19 @@ function Home() {
   const isIndexInsideStudyQueue = currentStudyPosition >= 0;
   const safeStudyPosition = isIndexInsideStudyQueue ? currentStudyPosition : 0;
   const isStudyEmpty = studyWordIndices.length === 0;
+  const wordOrderDifficultyAvailable = useMemo(
+    () => wordOrderDifficultyEnabled && hasWordStudyInternalDifficulty(
+      baseStudyWordIndices,
+      activeWordPool,
+      { idictation: Boolean(idictationFlashSourceKey) }
+    ),
+    [
+      activeWordPool,
+      baseStudyWordIndices,
+      idictationFlashSourceKey,
+      wordOrderDifficultyEnabled
+    ]
+  );
 
   latestStateRef.current = {
     loading,
@@ -1252,9 +1445,12 @@ function Home() {
             DIFFICULTY_OPTIONS,
             IELTS_USE_OPTIONS,
             IDICTATION_FLASH_FILTERS,
-            wordOrderModes: WORD_STUDY_ORDER_MODES,
             wordOrderMode,
-            setWordOrderMode,
+            wordOrderDifficultyMode,
+            wordOrderDifficultyAvailable,
+            wordOrderDifficultyEnabled,
+            setWordOrderMode: handleWordOrderModeChange,
+            setWordDifficultyMode: handleWordDifficultyModeChange,
             nextWord,
             prevWord,
             toggleFavorite,

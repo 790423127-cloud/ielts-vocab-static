@@ -11,6 +11,7 @@ import {
   IDICTATION_FREQUENCY_META,
   IDICTATION_FREQUENCY_SOURCES
 } from "../../lib/spelling/idictation-frequency.generated.mjs";
+import { wordInternalDifficultyScore } from "../../lib/vocab/word-internal-difficulty.mjs";
 
 function normalizeWord(value) {
   return String(value || "")
@@ -143,6 +144,7 @@ function sanitizeWordItem(item) {
     ieltsUse: Array.isArray(item?.ieltsUse) ? item.ieltsUse : [],
     topics: Array.isArray(item?.topics) ? item.topics : [],
     difficulty: String(item?.difficulty || "").trim(),
+    studyDifficultyScore: wordInternalDifficultyScore(item),
     category: String(item?.category || "IELTS G类").trim(),
     status: String(item?.status || "").trim(),
     favorite: Boolean(item?.favorite),
@@ -270,7 +272,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260730_compact_word_order_v2";
+const STATIC_EXPORT_VERSION = "20260730_internal_difficulty_v5";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -314,8 +316,16 @@ const STATIC_INDEX_HTML = `<!doctype html>
         <select id="orderSelect" class="top-select order-select" title="排列方式" aria-label="单词排列方式">
           <option value="current">现有顺序</option>
           <option value="random">随机</option>
-          <option value="family">词族</option>
+          <option value="family">词族关系</option>
           <option value="association">场景关联</option>
+        </select>
+        <select id="difficultyOrderSelect" class="top-select relation-order-select" title="入口内部难度" aria-label="入口内部难度">
+          <option value="default">难度默认</option>
+          <option value="easy-to-hard">简单→困难</option>
+          <option value="hard-to-easy">困难→简单</option>
+          <option value="easier-only">只刷相对较易</option>
+          <option value="standard-only">只刷常规</option>
+          <option value="harder-only">只刷相对较难</option>
         </select>
         <button id="meaningVisibilityBtn" class="top-btn" type="button">隐藏释义</button>
         <button id="entryBtn" class="top-btn">入口</button>
@@ -712,6 +722,7 @@ const AUDIO_CACHE_NAME="static_vocab_audio_"+APP_VERSION;
 const CLOUDBASE_SYNC_CODE_KEY="static_vocab_cloudbase_sync_code_v1";
 const TOP_TOOLS_PREF_PREFIX="static_vocab_top_tools_collapsed_v1_";
 const WORD_ORDER_KEY="ielts_vocab_word_order_modes_v1";
+const WORD_ORDER_CURSOR_KEY="ielts_vocab_word_order_cursors_v1";
 const MEANING_VISIBILITY_KEY="ielts_vocab_hide_meanings_v1";
 const CLOUDBASE_SDK_URLS=[
   // CloudBase JS SDK 2.x：旧版 1.x 会触发 ACCESS_TOKEN_DISABLED。
@@ -772,6 +783,7 @@ const els={
   toast:document.getElementById("toast"),
   filterSelect:document.getElementById("filterSelect"),
   orderSelect:document.getElementById("orderSelect"),
+  difficultyOrderSelect:document.getElementById("difficultyOrderSelect"),
   meaningVisibilityBtn:document.getElementById("meaningVisibilityBtn"),
   mobileModeBtn:document.getElementById("mobileModeBtn"),
   swipeArea:document.getElementById("swipeArea"),
@@ -814,6 +826,47 @@ function norm(v){return String(v||"").trim().toLowerCase().replace(/\\s+/g," ")}
 function arr(v){return Array.isArray(v)?v:[]}
 function uniq(values){return Array.from(new Set(values.map(x=>String(x||"").trim()).filter(Boolean)))}
 function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+const FIXED_WORD_ORDER_MODES=["family","association"];
+const WORD_DIFFICULTY_MODES=["default","easy-to-hard","hard-to-easy","easier-only","standard-only","harder-only"];
+function normalizeWordOrderMode(mode){return ["current","random","family","association"].includes(mode)?mode:"current"}
+function normalizeDifficultyMode(mode){return WORD_DIFFICULTY_MODES.includes(mode)?mode:"default"}
+function wordOrderSnapshotKey(mode,difficultyMode){return normalizeWordOrderMode(mode)+"|"+normalizeDifficultyMode(difficultyMode)}
+function isFixedWordOrderMode(mode,difficultyMode){return FIXED_WORD_ORDER_MODES.includes(mode)||normalizeDifficultyMode(difficultyMode)!=="default"}
+function difficultyScore(word){
+  const explicit=Number(word&&word.studyDifficultyScore);
+  if(Number.isFinite(explicit))return Math.max(0,Math.min(100,Math.round(explicit)));
+  const key=norm(word&&word.word);
+  const letters=key.replace(/[^a-z]/g,"");
+  const syllables=Math.max(1,(letters.replace(/e$/,"").match(/[aeiouy]+/g)||[]).length);
+  const posParts=String(word&&word.pos||"").split(/[/,;|]+|\\s+or\\s+/i).filter(Boolean).length||1;
+  const meaningParts=String(word&&word.meaning||"").split(/[;；,，、/]+/).filter(Boolean).length||1;
+  let score=31+Math.max(0,Math.min(13,(letters.length-4)*1.3));
+  score+=Math.max(0,Math.min(9,(syllables-1)*2.25));
+  score+=Math.max(0,Math.min(6,(posParts-1)*2));
+  score+=Math.max(0,Math.min(7,(meaningParts-1)*1.4));
+  if(/[\\s-]/.test(key))score+=4;
+  if(arr(word&&word.wordFamily).length)score-=3;
+  return Math.max(0,Math.min(100,Math.round(score)));
+}
+function difficultyProfile(source){
+  const scores=source.map(difficultyScore).sort(function(a,b){return a-b});
+  const at=function(ratio){return scores[Math.max(0,Math.min(scores.length-1,Math.floor((scores.length-1)*ratio)))]||0};
+  return {available:scores.length>=6&&new Set(scores).size>=3,easierMax:at(.3),harderMin:at(.7)};
+}
+function difficultyTier(word,profile){
+  if(!profile.available)return "standard";
+  const score=difficultyScore(word);
+  if(score<=profile.easierMax)return "easier";
+  if(score>=profile.harderMin)return "harder";
+  return "standard";
+}
+function requestedDifficultyTier(mode){
+  if(mode==="easier-only")return "easier";
+  if(mode==="standard-only")return "standard";
+  if(mode==="harder-only")return "harder";
+  return "";
+}
+function difficultyDirection(mode){return mode==="easy-to-hard"?1:mode==="hard-to-easy"?-1:0}
 
 function readWordOrderPreferences(){
   try{
@@ -822,20 +875,98 @@ function readWordOrderPreferences(){
   }catch(e){return {}}
 }
 
-function wordOrderPreference(activeFilter){
-  const saved=readWordOrderPreferences()[activeFilter||filter]||{};
-  const mode=["current","random","family","association"].includes(saved.mode)?saved.mode:"current";
-  return {mode:mode,seed:Number(saved.seed)||0};
+function readWordOrderCursors(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(WORD_ORDER_CURSOR_KEY)||"{}");
+    return parsed&&typeof parsed==="object"?parsed:{};
+  }catch(e){return {}}
 }
 
-function saveWordOrderPreference(activeFilter,mode){
+function wordOrderPreference(activeFilter){
+  const activeKey=activeFilter||filter;
+  const saved=readWordOrderPreferences()[activeKey]||{};
+  const legacyDifficulty=saved.mode==="easy-to-hard"?"easy-to-hard":saved.mode==="hard-to-easy"?"hard-to-easy":"default";
+  const mode=normalizeWordOrderMode(saved.mode);
+  const difficultyMode=normalizeDifficultyMode(saved.difficultyMode||legacyDifficulty);
+  const storedSnapshots=saved.snapshots&&typeof saved.snapshots==="object"?saved.snapshots:{};
+  const cursorEntry=readWordOrderCursors()[activeKey]||{};
+  const snapshots={};
+  Object.keys(storedSnapshots).forEach(function(snapshotMode){
+    snapshots[snapshotMode]={
+      ...storedSnapshots[snapshotMode],
+      cursorKey:cursorEntry[snapshotMode]||storedSnapshots[snapshotMode].cursorKey||""
+    };
+  });
+  return {mode:mode,difficultyMode:difficultyMode,seed:Number(saved.seed)||0,snapshots:snapshots};
+}
+
+function saveWordOrderPreference(activeFilter,mode,difficultyMode,options){
+  const opts=options||{};
   const prefs=readWordOrderPreferences();
   const previous=prefs[activeFilter]||{};
   prefs[activeFilter]={
-    mode:["current","random","family","association"].includes(mode)?mode:"current",
-    seed:mode==="random"?Date.now():(Number(previous.seed)||0)
+    ...previous,
+    mode:normalizeWordOrderMode(mode),
+    difficultyMode:normalizeDifficultyMode(difficultyMode),
+    seed:mode==="random"?(Number(opts.seed)||Date.now()):(Number(previous.seed)||0)
   };
   try{localStorage.setItem(WORD_ORDER_KEY,JSON.stringify(prefs))}catch(e){}
+}
+
+function saveWordOrderSnapshot(activeFilter,snapshotKey,snapshot){
+  if(!snapshotKey)return;
+  const prefs=readWordOrderPreferences();
+  const previous=prefs[activeFilter]||{};
+  prefs[activeFilter]={
+    ...previous,
+    snapshots:{...(previous.snapshots||{}),[snapshotKey]:snapshot}
+  };
+  try{localStorage.setItem(WORD_ORDER_KEY,JSON.stringify(prefs))}catch(e){}
+  saveWordOrderCursor(activeFilter,snapshotKey,snapshot&&snapshot.cursorKey);
+}
+
+function saveWordOrderCursor(activeFilter,snapshotKey,cursorKey){
+  if(!cursorKey||!snapshotKey)return;
+  const cursors=readWordOrderCursors();
+  const previous=cursors[activeFilter]||{};
+  if(previous[snapshotKey]===cursorKey)return;
+  cursors[activeFilter]={...previous,[snapshotKey]:cursorKey};
+  try{localStorage.setItem(WORD_ORDER_CURSOR_KEY,JSON.stringify(cursors))}catch(e){}
+}
+
+function wordOrderEntryKey(word){
+  const stableId=word&&(word.wordId??word.id??word.inputId);
+  if(String(stableId||"").trim())return "id:"+String(stableId).trim();
+  return "word:"+norm(word&&word.word);
+}
+
+function createWordOrderSnapshot(ordered,cursorIndex){
+  const keys=[];
+  const seen=new Set();
+  ordered.forEach(function(word){
+    const key=wordOrderEntryKey(word);
+    if(key&&!seen.has(key)){seen.add(key);keys.push(key)}
+  });
+  const cursor=ordered.find(function(word){return word.originalIndex===cursorIndex});
+  const cursorKey=cursor?wordOrderEntryKey(cursor):(keys[0]||"");
+  return {version:1,keys:keys,cursorKey:keys.includes(cursorKey)?cursorKey:(keys[0]||"")};
+}
+
+function reconcileWordOrderSnapshot(snapshot,source,fallback){
+  const byKey=new Map();
+  source.forEach(function(word){const key=wordOrderEntryKey(word);if(key&&!byKey.has(key))byKey.set(key,word)});
+  const keys=[];
+  const seen=new Set();
+  function append(key){if(key&&!seen.has(key)&&byKey.has(key)){seen.add(key);keys.push(key)}}
+  arr(snapshot&&snapshot.keys).forEach(append);
+  (fallback||source).forEach(function(word){append(wordOrderEntryKey(word))});
+  const requested=String(snapshot&&snapshot.cursorKey||"");
+  const cursorKey=keys.includes(requested)?requested:(keys[0]||"");
+  return {
+    items:keys.map(function(key){return byKey.get(key)}),
+    cursorIndex:byKey.has(cursorKey)?byKey.get(cursorKey).originalIndex:null,
+    snapshot:{version:1,keys:keys,cursorKey:cursorKey}
+  };
 }
 
 function relationWord(value){
@@ -882,65 +1013,181 @@ function familyLinks(word){
   return relationKeys(word.wordFamily).concat([word.familyRoot,word.rootWord,word.baseWord,word.lemma].map(norm).filter(Boolean));
 }
 
-function associationLinks(word){
-  let links=relationKeys(word.synonyms).concat(relationKeys(word.relatedWords),relationKeys(word.associations));
-  const ownTokens=phraseTokens(word.word);
-  if(ownTokens.length>1)links=links.concat(ownTokens);
-  arr(word.collocations).concat(arr(word.phraseCollocations)).forEach(function(item){links=links.concat(phraseTokens(item))});
-  return uniq(links);
+function explicitAssociationLinks(word){
+  return relationKeys(word.synonyms).concat(relationKeys(word.relatedWords),relationKeys(word.associations));
+}
+
+const ASSOCIATION_TOKEN_STOP={a:1,an:1,and:1,as:1,at:1,be:1,by:1,for:1,from:1,in:1,into:1,of:1,on:1,or:1,the:1,to:1,with:1,about:1,after:1,before:1,during:1,related:1,service:1,services:1,someone:1,something:1,system:1,systems:1,thing:1,things:1,people:1,person:1,use:1,used:1,using:1,work:1,working:1};
+
+function englishTokens(value){
+  return norm(value).split(/[^a-z0-9']+/i).map(norm).filter(function(token){return token.length>2&&!ASSOCIATION_TOKEN_STOP[token]});
+}
+
+function associationTokens(word){
+  let tokens=englishTokens(word.word).concat(englishTokens(word.definition),englishTokens(word.meaningEn));
+  arr(word.collocations).concat(arr(word.phraseCollocations)).forEach(function(item){
+    tokens=tokens.concat(phraseTokens(item).filter(function(token){return !ASSOCIATION_TOKEN_STOP[token]}));
+  });
+  return uniq(tokens);
 }
 
 const SCENE_RULES=[
-  ["求职招聘",/求职|招聘|职位|职业|雇佣|工资|薪水|面试|job|career|employ|recruit|vacancy|salary|interview/i],
-  ["邮寄通信",/邮寄|邮件|信件|包裹|邮资|通信|mail|airmail|postage|parcel|letter|delivery/i],
-  ["机场出行",/机场|航班|登机|行李|护照|海关|旅行|旅游|交通|airport|flight|boarding|luggage|passport|customs|travel|transport/i],
-  ["医疗健康",/医疗|健康|医院|疾病|症状|诊断|治疗|康复|medicine|medical|health|hospital|symptom|diagnosis|treatment|recover/i],
-  ["住房生活",/住房|房屋|租房|房租|公寓|家具|家务|housing|house|rent|apartment|furniture|household/i],
-  ["教育考试",/教育|学校|课程|课堂|学习|考试|入学|奖学金|education|school|course|class|exam|admission|scholarship/i],
-  ["购物消费",/购物|消费|商店|价格|付款|退款|折扣|shopping|consumer|store|price|payment|refund|discount/i],
-  ["餐饮食物",/餐饮|食物|食品|餐厅|烹饪|饮料|food|restaurant|cook|meal|drink/i],
-  ["环境气候",/环境|气候|污染|能源|回收|生态|environment|climate|pollution|energy|recycle|ecology/i],
-  ["科技媒体",/科技|技术|软件|网络|媒体|互联网|technology|software|network|media|internet/i],
-  ["法律安全",/法律|犯罪|警察|安全|法庭|law|crime|police|security|court/i],
-  ["社区服务",/社区|公共服务|政府|市政|设施|community|public service|government|facility/i],
-  ["人际社交",/家庭|朋友|关系|社交|交流|family|friend|relationship|social|communication/i]
+  ["求职招聘",/求职|招聘|职业|雇佣|工资|薪水|面试|简历|job (?:vacancy|position)|career|employ|recruit|vacancy|salary|interview|resume|occupation/i,/求职|招聘|employment/i],
+  ["办公管理",/办公室|公司|部门|经理|管理|会议|合同|截止日期|office|company|department|manager|management|meeting|contract|deadline|staff/i,/办公|商业|管理|business/i],
+  ["银行支付",/银行|存款|贷款|现金|付款|支付|账户|押金|费用|预算|价格|bank|deposit|loan|cash|payment|account|fee|budget|price|dollar|card/i,/支付|消费|经济|finance|shopping/i],
+  ["邮寄通信",/邮寄|邮件|信件|包裹|邮资|通信|快递|mail|airmail|postage|parcel|letter|delivery|courier/i,/邮寄|通信|公共服务|communication/i],
+  ["机场航班",/机场|航班|登机|行李|护照|海关|航空|airport|flight|boarding|luggage|passport|customs|airline|departure|arrival gate/i,/航空|机场|旅行|交通|travel/i],
+  ["铁路交通",/铁路|火车|车站|站台|公交|地铁|交通|railway|train|station|platform|bus|subway|transport/i,/交通|铁路/i],
+  ["旅行住宿",/旅行|旅游|酒店|宾馆|预订|住宿|景点|travel|tour|hotel|hostel|booking|reservation|accommodation|tourist/i,/旅行|住宿|travel/i],
+  ["住房租赁",/住房|房屋|租房|房租|公寓|家具|家务|房东|房客|housing|house|rent|apartment|furniture|household|landlord|tenant/i,/住房|家庭|生活|housing/i],
+  ["购物售后",/购物|商店|商品|退款|折扣|收据|顾客|shopping|shop|store|refund|discount|receipt|customer|purchase/i,/购物|消费|shopping/i],
+  ["餐饮食物",/餐饮|食物|食品|餐厅|烹饪|饮料|菜单|food|restaurant|cook|meal|drink|menu|recipe/i,/餐饮|食物|消费|food/i],
+  ["医疗就诊",/医疗|医院|疾病|症状|诊断|治疗|药物|手术|hospital|disease|illness|symptom|diagnosis|treatment|medicine|surgery|clinical/i,/健康|医疗|health/i],
+  ["健康生活",/健康|锻炼|运动|营养|休息|康复|health|exercise|fitness|nutrition|rest|recover|wellbeing/i,/健康|健身|health/i],
+  ["校园课程",/学校|校园|课程|课堂|老师|学生|讲座|school|campus|course|class|teacher|student|lecture|tuition/i,/学校|教育|education/i],
+  ["考试学习",/学习|考试|测验|作业|入学|奖学金|study|learn|exam|test|assignment|admission|scholarship|qualification/i,/教育|考试|education/i],
+  ["环境污染",/环境|污染|垃圾|回收|生态|碳|塑料|environment|pollution|waste|recycle|ecology|carbon|plastic/i,/环境|environment/i],
+  ["能源气候",/气候|能源|温度|天气|排放|全球变暖|climate|energy|temperature|weather|emission|global warming/i,/环境|科技|environment/i],
+  ["科技网络",/科技|技术|软件|网络|媒体|互联网|设备|technology|software|network|media|internet|device|digital|computer|online/i,/科技|technology/i],
+  ["科研数据",/研究|实验|数据|证据|分析|调查|样本|research|experiment|data|evidence|analysis|survey|sample|laboratory/i,/科学|研究|science/i],
+  ["政府法律",/政府|法律|犯罪|警察|安全|法庭|政策|选举|government|law|crime|police|security|court|policy|election|politician/i,/政府|法律|社会|government|law/i],
+  ["社区服务",/社区|公共服务|市政|设施|图书馆|居民|community|public service|municipal|facility|library|resident/i,/社区|公共服务|community/i],
+  ["家庭人际",/家庭|朋友|关系|婚姻|父母|孩子|社交|family|friend|relationship|marriage|parent|child|social/i,/家庭|人际|family/i],
+  ["文化活动",/文化|历史|艺术|音乐|电影|活动|典礼|culture|history|art|music|film|event|ceremony|festival/i,/文化|历史|社会|culture/i],
+  ["农业自然",/农业|农场|植物|动物|森林|海洋|土壤|agriculture|farm|plant|animal|forest|marine|soil|wildlife/i,/环境|农业|自然|environment/i]
 ];
 
 function sceneForWord(word){
-  const text=[word.word,word.meaning,word.category].concat(arr(word.topics),arr(word.collocations).map(phraseText),arr(word.phraseCollocations).map(phraseText)).filter(Boolean).join(" ");
-  const matched=SCENE_RULES.find(function(rule){return rule[1].test(text)});
-  return matched?matched[0]:"";
+  const content=[word.word,word.meaning,word.category].concat(arr(word.collocations).map(phraseText),arr(word.phraseCollocations).map(phraseText)).filter(Boolean).join(" ");
+  const topics=arr(word.topics).join(" ");
+  let best="",bestScore=0;
+  SCENE_RULES.forEach(function(rule){
+    const score=(rule[1].test(content)?4:0)+(rule[2].test(topics)?2:0);
+    if(score>bestScore){best=rule[0];bestScore=score}
+  });
+  return best;
 }
 
-function orderStudyList(source,activeFilter){
+function orderSceneWords(source){
+  if(source.length<2)return source;
+  const profiles=source.map(function(word,position){return {word:word,position:position,key:norm(word.word),links:explicitAssociationLinks(word),tokens:associationTokens(word)}});
+  const positionByKey=new Map(profiles.map(function(profile){return [profile.key,profile.position]}));
+  const tokenPositions=new Map();
+  profiles.forEach(function(profile){profile.tokens.forEach(function(token){if(!tokenPositions.has(token))tokenPositions.set(token,[]);tokenPositions.get(token).push(profile.position)})});
+  const remaining=new Set(profiles.map(function(profile){return profile.position}));
+  const ordered=[];
+  let currentPosition=0;
+  while(remaining.size){
+    if(!remaining.has(currentPosition))currentPosition=Math.min.apply(null,Array.from(remaining));
+    const current=profiles[currentPosition];
+    ordered.push(current.word);
+    remaining.delete(currentPosition);
+    if(!remaining.size)break;
+    const scores=new Map();
+    current.links.forEach(function(key){const candidate=positionByKey.get(key);if(remaining.has(candidate))scores.set(candidate,1000)});
+    current.tokens.forEach(function(token){
+      const positions=tokenPositions.get(token)||[];
+      if(positions.length>80)return;
+      const weight=Math.max(12,72-positions.length);
+      positions.forEach(function(candidate){
+        if(!remaining.has(candidate))return;
+        const profile=profiles[candidate];
+        const bonus=profile.key===token||current.key===token?90:0;
+        scores.set(candidate,(scores.get(candidate)||0)+weight+bonus);
+      });
+    });
+    const strongest=Array.from(scores.entries()).filter(function(item){return item[1]>=32}).sort(function(a,b){return b[1]-a[1]||profiles[a[0]].word.originalIndex-profiles[b[0]].word.originalIndex})[0];
+    currentPosition=strongest?strongest[0]:Math.min.apply(null,Array.from(remaining));
+  }
+  return ordered;
+}
+
+function generateStudyList(source,pref){
   const ordered=source.slice();
-  const pref=wordOrderPreference(activeFilter);
-  if(pref.mode==="current"||ordered.length<2)return ordered;
+  if(ordered.length<2)return ordered;
   if(pref.mode==="random"){
     return ordered.sort(function(a,b){
       return deterministicHash(pref.seed+":"+norm(a.word)+":"+a.originalIndex)-deterministicHash(pref.seed+":"+norm(b.word)+":"+b.originalIndex);
     });
   }
+  const profile=difficultyProfile(ordered);
+  const requestedTier=requestedDifficultyTier(pref.difficultyMode);
+  const eligible=requestedTier&&profile.available
+    ?ordered.filter(function(word){return difficultyTier(word,profile)===requestedTier})
+    :ordered;
+  if(!eligible.length)return [];
+  let groups=[];
   if(pref.mode==="family"){
-    return connectedGroups(ordered,familyLinks).map(function(group){
-      return group.sort(function(a,b){return norm(a.word).split(" ").length-norm(b.word).split(" ").length||norm(a.word).length-norm(b.word).length||a.originalIndex-b.originalIndex});
-    }).sort(function(a,b){return a[0].originalIndex-b[0].originalIndex}).flat();
+    groups=connectedGroups(eligible,familyLinks).map(function(group){
+      const incoming=new Map();
+      group.forEach(function(word){familyLinks(word).forEach(function(key){incoming.set(key,(incoming.get(key)||0)+1)})});
+      return group.sort(function(a,b){
+        const ak=norm(a.word),bk=norm(b.word);
+        const as=familyLinks(a).length*8+(incoming.get(ak)||0)*3;
+        const bs=familyLinks(b).length*8+(incoming.get(bk)||0)*3;
+        return bs-as||ak.split(" ").length-bk.split(" ").length||ak.length-bk.length||a.originalIndex-b.originalIndex;
+      });
+    });
+  }else if(pref.mode==="association"){
+    const sceneBuckets=new Map();
+    const standalone=[];
+    connectedGroups(eligible,explicitAssociationLinks).forEach(function(group){
+      const scene=group.map(sceneForWord).find(Boolean)||"";
+      if(!scene){group.forEach(function(word){standalone.push([word])});return}
+      if(!sceneBuckets.has(scene))sceneBuckets.set(scene,[]);
+      sceneBuckets.get(scene).push.apply(sceneBuckets.get(scene),group);
+    });
+    groups=Array.from(sceneBuckets.values()).map(orderSceneWords).concat(standalone);
+  }else{
+    groups=eligible.map(function(word){return [word]});
   }
-  const components=connectedGroups(ordered,associationLinks);
-  const sceneBuckets=new Map();
-  const standalone=[];
-  components.forEach(function(group){
-    const scene=group.map(sceneForWord).find(Boolean)||"";
-    if(!scene){standalone.push(group);return}
-    if(!sceneBuckets.has(scene))sceneBuckets.set(scene,[]);
-    sceneBuckets.get(scene).push(group);
-  });
-  const grouped=[];
-  sceneBuckets.forEach(function(groups){
-    const flat=groups.flat().sort(function(a,b){return a.originalIndex-b.originalIndex});
-    for(let i=0;i<flat.length;i+=8)grouped.push(flat.slice(i,i+8));
-  });
-  return grouped.concat(standalone).sort(function(a,b){return a[0].originalIndex-b[0].originalIndex}).flat();
+  const direction=difficultyDirection(pref.difficultyMode);
+  if(direction){
+    groups=groups.map(function(group){
+      return group.slice().sort(function(a,b){
+        return (difficultyScore(a)-difficultyScore(b))*direction||a.originalIndex-b.originalIndex;
+      });
+    }).sort(function(a,b){
+      function median(group){
+        const scores=group.map(difficultyScore).sort(function(x,y){return x-y});
+        const middle=Math.floor(scores.length/2);
+        return scores.length%2?scores[middle]:(scores[middle-1]+scores[middle])/2;
+      }
+      return (median(a)-median(b))*direction
+        ||Math.min.apply(null,a.map(function(word){return word.originalIndex}))
+          -Math.min.apply(null,b.map(function(word){return word.originalIndex}));
+    });
+  }else{
+    groups.sort(function(a,b){
+      return Math.min.apply(null,a.map(function(word){return word.originalIndex}))
+        -Math.min.apply(null,b.map(function(word){return word.originalIndex}));
+    });
+  }
+  return groups.flat();
+}
+
+function orderStudyList(source,activeFilter){
+  const pref=wordOrderPreference(activeFilter);
+  const fresh=generateStudyList(source,pref);
+  const snapshotKey=wordOrderSnapshotKey(pref.mode,pref.difficultyMode);
+  if(!isFixedWordOrderMode(pref.mode,pref.difficultyMode)||!pref.snapshots[snapshotKey])return fresh;
+  return reconcileWordOrderSnapshot(pref.snapshots[snapshotKey],fresh,fresh).items;
+}
+
+function syncWordOrderControls(){
+  const pref=wordOrderPreference(filter);
+  if(els.orderSelect){
+    els.orderSelect.value=pref.mode;
+    const currentOption=els.orderSelect.querySelector('option[value="current"]');
+    if(currentOption)currentOption.textContent=isFixedWordOrderMode(pref.mode,pref.difficultyMode)?"切回现有顺序":"现有顺序";
+  }
+  if(els.difficultyOrderSelect){
+    const excluded=isIdictationFilter(filter);
+    const available=difficultyProfile(sourceList(filter)).available;
+    els.difficultyOrderSelect.hidden=excluded;
+    els.difficultyOrderSelect.disabled=excluded||pref.mode==="random"||!available;
+    els.difficultyOrderSelect.value=excluded?"default":pref.difficultyMode;
+  }
 }
 
 function meaningsHidden(){
@@ -1087,16 +1334,16 @@ async function ensureIdictationPayload(){
 }
 
 const ENTRY_GROUPS=[
-  {title:"爱听写独立入口",highlight:true,items:[
-    {title:"爱听写听力",desc:"按听力答案词和出现频率整理的独立刷词入口。",filter:"idictation:listening"},
-    {title:"爱听写阅读",desc:"按阅读高频答案词和出现频率整理的独立刷词入口。",filter:"idictation:reading"}
-  ]},
-  {title:"今天优先",items:[
-    {title:"今日任务",desc:"快速扫待学词 + 复习不熟词。",filter:"all"},
+  {title:"今日学习",items:[
+    {title:"待学词浏览",desc:"从全部可刷词中排除已认识词和专项参考词。",filter:"all"},
     {title:"不熟词",desc:"所有标记不熟的词，优先复习。",filter:"unfamiliar"},
     {title:"收藏词",desc:"写作、口语、书信可直接用的重点词。",filter:"favorite"}
   ]},
-  {title:"IELTS G 类用途",items:[
+  {title:"保留专项词库",highlight:true,items:[
+    {title:"爱听写听力",desc:"按听力答案词和出现频率整理的独立刷词入口。",filter:"idictation:listening"},
+    {title:"爱听写阅读",desc:"按阅读高频答案词和出现频率整理的独立刷词入口。",filter:"idictation:reading"}
+  ]},
+  {title:"按使用场景",items:[
     {title:"G类书信",desc:"投诉、申请、预约、感谢、道歉、解释。",filter:"ielts:G类书信"},
     {title:"Listening",desc:"听力生活场景词，优先听音频反应。",filter:"ielts:Listening"},
     {title:"Speaking",desc:"口语可用表达，适合造句。",filter:"ielts:Speaking"},
@@ -1104,11 +1351,12 @@ const ENTRY_GROUPS=[
     {title:"Task 2",desc:"社会、教育、环境、科技观点词。",filter:"ielts:Task 2"},
     {title:"生活/工作高频",desc:"住房、交通、健康、消费、工作。",filter:"life-work"}
   ]},
-  {title:"难度层级",items:[
-    {title:"基础必会",desc:"必须快速认出，适合每天扫。",filter:"difficulty:基础高频"},
-    {title:"核心高频",desc:"雅思主力词，优先变熟悉。",filter:"difficulty:中级核心"},
-    {title:"高级认识",desc:"认识即可，不要花太久。",filter:"difficulty:高级加分"},
-    {title:"全部单词",desc:"总仓库，包含熟悉词。",filter:"everything"}
+  {title:"主词库学习层级",items:[
+    {title:"基础必会",desc:"进入后仍可按本入口的相对难度细分。",filter:"difficulty:基础高频"},
+    {title:"核心高频",desc:"进入后可先学相对较易或相对较难部分。",filter:"difficulty:中级核心"},
+    {title:"高级认识",desc:"低频但有价值的扩展词，以识别为主。",filter:"difficulty:高级加分"},
+    {title:"专业参考",desc:"专业词、专名和低频词，只需结合语境识别。",filter:"difficulty:低频认识即可"},
+    {title:"全部可刷词",desc:"全部独立学习卡，包含熟悉词。",filter:"everything"}
   ]}
 ];
 
@@ -1124,11 +1372,15 @@ function poolForFilter(activeFilter){
   return words;
 }
 
-function list(activeFilter){
+function sourceList(activeFilter){
   const f=activeFilter||filter;
   const pool=poolForFilter(f);
-  const filtered=pool.map(function(w,i){return Object.assign({},w,{originalIndex:i})}).filter(function(w){return passFilterWith(f,w)});
-  return orderStudyList(filtered,f);
+  return pool.map(function(w,i){return Object.assign({},w,{originalIndex:i})}).filter(function(w){return passFilterWith(f,w)});
+}
+
+function list(activeFilter){
+  const f=activeFilter||filter;
+  return orderStudyList(sourceList(f),f);
 }
 
 function resolveIndexForFilter(activeFilter,options){
@@ -1172,7 +1424,7 @@ function switchFilter(nextFilter){
   rememberPositionForCurrentFilter();
   filter=nextFilter||"all";
   progress.filter=filter;
-  if(els.orderSelect)els.orderSelect.value=wordOrderPreference(filter).mode;
+  syncWordOrderControls();
   applyIndexForFilter(filter);
   render();
   persistNow();
@@ -1464,6 +1716,15 @@ function persistNow(){
       progress.currentWord=w.word||progress.currentWord||"";
       progress.currentWordUpdatedAt=Date.now();
       rememberPositionForCurrentFilter();
+      const pref=wordOrderPreference(filter);
+      const snapshotKey=wordOrderSnapshotKey(pref.mode,pref.difficultyMode);
+      const snapshot=pref.snapshots[snapshotKey];
+      if(isFixedWordOrderMode(pref.mode,pref.difficultyMode)&&snapshot){
+        const cursorKey=wordOrderEntryKey(w);
+        if(arr(snapshot.keys).includes(cursorKey)&&snapshot.cursorKey!==cursorKey){
+          saveWordOrderCursor(filter,snapshotKey,cursorKey);
+        }
+      }
     }
     progress.filter=filter;
     progress.mobileMode=mobileMode;
@@ -1841,7 +2102,7 @@ function updateStatusCounts(){
 function render(){
   updateStatusCounts();
   renderEntryList();
-  if(els.orderSelect) els.orderSelect.value=wordOrderPreference(filter).mode;
+  syncWordOrderControls();
   updateMeaningVisibilityButton();
   const l=list();
   const w=current();
@@ -2458,17 +2719,45 @@ if(els.topToolsToggle) els.topToolsToggle.onclick=function(){
   localStorage.setItem(TOP_TOOLS_PREF_PREFIX+topToolsViewportKey(),topToolsCollapsed?"1":"0");
   applyTopToolsState();
 };
-if(els.orderSelect) els.orderSelect.onchange=function(e){
+function changeWordOrderCombination(nextMode,nextDifficultyMode,label){
   restoreFocusWord="";
   const currentWord=currentRaw();
-  saveWordOrderPreference(filter,e.target.value);
-  if(currentWord){
-    const next=list();
-    const matched=next.find(function(item){return norm(item.word)===norm(currentWord.word)});
-    if(matched)index=matched.originalIndex;
+  const source=sourceList(filter);
+  const previous=wordOrderPreference(filter);
+  nextMode=normalizeWordOrderMode(nextMode);
+  nextDifficultyMode=isIdictationFilter(filter)?"default":normalizeDifficultyMode(nextDifficultyMode);
+  if(nextMode==="random"){
+    const seed=Date.now();
+    saveWordOrderPreference(filter,nextMode,nextDifficultyMode,{seed:seed});
+    const next=generateStudyList(source,{mode:nextMode,difficultyMode:"default",seed:seed,snapshots:{}});
+    if(next.length)index=next[0].originalIndex;
+  }else if(isFixedWordOrderMode(nextMode,nextDifficultyMode)){
+    const snapshotKey=wordOrderSnapshotKey(nextMode,nextDifficultyMode);
+    const fresh=generateStudyList(source,{mode:nextMode,difficultyMode:nextDifficultyMode,seed:0,snapshots:previous.snapshots});
+    const existing=previous.snapshots[snapshotKey];
+    const resolved=existing
+      ?reconcileWordOrderSnapshot(existing,fresh,fresh)
+      :{items:fresh,cursorIndex:fresh[0]?.originalIndex,snapshot:createWordOrderSnapshot(fresh,fresh[0]?.originalIndex)};
+    saveWordOrderSnapshot(filter,snapshotKey,resolved.snapshot);
+    saveWordOrderPreference(filter,nextMode,nextDifficultyMode);
+    if(Number.isInteger(resolved.cursorIndex))index=resolved.cursorIndex;
+  }else{
+    saveWordOrderPreference(filter,nextMode,nextDifficultyMode);
+    if(currentWord){
+      const matched=source.find(function(item){return norm(item.word)===norm(currentWord.word)});
+      if(matched)index=matched.originalIndex;
+    }
   }
   render();
-  toast("已切换为"+e.target.options[e.target.selectedIndex].text);
+  toast("已切换为"+label);
+}
+if(els.orderSelect) els.orderSelect.onchange=function(e){
+  const pref=wordOrderPreference(filter);
+  changeWordOrderCombination(e.target.value,pref.difficultyMode,e.target.options[e.target.selectedIndex].text);
+};
+if(els.difficultyOrderSelect) els.difficultyOrderSelect.onchange=function(e){
+  const pref=wordOrderPreference(filter);
+  changeWordOrderCombination(pref.mode,e.target.value,e.target.options[e.target.selectedIndex].text);
 };
 if(els.meaningVisibilityBtn) els.meaningVisibilityBtn.onclick=function(){
   setMeaningsHidden(!meaningsHidden());

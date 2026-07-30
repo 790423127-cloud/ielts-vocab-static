@@ -20,6 +20,8 @@ import {
 import WordStudyActions from "../components/WordStudyActions.jsx";
 import WordStudyContent from "../components/WordStudyContent.jsx";
 import StudyMeaningToggle from "../components/StudyMeaningToggle.jsx";
+import WordStudyOrderControls from "../components/WordStudyOrderControls.jsx";
+import { useOrderedStudyRows } from "../hooks/useOrderedStudyRows.js";
 import {
   applyMainEntryToReadingWord,
   backfillReadingWordsIntoMain,
@@ -344,14 +346,54 @@ export default function ReadingWordsPage() {
     });
   }, [words]);
 
-  const visibleWords = useMemo(
-    () => words.filter((word) => (
-      wordMatchesSearch(word, search) &&
+  const readingOrderPool = useMemo(() => {
+    const mainAvailable = mainLexiconStatus.status === "ready" && mainLexiconStatus.count > 0;
+    const mainIndex = mainLexiconRef.current.index;
+    return words.map((word) => {
+      const mainEntry = mainAvailable
+        ? mainIndex.get(normalizeReadingWordKey(word.word))?.entry
+        : null;
+      return {
+        ...(mainEntry || {}),
+        ...word,
+        difficulty: mainEntry?.difficulty || word.difficulty || ""
+      };
+    });
+  }, [mainLexiconStatus.count, mainLexiconStatus.status, words]);
+  const baseVisibleRows = useMemo(
+    () => readingOrderPool
+      .map((word, originalIndex) => ({ entry: word, originalIndex }))
+      .filter(({ entry: word }) => (
       (!onlyIncomplete || isReadingWordIncomplete(word)) &&
       (!onlyFrequent || word.highFrequency === true || Number(word.importCount) >= 2)
     )),
-    [onlyFrequent, onlyIncomplete, search, words]
+    [onlyFrequent, onlyIncomplete, readingOrderPool]
   );
+  const selectedPoolIndex = words.findIndex((word) => word.id === selectedId);
+  const wordOrdering = useOrderedStudyRows({
+    orderKey: `reading-words:${onlyIncomplete ? "incomplete" : "all"}:${onlyFrequent ? "frequent" : "all"}`,
+    rows: baseVisibleRows,
+    pool: readingOrderPool,
+    currentIndex: selectedPoolIndex
+  });
+  const visibleWords = useMemo(
+    () => wordOrdering.rows
+      .map((row) => words[row.originalIndex])
+      .filter((word) => word && wordMatchesSearch(word, search)),
+    [search, wordOrdering.rows, words]
+  );
+  const changeWordOrderMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeMode(nextMode);
+    if (Number.isInteger(nextIndex) && words[nextIndex]) {
+      setSelectedId(words[nextIndex].id);
+    }
+  }, [wordOrdering, words]);
+  const changeWordDifficultyMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeDifficultyMode(nextMode);
+    if (Number.isInteger(nextIndex) && words[nextIndex]) {
+      setSelectedId(words[nextIndex].id);
+    }
+  }, [wordOrdering, words]);
 
   useEffect(() => {
     if (!visibleWords.length) return;
@@ -1040,6 +1082,13 @@ export default function ReadingWordsPage() {
         >
           <Star aria-hidden="true" />高频词 {highFrequencyWords.length}
         </button>
+        <WordStudyOrderControls
+          mode={wordOrdering.mode}
+          difficultyMode={wordOrdering.difficultyMode}
+          onModeChange={changeWordOrderMode}
+          onDifficultyModeChange={changeWordDifficultyMode}
+          difficultyAvailable={wordOrdering.difficultyAvailable}
+        />
         <StudyMeaningToggle className={styles.secondaryButton} />
         <button type="button" className={styles.secondaryButton} onClick={() => setAddOpen((value) => !value)} disabled={actionsDisabled}>
           <BookPlus aria-hidden="true" />单个添加

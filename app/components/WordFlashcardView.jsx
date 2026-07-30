@@ -5,6 +5,7 @@ import { Bookmark, Library, PanelRightOpen, Pause, Play, Search } from "lucide-r
 import VirtualList from "./VirtualList";
 import VocabAdminToolsPanel from "./VocabAdminToolsPanel";
 import StudyMeaningToggle from "./StudyMeaningToggle";
+import WordStudyOrderControls from "./WordStudyOrderControls";
 import WordDetailGrid from "./WordDetailGrid";
 import WordStudyActions from "./WordStudyActions";
 import WordStudyContent from "./WordStudyContent";
@@ -117,9 +118,12 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     DIFFICULTY_OPTIONS,
     IELTS_USE_OPTIONS,
     IDICTATION_FLASH_FILTERS,
-    wordOrderModes,
     wordOrderMode,
+    wordOrderDifficultyMode,
+    wordOrderDifficultyAvailable,
+    wordOrderDifficultyEnabled,
     setWordOrderMode,
+    setWordDifficultyMode,
     nextWord,
     prevWord,
     toggleFavorite,
@@ -379,17 +383,14 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             percent={progressPercent}
             actions={(
               <header className="topbar">
-                <select
-                  className="top-pill word-order-select"
-                  value={wordOrderMode}
-                  onChange={(event) => setWordOrderMode(event.target.value)}
-                  aria-label="单词排列方式"
-                  title="只调整当前学习范围的刷词顺序，不修改主词库"
-                >
-                  {wordOrderModes.map((mode) => (
-                    <option key={mode.value} value={mode.value}>{mode.label}</option>
-                  ))}
-                </select>
+                <WordStudyOrderControls
+                  mode={wordOrderMode}
+                  difficultyMode={wordOrderDifficultyMode}
+                  onModeChange={setWordOrderMode}
+                  onDifficultyModeChange={setWordDifficultyMode}
+                  difficultyAvailable={wordOrderDifficultyAvailable}
+                  difficultyEnabled={wordOrderDifficultyEnabled}
+                />
                 <div className={`auto-scroll-control${autoScrollActive ? " is-active" : ""}`}>
                   <button
                     type="button"

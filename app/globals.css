@@ -7292,11 +7292,29 @@ body > main {
   height: 14px;
 }
 
-.page--word-flash .top-actions > .word-order-select {
-  width: 140px;
-  min-width: 140px;
-  max-width: 140px;
-  flex: 0 0 140px;
+.word-order-controls {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.page--word-flash .word-order-select {
+  width: 112px;
+  min-width: 112px;
+  max-width: 112px;
+}
+
+.page--word-flash .word-relation-select {
+  width: 116px;
+  min-width: 116px;
+  max-width: 116px;
+}
+
+.page--word-flash .word-relation-select.is-active {
+  border-color: color-mix(in srgb, var(--study-green) 45%, var(--study-border));
+  background: var(--study-green-soft);
+  color: var(--study-green);
 }
 
 .page--word-flash .menu-panel {
@@ -8801,11 +8819,16 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
     font-size: calc(11px * var(--font-scale));
   }
 
-  .page--word-flash .top-actions > .word-order-select {
-    width: 126px;
-    min-width: 126px;
-    max-width: 126px;
-    flex-basis: 126px;
+  .page--word-flash .word-order-select {
+    width: 108px;
+    min-width: 108px;
+    max-width: 108px;
+  }
+
+  .page--word-flash .word-relation-select {
+    width: 112px;
+    min-width: 112px;
+    max-width: 112px;
   }
 }
 

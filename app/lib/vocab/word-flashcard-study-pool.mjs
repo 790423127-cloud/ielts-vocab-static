@@ -220,7 +220,7 @@ export function getFilterName(filter) {
 
 export const LEARNING_ENTRIES = [
   {
-    group: "今天优先",
+    group: "今日学习",
     items: [
       { title: "待学词浏览", desc: "从全部可刷词中排除已认识词和专项参考词；翻页不会自动标记熟悉。", filter: { type: "all", value: "" } },
       { title: "不熟词", desc: "所有标记不熟的词，优先复习。", filter: { type: "status", value: "不熟" } },
@@ -228,17 +228,7 @@ export const LEARNING_ENTRIES = [
     ]
   },
   {
-    group: "词库整理",
-    items: [
-      {
-        title: "看看这些词",
-        desc: "初高中一眼能认出的基础词和少量低价值名词，按简单到较难排列，最多1500个。",
-        filter: { type: "tidy", value: "review" }
-      }
-    ]
-  },
-  {
-    group: "爱听写独立入口",
+    group: "保留专项词库",
     items: IDICTATION_FLASH_FILTERS.map((entry) => ({
       title: entry.title,
       desc: entry.desc,
@@ -246,7 +236,7 @@ export const LEARNING_ENTRIES = [
     }))
   },
   {
-    group: "IELTS G 类用途",
+    group: "按使用场景",
     items: [
       { title: "G类书信", desc: "投诉、申请、预约、感谢、道歉、解释。", filter: { type: "ielts", value: "G类书信" } },
       { title: "Listening", desc: "听力生活场景词，优先听音频反应。", filter: { type: "ielts", value: "Listening" } },
@@ -257,32 +247,39 @@ export const LEARNING_ENTRIES = [
     ]
   },
   {
-    group: "G类完整学习计划",
+    group: "主词库学习层级",
     items: [
       {
-        title: "阶段1 · 核心理解",
-        desc: "G类阅读核心词和本轮真题精补词，目标是1至2秒内认出。",
-        filter: { type: "topic", value: "G类完整学习计划·阶段1" }
+        title: "基础必会",
+        desc: "日常和考试基础词；进入后仍可按本入口的相对难度细分。",
+        filter: { type: "difficulty", value: "基础高频" }
       },
       {
-        title: "阶段2 · 扩展识别",
-        desc: "Section 2和Section 3扩展词，以阅读识别为主。",
-        filter: { type: "topic", value: "G类完整学习计划·阶段2" }
+        title: "核心高频",
+        desc: "雅思主力词；进入后可先学相对较易或相对较难部分。",
+        filter: { type: "difficulty", value: "中级核心" }
       },
       {
-        title: "阶段4 · 专业参考",
-        desc: "真题专业词、专名和低频词，只需结合原文识别。",
-        filter: { type: "topic", value: "G类完整学习计划·阶段4" }
-      }
+        title: "高级认识",
+        desc: "低频但有价值的扩展词；以识别和理解为主。",
+        filter: { type: "difficulty", value: "高级加分" }
+      },
+      {
+        title: "专业参考",
+        desc: "专业词、专名和低频词；只需结合语境识别。",
+        filter: { type: "difficulty", value: "低频认识即可" }
+      },
+      { title: "全部可刷词", desc: "全部独立学习卡，包含熟悉词；纯词形只在基词中参考。", filter: { type: "everything", value: "" } }
     ]
   },
   {
-    group: "难度层级",
+    group: "词库整理",
     items: [
-      { title: "基础必会", desc: "必须快速认出，适合每天扫。", filter: { type: "difficulty", value: "基础高频" } },
-      { title: "核心高频", desc: "雅思主力词，优先变熟悉。", filter: { type: "difficulty", value: "中级核心" } },
-      { title: "高级认识", desc: "认识即可，不要花太久。", filter: { type: "difficulty", value: "高级加分" } },
-      { title: "全部可刷词", desc: "全部独立学习卡，包含熟悉词；纯词形只在基词中参考。", filter: { type: "everything", value: "" } }
+      {
+        title: "看看这些词",
+        desc: "初高中一眼能认出的基础词和少量低价值名词，最多1500个。",
+        filter: { type: "tidy", value: "review" }
+      }
     ]
   }
 ];

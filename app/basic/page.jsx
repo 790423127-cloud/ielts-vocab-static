@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SatelliteLexiconFlashcard from "../components/SatelliteLexiconFlashcard";
 import StableLoadingState from "../components/StableLoadingState";
+import { useOrderedStudyRows } from "../hooks/useOrderedStudyRows.js";
 import { loadBasicWords, normalizeBasicWordKey } from "../lib/basic-vocab/load-basic-words.mjs";
 import {
   BASIC_LEARNING_ENTRIES,
@@ -296,10 +297,18 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  const studyList = useMemo(
+  const baseStudyList = useMemo(
     () => buildStudyList(words, filter, statusMap),
     [buildStudyList, words, filter, statusMap]
   );
+  const wordOrdering = useOrderedStudyRows({
+    orderKey: `${lexicon}:${storageFilterKey(filter)}`,
+    rows: baseStudyList,
+    pool: words,
+    currentIndex: index,
+    difficultyEnabled: lexicon !== "ielts538"
+  });
+  const studyList = wordOrdering.rows;
 
   const currentStudyPosition = useMemo(
     () => studyList.findIndex((item) => item.originalIndex === index),
@@ -373,6 +382,19 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
       savedAt: new Date().toISOString()
     });
   }, [filter, storageFilterKey, wordKey, words, writePositions, writeSession]);
+
+  const changeWordOrderMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeMode(nextMode);
+    if (!Number.isInteger(nextIndex)) return;
+    setIndex(nextIndex);
+    persistSession(nextIndex);
+  }, [persistSession, wordOrdering]);
+  const changeWordDifficultyMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeDifficultyMode(nextMode);
+    if (!Number.isInteger(nextIndex)) return;
+    setIndex(nextIndex);
+    persistSession(nextIndex);
+  }, [persistSession, wordOrdering]);
 
   const speakText = useCallback(async (text, kind = "word") => {
     const value = String(text || "").trim();
@@ -486,14 +508,6 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
     setToast(nextFavorite ? "已收藏" : "已取消收藏");
   }
 
-  function shuffleStudy() {
-    if (!studyList.length) return;
-    const pick = studyList[Math.floor(Math.random() * studyList.length)];
-    setIndex(pick.originalIndex);
-    persistSession(pick.originalIndex);
-    setToast("已随机跳转");
-  }
-
   useEffect(() => {
     function onKeyDown(event) {
       if (phase !== "ready") return;
@@ -591,7 +605,12 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
       onSpeakWord={() => speakText(item?.word, "word")}
       onSpeakExample={() => speakText(item?.example, "sentence")}
       onSpeakSmall={(text) => speakText(text, "phrase")}
-      onShuffle={shuffleStudy}
+      wordOrderMode={wordOrdering.mode}
+      wordOrderDifficultyMode={wordOrdering.difficultyMode}
+      wordOrderDifficultyAvailable={wordOrdering.difficultyAvailable}
+      wordOrderDifficultyEnabled={lexicon !== "ielts538"}
+      onWordOrderModeChange={changeWordOrderMode}
+      onWordDifficultyModeChange={changeWordDifficultyMode}
       onPrev={() => goToStudyOffset(-1)}
       onNext={() => goToStudyOffset(1)}
       overviewWords={studyList.map(({ entry }) => ({

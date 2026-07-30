@@ -80,6 +80,38 @@
   box-shadow: 0 8px 28px rgba(31, 51, 45, .045);
 }
 
+.toolbar :global(.word-order-controls) {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.toolbar :global(.word-order-select),
+.toolbar :global(.word-relation-select) {
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--study-border, #dfe6e2);
+  border-radius: 8px;
+  color: var(--study-text, #1f332d);
+  background: var(--study-card, #fff);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.toolbar :global(.word-order-select) {
+  width: 108px;
+}
+
+.toolbar :global(.word-relation-select) {
+  width: 112px;
+}
+
+.toolbar :global(.word-relation-select.is-active) {
+  border-color: color-mix(in srgb, var(--primary, #28705d) 45%, var(--study-border, #dfe6e2));
+  color: var(--primary, #28705d);
+  background: #edf6f2;
+}
+
 .syncBanner {
   width: min(1440px, 100%);
   min-height: 34px;

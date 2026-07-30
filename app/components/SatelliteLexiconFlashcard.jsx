@@ -15,6 +15,7 @@ import WordStudyOverview from "./WordStudyOverview";
 import WordStudyProgress from "./WordStudyProgress";
 import WordStudyWorkspace from "./WordStudyWorkspace";
 import StudyMeaningToggle from "./StudyMeaningToggle";
+import WordStudyOrderControls from "./WordStudyOrderControls";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
 import rgStyles from "../reading-g/reading-g.module.css";
 
@@ -152,7 +153,13 @@ export default function SatelliteLexiconFlashcard({
   onSpeakWord,
   onSpeakExample,
   onSpeakSmall,
-  onShuffle,
+  onShuffle = null,
+  wordOrderMode = "current",
+  wordOrderDifficultyMode = "default",
+  wordOrderDifficultyAvailable = true,
+  wordOrderDifficultyEnabled = true,
+  onWordOrderModeChange = null,
+  onWordDifficultyModeChange = null,
   statsLine,
   toast,
   extraLinks = [],
@@ -628,9 +635,19 @@ export default function SatelliteLexiconFlashcard({
           </div>
 
           <div className="top-actions">
-            {onShuffle ? (
+            {!quizMode && onWordOrderModeChange ? (
+              <WordStudyOrderControls
+                mode={wordOrderMode}
+                difficultyMode={wordOrderDifficultyMode}
+                onModeChange={onWordOrderModeChange}
+                onDifficultyModeChange={onWordDifficultyModeChange}
+                difficultyAvailable={wordOrderDifficultyAvailable}
+                difficultyEnabled={wordOrderDifficultyEnabled}
+              />
+            ) : null}
+            {quizMode && onShuffle ? (
               <button type="button" className="top-pill shuffle-pill" onClick={onShuffle}>
-                <Shuffle aria-hidden="true" />随机
+                <Shuffle aria-hidden="true" />重排本轮
               </button>
             ) : null}
             <StudyMeaningToggle />

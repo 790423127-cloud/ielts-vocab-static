@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260730_word_order_logic_v10";
+export const STATIC_RESPONSIVE_VERSION = "20260730_mobile_sync_cursor_v11";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
 export const STATIC_SWIPE_FIX_MARKER = "D2.9 static 538 touch-first swipe";
@@ -286,6 +286,12 @@ function wrapStaticStudyCard(html) {
 
 export function patchStaticHtml(html) {
   let next = wrapStaticStudyCard(replaceVersionQuery(html));
+  if (!next.includes('id="staticMobileInputZoomFix"')) {
+    next = next.replace(
+      "</head>",
+      '  <style id="staticMobileInputZoomFix">@media(max-width:900px){input,textarea{font-size:16px!important}}</style>\n</head>'
+    );
+  }
   if (!next.includes('http-equiv="Cache-Control"')) {
     next = next.replace("</head>", '  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />\n  <meta http-equiv="Pragma" content="no-cache" />\n</head>');
   }

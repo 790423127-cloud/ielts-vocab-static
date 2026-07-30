@@ -176,7 +176,7 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
     },
     {
       name: "reading-words.html",
-      data: Buffer.from('<link rel="stylesheet" href="./assets/reading-words.css?v=old"><button id="favoriteBtn"></button><button id="deleteBtn"></button>')
+      data: Buffer.from('<!doctype html><html><head><link rel="stylesheet" href="./assets/reading-words.css?v=old"></head><body><button id="favoriteBtn"></button><button id="deleteBtn"></button></body></html>')
     },
     {
       name: "assets/reading-words.js",
@@ -210,7 +210,10 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
   assert.match(entries.get("build-info.json"), /ielts-538/);
   assert.match(entries.get("index.html"), new RegExp(`v=${STATIC_RESPONSIVE_VERSION}`));
   assert.match(entries.get("index.html"), /id="staticStudyCard"/);
+  assert.match(entries.get("index.html"), /id="staticMobileInputZoomFix"/);
+  assert.match(entries.get("index.html"), /input,textarea\{font-size:16px!important\}/);
   assert.match(entries.get("index.html"), /staticBuildVersion/);
+  assert.match(entries.get("reading-words.html"), /id="staticMobileInputZoomFix"/);
   assert.match(entries.get("sw.js"), new RegExp(`static_vocab_shell_${STATIC_RESPONSIVE_VERSION}`));
   assert.equal(entries.get("data/words.json"), '{"words":[]}');
 });

@@ -53,6 +53,12 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("assets/app.js"), /function seekProgressPosition/);
   assert.match(entries.get("assets/app.js"), /progressSeek\.oninput/);
   assert.match(entries.get("assets/app.js"), /progressJumpForm\.onsubmit/);
+  assert.match(entries.get("assets/app.js"), /progressJumpInput\.blur\(\)/);
+  assert.match(entries.get("assets/app.js"), /arr\(snapshot\.indices\)\.includes\(index\)/);
+  assert.match(entries.get("assets/app.js"), /function changeWordOrderCombination[\s\S]*?persistNow\(\);[\s\S]*?const currentWord=currentRaw\(\)/);
+  assert.match(entries.get("assets/app.js"), /\.skip\(offset\)[\s\S]*?\.limit\(CLOUD_PROGRESS_PAGE_SIZE\)/);
+  assert.match(entries.get("assets/app.js"), /\.doc\(deviceDocId\)\.set\(payload\)/);
+  assert.doesNotMatch(entries.get("assets/app.js"), /collection\("vocab_progress"\)\.add\(payload\)/);
   assert.doesNotMatch(entries.get("assets/app.js"), /saved\?words\.find/);
   assert.match(entries.get("assets/app.js"), /!\("ontouchstart" in window\)&&"PointerEvent" in window/);
   assert.doesNotMatch(entries.get("assets/app.js"), /pointer-touch-v3/);
@@ -61,11 +67,14 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("index.html"), /id="staticStudyCard"/);
   assert.match(entries.get("index.html"), /id="progressSeek"/);
   assert.match(entries.get("index.html"), /id="progressJumpInput"/);
+  assert.match(entries.get("index.html"), /id="staticMobileInputZoomFix"/);
+  assert.match(entries.get("index.html"), /input,textarea\{font-size:16px!important\}/);
   assert.match(entries.get("index.html"), /staticBuildVersion/);
   assert.match(entries.get("sw.js"), new RegExp(STATIC_RESPONSIVE_VERSION));
   assert.match(entries.get("sw.js"), /url\.pathname\.endsWith\("\/reading-words\.html"\)/);
   assert.match(entries.get("reading-words.html"), /id="favoriteBtn"/);
   assert.match(entries.get("reading-words.html"), /id="deleteBtn"/);
+  assert.match(entries.get("reading-words.html"), /id="staticMobileInputZoomFix"/);
   assert.match(entries.get("assets/reading-words.js"), /deleteCurrentReadingWord/);
   assert.match(entries.get("assets/reading-words.js"), /shouldHandleDeleteShortcut/);
   assert.match(entries.get("assets/reading-words.js"), /synonymListHtml/);

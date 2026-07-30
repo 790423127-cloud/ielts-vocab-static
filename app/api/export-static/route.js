@@ -272,7 +272,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260730_word_order_logic_v10";
+const STATIC_EXPORT_VERSION = "20260730_mobile_sync_cursor_v11";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -748,12 +748,10 @@ const WORD_ORDER_CURSOR_KEY="ielts_vocab_word_order_cursors_v1";
 const MEANING_VISIBILITY_KEY="ielts_vocab_hide_meanings_v1";
 const CLOUDBASE_SDK_URLS=[
   // CloudBase JS SDK 2.x：旧版 1.x 会触发 ACCESS_TOKEN_DISABLED。
-  "https://static.cloudbase.net/cloudbase-js-sdk/2.12.1/cloudbase.full.js",
-  "https://static.cloudbase.net/cloudbase-js-sdk/2.8.1/cloudbase.full.js",
-  "https://static.cloudbase.net/cloudbase-js-sdk/2.0.0/cloudbase.full.js",
-  "https://cdn.jsdelivr.net/npm/@cloudbase/js-sdk@2.12.1/dist/index.umd.js",
-  "https://unpkg.com/@cloudbase/js-sdk@2.12.1/dist/index.umd.js"
+  "https://static.cloudbase.net/cloudbase-js-sdk/2.12.1/cloudbase.full.js"
 ];
+const CLOUD_PROGRESS_PAGE_SIZE=500;
+const CLOUD_PROGRESS_MAX_ROWS=5000;
 
 let words=[];
 let idictationPayload=null;
@@ -1884,7 +1882,7 @@ function persistNow(){
       if(isFixedWordOrderMode(pref.mode,pref.difficultyMode)&&snapshot){
         const cursorKey=wordOrderEntryKey(w);
         const containsWord=Number(snapshot.version)===2
-          ?arr(snapshot.indices).includes(w.originalIndex)
+          ?arr(snapshot.indices).includes(index)
           :arr(snapshot.keys).includes(cursorKey);
         if(containsWord&&snapshot.cursorKey!==cursorKey){
           saveWordOrderCursor(filter,snapshotKey,cursorKey);
@@ -2690,36 +2688,48 @@ async function getCloudDoc(){
   const loginStateBeforeRead=await getLoginStateSafe(cloudbaseAuth);
   if(!loginStateBeforeRead) throw new Error("读取前没有登录态 credentials not found");
 
-  const result=await cloudbaseDb
-    .collection("vocab_progress")
-    .where({syncCodeHash:cloudbaseDocId,vocabId:getVocabId()})
-    .limit(1000)
-    .get();
+  const rows=[];
+  let offset=0;
+  while(offset<CLOUD_PROGRESS_MAX_ROWS){
+    const result=await cloudbaseDb
+      .collection("vocab_progress")
+      .where({syncCodeHash:cloudbaseDocId,vocabId:getVocabId()})
+      .skip(offset)
+      .limit(CLOUD_PROGRESS_PAGE_SIZE)
+      .get();
+    const page=(result&&Array.isArray(result.data)?result.data:[])
+      .filter(function(x){return x&&x.syncCodeHash===cloudbaseDocId&&((x.vocabId||"")===getVocabId())});
+    rows.push.apply(rows,page);
+    if(page.length<CLOUD_PROGRESS_PAGE_SIZE)break;
+    offset+=page.length;
+  }
+  if(rows.length>=CLOUD_PROGRESS_MAX_ROWS){
+    console.warn("CloudBase progress rows reached safety limit",CLOUD_PROGRESS_MAX_ROWS);
+  }
 
-  const rows=(result&&Array.isArray(result.data)?result.data:[])
-    .filter(function(x){return x&&x.syncCodeHash===cloudbaseDocId&&((x.vocabId||"")===getVocabId())});
-
-  // 关键修复：同一个同步码下，读取全部设备记录并合并，不再只取最新一条。
+  // 兼容旧版累计产生的多条记录：分页读取后再按单词时间戳合并。
   return mergeCloudRows(rows);
 }
 
 async function setCloudDoc(data){
   if(!cloudbaseDb||!cloudbaseDocId) throw new Error("未连接同步码");
 
-  // 兼容 [READONLY]：
-  // 每台设备只新增自己创建的进度记录，不去修改别的设备创建的记录。
-  // 手机 / 电脑恢复时读取同一同步码下 updatedAt 最新的一条。
+  // READONLY 允许所有用户读取、仅创建者写入。
+  // 每台设备使用自己的稳定文档 ID：第一次创建，之后覆盖本设备记录，
+  // 避免每次操作都新增文档并最终超过 CloudBase 单次 1000 条读取上限。
+  const deviceId=progress.deviceId||getDeviceId();
+  const deviceDocId="progress_"+(await sha256Text(cloudbaseDocId+"|"+getVocabId()+"|"+deviceId)).slice(0,48);
   const payload=Object.assign({
     syncCodeHash:cloudbaseDocId,
     vocabId:getVocabId(),
     syncKey:cloudbaseDocId+"__"+getVocabId(),
-    deviceId:progress.deviceId||getDeviceId(),
+    deviceId:deviceId,
     createdAt:Date.now()
   },data);
 
   const loginStateBeforeWrite=await getLoginStateSafe(cloudbaseAuth);
   if(!loginStateBeforeWrite) throw new Error("写入前没有登录态 credentials not found");
-  await cloudbaseDb.collection("vocab_progress").add(payload);
+  await cloudbaseDb.collection("vocab_progress").doc(deviceDocId).set(payload);
 }
 
 function mergeCloudProgress(remote,forcePosition){
@@ -2939,6 +2949,9 @@ if(els.topToolsToggle) els.topToolsToggle.onclick=function(){
 };
 function changeWordOrderCombination(nextMode,nextDifficultyMode,label){
   restoreFocusWord="";
+  // 先同步保存当前组合的游标，避免用户快速切换时尚未执行延迟保存，
+  // 再切回来却落到该组合的第一个词。
+  persistNow();
   const currentWord=currentRaw();
   const source=sourceList(filter);
   const previous=wordOrderPreference(filter);
@@ -3007,14 +3020,17 @@ if(els.count)els.count.onclick=function(){
 if(els.progressJumpForm)els.progressJumpForm.onsubmit=function(e){
   e.preventDefault();
   seekProgressPosition(els.progressJumpInput.value);
+  els.progressJumpInput.blur();
   els.progressJumpForm.classList.add("hidden");
 };
 if(els.progressJumpCancel)els.progressJumpCancel.onclick=function(){
+  els.progressJumpInput.blur();
   els.progressJumpForm.classList.add("hidden");
 };
 if(els.progressJumpInput)els.progressJumpInput.onkeydown=function(e){
   if(e.key==="Escape"){
     e.preventDefault();
+    els.progressJumpInput.blur();
     els.progressJumpForm.classList.add("hidden");
   }
 };

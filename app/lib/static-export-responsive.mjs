@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260730_order_controls_v7";
+export const STATIC_RESPONSIVE_VERSION = "20260730_word_order_logic_v10";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
 export const STATIC_SWIPE_FIX_MARKER = "D2.9 static 538 touch-first swipe";

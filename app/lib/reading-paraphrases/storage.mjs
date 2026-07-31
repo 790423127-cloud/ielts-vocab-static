@@ -2,8 +2,6 @@ import { safeLocalStorageGet, safeLocalStorageSet } from "../browser-storage.mjs
 
 export const READING_PARAPHRASE_STORAGE_KEY = "ielts_reading_paraphrases_v1";
 export const READING_PARAPHRASE_SCHEMA_VERSION = 1;
-export const READING_PARAPHRASE_MAX_IMPORT_BYTES = 4 * 1024 * 1024;
-export const READING_PARAPHRASE_MAX_IMPORT_ITEMS = 20000;
 export const READING_PARAPHRASE_DIRECTION = {
   QUESTION_TO_SOURCE: "question-to-source",
   SOURCE_TO_QUESTION: "source-to-question",
@@ -109,9 +107,6 @@ function parseTxt(input) {
 export function parseReadingParaphraseImport(input) {
   let payload = input;
   if (typeof input === "string") {
-    if (input.length > READING_PARAPHRASE_MAX_IMPORT_BYTES) {
-      throw new Error("导入文件过大，请拆分为不超过 4 MB 的学习包");
-    }
     const raw = input.trim();
     if (!raw) return [];
     try {
@@ -126,9 +121,6 @@ export function parseReadingParaphraseImport(input) {
     : Array.isArray(payload?.items)
       ? payload.items
       : [];
-  if (rows.length > READING_PARAPHRASE_MAX_IMPORT_ITEMS) {
-    throw new Error("单次最多导入 20000 组同义替换，请拆分后重试");
-  }
   return rows.map(normalizeItem).filter(Boolean);
 }
 
@@ -224,9 +216,10 @@ export function mergeReadingParaphraseCloudState(localInput, remoteInput) {
   return {
     ...merged,
     direction: remoteIsNewer ? remote.direction : local.direction,
-    positions: remoteIsNewer
-      ? { ...(local.positions || {}), ...(remote.positions || {}) }
-      : { ...(remote.positions || {}), ...(local.positions || {}) },
+    positions: {
+      ...(remote.positions || {}),
+      ...(local.positions || {})
+    },
     updatedAt: Math.max(Number(local.updatedAt || 0), Number(remote.updatedAt || 0))
   };
 }

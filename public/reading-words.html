@@ -4,8 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#f4f6f5" />
-  <title>阅读生词栏 · IELTS Vocab 静态版</title>
-  <link rel="stylesheet" href="./assets/reading-words.css?v=20260728_reading_synonym_variants_v2" />
+  <title>阅读生词本 · IELTS Vocab 静态版</title>
+  <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
+  <link rel="stylesheet" href="./assets/reading-words.css?v=20260729_reading_synonym_meanings_v5" />
 </head>
 <body>
   <header class="reading-header">
@@ -14,7 +15,7 @@
       <a href="./index.html">刷词</a>
       <a href="./meaning.html">选义</a>
       <a href="./spelling.html">拼写</a>
-      <a class="active" href="./reading-words.html">阅读生词</a>
+      <a class="active" href="./reading-words.html">阅读生词本</a>
     </nav>
   </header>
 
@@ -22,7 +23,7 @@
     <section class="reading-title">
       <div>
         <p>个人独立词库 · 仅存本机</p>
-        <h1>阅读生词栏</h1>
+        <h1>阅读生词本</h1>
         <span id="mainStatus">正在读取主词库…</span>
       </div>
       <dl aria-label="阅读生词统计">
@@ -37,6 +38,7 @@
       <button id="frequentFilterBtn" type="button" aria-pressed="false">高频词</button>
       <button id="singleAddBtn" type="button">单个添加</button>
       <button id="batchAddBtn" type="button">表格批量添加</button>
+      <button type="button" data-study-meaning-toggle>隐藏释义</button>
       <button id="exportBtn" type="button">跨设备导出</button>
       <label class="file-button">跨设备导入<input id="importInput" type="file" accept=".json,.csv,.tsv,.txt,application/json" /></label>
       <button id="aiInfoBtn" class="primary" type="button">AI 工具</button>
@@ -50,7 +52,7 @@
         <label>同义替换<input id="synonymInput" autocomplete="off" placeholder="多个词用逗号分开" /></label>
         <div class="editor-actions">
           <button id="singleCancelBtn" type="button">取消</button>
-          <button class="primary" type="submit">加入阅读生词栏</button>
+          <button class="primary" type="submit">加入阅读生词本</button>
         </div>
       </form>
     </section>
@@ -76,25 +78,29 @@
           <span>可单个添加，也可直接粘贴表格批量导入。</span>
         </div>
         <div id="wordContent" class="hidden">
-          <div class="card-meta"><span id="positionText">1 / 1</span><span id="frequencyBadge"></span></div>
-          <div class="example">
+          <div class="card-meta">
+            <span id="positionText">1 / 1</span>
+            <div><span id="frequencyBadge"></span><button id="favoriteBtn" type="button" aria-pressed="false">☆ 收藏</button></div>
+          </div>
+          <div class="example study-answer-content">
             <button id="exampleSoundBtn" type="button" aria-label="播放例句">🔊</button>
             <div><p id="exampleText"></p><span id="exampleCnText"></span></div>
           </div>
           <button id="wordSoundBtn" class="word" type="button"></button>
-          <div class="word-meta"><span id="phoneticText"></span><b id="posText"></b></div>
-          <h2 id="meaningText"></h2>
-          <div class="detail-grid">
+          <div class="word-meta study-answer-content"><span id="phoneticText"></span><b id="posText"></b></div>
+          <h2 id="meaningText" class="study-answer-content"></h2>
+          <div class="detail-grid study-answer-content">
             <section><h3>变形</h3><div id="formsList"></div></section>
             <section><h3>词族</h3><div id="familyList"></div></section>
             <section><h3>同义替换</h3><div id="synonymList"></div></section>
           </div>
           <footer class="study-actions" aria-label="学习操作">
-            <button id="prevBtn" type="button">上一个</button>
+            <button id="prevBtn" type="button" title="上一个（快捷键：←）">← 上一个</button>
             <button id="knownBtn" type="button">认识</button>
             <button id="blurryBtn" type="button">模糊</button>
             <button id="unknownBtn" type="button">不熟</button>
-            <button id="nextBtn" type="button">下一个</button>
+            <button id="nextBtn" type="button" title="下一个（快捷键：→）">下一个 →</button>
+            <button id="deleteBtn" class="danger" type="button" title="只从阅读生词本删除（D / Delete）">删除</button>
           </footer>
         </div>
       </article>
@@ -106,6 +112,7 @@
     </section>
   </main>
   <div id="toast" class="toast" role="status"></div>
-  <script src="./assets/reading-words.js?v=20260728_reading_synonym_variants_v2"></script>
+  <script src="./assets/study-meaning-visibility.js?v=20260730_word_order_meaning_visibility_v1"></script>
+  <script src="./assets/reading-words.js?v=20260729_reading_synonym_meanings_v5"></script>
 </body>
 </html>

@@ -1181,6 +1181,14 @@ input[type="file"] {
   opacity: .92;
 }
 
+html[data-study-meanings-hidden="true"] .study-answer-content {
+  display: none !important;
+}
+
+.spelling-focus-stack--preparing {
+  pointer-events: none;
+}
+
 .spelling-stats-sidebar {
   display: none;
 }
@@ -7156,6 +7164,7 @@ body > main {
 }
 
 .word-study-progress {
+  position: relative;
   min-height: 56px;
   display: grid;
   grid-template-columns: auto minmax(90px, 1fr) auto auto;
@@ -7184,10 +7193,15 @@ body > main {
 }
 
 .word-study-progress__track {
+  position: relative;
   height: 6px;
   overflow: hidden;
   border-radius: 3px;
   background: var(--study-border);
+}
+
+.word-study-progress__track.is-seekable {
+  overflow: visible;
 }
 
 .word-study-progress__track span {
@@ -7195,6 +7209,83 @@ body > main {
   height: 100%;
   border-radius: inherit;
   background: var(--study-green);
+}
+
+.word-study-progress__track input[type="range"] {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  transform: translateY(-50%);
+  appearance: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.word-study-progress__track input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: transparent;
+}
+
+.word-study-progress__track input[type="range"]::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  appearance: none;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--study-green);
+  box-shadow: 0 1px 5px rgba(16, 70, 58, .28);
+}
+
+.word-study-progress__track input[type="range"]::-moz-range-track {
+  height: 6px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+}
+
+.word-study-progress__track input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--study-green);
+  box-shadow: 0 1px 5px rgba(16, 70, 58, .28);
+}
+
+.word-study-progress__track input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 3px solid color-mix(in srgb, var(--study-green) 24%, transparent);
+  outline-offset: 2px;
+}
+
+.word-study-progress__track input[type="range"]:focus-visible::-moz-range-thumb {
+  outline: 3px solid color-mix(in srgb, var(--study-green) 24%, transparent);
+  outline-offset: 2px;
+}
+
+.word-study-progress__preview {
+  display: block;
+  max-width: 112px;
+  padding: 3px 7px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--study-green) 28%, var(--study-border));
+  border-radius: 6px;
+  background: var(--study-green-soft);
+  color: var(--study-green-deep);
+  font-size: calc(10px * var(--font-scale));
+  font-weight: 750;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .word-study-progress__count {
@@ -7206,9 +7297,72 @@ body > main {
   white-space: nowrap;
 }
 
+.word-study-progress__count button {
+  min-width: 0;
+  padding: 3px 5px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.word-study-progress__count button:not(:disabled):hover,
+.word-study-progress__count button:not(:disabled):focus-visible {
+  background: var(--study-green-soft);
+}
+
+.word-study-progress__count button:disabled {
+  padding-inline: 0;
+  cursor: default;
+}
+
 .word-study-progress__count strong {
   color: var(--study-green-deep);
   font-size: 12px;
+}
+
+.word-study-progress__jump {
+  position: absolute;
+  z-index: 1500;
+  top: calc(100% + 6px);
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--study-border);
+  border-radius: 9px;
+  background: var(--study-card);
+  color: var(--study-text);
+  box-shadow: 0 10px 28px rgba(22, 50, 44, .16);
+  font-size: calc(11px * var(--font-scale));
+  white-space: nowrap;
+}
+
+.word-study-progress__jump input {
+  width: 82px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--study-border);
+  border-radius: 6px;
+  background: var(--study-card);
+  color: var(--study-green-deep);
+  font: inherit;
+  font-weight: 750;
+}
+
+.word-study-progress__jump button {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 9px;
+  border: 1px solid var(--study-border);
+  border-radius: 6px;
+  background: var(--study-green-soft);
+  color: var(--study-green-deep);
+  font: inherit;
+  font-weight: 750;
 }
 
 .word-study-progress__actions,
@@ -7229,6 +7383,7 @@ body > main {
 
 .auto-scroll-control {
   min-width: 0;
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -7282,6 +7437,50 @@ body > main {
 .page--word-flash .top-pill svg {
   width: 14px;
   height: 14px;
+}
+
+.word-order-controls {
+  min-width: 0;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.page--word-flash .word-order-select {
+  width: 112px;
+  min-width: 112px;
+  max-width: 112px;
+}
+
+.page--word-flash .word-relation-select,
+.page--word-flash .word-difficulty-select {
+  width: 116px;
+  min-width: 116px;
+  max-width: 116px;
+}
+
+.page--word-flash .word-relation-select.is-active,
+.page--word-flash .word-difficulty-select.is-active {
+  border-color: color-mix(in srgb, var(--study-green) 45%, var(--study-border));
+  background: var(--study-green-soft);
+  color: var(--study-green);
+}
+
+@media (max-width: 1450px) {
+  .word-study-progress {
+    grid-template-columns: auto minmax(90px, 1fr) auto;
+  }
+
+  .word-study-progress__actions {
+    grid-column: 1 / -1;
+  }
+
+  .page--word-flash .topbar {
+    justify-content: flex-end;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
 }
 
 .page--word-flash .menu-panel {
@@ -7698,6 +7897,7 @@ body > main {
 .word-dictionary-module {
   min-width: 0;
   overflow: hidden;
+  container-type: inline-size;
   border: 1px solid var(--study-border);
   border-radius: 9px;
   background: var(--study-card);
@@ -7741,8 +7941,11 @@ body > main {
 }
 
 .word-dictionary-row button {
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   gap: 6px;
+  justify-self: stretch;
   overflow: hidden;
   color: var(--study-green-deep);
   font-size: calc(13px * var(--font-scale));
@@ -7751,10 +7954,40 @@ body > main {
   white-space: nowrap;
 }
 
+.word-dictionary-row__term {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .word-dictionary-row button svg {
   width: 15px;
   height: 15px;
   flex: 0 0 auto;
+}
+
+@container (max-width: 360px) {
+  .word-dictionary-module .word-dictionary-row {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 4px 8px;
+    padding: 4px 0;
+  }
+
+  .word-dictionary-row small {
+    grid-column: 2;
+    padding-bottom: 4px;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .word-dictionary-row__term {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
 }
 
 .word-dictionary-empty {
@@ -8261,6 +8494,27 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
     grid-template-columns: auto minmax(60px, 1fr) auto;
   }
 
+  .word-study-progress__track input[type="range"] {
+    height: 38px;
+  }
+
+  .word-study-progress__track input[type="range"]::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    margin-top: -7px;
+  }
+
+  .word-study-progress__track input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .word-study-progress__jump {
+    right: 8px;
+    left: 8px;
+    justify-content: center;
+  }
+
   .word-study-progress__actions {
     grid-column: 1 / -1;
   }
@@ -8750,6 +9004,18 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
     height: 44px;
     padding: 0 5px;
     font-size: calc(11px * var(--font-scale));
+  }
+
+  .page--word-flash .word-order-select {
+    width: 108px;
+    min-width: 108px;
+    max-width: 108px;
+  }
+
+  .page--word-flash .word-relation-select {
+    width: 112px;
+    min-width: 112px;
+    max-width: 112px;
   }
 }
 

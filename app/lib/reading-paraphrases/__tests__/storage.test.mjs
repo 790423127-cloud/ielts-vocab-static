@@ -2,8 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  READING_PARAPHRASE_MAX_IMPORT_BYTES,
-  READING_PARAPHRASE_MAX_IMPORT_ITEMS,
   READING_PARAPHRASE_STATUS,
   createReadingParaphraseState,
   mergeReadingParaphraseCloudState,
@@ -40,19 +38,6 @@ test("keeps TXT compatibility and directional pair identity", () => {
   assert.equal(items.length, 2);
   assert.equal(items[0].questionPhrase, "cost less than");
   assert.equal(items[0].sourcePhrase, "under $10");
-});
-
-test("rejects oversized imports before they can exhaust browser storage", () => {
-  assert.throws(
-    () => parseReadingParaphraseImport("x".repeat(READING_PARAPHRASE_MAX_IMPORT_BYTES + 1)),
-    /不超过 4 MB/
-  );
-  assert.throws(
-    () => parseReadingParaphraseImport({
-      items: Array.from({ length: READING_PARAPHRASE_MAX_IMPORT_ITEMS + 1 })
-    }),
-    /最多导入 20000/
-  );
 });
 
 test("reimport merges sources while preserving local study status", () => {
@@ -110,20 +95,4 @@ test("cloud merge keeps the newest per-pair study event", () => {
 
   const merged = mergeReadingParaphraseCloudState(local, remote);
   assert.equal(merged.items[0].study.status, READING_PARAPHRASE_STATUS.FUZZY);
-});
-
-test("cloud merge uses the cursor from the newer device snapshot", () => {
-  const local = {
-    ...createReadingParaphraseState(),
-    updatedAt: 500,
-    positions: { "question-to-source:all": "local-pair" }
-  };
-  const remote = {
-    ...createReadingParaphraseState(),
-    updatedAt: 600,
-    positions: { "question-to-source:all": "remote-pair" }
-  };
-
-  const merged = mergeReadingParaphraseCloudState(local, remote);
-  assert.equal(merged.positions["question-to-source:all"], "remote-pair");
 });

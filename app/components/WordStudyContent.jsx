@@ -50,7 +50,7 @@ export default function WordStudyContent({
 
   return (
     <div className="word-study-content">
-      <section className="example-box" aria-label="例句">
+      <section className="example-box study-answer-content" aria-label="例句">
         <button
           className="hero-sound-btn example-sound-btn"
           type="button"
@@ -89,7 +89,7 @@ export default function WordStudyContent({
         >
           <span className={headwordClassName}><HeadwordText value={displayHeadword} /></span>
         </button>
-        <div className="word-sub">
+        <div className="word-sub study-answer-content">
           <span className="phonetic">{fallback(item.phonetic || audioInfo.phonetic, "等待音标")}</span>
           <button
             className="word-pronunciation-button"
@@ -104,7 +104,7 @@ export default function WordStudyContent({
         </div>
       </section>
 
-      <div className="meaning-block">
+      <div className="meaning-block study-answer-content">
         <div className="meaning-primary">{fallback(item.meaning, "等待补充中文主释义")}</div>
         {mainMeaningDetail ? (
           <div className="meaning-detail"><strong>主释义详解：</strong>{mainMeaningDetail}</div>

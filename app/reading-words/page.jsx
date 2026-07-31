@@ -19,8 +19,14 @@ import {
 } from "lucide-react";
 import WordStudyActions from "../components/WordStudyActions.jsx";
 import WordStudyContent from "../components/WordStudyContent.jsx";
+import StudyMeaningToggle from "../components/StudyMeaningToggle.jsx";
+import WordStudyOrderControls from "../components/WordStudyOrderControls.jsx";
+import { useOrderedStudyRows } from "../hooks/useOrderedStudyRows.js";
 import {
   applyMainEntryToReadingWord,
+  backfillReadingWordsIntoMain,
+  buildReadingSynonymDisplay,
+  ensureReadingWordMainEntry,
   isMainEntryClassificationIncomplete,
   mergeAiProfileIntoMainEntry,
   needsReadingAiProcessing,
@@ -47,12 +53,18 @@ import {
   removeReadingWordEntry,
   shouldHandleReadingWordDeleteShortcut
 } from "../lib/reading-words/delete.mjs";
+import { mergeWordContentWithUserState } from "../lib/vocab/word-cache-meta.mjs";
 import {
   loadActiveWordsForSync,
   loadWordsImportBackupFromIndexedDB,
+  postExportCache,
   saveWordsToIndexedDB,
   saveWordsToIndexedDBWithBackup
 } from "../lib/vocab/word-store.mjs";
+import {
+  buildLexiconDeletionIntent,
+  formalLexiconWords
+} from "../lib/vocab/lexicon-delete-intent.mjs";
 import styles from "./reading-words.module.css";
 
 const EMPTY_DRAFT = {
@@ -107,6 +119,28 @@ function buildMainWordIndex(words = []) {
   );
 }
 
+async function loadFormalMainLexicon() {
+  const response = await fetch("/api/vocab-data", { cache: "no-store" });
+  if (!response?.ok) {
+    throw new Error(`正式主词库接口返回 ${response?.status || "异常"}`);
+  }
+  const payload = await response.json().catch(() => null);
+  if (!Array.isArray(payload?.words) || !payload.words.length) {
+    throw new Error("正式主词库为空或格式错误");
+  }
+  return {
+    words: payload.words,
+    meta: {
+      count: payload.count,
+      version: payload.version || "",
+      lexiconHash: payload.lexiconHash || "",
+      savedAt: payload.savedAt || "",
+      fileHash: payload.fileHash || "",
+      wordsHash: payload.wordsHash || ""
+    }
+  };
+}
+
 function DetailList({ title, items, emptyText, renderItem }) {
   return (
     <section className={styles.detailSection}>
@@ -139,7 +173,7 @@ export default function ReadingWordsPage() {
   const [mainLexiconStatus, setMainLexiconStatus] = useState({
     status: "loading",
     count: 0,
-    message: "正在核对浏览器主词库…"
+    message: "正在核对正式主词库…"
   });
   const [rollbackAvailable, setRollbackAvailable] = useState(false);
   const [mainWriteBusy, setMainWriteBusy] = useState(false);
@@ -166,34 +200,97 @@ export default function ReadingWordsPage() {
     let cancelled = false;
     Promise.all([
       loadActiveWordsForSync(),
-      loadWordsImportBackupFromIndexedDB()
-    ]).then(([loaded, backup]) => {
+      loadWordsImportBackupFromIndexedDB(),
+      loadFormalMainLexicon()
+    ]).then(async ([loaded, backup, formal]) => {
       if (cancelled) return;
-      const mainWords = Array.isArray(loaded?.words) ? loaded.words : [];
-      if (!mainWords.length) {
+      const activeMainWords = Array.isArray(loaded?.words) ? loaded.words : [];
+      const formalMainWords = Array.isArray(formal?.words) ? formal.words : [];
+      if (!activeMainWords.length || !formalMainWords.length) {
         setMainLexiconStatus({
           status: "error",
           count: 0,
-          message: "浏览器主词库为空，已停止自动同步；阅读生词仍可查看和导出。"
+          message: "正式主词库为空，已停止自动同步；阅读生词仍可查看和导出。"
         });
         return;
       }
-      const mainIndex = buildMainWordIndex(mainWords);
+
+      const migration = backfillReadingWordsIntoMain(savedWords, formalMainWords, {
+        now: new Date().toISOString()
+      });
+      const nextMeta = { ...(loaded?.meta || {}), ...(formal?.meta || {}) };
+      let nextMainWords = mergeWordContentWithUserState(
+        migration.mainWords,
+        activeMainWords,
+        { includePersonalSupplements: false }
+      );
+      let nextReadingWords = migration.words;
+      let publishedMeta = null;
+
+      if (migration.mainChanged) {
+        const nextCachedMainWords = mergeWordContentWithUserState(
+          migration.mainWords,
+          activeMainWords
+        );
+        await saveWordsToIndexedDBWithBackup(
+          nextCachedMainWords,
+          activeMainWords,
+          nextMeta,
+          { reason: "personal-reading-legacy-main-backfill" }
+        );
+        if (!writeReadingWordsWithBackup(nextReadingWords, savedWords)) {
+          await saveWordsToIndexedDB(activeMainWords, loaded?.meta || {});
+          throw new Error("旧阅读生词关联写入失败，主词库已自动回退");
+        }
+
+        try {
+          const result = await postExportCache(
+            migration.mainWords,
+            nextMeta,
+            {
+              source: "personal-reading-legacy-main-backfill",
+              forceRefresh: true
+            }
+          );
+          if (!result?.ok) {
+            const detail = [result?.error, result?.detail].filter(Boolean).join("：");
+            throw new Error(`旧阅读生词写入正式主词库失败：${detail || "未知错误"}`);
+          }
+          publishedMeta = result;
+        } catch (error) {
+          await saveWordsToIndexedDB(activeMainWords, loaded?.meta || {});
+          writeReadingWords(savedWords);
+          throw error;
+        }
+        setNotice(
+          `已将 ${migration.addedToMain} 个旧阅读生词补入正式主词库；等待 AI 扫描分类。`
+        );
+      } else {
+        const activeIndex = buildMainWordIndex(nextMainWords);
+        nextReadingWords = savedWords.map((word) => {
+          const linked = activeIndex.get(normalizeReadingWordKey(word.word))?.entry;
+          return linked ? applyMainEntryToReadingWord(word, linked) : word;
+        });
+      }
+
+      if (cancelled) return;
+      const mainIndex = buildMainWordIndex(nextMainWords);
       mainLexiconRef.current = {
-        words: mainWords,
-        meta: loaded?.meta || {},
+        words: nextMainWords,
+        meta: { ...nextMeta, ...(publishedMeta || {}) },
         index: mainIndex
       };
-      setWords((current) => current.map((word) => {
-        const linked = mainIndex.get(normalizeReadingWordKey(word.word))?.entry;
-        return linked ? applyMainEntryToReadingWord(word, linked) : word;
-      }));
+      setWords(nextReadingWords);
       setMainLexiconStatus({
         status: "ready",
-        count: mainWords.length,
-        message: `已连接浏览器主词库 ${mainWords.length.toLocaleString("zh-CN")} 词`
+        count: migration.mainWords.length,
+        message: `已连接正式主词库 ${migration.mainWords.length.toLocaleString("zh-CN")} 词`
       });
-      setRollbackAvailable(backup?.status === "cache-hit" || Boolean(readReadingWordsRollback()));
+      setRollbackAvailable(
+        migration.mainChanged ||
+        backup?.status === "cache-hit" ||
+        Boolean(readReadingWordsRollback())
+      );
     }).catch((error) => {
       if (cancelled) return;
       setMainLexiconStatus({
@@ -235,22 +332,68 @@ export default function ReadingWordsPage() {
       return needsReadingAiProcessing(word, mainEntry);
     });
   }, [words]);
+  const mainEntryMissingWords = useMemo(() => {
+    const mainIndex = mainLexiconRef.current.index;
+    return words.filter(
+      (word) => !mainIndex.get(normalizeReadingWordKey(word.word))?.entry
+    );
+  }, [words]);
   const mainClassificationPending = useMemo(() => {
     const mainIndex = mainLexiconRef.current.index;
     return words.filter((word) => {
       const mainEntry = mainIndex.get(normalizeReadingWordKey(word.word))?.entry;
-      return isMainEntryClassificationIncomplete(mainEntry);
+      return Boolean(mainEntry) && isMainEntryClassificationIncomplete(mainEntry);
     });
   }, [words]);
 
-  const visibleWords = useMemo(
-    () => words.filter((word) => (
-      wordMatchesSearch(word, search) &&
+  const readingOrderPool = useMemo(() => {
+    const mainAvailable = mainLexiconStatus.status === "ready" && mainLexiconStatus.count > 0;
+    const mainIndex = mainLexiconRef.current.index;
+    return words.map((word) => {
+      const mainEntry = mainAvailable
+        ? mainIndex.get(normalizeReadingWordKey(word.word))?.entry
+        : null;
+      return {
+        ...(mainEntry || {}),
+        ...word,
+        difficulty: mainEntry?.difficulty || word.difficulty || ""
+      };
+    });
+  }, [mainLexiconStatus.count, mainLexiconStatus.status, words]);
+  const baseVisibleRows = useMemo(
+    () => readingOrderPool
+      .map((word, originalIndex) => ({ entry: word, originalIndex }))
+      .filter(({ entry: word }) => (
       (!onlyIncomplete || isReadingWordIncomplete(word)) &&
       (!onlyFrequent || word.highFrequency === true || Number(word.importCount) >= 2)
     )),
-    [onlyFrequent, onlyIncomplete, search, words]
+    [onlyFrequent, onlyIncomplete, readingOrderPool]
   );
+  const selectedPoolIndex = words.findIndex((word) => word.id === selectedId);
+  const wordOrdering = useOrderedStudyRows({
+    orderKey: `reading-words:${onlyIncomplete ? "incomplete" : "all"}:${onlyFrequent ? "frequent" : "all"}`,
+    rows: baseVisibleRows,
+    pool: readingOrderPool,
+    currentIndex: selectedPoolIndex
+  });
+  const visibleWords = useMemo(
+    () => wordOrdering.rows
+      .map((row) => words[row.originalIndex])
+      .filter((word) => word && wordMatchesSearch(word, search)),
+    [search, wordOrdering.rows, words]
+  );
+  const changeWordOrderMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeMode(nextMode);
+    if (Number.isInteger(nextIndex) && words[nextIndex]) {
+      setSelectedId(words[nextIndex].id);
+    }
+  }, [wordOrdering, words]);
+  const changeWordDifficultyMode = useCallback((nextMode) => {
+    const nextIndex = wordOrdering.changeDifficultyMode(nextMode);
+    if (Number.isInteger(nextIndex) && words[nextIndex]) {
+      setSelectedId(words[nextIndex].id);
+    }
+  }, [wordOrdering, words]);
 
   useEffect(() => {
     if (!visibleWords.length) return;
@@ -264,6 +407,14 @@ export default function ReadingWordsPage() {
     ? visibleWords.findIndex((word) => word.id === selectedWord.id)
     : -1;
   const missingFields = selectedWord ? getReadingWordMissingFields(selectedWord) : [];
+  const selectedMainEntry = selectedWord
+    ? mainLexiconRef.current.index.get(normalizeReadingWordKey(selectedWord.word))?.entry
+    : null;
+  const selectedMainStatus = selectedWord && !selectedMainEntry
+    ? "主词库未收录"
+    : selectedMainEntry && isMainEntryClassificationIncomplete(selectedMainEntry)
+      ? "主词库待分类"
+      : "";
   const aiRunning = aiRun.status === "running";
   const mainReady = mainLexiconStatus.status === "ready";
   const actionsDisabled = aiRunning || mainWriteBusy || !mainReady;
@@ -277,11 +428,38 @@ export default function ReadingWordsPage() {
     }
   }, [batchText]);
 
-  const moveSelection = (offset) => {
+  const moveSelection = useCallback((offset) => {
     if (!visibleWords.length) return;
     const nextIndex = (Math.max(0, selectedIndex) + offset + visibleWords.length) % visibleWords.length;
     setSelectedId(visibleWords[nextIndex].id);
-  };
+  }, [selectedIndex, visibleWords]);
+
+  useEffect(() => {
+    function handleReadingWordNavigation(event) {
+      if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+      const target = event.target;
+      const tagName = String(target?.tagName || "").toLowerCase();
+      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
+      if (
+        tagName === "input"
+        || tagName === "textarea"
+        || (tagName === "select" && !isHorizontalArrow)
+        || target?.isContentEditable
+      ) return;
+      if (!selectedWord || visibleWords.length < 2) return;
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        moveSelection(-1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        moveSelection(1);
+      }
+    }
+
+    window.addEventListener("keydown", handleReadingWordNavigation, true);
+    return () => window.removeEventListener("keydown", handleReadingWordNavigation, true);
+  }, [moveSelection, selectedWord, visibleWords.length]);
 
   const patchSelectedWord = (patch) => {
     if (!selectedWord) return;
@@ -295,7 +473,7 @@ export default function ReadingWordsPage() {
   const deleteSelectedWord = useCallback(() => {
     if (!selectedWord || aiRunning || mainWriteBusy) return;
     const confirmed = window.confirm(
-      `确定从阅读生词栏删除“${selectedWord.word}”吗？\n\n` +
+      `确定从阅读生词本删除“${selectedWord.word}”吗？\n\n` +
       "只会删除阅读生词记录，不会删除主词库中的单词。"
     );
     if (!confirmed) return;
@@ -314,7 +492,7 @@ export default function ReadingWordsPage() {
     setSelectedId(result.nextSelectedId);
     setRollbackAvailable(true);
     setStorageError("");
-    setNotice(`已从阅读生词栏删除：${result.removed.word}；主词库未改变。`);
+    setNotice(`已从阅读生词本删除：${result.removed.word}；主词库未改变。`);
   }, [aiRunning, mainWriteBusy, selectedWord, visibleWords, words]);
 
   useEffect(() => {
@@ -330,18 +508,45 @@ export default function ReadingWordsPage() {
     return () => window.removeEventListener("keydown", handleReadingWordDeleteShortcut);
   }, [aiRunning, deleteSelectedWord, mainWriteBusy, selectedWord]);
 
-  const updateMainLexiconMemory = (nextWords) => {
+  const updateMainLexiconMemory = (nextWords, nextMeta = null) => {
     mainLexiconRef.current = {
       ...mainLexiconRef.current,
       words: nextWords,
+      ...(nextMeta ? { meta: { ...mainLexiconRef.current.meta, ...nextMeta } } : {}),
       index: buildMainWordIndex(nextWords)
     };
     setMainLexiconStatus((current) => ({
       ...current,
       status: "ready",
       count: nextWords.length,
-      message: `已连接浏览器主词库 ${nextWords.length.toLocaleString("zh-CN")} 词`
+      message: `已连接正式主词库 ${nextWords.length.toLocaleString("zh-CN")} 词`
     }));
+  };
+
+  const publishFormalMainWords = async (
+    nextWords,
+    previousWords,
+    source,
+    { confirmedDeletion = false } = {}
+  ) => {
+    const deletionIntent = buildLexiconDeletionIntent(previousWords, nextWords, {
+      action: source,
+      confirmed: confirmedDeletion
+    });
+    const result = await postExportCache(
+      formalLexiconWords(nextWords),
+      mainLexiconRef.current.meta,
+      {
+        source,
+        forceRefresh: true,
+        ...(deletionIntent ? { deletionIntent } : {})
+      }
+    );
+    if (!result?.ok) {
+      const detail = [result?.error, result?.detail].filter(Boolean).join("：");
+      throw new Error(`正式主词库文件写入失败：${detail || "未知错误"}`);
+    }
+    return result;
   };
 
   const commitReadingImport = async (incoming, sourceLabel) => {
@@ -373,10 +578,24 @@ export default function ReadingWordsPage() {
         if (result.mainChanged) {
           await saveWordsToIndexedDB(previousMainWords, mainLexiconRef.current.meta);
         }
-        throw new Error("阅读生词栏写入失败，主词库已自动回退");
+        throw new Error("阅读生词本写入失败，主词库已自动回退");
       }
 
-      if (result.mainChanged) updateMainLexiconMemory(result.mainWords);
+      let publishedMeta = null;
+      if (result.mainChanged) {
+        try {
+          publishedMeta = await publishFormalMainWords(
+            result.mainWords,
+            previousMainWords,
+            sourceLabel
+          );
+        } catch (error) {
+          await saveWordsToIndexedDB(previousMainWords, mainLexiconRef.current.meta);
+          writeReadingWords(words);
+          throw error;
+        }
+        updateMainLexiconMemory(result.mainWords, publishedMeta);
+      }
       setWords(result.words);
       setRollbackAvailable(true);
       return result;
@@ -407,7 +626,7 @@ export default function ReadingWordsPage() {
     setDraft(EMPTY_DRAFT);
     setAddOpen(false);
     setNotice(result.added
-      ? `已添加 ${normalized.word}；${result.addedToMain ? "同时加入浏览器主词库。" : "已复用主词库资料。"}`
+      ? `已添加 ${normalized.word}；${result.addedToMain ? "同时加入正式主词库。" : "已复用主词库资料。"}`
       : `“${normalized.word}”再次导入，累计 ${imported?.importCount || 2} 次，已标记为高频词。`);
   };
 
@@ -447,12 +666,12 @@ export default function ReadingWordsPage() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `阅读生词栏备份-${new Date().toISOString().slice(0, 10)}.json`;
+    anchor.download = `阅读生词本备份-${new Date().toISOString().slice(0, 10)}.json`;
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
-    setNotice("阅读生词栏备份已导出。");
+    setNotice("阅读生词本备份已导出。");
   };
 
   const exportTransferPackage = () => {
@@ -504,15 +723,27 @@ export default function ReadingWordsPage() {
       );
       if (!writeReadingWordsWithBackup(result.words, words)) {
         await saveWordsToIndexedDB(previousMainWords, mainLexiconRef.current.meta);
-        throw new Error("阅读生词写入失败，浏览器主词库已自动回退");
+        throw new Error("阅读生词写入失败，正式主词库已自动回退");
       }
-      updateMainLexiconMemory(result.mainWords);
+      let publishedMeta;
+      try {
+        publishedMeta = await publishFormalMainWords(
+          result.mainWords,
+          previousMainWords,
+          "personal-reading-cross-device-import"
+        );
+      } catch (error) {
+        await saveWordsToIndexedDB(previousMainWords, mainLexiconRef.current.meta);
+        writeReadingWords(words);
+        throw error;
+      }
+      updateMainLexiconMemory(result.mainWords, publishedMeta);
       setWords(result.words);
       setSelectedId(result.words[0]?.id || "");
       setRollbackAvailable(true);
       setNotice(
         `跨设备导入完成：生词新增 ${result.readingAdded}、合并 ${result.readingMerged}；` +
-        `主词库补充新增 ${result.mainAdded}、学习状态合并 ${result.mainMerged}。`
+        `正式主词库新增 ${result.mainAdded}、学习状态合并 ${result.mainMerged}。`
       );
     } catch (error) {
       setStorageError(`跨设备导入失败：${error?.message || error}`);
@@ -533,18 +764,25 @@ export default function ReadingWordsPage() {
       return;
     }
     const confirmed = window.confirm(
-      "将恢复到上一次导入或 AI 写回前的阅读生词和浏览器主词库。当前修改会被替换，是否继续？"
+      "将恢复到上一次导入或 AI 写回前的阅读生词和正式主词库。当前修改会被替换，是否继续？"
     );
     if (!confirmed) return;
 
     mainMutationInFlightRef.current = true;
     setMainWriteBusy(true);
     try {
+      const previousMainWords = mainLexiconRef.current.words;
       await saveWordsToIndexedDB(mainBackup.words, mainBackup.meta || {});
       if (!writeReadingWords(readingBackup.words)) {
         throw new Error("阅读生词备份恢复失败");
       }
-      updateMainLexiconMemory(mainBackup.words);
+      const publishedMeta = await publishFormalMainWords(
+        mainBackup.words,
+        previousMainWords,
+        "restore-reading-sync-backup",
+        { confirmedDeletion: true }
+      );
+      updateMainLexiconMemory(mainBackup.words, publishedMeta);
       setWords(readingBackup.words);
       setSelectedId(readingBackup.words[0]?.id || "");
       setNotice("已恢复到上一次同步前的本地备份。");
@@ -562,7 +800,7 @@ export default function ReadingWordsPage() {
     setAiRun((current) => ({
       ...current,
       status: "stopped",
-      message: "已停止；停止后收到的结果不会写入阅读生词栏。"
+      message: "已停止；停止后收到的结果不会写入阅读生词本。"
     }));
   };
 
@@ -587,7 +825,7 @@ export default function ReadingWordsPage() {
         total: 0,
         filled: 0,
         failed: 0,
-        message: "浏览器主词库尚未准备好，未发起 AI 请求。"
+        message: "正式主词库尚未准备好，未发起 AI 请求。"
       });
       return;
     }
@@ -599,7 +837,7 @@ export default function ReadingWordsPage() {
         total: 0,
         filled: 0,
         failed: 0,
-        message: "当前阅读生词栏没有需要补全的词。"
+        message: "当前阅读生词本没有需要补全的词。"
       });
       return;
     }
@@ -618,7 +856,7 @@ export default function ReadingWordsPage() {
       total: targets.length,
       filled: 0,
       failed: 0,
-      message: "正在检查阅读生词栏，不会扫描正式词库。"
+      message: "正在检查阅读生词本，不会扫描正式词库。"
     });
 
     for (let start = 0; start < targets.length; start += 10) {
@@ -663,7 +901,11 @@ export default function ReadingWordsPage() {
       let batchFilled = 0;
       let batchFailed = 0;
       const mainIndex = buildMainWordIndex(workingMainWords);
-      const nextMainWords = [...workingMainWords];
+      const usedMainIds = new Set(
+        workingMainWords.flatMap((entry) => [entry?.id, entry?.wordId]).filter(Boolean)
+      );
+      let nextMainWords = [...workingMainWords];
+      const previousBatchReadingWords = workingWords;
 
       workingWords = workingWords.map((word) => {
         if (!batch.some((entry) => entry.id === word.id)) return word;
@@ -672,10 +914,19 @@ export default function ReadingWordsPage() {
           batchFailed += 1;
           return word;
         }
-        const mainLocation = mainIndex.get(normalizeReadingWordKey(word.word));
+        const mainWordKey = normalizeReadingWordKey(word.word);
+        let mainLocation = mainIndex.get(mainWordKey);
         if (!mainLocation) {
-          batchFailed += 1;
-          return word;
+          const ensured = ensureReadingWordMainEntry(word, nextMainWords, {
+            usedIds: usedMainIds,
+            now: new Date().toISOString()
+          });
+          nextMainWords = ensured.mainWords;
+          mainLocation = {
+            entry: ensured.mainEntry,
+            index: ensured.mainIndex
+          };
+          mainIndex.set(mainWordKey, mainLocation);
         }
         const merged = mergeReadingWordAiProfile(word, profile);
         const mergedMain = mergeAiProfileIntoMainEntry(mainLocation.entry, profile);
@@ -716,6 +967,19 @@ export default function ReadingWordsPage() {
             throw new Error("阅读生词写入失败，本批主词库写回已自动回退");
           }
         }
+        let publishedMeta;
+        try {
+          publishedMeta = await publishFormalMainWords(
+            nextMainWords,
+            workingMainWords,
+            "personal-reading-ai-completion"
+          );
+        } catch (error) {
+          await saveWordsToIndexedDB(workingMainWords, mainLexiconRef.current.meta);
+          writeReadingWords(previousBatchReadingWords);
+          throw error;
+        }
+        updateMainLexiconMemory(nextMainWords, publishedMeta);
       } catch (error) {
         aiControlRef.current.controller = null;
         setAiRun({
@@ -730,7 +994,6 @@ export default function ReadingWordsPage() {
       }
       workingMainWords = nextMainWords;
       firstWrite = false;
-      updateMainLexiconMemory(workingMainWords);
       setRollbackAvailable(true);
       processed += batch.length;
       filled += batchFilled;
@@ -755,7 +1018,7 @@ export default function ReadingWordsPage() {
       filled,
       failed,
       message: failed
-        ? `补全结束：${filled} 个重新校验通过，${failed} 个仍不完整。`
+        ? `补全结束：${filled} 个重新校验通过，${failed} 个仍待处理。`
         : `补全结束：${filled} 个重新校验通过。`
     });
   };
@@ -763,7 +1026,7 @@ export default function ReadingWordsPage() {
   if (!ready) {
     return (
       <main className={styles.page}>
-        <div className={styles.loading}>正在读取阅读生词栏…</div>
+        <div className={styles.loading}>正在读取阅读生词本…</div>
       </main>
     );
   }
@@ -774,9 +1037,9 @@ export default function ReadingWordsPage() {
         <div>
           <div className={styles.titleLine}>
             <BookOpenText aria-hidden="true" />
-            <h1>阅读生词栏</h1>
+            <h1>阅读生词本</h1>
           </div>
-          <p>阅读生词独立学习；已有主词直接复用资料，新词安全加入浏览器主词库补充层。</p>
+          <p>阅读生词独立学习；已有主词直接复用资料，新词写入正式主词库，并在 AI 扫描后按用途、主题和难度分类。</p>
         </div>
         <div className={styles.headerStats} aria-label="阅读生词统计">
           <strong>{words.length}</strong>
@@ -790,6 +1053,7 @@ export default function ReadingWordsPage() {
 
       <div className={`${styles.syncBanner} ${mainLexiconStatus.status === "error" ? styles.syncError : ""}`} role="status">
         <span>{mainLexiconStatus.message}</span>
+        {mainEntryMissingWords.length ? <em>主词库未收录 {mainEntryMissingWords.length} 个</em> : null}
         {mainClassificationPending.length ? <em>主词库待分类 {mainClassificationPending.length} 个</em> : null}
       </div>
 
@@ -819,6 +1083,14 @@ export default function ReadingWordsPage() {
         >
           <Star aria-hidden="true" />高频词 {highFrequencyWords.length}
         </button>
+        <WordStudyOrderControls
+          mode={wordOrdering.mode}
+          difficultyMode={wordOrdering.difficultyMode}
+          onModeChange={changeWordOrderMode}
+          onDifficultyModeChange={changeWordDifficultyMode}
+          difficultyAvailable={wordOrdering.difficultyAvailable}
+        />
+        <StudyMeaningToggle className={styles.secondaryButton} />
         <button type="button" className={styles.secondaryButton} onClick={() => setAddOpen((value) => !value)} disabled={actionsDisabled}>
           <BookPlus aria-hidden="true" />单个添加
         </button>
@@ -860,7 +1132,7 @@ export default function ReadingWordsPage() {
             <label className={styles.wideField}><span>英文例句</span><input value={draft.example} onChange={(event) => setDraft({ ...draft, example: event.target.value })} /></label>
             <label className={styles.wideField}><span>例句翻译</span><input value={draft.exampleCn} onChange={(event) => setDraft({ ...draft, exampleCn: event.target.value })} /></label>
             <label className={styles.wideField}><span>同义替换</span><input value={draft.synonyms} onChange={(event) => setDraft({ ...draft, synonyms: event.target.value })} placeholder="多个词用逗号或分号分开" /></label>
-            <div className={styles.formActions}><button type="submit" className={styles.primaryButton}>加入阅读生词栏</button></div>
+            <div className={styles.formActions}><button type="submit" className={styles.primaryButton}>加入阅读生词本</button></div>
           </form>
         </section>
       ) : null}
@@ -898,7 +1170,7 @@ export default function ReadingWordsPage() {
             <div className={styles.aiIcon}><Bot aria-hidden="true" /></div>
             <div>
               <strong>阅读生词专用 AI 补全</strong>
-              <p>扫描范围固定为本页 {words.length} 个词，只处理其中 {aiTargetWords.length} 个待补全或主词库待分类词；阅读生词不保存分类。</p>
+              <p>扫描范围固定为本页 {words.length} 个词，只处理其中 {aiTargetWords.length} 个阅读资料待补全、主词库未收录或待分类词；阅读生词不保存分类。</p>
             </div>
           </div>
           <div className={styles.aiRules}>
@@ -919,7 +1191,7 @@ export default function ReadingWordsPage() {
           {aiRun.total || aiRun.message ? (
             <div className={styles.aiProgress}>
               <div><span style={{ width: `${aiRun.total ? (aiRun.processed / aiRun.total) * 100 : 0}%` }} /></div>
-              <p>{aiRun.message || "准备开始"} {aiRun.total ? `· 通过 ${aiRun.filled} · 仍不完整 ${aiRun.failed}` : ""}</p>
+              <p>{aiRun.message || "准备开始"} {aiRun.total ? `· 通过 ${aiRun.filled} · 仍待处理 ${aiRun.failed}` : ""}</p>
             </div>
           ) : null}
           <div className={styles.aiActions}>
@@ -941,6 +1213,14 @@ export default function ReadingWordsPage() {
             <div className={styles.listRows}>
               {visibleWords.map((word) => {
                 const missing = getReadingWordMissingFields(word);
+                const mainEntry = mainLexiconRef.current.index.get(
+                  normalizeReadingWordKey(word.word)
+                )?.entry;
+                const mainStatus = !mainEntry
+                  ? "主词库未收录"
+                  : isMainEntryClassificationIncomplete(mainEntry)
+                    ? "主词库待分类"
+                    : "";
                 return (
                   <button
                     type="button"
@@ -948,10 +1228,14 @@ export default function ReadingWordsPage() {
                     className={`${styles.wordRow}${selectedWord?.id === word.id ? ` ${styles.selectedRow}` : ""}`}
                     onClick={() => setSelectedId(word.id)}
                   >
-                    <span><strong>{word.word}</strong><small>{word.meaning || "暂无释义"}</small></span>
+                    <span><strong>{word.word}</strong><small className="study-answer-content">{word.meaning || "暂无释义"}</small></span>
                     <span className={styles.rowBadges}>
                       {word.highFrequency || Number(word.importCount) >= 2 ? <b>高频 ×{word.importCount}</b> : null}
-                      {missing.length ? <em>{missing.length} 项待补</em> : <i>完整</i>}
+                      {missing.length
+                        ? <em>阅读资料 {missing.length} 项待补</em>
+                        : mainStatus
+                          ? <em>{mainStatus}</em>
+                          : <i>完整</i>}
                     </span>
                   </button>
                 );
@@ -988,8 +1272,8 @@ export default function ReadingWordsPage() {
                   className="word-canvas-icon"
                   onClick={deleteSelectedWord}
                   disabled={aiRunning || mainWriteBusy}
-                  aria-label="从阅读生词栏删除"
-                  title="只从阅读生词栏删除（D / Delete）"
+                  aria-label="从阅读生词本删除"
+                  title="只从阅读生词本删除（D / Delete）"
                   data-testid="reading-word-delete"
                 >
                   <Trash2 aria-hidden="true" />
@@ -1000,6 +1284,12 @@ export default function ReadingWordsPage() {
                 <div className={styles.missingBanner}>
                   <AlertTriangle aria-hidden="true" />
                   待补全：{missingFields.map((field) => MISSING_FIELD_LABELS[field]).join("、")}
+                </div>
+              ) : null}
+              {selectedMainStatus ? (
+                <div className={styles.missingBanner}>
+                  <AlertTriangle aria-hidden="true" />
+                  {selectedMainStatus}；AI 处理时会先建立正式主词条，再补充分类。
                 </div>
               ) : null}
 
@@ -1014,7 +1304,7 @@ export default function ReadingWordsPage() {
                 speakWord={() => speak(selectedWord.word)}
               />
 
-              <div className={styles.detailGrid}>
+              <div className={`${styles.detailGrid} study-answer-content`}>
                 <DetailList
                   title="变形"
                   items={Array.isArray(selectedWord.forms) ? selectedWord.forms : []}
@@ -1039,11 +1329,27 @@ export default function ReadingWordsPage() {
                   title="同义替换"
                   items={Array.isArray(selectedWord.synonyms) ? selectedWord.synonyms : []}
                   emptyText={selectedWord.synonymsReviewed ? "已审核 · 无可替换" : "待 AI 检查同义替换"}
-                  renderItem={(item) => (
-                    <button type="button" className={styles.synonymItem} key={item} onClick={() => speak(item)}>
-                      <Volume2 aria-hidden="true" />{item}
-                    </button>
-                  )}
+                  renderItem={(item, index) => {
+                    const synonymWord = typeof item === "string"
+                      ? item
+                      : item?.word || item?.replacement || "";
+                    const synonymMainEntry = mainLexiconRef.current.index.get(
+                      normalizeReadingWordKey(synonymWord)
+                    )?.entry;
+                    const synonym = buildReadingSynonymDisplay(item, synonymMainEntry);
+                    return (
+                      <button
+                        type="button"
+                        className={styles.synonymItem}
+                        key={`${synonym.word}-${index}`}
+                        onClick={() => speak(synonym.word)}
+                      >
+                        <Volume2 aria-hidden="true" />
+                        <strong className={styles.synonymWord}>{synonym.word}</strong>
+                        <span className={styles.synonymMeaning}>{synonym.meaning || "释义待补全"}</span>
+                      </button>
+                    );
+                  }}
                 />
               </div>
 
@@ -1053,6 +1359,7 @@ export default function ReadingWordsPage() {
                 isExternalIdictationItem={false}
                 prevWord={() => moveSelection(-1)}
                 nextWord={() => moveSelection(1)}
+                showDirectionArrows
                 markStatus={(status) => patchSelectedWord({
                   status: selectedWord.status === status ? "" : status
                 })}

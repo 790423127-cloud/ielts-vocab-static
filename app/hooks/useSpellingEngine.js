@@ -169,6 +169,8 @@ export function useSpellingEngine(words = [], options = {}) {
   const flashcardStateRef = useRef(null);
   const candidateOptionsRef = useRef(null);
   const lexiconMetaRef = useRef(null);
+  const categoryScopeRef = useRef(null);
+  const spellingScopeRef = useRef(null);
   const debugModeRef = useRef(options.debugMode);
   const turboModeRef = useRef(options.turboMode === true);
   const autoNextOnCorrectRef = useRef(options.autoNextOnCorrect !== false);
@@ -202,6 +204,8 @@ export function useSpellingEngine(words = [], options = {}) {
     () => resolveSpellingScope(options.spellingScope || categoryScope?.scope || "word"),
     [options.spellingScope, categoryScope?.scope]
   );
+  categoryScopeRef.current = categoryScope;
+  spellingScopeRef.current = spellingScope;
 
   const engineDepsKey = useMemo(
     () => buildEngineDepsKey(words, candidateOptions, lexiconMeta, options.debugMode, categoryScope, spellingScope),
@@ -210,6 +214,8 @@ export function useSpellingEngine(words = [], options = {}) {
 
   useEffect(() => {
     const activeWords = wordsRef.current;
+    const activeCategoryScope = categoryScopeRef.current;
+    const activeSpellingScope = spellingScopeRef.current;
 
     if (!activeWords.length) {
       bridgeRef.current = null;
@@ -242,11 +248,11 @@ export function useSpellingEngine(words = [], options = {}) {
       debugMode: debugModeRef.current,
       candidateOptions: candidateOptionsRef.current,
       lexiconMeta: lexiconMetaRef.current,
-      scope: spellingScope.scope,
-      currentBatchId: categoryScope?.currentBatchId || "",
-      category: categoryScope?.label || "",
-      source: categoryScope?.practiceSource || "category",
-      errorBankTotal: Number(categoryScope?.errorBankTotal) || 0,
+      scope: activeSpellingScope.scope,
+      currentBatchId: activeCategoryScope?.currentBatchId || "",
+      category: activeCategoryScope?.label || "",
+      source: activeCategoryScope?.practiceSource || "category",
+      errorBankTotal: Number(activeCategoryScope?.errorBankTotal) || 0,
       ...(store ? { store } : {})
     });
     const bridge = createBridge();
@@ -305,14 +311,7 @@ export function useSpellingEngine(words = [], options = {}) {
     return () => {
       cancelled = true;
     };
-  }, [
-    engineDepsKey,
-    categoryScope?.currentBatchId,
-    categoryScope?.errorBankTotal,
-    categoryScope?.label,
-    categoryScope?.practiceSource,
-    spellingScope.scope
-  ]);
+  }, [engineDepsKey]);
 
   function refresh(overrides = {}) {
     const bridge = bridgeRef.current;

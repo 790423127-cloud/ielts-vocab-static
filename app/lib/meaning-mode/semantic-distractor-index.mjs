@@ -1,7 +1,7 @@
 // Auto-generated semantic distractor index for Meaning Mode — v2 rich micro-domain.
 // Source: .static-export-cache/words.json (READ-ONLY)
 // Matched against: public/data/meaning-6000.json (READ-ONLY)
-// Generated: 2026-07-26T04:48:11.313Z
+// Generated: 2026-07-30T11:01:43.955Z
 // Fields: _posFamily, _semanticGroups, _confidence, _sourceFields
 // DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-semantic-distractor-index.mjs
 
@@ -196681,57 +196681,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_fe7f29efae2f",
-    "word": "ireland",
-    "quizMeaningZh": "爱尔兰",
-    "meaningZh": "爱尔兰",
-    "meaningDetailedZh": "爱尔兰",
-    "meaningSource": "curated-quiz-sense",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 130.9,
-    "zipfFrequency": 4.66,
-    "scoreBreakdown": {
-      "zipf": 4.66,
-      "priority": 1,
-      "gBonus": 21,
-      "evidence": 0,
-      "collocation": 4,
-      "difficulty": 13,
-      "source": 0,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 11,
-      "curatedSenseBonus": 5,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "listening",
-      "reading",
-      "writing"
-    ],
-    "topics": [
-      "旅行"
-    ],
-    "sourceEvidence": [
-      "writingPriority",
-      "ieltsUse",
-      "topics",
-      "collocations",
-      "quizSenses"
-    ],
-    "legacy4500": true,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "abstract-conceptual",
-      "movement-travel",
-      "education-academic",
-      "communication-language"
-    ],
-    "_confidence": "high",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_6591f15e4807",
     "word": "spectrum",
     "quizMeaningZh": "光谱",
@@ -264717,51 +264666,6 @@ export const SEMANTIC_INDEX = [
     "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
   },
   {
-    "wordId": "word_excel_043a718774c5",
-    "word": "s",
-    "quizMeaningZh": "abbr. 小号的 n. 硫",
-    "meaningZh": "abbr. 小号的 n. 硫",
-    "meaningDetailedZh": "s: abbr. 小号的（型号） n. 硫",
-    "meaningSource": "master-lexicon",
-    "posFamily": "noun",
-    "difficulty": "基础高频",
-    "selectionScore": 114.9,
-    "zipfFrequency": 5.86,
-    "scoreBreakdown": {
-      "zipf": 5.86,
-      "priority": 1,
-      "gBonus": 4,
-      "evidence": 5,
-      "collocation": 0,
-      "difficulty": 13,
-      "source": -2,
-      "rarePenalty": 0,
-      "longPenalty": 0,
-      "legacyBonus": 0,
-      "curatedSenseBonus": 0,
-      "posBalanceBonus": 0
-    },
-    "tags": [
-      "reading"
-    ],
-    "topics": [
-      "c7~8"
-    ],
-    "sourceEvidence": [
-      "readingPriority",
-      "excelSourceTags",
-      "ieltsUse",
-      "topics"
-    ],
-    "legacy4500": false,
-    "_posFamily": "noun",
-    "_semanticGroups": [
-      "education-academic"
-    ],
-    "_confidence": "medium",
-    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
-  },
-  {
     "wordId": "word_6a8c2a612778",
     "word": "pronounced",
     "quizMeaningZh": "显著的",
@@ -332356,6 +332260,103 @@ export const SEMANTIC_INDEX = [
     "_posFamily": "noun",
     "_semanticGroups": [
       "movement-travel",
+      "education-academic"
+    ],
+    "_confidence": "medium",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_303ec5b45041",
+    "word": "lower",
+    "quizMeaningZh": "较低的；放下",
+    "meaningZh": "较低的；放下",
+    "meaningDetailedZh": "较低的；放下",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "中级核心",
+    "selectionScore": 46.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 16.25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 0,
+      "speaking": 0,
+      "comprehensionImportance": 60,
+      "contextFrequency": 76,
+      "coverageValue": 70,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading"
+    ],
+    "topics": [
+      "消费",
+      "听力",
+      "p4",
+      "p12",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "listeningPriority",
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "change-process",
+      "work-economy",
+      "education-academic"
+    ],
+    "_confidence": "high",
+    "_sourceFields": "pos+topics+ieltsUse+meaning+definition+meaningDetailZh"
+  },
+  {
+    "wordId": "word_30afd042b971",
+    "word": "grown",
+    "quizMeaningZh": "成长（过去分词）",
+    "meaningZh": "成长（过去分词）",
+    "meaningDetailedZh": "成长（过去分词）",
+    "meaningSource": "master-lexicon-rebaseline",
+    "posFamily": "adjective",
+    "difficulty": "中级核心",
+    "selectionScore": 46.7,
+    "scoreBreakdown": {
+      "ieltsExamWeight": 25,
+      "listening": 5,
+      "reading": 5,
+      "writing": 5,
+      "speaking": 0,
+      "comprehensionImportance": 55,
+      "contextFrequency": 75,
+      "coverageValue": 52,
+      "noisePenalty": 0
+    },
+    "tags": [
+      "listening",
+      "reading",
+      "writing"
+    ],
+    "topics": [
+      "实用补充",
+      "阅读",
+      "list4",
+      "list75",
+      "G类完整学习计划",
+      "G类完整学习计划·阶段1"
+    ],
+    "sourceEvidence": [
+      "readingPriority",
+      "excelSourceTags",
+      "ieltsUse",
+      "topics"
+    ],
+    "_posFamily": "adjective",
+    "_semanticGroups": [
+      "action-behavior",
       "education-academic"
     ],
     "_confidence": "medium",

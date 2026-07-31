@@ -14,6 +14,8 @@ import VirtualList from "./VirtualList";
 import WordStudyOverview from "./WordStudyOverview";
 import WordStudyProgress from "./WordStudyProgress";
 import WordStudyWorkspace from "./WordStudyWorkspace";
+import StudyMeaningToggle from "./StudyMeaningToggle";
+import WordStudyOrderControls from "./WordStudyOrderControls";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
 import rgStyles from "../reading-g/reading-g.module.css";
 
@@ -151,7 +153,13 @@ export default function SatelliteLexiconFlashcard({
   onSpeakWord,
   onSpeakExample,
   onSpeakSmall,
-  onShuffle,
+  onShuffle = null,
+  wordOrderMode = "current",
+  wordOrderDifficultyMode = "default",
+  wordOrderDifficultyAvailable = true,
+  wordOrderDifficultyEnabled = true,
+  onWordOrderModeChange = null,
+  onWordDifficultyModeChange = null,
   statsLine,
   toast,
   extraLinks = [],
@@ -619,7 +627,7 @@ export default function SatelliteLexiconFlashcard({
           <div className="previous">
             <div className="previous-label">上一个单词</div>
             <div className="previous-word">{prevItem?.word || "—"}</div>
-            <div className="previous-meta">
+            <div className="previous-meta study-answer-content">
               {fallback(prevItem?.phonetic, "等待音标")} ·{" "}
               {fallback(getPosDisplay(prevItem?.pos), "词性")} ·{" "}
               {fallback(prevItem?.meaning, "释义")}
@@ -627,11 +635,22 @@ export default function SatelliteLexiconFlashcard({
           </div>
 
           <div className="top-actions">
-            {onShuffle ? (
+            {!quizMode && onWordOrderModeChange ? (
+              <WordStudyOrderControls
+                mode={wordOrderMode}
+                difficultyMode={wordOrderDifficultyMode}
+                onModeChange={onWordOrderModeChange}
+                onDifficultyModeChange={onWordDifficultyModeChange}
+                difficultyAvailable={wordOrderDifficultyAvailable}
+                difficultyEnabled={wordOrderDifficultyEnabled}
+              />
+            ) : null}
+            {quizMode && onShuffle ? (
               <button type="button" className="top-pill shuffle-pill" onClick={onShuffle}>
-                <Shuffle aria-hidden="true" />随机
+                <Shuffle aria-hidden="true" />重排本轮
               </button>
             ) : null}
+            <StudyMeaningToggle />
             <a className="top-pill spelling-entry-link" href="/">
               ← 主词库
             </a>
@@ -786,7 +805,7 @@ export default function SatelliteLexiconFlashcard({
           <section className="main">
           <div className="center word-study-content">
 
-            <div className="example-box">
+            <div className="example-box study-answer-content">
               <div className="example-head">
                 <button
                   className="hero-sound-btn"
@@ -993,7 +1012,7 @@ export default function SatelliteLexiconFlashcard({
                     }}
                   >
                     <div className="word">{item?.word || "—"}</div>
-                    <div className="word-sub">
+                    <div className="word-sub study-answer-content">
                       <span className="phonetic">{fallback(item?.phonetic, "等待音标")}</span>
                       <span className="pos">
                         {fallback(
@@ -1007,7 +1026,7 @@ export default function SatelliteLexiconFlashcard({
                   </div>
                 </div>
 
-                <div className="meaning-block">
+                <div className="meaning-block study-answer-content">
                   <div className="meaning-primary">{fallback(item?.meaning, "等待释义")}</div>
                   {isReadingG && supplementalSenses.length ? (
                     <div className={rgStyles.rgSensesWrap}>
@@ -1110,7 +1129,7 @@ export default function SatelliteLexiconFlashcard({
                   {isIelts538 ? (
                     relatedWords.length ? (
                       <section
-                        className={`grid footer-grid ielts-538-related-grid${isDenseIelts538 ? " is-dense" : ""}${showRelatedMeanings && hasDistinctRelatedMeanings ? " is-meaning-expanded" : ""}`}
+                        className={`grid footer-grid ielts-538-related-grid study-answer-content${isDenseIelts538 ? " is-dense" : ""}${showRelatedMeanings && hasDistinctRelatedMeanings ? " is-meaning-expanded" : ""}`}
                         aria-label="相关单词和同义替换"
                       >
                         <div className="block">
@@ -1123,7 +1142,7 @@ export default function SatelliteLexiconFlashcard({
                                 aria-expanded={showRelatedMeanings}
                                 onClick={() => setShowRelatedMeanings((visible) => !visible)}
                               >
-                                {showRelatedMeanings ? "隐藏释义" : "显示释义"}
+                                {showRelatedMeanings ? "收起其他义" : "展开其他义"}
                               </button>
                             ) : null}
                           </div>

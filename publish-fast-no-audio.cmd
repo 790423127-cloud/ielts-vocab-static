@@ -135,6 +135,11 @@ if exist "%EXPORT_DIR%\reading-words.html" (
   if errorlevel 1 goto FAIL
 )
 
+if exist "%EXPORT_DIR%\reading-paraphrases.html" (
+  call tcb hosting deploy "%EXPORT_DIR%\reading-paraphrases.html" %DEPLOY_PATH%/reading-paraphrases.html -e %ENV_ID%
+  if errorlevel 1 goto FAIL
+)
+
 if exist "%EXPORT_DIR%\ielts-538.html" (
   call tcb hosting deploy "%EXPORT_DIR%\ielts-538.html" %DEPLOY_PATH%/ielts-538.html -e %ENV_ID%
   if errorlevel 1 goto FAIL
@@ -186,6 +191,8 @@ echo URL:
 echo https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/?v=fast1
 echo Spelling:
 echo https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/spelling.html
+echo Reading paraphrases:
+echo https://ielts-vocab-d1gymoilc5746f67a-1441466606.tcloudbaseapp.com/beidanci/reading-paraphrases.html
 echo.
 pause
 exit /b 0

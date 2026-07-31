@@ -117,11 +117,8 @@ export function resolveFilterSwitchIndex(resolveIndex, {
   studyPool = null,
   findFirstInFilter
 }) {
-  const filterKeyValue = typeof filterKey === "function" ? filterKey(filter) : "all";
-  const savedWordKey = String(entryPositions[filterKeyValue] || "").trim();
-
   const result = resolveIndex(words, {
-    session: { wordKey: savedWordKey, filter },
+    session: { filter },
     entryPositions,
     filter,
     wordMatchesFilter,

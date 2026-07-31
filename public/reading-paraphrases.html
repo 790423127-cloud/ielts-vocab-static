@@ -16,18 +16,17 @@
     <section class="rp-title">
       <div><p>READING PARAPHRASE NOTEBOOK</p><h1>阅读同义替换记录本</h1><span>导入阅读网站的错题替换关系，独立记录认识、模糊和不熟。</span></div>
       <div class="rp-title-actions">
-        <button id="importBtn" class="rp-button rp-primary" type="button">导入学习包</button>
-        <input id="importInput" type="file" accept=".json,.txt,application/json,text/plain" hidden />
+        <label class="rp-button rp-primary">导入学习包<input id="importInput" type="file" accept=".json,.txt,application/json,text/plain" /></label>
         <button id="exportBtn" class="rp-button" type="button">导出备份</button>
       </div>
     </section>
-    <div id="notice" class="rp-notice hidden" role="status" aria-live="polite"></div>
-    <div id="error" class="rp-error hidden" role="alert"></div>
+    <div id="notice" class="rp-notice hidden"></div>
+    <div id="error" class="rp-error hidden"></div>
 
-    <section class="rp-toolbar" aria-label="学习设置">
+    <section class="rp-toolbar">
       <label><span>回忆方向</span><select id="directionSelect"><option value="question-to-source">题目表达 → 原文表达</option><option value="source-to-question">原文表达 → 题目表达</option><option value="browse">对照浏览</option></select></label>
       <label><span>学习范围</span><select id="filterSelect"><option value="all">全部</option><option value="new">未学习</option><option value="fuzzy">模糊</option><option value="unfamiliar">不熟</option><option value="known">认识</option></select></label>
-      <div class="rp-stat" aria-live="polite"><strong id="positionText">0 / 0</strong><span id="sourceCount">等待导入</span></div>
+      <div class="rp-stat"><strong id="positionText">0 / 0</strong><span id="sourceCount">等待导入</span></div>
       <button id="syncOpenBtn" class="rp-button" type="button">云同步</button>
     </section>
 
@@ -41,7 +40,7 @@
         <div class="rp-meta"><span id="directionLabel"></span><b id="statusLabel">未学习</b></div>
         <div class="rp-prompt"><span id="promptLabel">题目表达</span><h2 id="promptText"></h2></div>
         <button id="revealBtn" class="rp-reveal" type="button">显示答案</button>
-        <div id="answerArea" class="rp-answer" aria-live="polite">
+        <div id="answerArea" class="rp-answer">
           <span id="answerLabel">原文表达</span><h3 id="answerText">点击后查看</h3><p id="noteText"></p>
         </div>
         <div id="sources" class="rp-sources hidden"></div>
@@ -55,12 +54,12 @@
       </footer>
     </section>
 
-    <section id="syncPanel" class="rp-sync hidden" role="region" aria-label="腾讯云同步">
+    <section id="syncPanel" class="rp-sync hidden" aria-label="腾讯云同步">
       <div><strong>腾讯云学习进度同步</strong><button id="syncCloseBtn" type="button">关闭</button></div>
       <p>使用与主词库相同的同步码。只同步本记录本、学习状态和当前位置。</p>
       <input id="syncCodeInput" type="password" inputmode="text" autocomplete="off" placeholder="输入至少 6 位同步码" />
       <div><button id="syncConnectBtn" class="rp-primary" type="button">连接并合并</button><button id="syncPullBtn" type="button">从云端恢复</button><button id="syncPushBtn" type="button">上传本机进度</button></div>
-      <span id="syncStatus" role="status" aria-live="polite">未连接</span>
+      <span id="syncStatus">未连接</span>
     </section>
   </main>
   <script src="./sync-config.js?v=20260730_v1"></script>

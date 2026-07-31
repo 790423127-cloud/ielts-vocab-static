@@ -1,5 +1,5 @@
 import {
-  REAL_AUDIO_ENHANCE_VERSION,
+  EDGE_AUDIO_ENHANCE_VERSION,
   isRealAudioEnhanceAvailable,
   needsEdgeAudioEnhance
 } from "../app/lib/real-audio-enhance.mjs";
@@ -23,7 +23,7 @@ const indexFile = audioIndexPath();
 const index = readJson(indexFile, {});
 const pending = Object.entries(index).filter(([, entry]) => needsEdgeAudioEnhance(entry));
 
-console.log(`Edge audio enhance version: ${REAL_AUDIO_ENHANCE_VERSION}`);
+console.log(`Edge audio enhance version: ${EDGE_AUDIO_ENHANCE_VERSION}`);
 console.log(`Pending edge entries: ${pending.length}${dryRun ? " (dry-run)" : ""}`);
 
 let enhanced = 0;
@@ -40,7 +40,7 @@ for (const [key, entry] of pending.slice(0, limit)) {
   if (result.ok && result.enhanced) {
     index[key] = {
       ...entry,
-      audioEnhanceVersion: REAL_AUDIO_ENHANCE_VERSION,
+      audioEnhanceVersion: EDGE_AUDIO_ENHANCE_VERSION,
       contentType: result.contentType || entry.contentType || "audio/mpeg",
       updatedAt: Date.now()
     };

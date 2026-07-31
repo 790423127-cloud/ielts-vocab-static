@@ -28,7 +28,8 @@ export function buildAtomicDeletionNavigation({
   filter,
   wordMatchesFilter,
   normalizeWord,
-  sortQueue
+  sortQueue,
+  orderedQueue
 }) {
   const sourceWords = Array.isArray(words) ? words : [];
   if (!Number.isInteger(currentIndex) || !sourceWords[currentIndex]) return null;
@@ -37,18 +38,40 @@ export function buildAtomicDeletionNavigation({
   const targetKey = normalizeWord(sourceWords[currentIndex]?.word);
   if (!targetKey) return null;
 
+  const visibleQueue = Array.isArray(orderedQueue)
+    ? orderedQueue
+      .map((entry) => (
+        Number.isInteger(entry)
+          ? entry
+          : Number.isInteger(entry?.originalIndex)
+            ? entry.originalIndex
+            : -1
+      ))
+      .filter((sourceIndex) => (
+        sourceIndex >= 0
+        && sourceWords[sourceIndex]
+        && wordMatchesFilter(sourceWords[sourceIndex], filter, sourceIndex)
+      ))
+    : [];
   const oldQueue = [];
-  for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
-    if (wordMatchesFilter(sourceWords[sourceIndex], filter, sourceIndex)) oldQueue.push(sourceIndex);
+  if (visibleQueue.length) {
+    oldQueue.push(...visibleQueue);
+  } else {
+    for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
+      if (wordMatchesFilter(sourceWords[sourceIndex], filter, sourceIndex)) oldQueue.push(sourceIndex);
+    }
   }
-  const sortedOldQueue = typeof sortQueue === "function" ? sortQueue(oldQueue, sourceWords, filter) : oldQueue;
+  const sortedOldQueue = visibleQueue.length || typeof sortQueue !== "function"
+    ? oldQueue
+    : sortQueue(oldQueue, sourceWords, filter);
 
   const oldPosition = sortedOldQueue.indexOf(currentIndex);
   const nextWords = [];
-  const nextQueue = [];
+  const oldToNewIndex = new Map();
   let deletedCount = 0;
 
-  for (const word of sourceWords) {
+  for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
+    const word = sourceWords[sourceIndex];
     if (normalizeWord(word?.word) === targetKey) {
       deletedCount += 1;
       continue;
@@ -56,17 +79,49 @@ export function buildAtomicDeletionNavigation({
 
     const nextIndex = nextWords.length;
     nextWords.push(word);
-    if (wordMatchesFilter(word, filter, nextIndex)) nextQueue.push(nextIndex);
+    oldToNewIndex.set(sourceIndex, nextIndex);
   }
 
   if (!deletedCount) return null;
 
-  const sortedNextQueue = typeof sortQueue === "function" ? sortQueue(nextQueue, nextWords, filter) : nextQueue;
+  let sortedNextQueue;
+  let nextQueuePosition = -1;
+  if (visibleQueue.length) {
+    sortedNextQueue = [];
+    let survivorsBeforeCurrent = 0;
+
+    sortedOldQueue.forEach((sourceIndex, queuePosition) => {
+      const nextIndex = oldToNewIndex.get(sourceIndex);
+      if (!Number.isInteger(nextIndex)) return;
+      if (!wordMatchesFilter(nextWords[nextIndex], filter, nextIndex)) return;
+      if (oldPosition >= 0 && queuePosition < oldPosition) survivorsBeforeCurrent += 1;
+      sortedNextQueue.push(nextIndex);
+    });
+
+    if (oldPosition >= 0) {
+      nextQueuePosition = Math.min(survivorsBeforeCurrent, sortedNextQueue.length - 1);
+    }
+  } else {
+    const nextQueue = [];
+    for (let nextIndex = 0; nextIndex < nextWords.length; nextIndex += 1) {
+      if (wordMatchesFilter(nextWords[nextIndex], filter, nextIndex)) nextQueue.push(nextIndex);
+    }
+    sortedNextQueue = typeof sortQueue === "function"
+      ? sortQueue(nextQueue, nextWords, filter)
+      : nextQueue;
+  }
+
   let nextIndex = 0;
   if (sortedNextQueue.length) {
-    const queuePosition = oldPosition >= 0
-      ? Math.min(oldPosition, sortedNextQueue.length - 1)
-      : resolveMissingQueuePosition(sortedNextQueue, Math.min(currentIndex, Math.max(0, nextWords.length - 1)), "next");
+    const queuePosition = nextQueuePosition >= 0
+      ? nextQueuePosition
+      : oldPosition >= 0
+        ? Math.min(oldPosition, sortedNextQueue.length - 1)
+        : resolveMissingQueuePosition(
+          sortedNextQueue,
+          Math.min(currentIndex, Math.max(0, nextWords.length - 1)),
+          "next"
+        );
     nextIndex = sortedNextQueue[Math.max(0, queuePosition)];
   } else if (nextWords.length) {
     nextIndex = Math.min(currentIndex, nextWords.length - 1);
@@ -75,6 +130,8 @@ export function buildAtomicDeletionNavigation({
   return {
     words: nextWords,
     index: nextIndex,
+    queueIndices: sortedNextQueue,
+    queuePosition: sortedNextQueue.indexOf(nextIndex),
     queueLength: sortedNextQueue.length,
     deletedCount,
     targetKey

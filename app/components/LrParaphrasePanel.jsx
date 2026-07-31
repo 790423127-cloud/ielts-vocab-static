@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import StableLoadingState from "./StableLoadingState.jsx";
+import StudyMeaningToggle from "./StudyMeaningToggle.jsx";
 import { readJsonStorage, writeJsonStorage } from "../lib/browser-storage.mjs";
 import { loadLrSynonyms } from "../lib/vocab/load-lr-synonyms.mjs";
 import { loadParaphrasesWithCache } from "../lib/vocab/lr-paraphrase-store.mjs";
@@ -403,6 +404,7 @@ export default function LrParaphrasePanel() {
             </button>
           ))}
         </div>
+        <StudyMeaningToggle />
       </header>
 
       <section className="main lr-main flash-training-main">
@@ -427,10 +429,10 @@ export default function LrParaphrasePanel() {
             <section className="lr-core-panel" aria-label="核心词">
               <div className="lr-section-label">核心词</div>
               <h1>{item.baseWord}</h1>
-              <p>{item.meaning || "释义待补充"}</p>
+              <p className="study-answer-content">{item.meaning || "释义待补充"}</p>
             </section>
 
-            <section className="lr-replacement-panel" aria-label="常见替换">
+            <section className="lr-replacement-panel study-answer-content" aria-label="常见替换">
               <div className="lr-section-label">常见替换</div>
               <div className="lr-synonym-chips">
                 {visibleSynonyms.length ? (
@@ -445,7 +447,7 @@ export default function LrParaphrasePanel() {
           </div>
 
           {clusterMembers.length ? (
-            <section className="lr-member-panel" aria-label="同组词群">
+            <section className="lr-member-panel study-answer-content" aria-label="同组词群">
               <div className="lr-member-head">
                 <div className="lr-section-label">同组词群</div>
                 <span>{clusterMembers.length} 个相关词</span>
@@ -465,7 +467,7 @@ export default function LrParaphrasePanel() {
             </section>
           ) : null}
 
-          <section className="lr-example-panel" aria-label="例句对照">
+          <section className="lr-example-panel study-answer-content" aria-label="例句对照">
             <div className="lr-section-label">例句对照</div>
             {examples ? (
               <div className="lr-example-pair">
@@ -477,7 +479,7 @@ export default function LrParaphrasePanel() {
             )}
           </section>
 
-          {item.notesZh ? <p className="lr-synonym-note">{item.notesZh}</p> : null}
+          {item.notesZh ? <p className="lr-synonym-note study-answer-content">{item.notesZh}</p> : null}
 
           <div className="lr-actions">
             <button type="button" className="small-btn ghost" onClick={prevItem}>上一个</button>

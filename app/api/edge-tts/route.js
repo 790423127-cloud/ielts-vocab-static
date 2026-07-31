@@ -4,7 +4,7 @@ import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
 
 import { createReadStream, existsSync } from "fs";
 import path from "path";
-import { REAL_AUDIO_ENHANCE_VERSION } from "../../lib/real-audio-enhance.mjs";
+import { EDGE_AUDIO_ENHANCE_VERSION } from "../../lib/real-audio-enhance.mjs";
 import {
   REAL_AUDIO_CACHE_VERSION,
   audioIndexPath,
@@ -51,7 +51,7 @@ function streamIndexed(indexed = {}, source = "") {
     "X-Audio-Source": source || indexed.source || "edge-cache",
     "X-Audio-Provider": indexed.provider || "edge-tts",
     "X-Audio-Real": "0",
-    "X-Audio-Enhanced": indexed.audioEnhanceVersion === REAL_AUDIO_ENHANCE_VERSION ? "1" : "0",
+    "X-Audio-Enhanced": indexed.audioEnhanceVersion === EDGE_AUDIO_ENHANCE_VERSION ? "1" : "0",
     "X-Audio-Enhance-Version": indexed.audioEnhanceVersion || "",
     "X-Audio-Cache-Token": cacheToken,
     "X-Audio-Updated-At": String(indexed.updatedAt || ""),

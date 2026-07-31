@@ -1,5 +1,5 @@
 // Auto-generated: meaning-6000 wordId -> posFamily mapping
-// Generated 2026-07-26T04:48:11.330Z
+// Generated 2026-07-30T11:01:43.970Z
 export const MEANING_POS_INDEX = Object.freeze({
   "word_0e57569bdb14": "adverb",
   "word_6dfdc9935293": "verb",
@@ -3332,7 +3332,6 @@ export const MEANING_POS_INDEX = Object.freeze({
   "word_dfa4a6761afe": "noun",
   "word_gt10500_10106": "noun",
   "word_2100c14f44f7": "noun",
-  "word_fe7f29efae2f": "noun",
   "word_6591f15e4807": "noun",
   "word_d8a0b6e00de6": "noun",
   "word_5a6b2eef75b4": "noun",
@@ -4621,7 +4620,6 @@ export const MEANING_POS_INDEX = Object.freeze({
   "word_1ad0f5cc64db": "noun",
   "word_c7107df1131d": "noun",
   "word_d7efd7e4e11b": "noun",
-  "word_excel_043a718774c5": "noun",
   "word_6a8c2a612778": "adjective",
   "word_listening1179_c74276c1d698": "noun",
   "word_3b24e867c9de": "verb",
@@ -6000,5 +5998,7 @@ export const MEANING_POS_INDEX = Object.freeze({
   "word_7cf02ff5ca1d": "noun",
   "word_2f7813c6ed6f": "noun",
   "word_9f29827997f9": "adjective",
-  "word_ddc78c039f41": "noun"
+  "word_ddc78c039f41": "noun",
+  "word_303ec5b45041": "adjective",
+  "word_30afd042b971": "adjective"
 });

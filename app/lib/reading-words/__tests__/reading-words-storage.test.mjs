@@ -65,6 +65,8 @@ test("AI merge fills only missing reading fields and never adds collocation sect
     pos: "verb",
     example: "The museum retained its original entrance.",
     exampleCn: "博物馆保留了原来的入口。",
+    forms: [],
+    wordFamily: [],
     synonyms: ["keep", "preserve"],
     collocations: [{ phrase: "retain control", chinese: "保持控制" }],
     phraseCollocations: [{ phrase: "retain the right to", chinese: "保留……的权利" }]

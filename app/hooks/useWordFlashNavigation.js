@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { flushSync } from "react-dom";
 import {
-  getFilterName,
   sortWordIndicesForFilter,
   wordMatchesFilter
 } from "../lib/vocab/word-flashcard-study-pool.mjs";
-import { normalizeWord } from "../lib/vocab/page-word-helpers.mjs";
-import {
-  buildAtomicDeletionNavigation,
-  resolveMissingQueuePosition
-} from "../lib/vocab/word-navigation-index.mjs";
+import { orderStudyWordIndices } from "../lib/vocab/word-study-ordering.mjs";
+import { resolveMissingQueuePosition } from "../lib/vocab/word-navigation-index.mjs";
 
 /**
  * Word flashcard navigation: markStatus, prev/next, shuffle, keyboard shortcuts.
@@ -21,7 +16,6 @@ export function useWordFlashNavigation({
   flashStudyModeRef,
   studySessionRef,
   latestStateRef,
-  studyWords,
   words,
   setWords,
   index,
@@ -30,7 +24,6 @@ export function useWordFlashNavigation({
   setToast,
   item,
   isExternalIdictationItem,
-  idictationFlashSourceKey,
   persistWordFlashSessionNow,
   speakWord,
   speakExample,
@@ -64,15 +57,9 @@ export function useWordFlashNavigation({
     const sourceWords = Array.isArray(latest?.words) ? latest.words : [];
     const activeFilter = latest?.filter || filter;
 
-    // 爱听写使用 10 亿偏移后的虚拟索引，必须保留 studyWords 中的 originalIndex。
-    if (visibleStudyWords.some((word) => word?.__idictationFlash)) {
-      return visibleStudyWords
-        .map((word) => word?.originalIndex)
-        .filter((value) => Number.isInteger(value));
-    }
-
-    // 整理页已经按简单到较难生成队列，导航必须沿用同一顺序。
-    if (activeFilter?.type === "tidy" && visibleStudyWords.length) {
+    // 页面已经按“现有 / 随机 / 词族 / 场景关联”生成稳定队列。
+    // 所有导航都沿用这份队列，避免重新按主词库物理顺序计算。
+    if (visibleStudyWords.length) {
       return visibleStudyWords
         .map((word) => word?.originalIndex)
         .filter((value) => Number.isInteger(value));
@@ -161,7 +148,14 @@ export function useWordFlashNavigation({
       if (matchesStudyWord(simulatedWords[wordIndex], filter, wordIndex)) candidateIndices.push(wordIndex);
     }
 
-    const sortedCandidateIndices = sortWordIndicesForFilter(candidateIndices, simulatedWords, filter);
+    const sortedCandidateIndices = orderStudyWordIndices(
+      sortWordIndicesForFilter(candidateIndices, simulatedWords, filter),
+      simulatedWords,
+      {
+        mode: latest.wordOrderMode,
+        seed: latest.wordOrderSeed
+      }
+    );
     let targetIndex = currentOriginalIndex;
     if (sortedCandidateIndices.length) {
       const currentCandidatePosition = sortedCandidateIndices.indexOf(currentOriginalIndex);
@@ -210,58 +204,6 @@ export function useWordFlashNavigation({
     setToast(item.favorite ? "已取消收藏" : "已收藏");
   }
 
-  function shuffleStudyWords() {
-    studySessionRef.current.userAdjusted = true;
-    studySessionRef.current.restoreTargetIndex = null;
-    studySessionRef.current.persistBlocked = false;
-    studySessionRef.current.settling = false;
-
-    if (idictationFlashSourceKey) {
-      if (studyWords.length < 2) {
-        setToast("当前范围单词太少，无法随机");
-        return;
-      }
-
-      const random = studyWords[Math.floor(Math.random() * studyWords.length)];
-      latestStateRef.current.index = random.originalIndex;
-      setIndex(random.originalIndex);
-      persistWordFlashSessionNow(random.originalIndex);
-      setToast(`${getFilterName(filter)} 已随机跳转；表格顺序保持不变`);
-      return;
-    }
-
-    const currentMatches = words
-      .map((word, originalIndex) => ({ word, originalIndex }))
-      .filter(({ word, originalIndex }) => matchesStudyWord(word, filter, originalIndex));
-
-    if (currentMatches.length < 2) {
-      setToast("当前范围单词太少，无法随机");
-      return;
-    }
-
-    const targetIndices = currentMatches.map((entry) => entry.originalIndex);
-    const shuffledWords = currentMatches.map((entry) => entry.word);
-
-    for (let i = shuffledWords.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledWords[i], shuffledWords[j]] = [shuffledWords[j], shuffledWords[i]];
-    }
-
-    setWords((prev) => {
-      const next = [...prev];
-      targetIndices.forEach((targetIndex, orderIndex) => {
-        next[targetIndex] = shuffledWords[orderIndex];
-      });
-      return next;
-    });
-
-    const randomIndex = targetIndices[0];
-    latestStateRef.current.index = randomIndex;
-    setIndex(randomIndex);
-    persistWordFlashSessionNow(randomIndex);
-    setToast(`${getFilterName(filter)} 已随机打乱`);
-  }
-
   markStatusRef.current = markStatus;
   nextWordRef.current = nextWord;
   prevWordRef.current = prevWord;
@@ -302,41 +244,14 @@ export function useWordFlashNavigation({
           return;
         }
 
-        const activeFilter = latest.filter || { type: "all", value: "" };
-        const deletionNavigation = buildAtomicDeletionNavigation({
-          words: latest.words,
-          currentIndex: latest.index,
-          filter: activeFilter,
-          wordMatchesFilter: matchesStudyWord,
-          normalizeWord,
-          sortQueue: sortWordIndicesForFilter
-        });
-
         quickStatusLockRef.current = true;
-        studySessionRef.current.userAdjusted = true;
-        studySessionRef.current.restoreTargetIndex = null;
-        studySessionRef.current.persistBlocked = false;
-        studySessionRef.current.settling = false;
+        const deletionResult = typeof deleteCurrentWord === "function"
+          ? deleteCurrentWord()
+          : null;
 
-        if (deletionNavigation && typeof deleteCurrentWord === "function") {
-          // The legacy delete path also sets a raw master-lexicon index. Flush the
-          // deletion and the exact filtered successor as one React commit so no
-          // out-of-range word can be painted between them.
-          flushSync(() => {
-            deleteCurrentWord();
-            latest.words = deletionNavigation.words;
-            latest.index = deletionNavigation.index;
-            latest.isStudyEmpty = deletionNavigation.queueLength === 0;
-            setIndex(deletionNavigation.index);
-          });
-
-          persistWordFlashSessionNow(
-            deletionNavigation.index,
-            activeFilter,
-            deletionNavigation.words
-          );
-        } else if (typeof deleteCurrentWord === "function") {
-          deleteCurrentWord();
+        if (!deletionResult?.deleted) {
+          quickStatusLockRef.current = false;
+          return;
         }
 
         window.setTimeout(() => {
@@ -391,7 +306,8 @@ export function useWordFlashNavigation({
 
     function handleKeyDown(event) {
       if (flashStudyMode !== "word") return;
-      if (isTypingTarget(event.target)) return;
+      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
+      if (isTypingTarget(event.target) && !isHorizontalArrow) return;
 
       if (event.key === "Tab") {
         if (event.repeat) return;
@@ -416,8 +332,8 @@ export function useWordFlashNavigation({
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [flashStudyMode]);
 
   return {
@@ -425,7 +341,6 @@ export function useWordFlashNavigation({
     nextWord,
     prevWord,
     toggleFavorite,
-    shuffleStudyWords,
     updateCurrent
   };
 }

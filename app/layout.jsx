@@ -29,10 +29,14 @@ const browserCompatibilityBootstrapScript = `
 
     var raw = localStorage.getItem("ielts-vocab-font-scale");
     var value = parseFloat(raw);
-    if (!isFinite(value)) return;
-    value = Math.min(1.6, Math.max(0.8, value));
-    document.documentElement.dataset.fontScale = String(value);
-    document.documentElement.style.setProperty("--font-scale", String(value));
+    if (isFinite(value)) {
+      value = Math.min(1.6, Math.max(0.8, value));
+      document.documentElement.dataset.fontScale = String(value);
+      document.documentElement.style.setProperty("--font-scale", String(value));
+    }
+
+    document.documentElement.dataset.studyMeaningsHidden =
+      localStorage.getItem("ielts_vocab_hide_meanings_v1") === "1" ? "true" : "false";
   } catch (e) {}
 })();
 `;

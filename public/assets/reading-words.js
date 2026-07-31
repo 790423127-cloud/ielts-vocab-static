@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const VERSION = "20260728_reading_synonym_variants_v2";
+  const VERSION = "20260729_reading_synonym_meanings_v5";
   const READING_KEY = "ielts-personal-reading-words-v1";
   const MAIN_SUPPLEMENT_KEY = "static_personal_reading_main_v1";
   const TRANSFER_TYPE = "ielts-reading-words-transfer";
@@ -13,14 +13,14 @@
     "batchImportBtn", "aiPanel", "emptyState", "wordContent", "positionText",
     "frequencyBadge", "exampleText", "exampleCnText", "exampleSoundBtn", "wordSoundBtn",
     "phoneticText", "posText", "meaningText", "formsList", "familyList", "synonymList",
-    "prevBtn", "knownBtn", "blurryBtn", "unknownBtn", "nextBtn", "visibleCount",
+    "favoriteBtn", "prevBtn", "knownBtn", "blurryBtn", "unknownBtn", "nextBtn", "deleteBtn", "visibleCount",
     "wordList", "toast"
   ].map((id) => [id, document.getElementById(id)]));
 
   let mainWords = [];
   let mainIndex = new Map();
-  let words = readReadingWords();
-  let selectedId = words[0]?.id || "";
+  let words = [];
+  let selectedId = "";
   let frequentOnly = false;
 
   function clean(value) {
@@ -48,6 +48,8 @@
   ];
   const SYNONYM_VARIANT_KEY = new Map();
   SYNONYM_VARIANT_GROUPS.forEach((group) => group.forEach((variant) => SYNONYM_VARIANT_KEY.set(variant, group[0])));
+  words = readReadingWords();
+  selectedId = words[0]?.id || "";
 
   function synonymEquivalenceKey(value) {
     const compact = clean(value).toLowerCase().replace(/[’‘`]/g, "'").replace(/[^a-z0-9]+/g, "");
@@ -266,6 +268,28 @@
       : '<p class="empty">暂无可靠内容</p>';
   }
 
+  function synonymListHtml(items) {
+    if (!items.length) return '<p class="empty">暂无可靠内容</p>';
+    return items.map((item) => {
+      const word = clean(typeof item === "string" ? item : item?.word || item?.replacement);
+      const linked = mainIndex.get(key(word));
+      const meaning = clean(
+        (typeof item === "object" && item
+          ? item.meaning || item.meaningZh || item.chineseMeaning
+          : "")
+        || linked?.meaning
+        || linked?.chineseMeaning
+      );
+      return `
+        <button class="synonym-row" type="button" data-synonym="${escapeHtml(word)}">
+          <span aria-hidden="true">🔊</span>
+          <strong>${escapeHtml(word)}</strong>
+          <em>${escapeHtml(meaning || "释义待补全")}</em>
+        </button>
+      `;
+    }).join("");
+  }
+
   function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>"']/g, (character) => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -303,6 +327,9 @@
     els.frequencyBadge.textContent = current.highFrequency || Number(current.importCount) >= 2
       ? `高频 ×${current.importCount}`
       : "";
+    els.favoriteBtn.textContent = current.favorite ? "★ 已收藏" : "☆ 收藏";
+    els.favoriteBtn.setAttribute("aria-pressed", String(Boolean(current.favorite)));
+    els.favoriteBtn.classList.toggle("active", Boolean(current.favorite));
     els.exampleText.textContent = current.example || "暂无英文例句";
     els.exampleCnText.textContent = current.exampleCn || "";
     els.wordSoundBtn.textContent = current.word;
@@ -311,7 +338,10 @@
     els.meaningText.textContent = current.meaning || "释义待补全";
     els.formsList.innerHTML = listHtml(current.forms || [], (item) => `${item.word || ""}${item.type ? ` · ${item.type}` : ""}`);
     els.familyList.innerHTML = listHtml(current.wordFamily || [], (item) => `${item.word || ""}${item.pos ? ` · ${item.pos}` : ""}${item.meaning ? ` · ${item.meaning}` : ""}`);
-    els.synonymList.innerHTML = listHtml(current.synonyms || [], (item) => typeof item === "string" ? item : item.word || item.replacement || "");
+    els.synonymList.innerHTML = synonymListHtml(current.synonyms || []);
+    els.synonymList.querySelectorAll("[data-synonym]").forEach((button) => {
+      button.onclick = () => speak(button.dataset.synonym);
+    });
     for (const [button, status] of [[els.knownBtn, "熟悉"], [els.blurryBtn, "模糊"], [els.unknownBtn, "不熟"]]) {
       button.classList.toggle("active", current.status === status);
     }
@@ -331,6 +361,42 @@
     words = words.map((word) => word.id === current.id ? { ...word, status, updatedAt: new Date().toISOString() } : word);
     saveReadingWords();
     render();
+  }
+
+  function toggleFavorite() {
+    const current = currentWord();
+    if (!current) return;
+    words = words.map((word) => word.id === current.id
+      ? { ...word, favorite: !word.favorite, updatedAt: new Date().toISOString() }
+      : word);
+    saveReadingWords();
+    render();
+  }
+
+  function shouldHandleDeleteShortcut(event) {
+    if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return false;
+    const tag = String(event.target?.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select" || event.target?.isContentEditable) return false;
+    const shortcutKey = String(event.key || "").toLowerCase();
+    return shortcutKey === "d" || shortcutKey === "delete" || event.code === "Delete";
+  }
+
+  function deleteCurrentReadingWord() {
+    const visible = visibleWords();
+    const current = currentWord();
+    if (!current) return;
+    const currentIndex = visible.findIndex((word) => word.id === current.id);
+    if (!confirm(
+      `确定从阅读生词本删除“${current.word}”吗？\n\n` +
+      "只会删除阅读生词记录，不会删除主词库中的单词。"
+    )) return;
+
+    const nextVisible = visible[currentIndex + 1] || visible[currentIndex - 1] || null;
+    words = words.filter((word) => word.id !== current.id);
+    selectedId = nextVisible?.id || "";
+    saveReadingWords();
+    render();
+    toast(`已从阅读生词本删除：${current.word}；主词库未改变。`);
   }
 
   function speak(text) {
@@ -437,11 +503,38 @@
   };
   els.prevBtn.onclick = () => move(-1);
   els.nextBtn.onclick = () => move(1);
+  els.favoriteBtn.onclick = toggleFavorite;
   els.knownBtn.onclick = () => mark("熟悉");
   els.blurryBtn.onclick = () => mark("模糊");
   els.unknownBtn.onclick = () => mark("不熟");
+  els.deleteBtn.onclick = deleteCurrentReadingWord;
   els.wordSoundBtn.onclick = () => speak(currentWord()?.word);
   els.exampleSoundBtn.onclick = () => speak(currentWord()?.example);
+  window.addEventListener("keydown", (event) => {
+    if (shouldHandleDeleteShortcut(event)) {
+      event.preventDefault();
+      deleteCurrentReadingWord();
+      return;
+    }
+    const tag = String(event.target?.tagName || "").toLowerCase();
+    if (
+      event.repeat
+      || event.ctrlKey
+      || event.metaKey
+      || event.altKey
+      || tag === "input"
+      || tag === "textarea"
+      || tag === "select"
+      || event.target?.isContentEditable
+    ) return;
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      move(-1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      move(1);
+    }
+  });
 
   async function boot() {
     try {

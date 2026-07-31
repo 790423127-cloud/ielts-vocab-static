@@ -4,6 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { selectMeaningWords } from "../app/lib/meaning-mode/selector.mjs";
+import {
+  computeIntegrityHash,
+  computeLexiconHash
+} from "../app/lib/vocab/lexicon-guard.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC_PATH = path.join(ROOT, "public", "data", "words.json");
@@ -84,16 +88,73 @@ function relationTarget(item) {
   return normalizeWord(typeof item === "string" ? item : item?.word);
 }
 
+function isSuffixAuditCandidate(value) {
+  const word = normalizeWord(value);
+  return ["s", "ed", "ing", "er", "est", "en", "ind"].some((ending) => word.endsWith(ending));
+}
+
+function mergeRetirementEntries(existingEntries, addedEntries) {
+  const merged = [];
+  const seenIds = new Set();
+  const seenWords = new Set();
+
+  for (const entry of [...existingEntries, ...addedEntries]) {
+    const id = stableId(entry);
+    const word = String(entry?.word || "").trim();
+    const wordKey = normalizeWord(word);
+    if ((!id && !wordKey) || (id && seenIds.has(id)) || (wordKey && seenWords.has(wordKey))) continue;
+    if (id) seenIds.add(id);
+    if (wordKey) seenWords.add(wordKey);
+    merged.push({
+      ...(id ? { id } : {}),
+      word,
+      reason: String(entry?.reason || "user-curated-removal"),
+      ...(entry?.morphologyAuditIncluded === false ? { morphologyAuditIncluded: false } : {})
+    });
+  }
+
+  return merged;
+}
+
+function buildMorphologyAudit(words, retirementEntries, previousAudit, generatedAt) {
+  const inflectedReferences = words.filter(
+    (entry) => entry?.entryType === "inflected-form" && entry?.studyMode === "reference"
+  ).length;
+  const previousVersion = String(previousAudit?.version || "").match(/-v(\d+)-/)?.[1];
+  const nextVersion = Math.max(1, Number(previousVersion) + 1 || 1);
+  const auditDate = String(generatedAt || "").slice(0, 10).replaceAll("-", "");
+
+  return {
+    version: `manual-morphology-audit-v${nextVersion}-${auditDate}`,
+    rawSuffixHeadwordsReviewed:
+      words.filter((entry) => isSuffixAuditCandidate(entry?.word)).length +
+      retirementEntries.filter(
+        (entry) => entry?.morphologyAuditIncluded !== false && isSuffixAuditCandidate(entry?.word)
+      ).length,
+    storedFormLinksReviewed: words.reduce(
+      (sum, entry) => sum + (Array.isArray(entry?.forms) ? entry.forms.length : 0),
+      0
+    ),
+    inflectedReferences,
+    brushableHeadwords: words.length - inflectedReferences,
+    meaningZhRepaired: Math.max(0, Number(previousAudit?.meaningZhRepaired) || 0),
+    referenceLinksRepaired: Math.max(0, Number(previousAudit?.referenceLinksRepaired) || 0),
+    wrongOwnerIdsRemoved: Math.max(0, Number(previousAudit?.wrongOwnerIdsRemoved) || 0),
+    danglingFormsRemoved: Math.max(0, Number(previousAudit?.danglingFormsRemoved) || 0)
+  };
+}
+
 function atomicWrite(filePath, content) {
   const tempPath = `${filePath}.rebaseline-tmp`;
   fs.writeFileSync(tempPath, content, "utf8");
   fs.renameSync(tempPath, filePath);
 }
 
-function buildPlan({ version, generatedAt, previousRef }) {
+function buildPlan({ version, generatedAt, previousRef, allowAdditions = false }) {
   const publicFile = readJson(PUBLIC_PATH);
   const cacheFile = readJson(CACHE_PATH);
   const meaningFile = readJson(MEANING_PATH);
+  const retirementFile = readJson(RETIREMENTS_PATH);
 
   if (!publicFile.raw.equals(cacheFile.raw)) {
     throw new Error("两个正式主词库当前并非逐字节一致，停止重建基线。");
@@ -133,9 +194,9 @@ function buildPlan({ version, generatedAt, previousRef }) {
   const addedSincePrevious = currentWords.filter(
     (entry) => !previousWordKeys.has(normalizeWord(entry.word))
   );
-  if (addedSincePrevious.length) {
+  if (addedSincePrevious.length && !allowAdditions) {
     throw new Error(
-      `历史版本之后还新增了 ${addedSincePrevious.length} 个词，当前脚本只适用于纯删除基线重建。`
+      `历史版本之后还新增了 ${addedSincePrevious.length} 个词；确认这些词应进入正式主词库后，使用 --allow-additions 重建基线。`
     );
   }
 
@@ -195,12 +256,36 @@ function buildPlan({ version, generatedAt, previousRef }) {
     throw new Error("最终词库稳定 ID 不完整或重复，停止写入。");
   }
 
+  const newRetirementEntries = [
+    ...curatedRemovedEntries.map((entry) => ({
+      id: stableId(entry),
+      word: entry.word,
+      reason: "user-curated-removal"
+    })),
+    ...orphanReferences.map((entry) => ({
+      id: stableId(entry),
+      word: entry.word,
+      reason: "orphan-inflected-reference-after-base-removal"
+    }))
+  ];
+  const existingRetirementEntries = Array.isArray(retirementFile.data?.entries)
+    ? retirementFile.data.entries
+    : [];
+  const retirementEntries = mergeRetirementEntries(existingRetirementEntries, newRetirementEntries);
+  const morphologyAudit = buildMorphologyAudit(
+    finalWords,
+    retirementEntries,
+    previousPayload?.morphologyAudit || publicFile.data?.morphologyAudit,
+    generatedAt
+  );
   const wordsPayload = {
     ...publicFile.data,
     version,
     savedAt: generatedAt,
     count: finalWords.length,
-    lexiconHash: sha256(JSON.stringify(finalWords)),
+    lexiconHash: computeLexiconHash(finalWords),
+    integrityHash: computeIntegrityHash(finalWords),
+    morphologyAudit,
     words: finalWords
   };
   const wordsContent = `${JSON.stringify(wordsPayload, null, 2)}\n`;
@@ -280,18 +365,6 @@ function buildPlan({ version, generatedAt, previousRef }) {
     `export const MASTER_LEXICON_SHA256 = ${JSON.stringify(wordsFileHash)};`,
     ""
   ].join("\n");
-  const retirementEntries = [
-    ...curatedRemovedEntries.map((entry) => ({
-      id: stableId(entry),
-      word: entry.word,
-      reason: "user-curated-removal"
-    })),
-    ...orphanReferences.map((entry) => ({
-      id: stableId(entry),
-      word: entry.word,
-      reason: "orphan-inflected-reference-after-base-removal"
-    }))
-  ];
   const retirementsContent = `${JSON.stringify({
     version,
     generatedAt,
@@ -318,7 +391,8 @@ function buildPlan({ version, generatedAt, previousRef }) {
         meaningCount: finalMeaningItems.length,
         version,
         fileHash: wordsFileHash,
-        lexiconHash: wordsPayload.lexiconHash
+        lexiconHash: wordsPayload.lexiconHash,
+        morphologyAudit
       },
       removedOrphanReferences: orphanReferences.map((entry) => ({
         id: stableId(entry),
@@ -331,6 +405,12 @@ function buildPlan({ version, generatedAt, previousRef }) {
         id: stableId(entry),
         word: entry.word,
         reason: "user-curated-removal"
+      })),
+      addedEntries: addedSincePrevious.map((entry) => ({
+        id: stableId(entry),
+        word: entry.word,
+        source: entry.source || "",
+        addedFromReadingWords: entry.addedFromReadingWords === true
       })),
       prunedRelations,
       removedMeaningItems: removedMeaningItems.map((item) => ({
@@ -351,13 +431,14 @@ const version = readArg("--version");
 const generatedAt = readArg("--generated-at");
 const previousRef = readArg("--previous-ref");
 const apply = process.argv.includes("--apply");
+const allowAdditions = process.argv.includes("--allow-additions");
 const reportPathArg = readArg("--report");
 
 if (!version || !generatedAt || !previousRef) {
   throw new Error("请提供 --version <新版本>、--generated-at <ISO 时间> 和 --previous-ref <删除前 Git 版本>。");
 }
 
-const plan = buildPlan({ version, generatedAt, previousRef });
+const plan = buildPlan({ version, generatedAt, previousRef, allowAdditions });
 const reportContent = `${JSON.stringify(plan.report, null, 2)}\n`;
 
 if (apply) {
@@ -380,6 +461,7 @@ console.log(
         mode: plan.report.mode,
         before: plan.report.before,
         after: plan.report.after,
+        addedCount: plan.report.addedEntries.length,
         curatedRemovedCount: plan.report.curatedRemovedEntries.length,
         removedOrphanReferenceCount: plan.report.removedOrphanReferences.length,
         prunedRelationCount: plan.report.prunedRelations.length,

@@ -13,7 +13,7 @@
   const PREFS_KEY = "ielts_static_spelling_prefs_v1";
   const POSITION_KEY = "ielts_static_spelling_position_v1";
   const SETTINGS_PANEL_PREF_PREFIX = "ielts_static_spelling_settings_collapsed_v1_";
-  const AUDIO_CACHE_NAME = "static_vocab_audio_20260712_d15_audit_fix_v1";
+  const AUDIO_CACHE_NAME = "static_vocab_audio_20260729_mobile_native_audio_v2";
 
   const CATEGORY_TYPES = [
     { value: "difficulty", label: "难度分类" },
@@ -1759,6 +1759,20 @@
     }
   }
 
+  function stopAudioPlayer() {
+    if (audioPlayer) {
+      audioPlayer.onended = null;
+      audioPlayer.onerror = null;
+      try {
+        audioPlayer.pause();
+      } catch {}
+      try {
+        audioPlayer.currentTime = 0;
+      } catch {}
+      audioPlayer = null;
+    }
+  }
+
   async function playAudio(path, fallbackText) {
     const text = String(fallbackText || "").trim();
     if (!path) {
@@ -1766,15 +1780,16 @@
       return;
     }
     try {
-      if (audioPlayer) {
-        audioPlayer.pause();
-        audioPlayer.currentTime = 0;
-      }
+      stopAudioPlayer();
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
       const url = await cachedAudioUrl(path, 1500);
       audioPlayer = new Audio(url);
+      audioPlayer.preload = "auto";
+      audioPlayer.playsInline = true;
+      audioPlayer.volume = 1;
       await audioPlayer.play();
     } catch {
+      stopAudioPlayer();
       browserSpeak(text);
     }
   }

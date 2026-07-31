@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260728_static_mobile_swipe_538_v4";
+export const STATIC_RESPONSIVE_VERSION = "20260730_mobile_sync_cursor_v11";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
 export const STATIC_SWIPE_FIX_MARKER = "D2.9 static 538 touch-first swipe";
@@ -54,6 +54,8 @@ const MOBILE_ENTRY_CSS = `
 /* ${STATIC_FILTER_FIX_MARKER} */
 .static-study-card{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y;overscroll-behavior-x:contain}
 .static-build-version{position:fixed;right:8px;bottom:6px;z-index:2;padding:3px 7px;border-radius:999px;background:rgba(255,255,255,.72);color:rgba(22,53,47,.55);font-size:10px;line-height:1.2;pointer-events:none}
+.top-actions .order-select{width:112px;min-width:112px;max-width:112px}
+.top-actions .relation-order-select{width:116px;min-width:116px;max-width:116px}
 @media (max-width:900px){
   .entry-panel{align-items:flex-end;padding:8px}
   .entry-card{width:100%;max-width:none;max-height:84svh;border-radius:24px 24px 0 0;padding:16px}
@@ -63,6 +65,8 @@ const MOBILE_ENTRY_CSS = `
   .entry-desc{font-size:11px;line-height:1.35}
   .entry-meta{font-size:11px}
   .top-select{max-width:100%;min-width:0}
+  .top-actions .order-select{width:min(132px,100%);min-width:0;max-width:132px;justify-self:start}
+  .top-actions .relation-order-select{width:min(132px,100%);min-width:0;max-width:132px;justify-self:start}
 }
 `;
 
@@ -91,23 +95,23 @@ const CURATED_FILTER_FUNCTION = `function buildFilterOptions(){
     {value:"life-work",label:"生活/工作高频"}
   ];
   const groups=[
-    {label:"爱听写",items:[
+    {label:"保留专项词库",items:[
       {value:"idictation:listening",label:"爱听写听力"},
       {value:"idictation:reading",label:"爱听写阅读"}
     ]},
-    {label:"IELTS 用途",items:[
+    {label:"按使用场景",items:[
       {value:"ielts:G类书信",label:"G类书信"},
       {value:"ielts:Listening",label:"Listening"},
       {value:"ielts:Speaking",label:"Speaking"},
       {value:"ielts:Reading",label:"Reading"},
       {value:"ielts:Task 2",label:"Task 2"}
     ]},
-    {label:"难度",items:[
+    {label:"主词库学习层级",items:[
       {value:"difficulty:基础高频",label:"基础必会"},
       {value:"difficulty:中级核心",label:"核心高频"},
       {value:"difficulty:高级加分",label:"高级认识"},
       {value:"difficulty:阅读扩展",label:"阅读扩展"},
-      {value:"difficulty:低频认识即可",label:"低频认识"}
+      {value:"difficulty:低频认识即可",label:"专业参考"}
     ]},
     {label:"主题",items:[
       "教育","工作","住房","交通","健康","环境","科技","政府","社会","消费","旅行","社区","法律","家庭","公共服务"
@@ -282,6 +286,12 @@ function wrapStaticStudyCard(html) {
 
 export function patchStaticHtml(html) {
   let next = wrapStaticStudyCard(replaceVersionQuery(html));
+  if (!next.includes('id="staticMobileInputZoomFix"')) {
+    next = next.replace(
+      "</head>",
+      '  <style id="staticMobileInputZoomFix">@media(max-width:900px){input,textarea{font-size:16px!important}}</style>\n</head>'
+    );
+  }
   if (!next.includes('http-equiv="Cache-Control"')) {
     next = next.replace("</head>", '  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />\n  <meta http-equiv="Pragma" content="no-cache" />\n</head>');
   }
@@ -423,6 +433,9 @@ export function patchStaticExportZip(input) {
   const css = byName.get("assets/style.css") || "";
   const html = byName.get("index.html") || "";
   const sw = byName.get("sw.js") || "";
+  const readingHtml = byName.get("reading-words.html") || "";
+  const readingJs = byName.get("assets/reading-words.js") || "";
+  const readingCss = byName.get("assets/reading-words.css") || "";
   if (!appJs.includes(STATIC_SWIPE_FIX_MARKER) || !appJs.includes(STATIC_SWIPE_ENGINE)) {
     throw new Error("Final static ZIP does not contain the verified 538-style swipe controller");
   }
@@ -434,6 +447,19 @@ export function patchStaticExportZip(input) {
   }
   if (!sw.includes(STATIC_RESPONSIVE_VERSION)) {
     throw new Error("Final static ZIP service worker version is stale");
+  }
+  if (!sw.includes('url.pathname.endsWith("/reading-words.html")')) {
+    throw new Error("Final static ZIP does not support offline reading-words navigation");
+  }
+  if (
+    !readingHtml.includes(STATIC_RESPONSIVE_VERSION) ||
+    !readingHtml.includes('id="deleteBtn"') ||
+    !readingHtml.includes('id="favoriteBtn"') ||
+    !readingJs.includes("deleteCurrentReadingWord") ||
+    !readingJs.includes("shouldHandleDeleteShortcut") ||
+    !readingCss.includes("repeat(6,minmax(0,1fr))")
+  ) {
+    throw new Error("Final static ZIP reading-words page is missing verified mobile controls");
   }
   return createStoredZip(entries);
 }

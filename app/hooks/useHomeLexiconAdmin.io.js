@@ -20,6 +20,10 @@ import {
   postExportCache,
   saveWordsToIndexedDB
 } from "../lib/vocab/word-store.mjs";
+import {
+  buildLexiconDeletionIntent,
+  formalLexiconWords
+} from "../lib/vocab/lexicon-delete-intent.mjs";
 
 
 export function createIoOps(ctx) {
@@ -32,6 +36,33 @@ export function createIoOps(ctx) {
     compactBrowserStorageForCurrentWords,
     demoWords, setFilter
   } = ctx;
+
+  function confirmFormalDeletion(nextWords, previousWords) {
+    const deletionIntent = buildLexiconDeletionIntent(previousWords, nextWords, {
+      action: "preview-formal-replacement",
+      confirmed: true
+    });
+    if (!deletionIntent) return true;
+    return confirm(
+      `恢复内容会从正式主词库删除 ${deletionIntent.removed.length} 条记录。\n\n` +
+      "服务器会先生成可恢复备份，是否继续？"
+    );
+  }
+
+  async function publishConfirmedWords(nextWords, previousWords, source) {
+    const deletionIntent = buildLexiconDeletionIntent(previousWords, nextWords, {
+      action: source,
+      confirmed: true
+    });
+    const result = await postExportCache(formalLexiconWords(nextWords), cacheMetaRef.current, {
+      source,
+      ...(deletionIntent ? { deletionIntent } : {})
+    });
+    if (!result?.ok) {
+      throw new Error([result?.error, result?.detail].filter(Boolean).join("：") || "正式主词库写入失败");
+    }
+    return result;
+  }
 
   function importWords(newWords) {
     if (!newWords.length) {
@@ -151,13 +182,17 @@ export function createIoOps(ctx) {
       setToast(`恢复失败：只找到 ${Array.isArray(recoveredWords) ? recoveredWords.length : 0} 个词，数量太少，已拒绝覆盖`);
       return;
     }
+    if (!confirmFormalDeletion(recoveredWords, words)) {
+      setToast("已取消会删除正式词条的恢复操作");
+      return;
+    }
 
     setWords(recoveredWords);
     resetWordStudySessionState();
 
     await saveWordsToIndexedDB(recoveredWords, cacheMetaRef.current);
 
-    await postExportCache(recoveredWords, cacheMetaRef.current, { source: sourceLabel }).catch(() => {});
+    await publishConfirmedWords(recoveredWords, words, sourceLabel);
 
     setToast(`词库已恢复：${recoveredWords.length} 个词｜来源：${sourceLabel}`);
   }
@@ -360,10 +395,7 @@ export function createIoOps(ctx) {
 
         await saveWordsToIndexedDB(nextWords, cacheMetaRef.current);
 
-        await postExportCache(nextWords, cacheMetaRef.current, {
-          source: "template_merge_import",
-          allowSmall: nextWords.length >= 1000
-        }).catch(() => {});
+        await publishConfirmedWords(nextWords, words, "template_merge_import");
 
         setToast(`模板词库已合并：更新 ${updateCount} 个，新增 ${appendCount} 个，当前总数 ${nextWords.length}`);
       } catch (error) {
@@ -469,10 +501,7 @@ export function createIoOps(ctx) {
 
         await saveWordsToIndexedDB(importedWords, cacheMetaRef.current);
 
-        await postExportCache(importedWords, cacheMetaRef.current, {
-          source: "manual_import",
-          allowSmall: importedWords.length >= 1000
-        }).catch(() => {});
+        await publishConfirmedWords(importedWords, words, "manual_import");
 
         setToast(`已恢复完整备份：${importedWords.length} 个词`);
       } catch (error) {

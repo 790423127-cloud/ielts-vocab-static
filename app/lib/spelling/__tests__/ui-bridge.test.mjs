@@ -8,14 +8,28 @@ const now = Date.UTC(2026, 5, 18, 18, 0, 0);
 
 function createMemoryStore(initialRecords = []) {
   const records = new Map(initialRecords.map((record) => [record.wordId, JSON.parse(JSON.stringify(record))]));
+  const metrics = {
+    putRecordCalls: 0,
+    putRecordsCalls: 0,
+    putRecordsSizes: []
+  };
 
   return {
+    metrics,
     async open() {},
     async getAllRecords() {
       return Array.from(records.values()).map((record) => JSON.parse(JSON.stringify(record)));
     },
     async putRecord(record) {
+      metrics.putRecordCalls += 1;
       records.set(record.wordId, JSON.parse(JSON.stringify(record)));
+    },
+    async putRecords(nextRecords) {
+      metrics.putRecordsCalls += 1;
+      metrics.putRecordsSizes.push(nextRecords.length);
+      for (const record of nextRecords) {
+        records.set(record.wordId, JSON.parse(JSON.stringify(record)));
+      }
     }
   };
 }
@@ -43,6 +57,41 @@ test("UI bridge persists legacy error-bank migration during initialization", asy
   assert.equal(persisted.errorBank.active, true);
   assert.equal(persisted.srs.stage, 1);
   assert.ok(persisted.srs.nextReviewAt > now);
+});
+
+test("UI bridge persists a large rollover set with one batch write", async () => {
+  const legacyRecords = Array.from({ length: 262 }, (_, index) => ({
+    wordId: `word_${index}`,
+    updatedAt: now - 1_000,
+    revision: 1,
+    today: {
+      sessionDate: "2026-06-17",
+      repairState: "mastered",
+      completedToday: true,
+      lastSeenAt: now - 1_000
+    },
+    errorBank: { everWrong: false, active: false, totalWrongCount: 0 },
+    srs: { stage: 0, nextReviewAt: 0, lastReviewedAt: 0 },
+    spelling: {}
+  }));
+  const store = createMemoryStore(legacyRecords);
+  const bridge = createSpellingUiBridge({
+    words: legacyRecords.map((record, index) => ({
+      word: `word${index}`,
+      wordId: record.wordId,
+      meaning: `meaning ${index}`
+    })),
+    flashcardState: { statuses: {} },
+    store,
+    now
+  });
+
+  await bridge.init();
+
+  assert.equal(store.metrics.putRecordsCalls, 1);
+  assert.deepEqual(store.metrics.putRecordsSizes, [262]);
+  assert.equal(store.metrics.putRecordCalls, 0);
+  assert.equal((await store.getAllRecords()).length, 262);
 });
 
 test("UI bridge reads training records once and leaves error-bank recovery to its owner hook", async () => {

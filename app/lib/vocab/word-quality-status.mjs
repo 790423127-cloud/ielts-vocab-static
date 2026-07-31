@@ -5,7 +5,7 @@ import {
 } from "./admin-ai-content-profile.mjs";
 
 const MISSING_TEXT_RE = /^(?:-|—|n\/?a|none|null|undefined|unknown|not available|待补全|待完善|暂无|无释义|中文释义|英文释义|meaning here|translation here|example sentence|\?{2,})$/i;
-const FUNCTION_WORD_POS_RE = /\b(?:article|auxiliary|conjunction|determiner|modal|preposition|pronoun)\b/i;
+const FUNCTION_WORD_POS_RE = /\b(?:article|auxiliary|conjunction|determiner|interjection|modal|preposition|pronoun)\b/i;
 const REFERENCE_CATEGORY_RE = /(?:参考|专名|来源待核|专业参考|拼写变体)/;
 const FAMILY_RELATIONS = new Set([
   "base-word",
@@ -16,6 +16,14 @@ const FAMILY_RELATIONS = new Set([
   "agent-noun",
   "negative-form",
   "related-to"
+]);
+const FAMILY_RELATION_ALIASES = new Map([
+  ["同词族 / 派生词", "related-to"],
+  ["同词族/派生词", "related-to"],
+  ["同词族 / 词汇化派生词", "related-to"],
+  ["同词族/词汇化派生词", "related-to"],
+  ["lexicalised/derived relation", "related-to"],
+  ["lexicalized/derived relation", "related-to"]
 ]);
 
 export const WORD_QUALITY_LANES = Object.freeze({
@@ -83,11 +91,20 @@ export function resolveWordEnrichmentTarget(word = {}) {
     };
   }
 
+  if (/\binterjection\b/i.test(String(word?.pos || ""))) {
+    return {
+      applicable: false,
+      minimum: { common: 0, phrase: 0 },
+      standard: { common: 0, phrase: 0 },
+      rich: { common: 0, phrase: 0 }
+    };
+  }
+
   if (isFunctionWord(word)) {
     return {
       applicable: true,
       minimum: { common: 0, phrase: 0 },
-      standard: { common: 0, phrase: 2 },
+      standard: { common: 0, phrase: 1 },
       rich: { common: 0, phrase: 4 }
     };
   }
@@ -105,7 +122,7 @@ export function resolveWordEnrichmentTarget(word = {}) {
     return {
       applicable: true,
       minimum: { common: 0, phrase: 0 },
-      standard: { common: 2, phrase: 1 },
+      standard: { common: 1, phrase: 1 },
       rich: { common: 3, phrase: 3 }
     };
   }
@@ -113,7 +130,7 @@ export function resolveWordEnrichmentTarget(word = {}) {
   return {
     applicable: true,
     minimum: { common: 0, phrase: 0 },
-    standard: { common: 2, phrase: 2 },
+    standard: { common: 1, phrase: 1 },
     rich: { common: 4, phrase: 4 }
   };
 }
@@ -209,16 +226,24 @@ export function getWordFamilyStatus(word = {}, { knownHeadwords = new Set() } = 
   for (const item of family) {
     const familyWord = String(typeof item === "string" ? item : item?.word || "").trim();
     const familyKey = normalizeHeadword(familyWord);
-    const relation = String(typeof item === "string" ? "related-to" : item?.relation || "related-to")
-      .trim()
-      .toLowerCase();
+    const rawRelation = String(typeof item === "string" ? "related-to" : item?.relation || "related-to").trim();
+    const relation = FAMILY_RELATION_ALIASES.get(rawRelation)
+      || rawRelation.toLowerCase();
     const meaning = String(typeof item === "string" ? "" : item?.meaningZh || item?.meaning || item?.chinese || "").trim();
+    const explicitStandaloneCandidate = Boolean(
+      typeof item !== "string" &&
+      (
+        item?.standaloneCandidate === true ||
+        item?.promotionStatus === "pending" ||
+        item?.standaloneReviewStatus === "pending"
+      )
+    );
 
     if (!familyKey || familyKey === headwordKey || !isSingleEnglishHeadword(familyWord) || !FAMILY_RELATIONS.has(relation)) {
       reviewItems.push({ word: familyWord, relation, reason: "invalid-family-structure" });
       continue;
     }
-    if (!known.has(familyKey) && hasUsefulQualityText(meaning)) {
+    if (explicitStandaloneCandidate && !known.has(familyKey) && hasUsefulQualityText(meaning)) {
       promotionCandidates.push({ word: familyWord, relation, meaning });
     }
   }

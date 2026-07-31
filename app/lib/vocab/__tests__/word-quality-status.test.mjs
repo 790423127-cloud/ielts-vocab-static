@@ -38,7 +38,7 @@ test("optional enrichment does not create a paid completion backlog", () => {
   });
   assert.equal(isMissingAiFields(word), false);
   assert.equal(getUnifiedQualityQueue(word), "ready");
-  assert.equal(needsOptionalWordEnrichment(word), true);
+  assert.equal(needsOptionalWordEnrichment(word), false);
 });
 
 test("legitimate words named none, null, and unknown are valid headwords", () => {
@@ -101,10 +101,26 @@ test("difficulty and part of speech control enrichment without forcing four plus
 
 test("family promotion candidates are reported separately from repair queues", () => {
   const result = getWordFamilyStatus(readyWord({
-    wordFamily: [{ word: "accessibility", relation: "noun-form", meaning: "可访问性" }]
+    wordFamily: [{ word: "accessibility", relation: "noun-form", meaning: "可访问性", standaloneCandidate: true }]
   }), { knownHeadwords: new Set(["access"]) });
   assert.equal(result.familyStatus, "promotion-candidate");
   assert.equal(result.hasFamilyPromotionCandidate, true);
+});
+
+test("localized family relation labels are valid and do not imply a standalone card", () => {
+  const result = getWordFamilyStatus(readyWord({
+    wordFamily: [{ word: "accessibility", relation: "同词族 / 派生词", meaning: "可访问性" }]
+  }), { knownHeadwords: new Set(["access"]) });
+
+  assert.equal(result.familyStatus, "clean");
+  assert.equal(result.needsFamilyReview, false);
+  assert.equal(result.hasFamilyPromotionCandidate, false);
+});
+
+test("learning-ready enrichment requires one reliable collocation and one pattern", () => {
+  const status = getWordEnrichmentStatus(readyWord());
+  assert.equal(status.enrichmentStatus, "standard");
+  assert.equal(status.needsOptionalEnrichment, false);
 });
 
 test("quality summaries expose required, optional, and family counts separately", () => {
@@ -115,7 +131,7 @@ test("quality summaries expose required, optional, and family counts separately"
     readyWord({ word: "classify", topics: [] }),
     readyWord({
       word: "family-owner",
-      wordFamily: [{ word: "familymember", relation: "noun-form", meaning: "词族成员" }]
+      wordFamily: [{ word: "familymember", relation: "noun-form", meaning: "词族成员", standaloneCandidate: true }]
     })
   ];
   const counts = summarizeWordQuality(words, {
@@ -129,8 +145,8 @@ test("quality summaries expose required, optional, and family counts separately"
     contentMissing: 2,
     contentInvalid: 0,
     classificationMissing: 1,
-    enrichmentThin: 5,
-    enrichmentStandard: 0,
+    enrichmentThin: 0,
+    enrichmentStandard: 5,
     enrichmentRich: 0,
     familyReview: 0,
     familyPromotion: 1,

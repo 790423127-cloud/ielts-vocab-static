@@ -1,28 +1,9 @@
 // Auto-generated sense catalog for Meaning Mode — micro-semantic categories.
-// Generated: 2026-07-10T11:29:14.363Z
+// Generated: 2026-07-30T11:01:45.173Z
 // Replaces broad-domain classification with fine-grained micro-categories.
 // DO NOT EDIT — regenerate: node app/lib/meaning-mode/build-sense-catalog.cjs
 
 export const SENSE_CATALOG = [
-  {
-    "wordId": "word_5d80236c4600",
-    "word": "first",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第一；首先",
-    "meaningDetailedZh": "第一；首先",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第一",
-      "一首",
-      "首先"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
   {
     "wordId": "word_0e57569bdb14",
     "word": "already",
@@ -613,10 +594,7 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "财务",
-      "务的",
-      "的金",
-      "金融",
-      "融的"
+      "务的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -840,7 +818,7 @@ export const SENSE_CATALOG = [
     "word": "support",
     "posFamily": "verb",
     "quizMeaningZh": "支持；资助",
-    "meaningDetailedZh": "支持；资助",
+    "meaningDetailedZh": "支持；资助；支撑；供养或维持",
     "semanticMacro": "relation-possession",
     "semanticMicro": "support-assistance",
     "allMicros": [
@@ -849,7 +827,12 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "支持",
       "持资",
-      "资助"
+      "资助",
+      "助支",
+      "支撑",
+      "撑供",
+      "供养",
+      "养维"
     ],
     "contrastClass": "support-assistance",
     "sourceType": "master-lexicon"
@@ -1130,7 +1113,7 @@ export const SENSE_CATALOG = [
     "word": "current",
     "posFamily": "adjective",
     "quizMeaningZh": "当前的；流通的",
-    "meaningDetailedZh": "当前的；流通的",
+    "meaningDetailedZh": "当前的；通行的；水流；洋流；电流",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -1139,9 +1122,12 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "当前",
       "前的",
-      "的流",
-      "流通",
-      "通的"
+      "的通",
+      "通行",
+      "行的",
+      "的水",
+      "水流",
+      "流洋"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -1588,27 +1574,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_10517687ee0c",
-    "word": "all",
-    "posFamily": "adjective",
-    "quizMeaningZh": "所有的；全部的",
-    "meaningDetailedZh": "所有的；全部的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "所有",
-      "有的",
-      "的全",
-      "全部",
-      "部的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_52b43951bc72",
     "word": "forward",
     "posFamily": "adverb",
@@ -1723,23 +1688,6 @@ export const SENSE_CATALOG = [
       "表演",
       "演业",
       "业绩"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_3bbc9ad96500",
-    "word": "ago",
-    "posFamily": "adverb",
-    "quizMeaningZh": "以前",
-    "meaningDetailedZh": "以前",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "以前"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -2110,31 +2058,11 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_61ccad19a5e4",
-    "word": "end",
-    "posFamily": "noun",
-    "quizMeaningZh": "结束，终点；结束",
-    "meaningDetailedZh": "结束，终点；结束",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "结束",
-      "束终",
-      "终点",
-      "点结"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_b76462c94795",
     "word": "record",
     "posFamily": "noun",
     "quizMeaningZh": "记录；录制",
-    "meaningDetailedZh": "记录；录制",
+    "meaningDetailedZh": "记录；录制；首次记载或记录实例",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -2143,7 +2071,11 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "记录",
       "录录",
-      "录制"
+      "录制",
+      "制首",
+      "首次",
+      "次记",
+      "记载"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -2760,25 +2692,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_f733f54ac445",
-    "word": "cost",
-    "posFamily": "noun",
-    "quizMeaningZh": "成本；花费",
-    "meaningDetailedZh": "成本；花费",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "成本",
-      "本花",
-      "花费"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_189428343e7e",
     "word": "visit",
     "posFamily": "verb",
@@ -3234,7 +3147,7 @@ export const SENSE_CATALOG = [
     "word": "stock",
     "posFamily": "noun",
     "quizMeaningZh": "股票；库存；储备",
-    "meaningDetailedZh": "股票；库存；储备",
+    "meaningDetailedZh": "股票；库存；储备；（鱼类等的）种群或资源量",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -3245,7 +3158,10 @@ export const SENSE_CATALOG = [
       "票库",
       "库存",
       "存储",
-      "储备"
+      "储备",
+      "备鱼",
+      "鱼类",
+      "类等"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -3267,25 +3183,6 @@ export const SENSE_CATALOG = [
       "降低"
     ],
     "contrastClass": "decrease-reduction",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_877889fd9050",
-    "word": "baby",
-    "posFamily": "noun",
-    "quizMeaningZh": "婴儿；宝宝",
-    "meaningDetailedZh": "婴儿；宝宝",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "婴儿",
-      "儿宝",
-      "宝宝"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -3362,24 +3259,6 @@ export const SENSE_CATALOG = [
       "努力",
       "力尽",
       "尽力"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_3abde6132f9d",
-    "word": "useful",
-    "posFamily": "adjective",
-    "quizMeaningZh": "有用的",
-    "meaningDetailedZh": "有用的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "有用",
-      "用的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -3937,25 +3816,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_a3e1c7a7b80f",
-    "word": "hit",
-    "posFamily": "verb",
-    "quizMeaningZh": "打；击；碰撞",
-    "meaningDetailedZh": "打；击；碰撞",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "打击",
-      "击碰",
-      "碰撞"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_008a4e96940e",
     "word": "safety",
     "posFamily": "noun",
@@ -4087,26 +3947,6 @@ export const SENSE_CATALOG = [
       "运营"
     ],
     "contrastClass": "operation-manipulation",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_dc2180fcdb13",
-    "word": "class",
-    "posFamily": "noun",
-    "quizMeaningZh": "班级；课；阶级",
-    "meaningDetailedZh": "班级；课；阶级",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "班级",
-      "级课",
-      "课阶",
-      "阶级"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -4401,26 +4241,6 @@ export const SENSE_CATALOG = [
       "管理"
     ],
     "contrastClass": "control-regulation",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_d4547b06cc4a",
-    "word": "guy",
-    "posFamily": "noun",
-    "quizMeaningZh": "家伙，小伙子",
-    "meaningDetailedZh": "家伙，小伙子",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "家伙",
-      "伙小",
-      "小伙",
-      "伙子"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -5011,27 +4831,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_96fdd1f0e20d",
-    "word": "date",
-    "posFamily": "noun",
-    "quizMeaningZh": "日期；约会；定日期",
-    "meaningDetailedZh": "日期；约会；定日期",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "日期",
-      "期约",
-      "约会",
-      "会定",
-      "定日"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_6ffe86e71a91",
     "word": "village",
     "posFamily": "noun",
@@ -5272,24 +5071,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "选择"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_6546fd94944e",
-    "word": "why",
-    "posFamily": "adverb",
-    "quizMeaningZh": "为什么",
-    "meaningDetailedZh": "为什么",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "为什",
-      "什么"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -5564,27 +5345,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_ce446bdcf172",
-    "word": "fun",
-    "posFamily": "noun",
-    "quizMeaningZh": "乐趣；有趣的事",
-    "meaningDetailedZh": "乐趣；有趣的事",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "乐趣",
-      "趣有",
-      "有趣",
-      "趣的",
-      "的事"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_807b072bea7b",
     "word": "overall",
     "posFamily": "adverb",
@@ -5678,7 +5438,7 @@ export const SENSE_CATALOG = [
     "word": "surface",
     "posFamily": "noun",
     "quizMeaningZh": "表面；浮现",
-    "meaningDetailedZh": "表面；浮现",
+    "meaningDetailedZh": "表面；地表；浮现",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -5686,7 +5446,9 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "表面",
-      "面浮",
+      "面地",
+      "地表",
+      "表浮",
       "浮现"
     ],
     "contrastClass": "general",
@@ -5727,23 +5489,6 @@ export const SENSE_CATALOG = [
       "计划"
     ],
     "contrastClass": "strategy-planning",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_64e11a5497fc",
-    "word": "add",
-    "posFamily": "verb",
-    "quizMeaningZh": "添加",
-    "meaningDetailedZh": "添加",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "添加"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -6001,9 +5746,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "机构",
-      "构制",
-      "制度"
+      "机构"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -6039,13 +5782,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "贡献",
-      "献捐",
-      "捐款",
-      "款促",
-      "促成",
-      "成因",
-      "因素"
+      "贡献"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -6269,9 +6006,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "奖励",
-      "励回",
-      "回报"
+      "奖励"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -6714,24 +6449,6 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "故意",
       "意地"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_2880e7f7ca7e",
-    "word": "cool",
-    "posFamily": "adjective",
-    "quizMeaningZh": "凉爽；酷",
-    "meaningDetailedZh": "凉爽；酷",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "凉爽",
-      "爽酷"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -7505,25 +7222,6 @@ export const SENSE_CATALOG = [
       "最终"
     ],
     "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_56fe2c5453ac",
-    "word": "job",
-    "posFamily": "noun",
-    "quizMeaningZh": "工作；职位",
-    "meaningDetailedZh": "工作；职位",
-    "semanticMacro": "work-economy",
-    "semanticMicro": "employment-occupation",
-    "allMicros": [
-      "employment-occupation"
-    ],
-    "ambiguityKeys": [
-      "工作",
-      "作职",
-      "职位"
-    ],
-    "contrastClass": "employment-occupation",
     "sourceType": "master-lexicon"
   },
   {
@@ -8383,7 +8081,7 @@ export const SENSE_CATALOG = [
     "word": "scheme",
     "posFamily": "noun",
     "quizMeaningZh": "计划；方案；阴谋",
-    "meaningDetailedZh": "计划；方案；阴谋",
+    "meaningDetailedZh": "计划；方案；制度；机制；阴谋",
     "semanticMacro": "action-behavior",
     "semanticMicro": "strategy-planning",
     "allMicros": [
@@ -8393,8 +8091,11 @@ export const SENSE_CATALOG = [
       "计划",
       "划方",
       "方案",
-      "案阴",
-      "阴谋"
+      "案制",
+      "制度",
+      "度机",
+      "机制",
+      "制阴"
     ],
     "contrastClass": "strategy-planning",
     "sourceType": "master-lexicon"
@@ -8478,7 +8179,7 @@ export const SENSE_CATALOG = [
     "word": "charge",
     "posFamily": "noun",
     "quizMeaningZh": "收费；充电；指控",
-    "meaningDetailedZh": "收费；充电；指控",
+    "meaningDetailedZh": "收费；费用；充电；指控",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -8486,7 +8187,9 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "收费",
-      "费充",
+      "费费",
+      "费用",
+      "用充",
       "充电",
       "电指",
       "指控"
@@ -8507,11 +8210,7 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "有限",
-      "限的",
-      "的受",
-      "受限",
-      "限制",
-      "制的"
+      "限的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -9212,18 +8911,23 @@ export const SENSE_CATALOG = [
     "word": "subject",
     "posFamily": "noun",
     "quizMeaningZh": "科目；主题",
-    "meaningDetailedZh": "科目；主题",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "科目；主题；研究对象；受……影响或约束",
+    "semanticMacro": "education-academic",
+    "semanticMicro": "research-investigation",
     "allMicros": [
-      "general"
+      "research-investigation"
     ],
     "ambiguityKeys": [
       "科目",
       "目主",
-      "主题"
+      "主题",
+      "题研",
+      "研究",
+      "究对",
+      "对象",
+      "象受"
     ],
-    "contrastClass": "general",
+    "contrastClass": "research-investigation",
     "sourceType": "master-lexicon"
   },
   {
@@ -9442,19 +9146,23 @@ export const SENSE_CATALOG = [
     "word": "agent",
     "posFamily": "noun",
     "quizMeaningZh": "代理人；中介",
-    "meaningDetailedZh": "代理人；中介",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "代理人；中介；造成变化的因素或致病因子",
+    "semanticMacro": "cause-effect",
+    "semanticMicro": "effect-function",
     "allMicros": [
-      "general"
+      "effect-function"
     ],
     "ambiguityKeys": [
       "代理",
       "理人",
       "人中",
-      "中介"
+      "中介",
+      "介作",
+      "作用",
+      "用因",
+      "因素"
     ],
-    "contrastClass": "general",
+    "contrastClass": "effect-function",
     "sourceType": "master-lexicon"
   },
   {
@@ -9608,26 +9316,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_7745ef79a072",
-    "word": "club",
-    "posFamily": "noun",
-    "quizMeaningZh": "俱乐部；社团",
-    "meaningDetailedZh": "俱乐部；社团",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "俱乐",
-      "乐部",
-      "部社",
-      "社团"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_55c0451c2079",
     "word": "completely",
     "posFamily": "adverb",
@@ -9707,7 +9395,7 @@ export const SENSE_CATALOG = [
     "word": "practice",
     "posFamily": "noun",
     "quizMeaningZh": "练习，实践",
-    "meaningDetailedZh": "练习，实践",
+    "meaningDetailedZh": "练习；实践；惯例",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -9716,7 +9404,9 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "练习",
       "习实",
-      "实践"
+      "实践",
+      "践惯",
+      "惯例"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -9803,7 +9493,7 @@ export const SENSE_CATALOG = [
     "word": "range",
     "posFamily": "noun",
     "quizMeaningZh": "范围；山脉",
-    "meaningDetailedZh": "范围；山脉",
+    "meaningDetailedZh": "范围；山脉；服务或设备的覆盖范围",
     "semanticMacro": "quantity-measurement",
     "semanticMicro": "scope-range",
     "allMicros": [
@@ -9812,7 +9502,10 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "范围",
       "围山",
-      "山脉"
+      "山脉",
+      "脉覆",
+      "覆盖",
+      "盖范"
     ],
     "contrastClass": "scope-range",
     "sourceType": "master-lexicon"
@@ -10328,23 +10021,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_5cf9dbc99582",
-    "word": "art",
-    "posFamily": "noun",
-    "quizMeaningZh": "艺术",
-    "meaningDetailedZh": "艺术",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "艺术"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_57eaba8d957d",
     "word": "article",
     "posFamily": "noun",
@@ -10503,7 +10179,7 @@ export const SENSE_CATALOG = [
     "word": "claim",
     "posFamily": "verb",
     "quizMeaningZh": "声称；要求；索赔",
-    "meaningDetailedZh": "声称；要求；索赔",
+    "meaningDetailedZh": "声称；要求；索赔；正式申领福利、退款或款项",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -10514,7 +10190,9 @@ export const SENSE_CATALOG = [
       "称要",
       "要求",
       "求索",
-      "索赔"
+      "索赔",
+      "赔申",
+      "申领"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -10590,23 +10268,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "附近"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_3a5021b463df",
-    "word": "hair",
-    "posFamily": "noun",
-    "quizMeaningZh": "头发",
-    "meaningDetailedZh": "头发",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "头发"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -12681,21 +12342,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_8e12102ca4bc",
-    "word": "ball",
-    "posFamily": "noun",
-    "quizMeaningZh": "球",
-    "meaningDetailedZh": "球",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_0a7c5b5fc720",
     "word": "structure",
     "posFamily": "noun",
@@ -12808,23 +12454,6 @@ export const SENSE_CATALOG = [
       "成长"
     ],
     "contrastClass": "growth-increase",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_7f7f08be5364",
-    "word": "fourth",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第四",
-    "meaningDetailedZh": "第四",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第四"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -13059,24 +12688,6 @@ export const SENSE_CATALOG = [
       "增加",
       "加加",
       "加法"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_c1dca7cfb5a0",
-    "word": "brown",
-    "posFamily": "adjective",
-    "quizMeaningZh": "棕色的",
-    "meaningDetailedZh": "棕色的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "棕色",
-      "色的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -13530,11 +13141,7 @@ export const SENSE_CATALOG = [
       "independence-autonomy"
     ],
     "ambiguityKeys": [
-      "独立",
-      "立自",
-      "自主",
-      "主自",
-      "自立"
+      "独立"
     ],
     "contrastClass": "independence-autonomy",
     "sourceType": "master-lexicon"
@@ -13813,25 +13420,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_4c8a3142b573",
-    "word": "copy",
-    "posFamily": "noun",
-    "quizMeaningZh": "副本；复制",
-    "meaningDetailedZh": "副本；复制",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "副本",
-      "本复",
-      "复制"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_601abda828b0",
     "word": "journal",
     "posFamily": "noun",
@@ -13960,24 +13548,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_3080db0651e0",
-    "word": "second",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第二；秒",
-    "meaningDetailedZh": "第二；秒",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第二",
-      "二秒"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_ee89d601de12",
     "word": "novel",
     "posFamily": "adjective",
@@ -14006,18 +13576,16 @@ export const SENSE_CATALOG = [
     "semanticMacro": "evaluation-importance",
     "semanticMicro": "importance-dominance",
     "allMicros": [
-      "importance-dominance",
-      "advantage"
+      "importance-dominance"
     ],
     "ambiguityKeys": [
-      "主要",
-      "要的",
-      "的占",
-      "占优",
-      "优势",
-      "势的"
+      "占主",
+      "主导",
+      "导地",
+      "地位",
+      "位的"
     ],
-    "contrastClass": "advantage",
+    "contrastClass": "importance-dominance",
     "sourceType": "master-lexicon"
   },
   {
@@ -14201,18 +13769,23 @@ export const SENSE_CATALOG = [
     "word": "bill",
     "posFamily": "noun",
     "quizMeaningZh": "账单；法案",
-    "meaningDetailedZh": "账单；法案",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "账单；法案；把……宣传或描述为",
+    "semanticMacro": "communication-language",
+    "semanticMicro": "description-narration",
     "allMicros": [
-      "general"
+      "description-narration"
     ],
     "ambiguityKeys": [
       "账单",
       "单法",
-      "法案"
+      "法案",
+      "案把",
+      "把…",
+      "……",
+      "…宣",
+      "宣传"
     ],
-    "contrastClass": "general",
+    "contrastClass": "description-narration",
     "sourceType": "master-lexicon"
   },
   {
@@ -14263,13 +13836,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "维护",
-      "护保",
-      "保养",
-      "养维",
-      "维持",
-      "持赡",
-      "赡养"
+      "维护"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -14463,23 +14030,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "永远"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_46e2662e18e4",
-    "word": "hide",
-    "posFamily": "verb",
-    "quizMeaningZh": "隐藏",
-    "meaningDetailedZh": "隐藏",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "隐藏"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -14848,23 +14398,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_b1b170a70024",
-    "word": "beach",
-    "posFamily": "noun",
-    "quizMeaningZh": "海滩",
-    "meaningDetailedZh": "海滩",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "海滩"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_fc7f824f8972",
     "word": "impact",
     "posFamily": "noun",
@@ -14954,9 +14487,7 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "金融",
       "融财",
-      "财政",
-      "政资",
-      "资金"
+      "财政"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -15863,24 +15394,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_bf55677c35aa",
-    "word": "foot",
-    "posFamily": "noun",
-    "quizMeaningZh": "脚；英尺",
-    "meaningDetailedZh": "脚；英尺",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "脚英",
-      "英尺"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_2d60798e8481",
     "word": "occur",
     "posFamily": "verb",
@@ -15923,7 +15436,7 @@ export const SENSE_CATALOG = [
     "word": "moderate",
     "posFamily": "adjective",
     "quizMeaningZh": "适度的；温和的",
-    "meaningDetailedZh": "适度的；温和的",
+    "meaningDetailedZh": "适度的；中等的；缓和；调节",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -15932,9 +15445,12 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "适度",
       "度的",
-      "的温",
-      "温和",
-      "和的"
+      "的中",
+      "中等",
+      "等的",
+      "的缓",
+      "缓和",
+      "和调"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -16453,9 +15969,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "完成",
-      "成结",
-      "结束"
+      "完成"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -16484,17 +15998,24 @@ export const SENSE_CATALOG = [
     "word": "means",
     "posFamily": "noun",
     "quizMeaningZh": "人；结束",
-    "meaningDetailedZh": "人；结束",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "方法；手段；财富；意思是（mean 的第三人称单数）",
+    "semanticMacro": "action-behavior",
+    "semanticMicro": "method-approach",
     "allMicros": [
-      "general"
+      "method-approach",
+      "method-means"
     ],
     "ambiguityKeys": [
-      "人结",
-      "结束"
+      "方法",
+      "法手",
+      "手段",
+      "段财",
+      "财富",
+      "富意",
+      "意思",
+      "思是"
     ],
-    "contrastClass": "general",
+    "contrastClass": "method-means",
     "sourceType": "master-lexicon"
   },
   {
@@ -16591,7 +16112,7 @@ export const SENSE_CATALOG = [
     "word": "host",
     "posFamily": "noun",
     "quizMeaningZh": "主人；主持人",
-    "meaningDetailedZh": "主人；主持人",
+    "meaningDetailedZh": "主人；主持人；宿主或寄主",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -16601,7 +16122,9 @@ export const SENSE_CATALOG = [
       "主人",
       "人主",
       "主持",
-      "持人"
+      "持人",
+      "人宿",
+      "宿主"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -16680,7 +16203,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "透明",
-      "明透",
       "明度"
     ],
     "contrastClass": "general",
@@ -17148,8 +16670,11 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
+      "冲奔",
+      "奔匆",
       "匆忙",
-      "忙冲"
+      "忙行",
+      "行事"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -18982,23 +18507,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_155dbd175970",
-    "word": "boss",
-    "posFamily": "noun",
-    "quizMeaningZh": "老板",
-    "meaningDetailedZh": "老板",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "老板"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_89bb7906f704",
     "word": "connection",
     "posFamily": "noun",
@@ -19351,7 +18859,7 @@ export const SENSE_CATALOG = [
     "word": "waste",
     "posFamily": "noun",
     "quizMeaningZh": "浪费；废物",
-    "meaningDetailedZh": "浪费；废物",
+    "meaningDetailedZh": "浪费；废物；浪费的；废弃的",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -19360,7 +18868,12 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "浪费",
       "费废",
-      "废物"
+      "废物",
+      "物浪",
+      "费的",
+      "的废",
+      "废弃",
+      "弃的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -20334,25 +19847,6 @@ export const SENSE_CATALOG = [
       "分数",
       "数得",
       "得分"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_4e0ab357b145",
-    "word": "map",
-    "posFamily": "noun",
-    "quizMeaningZh": "地图；映射",
-    "meaningDetailedZh": "地图；映射",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "地图",
-      "图映",
-      "映射"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -22127,23 +21621,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_70c3a01ac47e",
-    "word": "kid",
-    "posFamily": "noun",
-    "quizMeaningZh": "小孩",
-    "meaningDetailedZh": "小孩",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "小孩"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_d1521176b39f",
     "word": "preserve",
     "posFamily": "verb",
@@ -22344,7 +21821,7 @@ export const SENSE_CATALOG = [
     "word": "screen",
     "posFamily": "noun",
     "quizMeaningZh": "屏幕；筛选",
-    "meaningDetailedZh": "屏幕；筛选",
+    "meaningDetailedZh": "屏幕；遮挡；筛查；检测",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -22352,8 +21829,12 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "屏幕",
-      "幕筛",
-      "筛选"
+      "幕遮",
+      "遮挡",
+      "挡筛",
+      "筛查",
+      "查检",
+      "检测"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -23212,8 +22693,6 @@ export const SENSE_CATALOG = [
       "support-assistance"
     ],
     "ambiguityKeys": [
-      "帮助",
-      "助援",
       "援助"
     ],
     "contrastClass": "support-assistance",
@@ -23274,23 +22753,6 @@ export const SENSE_CATALOG = [
       "缓解",
       "解救",
       "救济"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_0b33322d2b02",
-    "word": "classroom",
-    "posFamily": "noun",
-    "quizMeaningZh": "教室",
-    "meaningDetailedZh": "教室",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "教室"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -23414,16 +22876,20 @@ export const SENSE_CATALOG = [
     "word": "breed",
     "posFamily": "verb",
     "quizMeaningZh": "繁殖；饲养",
-    "meaningDetailedZh": "繁殖；饲养",
+    "meaningDetailedZh": "品种；繁殖；饲养；培育",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
+      "品种",
+      "种繁",
       "繁殖",
       "殖饲",
-      "饲养"
+      "饲养",
+      "养培",
+      "培育"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -23736,15 +23202,19 @@ export const SENSE_CATALOG = [
     "word": "downtown",
     "posFamily": "adverb",
     "quizMeaningZh": "市中心",
-    "meaningDetailedZh": "市中心",
+    "meaningDetailedZh": "在市中心；市中心的；市中心",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
+      "在市",
       "市中",
-      "中心"
+      "中心",
+      "心市",
+      "心的",
+      "的市"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -23835,25 +23305,6 @@ export const SENSE_CATALOG = [
       "曾经",
       "经一",
       "一旦"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_f125509e96e3",
-    "word": "police",
-    "posFamily": "noun",
-    "quizMeaningZh": "警察；警方",
-    "meaningDetailedZh": "警察；警方",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "警察",
-      "察警",
-      "警方"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -23957,23 +23408,6 @@ export const SENSE_CATALOG = [
       "的粗",
       "粗体",
       "体的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_7a705aceb073",
-    "word": "welcome",
-    "posFamily": "verb",
-    "quizMeaningZh": "欢迎",
-    "meaningDetailedZh": "欢迎",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "欢迎"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -24586,9 +24020,9 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "艰难",
-      "难困",
-      "困苦"
+      "困难",
+      "难艰",
+      "艰苦"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -25395,18 +24829,21 @@ export const SENSE_CATALOG = [
     "word": "base",
     "posFamily": "noun",
     "quizMeaningZh": "基础；基地",
-    "meaningDetailedZh": "基础；基地",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "基础；基地；工作或研究站",
+    "semanticMacro": "work-economy",
+    "semanticMicro": "employment-occupation",
     "allMicros": [
-      "general"
+      "employment-occupation"
     ],
     "ambiguityKeys": [
       "基础",
       "础基",
-      "基地"
+      "基地",
+      "地工",
+      "工作",
+      "作站"
     ],
-    "contrastClass": "general",
+    "contrastClass": "employment-occupation",
     "sourceType": "master-lexicon"
   },
   {
@@ -25928,20 +25365,18 @@ export const SENSE_CATALOG = [
     "word": "married",
     "posFamily": "adjective",
     "quizMeaningZh": "从事相关工作的人",
-    "meaningDetailedZh": "从事相关工作的人",
+    "meaningDetailedZh": "已婚的；婚姻的",
     "semanticMacro": "work-economy",
     "semanticMicro": "employment-occupation",
     "allMicros": [
       "employment-occupation"
     ],
     "ambiguityKeys": [
-      "从事",
-      "事相",
-      "相关",
-      "关工",
-      "工作",
-      "作的",
-      "的人"
+      "已婚",
+      "婚的",
+      "的婚",
+      "婚姻",
+      "姻的"
     ],
     "contrastClass": "employment-occupation",
     "sourceType": "master-lexicon"
@@ -25958,9 +25393,11 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "此外",
-      "外而",
-      "而且"
+      "除…",
+      "……",
+      "…之",
+      "之外",
+      "外还"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -25984,27 +25421,6 @@ export const SENSE_CATALOG = [
       "报道"
     ],
     "contrastClass": "scope-range",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_6943149811e9",
-    "word": "gym",
-    "posFamily": "noun",
-    "quizMeaningZh": "健身房；体育馆",
-    "meaningDetailedZh": "健身房；体育馆",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "健身",
-      "身房",
-      "房体",
-      "体育",
-      "育馆"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -26650,23 +26066,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_bf2edcffbb90",
-    "word": "sing",
-    "posFamily": "verb",
-    "quizMeaningZh": "唱歌",
-    "meaningDetailedZh": "唱歌",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "唱歌"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_5fd9ccf1e1f2",
     "word": "principle",
     "posFamily": "noun",
@@ -26996,7 +26395,7 @@ export const SENSE_CATALOG = [
     "word": "fuel",
     "posFamily": "noun",
     "quizMeaningZh": "燃料；加油",
-    "meaningDetailedZh": "燃料；加油",
+    "meaningDetailedZh": "燃料；加油；加剧；推动",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -27005,7 +26404,11 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "燃料",
       "料加",
-      "加油"
+      "加油",
+      "油加",
+      "加剧",
+      "剧推",
+      "推动"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -27125,9 +26528,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "租户",
-      "户房",
-      "房客"
+      "租户"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -28010,7 +27411,10 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "联合",
-      "合的"
+      "合的",
+      "的团",
+      "团结",
+      "结的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -28752,9 +28156,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "负担",
-      "担重",
-      "重担"
+      "负担"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -28810,8 +28212,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "分析",
-      "析家",
-      "家分",
       "析师"
     ],
     "contrastClass": "general",
@@ -29457,9 +28857,6 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "毁灭",
-      "灭的",
-      "的完",
       "完成",
       "成的"
     ],
@@ -30671,23 +30068,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_5ebdc88b0afd",
-    "word": "hill",
-    "posFamily": "noun",
-    "quizMeaningZh": "小山",
-    "meaningDetailedZh": "小山",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "小山"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_243421761959",
     "word": "typically",
     "posFamily": "adverb",
@@ -31488,23 +30868,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_7c71ddc12e0c",
-    "word": "cash",
-    "posFamily": "noun",
-    "quizMeaningZh": "现金",
-    "meaningDetailedZh": "现金",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "现金"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_00d105020dc7",
     "word": "quarter",
     "posFamily": "noun",
@@ -32291,9 +31654,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "成就",
-      "就成",
-      "成绩"
+      "成就"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -33195,11 +32556,7 @@ export const SENSE_CATALOG = [
       "support-assistance"
     ],
     "ambiguityKeys": [
-      "帮助",
-      "助援",
-      "援助",
-      "助协",
-      "协助"
+      "帮助"
     ],
     "contrastClass": "support-assistance",
     "sourceType": "master-lexicon"
@@ -33307,9 +32664,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "完成",
-      "成达",
-      "达成"
+      "完成"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -33349,21 +32704,6 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "选择"
     ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_cfe150403118",
-    "word": "boat",
-    "posFamily": "noun",
-    "quizMeaningZh": "船",
-    "meaningDetailedZh": "船",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
@@ -34276,9 +33616,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "刺激",
-      "激激",
-      "激励"
+      "刺激"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -34474,23 +33812,6 @@ export const SENSE_CATALOG = [
       "的进",
       "进攻",
       "攻的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_4fefca12598e",
-    "word": "autumn",
-    "posFamily": "noun",
-    "quizMeaningZh": "秋天",
-    "meaningDetailedZh": "秋天",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "秋天"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -34980,14 +34301,21 @@ export const SENSE_CATALOG = [
     "word": "litter",
     "posFamily": "noun",
     "quizMeaningZh": "垃圾",
-    "meaningDetailedZh": "垃圾",
+    "meaningDetailedZh": "垃圾；一窝幼崽；森林枯枝落叶层",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "垃圾"
+      "垃圾",
+      "圾一",
+      "一窝",
+      "窝幼",
+      "幼崽",
+      "崽枯",
+      "枯枝",
+      "枝落"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -35863,9 +35191,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "陪伴",
-      "伴伴",
-      "伴随"
+      "陪伴"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -36300,23 +35626,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_9c4fdfdee071",
-    "word": "afternoon",
-    "posFamily": "noun",
-    "quizMeaningZh": "下午",
-    "meaningDetailedZh": "下午",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "下午"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_55d9067ef2bf",
     "word": "attached",
     "posFamily": "adjective",
@@ -36461,27 +35770,6 @@ export const SENSE_CATALOG = [
       "姿势",
       "势姿",
       "姿态"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_39184c4e10aa",
-    "word": "fifth",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第五；五分之一",
-    "meaningDetailedZh": "第五；五分之一",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第五",
-      "五五",
-      "五分",
-      "分之",
-      "之一"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -37362,9 +36650,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "包含",
-      "含包",
-      "包容"
+      "包含"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -37510,8 +36796,8 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "评分",
-      "分标",
-      "标记"
+      "分批",
+      "批改"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -37819,9 +37105,11 @@ export const SENSE_CATALOG = [
       "主要",
       "要地",
       "地占",
-      "占优",
-      "优势",
-      "势地"
+      "占主",
+      "主导",
+      "导地",
+      "地位",
+      "位地"
     ],
     "contrastClass": "advantage",
     "sourceType": "master-lexicon"
@@ -38174,23 +37462,6 @@ export const SENSE_CATALOG = [
       "塑造"
     ],
     "contrastClass": "shape-form",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_5c057d0b32d2",
-    "word": "sky",
-    "posFamily": "noun",
-    "quizMeaningZh": "天空",
-    "meaningDetailedZh": "天空",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "天空"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -39341,26 +38612,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_1163aaab11b0",
-    "word": "dutch",
-    "posFamily": "adjective",
-    "quizMeaningZh": "荷兰的；荷兰人",
-    "meaningDetailedZh": "荷兰的；荷兰人",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "荷兰",
-      "兰的",
-      "的荷",
-      "兰人"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_a5ef69429ccf",
     "word": "scientist",
     "posFamily": "noun",
@@ -39999,23 +39250,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_c4c59e4e15ff",
-    "word": "sixth",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第六",
-    "meaningDetailedZh": "第六",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第六"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_2eb5b5f51d9f",
     "word": "geography",
     "posFamily": "noun",
@@ -40331,8 +39565,7 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "补充",
-      "充补",
-      "补足"
+      "充物"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -41178,25 +40411,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_8a5e72a5aed9",
-    "word": "dry",
-    "posFamily": "adjective",
-    "quizMeaningZh": "干的；弄干",
-    "meaningDetailedZh": "干的；弄干",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "干的",
-      "的弄",
-      "弄干"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_5cc5139f2a4c",
     "word": "expire",
     "posFamily": "verb",
@@ -41228,23 +40442,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "伦敦"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_163a0c534c0b",
-    "word": "ninth",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第九",
-    "meaningDetailedZh": "第九",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第九"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -41839,23 +41036,6 @@ export const SENSE_CATALOG = [
       "思考",
       "考想",
       "想法"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_d6016a756499",
-    "word": "card",
-    "posFamily": "noun",
-    "quizMeaningZh": "卡片",
-    "meaningDetailedZh": "卡片",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "卡片"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -42576,7 +41756,7 @@ export const SENSE_CATALOG = [
     "word": "strain",
     "posFamily": "noun",
     "quizMeaningZh": "压力；拉紧；应变",
-    "meaningDetailedZh": "压力；拉紧；应变",
+    "meaningDetailedZh": "压力；拉紧；应变；菌株或品系",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -42587,24 +41767,10 @@ export const SENSE_CATALOG = [
       "力拉",
       "拉紧",
       "紧应",
-      "应变"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_124312b3cd6d",
-    "word": "businessman",
-    "posFamily": "noun",
-    "quizMeaningZh": "商人",
-    "meaningDetailedZh": "商人",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "商人"
+      "应变",
+      "变菌",
+      "菌株",
+      "株品"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -42904,9 +42070,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "顾问",
-      "问导",
-      "导师"
+      "顾问"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -44462,10 +43626,11 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "房屋",
-      "屋经",
-      "经营",
-      "营场",
-      "场所"
+      "屋及",
+      "及附",
+      "附属",
+      "属建",
+      "建筑"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -45559,7 +44724,7 @@ export const SENSE_CATALOG = [
     "word": "discrimination",
     "posFamily": "noun",
     "quizMeaningZh": "歧视；区别",
-    "meaningDetailedZh": "歧视；区别",
+    "meaningDetailedZh": "歧视；区别；辨别",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -45568,7 +44733,9 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "歧视",
       "视区",
-      "区别"
+      "区别",
+      "别辨",
+      "辨别"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -45659,18 +44826,23 @@ export const SENSE_CATALOG = [
     "word": "spell",
     "posFamily": "verb",
     "quizMeaningZh": "拼写；咒语",
-    "meaningDetailedZh": "拼写；咒语",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "拼写；咒语；一段时间或一阵",
+    "semanticMacro": "time-sequence",
+    "semanticMicro": "time-temporal",
     "allMicros": [
-      "general"
+      "time-temporal"
     ],
     "ambiguityKeys": [
       "拼写",
       "写咒",
-      "咒语"
+      "咒语",
+      "语一",
+      "一段",
+      "段时",
+      "时间",
+      "间一"
     ],
-    "contrastClass": "general",
+    "contrastClass": "time-temporal",
     "sourceType": "master-lexicon"
   },
   {
@@ -46011,9 +45183,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "完成",
-      "成结",
-      "结束"
+      "完成"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -46388,17 +45558,19 @@ export const SENSE_CATALOG = [
     "word": "mount",
     "posFamily": "verb",
     "quizMeaningZh": "增加；安装；山",
-    "meaningDetailedZh": "增加；安装；山",
+    "meaningDetailedZh": "登上；安装；增加；山",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "增加",
-      "加安",
+      "登上",
+      "上安",
       "安装",
-      "装山"
+      "装增",
+      "增加",
+      "加山"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -46818,25 +45990,6 @@ export const SENSE_CATALOG = [
       "隐藏",
       "藏掩",
       "掩盖"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_72570ec63621",
-    "word": "cooking",
-    "posFamily": "noun",
-    "quizMeaningZh": "烹饪；做饭",
-    "meaningDetailedZh": "烹饪；做饭",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "烹饪",
-      "饪做",
-      "做饭"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -47596,17 +46749,21 @@ export const SENSE_CATALOG = [
     "word": "overwhelming",
     "posFamily": "adjective",
     "quizMeaningZh": "非常；强壮的",
-    "meaningDetailedZh": "非常；强壮的",
+    "meaningDetailedZh": "压倒性的；势不可挡的；巨大的",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "非常",
-      "常强",
-      "强壮",
-      "壮的"
+      "压倒",
+      "倒性",
+      "性的",
+      "的势",
+      "势不",
+      "不可",
+      "可挡",
+      "挡的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -48362,47 +47519,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_f0c1e00dc974",
-    "word": "girl",
-    "posFamily": "noun",
-    "quizMeaningZh": "女孩，姑娘",
-    "meaningDetailedZh": "女孩，姑娘",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "女孩",
-      "孩姑",
-      "姑娘"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_cf2bd2f09996",
-    "word": "numbers",
-    "posFamily": "noun",
-    "quizMeaningZh": "数字；数量；号码",
-    "meaningDetailedZh": "数字；数量；号码",
-    "semanticMacro": "quantity-measurement",
-    "semanticMicro": "quantity-amount",
-    "allMicros": [
-      "quantity-amount",
-      "digital-electronic"
-    ],
-    "ambiguityKeys": [
-      "数字",
-      "字数",
-      "数量",
-      "量号",
-      "号码"
-    ],
-    "contrastClass": "digital-electronic",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_2b22aa8b7230",
     "word": "understood",
     "posFamily": "verb",
@@ -49051,7 +48167,7 @@ export const SENSE_CATALOG = [
     "word": "perceived",
     "posFamily": "adjective",
     "quizMeaningZh": "感知到的",
-    "meaningDetailedZh": "感知到的",
+    "meaningDetailedZh": "感知到的；被认为的",
     "semanticMacro": "cognition-opinion",
     "semanticMicro": "perception-sensory",
     "allMicros": [
@@ -49060,7 +48176,11 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "感知",
       "知到",
-      "到的"
+      "到的",
+      "的被",
+      "被认",
+      "认为",
+      "为的"
     ],
     "contrastClass": "perception-sensory",
     "sourceType": "master-lexicon"
@@ -49744,9 +48864,10 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "遗体",
-      "体残",
-      "残骸"
+      "剩余",
+      "余物",
+      "物遗",
+      "遗迹"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -50088,25 +49209,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_d942822da1e8",
-    "word": "age",
-    "posFamily": "noun",
-    "quizMeaningZh": "年龄；时代",
-    "meaningDetailedZh": "年龄；时代",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "年龄",
-      "龄时",
-      "时代"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_2fdb8b4becd7",
     "word": "fighting",
     "posFamily": "noun",
@@ -50317,19 +49419,22 @@ export const SENSE_CATALOG = [
     "word": "findings",
     "posFamily": "noun",
     "quizMeaningZh": "其他的；制作",
-    "meaningDetailedZh": "其他的；制作",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "调查结果；发现（复数）",
+    "semanticMacro": "cause-effect",
+    "semanticMicro": "effect-result",
     "allMicros": [
-      "general"
+      "effect-result"
     ],
     "ambiguityKeys": [
-      "其他",
-      "他的",
-      "的制",
-      "制作"
+      "调查",
+      "查结",
+      "结果",
+      "果发",
+      "发现",
+      "现复",
+      "复数"
     ],
-    "contrastClass": "general",
+    "contrastClass": "effect-result",
     "sourceType": "master-lexicon"
   },
   {
@@ -50856,23 +49961,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_eace101a5e77",
-    "word": "wife",
-    "posFamily": "noun",
-    "quizMeaningZh": "妻子",
-    "meaningDetailedZh": "妻子",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "妻子"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_3e21ae25c4e2",
     "word": "essay",
     "posFamily": "noun",
@@ -50945,8 +50033,8 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "支配",
-      "配优",
-      "优势"
+      "配地",
+      "地位"
     ],
     "contrastClass": "advantage",
     "sourceType": "master-lexicon"
@@ -51916,18 +51004,15 @@ export const SENSE_CATALOG = [
     "wordId": "word_3563c78aecba",
     "word": "virtually",
     "posFamily": "adverb",
-    "quizMeaningZh": "几乎；虚拟地",
-    "meaningDetailedZh": "几乎；虚拟地",
+    "quizMeaningZh": "几乎",
+    "meaningDetailedZh": "几乎",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "几乎",
-      "乎虚",
-      "虚拟",
-      "拟地"
+      "几乎"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -52344,18 +51429,21 @@ export const SENSE_CATALOG = [
     "word": "adopted",
     "posFamily": "verb",
     "quizMeaningZh": "自己的；免费的",
-    "meaningDetailedZh": "自己的；免费的",
+    "meaningDetailedZh": "采用；收养（过去式/过去分词）",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "自己",
-      "己的",
-      "的免",
-      "免费",
-      "费的"
+      "采用",
+      "用收",
+      "收养",
+      "养过",
+      "过去",
+      "去式",
+      "式过",
+      "去分"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -52971,25 +52059,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_0885ff9f77fb",
-    "word": "fix",
-    "posFamily": "verb",
-    "quizMeaningZh": "修理；固定",
-    "meaningDetailedZh": "修理；固定",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "修理",
-      "理固",
-      "固定"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_3bbcbf93e07b",
     "word": "depth",
     "posFamily": "noun",
@@ -53350,25 +52419,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "沙漠"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_c343bc6852db",
-    "word": "twentieth",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第二十(的)",
-    "meaningDetailedZh": "第二十(的)",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第二",
-      "二十",
-      "十的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -54069,8 +53119,8 @@ export const SENSE_CATALOG = [
     "wordId": "word_ce8b7c45906e",
     "word": "rear",
     "posFamily": "adjective",
-    "quizMeaningZh": "后面的；后方的",
-    "meaningDetailedZh": "后面的；后方的",
+    "quizMeaningZh": "饲养；养育",
+    "meaningDetailedZh": "后面的；后方；饲养；养育",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -54081,7 +53131,10 @@ export const SENSE_CATALOG = [
       "面的",
       "的后",
       "后方",
-      "方的"
+      "方饲",
+      "饲养",
+      "养养",
+      "养育"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -54362,7 +53415,10 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "调解",
-      "解人"
+      "解人",
+      "人调",
+      "调停",
+      "停者"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -55190,9 +54246,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "海关",
-      "关关",
-      "关税"
+      "海关"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -56840,19 +55894,18 @@ export const SENSE_CATALOG = [
     "wordId": "word_89a32dfc1c2d",
     "word": "following",
     "posFamily": "adjective",
-    "quizMeaningZh": "下列的；接着的",
-    "meaningDetailedZh": "下列的；接着的",
+    "quizMeaningZh": "在...之后",
+    "meaningDetailedZh": "在...之后",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "下列",
-      "列的",
-      "的接",
-      "接着",
-      "着的"
+      "在.",
+      "..",
+      ".之",
+      "之后"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -57489,25 +56542,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_63cb1205e171",
-    "word": "box",
-    "posFamily": "noun",
-    "quizMeaningZh": "盒子；拳击",
-    "meaningDetailedZh": "盒子；拳击",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "盒子",
-      "子拳",
-      "拳击"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_420de1da99f1",
     "word": "sacred",
     "posFamily": "adjective",
@@ -57729,23 +56763,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "边境"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_5fccc6c46528",
-    "word": "bread",
-    "posFamily": "noun",
-    "quizMeaningZh": "面包",
-    "meaningDetailedZh": "面包",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "面包"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -58162,24 +57179,6 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "史前",
       "前的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_f55e84dba333",
-    "word": "busy",
-    "posFamily": "adjective",
-    "quizMeaningZh": "忙碌的",
-    "meaningDetailedZh": "忙碌的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "忙碌",
-      "碌的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -58787,25 +57786,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_c3f6e9b1b49c",
-    "word": "singing",
-    "posFamily": "noun",
-    "quizMeaningZh": "歌唱；唱歌",
-    "meaningDetailedZh": "歌唱；唱歌",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "歌唱",
-      "唱唱",
-      "唱歌"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_09a2ea77a483",
     "word": "warning",
     "posFamily": "noun",
@@ -59184,23 +58164,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_fbba4fd14deb",
-    "word": "boy",
-    "posFamily": "noun",
-    "quizMeaningZh": "男孩",
-    "meaningDetailedZh": "男孩",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "男孩"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_b00e7121560f",
     "word": "simultaneously",
     "posFamily": "adverb",
@@ -59331,25 +58294,6 @@ export const SENSE_CATALOG = [
       "迫使",
       "使帮",
       "帮忙"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_9f5b7ead8440",
-    "word": "neck",
-    "posFamily": "noun",
-    "quizMeaningZh": "脖子；颈部",
-    "meaningDetailedZh": "脖子；颈部",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "脖子",
-      "子颈",
-      "颈部"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -60013,11 +58957,8 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "租赁",
-      "赁期",
-      "期租",
-      "租约",
-      "约关",
-      "关系"
+      "赁租",
+      "租期"
     ],
     "contrastClass": "relationship-connection",
     "sourceType": "master-lexicon"
@@ -60545,21 +59486,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_fd3cb043bcae",
-    "word": "bear",
-    "posFamily": "noun",
-    "quizMeaningZh": "熊",
-    "meaningDetailedZh": "熊",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_5f7ec305977f",
     "word": "fantastic",
     "posFamily": "adjective",
@@ -60606,16 +59532,18 @@ export const SENSE_CATALOG = [
     "word": "lasting",
     "posFamily": "adjective",
     "quizMeaningZh": "长的；时间",
-    "meaningDetailedZh": "长的；时间",
+    "meaningDetailedZh": "持久的；长期的",
     "semanticMacro": "time-sequence",
     "semanticMicro": "time-temporal",
     "allMicros": [
       "time-temporal"
     ],
     "ambiguityKeys": [
-      "长的",
-      "的时",
-      "时间"
+      "持久",
+      "久的",
+      "的长",
+      "长期",
+      "期的"
     ],
     "contrastClass": "time-temporal",
     "sourceType": "master-lexicon"
@@ -60709,23 +59637,6 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "幸运",
       "运的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_d8e822aa8d74",
-    "word": "chat",
-    "posFamily": "verb",
-    "quizMeaningZh": "聊天",
-    "meaningDetailedZh": "聊天",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "聊天"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -61333,19 +60244,23 @@ export const SENSE_CATALOG = [
     "wordId": "word_53d4d6ff42ff",
     "word": "sales",
     "posFamily": "noun",
-    "quizMeaningZh": "一些；时间",
-    "meaningDetailedZh": "一些；时间",
-    "semanticMacro": "time-sequence",
-    "semanticMicro": "time-temporal",
+    "quizMeaningZh": "销售；销售额；出售（复数）",
+    "meaningDetailedZh": "销售；销售额；出售（复数）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
     "allMicros": [
-      "time-temporal"
+      "general"
     ],
     "ambiguityKeys": [
-      "一些",
-      "些时",
-      "时间"
+      "销售",
+      "售销",
+      "售额",
+      "额出",
+      "出售",
+      "售复",
+      "复数"
     ],
-    "contrastClass": "time-temporal",
+    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -61443,8 +60358,7 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "紧迫",
-      "迫的",
-      "的压"
+      "迫的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -61710,9 +60624,9 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "法令",
-      "令条",
-      "条例"
+      "条例",
+      "例法",
+      "法令"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -65051,24 +63965,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_fe7f29efae2f",
-    "word": "ireland",
-    "posFamily": "noun",
-    "quizMeaningZh": "爱尔兰",
-    "meaningDetailedZh": "爱尔兰",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "爱尔",
-      "尔兰"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_6591f15e4807",
     "word": "spectrum",
     "posFamily": "noun",
@@ -65197,8 +64093,8 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "勤劳",
-      "劳的"
+      "勤奋",
+      "奋的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -65815,24 +64711,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_b4098e614496",
-    "word": "boil",
-    "posFamily": "verb",
-    "quizMeaningZh": "煮沸；煮",
-    "meaningDetailedZh": "煮沸；煮",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "煮沸",
-      "沸煮"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_6c709bbf88c6",
     "word": "portray",
     "posFamily": "verb",
@@ -66415,21 +65293,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_0d7317eb7911",
-    "word": "tea",
-    "posFamily": "noun",
-    "quizMeaningZh": "茶",
-    "meaningDetailedZh": "茶",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_dc66d63382fa",
     "word": "bundle",
     "posFamily": "noun",
@@ -66887,14 +65750,16 @@ export const SENSE_CATALOG = [
     "word": "cherry",
     "posFamily": "noun",
     "quizMeaningZh": "樱桃",
-    "meaningDetailedZh": "樱桃",
+    "meaningDetailedZh": "樱桃；樱桃树",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "樱桃"
+      "樱桃",
+      "桃樱",
+      "桃树"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -67105,27 +65970,6 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "地下",
       "下水"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_65fde9224838",
-    "word": "york",
-    "posFamily": "noun",
-    "quizMeaningZh": "约克（英国城市）",
-    "meaningDetailedZh": "约克（英国城市）",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "约克",
-      "克英",
-      "英国",
-      "国城",
-      "城市"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -68352,6 +67196,8 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "电子",
+      "子学",
+      "学电",
       "子设",
       "设备"
     ],
@@ -68580,23 +67426,6 @@ export const SENSE_CATALOG = [
       "寒冷",
       "冷放",
       "放松"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_332507473a34",
-    "word": "soap",
-    "posFamily": "noun",
-    "quizMeaningZh": "肥皂",
-    "meaningDetailedZh": "肥皂",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "肥皂"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -69189,19 +68018,18 @@ export const SENSE_CATALOG = [
     "wordId": "word_25a053bf003e",
     "word": "developed",
     "posFamily": "adjective",
-    "quizMeaningZh": "时间；更多",
-    "meaningDetailedZh": "时间；更多",
-    "semanticMacro": "time-sequence",
-    "semanticMicro": "time-temporal",
+    "quizMeaningZh": "发达的",
+    "meaningDetailedZh": "发达的",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
     "allMicros": [
-      "time-temporal"
+      "general"
     ],
     "ambiguityKeys": [
-      "时间",
-      "间更",
-      "更多"
+      "发达",
+      "达的"
     ],
-    "contrastClass": "time-temporal",
+    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -69310,21 +68138,6 @@ export const SENSE_CATALOG = [
       "收利",
       "利用"
     ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_f44e194fe655",
-    "word": "sugar",
-    "posFamily": "noun",
-    "quizMeaningZh": "糖",
-    "meaningDetailedZh": "糖",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
@@ -69680,24 +68493,6 @@ export const SENSE_CATALOG = [
       "批评",
       "评挑",
       "挑剔"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_b1171bec59c7",
-    "word": "bike",
-    "posFamily": "noun",
-    "quizMeaningZh": "自行车",
-    "meaningDetailedZh": "自行车",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "自行",
-      "行车"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -70096,9 +68891,7 @@ export const SENSE_CATALOG = [
       "dependence-reliance"
     ],
     "ambiguityKeys": [
-      "依赖",
-      "赖从",
-      "从属"
+      "依赖"
     ],
     "contrastClass": "dependence-reliance",
     "sourceType": "master-lexicon"
@@ -70128,14 +68921,16 @@ export const SENSE_CATALOG = [
     "wordId": "word_3ccf4e2f2270",
     "word": "bark",
     "posFamily": "verb",
-    "quizMeaningZh": "吠叫",
-    "meaningDetailedZh": "吠叫",
+    "quizMeaningZh": "树皮",
+    "meaningDetailedZh": "树皮；吠叫",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
+      "树皮",
+      "皮吠",
       "吠叫"
     ],
     "contrastClass": "general",
@@ -71443,24 +70238,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_1699ee6ea8cd",
-    "word": "egg",
-    "posFamily": "noun",
-    "quizMeaningZh": "鸡蛋，卵",
-    "meaningDetailedZh": "鸡蛋，卵",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "鸡蛋",
-      "蛋卵"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_b4ac694549f3",
     "word": "optimism",
     "posFamily": "noun",
@@ -71549,21 +70326,6 @@ export const SENSE_CATALOG = [
       "猜测"
     ],
     "contrastClass": "speculation-guess",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_6dbc6763e91b",
-    "word": "deer",
-    "posFamily": "noun",
-    "quizMeaningZh": "鹿",
-    "meaningDetailedZh": "鹿",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -71977,8 +70739,8 @@ export const SENSE_CATALOG = [
     "wordId": "word_2edea7edbf60",
     "word": "coat",
     "posFamily": "noun",
-    "quizMeaningZh": "外套；涂层",
-    "meaningDetailedZh": "外套；涂层",
+    "quizMeaningZh": "动物、种子或细胞的外层；外壳",
+    "meaningDetailedZh": "外套；涂层；动物、种子或细胞的外层",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -71987,7 +70749,10 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "外套",
       "套涂",
-      "涂层"
+      "涂层",
+      "层外",
+      "外层",
+      "外壳"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -72346,42 +71111,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_22e268d71dd6",
-    "word": "dad",
-    "posFamily": "noun",
-    "quizMeaningZh": "爸爸",
-    "meaningDetailedZh": "爸爸",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "爸爸"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_635a1a291caa",
-    "word": "fly",
-    "posFamily": "verb",
-    "quizMeaningZh": "飞；乘飞机",
-    "meaningDetailedZh": "飞；乘飞机",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "飞乘",
-      "乘飞",
-      "飞机"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_9f903f6dda01",
     "word": "legislation",
     "posFamily": "noun",
@@ -72519,14 +71248,17 @@ export const SENSE_CATALOG = [
     "word": "irritate",
     "posFamily": "verb",
     "quizMeaningZh": "激怒",
-    "meaningDetailedZh": "激怒",
+    "meaningDetailedZh": "刺激；使恼怒",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "激怒"
+      "刺激",
+      "激使",
+      "使恼",
+      "恼怒"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -72818,25 +71550,6 @@ export const SENSE_CATALOG = [
       "人畏",
       "畏惧",
       "惧的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_7f838d6365fa",
-    "word": "arm",
-    "posFamily": "noun",
-    "quizMeaningZh": "手臂；武装",
-    "meaningDetailedZh": "手臂；武装",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "手臂",
-      "臂武",
-      "武装"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -74117,21 +72830,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_c7fb01f3d845",
-    "word": "ice",
-    "posFamily": "noun",
-    "quizMeaningZh": "冰",
-    "meaningDetailedZh": "冰",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_983247cfeed6",
     "word": "layer",
     "posFamily": "noun",
@@ -74262,24 +72960,6 @@ export const SENSE_CATALOG = [
       "可触",
       "触摸",
       "摸的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_c468ea41f289",
-    "word": "feet",
-    "posFamily": "noun",
-    "quizMeaningZh": "脚（复数）",
-    "meaningDetailedZh": "脚（复数）",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "脚复",
-      "复数"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -74787,17 +73467,21 @@ export const SENSE_CATALOG = [
     "word": "concession",
     "posFamily": "noun",
     "quizMeaningZh": "让步；特许权",
-    "meaningDetailedZh": "让步；特许权",
+    "meaningDetailedZh": "优惠；减价票；让步；特许权",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
+      "优惠",
+      "惠减",
+      "减价",
+      "价票",
+      "票让",
       "让步",
       "步特",
-      "特许",
-      "许权"
+      "特许"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -75391,7 +74075,7 @@ export const SENSE_CATALOG = [
     "word": "penetrate",
     "posFamily": "verb",
     "quizMeaningZh": "穿透；渗透",
-    "meaningDetailedZh": "穿透；渗透",
+    "meaningDetailedZh": "穿透；渗透；深入或进入内部",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -75400,7 +74084,9 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "穿透",
       "透渗",
-      "渗透"
+      "渗透",
+      "透深",
+      "深入"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -75515,24 +74201,6 @@ export const SENSE_CATALOG = [
       "具刀",
       "刀叉",
       "叉勺"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_a89a410458db",
-    "word": "wine",
-    "posFamily": "noun",
-    "quizMeaningZh": "葡萄酒",
-    "meaningDetailedZh": "葡萄酒",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "葡萄",
-      "萄酒"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -75968,7 +74636,7 @@ export const SENSE_CATALOG = [
     "word": "invoke",
     "posFamily": "verb",
     "quizMeaningZh": "援引，调用，唤起",
-    "meaningDetailedZh": "援引，调用，唤起",
+    "meaningDetailedZh": "援引；调用；唤起",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -75980,23 +74648,6 @@ export const SENSE_CATALOG = [
       "调用",
       "用唤",
       "唤起"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_d7ee8696d4f4",
-    "word": "song",
-    "posFamily": "noun",
-    "quizMeaningZh": "歌曲",
-    "meaningDetailedZh": "歌曲",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "歌曲"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -76427,21 +75078,20 @@ export const SENSE_CATALOG = [
     "wordId": "word_5f09dd004734",
     "word": "determined",
     "posFamily": "adjective",
-    "quizMeaningZh": "下定决心的；坚定的",
-    "meaningDetailedZh": "下定决心的；坚定的",
+    "quizMeaningZh": "坚定的；有决心的",
+    "meaningDetailedZh": "坚定的；有决心的",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "下定",
-      "定决",
-      "决心",
-      "心的",
-      "的坚",
       "坚定",
-      "定的"
+      "定的",
+      "的有",
+      "有决",
+      "决心",
+      "心的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -77214,25 +75864,6 @@ export const SENSE_CATALOG = [
       "汽油",
       "油煤",
       "煤气"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_022b4f1b9005",
-    "word": "duck",
-    "posFamily": "noun",
-    "quizMeaningZh": "鸭子；躲避",
-    "meaningDetailedZh": "鸭子；躲避",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "鸭子",
-      "子躲",
-      "躲避"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -78040,16 +76671,17 @@ export const SENSE_CATALOG = [
     "word": "seating",
     "posFamily": "noun",
     "quizMeaningZh": "服务；人们",
-    "meaningDetailedZh": "服务；人们",
+    "meaningDetailedZh": "座位；座位安排",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "服务",
-      "务人",
-      "人们"
+      "座位",
+      "位座",
+      "位安",
+      "安排"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -78360,27 +76992,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_718095fd0faf",
-    "word": "aunt",
-    "posFamily": "noun",
-    "quizMeaningZh": "阿姨；姑妈；姨妈",
-    "meaningDetailedZh": "阿姨；姑妈；姨妈",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "阿姨",
-      "姨姑",
-      "姑妈",
-      "妈姨",
-      "姨妈"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_61d8b7a2b381",
     "word": "recycling",
     "posFamily": "noun",
@@ -78437,28 +77048,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_19e685359b15",
-    "word": "says",
-    "posFamily": "verb",
-    "quizMeaningZh": "说（第三人称单数）",
-    "meaningDetailedZh": "说（第三人称单数）",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "说第",
-      "第三",
-      "三人",
-      "人称",
-      "称单",
-      "单数"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_5a97bb8dddd6",
     "word": "retrieve",
     "posFamily": "verb",
@@ -78490,25 +77079,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "伊朗"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_93f65ed7553f",
-    "word": "orange",
-    "posFamily": "noun",
-    "quizMeaningZh": "橙色；橙子",
-    "meaningDetailedZh": "橙色；橙子",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "橙色",
-      "色橙",
-      "橙子"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -79049,23 +77619,6 @@ export const SENSE_CATALOG = [
       "炮火",
       "火枪",
       "枪声"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_212f85fa2099",
-    "word": "fox",
-    "posFamily": "noun",
-    "quizMeaningZh": "狐狸",
-    "meaningDetailedZh": "狐狸",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "狐狸"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -80349,25 +78902,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_296690b206c6",
-    "word": "app",
-    "posFamily": "noun",
-    "quizMeaningZh": "应用程序",
-    "meaningDetailedZh": "应用程序",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "应用",
-      "用程",
-      "程序"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_aac3508c4e5a",
     "word": "feat",
     "posFamily": "noun",
@@ -80539,19 +79073,15 @@ export const SENSE_CATALOG = [
     "wordId": "word_71475e03f71b",
     "word": "venue",
     "posFamily": "noun",
-    "quizMeaningZh": "场地；举办地点",
-    "meaningDetailedZh": "场地；举办地点",
+    "quizMeaningZh": "场地",
+    "meaningDetailedZh": "场地",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "场地",
-      "地举",
-      "举办",
-      "办地",
-      "地点"
+      "场地"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -81790,21 +80320,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_f527971aa77d",
-    "word": "leg",
-    "posFamily": "noun",
-    "quizMeaningZh": "腿",
-    "meaningDetailedZh": "腿",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_9d9b20f02855",
     "word": "imbalance",
     "posFamily": "noun",
@@ -81892,25 +80407,6 @@ export const SENSE_CATALOG = [
       "女发",
       "发言",
       "言人"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_46378b156935",
-    "word": "cook",
-    "posFamily": "verb",
-    "quizMeaningZh": "烹饪；厨师",
-    "meaningDetailedZh": "烹饪；厨师",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "烹饪",
-      "饪厨",
-      "厨师"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -82990,25 +81486,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_b62ff06acbb0",
-    "word": "days",
-    "posFamily": "noun",
-    "quizMeaningZh": "天数；日子",
-    "meaningDetailedZh": "天数；日子",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "天数",
-      "数日",
-      "日子"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_9bf7bce7d531",
     "word": "dish",
     "posFamily": "noun",
@@ -83475,24 +81952,6 @@ export const SENSE_CATALOG = [
       "等级",
       "级制",
       "制的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_079d0cd5444e",
-    "word": "cry",
-    "posFamily": "verb",
-    "quizMeaningZh": "哭；喊叫",
-    "meaningDetailedZh": "哭；喊叫",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "哭喊",
-      "喊叫"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -84186,25 +82645,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_fafba1e1b9fd",
-    "word": "later",
-    "posFamily": "adverb",
-    "quizMeaningZh": "后来；稍后",
-    "meaningDetailedZh": "后来；稍后",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "后来",
-      "来稍",
-      "稍后"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_bae28940f089",
     "word": "educated",
     "posFamily": "adjective",
@@ -84856,16 +83296,17 @@ export const SENSE_CATALOG = [
     "word": "advert",
     "posFamily": "noun",
     "quizMeaningZh": "一些；服务",
-    "meaningDetailedZh": "一些；服务",
+    "meaningDetailedZh": "广告；广告宣传",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "一些",
-      "些服",
-      "服务"
+      "广告",
+      "告广",
+      "告宣",
+      "宣传"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -85150,26 +83591,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_listening1179_fe31dae5ff64",
-    "word": "ATM",
-    "posFamily": "noun",
-    "quizMeaningZh": "自动取款机",
-    "meaningDetailedZh": "自动取款机",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "自动",
-      "动取",
-      "取款",
-      "款机"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_58fe5eaa2e80",
     "word": "variance",
     "posFamily": "noun",
@@ -85370,25 +83791,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_589a3e5d5f6a",
-    "word": "cup",
-    "posFamily": "noun",
-    "quizMeaningZh": "杯子；奖杯",
-    "meaningDetailedZh": "杯子；奖杯",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "杯子",
-      "子奖",
-      "奖杯"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_b85c97e6906f",
     "word": "entitled",
     "posFamily": "adjective",
@@ -85411,16 +83813,22 @@ export const SENSE_CATALOG = [
     "wordId": "word_623cab83f8bf",
     "word": "bite",
     "posFamily": "verb",
-    "quizMeaningZh": "咬，一口",
-    "meaningDetailedZh": "咬，一口",
+    "quizMeaningZh": "咬；咬伤",
+    "meaningDetailedZh": "咬；咬伤；一口；（寒冷）刺痛",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "咬一",
-      "一口"
+      "咬咬",
+      "咬伤",
+      "伤一",
+      "一口",
+      "口寒",
+      "寒冷",
+      "冷刺",
+      "刺痛"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -85597,24 +84005,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_8ae07c987eb5",
-    "word": "soda",
-    "posFamily": "noun",
-    "quizMeaningZh": "苏打水",
-    "meaningDetailedZh": "苏打水",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "苏打",
-      "打水"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_114a75d29f03",
     "word": "ceramics",
     "posFamily": "noun",
@@ -85627,9 +84017,7 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "陶瓷",
-      "瓷工",
-      "工艺",
-      "艺陶",
+      "瓷陶",
       "瓷制",
       "制品"
     ],
@@ -85747,25 +84135,6 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "百叶",
       "叶窗"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_f689ca2d2a8a",
-    "word": "bus",
-    "posFamily": "noun",
-    "quizMeaningZh": "公共汽车",
-    "meaningDetailedZh": "公共汽车",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "公共",
-      "共汽",
-      "汽车"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -86025,21 +84394,6 @@ export const SENSE_CATALOG = [
       "工作"
     ],
     "contrastClass": "employment-occupation",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_excel_6e317bcd6839",
-    "word": "books",
-    "posFamily": "noun",
-    "quizMeaningZh": "书",
-    "meaningDetailedZh": "书",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -86883,10 +85237,7 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "签署",
-      "署方",
-      "方签",
-      "签约",
-      "约国"
+      "署方"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -87749,16 +86100,23 @@ export const SENSE_CATALOG = [
     "word": "fingerprint",
     "posFamily": "noun",
     "quizMeaningZh": "指纹",
-    "meaningDetailedZh": "指纹",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "meaningDetailedZh": "指纹；用于识别的特征图谱",
+    "semanticMacro": "quality-attribute",
+    "semanticMicro": "characteristic-feature",
     "allMicros": [
-      "general"
+      "characteristic-feature"
     ],
     "ambiguityKeys": [
-      "指纹"
+      "指纹",
+      "纹特",
+      "特征",
+      "征图",
+      "图谱",
+      "谱识",
+      "识别",
+      "别特"
     ],
-    "contrastClass": "general",
+    "contrastClass": "characteristic-feature",
     "sourceType": "master-lexicon"
   },
   {
@@ -87948,25 +86306,6 @@ export const SENSE_CATALOG = [
       "解决",
       "决难",
       "难题"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_383fc80c496f",
-    "word": "soccer",
-    "posFamily": "noun",
-    "quizMeaningZh": "英式足球",
-    "meaningDetailedZh": "英式足球",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "英式",
-      "式足",
-      "足球"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -88266,22 +86605,19 @@ export const SENSE_CATALOG = [
     "wordId": "word_listening1179_32132b88895d",
     "word": "precarious",
     "posFamily": "adjective",
-    "quizMeaningZh": "不稳定的，危险的",
-    "meaningDetailedZh": "不稳定的，危险的",
-    "semanticMacro": "abstract-conceptual",
-    "semanticMicro": "danger-risk",
+    "quizMeaningZh": "不稳定的",
+    "meaningDetailedZh": "不稳定的",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
     "allMicros": [
-      "danger-risk"
+      "general"
     ],
     "ambiguityKeys": [
       "不稳",
       "稳定",
-      "定的",
-      "的危",
-      "危险",
-      "险的"
+      "定的"
     ],
-    "contrastClass": "danger-risk",
+    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -88796,23 +87132,6 @@ export const SENSE_CATALOG = [
       "司附",
       "附属",
       "属的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_d10e174914df",
-    "word": "rome",
-    "posFamily": "noun",
-    "quizMeaningZh": "罗马",
-    "meaningDetailedZh": "罗马",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "罗马"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -89497,7 +87816,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "交接"
+      "移交"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -89526,20 +87845,16 @@ export const SENSE_CATALOG = [
     "wordId": "word_1e962c4cd342",
     "word": "decided",
     "posFamily": "adjective",
-    "quizMeaningZh": "决定了的；果断的",
-    "meaningDetailedZh": "决定了的；果断的",
+    "quizMeaningZh": "明确的",
+    "meaningDetailedZh": "明确的",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "决定",
-      "定了",
-      "了的",
-      "的果",
-      "果断",
-      "断的"
+      "明确",
+      "确的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -89673,18 +87988,22 @@ export const SENSE_CATALOG = [
     "wordId": "word_e36b54dbb82a",
     "word": "alright",
     "posFamily": "adverb",
-    "quizMeaningZh": "好吧；没问题",
-    "meaningDetailedZh": "好吧；没问题",
+    "quizMeaningZh": "好的；没问题；令人满意的",
+    "meaningDetailedZh": "好的；没问题；令人满意的",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "好吧",
-      "吧没",
+      "好的",
+      "的没",
       "没问",
-      "问题"
+      "问题",
+      "题令",
+      "令人",
+      "人满",
+      "满意"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -89704,26 +88023,6 @@ export const SENSE_CATALOG = [
       "新近",
       "近最",
       "最近"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_4a2fc953f5b7",
-    "word": "bin",
-    "posFamily": "noun",
-    "quizMeaningZh": "垃圾桶，箱子",
-    "meaningDetailedZh": "垃圾桶，箱子",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "垃圾",
-      "圾桶",
-      "桶箱",
-      "箱子"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -90344,51 +88643,6 @@ export const SENSE_CATALOG = [
       "蝴蝶"
     ],
     "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_excel_043a718774c5",
-    "word": "s",
-    "posFamily": "noun",
-    "quizMeaningZh": "abbr. 小号的（型号） n. 硫",
-    "meaningDetailedZh": "abbr. 小号的（型号） n. 硫",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      ".小",
-      "小号",
-      "号的",
-      "的型",
-      "型号",
-      ".硫"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_excel_063bffb4b52b",
-    "word": "ways",
-    "posFamily": "noun",
-    "quizMeaningZh": "方式；方法；方面；路线",
-    "meaningDetailedZh": "方式；方法；方面；路线",
-    "semanticMacro": "action-behavior",
-    "semanticMicro": "method-approach",
-    "allMicros": [
-      "method-approach"
-    ],
-    "ambiguityKeys": [
-      "方式",
-      "式方",
-      "方法",
-      "法方",
-      "方面",
-      "面路",
-      "路线"
-    ],
-    "contrastClass": "method-approach",
     "sourceType": "master-lexicon"
   },
   {
@@ -91365,26 +89619,6 @@ export const SENSE_CATALOG = [
       "说实",
       "实在",
       "在的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_110fc0005b62",
-    "word": "korean",
-    "posFamily": "adjective",
-    "quizMeaningZh": "韩国人；韩国的",
-    "meaningDetailedZh": "韩国人；韩国的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "韩国",
-      "国人",
-      "人韩",
-      "国的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -92422,41 +90656,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_176f4e517991",
-    "word": "cute",
-    "posFamily": "adjective",
-    "quizMeaningZh": "可爱的",
-    "meaningDetailedZh": "可爱的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "可爱",
-      "爱的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_663ba0822fa0",
-    "word": "pet",
-    "posFamily": "noun",
-    "quizMeaningZh": "宠物",
-    "meaningDetailedZh": "宠物",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "宠物"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_dfe5f8ee05e4",
     "word": "therapeutic",
     "posFamily": "adjective",
@@ -92714,24 +90913,6 @@ export const SENSE_CATALOG = [
       "指导",
       "导性",
       "性的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_ee0c59950530",
-    "word": "sad",
-    "posFamily": "adjective",
-    "quizMeaningZh": "伤心的",
-    "meaningDetailedZh": "伤心的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "伤心",
-      "心的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -93810,8 +91991,8 @@ export const SENSE_CATALOG = [
     "wordId": "word_af7b75857386",
     "word": "pregnancy",
     "posFamily": "noun",
-    "quizMeaningZh": "怀孕，妊娠",
-    "meaningDetailedZh": "怀孕，妊娠",
+    "quizMeaningZh": "怀孕；妊娠",
+    "meaningDetailedZh": "怀孕；妊娠",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -93935,23 +92116,6 @@ export const SENSE_CATALOG = [
     "ambiguityKeys": [
       "周复",
       "复数"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_fb48c4aa69bd",
-    "word": "bag",
-    "posFamily": "noun",
-    "quizMeaningZh": "袋子",
-    "meaningDetailedZh": "袋子",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "袋子"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -94383,25 +92547,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_b8701cbf5bf9",
-    "word": "girls",
-    "posFamily": "noun",
-    "quizMeaningZh": "女孩；女儿",
-    "meaningDetailedZh": "女孩；女儿",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "女孩",
-      "孩女",
-      "女儿"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_52d6b1ef86f2",
     "word": "fraud",
     "posFamily": "noun",
@@ -94464,26 +92609,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_fb9400b9c30b",
-    "word": "closed",
-    "posFamily": "adjective",
-    "quizMeaningZh": "关闭的；封闭的",
-    "meaningDetailedZh": "关闭的；封闭的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "关闭",
-      "闭的",
-      "的封",
-      "封闭"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_99b243259b54",
     "word": "relaxing",
     "posFamily": "adjective",
@@ -94538,23 +92663,6 @@ export const SENSE_CATALOG = [
       "弱性",
       "性弱",
       "弱点"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_ce90a2271a97",
-    "word": "ear",
-    "posFamily": "noun",
-    "quizMeaningZh": "耳朵",
-    "meaningDetailedZh": "耳朵",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "耳朵"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -94829,14 +92937,17 @@ export const SENSE_CATALOG = [
     "wordId": "word_listening1179_3ee15b8a77ec",
     "word": "sequential",
     "posFamily": "adjective",
-    "quizMeaningZh": "顺序的",
-    "meaningDetailedZh": "顺序的",
+    "quizMeaningZh": "连续的，顺序的",
+    "meaningDetailedZh": "连续的，顺序的",
     "semanticMacro": "time-sequence",
     "semanticMicro": "sequence-order",
     "allMicros": [
       "sequence-order"
     ],
     "ambiguityKeys": [
+      "连续",
+      "续的",
+      "的顺",
       "顺序",
       "序的"
     ],
@@ -95672,14 +93783,8 @@ export const SENSE_CATALOG = [
       "employment-occupation"
     ],
     "ambiguityKeys": [
-      "练习",
-      "习册",
-      "册工",
       "工作",
-      "作纸",
-      "纸用",
-      "用于",
-      "于课"
+      "作表"
     ],
     "contrastClass": "employment-occupation",
     "sourceType": "master-lexicon"
@@ -95827,24 +93932,6 @@ export const SENSE_CATALOG = [
       "恢复",
       "复简",
       "简历"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_a119c2297afd",
-    "word": "tenth",
-    "posFamily": "adjective",
-    "quizMeaningZh": "第十的",
-    "meaningDetailedZh": "第十的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "第十",
-      "十的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -96016,19 +94103,19 @@ export const SENSE_CATALOG = [
     "wordId": "word_f31b576e5488",
     "word": "financially",
     "posFamily": "adverb",
-    "quizMeaningZh": "经济上；财务上",
-    "meaningDetailedZh": "经济上；财务上",
+    "quizMeaningZh": "财务上；经济上",
+    "meaningDetailedZh": "财务上；经济上",
     "semanticMacro": "work-economy",
     "semanticMicro": "economy-finance",
     "allMicros": [
       "economy-finance"
     ],
     "ambiguityKeys": [
-      "经济",
-      "济上",
-      "上财",
       "财务",
-      "务上"
+      "务上",
+      "上经",
+      "经济",
+      "济上"
     ],
     "contrastClass": "economy-finance",
     "sourceType": "master-lexicon"
@@ -96488,26 +94575,6 @@ export const SENSE_CATALOG = [
     ],
     "ambiguityKeys": [
       "衬衫"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_b7c13d508639",
-    "word": "desk",
-    "posFamily": "noun",
-    "quizMeaningZh": "书桌；办公桌",
-    "meaningDetailedZh": "书桌；办公桌",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "书桌",
-      "桌办",
-      "办公",
-      "公桌"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -97949,23 +96016,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_876399a2e139",
-    "word": "toy",
-    "posFamily": "noun",
-    "quizMeaningZh": "玩具",
-    "meaningDetailedZh": "玩具",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "玩具"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_4c3a7d4e1d46",
     "word": "aftermath",
     "posFamily": "noun",
@@ -98421,24 +96471,6 @@ export const SENSE_CATALOG = [
       "恶化",
       "化衰",
       "衰退"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_7b26f77e6ef8",
-    "word": "washington",
-    "posFamily": "noun",
-    "quizMeaningZh": "华盛顿",
-    "meaningDetailedZh": "华盛顿",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "华盛",
-      "盛顿"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -100386,29 +98418,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_593937da9f16",
-    "word": "russian",
-    "posFamily": "noun",
-    "quizMeaningZh": "俄罗斯人，俄语，俄罗斯的",
-    "meaningDetailedZh": "俄罗斯人，俄语，俄罗斯的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "俄罗",
-      "罗斯",
-      "斯人",
-      "人俄",
-      "俄语",
-      "语俄",
-      "斯的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_24647d89a27b",
     "word": "formally",
     "posFamily": "adverb",
@@ -100813,23 +98822,6 @@ export const SENSE_CATALOG = [
       "理由"
     ],
     "contrastClass": "cause-reason",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_bd0fb9d9b10e",
-    "word": "cake",
-    "posFamily": "noun",
-    "quizMeaningZh": "蛋糕",
-    "meaningDetailedZh": "蛋糕",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "蛋糕"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -101808,23 +99800,6 @@ export const SENSE_CATALOG = [
       "代表",
       "表大",
       "大会"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_e14ae1516220",
-    "word": "beer",
-    "posFamily": "noun",
-    "quizMeaningZh": "啤酒",
-    "meaningDetailedZh": "啤酒",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "啤酒"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -103121,24 +101096,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_6e4fb05b2085",
-    "word": "pan",
-    "posFamily": "noun",
-    "quizMeaningZh": "平底锅",
-    "meaningDetailedZh": "平底锅",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "平底",
-      "底锅"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_84173912a92c",
     "word": "lit",
     "posFamily": "adjective",
@@ -103705,24 +101662,17 @@ export const SENSE_CATALOG = [
     "wordId": "word_240f795f3f95",
     "word": "asset",
     "posFamily": "noun",
-    "quizMeaningZh": "资产，财产，有价值的东西",
-    "meaningDetailedZh": "资产，财产，有价值的东西",
-    "semanticMacro": "abstract-conceptual",
-    "semanticMicro": "value-worth",
+    "quizMeaningZh": "资产",
+    "meaningDetailedZh": "资产",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
     "allMicros": [
-      "value-worth"
+      "general"
     ],
     "ambiguityKeys": [
-      "资产",
-      "产财",
-      "财产",
-      "产有",
-      "有价",
-      "价值",
-      "值的",
-      "的东"
+      "资产"
     ],
-    "contrastClass": "value-worth",
+    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -104372,8 +102322,8 @@ export const SENSE_CATALOG = [
     "wordId": "word_f019cab46060",
     "word": "unanimous",
     "posFamily": "adjective",
-    "quizMeaningZh": "全体一致的；一致同意的",
-    "meaningDetailedZh": "全体一致的；一致同意的",
+    "quizMeaningZh": "全体一致的",
+    "meaningDetailedZh": "全体一致的",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -104383,11 +102333,7 @@ export const SENSE_CATALOG = [
       "全体",
       "体一",
       "一致",
-      "致的",
-      "的一",
-      "致同",
-      "同意",
-      "意的"
+      "致的"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -105670,25 +103616,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_6cca4220b2c8",
-    "word": "grandma",
-    "posFamily": "noun",
-    "quizMeaningZh": "奶奶；外婆",
-    "meaningDetailedZh": "奶奶；外婆",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "奶奶",
-      "奶外",
-      "外婆"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_7008a673ce6a",
     "word": "nutrient",
     "posFamily": "noun",
@@ -105707,25 +103634,6 @@ export const SENSE_CATALOG = [
       "物质"
     ],
     "contrastClass": "nutrition-diet",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_309e5069339a",
-    "word": "o'clock",
-    "posFamily": "adverb",
-    "quizMeaningZh": "...点钟",
-    "meaningDetailedZh": "...点钟",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "..",
-      ".点",
-      "点钟"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -106148,8 +104056,8 @@ export const SENSE_CATALOG = [
     "wordId": "word_listening1179_afebe3466940",
     "word": "contractual",
     "posFamily": "adjective",
-    "quizMeaningZh": "合同的，契约的",
-    "meaningDetailedZh": "合同的，契约的",
+    "quizMeaningZh": "合同的；契约的",
+    "meaningDetailedZh": "合同的；契约的",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
@@ -106203,23 +104111,6 @@ export const SENSE_CATALOG = [
       "论的"
     ],
     "contrastClass": "method-approach",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_d752b9d04068",
-    "word": "apple",
-    "posFamily": "noun",
-    "quizMeaningZh": "苹果",
-    "meaningDetailedZh": "苹果",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "苹果"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -106497,27 +104388,6 @@ export const SENSE_CATALOG = [
       "长方",
       "方形",
       "形的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_1600740c91b0",
-    "word": "ends",
-    "posFamily": "noun",
-    "quizMeaningZh": "结束；末端（复数）",
-    "meaningDetailedZh": "结束；末端（复数）",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "结束",
-      "束末",
-      "末端",
-      "端复",
-      "复数"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -107152,19 +105022,25 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_33254b73d3bf",
-    "word": "ass",
-    "posFamily": "noun",
-    "quizMeaningZh": "驴；笨蛋",
-    "meaningDetailedZh": "驴；笨蛋",
+    "wordId": "word_d7658b5fe9d8",
+    "word": "forgotten",
+    "posFamily": "adjective",
+    "quizMeaningZh": "被遗忘的；忘记（过去分词）",
+    "meaningDetailedZh": "被遗忘的；忘记（过去分词）",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "驴笨",
-      "笨蛋"
+      "被遗",
+      "遗忘",
+      "忘的",
+      "的忘",
+      "忘记",
+      "记过",
+      "过去",
+      "去分"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -107658,25 +105534,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_b6e346593e5a",
-    "word": "madam",
-    "posFamily": "noun",
-    "quizMeaningZh": "女士；夫人",
-    "meaningDetailedZh": "女士；夫人",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "女士",
-      "士夫",
-      "夫人"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_listening1179_96d0955b7496",
     "word": "meteorological",
     "posFamily": "adjective",
@@ -108107,23 +105964,6 @@ export const SENSE_CATALOG = [
       "他建"
     ],
     "contrastClass": "independence-autonomy",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_82ac205b3b54",
-    "word": "midnight",
-    "posFamily": "noun",
-    "quizMeaningZh": "午夜",
-    "meaningDetailedZh": "午夜",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "午夜"
-    ],
-    "contrastClass": "general",
     "sourceType": "master-lexicon"
   },
   {
@@ -109442,43 +107282,22 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_cc237d980879",
-    "word": "legs",
+    "wordId": "word_d21f2433ff83",
+    "word": "testing",
     "posFamily": "noun",
-    "quizMeaningZh": "腿（复数）",
-    "meaningDetailedZh": "腿（复数）",
+    "quizMeaningZh": "测试；检验",
+    "meaningDetailedZh": "测试；检验",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
-      "腿复",
-      "复数"
+      "测试",
+      "试检",
+      "检验"
     ],
     "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_d21f2433ff83",
-    "word": "testing",
-    "posFamily": "noun",
-    "quizMeaningZh": "测试；知道的行为",
-    "meaningDetailedZh": "测试；知道的行为",
-    "semanticMacro": "action-behavior",
-    "semanticMicro": "behavior-conduct",
-    "allMicros": [
-      "behavior-conduct"
-    ],
-    "ambiguityKeys": [
-      "测试",
-      "试知",
-      "知道",
-      "道的",
-      "的行",
-      "行为"
-    ],
-    "contrastClass": "behavior-conduct",
     "sourceType": "master-lexicon"
   },
   {
@@ -110503,20 +108322,25 @@ export const SENSE_CATALOG = [
     "wordId": "word_5c657bebb29e",
     "word": "acts",
     "posFamily": "noun",
-    "quizMeaningZh": "新的；书；早的",
-    "meaningDetailedZh": "新的；书；早的",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
+    "quizMeaningZh": "行动；行为；表演（复数/第三人称单数）",
+    "meaningDetailedZh": "行动；行为；表演（复数/第三人称单数）",
+    "semanticMacro": "action-behavior",
+    "semanticMicro": "behavior-conduct",
     "allMicros": [
-      "general"
+      "behavior-conduct",
+      "action-execution"
     ],
     "ambiguityKeys": [
-      "新的",
-      "的书",
-      "书早",
-      "早的"
+      "行动",
+      "动行",
+      "行为",
+      "为表",
+      "表演",
+      "演复",
+      "复数",
+      "数第"
     ],
-    "contrastClass": "general",
+    "contrastClass": "action-execution",
     "sourceType": "master-lexicon"
   },
   {
@@ -110660,25 +108484,6 @@ export const SENSE_CATALOG = [
       "采用",
       "用收",
       "收养"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_557cd26810e8",
-    "word": "kent",
-    "posFamily": "noun",
-    "quizMeaningZh": "肯特（地名）",
-    "meaningDetailedZh": "肯特（地名）",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "肯特",
-      "特地",
-      "地名"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -111176,13 +108981,7 @@ export const SENSE_CATALOG = [
       "general"
     ],
     "ambiguityKeys": [
-      "虐待",
-      "待不",
-      "不公",
-      "公正",
-      "正地",
-      "地对",
-      "对待"
+      "虐待"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -111717,14 +109516,17 @@ export const SENSE_CATALOG = [
     "wordId": "word_c37fa9d746f5",
     "word": "vat",
     "posFamily": "noun",
-    "quizMeaningZh": "增值税",
-    "meaningDetailedZh": "增值税",
+    "quizMeaningZh": "大桶；缸；增值税（VAT）",
+    "meaningDetailedZh": "大桶；缸；增值税（VAT）",
     "semanticMacro": "general",
     "semanticMicro": "general",
     "allMicros": [
       "general"
     ],
     "ambiguityKeys": [
+      "大桶",
+      "桶缸",
+      "缸增",
       "增值",
       "值税"
     ],
@@ -112222,24 +110024,6 @@ export const SENSE_CATALOG = [
       "的不",
       "不足",
       "足的"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
-    "wordId": "word_95d8ab2c9f67",
-    "word": "faces",
-    "posFamily": "noun",
-    "quizMeaningZh": "脸（复数）",
-    "meaningDetailedZh": "脸（复数）",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "脸复",
-      "复数"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"
@@ -114409,25 +112193,6 @@ export const SENSE_CATALOG = [
     "sourceType": "master-lexicon"
   },
   {
-    "wordId": "word_c6d5de5a1472",
-    "word": "cow",
-    "posFamily": "noun",
-    "quizMeaningZh": "母牛；奶牛",
-    "meaningDetailedZh": "母牛；奶牛",
-    "semanticMacro": "general",
-    "semanticMicro": "general",
-    "allMicros": [
-      "general"
-    ],
-    "ambiguityKeys": [
-      "母牛",
-      "牛奶",
-      "奶牛"
-    ],
-    "contrastClass": "general",
-    "sourceType": "master-lexicon"
-  },
-  {
     "wordId": "word_a312f9f8c121",
     "word": "pepper",
     "posFamily": "noun",
@@ -115209,6 +112974,2475 @@ export const SENSE_CATALOG = [
       "的优",
       "优雅",
       "雅的"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_4a7a5ff9e356",
+    "word": "little",
+    "posFamily": "adjective",
+    "quizMeaningZh": "小的；很少的",
+    "meaningDetailedZh": "小的；很少的",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "小的",
+      "的很",
+      "很少",
+      "少的"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_d46ed415789f",
+    "word": "abnormality",
+    "posFamily": "noun",
+    "quizMeaningZh": "异常；畸形",
+    "meaningDetailedZh": "异常；畸形",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "异常",
+      "常畸",
+      "畸形"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_eee641f56c3d",
+    "word": "telecommute",
+    "posFamily": "verb",
+    "quizMeaningZh": "远程办公",
+    "meaningDetailedZh": "远程办公",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "远程",
+      "程办",
+      "办公"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_0c16baf0eded",
+    "word": "japanese",
+    "posFamily": "adjective",
+    "quizMeaningZh": "日本的；日语；日本人",
+    "meaningDetailedZh": "日本的；日语；日本人",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "日本",
+      "本的",
+      "的日",
+      "日语",
+      "语日",
+      "本人"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_320aa710f409",
+    "word": "italian",
+    "posFamily": "adjective",
+    "quizMeaningZh": "意大利的；意大利人",
+    "meaningDetailedZh": "意大利的；意大利人",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "意大",
+      "大利",
+      "利的",
+      "的意",
+      "利人"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_dab0dee63ad3",
+    "word": "france",
+    "posFamily": "noun",
+    "quizMeaningZh": "法国",
+    "meaningDetailedZh": "法国",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "法国"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_fe41e892a2b8",
+    "word": "marginalisation",
+    "posFamily": "noun",
+    "quizMeaningZh": "边缘化",
+    "meaningDetailedZh": "边缘化",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "边缘",
+      "缘化"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_9ce70bd1d4b3",
+    "word": "ought",
+    "posFamily": "verb",
+    "quizMeaningZh": "应该",
+    "meaningDetailedZh": "应该",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "应该"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_d7af66c3eabd",
+    "word": "restatement",
+    "posFamily": "noun",
+    "quizMeaningZh": "重申；重新表述",
+    "meaningDetailedZh": "重申；重新表述",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "重申",
+      "申重",
+      "重新",
+      "新表",
+      "表述"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_d8b9d454eca1",
+    "word": "israel",
+    "posFamily": "noun",
+    "quizMeaningZh": "以色列",
+    "meaningDetailedZh": "以色列",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "以色",
+      "色列"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_081df50ca8d8",
+    "word": "graphics",
+    "posFamily": "noun",
+    "quizMeaningZh": "图形",
+    "meaningDetailedZh": "图形",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "图形"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_3fac38e63201",
+    "word": "olympics",
+    "posFamily": "noun",
+    "quizMeaningZh": "一次；每个；国家",
+    "meaningDetailedZh": "奥林匹克运动会",
+    "semanticMacro": "health-body",
+    "semanticMicro": "exercise-fitness",
+    "allMicros": [
+      "exercise-fitness"
+    ],
+    "ambiguityKeys": [
+      "奥林",
+      "林匹",
+      "匹克",
+      "克运",
+      "运动",
+      "动会"
+    ],
+    "contrastClass": "exercise-fitness",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_1620c6035e58",
+    "word": "cohesion",
+    "posFamily": "noun",
+    "quizMeaningZh": "凝聚力，结合",
+    "meaningDetailedZh": "凝聚力，结合",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "凝聚",
+      "聚力",
+      "力结",
+      "结合"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_0ac4e8ae342a",
+    "word": "plagiarise",
+    "posFamily": "verb",
+    "quizMeaningZh": "抄袭",
+    "meaningDetailedZh": "抄袭",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "抄袭"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_8c8fa8880a1e",
+    "word": "underlie",
+    "posFamily": "verb",
+    "quizMeaningZh": "构成…的基础",
+    "meaningDetailedZh": "构成…的基础",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "构成",
+      "成…",
+      "…的",
+      "的基",
+      "基础"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_be09f94ae485",
+    "word": "heighten",
+    "posFamily": "verb",
+    "quizMeaningZh": "提高，增强",
+    "meaningDetailedZh": "提高，增强",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "提高",
+      "高增",
+      "增强"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_92c9501bf3a3",
+    "word": "found",
+    "posFamily": "verb",
+    "quizMeaningZh": "建立；创办",
+    "meaningDetailedZh": "建立；创办",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "建立",
+      "立创",
+      "创办"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_22ae6ede06ba",
+    "word": "desertification",
+    "posFamily": "noun",
+    "quizMeaningZh": "荒漠化",
+    "meaningDetailedZh": "荒漠化",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "荒漠",
+      "漠化"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_635bf3103516",
+    "word": "massachusetts",
+    "posFamily": "noun",
+    "quizMeaningZh": "马萨诸塞州",
+    "meaningDetailedZh": "马萨诸塞州",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "马萨",
+      "萨诸",
+      "诸塞",
+      "塞州"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_0381c2eb39e7",
+    "word": "persona",
+    "posFamily": "noun",
+    "quizMeaningZh": "角色；形象",
+    "meaningDetailedZh": "角色；形象",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "角色",
+      "色形",
+      "形象"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_b0e26827e63a",
+    "word": "america",
+    "posFamily": "noun",
+    "quizMeaningZh": "美国；美洲",
+    "meaningDetailedZh": "美国；美洲",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "美国",
+      "国美",
+      "美洲"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_c2a5b8c3b402",
+    "word": "encode",
+    "posFamily": "verb",
+    "quizMeaningZh": "编码；加密",
+    "meaningDetailedZh": "编码；加密",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "编码",
+      "码加",
+      "加密"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_fed61c5032e3",
+    "word": "videoconference",
+    "posFamily": "noun",
+    "quizMeaningZh": "视频会议",
+    "meaningDetailedZh": "视频会议",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "视频",
+      "频会",
+      "会议"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_e56a471f7ae0",
+    "word": "causation",
+    "posFamily": "noun",
+    "quizMeaningZh": "因果关系",
+    "meaningDetailedZh": "因果关系",
+    "semanticMacro": "relation-possession",
+    "semanticMicro": "relationship-connection",
+    "allMicros": [
+      "relationship-connection"
+    ],
+    "ambiguityKeys": [
+      "因果",
+      "果关",
+      "关系"
+    ],
+    "contrastClass": "relationship-connection",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_45e3d5d23009",
+    "word": "sexuality",
+    "posFamily": "noun",
+    "quizMeaningZh": "性取向；性",
+    "meaningDetailedZh": "性取向；性",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "性取",
+      "取向",
+      "向性"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_58173f0423e4",
+    "word": "immobilise",
+    "posFamily": "verb",
+    "quizMeaningZh": "使固定",
+    "meaningDetailedZh": "使固定",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "使固",
+      "固定"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_7e2d00b3ac67",
+    "word": "fluctuate",
+    "posFamily": "verb",
+    "quizMeaningZh": "波动",
+    "meaningDetailedZh": "波动",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "波动"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ec0967417f32",
+    "word": "paintwork",
+    "posFamily": "noun",
+    "quizMeaningZh": "油漆表面；漆面",
+    "meaningDetailedZh": "油漆表面；漆面",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "油漆",
+      "漆表",
+      "表面",
+      "面漆",
+      "漆面"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_cc2eb0eaa05b",
+    "word": "runaround",
+    "posFamily": "noun",
+    "quizMeaningZh": "推诿，回避",
+    "meaningDetailedZh": "推诿，回避",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "推诿",
+      "诿回",
+      "回避"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_57f92721d489",
+    "word": "postbox",
+    "posFamily": "noun",
+    "quizMeaningZh": "邮筒；信箱",
+    "meaningDetailedZh": "邮筒；信箱",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "邮筒",
+      "筒信",
+      "信箱"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_b471e40e036c",
+    "word": "shortcoming",
+    "posFamily": "noun",
+    "quizMeaningZh": "缺点；不足",
+    "meaningDetailedZh": "缺点；不足",
+    "semanticMacro": "quality-attribute",
+    "semanticMicro": "disadvantage-flaw",
+    "allMicros": [
+      "disadvantage-flaw"
+    ],
+    "ambiguityKeys": [
+      "缺点",
+      "点不",
+      "不足"
+    ],
+    "contrastClass": "disadvantage-flaw",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_f602e1edec07",
+    "word": "gatherer",
+    "posFamily": "noun",
+    "quizMeaningZh": "从事相关工作的人",
+    "meaningDetailedZh": "从事相关工作的人",
+    "semanticMacro": "work-economy",
+    "semanticMicro": "employment-occupation",
+    "allMicros": [
+      "employment-occupation"
+    ],
+    "ambiguityKeys": [
+      "从事",
+      "事相",
+      "相关",
+      "关工",
+      "工作",
+      "作的",
+      "的人"
+    ],
+    "contrastClass": "employment-occupation",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_fadcdb797829",
+    "word": "larder",
+    "posFamily": "noun",
+    "quizMeaningZh": "食品储藏室",
+    "meaningDetailedZh": "食品储藏室",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "食品",
+      "品储",
+      "储藏",
+      "藏室"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_19efe2802265",
+    "word": "hypothesize",
+    "posFamily": "verb",
+    "quizMeaningZh": "假设；假定",
+    "meaningDetailedZh": "假设；假定",
+    "semanticMacro": "cognition-opinion",
+    "semanticMicro": "speculation-assumption",
+    "allMicros": [
+      "speculation-assumption"
+    ],
+    "ambiguityKeys": [
+      "假设",
+      "设假",
+      "假定"
+    ],
+    "contrastClass": "speculation-assumption",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_8445d41b803f",
+    "word": "impair",
+    "posFamily": "verb",
+    "quizMeaningZh": "损害；削弱",
+    "meaningDetailedZh": "损害；削弱",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "损害",
+      "害削",
+      "削弱"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_90fb78881cc8",
+    "word": "noticeboard",
+    "posFamily": "noun",
+    "quizMeaningZh": "布告栏",
+    "meaningDetailedZh": "布告栏",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "布告",
+      "告栏"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_65ebea085caa",
+    "word": "misidentify",
+    "posFamily": "verb",
+    "quizMeaningZh": "错误识别；认错",
+    "meaningDetailedZh": "错误识别；认错",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "错误",
+      "误识",
+      "识别",
+      "别认",
+      "认错"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_eef1ce38b4f9",
+    "word": "applied",
+    "posFamily": "adjective",
+    "quizMeaningZh": "应用的;实用的",
+    "meaningDetailedZh": "应用的;实用的",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "应用",
+      "用的",
+      "的实",
+      "实用"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_f394b30a1830",
+    "word": "permittee",
+    "posFamily": "noun",
+    "quizMeaningZh": "持证人；被许可人",
+    "meaningDetailedZh": "持证人；被许可人",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "持证",
+      "证人",
+      "人被",
+      "被许",
+      "许可",
+      "可人"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_89db2bacfb87",
+    "word": "trousers",
+    "posFamily": "noun",
+    "quizMeaningZh": "裤子",
+    "meaningDetailedZh": "裤子",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "裤子"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_7c838daaf215",
+    "word": "sitting",
+    "posFamily": "verb",
+    "quizMeaningZh": "坐;会议",
+    "meaningDetailedZh": "坐;会议",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "坐会",
+      "会议"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_4faac7faa0ac",
+    "word": "minutes",
+    "posFamily": "noun",
+    "quizMeaningZh": "分钟；会议记录",
+    "meaningDetailedZh": "分钟；会议记录",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "分钟",
+      "钟会",
+      "会议",
+      "议记",
+      "记录"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_ed04ce0a1d53",
+    "word": "reforestation",
+    "posFamily": "noun",
+    "quizMeaningZh": "重新造林",
+    "meaningDetailedZh": "重新造林",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "重新",
+      "新造",
+      "造林"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_b458d8329f54",
+    "word": "asian",
+    "posFamily": "adjective",
+    "quizMeaningZh": "亚洲的；亚洲人",
+    "meaningDetailedZh": "亚洲的；亚洲人",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "亚洲",
+      "洲的",
+      "的亚",
+      "洲人"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ca220417034a",
+    "word": "randomize",
+    "posFamily": "verb",
+    "quizMeaningZh": "随机化",
+    "meaningDetailedZh": "随机化",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "随机",
+      "机化"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ee58f690ad76",
+    "word": "conceptualize",
+    "posFamily": "verb",
+    "quizMeaningZh": "概念化；构思",
+    "meaningDetailedZh": "概念化；构思",
+    "semanticMacro": "cognition-opinion",
+    "semanticMicro": "thought-concept",
+    "allMicros": [
+      "thought-concept"
+    ],
+    "ambiguityKeys": [
+      "概念",
+      "念化",
+      "化构",
+      "构思"
+    ],
+    "contrastClass": "thought-concept",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_c42006c2ccbe",
+    "word": "centralize",
+    "posFamily": "verb",
+    "quizMeaningZh": "集中化",
+    "meaningDetailedZh": "集中化",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "集中",
+      "中化"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_3ae74d0e0492",
+    "word": "described",
+    "posFamily": "adjective",
+    "quizMeaningZh": "描述的",
+    "meaningDetailedZh": "描述的",
+    "semanticMacro": "communication-language",
+    "semanticMicro": "description-narration",
+    "allMicros": [
+      "description-narration"
+    ],
+    "ambiguityKeys": [
+      "描述",
+      "述的"
+    ],
+    "contrastClass": "description-narration",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_7bb9b481817b",
+    "word": "killed",
+    "posFamily": "adjective",
+    "quizMeaningZh": "杀死的",
+    "meaningDetailedZh": "杀死的",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "杀死",
+      "死的"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_62d1ff031461",
+    "word": "affected",
+    "posFamily": "verb",
+    "quizMeaningZh": "受影响的",
+    "meaningDetailedZh": "受影响的",
+    "semanticMacro": "cause-effect",
+    "semanticMicro": "effect-influence",
+    "allMicros": [
+      "effect-influence"
+    ],
+    "ambiguityKeys": [
+      "受影",
+      "影响",
+      "响的"
+    ],
+    "contrastClass": "effect-influence",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_2e03795b0c7c",
+    "word": "notetaking",
+    "posFamily": "noun",
+    "quizMeaningZh": "记笔记",
+    "meaningDetailedZh": "记笔记",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "记笔",
+      "笔记"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_69f37c35b03f",
+    "word": "powercut",
+    "posFamily": "noun",
+    "quizMeaningZh": "停电",
+    "meaningDetailedZh": "停电",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "停电"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_21deae0d2b84",
+    "word": "salesclerk",
+    "posFamily": "noun",
+    "quizMeaningZh": "售货员",
+    "meaningDetailedZh": "售货员",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "售货",
+      "货员"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_b41c448aaf22",
+    "word": "smokealarm",
+    "posFamily": "noun",
+    "quizMeaningZh": "烟雾报警器",
+    "meaningDetailedZh": "烟雾报警器",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "烟雾",
+      "雾报",
+      "报警",
+      "警器"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_31b14dca2469",
+    "word": "stoplight",
+    "posFamily": "noun",
+    "quizMeaningZh": "红绿灯",
+    "meaningDetailedZh": "红绿灯",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "红绿",
+      "绿灯"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_9f962dc9adfa",
+    "word": "townhall",
+    "posFamily": "noun",
+    "quizMeaningZh": "市政厅",
+    "meaningDetailedZh": "市政厅",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "市政",
+      "政厅"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_c03a73095563",
+    "word": "digitalisation",
+    "posFamily": "noun",
+    "quizMeaningZh": "数字化",
+    "meaningDetailedZh": "数字化",
+    "semanticMacro": "technology-science",
+    "semanticMicro": "digital-electronic",
+    "allMicros": [
+      "digital-electronic"
+    ],
+    "ambiguityKeys": [
+      "数字",
+      "字化"
+    ],
+    "contrastClass": "digital-electronic",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_a00f82d8b27e",
+    "word": "cyberattack",
+    "posFamily": "noun",
+    "quizMeaningZh": "网络攻击",
+    "meaningDetailedZh": "网络攻击",
+    "semanticMacro": "technology-science",
+    "semanticMicro": "network-connectivity",
+    "allMicros": [
+      "network-connectivity"
+    ],
+    "ambiguityKeys": [
+      "网络",
+      "络攻",
+      "攻击"
+    ],
+    "contrastClass": "network-connectivity",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_bd43eb38eae1",
+    "word": "forename",
+    "posFamily": "noun",
+    "quizMeaningZh": "名（相对于姓）",
+    "meaningDetailedZh": "名（相对于姓）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "名相",
+      "相对",
+      "对于",
+      "于姓"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_f1962693b66c",
+    "word": "stomachache",
+    "posFamily": "noun",
+    "quizMeaningZh": "胃痛，肚子疼",
+    "meaningDetailedZh": "胃痛，肚子疼",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "胃痛",
+      "痛肚",
+      "肚子",
+      "子疼"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_d78a7f9e871f",
+    "word": "interrelationship",
+    "posFamily": "noun",
+    "quizMeaningZh": "相互关系",
+    "meaningDetailedZh": "相互关系",
+    "semanticMacro": "relation-possession",
+    "semanticMicro": "relationship-connection",
+    "allMicros": [
+      "relationship-connection"
+    ],
+    "ambiguityKeys": [
+      "相互",
+      "互关",
+      "关系"
+    ],
+    "contrastClass": "relationship-connection",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_90371f493466",
+    "word": "composter",
+    "posFamily": "noun",
+    "quizMeaningZh": "堆肥箱",
+    "meaningDetailedZh": "堆肥箱",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "堆肥",
+      "肥箱"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_e6f6a9f72ab2",
+    "word": "exemplification",
+    "posFamily": "noun",
+    "quizMeaningZh": "例证",
+    "meaningDetailedZh": "例证",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "例证"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_9a0d21243c6c",
+    "word": "generalisation",
+    "posFamily": "noun",
+    "quizMeaningZh": "概括，归纳",
+    "meaningDetailedZh": "概括，归纳",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "概括",
+      "括归",
+      "归纳"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_ec3be984d993",
+    "word": "microplastic",
+    "posFamily": "noun",
+    "quizMeaningZh": "微塑料",
+    "meaningDetailedZh": "微塑料",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "微塑",
+      "塑料"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_6b15ef618654",
+    "word": "paragraphing",
+    "posFamily": "noun",
+    "quizMeaningZh": "分段",
+    "meaningDetailedZh": "分段",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "分段"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_47132ca06c1b",
+    "word": "socialisation",
+    "posFamily": "noun",
+    "quizMeaningZh": "社会化；社交",
+    "meaningDetailedZh": "社会化；社交",
+    "semanticMacro": "society-culture",
+    "semanticMicro": "society-community",
+    "allMicros": [
+      "society-community"
+    ],
+    "ambiguityKeys": [
+      "社会",
+      "会化",
+      "化社",
+      "社交"
+    ],
+    "contrastClass": "society-community",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_1e3ed671310e",
+    "word": "reconciliation",
+    "posFamily": "noun",
+    "quizMeaningZh": "和解；调和",
+    "meaningDetailedZh": "和解；调和",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "和解",
+      "解调",
+      "调和"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ed1a3b9306d6",
+    "word": "liberalization",
+    "posFamily": "noun",
+    "quizMeaningZh": "自由化",
+    "meaningDetailedZh": "自由化",
+    "semanticMacro": "abstract-conceptual",
+    "semanticMicro": "freedom-liberty",
+    "allMicros": [
+      "freedom-liberty"
+    ],
+    "ambiguityKeys": [
+      "自由",
+      "由化"
+    ],
+    "contrastClass": "freedom-liberty",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_e77e5ee820f9",
+    "word": "fascinate",
+    "posFamily": "verb",
+    "quizMeaningZh": "使着迷",
+    "meaningDetailedZh": "使着迷",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "使着",
+      "着迷"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_005618d62b61",
+    "word": "riding",
+    "posFamily": "noun",
+    "quizMeaningZh": "骑马；骑（现在分词）",
+    "meaningDetailedZh": "骑马；骑（现在分词）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "骑马",
+      "马骑",
+      "骑现",
+      "现在",
+      "在分",
+      "分词"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_dd91aa249884",
+    "word": "popularize",
+    "posFamily": "verb",
+    "quizMeaningZh": "普及",
+    "meaningDetailedZh": "普及",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "普及"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_listening1179_298d0899cdc6",
+    "word": "objectify",
+    "posFamily": "verb",
+    "quizMeaningZh": "使客观化；物化",
+    "meaningDetailedZh": "使客观化；物化",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "物化"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_e3e4c5d6a429",
+    "word": "collocation",
+    "posFamily": "noun",
+    "quizMeaningZh": "搭配",
+    "meaningDetailedZh": "搭配",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "搭配"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_01c6fef811ce",
+    "word": "embargo",
+    "posFamily": "noun",
+    "quizMeaningZh": "禁运",
+    "meaningDetailedZh": "禁运",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "禁运"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_8a49cb965fc6",
+    "word": "jobseeker",
+    "posFamily": "noun",
+    "quizMeaningZh": "求职者",
+    "meaningDetailedZh": "求职者",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "求职",
+      "职者"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_326f13d28afb",
+    "word": "constituent",
+    "posFamily": "noun",
+    "quizMeaningZh": "成分；选民",
+    "meaningDetailedZh": "成分；选民",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "成分",
+      "分选",
+      "选民"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_b9800593abd9",
+    "word": "legitimacy",
+    "posFamily": "noun",
+    "quizMeaningZh": "合法性；正当性",
+    "meaningDetailedZh": "合法性；正当性",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "合法",
+      "法性",
+      "性正",
+      "正当",
+      "当性"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_c55f23d20c89",
+    "word": "policymaker",
+    "posFamily": "noun",
+    "quizMeaningZh": "政策制定者",
+    "meaningDetailedZh": "政策制定者",
+    "semanticMacro": "society-culture",
+    "semanticMicro": "policy-governance",
+    "allMicros": [
+      "policy-governance"
+    ],
+    "ambiguityKeys": [
+      "政策",
+      "策制",
+      "制定",
+      "定者"
+    ],
+    "contrastClass": "policy-governance",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_99e83fc4640a",
+    "word": "oppression",
+    "posFamily": "noun",
+    "quizMeaningZh": "压迫",
+    "meaningDetailedZh": "压迫",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "压迫"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_86492cefb217",
+    "word": "segregation",
+    "posFamily": "noun",
+    "quizMeaningZh": "隔离；分离",
+    "meaningDetailedZh": "隔离；分离",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "隔离",
+      "离分",
+      "分离"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_819b4ee92d85",
+    "word": "persecution",
+    "posFamily": "noun",
+    "quizMeaningZh": "迫害",
+    "meaningDetailedZh": "迫害",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "迫害"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_4c6e6ddb2581",
+    "word": "underpayment",
+    "posFamily": "noun",
+    "quizMeaningZh": "少付的工资或款项",
+    "meaningDetailedZh": "少付的工资或款项",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "少付",
+      "付的",
+      "的工",
+      "工资",
+      "资或",
+      "或款",
+      "款项"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_0c8cfe10af80",
+    "word": "dangle",
+    "posFamily": "verb",
+    "quizMeaningZh": "悬挂；摇晃",
+    "meaningDetailedZh": "悬挂；摇晃",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "悬挂",
+      "挂摇",
+      "摇晃"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_a5c96bc8a871",
+    "word": "deskjob",
+    "posFamily": "noun",
+    "quizMeaningZh": "案头工作",
+    "meaningDetailedZh": "案头工作",
+    "semanticMacro": "work-economy",
+    "semanticMicro": "employment-occupation",
+    "allMicros": [
+      "employment-occupation"
+    ],
+    "ambiguityKeys": [
+      "案头",
+      "头工",
+      "工作"
+    ],
+    "contrastClass": "employment-occupation",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ba3f35bf4684",
+    "word": "resolver",
+    "posFamily": "noun",
+    "quizMeaningZh": "解决者",
+    "meaningDetailedZh": "解决者",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "解决",
+      "决者"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ab82d211b52e",
+    "word": "rangefinder",
+    "posFamily": "noun",
+    "quizMeaningZh": "测距仪（用于测量距离的光学或电子工具）",
+    "meaningDetailedZh": "测距仪（用于测量距离的光学或电子工具）",
+    "semanticMacro": "quantity-measurement",
+    "semanticMicro": "measurement-assessment",
+    "allMicros": [
+      "measurement-assessment"
+    ],
+    "ambiguityKeys": [
+      "测距",
+      "距仪",
+      "仪用",
+      "用于",
+      "于测",
+      "测量",
+      "量距",
+      "距离"
+    ],
+    "contrastClass": "measurement-assessment",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_60544f23ab4c",
+    "word": "rampway",
+    "posFamily": "noun",
+    "quizMeaningZh": "（供轮椅或货物用的）坡道",
+    "meaningDetailedZh": "（供轮椅或货物用的）坡道",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "供轮",
+      "轮椅",
+      "椅或",
+      "或货",
+      "货物",
+      "物用",
+      "用的",
+      "的坡"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_c659c3547b4b",
+    "word": "pinboard",
+    "posFamily": "noun",
+    "quizMeaningZh": "图钉板；公告板",
+    "meaningDetailedZh": "图钉板；公告板",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "图钉",
+      "钉板",
+      "板公",
+      "公告",
+      "告板"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_d068552c8536",
+    "word": "mapreader",
+    "posFamily": "noun",
+    "quizMeaningZh": "地图阅读器（人或设备）",
+    "meaningDetailedZh": "地图阅读器（人或设备）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "地图",
+      "图阅",
+      "阅读",
+      "读器",
+      "器人",
+      "人或",
+      "或设",
+      "设备"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_dcfcd3c1848b",
+    "word": "preceptor",
+    "posFamily": "noun",
+    "quizMeaningZh": "实习指导老师",
+    "meaningDetailedZh": "实习指导老师",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "实习",
+      "习指",
+      "指导",
+      "导老",
+      "老师"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_81f92babd538",
+    "word": "mutiny",
+    "posFamily": "noun",
+    "quizMeaningZh": "兵变；叛乱",
+    "meaningDetailedZh": "兵变；叛乱",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "兵变",
+      "变叛",
+      "叛乱"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ab3d21d0d2fe",
+    "word": "exemplify",
+    "posFamily": "verb",
+    "quizMeaningZh": "例证；举例说明",
+    "meaningDetailedZh": "例证；举例说明",
+    "semanticMacro": "cognition-opinion",
+    "semanticMicro": "interpretation-explanation",
+    "allMicros": [
+      "interpretation-explanation"
+    ],
+    "ambiguityKeys": [
+      "例证",
+      "证举",
+      "举例",
+      "例说",
+      "说明"
+    ],
+    "contrastClass": "interpretation-explanation",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_2a3084e416b4",
+    "word": "milliner",
+    "posFamily": "noun",
+    "quizMeaningZh": "女帽制造商或销售商",
+    "meaningDetailedZh": "女帽制造商或销售商",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "女帽",
+      "帽制",
+      "制造",
+      "造商",
+      "商或",
+      "或销",
+      "销售",
+      "售商"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_d3a342dd405f",
+    "word": "plantroom",
+    "posFamily": "noun",
+    "quizMeaningZh": "设备机房；植物房",
+    "meaningDetailedZh": "设备机房；植物房",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "设备",
+      "备机",
+      "机房",
+      "房植",
+      "植物",
+      "物房"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_2065354ed2a4",
+    "word": "passcode",
+    "posFamily": "noun",
+    "quizMeaningZh": "密码；通行码",
+    "meaningDetailedZh": "密码；通行码",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "密码",
+      "码通",
+      "通行",
+      "行码"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_81a491b30464",
+    "word": "pushchair",
+    "posFamily": "noun",
+    "quizMeaningZh": "婴儿推车",
+    "meaningDetailedZh": "婴儿推车",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "婴儿",
+      "儿推",
+      "推车"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_186e9ff804f0",
+    "word": "poolroom",
+    "posFamily": "noun",
+    "quizMeaningZh": "台球室；游泳池机房",
+    "meaningDetailedZh": "台球室；游泳池机房",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "台球",
+      "球室",
+      "室游",
+      "游泳",
+      "泳池",
+      "池机",
+      "机房"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_9308395042f0",
+    "word": "pillbox",
+    "posFamily": "noun",
+    "quizMeaningZh": "药丸盒；碉堡",
+    "meaningDetailedZh": "药丸盒；碉堡",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "药丸",
+      "丸盒",
+      "盒碉",
+      "碉堡"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_b501cd94f838",
+    "word": "pillowcase",
+    "posFamily": "noun",
+    "quizMeaningZh": "枕套",
+    "meaningDetailedZh": "枕套",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "枕套"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_6c602533c1f2",
+    "word": "protectorate",
+    "posFamily": "noun",
+    "quizMeaningZh": "保护国",
+    "meaningDetailedZh": "保护国",
+    "semanticMacro": "environment-nature",
+    "semanticMicro": "conservation-protection",
+    "allMicros": [
+      "conservation-protection"
+    ],
+    "ambiguityKeys": [
+      "保护",
+      "护国"
+    ],
+    "contrastClass": "conservation-protection",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_5c70f12c6e83",
+    "word": "puppeteer",
+    "posFamily": "noun",
+    "quizMeaningZh": "木偶操纵者",
+    "meaningDetailedZh": "木偶操纵者",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "木偶",
+      "偶操",
+      "操纵",
+      "纵者"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_6ece9ecf35a4",
+    "word": "outpost",
+    "posFamily": "noun",
+    "quizMeaningZh": "前哨；偏远据点",
+    "meaningDetailedZh": "前哨；偏远据点",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "前哨",
+      "哨偏",
+      "偏远",
+      "远据",
+      "据点"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ea7f07a35aaf",
+    "word": "recognizer",
+    "posFamily": "noun",
+    "quizMeaningZh": "识别器（能够辨认特定事物或人的设备或程序）",
+    "meaningDetailedZh": "识别器（能够辨认特定事物或人的设备或程序）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "识别",
+      "别器",
+      "器能",
+      "能够",
+      "够辨",
+      "辨认",
+      "认特",
+      "特定"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_35848857832a",
+    "word": "hatchway",
+    "posFamily": "noun",
+    "quizMeaningZh": "舱口；天窗",
+    "meaningDetailedZh": "舱口；天窗",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "舱口",
+      "口天",
+      "天窗"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_17e4603a1174",
+    "word": "preserver",
+    "posFamily": "noun",
+    "quizMeaningZh": "保存某物的人或物",
+    "meaningDetailedZh": "保存某物的人或物",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "保存",
+      "存某",
+      "某物",
+      "物的",
+      "的人",
+      "人或",
+      "或物"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_3d32e258cee5",
+    "word": "redeemer",
+    "posFamily": "noun",
+    "quizMeaningZh": "救赎者（从困境或罪恶中拯救他人的人或事物）",
+    "meaningDetailedZh": "救赎者（从困境或罪恶中拯救他人的人或事物）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "救赎",
+      "赎者",
+      "者从",
+      "从困",
+      "困境",
+      "境或",
+      "或罪",
+      "罪恶"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_41a8d2fc538c",
+    "word": "ragpicker",
+    "posFamily": "noun",
+    "quizMeaningZh": "拾荒者；捡破烂的人",
+    "meaningDetailedZh": "拾荒者；捡破烂的人",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "拾荒",
+      "荒者",
+      "者捡",
+      "捡破",
+      "破烂",
+      "烂的",
+      "的人"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_29d252d7d463",
+    "word": "reasoner",
+    "posFamily": "noun",
+    "quizMeaningZh": "善于推理的人；逻辑思考者",
+    "meaningDetailedZh": "善于推理的人；逻辑思考者",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "善于",
+      "于推",
+      "推理",
+      "理的",
+      "的人",
+      "人逻",
+      "逻辑",
+      "辑思"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_fa983c1431fb",
+    "word": "partaker",
+    "posFamily": "noun",
+    "quizMeaningZh": "参与者；分享者",
+    "meaningDetailedZh": "参与者；分享者",
+    "semanticMacro": "action-behavior",
+    "semanticMicro": "participation-involvement",
+    "allMicros": [
+      "participation-involvement"
+    ],
+    "ambiguityKeys": [
+      "参与",
+      "与者",
+      "者分",
+      "分享",
+      "享者"
+    ],
+    "contrastClass": "participation-involvement",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_7fcec05ff3b7",
+    "word": "rejoinder",
+    "posFamily": "noun",
+    "quizMeaningZh": "反驳；回答",
+    "meaningDetailedZh": "反驳；回答",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "反驳",
+      "驳回",
+      "回答"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_0f63efe2686b",
+    "word": "parkade",
+    "posFamily": "noun",
+    "quizMeaningZh": "多层停车场",
+    "meaningDetailedZh": "多层停车场",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "多层",
+      "层停",
+      "停车",
+      "车场"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_885e5d9b6f38",
+    "word": "rentier",
+    "posFamily": "noun",
+    "quizMeaningZh": "靠租金生活的人",
+    "meaningDetailedZh": "靠租金生活的人",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "靠租",
+      "租金",
+      "金生",
+      "生活",
+      "活的",
+      "的人"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_d81c570c4e10",
+    "word": "priesthood",
+    "posFamily": "noun",
+    "quizMeaningZh": "神职人员群体或职位",
+    "meaningDetailedZh": "神职人员群体或职位",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "神职",
+      "职人",
+      "人员",
+      "员群",
+      "群体",
+      "体或",
+      "或职",
+      "职位"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_2a4a8899d45b",
+    "word": "quayside",
+    "posFamily": "noun",
+    "quizMeaningZh": "码头边",
+    "meaningDetailedZh": "码头边",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "码头",
+      "头边"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_0932e5ac806b",
+    "word": "rattlesnake",
+    "posFamily": "noun",
+    "quizMeaningZh": "响尾蛇（一种有毒的蛇，尾巴会发出响声）",
+    "meaningDetailedZh": "响尾蛇（一种有毒的蛇，尾巴会发出响声）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "响尾",
+      "尾蛇",
+      "蛇一",
+      "一种",
+      "种有",
+      "有毒",
+      "毒的",
+      "的蛇"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_f267e1328ab4",
+    "word": "reagent",
+    "posFamily": "noun",
+    "quizMeaningZh": "试剂（用于化学反应中检测或制取其他物质的物质）",
+    "meaningDetailedZh": "试剂（用于化学反应中检测或制取其他物质的物质）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "试剂",
+      "剂用",
+      "用于",
+      "于化",
+      "化学",
+      "学反",
+      "反应",
+      "应中"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_0ab710c23e08",
+    "word": "replier",
+    "posFamily": "noun",
+    "quizMeaningZh": "回复者",
+    "meaningDetailedZh": "回复者",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "回复",
+      "复者"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_6c1b994c585d",
+    "word": "resistor",
+    "posFamily": "noun",
+    "quizMeaningZh": "电阻器",
+    "meaningDetailedZh": "电阻器",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "电阻",
+      "阻器"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_bd10529c3427",
+    "word": "responder",
+    "posFamily": "noun",
+    "quizMeaningZh": "响应者",
+    "meaningDetailedZh": "响应者",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "响应",
+      "应者"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_7cf02ff5ca1d",
+    "word": "returnee",
+    "posFamily": "noun",
+    "quizMeaningZh": "归来者",
+    "meaningDetailedZh": "归来者",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "归来",
+      "来者"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_2f7813c6ed6f",
+    "word": "holster",
+    "posFamily": "noun",
+    "quizMeaningZh": "手枪皮套",
+    "meaningDetailedZh": "手枪皮套",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "手枪",
+      "枪皮",
+      "皮套"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_9f29827997f9",
+    "word": "latest",
+    "posFamily": "adjective",
+    "quizMeaningZh": "最新的；最近的",
+    "meaningDetailedZh": "最新的；最近的",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "最新",
+      "新的",
+      "的最",
+      "最近",
+      "近的"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_ddc78c039f41",
+    "word": "scotland",
+    "posFamily": "noun",
+    "quizMeaningZh": "苏格兰",
+    "meaningDetailedZh": "苏格兰",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "苏格",
+      "格兰"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_303ec5b45041",
+    "word": "lower",
+    "posFamily": "adjective",
+    "quizMeaningZh": "较低的；放下",
+    "meaningDetailedZh": "较低的；降低；放下",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "较低",
+      "低的",
+      "的降",
+      "降低",
+      "低放",
+      "放下"
+    ],
+    "contrastClass": "general",
+    "sourceType": "master-lexicon"
+  },
+  {
+    "wordId": "word_30afd042b971",
+    "word": "grown",
+    "posFamily": "adjective",
+    "quizMeaningZh": "成长（过去分词）",
+    "meaningDetailedZh": "成长（过去分词）",
+    "semanticMacro": "general",
+    "semanticMicro": "general",
+    "allMicros": [
+      "general"
+    ],
+    "ambiguityKeys": [
+      "成长",
+      "长过",
+      "过去",
+      "去分",
+      "分词"
     ],
     "contrastClass": "general",
     "sourceType": "master-lexicon"

@@ -910,23 +910,6 @@ export function getLikelyWrongAiWordReasons(word) {
   inspectList(word.collocations, "collocations");
   inspectList(word.phraseCollocations, "phraseCollocations");
 
-  // 只检查词形/词族里“完全等于截断拼写”的项目，避免把正常中文“完成”
-  // 或 null hypothesis 等合法内容误判为结构异常。
-  const cleanWord = normalizeWord(word.word);
-  if (cleanWord.length >= 5) {
-    const chopped = cleanWord.slice(0, -1);
-    const relationWords = [
-      ...(Array.isArray(word.forms) ? word.forms : []),
-      ...(Array.isArray(word.wordFamily) ? word.wordFamily : [])
-    ]
-      .map((item) => normalizeWord(item?.word || item))
-      .filter(Boolean);
-
-    if (relationWords.some((value) => value === chopped || value === `${chopped}s`)) {
-      reasons.push("truncated-relation-headword");
-    }
-  }
-
   return [...new Set(reasons)];
 }
 

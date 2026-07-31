@@ -50,9 +50,120 @@
   visibility: visible;
 }
 
+.spellingPreparingPanel {
+  width: min(560px, calc(100% - 24px));
+  margin: auto;
+  padding: clamp(24px, 4vw, 38px);
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  border: 1px solid rgba(47, 107, 93, 0.14);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 50px rgba(34, 73, 64, 0.07);
+  box-sizing: border-box;
+}
+
+.spellingPreparingMark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(47, 107, 93, 0.2);
+  border-radius: 50%;
+  background: #edf6f2;
+  color: #196f5c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.spellingPreparingCopy {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.spellingPreparingCopy p,
+.spellingPreparingCopy h2,
+.spellingPreparingCopy span {
+  margin: 0;
+}
+
+.spellingPreparingCopy p {
+  color: #247864;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.spellingPreparingCopy h2 {
+  color: #173f36;
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.25;
+}
+
+.spellingPreparingCopy span {
+  color: #7a8984;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.spellingPreparingProgress {
+  width: min(320px, 90%);
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e2ece8;
+}
+
+.spellingPreparingProgress span {
+  display: block;
+  width: 38%;
+  height: 100%;
+  border-radius: inherit;
+  background: #2f806c;
+  animation: spellingPreparingProgress 1.2s ease-in-out infinite alternate;
+}
+
+.spellingPreparingSkeleton {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spellingPreparingSkeleton span {
+  width: 54px;
+  height: 8px;
+  border-radius: 999px;
+  background: #edf2f0;
+}
+
+.spellingPreparingSkeleton span:nth-child(2) {
+  width: 86px;
+}
+
+@keyframes spellingPreparingProgress {
+  from { transform: translateX(0); }
+  to { transform: translateX(165%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spellingPreparingProgress span {
+    width: 62%;
+    animation: none;
+  }
+}
+
 @media (max-width: 640px) {
   .spellingErrorMessage {
     min-height: 44px;
     font-size: calc(20px * var(--font-scale));
+  }
+
+  .spellingPreparingPanel {
+    width: 100%;
+    padding: 24px 20px;
+    border-radius: 16px;
   }
 }

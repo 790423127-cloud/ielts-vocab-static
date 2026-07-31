@@ -22,6 +22,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../.
 const wordsPath = path.join(root, ".static-export-cache/words.json");
 const phrasesPath = path.join(root, "public/data/phrases.json");
 const pagePath = path.join(root, "app/page.jsx");
+const flashcardViewPath = path.join(root, "app/components/WordFlashcardView.jsx");
 
 function fileHash(filePath) {
   return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
@@ -56,6 +57,16 @@ test("home count formatter displays the computed brushable count without fixed t
   assert.match(bootstrap, /hydratedWordsRef\.current === words/);
   assert.doesNotMatch(source, /"9,909"/);
   assert.doesNotMatch(source, /words\.length\s*>=\s*9900\s*\?\s*"9,909"/);
+});
+
+test("learning range counts are ready before the menu opens", () => {
+  const source = fs.readFileSync(pagePath, "utf8");
+  const view = fs.readFileSync(flashcardViewPath, "utf8");
+
+  assert.match(source, /const learningEntryCounts = useMemo\(\(\) => \{/);
+  assert.doesNotMatch(source, /rangeStatsOpen/);
+  assert.doesNotMatch(view, /onRangeOpenChange/);
+  assert.match(view, /待学词浏览会排除已认识词和专项参考词/);
 });
 
 test("word cache metadata invalidates on version or hash changes", () => {
@@ -151,6 +162,31 @@ test("main lexicon merge excludes redundant personal-wrong cache supplements", (
   });
   assert.equal(merged.length, 1);
   assert.equal(merged[0].status, "熟悉");
+});
+
+test("home merge keeps reading supplements while excluding personal-wrong supplements", () => {
+  const fresh = [{ id: "word_1", word: "work", meaning: "工作" }];
+  const cached = [
+    {
+      id: "word_personal_wrong",
+      word: "unlistedword",
+      addedFromPersonalWrongBook: true,
+      source: "personal_wrong_book"
+    },
+    {
+      id: "word_personal_reading",
+      word: "microhabitat",
+      meaning: "微生境",
+      addedFromReadingWords: true,
+      source: "personal-reading"
+    }
+  ];
+
+  const merged = mergeWordContentWithUserState(fresh, cached, {
+    includePersonalSupplements: true,
+    supplementKinds: ["personal-reading"]
+  });
+  assert.deepEqual(merged.map((entry) => entry.word), ["work", "microhabitat"]);
 });
 
 test("spelling vocab merge treats personal wrong words as additive local vocabulary", () => {

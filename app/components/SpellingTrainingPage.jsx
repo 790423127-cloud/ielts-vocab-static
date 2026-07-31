@@ -57,7 +57,10 @@ import {
   selectPersonalWrongBookBatch,
   summarizePersonalWrongBook
 } from "../lib/spelling/personal-wrong-book.mjs";
-import { loadSpellingLexicon } from "../lib/spelling/load-spelling-lexicon.mjs";
+import {
+  getCachedSpellingLexicon,
+  loadSpellingLexicon
+} from "../lib/spelling/load-spelling-lexicon.mjs";
 import {
   IDICTATION_PRACTICE_SOURCES,
   ensureIdictationFrequencyData,
@@ -79,6 +82,7 @@ import {
   countEntriesBySpellingCategories,
   filterBySpellingCategory,
   listSpellingBatchOptions,
+  listSpellingBatchOptionsFromSelection,
   selectSpellingBatch,
   spellingCategoryLabel
 } from "../lib/spelling/spelling-categories.mjs";
@@ -125,7 +129,6 @@ import {
 } from "../lib/spelling/spelling-training-page-helpers.mjs";
 
 const EMPTY_COUNT_MAP = new Map();
-
 export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const scopeConfig = useMemo(() => resolveSpellingScope(scopeProp), [scopeProp]);
   const scope = scopeConfig.scope;
@@ -135,7 +138,8 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const otherLabel = isPhrase ? "单词拼写训练" : "词组拼写训练";
   const categoryTypes = isPhrase ? SPELLING_PHRASE_CATEGORY_TYPES : SPELLING_CATEGORY_TYPES;
 
-  const [lexicon, setLexicon] = useState(null);
+  const [lexicon, setLexicon] = useState(() => getCachedSpellingLexicon({ scope }));
+  const hadCachedLexiconAtMountRef = useRef(Boolean(lexicon));
   const [includeFamiliar, setIncludeFamiliar] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [loadElapsedMs, setLoadElapsedMs] = useState(0);
@@ -171,6 +175,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const [dailyStatsHydrated, setDailyStatsHydrated] = useState(false);
   const [errorAnalysisVisible, setErrorAnalysisVisible] = useState(false);
   const {
+    preferencesHydrated,
     rangeSettingsExpanded,
     setRangeSettingsExpanded,
     turboMode,
@@ -268,25 +273,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   }, [personalWrongRecords, personalWrongHydrated]);
 
   useEffect(() => {
-    if (!personalWrongHydrated || personalWrongLexiconReconciledRef.current) return;
-    personalWrongLexiconReconciledRef.current = true;
-
-    const hasScopedPersonalWrongRecords = normalizePersonalWrongBookRecords(personalWrongRecords)
-      .some((record) => record.active !== false && record.scope === scope);
-    if (!hasScopedPersonalWrongRecords) return;
-
-    syncPersonalWrongRecordsToLocalLexicon(personalWrongRecords, { scope })
-      .then(async (syncResult) => {
-        if (Number(syncResult?.removed || 0) <= 0 && Number(syncResult?.added || 0) <= 0) return;
-        const refreshed = await loadSpellingLexicon({ force: true, scope });
-        setLexicon(refreshed);
-      })
-      .catch((error) => {
-        console.warn("[personal-wrong-lexicon-sync]", error);
-      });
-  }, [personalWrongHydrated, personalWrongRecords, scope]);
-
-  useEffect(() => {
     let cancelled = false;
 
     loadSpellingLexicon({ scope })
@@ -324,6 +310,24 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const idictationPrefs = idictationSourceKey ? idictation?.[idictationSourceKey] : null;
 
   useEffect(() => {
+    if (
+      !personalWrongHydrated
+      || practiceSource !== "personal_wrong_book"
+      || personalWrongLexiconReconciledRef.current
+    ) return;
+    personalWrongLexiconReconciledRef.current = true;
+
+    const hasScopedPersonalWrongRecords = normalizePersonalWrongBookRecords(personalWrongRecords)
+      .some((record) => record.active !== false && record.scope === scope);
+    if (!hasScopedPersonalWrongRecords) return;
+
+    syncPersonalWrongRecordsToLocalLexicon(personalWrongRecords, { scope })
+      .catch((error) => {
+        console.warn("[personal-wrong-lexicon-sync]", error);
+      });
+  }, [personalWrongHydrated, personalWrongRecords, practiceSource, scope]);
+
+  useEffect(() => {
     if (!idictationSourceKey) return;
 
     let cancelled = false;
@@ -355,16 +359,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       })
     }),
     [lexiconEntries, batchPrefs, categoryPrefs.categoryType, categoryPrefs.categoryValue, isPhrase]
-  );
-
-  const currentCategoryEntries = useMemo(
-    () => filterBySpellingCategory(
-      lexiconEntries,
-      categoryPrefs.categoryType,
-      categoryPrefs.categoryValue,
-      scope
-    ),
-    [lexiconEntries, categoryPrefs.categoryType, categoryPrefs.categoryValue, scope]
   );
 
   const errorBankSourceEntries = useMemo(
@@ -482,8 +476,8 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   }, [lexicon, practiceSource, personalWrongBatchSelection.entries, errorBankBatchSelection.entries, srsBatchSelection.entries, idictationBatchSelection.entries, batchSelection.entries]);
 
   const batchOptions = useMemo(
-    () => listSpellingBatchOptions(lexiconEntries, batchPrefs),
-    [lexiconEntries, batchPrefs]
+    () => listSpellingBatchOptionsFromSelection(batchSelection),
+    [batchSelection]
   );
 
   const errorBankBatchOptions = useMemo(
@@ -509,15 +503,17 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     [srsSourceEntries, scope]
   );
 
+  const needsExpandedCategoryCounts = statsSidebarOpen && rangeSettingsExpanded;
   const categoryCounts = useMemo(
     () => countEntriesBySpellingCategories(
       lexiconEntries,
-      isPhrase
-        ? ["difficulty", "topic", "ielts_use", "lr_high_frequency"]
-        : ["difficulty", "topic", "lr_high_frequency"],
-      scope
+      needsExpandedCategoryCounts
+        ? (isPhrase
+            ? ["difficulty", "topic", "ielts_use", "lr_high_frequency"]
+            : ["difficulty", "topic", "lr_high_frequency"])
+        : ["difficulty"]
     ),
-    [lexiconEntries, isPhrase, scope]
+    [lexiconEntries, isPhrase, needsExpandedCategoryCounts]
   );
 
   const difficultyCounts = categoryCounts.difficulty || EMPTY_COUNT_MAP;
@@ -609,7 +605,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     excludeFamiliarFlashcards: shouldExcludeFamiliarSpellingEntries(practiceSource, includeFamiliar)
   }), [scopeConfig.entryMode, scope, practiceSource, includeFamiliar]);
 
-  const spelling = useSpellingEngine(spellingEntries, {
+  const spelling = useSpellingEngine(preferencesHydrated ? spellingEntries : [], {
     spellingScope: scope,
     candidateOptions,
     lexiconMeta,
@@ -884,9 +880,9 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   }
 
   const activeSourceLoading = practiceSource === "error_bank"
-    ? errorBank.loading
+    ? !errorBank.initialized
     : practiceSource === "srs_review"
-      ? srsReview.loading
+      ? !srsReview.initialized
       : practiceSource === "personal_wrong_book"
         ? !personalWrongHydrated
         : isIdictationPracticeSource(practiceSource)
@@ -899,9 +895,25 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     engineReady: spelling.ready
   });
   const isSpellingLoading = loadingState.loading;
+  const supportingDataReady = (
+    preferencesHydrated
+    && dailyStatsHydrated
+    && personalWrongHydrated
+  );
+  const isPagePreparing = isSpellingLoading || !supportingDataReady;
+  const shouldRenderPreparationPanel = (
+    isPagePreparing
+    && !hadCachedLexiconAtMountRef.current
+  );
+  const isStatsSidebarVisible = !isPagePreparing && statsSidebarOpen;
   const showEnginePreparing = loadingState.showEnginePreparing;
-  const current = !isSpellingLoading ? spelling.currentWord : null;
+  const current = !isPagePreparing ? spelling.currentWord : null;
   const loadCycleKey = `${scope}:${activeBatchId}`;
+  const loadPhase = !preferencesHydrated
+    ? "读取训练设置"
+    : !dailyStatsHydrated || !personalWrongHydrated
+      ? "恢复训练进度"
+      : loadingState.phase;
 
   useEffect(() => {
     pageLoadStartedAtRef.current = typeof performance !== "undefined" ? performance.now() : Date.now();
@@ -915,12 +927,12 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     };
 
     updateElapsed();
-    if (!isSpellingLoading) return undefined;
+    if (!isPagePreparing) return undefined;
     const timer = window.setInterval(updateElapsed, 100);
     return () => window.clearInterval(timer);
-  }, [isSpellingLoading, loadCycleKey]);
+  }, [isPagePreparing, loadPhase, loadCycleKey]);
 
-  const loadTimingText = `${loadingState.phase} · ${loadElapsedMs} ms`;
+  const loadTimingText = `${loadPhase} · ${loadElapsedMs} ms`;
 
   useEffect(() => {
     learningActivityRef.current = createLearningActivity();
@@ -1276,12 +1288,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     }
   }, [practiceSource, spelling.uiState, refreshSrsReview]);
 
-  useEffect(() => {
-    if (!spelling.ready) return;
-    refreshErrorBank();
-    refreshSrsReview();
-  }, [spelling.ready, refreshErrorBank, refreshSrsReview]);
-
   const handleContinueAfterCorrect = useCallback(async () => {
     if (!spelling.awaitingAdvance || spelling.uiState !== "correct_feedback") return null;
     return spelling.continueAfterCorrect();
@@ -1455,6 +1461,12 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   }, [spellingEntries, scope, practiceSource, activeRangeLine]);
 
   const handleExportCurrentCategory = useCallback((format = "json") => {
+    const currentCategoryEntries = filterBySpellingCategory(
+      lexiconEntries,
+      categoryPrefs.categoryType,
+      categoryPrefs.categoryValue,
+      scope
+    );
     if (!currentCategoryEntries.length) {
       showActionNotice("当前分类没有可导出内容");
       return;
@@ -1486,10 +1498,11 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       mimeType: "application/json;charset=utf-8"
     });
     showActionNotice(`已导出${batchSelection.label}全部 JSON：${payload.count} 条`);
-  }, [currentCategoryEntries, scope, categoryPrefs, batchSelection.label]);
+  }, [lexiconEntries, scope, categoryPrefs, batchSelection.label]);
 
   return (
-    <main className="spelling-page-shell">
+    <main className="spelling-page-shell" aria-busy={isPagePreparing}>
+      {!isPagePreparing ? (
       <header className="spelling-topbar" aria-label="拼写训练顶栏">
         <div className="spelling-topbar__nav">
           <Link className="spelling-back-link spelling-back-link--compact" href="/">← 刷词</Link>
@@ -1553,15 +1566,16 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
           </button>
         </div>
       </header>
+      ) : null}
 
-      {loadError ? <p className="spelling-load-error spelling-load-error--inline">{loadError}</p> : null}
-      {spelling.storageWarning ? (
+      {!isPagePreparing && loadError ? <p className="spelling-load-error spelling-load-error--inline">{loadError}</p> : null}
+      {!isPagePreparing && spelling.storageWarning ? (
         <p className="spelling-load-error spelling-load-error--inline" role="status">
           {spelling.storageWarning}
         </p>
       ) : null}
 
-      {aiToolsPanelOpen ? (
+      {!isPagePreparing && aiToolsPanelOpen ? (
         <SpellingAiToolsPanel
           scope={scope}
           currentEntry={current}
@@ -1570,7 +1584,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
         />
       ) : null}
 
-      {personalWrongPanelOpen ? (
+      {!isPagePreparing && personalWrongPanelOpen ? (
         <SpellingPersonalWrongDock
           scope={scope}
           scopeConfig={scopeConfig}
@@ -1601,9 +1615,10 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
         />
       ) : null}
 
-      <div className={`spelling-page-layout${statsSidebarOpen ? " is-sidebar-open" : ""}`}>
+      <div className={`spelling-page-layout${isStatsSidebarVisible ? " is-sidebar-open" : ""}`}>
+        {(!isPagePreparing || shouldRenderPreparationPanel) ? (
         <SpellingFocusCard
-          isSpellingLoading={isSpellingLoading}
+          isSpellingLoading={isPagePreparing}
           loadingDetail={loadTimingText}
           isBatchComplete={isBatchComplete}
           current={current}
@@ -1648,8 +1663,9 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
           undoLastSpellingAction={undoLastSpellingAction}
           actionNotice={actionNotice}
         />
+        ) : null}
 
-        <SpellingStatsSidebar
+        {isStatsSidebarVisible ? <SpellingStatsSidebar
           statsSidebarOpen={statsSidebarOpen}
           onClose={() => setStatsSidebarOpen(false)}
           dailyStats={dailyStats}
@@ -1734,12 +1750,12 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
           spellingEntries={spellingEntries}
           handleExportCurrentBatch={handleExportCurrentBatch}
           practiceSource={practiceSource}
-          currentCategoryEntries={currentCategoryEntries}
+          currentCategoryCount={batchSelection.totalInCategory}
           handleExportCurrentCategory={handleExportCurrentCategory}
           batchSelection={batchSelection}
           srsReview={srsReview}
           srsIntervalText={srsIntervalText}
-        />
+        /> : null}
 
       </div>
     </main>

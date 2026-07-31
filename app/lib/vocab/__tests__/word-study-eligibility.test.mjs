@@ -507,7 +507,10 @@ test("suffix candidate count accounts for registered retirements", () => {
   const endings = ["s", "ed", "ing", "er", "est", "en", "ind"];
   const candidates = words.filter((entry) => endings.some((ending) => normalizeWord(entry.word).endsWith(ending)));
   const retiredCandidates = retirementPayload.entries.filter(
-    (entry) => endings.some((ending) => normalizeWord(entry.word).endsWith(ending))
+    (entry) => (
+      entry.morphologyAuditIncluded !== false &&
+      endings.some((ending) => normalizeWord(entry.word).endsWith(ending))
+    )
   );
   assert.equal(candidates.length + retiredCandidates.length, payload.morphologyAudit.rawSuffixHeadwordsReviewed);
 });

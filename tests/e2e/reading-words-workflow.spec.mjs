@@ -1,15 +1,78 @@
 import { expect, test } from "@playwright/test";
 
-test("reading words reuse main data, count repeated imports, and migrate to another device profile", async ({ page, browser }) => {
+test("legacy reading words are backfilled into the formal lexicon and show synonym meanings", async ({ page }) => {
+  let publishedWords = [];
+  await page.route("**/api/export-cache", async (route) => {
+    const body = route.request().postDataJSON();
+    publishedWords = Array.isArray(body?.words) ? body.words : [];
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        ok: true,
+        count: publishedWords.length,
+        version: "e2e-reading-legacy-backfill",
+        savedAt: new Date().toISOString()
+      })
+    });
+  });
+  await page.addInitScript(() => {
+    const now = new Date().toISOString();
+    localStorage.setItem("ielts-personal-reading-words-v1", JSON.stringify({
+      version: 1,
+      updatedAt: now,
+      words: [{
+        id: "reading-legacy-term",
+        wordId: "reading-legacy-term",
+        word: "legacyreadingterm",
+        pos: "adjective",
+        meaning: "测试释义",
+        definition: "used only for a deterministic browser test",
+        example: "This is a legacy reading term.",
+        exampleCn: "这是一个测试阅读词。",
+        forms: [],
+        formsReviewed: true,
+        formsReviewSource: "reading-ai",
+        wordFamily: [],
+        wordFamilyReviewed: true,
+        wordFamilyReviewSource: "reading-ai",
+        synonyms: ["broad"],
+        synonymsReviewed: true,
+        synonymsReviewSource: "reading-ai",
+        importCount: 1,
+        createdAt: now,
+        updatedAt: now
+      }]
+    }));
+  });
+
   await page.goto("/reading-words");
-  await expect(page.getByRole("status")).toContainText("已连接浏览器主词库", {
+  await expect(page.getByRole("button", { name: /legacyreadingterm.*主词库待分类/ })).toBeVisible({
+    timeout: 45_000
+  });
+  await expect(page.getByRole("button", { name: /broad.*广泛的；宽的/ })).toBeVisible({
+    timeout: 45_000
+  });
+  await expect.poll(
+    () => publishedWords.some((entry) => entry?.word === "legacyreadingterm")
+  ).toBe(true);
+});
+
+test("reading words reuse main data, count repeated imports, and migrate to another device profile", async ({ page, browser }) => {
+  await page.route("**/api/export-cache", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ ok: true, version: "e2e-reading-words", savedAt: new Date().toISOString() })
+  }));
+  await page.goto("/reading-words");
+  await expect(page.getByRole("status")).toContainText("已连接正式主词库", {
     timeout: 45_000
   });
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
     await page.getByRole("button", { name: "单个添加" }).click();
     await page.getByLabel("单词 *").fill("retain");
-    await page.getByRole("button", { name: "加入阅读生词栏" }).click();
+    await page.getByRole("button", { name: "加入阅读生词本" }).click();
   }
 
   await expect(page.getByRole("button", { name: /retain 保留/ })).toContainText("高频 ×2");
@@ -27,8 +90,13 @@ test("reading words reuse main data, count repeated imports, and migrate to anot
   expect(transferPath).toBeTruthy();
   const secondDevice = await browser.newContext();
   const secondPage = await secondDevice.newPage();
+  await secondPage.route("**/api/export-cache", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ ok: true, version: "e2e-reading-words", savedAt: new Date().toISOString() })
+  }));
   await secondPage.goto("/reading-words");
-  await expect(secondPage.getByRole("status")).toContainText("已连接浏览器主词库", {
+  await expect(secondPage.getByRole("status")).toContainText("已连接正式主词库", {
     timeout: 45_000
   });
   await secondPage.getByLabel("跨设备导入").setInputFiles(transferPath);

@@ -15,7 +15,6 @@ import {
 
 import {
   READING_PARAPHRASE_DIRECTION,
-  READING_PARAPHRASE_MAX_IMPORT_BYTES,
   READING_PARAPHRASE_STATUS,
   createReadingParaphraseState,
   loadReadingParaphraseState,
@@ -71,7 +70,6 @@ export default function ReadingParaphrasesPage() {
   const [filter, setFilter] = useState("all");
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
-  const [persistenceError, setPersistenceError] = useState("");
   const fileRef = useRef(null);
 
   useEffect(() => {
@@ -82,8 +80,7 @@ export default function ReadingParaphrasesPage() {
 
   useEffect(() => {
     if (!ready) return;
-    const saved = saveReadingParaphraseState(state);
-    setPersistenceError(saved ? "" : "本机存储空间不足，本次进度尚未保存。请先导出备份并清理浏览器存储空间。");
+    saveReadingParaphraseState(state);
   }, [ready, state]);
 
   const visibleItems = useMemo(() => {
@@ -173,9 +170,6 @@ export default function ReadingParaphrasesPage() {
     setError("");
     setNotice("");
     try {
-      if (file.size > READING_PARAPHRASE_MAX_IMPORT_BYTES) {
-        throw new Error("导入文件过大，请拆分为不超过 4 MB 的学习包");
-      }
       const incoming = parseReadingParaphraseImport(await file.text());
       if (!incoming.length) throw new Error("文件中没有可识别的同义替换记录");
       const result = mergeReadingParaphraseState(state, incoming);
@@ -237,10 +231,8 @@ export default function ReadingParaphrasesPage() {
         </div>
       </header>
 
-      {notice ? <div className={styles.notice} role="status" aria-live="polite">{notice}</div> : null}
-      {error || persistenceError ? (
-        <div className={styles.error} role="alert">{error || persistenceError}</div>
-      ) : null}
+      {notice ? <div className={styles.notice}>{notice}</div> : null}
+      {error ? <div className={styles.error}>{error}</div> : null}
 
       <section className={styles.toolbar} aria-label="学习设置">
         <label>
@@ -259,7 +251,7 @@ export default function ReadingParaphrasesPage() {
             <option value={READING_PARAPHRASE_STATUS.KNOWN}>认识 {counts.known || 0}</option>
           </select>
         </label>
-        <div className={styles.stats} aria-live="polite">
+        <div className={styles.stats}>
           <strong>{visibleItems.length ? index + 1 : 0} / {visibleItems.length}</strong>
           <span>{current ? `错题来源 ${current.occurrenceCount} 次` : "等待导入"}</span>
         </div>

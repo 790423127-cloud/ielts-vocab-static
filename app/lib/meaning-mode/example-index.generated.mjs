@@ -1,7 +1,7 @@
 // Auto-generated Meaning Mode example index.
 // Source: .static-export-cache/words.json (READ-ONLY, never modified)
 // Matched against: public/data/meaning-6000.json (READ-ONLY, never modified)
-// Generated: 2026-07-26T04:44:41.197Z
+// Generated: 2026-07-30T11:00:44.586Z
 // Stats: 6000/6000 matched (100.0% coverage)
 // DO NOT EDIT MANUALLY — regenerate with: node app/lib/meaning-mode/build-example-index.mjs
 
@@ -26654,14 +26654,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_fe7f29efae2f": {
-    "sourceWordId": "word_fe7f29efae2f",
-    "word": "ireland",
-    "example": "I have been to Ireland.",
-    "exampleCn": "我去过爱尔兰。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_6591f15e4807": {
     "sourceWordId": "word_6591f15e4807",
     "word": "spectrum",
@@ -36963,14 +36955,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "butterfly",
     "example": "I saw a beautiful butterfly in the garden.",
     "exampleCn": "我在花园里看到一只美丽的蝴蝶。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_excel_043a718774c5": {
-    "sourceWordId": "word_excel_043a718774c5",
-    "word": "s",
-    "example": "This shirt is size.",
-    "exampleCn": "这件衬衫是小号的。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -48003,6 +47987,22 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "scotland",
     "example": "Scotland is known for its beautiful landscapes.",
     "exampleCn": "苏格兰以其美丽的风景而闻名。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_303ec5b45041": {
+    "sourceWordId": "word_303ec5b45041",
+    "word": "lower",
+    "example": "The lower price attracted buyers.",
+    "exampleCn": "较低的价格吸引了买家。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_30afd042b971": {
+    "sourceWordId": "word_30afd042b971",
+    "word": "grown",
+    "example": "A grown man should take responsibility for his actions.",
+    "exampleCn": "一个成年人应该为自己的行为负责。",
     "sourceField": "example",
     "matchType": "wordId"
   }

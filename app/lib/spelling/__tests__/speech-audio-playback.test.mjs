@@ -10,6 +10,9 @@ import {
   PLAYBACK_END_FADE_SECONDS,
   PLAYBACK_INTERRUPT_FADE_SECONDS,
   REAL_AUDIO_PLAYBACK_GAIN,
+  SPEECH_LOWPASS_FREQUENCY_HZ,
+  SPEECH_NOISE_NOTCH_FREQUENCY_HZ,
+  SPEECH_NOISE_NOTCH_Q,
   playSpeechAudio,
   resolveCleanPlaybackWindow,
   resolveSpeechPlaybackOptions,
@@ -32,11 +35,17 @@ test("speech playback module uses one edge gain for word and sentence", () => {
   assert.ok(PLAYBACK_END_FADE_SECONDS <= 0.06);
   assert.ok(PLAYBACK_INTERRUPT_FADE_SECONDS > 0);
   assert.ok(PLAYBACK_INTERRUPT_FADE_SECONDS < PLAYBACK_END_FADE_SECONDS);
+  assert.equal(SPEECH_NOISE_NOTCH_FREQUENCY_HZ, 11760);
+  assert.ok(SPEECH_NOISE_NOTCH_Q >= 5);
+  assert.ok(SPEECH_LOWPASS_FREQUENCY_HZ < SPEECH_NOISE_NOTCH_FREQUENCY_HZ);
 
   const playbackSource = fs.readFileSync(path.join(root, "app/lib/speech-audio-playback.mjs"), "utf8");
   assert.match(playbackSource, /linearRampToValueAtTime\(0, endsAt\)/);
   assert.match(playbackSource, /source\.stop\(endsAt\)/);
   assert.match(playbackSource, /source\.stop\(now \+ PLAYBACK_INTERRUPT_FADE_SECONDS\)/);
+  assert.match(playbackSource, /source\.connect\(filters\.lowpass\)/);
+  assert.match(playbackSource, /filters\.lowpass\.connect\(filters\.notch\)/);
+  assert.match(playbackSource, /filters\.notch\.connect\(gainNode\)/);
 });
 
 test("speech playback removes a long MP3 tail and ignores an isolated final spike", () => {

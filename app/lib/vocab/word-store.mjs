@@ -21,6 +21,34 @@ export const BIG_WORDS_IMPORT_BACKUP_STATE_KEY = "words_import_backup_state_v1";
 export const BIG_WORDS_IMPORT_BACKUP_CHUNK_PREFIX = "words_import_backup_chunk_v1_";
 export const BIG_WORDS_CHUNK_SIZE = 250;
 
+let wordContentMemoryCache = null;
+
+function wordContentCacheSignature(meta = {}) {
+  return [
+    meta.schemaVersion,
+    meta.contentHash,
+    meta.totalCount ?? meta.count,
+    meta.chunks,
+    meta.chunkSize,
+    meta.updatedAt
+  ].join(":");
+}
+
+function readWordContentMemoryCache(meta = {}) {
+  const signature = wordContentCacheSignature(meta);
+  return signature && wordContentMemoryCache?.signature === signature
+    ? wordContentMemoryCache.words
+    : null;
+}
+
+function rememberWordContent(meta = {}, words = []) {
+  if (!Array.isArray(words) || !words.length) return;
+  wordContentMemoryCache = {
+    signature: wordContentCacheSignature(meta),
+    words
+  };
+}
+
 function openBigStore() {
   return new Promise((resolve, reject) => {
     if (typeof indexedDB === "undefined") {
@@ -244,7 +272,10 @@ export function validateWordCacheChunks(meta, rawChunks, userState = {}) {
       reason: `词库缓存数量不一致：manifest=${totalCount}，实际=${content.length}`
     });
   }
-  if (meta.contentHash && meta.contentHash !== computeWordStoreContentHash(content)) {
+  const contentHash = rawChunks.every((raw) => typeof raw === "string")
+    ? computeWordStoreContentHashFromChunks(rawChunks)
+    : computeWordStoreContentHash(content);
+  if (meta.contentHash && meta.contentHash !== contentHash) {
     return cacheResult("cache-invalid", {
       meta,
       userState,
@@ -289,6 +320,16 @@ export async function loadWordsFromIndexedDB() {
     }
     const userState = state && typeof state === "object" ? state : {};
     const chunkCount = Number(meta?.chunks || 0);
+    const memoryWords = readWordContentMemoryCache(meta || {});
+    if (memoryWords?.length) {
+      return cacheResult("cache-hit", {
+        words: Object.keys(userState).length
+          ? applyWordUserStateMap(memoryWords, userState)
+          : memoryWords,
+        meta,
+        userState
+      });
+    }
     const chunkKeys = Array.from(
       { length: chunkCount },
       (_, index) => `${BIG_WORDS_CHUNK_PREFIX}${index}`
@@ -306,7 +347,18 @@ export async function loadWordsFromIndexedDB() {
           reason: error?.message || "IndexedDB chunk读取失败"
         });
       }
-      return validateWordCacheChunks(meta, rawChunks, userState);
+      const validated = validateWordCacheChunks(meta, rawChunks);
+      if (validated.status !== "cache-hit") {
+        return { ...validated, userState };
+      }
+      rememberWordContent(meta, validated.words);
+      return {
+        ...validated,
+        words: Object.keys(userState).length
+          ? applyWordUserStateMap(validated.words, userState)
+          : validated.words,
+        userState
+      };
     }
 
     if (Array.isArray(legacy) && legacy.length) {

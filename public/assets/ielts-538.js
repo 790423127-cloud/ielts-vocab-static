@@ -252,7 +252,7 @@
   function renderRelated(item, related, selected) {
     var hasExtra = related.some(function (entry) { return !!entry.extra; });
     els.meaningToggle.classList.toggle("hidden", !hasExtra);
-    els.meaningToggle.textContent = showMeanings ? "隐藏释义" : "显示释义";
+    els.meaningToggle.textContent = showMeanings ? "收起其他义" : "展开其他义";
     els.meaningToggle.setAttribute("aria-expanded", String(showMeanings));
     els.relatedGrid.innerHTML = related.map(function (entry) {
       var extra = showMeanings && entry.extra

@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#f4f6f5" />
+  <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23225f52'/%3E%3Cpath d='M9 8h14v3H12v4h9v3h-9v4h11v3H9z' fill='white'/%3E%3C/svg%3E" />
   <title>G类阅读提升 · 静态便携版</title>
   <link rel="stylesheet" href="./assets/style.css?v=20260726_ielts538_v2" />
@@ -81,6 +82,7 @@
           <a href="./basic.html" class="top-btn">零基础</a>
           <a href="./meaning.html" class="top-btn">看词选意思</a>
           <a href="./spelling.html" class="top-btn">拼写训练</a>
+          <button class="top-btn" type="button" data-study-meaning-toggle>隐藏释义</button>
           <button id="shuffleBtn" class="top-btn" type="button">随机</button>
           <button id="nextBtn" class="top-btn" type="button">下一个</button>
         </div>
@@ -97,7 +99,7 @@
       <div id="unfamiliarAlert" class="unfamiliar-alert hidden">已标记不熟，优先复习</div>
       <button id="wordSoundBtn" class="sound-main" title="播放单词" type="button">🔊</button>
       <div id="word" class="word">Loading</div>
-      <div id="basic" class="basic-line">正在准备学习内容</div>
+      <div id="basic" class="basic-line study-answer-content">正在准备学习内容</div>
       <div id="loadInfo" class="load-info">静态便携版 · vocab + paraphrases · 词义/短语/同义三类状态 · 仅存本机</div>
 
       <div id="quizBox" class="hidden" style="margin-top:12px;max-width:640px">
@@ -105,7 +107,7 @@
         <div id="quizExplain" class="hidden" style="margin-top:10px;padding:10px 12px;border-radius:10px;background:#f7f5f1;border:1px solid #ece3d8;font-size:13px;line-height:1.5"></div>
       </div>
 
-      <div class="example-card">
+      <div class="example-card study-answer-content">
         <div class="example-head">
           <button id="exampleSoundBtn" class="mini-sound example-sound" title="播放例句" type="button">🔊</button>
           <div id="example" class="example-en">读取分层词库并恢复学习位置</div>
@@ -126,6 +128,7 @@
     </footer>
   </main>
   <div id="toast" class="toast"></div>
+  <script src="./assets/study-meaning-visibility.js?v=20260730_word_order_meaning_visibility_v1"></script>
   <script src="./assets/reading-g.js?v=20260726_ielts538_v2"></script>
 </body>
 </html>

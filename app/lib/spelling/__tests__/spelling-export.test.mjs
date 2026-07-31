@@ -157,10 +157,15 @@ test("spelling page does not render placeholder questions before lexicon is read
   assert.match(source, /resolveSpellingLoadingState\(\{/);
   assert.match(source, /const isSpellingLoading = loadingState\.loading/);
   assert.match(source, /activeSourceLoading/);
-  assert.match(source, /const current = !isSpellingLoading \? spelling\.currentWord : null/);
+  assert.match(source, /const current = !isPagePreparing \? spelling\.currentWord : null/);
+  assert.match(source, /const hadCachedLexiconAtMountRef = useRef\(Boolean\(lexicon\)\)/);
+  assert.match(source, /isPagePreparing\s*&& !hadCachedLexiconAtMountRef\.current/);
+  assert.match(source, /const isStatsSidebarVisible = !isPagePreparing && statsSidebarOpen/);
+  assert.match(source, /spelling-page-layout\$\{isStatsSidebarVisible \? " is-sidebar-open" : ""\}/);
   assert.match(focus, /isSpellingLoading \? \(/);
   assert.match(combined, /正在准备本轮训练/);
-  assert.match(focus, /StableLoadingState/);
+  assert.match(focus, /spellingPreparingPanel/);
+  assert.doesNotMatch(focus, /spelling-line-input--preparing|音标准备中|词性与释义准备中/);
 });
 
 test("home page can deep-link to the AI tools menu", () => {
@@ -206,7 +211,8 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
   assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
   assert.doesNotMatch(spellingSource, /href="\/spelling-(?:words|phrases)"/);
-  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260727_mobile_first_screen_v2"/);
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260730_mobile_sync_cursor_v11"/);
+  assert.match(exportRoute, /href="\.\/reading-words\.html">阅读生词本<\/a>/);
   assert.match(exportRoute, /wordId: stableId/);
   assert.match(exportRoute, /otherMeanings: Array\.isArray\(item\?\.otherMeanings\)/);
   assert.match(exportRoute, /id="topToolsToggle"/);
@@ -216,8 +222,20 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.doesNotMatch(exportRoute, /<button id="mobileModeBtn"/);
   assert.match(fs.readFileSync(path.join(root, "public/assets/spelling.css"), "utf8"), /D2\.1 responsive system/);
   assert.match(exportRoute, /static_vocab_audio_\$\{STATIC_EXPORT_VERSION\}/);
-  assert.match(exportRoute, /function audioFor\(text\) \{\s*if \(!includeAudioFiles\) return "";/);
+  assert.doesNotMatch(exportRoute, /function audioFor\(text\) \{\s*if \(!includeAudioFiles\) return "";/);
+  assert.match(exportRoute, /if \(includeAudioFiles && !audioFiles\.has\(target\)\)/);
+  assert.match(exportRoute, /audio=new Audio\(url\)/);
+  assert.match(exportRoute, /audio\.playsInline=true/);
+  assert.doesNotMatch(exportRoute, /createMediaElementSource/);
+  assert.match(exportRoute, /function completeToolbarSelectAction\(control\)/);
+  assert.match(exportRoute, /if\(document\.activeElement===control\)control\.blur\(\)/);
+  assert.match(exportRoute, /const oldOrderedQueue=list\(\)/);
+  assert.match(exportRoute, /remapWordOrderSnapshotsAfterDeletion\(pref\.snapshots,previousWords\)/);
+  assert.match(exportRoute, /saveWordOrderSnapshot\(filter,snapshotKey,createWordOrderSnapshot\(preservedQueue,index\)\)/);
+  assert.match(spellingScript, /audioPlayer = new Audio\(url\)/);
+  assert.match(spellingScript, /audioPlayer\.playsInline = true/);
+  assert.doesNotMatch(spellingScript, /createMediaElementSource/);
   assert.match(exportRoute, /D2\.3 high-visibility study action dock/);
   assert.match(exportRoute, /\.status\{min-width:112px;min-height:50px/);
-  assert.match(exportRoute, /\.progress\{height:9px/);
+  assert.match(exportRoute, /\.progress\{position:relative;height:9px/);
 });

@@ -11,6 +11,7 @@ import {
   IDICTATION_FREQUENCY_META,
   IDICTATION_FREQUENCY_SOURCES
 } from "../../lib/spelling/idictation-frequency.generated.mjs";
+import { wordInternalDifficultyScore } from "../../lib/vocab/word-internal-difficulty.mjs";
 
 function normalizeWord(value) {
   return String(value || "")
@@ -143,6 +144,7 @@ function sanitizeWordItem(item) {
     ieltsUse: Array.isArray(item?.ieltsUse) ? item.ieltsUse : [],
     topics: Array.isArray(item?.topics) ? item.topics : [],
     difficulty: String(item?.difficulty || "").trim(),
+    studyDifficultyScore: wordInternalDifficultyScore(item),
     category: String(item?.category || "IELTS G类").trim(),
     status: String(item?.status || "").trim(),
     favorite: Boolean(item?.favorite),
@@ -270,7 +272,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260727_mobile_first_screen_v2";
+const STATIC_EXPORT_VERSION = "20260730_mobile_sync_cursor_v11";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -282,6 +284,12 @@ const STATIC_INDEX_HTML = `<!doctype html>
   <meta name="apple-mobile-web-app-title" content="IELTS Vocab" />
   <meta name="mobile-web-app-capable" content="yes" />
   <title>IELTS Vocab 静态学习版</title>
+  <script>
+    try {
+      document.documentElement.dataset.studyMeaningsHidden =
+        localStorage.getItem("ielts_vocab_hide_meanings_v1") === "1" ? "true" : "false";
+    } catch (e) {}
+  </script>
   <link rel="manifest" href="./manifest.webmanifest?v=${STATIC_EXPORT_VERSION}" />
   <link rel="stylesheet" href="./assets/style.css?v=${STATIC_EXPORT_VERSION}" />
 </head>
@@ -290,14 +298,14 @@ const STATIC_INDEX_HTML = `<!doctype html>
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>主词库刷词</strong><span>专注学习</span></div>
     <nav class="static-brand-nav" aria-label="主要学习模式">
-      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./ielts-538.html">538考点</a><a href="./reading-words.html">阅读生词</a>
+      <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./ielts-538.html">538考点</a><a href="./reading-paraphrases.html">阅读同义替换</a><a href="./reading-words.html">阅读生词本</a>
     </nav>
   </header>
   <aside class="static-shell-sidebar" aria-label="学习导航">
     <nav><a class="active" href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav>
     <div class="static-shell-divider"></div>
     <span class="static-shell-label">专项学习</span>
-    <nav><a href="./ielts-538.html">538考点</a><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./reading-words.html">阅读生词栏</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
+    <nav><a href="./ielts-538.html">538考点</a><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./reading-paraphrases.html">阅读同义替换</a><a href="./reading-words.html">阅读生词本</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav>
     <nav class="static-shell-bottom"><a href="./index.html">设置</a></nav>
   </aside>
   <main class="app">
@@ -305,7 +313,21 @@ const STATIC_INDEX_HTML = `<!doctype html>
       <button id="prevBtn" class="top-btn">上一个</button>
       <button id="topToolsToggle" class="top-tools-toggle" type="button" aria-expanded="true" aria-controls="topActions">工具与词库</button>
       <div id="topActions" class="top-actions">
-        <button id="shuffleBtn" class="top-btn">随机</button>
+        <select id="orderSelect" class="top-select order-select" title="排列方式" aria-label="单词排列方式">
+          <option value="current">现有顺序</option>
+          <option value="random">随机</option>
+          <option value="family">词族关系</option>
+          <option value="association">场景关联</option>
+        </select>
+        <select id="difficultyOrderSelect" class="top-select relation-order-select" title="入口内部难度" aria-label="入口内部难度">
+          <option value="default">难度默认</option>
+          <option value="easy-to-hard">简单→困难</option>
+          <option value="hard-to-easy">困难→简单</option>
+          <option value="easier-only">只刷相对较易</option>
+          <option value="standard-only">只刷常规</option>
+          <option value="harder-only">只刷相对较难</option>
+        </select>
+        <button id="meaningVisibilityBtn" class="top-btn" type="button">隐藏释义</button>
         <button id="entryBtn" class="top-btn">入口</button>
         <button id="editWordBtn" class="top-btn">修改</button>
         <button id="deleteWordBtn" class="top-btn danger-top">删除</button>
@@ -324,21 +346,21 @@ const STATIC_INDEX_HTML = `<!doctype html>
       <div id="unfamiliarAlert" class="unfamiliar-alert hidden">你特意标记了不熟，优先复习这个词</div>
       <button id="wordSoundBtn" class="sound-main" title="播放单词">🔊</button>
       <div id="word" class="word">Loading</div>
-      <div id="basic" class="basic-line">正在准备学习内容</div>
+      <div id="basic" class="basic-line study-answer-content">正在准备学习内容</div>
       <div id="loadInfo" class="load-info">第一次打开会稍慢，之后会自动缓存。</div>
       <div class="swipe-hint">← 右滑上一个 · 左滑下一个 →　Tab 发音单词 · 空格发音英文例句 · 按住 ←/→ 连续切词</div>
 
-      <div id="formsBox" class="forms-box hidden">
+      <div id="formsBox" class="forms-box study-answer-content hidden">
         <div class="box-title">听力形式 / 重要变形</div>
         <div id="formsList" class="cards"></div>
       </div>
 
-      <div id="familyBox" class="forms-box hidden">
+      <div id="familyBox" class="forms-box study-answer-content hidden">
         <div class="box-title">词族 / 派生词</div>
         <div id="familyList" class="cards"></div>
       </div>
 
-      <div class="example-card">
+      <div class="example-card study-answer-content">
         <div class="example-head">
           <button id="exampleSoundBtn" class="mini-sound example-sound" title="播放例句">🔊</button>
           <div id="example" class="example-en">读取主词库并恢复学习位置</div>
@@ -347,7 +369,7 @@ const STATIC_INDEX_HTML = `<!doctype html>
       </div>
     </section>
 
-    <section class="blocks">
+    <section class="blocks study-answer-content">
       <div class="block">
         <div class="block-title">常见搭配</div>
         <div id="collocations" class="list"></div>
@@ -364,8 +386,19 @@ const STATIC_INDEX_HTML = `<!doctype html>
         <button id="unknownBtn" class="status unknown">不熟 <span>0</span></button>
       </div>
       <div class="progress-row">
-        <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
-        <div id="count" class="count">0 / 0</div>
+        <div class="progress">
+          <div id="progressFill" class="progress-fill"></div>
+          <input id="progressSeek" type="range" min="1" max="1" value="1" aria-label="拖动跳转到词表位置" disabled />
+        </div>
+        <button id="count" class="count" type="button" aria-label="精确跳转位置">0 / 0</button>
+        <output id="progressPreview" class="progress-preview hidden"></output>
+        <form id="progressJumpForm" class="progress-jump hidden">
+          <label for="progressJumpInput">跳转到第</label>
+          <input id="progressJumpInput" type="number" min="1" max="1" step="1" inputmode="numeric" />
+          <span id="progressJumpTotal">/ 0</span>
+          <button type="submit">跳转</button>
+          <button id="progressJumpCancel" type="button" aria-label="取消位置跳转">×</button>
+        </form>
       </div>
     </footer>
 
@@ -456,7 +489,7 @@ const STATIC_INDEX_HTML = `<!doctype html>
 </body>
 </html>`;
 
-const STATIC_STYLE_CSS = `:root{--bg:#f7f2e8;--card:rgba(255,255,255,.76);--ink:#16352f;--muted:rgba(22,53,47,.62);--green:#237567;--soft:#e7f7f2;--orange:#c2410c}*{box-sizing:border-box}html,body{overscroll-behavior-x:none}body{margin:0;background:radial-gradient(circle at top,#fff8ed 0,#f7f2e8 48%,#efe7d8 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}button,select{font:inherit}.app{min-height:100svh;display:flex;flex-direction:column;padding:20px 22px 14px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:5}.top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.top-btn,.top-select{border:0;border-radius:999px;background:rgba(255,255,255,.72);color:var(--green);font-weight:900;padding:10px 14px;box-shadow:inset 0 0 0 1px rgba(35,117,103,.10);cursor:pointer}.top-select{max-width:min(58vw,360px)}.hero{text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 0;touch-action:pan-y;user-select:none}.star{border:0;background:transparent;color:#d29422;font-size:34px;line-height:1;cursor:pointer;margin-bottom:6px}.sound-main{border:0;width:42px;height:42px;border-radius:999px;background:rgba(231,247,242,.95);color:var(--green);font-size:18px;cursor:pointer;margin:4px 0 8px}.word{font-size:clamp(54px,9vw,112px);font-weight:950;letter-spacing:-.06em;line-height:.95;cursor:pointer;word-break:break-word;max-width:min(980px,96vw)}.basic-line{margin-top:14px;color:#1c3344;font-weight:900;font-size:clamp(20px,2.8vw,28px);line-height:1.4}.load-info{margin-top:7px;color:rgba(35,117,103,.45);font-size:12px;font-weight:850}.swipe-hint{margin-top:8px;font-size:12px;font-weight:850;color:rgba(35,117,103,.42)}.example-card{margin:20px auto 0;width:min(760px,calc(100vw - 48px));padding:18px 22px;border-radius:26px;background:var(--card);box-shadow:inset 0 0 0 1px rgba(35,117,103,.07)}.example-head{display:grid;grid-template-columns:34px 1fr;align-items:start;gap:10px;text-align:left}.example-sound{margin-top:1px}.example-en{font-size:clamp(18px,2.4vw,24px);font-weight:850}.example-cn{margin-top:8px;color:var(--muted);font-weight:700;text-align:left;padding-left:44px}.blocks{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(900px,calc(100vw - 44px));margin:0 auto 12px}.block{background:rgba(255,255,255,.62);border-radius:22px;padding:14px 16px;box-shadow:inset 0 0 0 1px rgba(35,117,103,.07)}.block-title{font-size:13px;font-weight:950;color:var(--muted);margin-bottom:8px}.list{display:grid;gap:8px}.item{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:center;text-align:left}.mini-sound{width:28px;height:28px;border:0;border-radius:999px;background:rgba(231,247,242,.95);color:var(--green);font-size:13px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(35,117,103,.12)}.en{font-weight:850}.zh{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}.forms-box{width:min(820px,calc(100vw - 48px));margin:14px auto 0;padding:18px 22px;border-radius:24px;background:rgba(255,255,255,.72);box-shadow:inset 0 0 0 1px rgba(33,94,81,.08)}.box-title{text-align:left;font-size:13px;font-weight:950;color:rgba(33,94,81,.72);margin-bottom:12px}.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}.form-card{display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;width:min(100%,560px);min-width:min(390px,100%);padding:16px 18px;border-radius:22px;background:rgba(231,247,242,.92);color:#215e51;font-size:14px;line-height:1.42;box-shadow:inset 0 0 0 1px rgba(33,94,81,.10)}.card-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px}.form-card b{font-size:17px;font-weight:1000}.form-card em{font-style:normal;font-size:12px;font-weight:950;color:rgba(33,94,81,.82);padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.78)}.form-desc{font-size:14px;font-weight:760;color:rgba(33,94,81,.90);word-break:break-word}.form-card small{font-size:12px;font-weight:820;color:rgba(33,94,81,.66);word-break:break-word}.unfamiliar-alert{margin:6px auto 10px;padding:10px 14px;border-radius:999px;background:rgba(255,244,230,.96);color:#9a3412;font-weight:900;font-size:15px;box-shadow:inset 0 0 0 1px rgba(234,88,12,.12)}.hidden{display:none!important}.bottom{width:min(900px,calc(100vw - 44px));margin:0 auto}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.status{border:0;border-radius:999px;padding:15px 18px;font-weight:950;font-size:17px;cursor:pointer}.status span{opacity:.55;font-size:12px;margin-left:5px}.known{background:#e7f7f2;color:#237567}.unknown{background:#fff4e6;color:#c2410c}.active-unknown{box-shadow:inset 0 0 0 2px rgba(194,65,12,.24)}.progress-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:12px}.progress{height:10px;border-radius:999px;background:rgba(35,117,103,.12);overflow:hidden}.progress-fill{height:100%;border-radius:999px;background:#237567;transition:width .2s}.count{font-size:13px;font-weight:900;color:var(--muted)}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);opacity:0;background:rgba(22,53,47,.92);color:#fff;border-radius:999px;padding:10px 16px;font-weight:900;transition:.2s;pointer-events:none;z-index:20}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.sync-top{background:rgba(231,247,242,.92)}.sync-top.on{background:#237567;color:#fff}.sync-panel{position:fixed;inset:0;background:rgba(22,53,47,.28);z-index:30;display:flex;align-items:center;justify-content:center;padding:18px}.sync-card{width:min(520px,100%);max-height:calc(100svh - 36px);overflow:auto;border-radius:28px;background:#fffaf1;box-shadow:0 22px 70px rgba(22,53,47,.22);padding:20px;display:grid;gap:14px}.sync-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.sync-title{font-size:22px;font-weight:1000;color:var(--ink)}.sync-status{margin-top:4px;font-size:13px;font-weight:850;color:var(--muted)}.sync-close{border:0;background:rgba(35,117,103,.10);color:var(--green);font-size:24px;border-radius:999px;width:36px;height:36px;cursor:pointer}.sync-section{display:grid;gap:8px;padding:14px;border-radius:20px;background:rgba(255,255,255,.64);box-shadow:inset 0 0 0 1px rgba(35,117,103,.08)}.sync-label{font-size:13px;font-weight:950;color:var(--green)}.sync-input{width:100%;border:0;border-radius:15px;padding:12px 13px;background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(35,117,103,.12);outline:none}.sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sync-action{border:0;border-radius:15px;padding:12px 13px;background:#237567;color:#fff;font-weight:950;cursor:pointer}.sync-action.secondary{background:#e7f7f2;color:#237567}.sync-action.danger{background:#fff4e6;color:#c2410c}.sync-help{font-size:12px;line-height:1.45;color:var(--muted);font-weight:760}@media(max-width:760px){.sync-panel{padding:10px;align-items:flex-end}.sync-card{border-radius:24px;padding:16px}.sync-grid{grid-template-columns:1fr}}body.mobile-mode .app{padding:12px 12px 10px}body.mobile-mode .top{gap:8px;align-items:flex-start}body.mobile-mode .top-btn,body.mobile-mode .top-select{font-size:12px;padding:8px 10px}body.mobile-mode .hero{justify-content:flex-start;padding-top:10px}body.mobile-mode .word{font-size:clamp(48px,18vw,82px);letter-spacing:-.055em}body.mobile-mode .example-card,body.mobile-mode .forms-box,body.mobile-mode .bottom{width:100%}body.mobile-mode .blocks{grid-template-columns:1fr;width:100%;gap:10px}body.mobile-mode .bottom{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(to top,rgba(247,242,232,.98),rgba(247,242,232,.72),transparent);z-index:6}body.mobile-mode .form-card{width:100%;min-width:100%;padding:14px 15px;border-radius:18px}@media(max-width:760px){.app{padding:12px 12px 10px}.top{align-items:flex-start}.top-actions{gap:6px}.top-btn,.top-select{padding:8px 9px;font-size:12px}.top-select{max-width:58vw}.hero{justify-content:flex-start;padding-top:10px}.word{font-size:clamp(48px,18vw,82px);letter-spacing:-.055em}.basic-line{font-size:15px}.swipe-hint{display:block}.example-head{grid-template-columns:32px 1fr}.example-cn{padding-left:42px}.blocks{grid-template-columns:1fr;width:100%;gap:10px}.example-card,.forms-box,.bottom{width:100%}.form-card{width:100%;min-width:100%;padding:14px 15px;border-radius:18px}.bottom{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(to top,rgba(247,242,232,.98),rgba(247,242,232,.72),transparent);z-index:6}.actions{gap:9px}.status{padding:13px 14px}}
+const STATIC_STYLE_CSS = `:root{--bg:#f7f2e8;--card:rgba(255,255,255,.76);--ink:#16352f;--muted:rgba(22,53,47,.62);--green:#237567;--soft:#e7f7f2;--orange:#c2410c}*{box-sizing:border-box}html,body{overscroll-behavior-x:none}html[data-study-meanings-hidden="true"] .study-answer-content{display:none!important}body{margin:0;background:radial-gradient(circle at top,#fff8ed 0,#f7f2e8 48%,#efe7d8 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}button,select{font:inherit}.app{min-height:100svh;display:flex;flex-direction:column;padding:20px 22px 14px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:5}.top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.top-btn,.top-select{border:0;border-radius:999px;background:rgba(255,255,255,.72);color:var(--green);font-weight:900;padding:10px 14px;box-shadow:inset 0 0 0 1px rgba(35,117,103,.10);cursor:pointer}.top-select{max-width:min(58vw,360px)}.order-select{width:140px;min-width:140px;max-width:140px;flex:0 0 140px}.hero{text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 0;touch-action:pan-y;user-select:none}.star{border:0;background:transparent;color:#d29422;font-size:34px;line-height:1;cursor:pointer;margin-bottom:6px}.sound-main{border:0;width:42px;height:42px;border-radius:999px;background:rgba(231,247,242,.95);color:var(--green);font-size:18px;cursor:pointer;margin:4px 0 8px}.word{font-size:clamp(54px,9vw,112px);font-weight:950;letter-spacing:-.06em;line-height:.95;cursor:pointer;word-break:break-word;max-width:min(980px,96vw)}.basic-line{margin-top:14px;color:#1c3344;font-weight:900;font-size:clamp(20px,2.8vw,28px);line-height:1.4}.load-info{margin-top:7px;color:rgba(35,117,103,.45);font-size:12px;font-weight:850}.swipe-hint{margin-top:8px;font-size:12px;font-weight:850;color:rgba(35,117,103,.42)}.example-card{margin:20px auto 0;width:min(760px,calc(100vw - 48px));padding:18px 22px;border-radius:26px;background:var(--card);box-shadow:inset 0 0 0 1px rgba(35,117,103,.07)}.example-head{display:grid;grid-template-columns:34px 1fr;align-items:start;gap:10px;text-align:left}.example-sound{margin-top:1px}.example-en{font-size:clamp(18px,2.4vw,24px);font-weight:850}.example-cn{margin-top:8px;color:var(--muted);font-weight:700;text-align:left;padding-left:44px}.blocks{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(900px,calc(100vw - 44px));margin:0 auto 12px}.block{background:rgba(255,255,255,.62);border-radius:22px;padding:14px 16px;box-shadow:inset 0 0 0 1px rgba(35,117,103,.07)}.block-title{font-size:13px;font-weight:950;color:var(--muted);margin-bottom:8px}.list{display:grid;gap:8px}.item{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:center;text-align:left}.mini-sound{width:28px;height:28px;border:0;border-radius:999px;background:rgba(231,247,242,.95);color:var(--green);font-size:13px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(35,117,103,.12)}.en{font-weight:850}.zh{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}.forms-box{width:min(820px,calc(100vw - 48px));margin:14px auto 0;padding:18px 22px;border-radius:24px;background:rgba(255,255,255,.72);box-shadow:inset 0 0 0 1px rgba(33,94,81,.08)}.box-title{text-align:left;font-size:13px;font-weight:950;color:rgba(33,94,81,.72);margin-bottom:12px}.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}.form-card{display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;width:min(100%,560px);min-width:min(390px,100%);padding:16px 18px;border-radius:22px;background:rgba(231,247,242,.92);color:#215e51;font-size:14px;line-height:1.42;box-shadow:inset 0 0 0 1px rgba(33,94,81,.10)}.card-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px}.form-card b{font-size:17px;font-weight:1000}.form-card em{font-style:normal;font-size:12px;font-weight:950;color:rgba(33,94,81,.82);padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.78)}.form-desc{font-size:14px;font-weight:760;color:rgba(33,94,81,.90);word-break:break-word}.form-card small{font-size:12px;font-weight:820;color:rgba(33,94,81,.66);word-break:break-word}.unfamiliar-alert{margin:6px auto 10px;padding:10px 14px;border-radius:999px;background:rgba(255,244,230,.96);color:#9a3412;font-weight:900;font-size:15px;box-shadow:inset 0 0 0 1px rgba(234,88,12,.12)}.hidden{display:none!important}.bottom{width:min(900px,calc(100vw - 44px));margin:0 auto}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.status{border:0;border-radius:999px;padding:15px 18px;font-weight:950;font-size:17px;cursor:pointer}.status span{opacity:.55;font-size:12px;margin-left:5px}.known{background:#e7f7f2;color:#237567}.unknown{background:#fff4e6;color:#c2410c}.active-unknown{box-shadow:inset 0 0 0 2px rgba(194,65,12,.24)}.progress-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:12px}.progress{height:10px;border-radius:999px;background:rgba(35,117,103,.12);overflow:hidden}.progress-fill{height:100%;border-radius:999px;background:#237567;transition:width .2s}.count{font-size:13px;font-weight:900;color:var(--muted)}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);opacity:0;background:rgba(22,53,47,.92);color:#fff;border-radius:999px;padding:10px 16px;font-weight:900;transition:.2s;pointer-events:none;z-index:20}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.sync-top{background:rgba(231,247,242,.92)}.sync-top.on{background:#237567;color:#fff}.sync-panel{position:fixed;inset:0;background:rgba(22,53,47,.28);z-index:30;display:flex;align-items:center;justify-content:center;padding:18px}.sync-card{width:min(520px,100%);max-height:calc(100svh - 36px);overflow:auto;border-radius:28px;background:#fffaf1;box-shadow:0 22px 70px rgba(22,53,47,.22);padding:20px;display:grid;gap:14px}.sync-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.sync-title{font-size:22px;font-weight:1000;color:var(--ink)}.sync-status{margin-top:4px;font-size:13px;font-weight:850;color:var(--muted)}.sync-close{border:0;background:rgba(35,117,103,.10);color:var(--green);font-size:24px;border-radius:999px;width:36px;height:36px;cursor:pointer}.sync-section{display:grid;gap:8px;padding:14px;border-radius:20px;background:rgba(255,255,255,.64);box-shadow:inset 0 0 0 1px rgba(35,117,103,.08)}.sync-label{font-size:13px;font-weight:950;color:var(--green)}.sync-input{width:100%;border:0;border-radius:15px;padding:12px 13px;background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(35,117,103,.12);outline:none}.sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sync-action{border:0;border-radius:15px;padding:12px 13px;background:#237567;color:#fff;font-weight:950;cursor:pointer}.sync-action.secondary{background:#e7f7f2;color:#237567}.sync-action.danger{background:#fff4e6;color:#c2410c}.sync-help{font-size:12px;line-height:1.45;color:var(--muted);font-weight:760}@media(max-width:760px){.sync-panel{padding:10px;align-items:flex-end}.sync-card{border-radius:24px;padding:16px}.sync-grid{grid-template-columns:1fr}}body.mobile-mode .app{padding:12px 12px 10px}body.mobile-mode .top{gap:8px;align-items:flex-start}body.mobile-mode .top-btn,body.mobile-mode .top-select{font-size:12px;padding:8px 10px}body.mobile-mode .hero{justify-content:flex-start;padding-top:10px}body.mobile-mode .word{font-size:clamp(48px,18vw,82px);letter-spacing:-.055em}body.mobile-mode .example-card,body.mobile-mode .forms-box,body.mobile-mode .bottom{width:100%}body.mobile-mode .blocks{grid-template-columns:1fr;width:100%;gap:10px}body.mobile-mode .bottom{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(to top,rgba(247,242,232,.98),rgba(247,242,232,.72),transparent);z-index:6}body.mobile-mode .form-card{width:100%;min-width:100%;padding:14px 15px;border-radius:18px}@media(max-width:760px){.app{padding:12px 12px 10px}.top{align-items:flex-start}.top-actions{gap:6px}.top-btn,.top-select{padding:8px 9px;font-size:12px}.top-select{max-width:58vw}.hero{justify-content:flex-start;padding-top:10px}.word{font-size:clamp(48px,18vw,82px);letter-spacing:-.055em}.basic-line{font-size:15px}.swipe-hint{display:block}.example-head{grid-template-columns:32px 1fr}.example-cn{padding-left:42px}.blocks{grid-template-columns:1fr;width:100%;gap:10px}.example-card,.forms-box,.bottom{width:100%}.form-card{width:100%;min-width:100%;padding:14px 15px;border-radius:18px}.bottom{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(to top,rgba(247,242,232,.98),rgba(247,242,232,.72),transparent);z-index:6}.actions{gap:9px}.status{padding:13px 14px}}
 
 .entry-panel{position:fixed;inset:0;background:rgba(22,53,47,.28);z-index:28;display:flex;align-items:center;justify-content:center;padding:18px}
 .entry-panel.hidden{display:none}
@@ -572,6 +605,7 @@ body{background:var(--bg)}
   .top>.top-btn{width:100%}
   .top-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;width:100%;padding-bottom:0;overflow:visible}
   .top-actions .top-btn,.top-actions .top-select{width:100%;min-width:0;max-width:none;padding:8px 5px;white-space:normal;line-height:1.25;overflow-wrap:anywhere;text-align:center}
+  .top-actions .order-select{width:min(132px,100%);min-width:0;max-width:132px;justify-self:start}
   .bottom,body.mobile-mode .bottom{position:static;padding:10px 0 4px;background:transparent}
 }
 @media(max-width:380px){
@@ -641,15 +675,26 @@ body{background:var(--bg)}
 .status{min-width:112px;min-height:50px;padding:0 22px;border-radius:7px;font-size:16px;font-weight:800;line-height:1.2}
 .known{box-shadow:0 2px 8px rgba(18,102,83,.16)}
 .unknown{border-color:#df9f82;background:#fff0e8;color:#a83d1c}
-.progress-row{width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;margin:0}
-.progress{height:9px;border-radius:5px;background:#d3ded9;box-shadow:inset 0 1px 2px rgba(22,54,46,.08)}
+.progress-row{position:relative;width:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:10px;margin:0}
+.progress{position:relative;height:9px;overflow:visible;border-radius:5px;background:#d3ded9;box-shadow:inset 0 1px 2px rgba(22,54,46,.08)}
 .progress-fill{border-radius:5px}
-.count{min-width:88px;color:#52645e;font-size:15px;font-weight:750;text-align:right}
+.progress input[type="range"]{position:absolute;z-index:2;top:50%;left:0;width:100%;height:32px;margin:0;padding:0;transform:translateY(-50%);appearance:none;border:0;outline:0;background:transparent;cursor:ew-resize;touch-action:none}
+.progress input[type="range"]::-webkit-slider-runnable-track{height:6px;background:transparent}
+.progress input[type="range"]::-webkit-slider-thumb{width:16px;height:16px;margin-top:-5px;appearance:none;border:2px solid #fff;border-radius:50%;background:#237567;box-shadow:0 1px 5px rgba(16,70,58,.28)}
+.progress input[type="range"]::-moz-range-track{height:6px;border:0;background:transparent}
+.progress input[type="range"]::-moz-range-thumb{width:14px;height:14px;border:2px solid #fff;border-radius:50%;background:#237567;box-shadow:0 1px 5px rgba(16,70,58,.28)}
+.progress-preview{display:block;max-width:112px;padding:3px 7px;overflow:hidden;border:1px solid rgba(35,117,103,.28);border-radius:6px;background:#e7f7f2;color:#16362e;font-size:10px;font-weight:750;line-height:1.35;text-overflow:ellipsis;white-space:nowrap}
+.count{min-width:88px;padding:3px 5px;border:0;border-radius:5px;background:transparent;color:#52645e;font-size:15px;font-weight:750;text-align:right;cursor:pointer}
+.count:hover,.count:focus-visible{background:#e7f7f2}
+.count:disabled{cursor:default}
+.progress-jump{position:absolute;z-index:20;right:0;bottom:calc(100% + 8px);display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#52645e;box-shadow:0 10px 28px rgba(22,50,44,.16);font-size:12px;white-space:nowrap}
+.progress-jump input{width:82px;height:32px;padding:0 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:#16362e;font:inherit;font-weight:750}
+.progress-jump button{min-width:32px;height:32px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:#e7f7f2;color:#237567;font:inherit;font-weight:750}
 @media(max-width:900px){
   .bottom,body.mobile-mode .bottom{min-height:0;grid-template-columns:1fr;gap:10px;padding:10px 0 calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#fff}
   .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .status{width:100%;min-width:0;min-height:52px;padding-inline:12px;font-size:16px}
-  .progress-row{grid-row:1}.progress{height:8px}.count{min-width:72px;font-size:14px}
+  .progress-row{grid-row:1;grid-template-columns:minmax(0,1fr) auto auto;gap:7px}.progress{height:8px}.progress input[type="range"]{height:38px}.progress input[type="range"]::-webkit-slider-thumb{width:20px;height:20px;margin-top:-7px}.progress input[type="range"]::-moz-range-thumb{width:18px;height:18px}.count{min-width:72px;font-size:14px}.progress-preview{max-width:82px}.progress-jump{right:0;left:0;justify-content:center}
 }
 @media(min-width:1600px){
   .bottom{min-height:90px;padding:14px 28px}.status{min-width:128px;min-height:54px;font-size:17px}.progress{height:10px}.count{font-size:16px}
@@ -698,14 +743,15 @@ const READING_MAIN_SUPPLEMENT_KEY="static_personal_reading_main_v1";
 const AUDIO_CACHE_NAME="static_vocab_audio_"+APP_VERSION;
 const CLOUDBASE_SYNC_CODE_KEY="static_vocab_cloudbase_sync_code_v1";
 const TOP_TOOLS_PREF_PREFIX="static_vocab_top_tools_collapsed_v1_";
+const WORD_ORDER_KEY="ielts_vocab_word_order_modes_v1";
+const WORD_ORDER_CURSOR_KEY="ielts_vocab_word_order_cursors_v1";
+const MEANING_VISIBILITY_KEY="ielts_vocab_hide_meanings_v1";
 const CLOUDBASE_SDK_URLS=[
   // CloudBase JS SDK 2.x：旧版 1.x 会触发 ACCESS_TOKEN_DISABLED。
-  "https://static.cloudbase.net/cloudbase-js-sdk/2.12.1/cloudbase.full.js",
-  "https://static.cloudbase.net/cloudbase-js-sdk/2.8.1/cloudbase.full.js",
-  "https://static.cloudbase.net/cloudbase-js-sdk/2.0.0/cloudbase.full.js",
-  "https://cdn.jsdelivr.net/npm/@cloudbase/js-sdk@2.12.1/dist/index.umd.js",
-  "https://unpkg.com/@cloudbase/js-sdk@2.12.1/dist/index.umd.js"
+  "https://static.cloudbase.net/cloudbase-js-sdk/2.12.1/cloudbase.full.js"
 ];
+const CLOUD_PROGRESS_PAGE_SIZE=500;
+const CLOUD_PROGRESS_MAX_ROWS=5000;
 
 let words=[];
 let idictationPayload=null;
@@ -751,11 +797,20 @@ const els={
   phraseCollocations:document.getElementById("phraseCollocations"),
   count:document.getElementById("count"),
   progressFill:document.getElementById("progressFill"),
+  progressSeek:document.getElementById("progressSeek"),
+  progressPreview:document.getElementById("progressPreview"),
+  progressJumpForm:document.getElementById("progressJumpForm"),
+  progressJumpInput:document.getElementById("progressJumpInput"),
+  progressJumpTotal:document.getElementById("progressJumpTotal"),
+  progressJumpCancel:document.getElementById("progressJumpCancel"),
   favoriteBtn:document.getElementById("favoriteBtn"),
   unknownBtn:document.getElementById("unknownBtn"),
   unfamiliarAlert:document.getElementById("unfamiliarAlert"),
   toast:document.getElementById("toast"),
   filterSelect:document.getElementById("filterSelect"),
+  orderSelect:document.getElementById("orderSelect"),
+  difficultyOrderSelect:document.getElementById("difficultyOrderSelect"),
+  meaningVisibilityBtn:document.getElementById("meaningVisibilityBtn"),
   mobileModeBtn:document.getElementById("mobileModeBtn"),
   swipeArea:document.getElementById("swipeArea"),
   syncBtn:document.getElementById("syncBtn"),
@@ -797,6 +852,487 @@ function norm(v){return String(v||"").trim().toLowerCase().replace(/\\s+/g," ")}
 function arr(v){return Array.isArray(v)?v:[]}
 function uniq(values){return Array.from(new Set(values.map(x=>String(x||"").trim()).filter(Boolean)))}
 function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+const FIXED_WORD_ORDER_MODES=["family","association"];
+const WORD_DIFFICULTY_MODES=["default","easy-to-hard","hard-to-easy","easier-only","standard-only","harder-only"];
+function normalizeWordOrderMode(mode){return ["current","random","family","association"].includes(mode)?mode:"current"}
+function normalizeDifficultyMode(mode){return WORD_DIFFICULTY_MODES.includes(mode)?mode:"default"}
+function wordOrderSnapshotKey(mode,difficultyMode){return normalizeWordOrderMode(mode)+"|"+normalizeDifficultyMode(difficultyMode)}
+function isFixedWordOrderMode(mode,difficultyMode){return FIXED_WORD_ORDER_MODES.includes(mode)||normalizeDifficultyMode(difficultyMode)!=="default"}
+function difficultyScore(word){
+  const explicit=Number(word&&word.studyDifficultyScore);
+  if(Number.isFinite(explicit))return Math.max(0,Math.min(100,Math.round(explicit)));
+  const key=norm(word&&word.word);
+  const letters=key.replace(/[^a-z]/g,"");
+  const syllables=Math.max(1,(letters.replace(/e$/,"").match(/[aeiouy]+/g)||[]).length);
+  const posParts=String(word&&word.pos||"").split(/[/,;|]+|\\s+or\\s+/i).filter(Boolean).length||1;
+  const meaningParts=String(word&&word.meaning||"").split(/[;；,，、/]+/).filter(Boolean).length||1;
+  let score=31+Math.max(0,Math.min(13,(letters.length-4)*1.3));
+  score+=Math.max(0,Math.min(9,(syllables-1)*2.25));
+  score+=Math.max(0,Math.min(6,(posParts-1)*2));
+  score+=Math.max(0,Math.min(7,(meaningParts-1)*1.4));
+  if(/[\\s-]/.test(key))score+=4;
+  if(arr(word&&word.wordFamily).length)score-=3;
+  return Math.max(0,Math.min(100,Math.round(score)));
+}
+function difficultyProfile(source){
+  const scores=source.map(difficultyScore).sort(function(a,b){return a-b});
+  const at=function(ratio){return scores[Math.max(0,Math.min(scores.length-1,Math.floor((scores.length-1)*ratio)))]||0};
+  return {available:scores.length>=6&&new Set(scores).size>=3,easierMax:at(.3),harderMin:at(.7)};
+}
+function difficultyTier(word,profile){
+  if(!profile.available)return "standard";
+  const score=difficultyScore(word);
+  if(score<=profile.easierMax)return "easier";
+  if(score>=profile.harderMin)return "harder";
+  return "standard";
+}
+function requestedDifficultyTier(mode){
+  if(mode==="easier-only")return "easier";
+  if(mode==="standard-only")return "standard";
+  if(mode==="harder-only")return "harder";
+  return "";
+}
+function difficultyDirection(mode){return mode==="easy-to-hard"?1:mode==="hard-to-easy"?-1:0}
+
+function readWordOrderPreferences(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(WORD_ORDER_KEY)||"{}");
+    return parsed&&typeof parsed==="object"?parsed:{};
+  }catch(e){return {}}
+}
+
+function readWordOrderCursors(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(WORD_ORDER_CURSOR_KEY)||"{}");
+    return parsed&&typeof parsed==="object"?parsed:{};
+  }catch(e){return {}}
+}
+
+function wordOrderPreference(activeFilter){
+  const activeKey=activeFilter||filter;
+  const saved=readWordOrderPreferences()[activeKey]||{};
+  const legacyDifficulty=saved.mode==="easy-to-hard"?"easy-to-hard":saved.mode==="hard-to-easy"?"hard-to-easy":"default";
+  const mode=normalizeWordOrderMode(saved.mode);
+  const difficultyMode=normalizeDifficultyMode(saved.difficultyMode||legacyDifficulty);
+  const storedSnapshots=saved.snapshots&&typeof saved.snapshots==="object"?saved.snapshots:{};
+  const cursorEntry=readWordOrderCursors()[activeKey]||{};
+  const snapshots={};
+  Object.keys(storedSnapshots).forEach(function(snapshotMode){
+    snapshots[snapshotMode]={
+      ...storedSnapshots[snapshotMode],
+      cursorKey:cursorEntry[snapshotMode]||storedSnapshots[snapshotMode].cursorKey||""
+    };
+  });
+  return {mode:mode,difficultyMode:difficultyMode,seed:Number(saved.seed)||0,snapshots:snapshots};
+}
+
+function saveWordOrderPreference(activeFilter,mode,difficultyMode,options){
+  const opts=options||{};
+  const prefs=readWordOrderPreferences();
+  const previous=prefs[activeFilter]||{};
+  prefs[activeFilter]={
+    ...previous,
+    mode:normalizeWordOrderMode(mode),
+    difficultyMode:normalizeDifficultyMode(difficultyMode),
+    seed:mode==="random"?(Number(opts.seed)||Date.now()):(Number(previous.seed)||0)
+  };
+  try{localStorage.setItem(WORD_ORDER_KEY,JSON.stringify(prefs))}catch(e){}
+}
+
+function saveWordOrderSnapshot(activeFilter,snapshotKey,snapshot){
+  if(!snapshotKey)return;
+  const prefs=readWordOrderPreferences();
+  const previous=prefs[activeFilter]||{};
+  prefs[activeFilter]={
+    ...previous,
+    snapshots:{...(previous.snapshots||{}),[snapshotKey]:snapshot}
+  };
+  try{localStorage.setItem(WORD_ORDER_KEY,JSON.stringify(prefs))}catch(e){}
+  saveWordOrderCursor(activeFilter,snapshotKey,snapshot&&snapshot.cursorKey);
+}
+
+function saveWordOrderCursor(activeFilter,snapshotKey,cursorKey){
+  if(!cursorKey||!snapshotKey)return;
+  const cursors=readWordOrderCursors();
+  const previous=cursors[activeFilter]||{};
+  if(previous[snapshotKey]===cursorKey)return;
+  cursors[activeFilter]={...previous,[snapshotKey]:cursorKey};
+  try{localStorage.setItem(WORD_ORDER_CURSOR_KEY,JSON.stringify(cursors))}catch(e){}
+}
+
+function wordOrderEntryKey(word){
+  const stableId=word&&(word.wordId??word.id??word.inputId);
+  if(String(stableId||"").trim())return "id:"+String(stableId).trim();
+  return "word:"+norm(word&&word.word);
+}
+
+let wordOrderSignatureCache={pool:null,length:-1,value:""};
+function wordOrderSourceSignature(sourceCount){
+  const resolvedCount=Number.isInteger(sourceCount)
+    ?Math.max(0,Math.min(sourceCount,words.length))
+    :words.length;
+  if(resolvedCount===words.length&&wordOrderSignatureCache.pool===words&&wordOrderSignatureCache.length===words.length){
+    return wordOrderSignatureCache.value;
+  }
+  const ordered=[...(words||[]).slice(0,resolvedCount)].sort(function(a,b){return a.originalIndex-b.originalIndex});
+  let hash=2166136261;
+  ordered.forEach(function(word){
+    const value=String(word.originalIndex)+":"+wordOrderEntryKey(word)+"|";
+    for(let i=0;i<value.length;i+=1){
+      hash^=value.charCodeAt(i);
+      hash=Math.imul(hash,16777619);
+    }
+  });
+  const value=ordered.length+":"+(hash>>>0).toString(36);
+  if(resolvedCount===words.length){
+    wordOrderSignatureCache={pool:words,length:words.length,value:value};
+  }
+  return value;
+}
+
+function createWordOrderSnapshot(ordered,cursorIndex){
+  const indices=[];
+  const seen=new Set();
+  ordered.forEach(function(word){
+    const key=wordOrderEntryKey(word);
+    if(key&&!seen.has(key)){seen.add(key);indices.push(word.originalIndex)}
+  });
+  const cursor=ordered.find(function(word){return word.originalIndex===cursorIndex});
+  const first=ordered.find(function(word){return word.originalIndex===indices[0]});
+  const cursorKey=cursor?wordOrderEntryKey(cursor):(first?wordOrderEntryKey(first):"");
+  return {
+    version:2,
+    indices:indices,
+    sourceCount:words.length,
+    sourceSignature:wordOrderSourceSignature(),
+    cursorKey:seen.has(cursorKey)?cursorKey:(first?wordOrderEntryKey(first):"")
+  };
+}
+
+function reconcileWordOrderSnapshot(snapshot,source,fallback){
+  const byKey=new Map();
+  const byIndex=new Map();
+  source.forEach(function(word){const key=wordOrderEntryKey(word);if(key&&!byKey.has(key))byKey.set(key,word)});
+  source.forEach(function(word){if(Number.isInteger(word.originalIndex))byIndex.set(word.originalIndex,word)});
+  const items=[];
+  const seenIndices=new Set();
+  function appendWord(word){
+    if(!word||!Number.isInteger(word.originalIndex)||seenIndices.has(word.originalIndex))return;
+    seenIndices.add(word.originalIndex);
+    items.push(word);
+  }
+  const compactMatches=Number(snapshot&&snapshot.version)===2
+    &&Array.isArray(snapshot&&snapshot.indices)
+    &&(
+      snapshot.sourceSignature===wordOrderSourceSignature()
+      ||(
+        Number.isInteger(Number(snapshot.sourceCount))
+        &&Number(snapshot.sourceCount)>=0
+        &&Number(snapshot.sourceCount)<=words.length
+        &&snapshot.sourceSignature===wordOrderSourceSignature(Number(snapshot.sourceCount))
+      )
+    );
+  if(compactMatches){
+    snapshot.indices.forEach(function(sourceIndex){appendWord(byIndex.get(sourceIndex))});
+  }else{
+    arr(snapshot&&snapshot.keys).forEach(function(key){appendWord(byKey.get(key))});
+  }
+  (fallback||source).forEach(appendWord);
+  source.forEach(appendWord);
+  const requested=String(snapshot&&snapshot.cursorKey||"");
+  const requestedWord=byKey.get(requested);
+  const cursorWord=requestedWord&&seenIndices.has(requestedWord.originalIndex)?requestedWord:items[0];
+  const cursorIndex=cursorWord?cursorWord.originalIndex:null;
+  return {
+    items:items,
+    cursorIndex:cursorIndex,
+    snapshot:createWordOrderSnapshot(items,cursorIndex)
+  };
+}
+
+function remapWordOrderSnapshotsAfterDeletion(snapshots,previousWords){
+  const nextByKey=new Map();
+  words.forEach(function(word,sourceIndex){
+    const key=wordOrderEntryKey(word);
+    if(key&&!nextByKey.has(key))nextByKey.set(key,sourceIndex);
+  });
+  const result={};
+  Object.keys(snapshots||{}).forEach(function(snapshotKey){
+    const snapshot=snapshots[snapshotKey]||{};
+    const orderedKeys=Number(snapshot.version)===2&&Array.isArray(snapshot.indices)
+      ?snapshot.indices.map(function(sourceIndex){
+        const word=previousWords[sourceIndex];
+        return word?wordOrderEntryKey(word):"";
+      })
+      :arr(snapshot.keys);
+    const seen=new Set();
+    const ordered=[];
+    orderedKeys.forEach(function(key){
+      const sourceIndex=nextByKey.get(key);
+      if(!Number.isInteger(sourceIndex)||seen.has(sourceIndex))return;
+      seen.add(sourceIndex);
+      ordered.push(Object.assign({},words[sourceIndex],{originalIndex:sourceIndex}));
+    });
+    const requestedCursorIndex=nextByKey.get(String(snapshot.cursorKey||""));
+    const cursorIndex=seen.has(requestedCursorIndex)
+      ?requestedCursorIndex
+      :(ordered[0]&&ordered[0].originalIndex);
+    result[snapshotKey]=createWordOrderSnapshot(ordered,cursorIndex);
+  });
+  return result;
+}
+
+function relationWord(value){
+  if(typeof value==="string")return value;
+  return value&&(value.word||value.replacement||value.term||value.text)||"";
+}
+
+function phraseText(value){
+  if(typeof value==="string")return value;
+  return value&&(value.phrase||value.text||value.collocation||value.word)||"";
+}
+
+function relationKeys(value){
+  return arr(value).map(relationWord).map(norm).filter(Boolean);
+}
+
+function phraseTokens(value){
+  const stop={a:1,an:1,and:1,as:1,at:1,be:1,by:1,for:1,from:1,in:1,into:1,of:1,on:1,or:1,the:1,to:1,with:1};
+  return norm(phraseText(value)).split(/[^a-z0-9']+/i).map(norm).filter(function(token){return token.length>2&&!stop[token]});
+}
+
+function deterministicHash(value){
+  let hash=2166136261;
+  const text=String(value||"");
+  for(let i=0;i<text.length;i++){hash^=text.charCodeAt(i);hash=Math.imul(hash,16777619)}
+  return hash>>>0;
+}
+
+function connectedGroups(entries,linksForWord){
+  const parent=entries.map(function(_,i){return i});
+  const byKey=new Map();
+  function find(i){while(parent[i]!==i){parent[i]=parent[parent[i]];i=parent[i]}return i}
+  function join(a,b){const ar=find(a),br=find(b);if(ar!==br)parent[br]=ar}
+  entries.forEach(function(entry,i){
+    uniq([norm(entry.word)].concat(linksForWord(entry)).filter(Boolean)).forEach(function(key){
+      const target=byKey.get(key);
+      if(Number.isInteger(target))join(i,target);
+      else byKey.set(key,i);
+    });
+  });
+  const groups=new Map();
+  entries.forEach(function(entry,i){const root=find(i);if(!groups.has(root))groups.set(root,[]);groups.get(root).push(entry)});
+  return Array.from(groups.values());
+}
+
+function familyLinks(word){
+  return relationKeys(word.wordFamily).concat([word.familyRoot,word.rootWord,word.baseWord,word.lemma].map(norm).filter(Boolean));
+}
+
+function explicitAssociationLinks(word){
+  return relationKeys(word.synonyms).concat(relationKeys(word.relatedWords),relationKeys(word.associations));
+}
+
+const ASSOCIATION_TOKEN_STOP={a:1,an:1,and:1,as:1,at:1,be:1,by:1,for:1,from:1,in:1,into:1,of:1,on:1,or:1,the:1,to:1,with:1,about:1,after:1,before:1,during:1,ability:1,area:1,change:1,common:1,different:1,example:1,form:1,general:1,important:1,include:1,kind:1,level:1,main:1,make:1,made:1,means:1,part:1,place:1,process:1,provide:1,result:1,set:1,state:1,type:1,way:1,related:1,service:1,services:1,someone:1,something:1,system:1,systems:1,thing:1,things:1,people:1,person:1,use:1,used:1,using:1,work:1,working:1};
+
+function englishTokens(value){
+  return norm(value).split(/[^a-z0-9']+/i).map(norm).filter(function(token){return token.length>2&&!ASSOCIATION_TOKEN_STOP[token]});
+}
+
+function associationTokens(word){
+  let tokens=englishTokens(word.word).concat(englishTokens(word.definition),englishTokens(word.meaningEn));
+  arr(word.collocations).concat(arr(word.phraseCollocations)).forEach(function(item){
+    tokens=tokens.concat(phraseTokens(item).filter(function(token){return !ASSOCIATION_TOKEN_STOP[token]}));
+  });
+  return uniq(tokens);
+}
+
+const SCENE_RULES=[
+  ["求职招聘",/求职|招聘|职业|雇佣|工资|薪水|面试|简历|job (?:vacancy|position)|career|employ|recruit|vacancy|salary|interview|resume|occupation/i,/求职|招聘|employment/i],
+  ["办公管理",/办公室|公司|部门|经理|管理|会议|合同|截止日期|office|company|department|manager|management|meeting|contract|deadline|staff/i,/办公|商业|管理|business/i],
+  ["银行支付",/银行|存款|贷款|现金|付款|支付|账户|押金|费用|预算|价格|bank|deposit|loan|cash|payment|account|fee|budget|price|dollar|card/i,/支付|消费|经济|finance|shopping/i],
+  ["邮寄通信",/邮寄|邮件|信件|包裹|邮资|通信|快递|mail|airmail|postage|parcel|letter|delivery|courier/i,/邮寄|通信|公共服务|communication/i],
+  ["机场航班",/机场|航班|登机|行李|护照|海关|航空|airport|flight|boarding|luggage|passport|customs|airline|departure|arrival gate/i,/航空|机场|旅行|交通|travel/i],
+  ["铁路交通",/铁路|火车|车站|站台|公交|地铁|交通|railway|train|station|platform|bus|subway|transport/i,/交通|铁路/i],
+  ["旅行住宿",/旅行|旅游|酒店|宾馆|预订|住宿|景点|travel|tour|hotel|hostel|booking|reservation|accommodation|tourist/i,/旅行|住宿|travel/i],
+  ["住房租赁",/住房|房屋|租房|房租|公寓|家具|家务|房东|房客|housing|house|rent|apartment|furniture|household|landlord|tenant/i,/住房|家庭|生活|housing/i],
+  ["购物售后",/购物|商店|商品|退款|折扣|收据|顾客|shopping|shop|store|refund|discount|receipt|customer|purchase/i,/购物|消费|shopping/i],
+  ["餐饮食物",/餐饮|食物|食品|餐厅|烹饪|饮料|菜单|food|restaurant|cook|meal|drink|menu|recipe/i,/餐饮|食物|消费|food/i],
+  ["医疗就诊",/医疗|医院|疾病|症状|诊断|治疗|药物|手术|hospital|disease|illness|symptom|diagnosis|treatment|medicine|surgery|clinical/i,/健康|医疗|health/i],
+  ["健康生活",/健康|锻炼|运动|营养|休息|康复|health|exercise|fitness|nutrition|rest|recover|wellbeing/i,/健康|健身|health/i],
+  ["校园课程",/学校|校园|课程|课堂|老师|学生|讲座|school|campus|course|class|teacher|student|lecture|tuition/i,/学校|教育|education/i],
+  ["考试学习",/学习|考试|测验|作业|入学|奖学金|study|learn|exam|test|assignment|admission|scholarship|qualification/i,/教育|考试|education/i],
+  ["环境污染",/环境|污染|垃圾|回收|生态|碳|塑料|environment|pollution|waste|recycle|ecology|carbon|plastic/i,/环境|environment/i],
+  ["能源气候",/气候|能源|温度|天气|排放|全球变暖|climate|energy|temperature|weather|emission|global warming/i,/环境|科技|environment/i],
+  ["科技网络",/科技|技术|软件|网络|媒体|互联网|设备|technology|software|network|media|internet|device|digital|computer|online/i,/科技|technology/i],
+  ["科研数据",/研究|实验|数据|证据|分析|调查|样本|research|experiment|data|evidence|analysis|survey|sample|laboratory/i,/科学|研究|science/i],
+  ["政府法律",/政府|法律|犯罪|警察|安全|法庭|政策|选举|government|law|crime|police|security|court|policy|election|politician/i,/政府|法律|社会|government|law/i],
+  ["社区服务",/社区|公共服务|市政|设施|图书馆|居民|community|public service|municipal|facility|library|resident/i,/社区|公共服务|community/i],
+  ["家庭人际",/家庭|朋友|关系|婚姻|父母|孩子|社交|family|friend|relationship|marriage|parent|child|social/i,/家庭|人际|family/i],
+  ["文化活动",/文化|历史|艺术|音乐|电影|活动|典礼|culture|history|art|music|film|event|ceremony|festival/i,/文化|历史|社会|culture/i],
+  ["农业自然",/农业|农场|植物|动物|森林|海洋|土壤|agriculture|farm|plant|animal|forest|marine|soil|wildlife/i,/环境|农业|自然|environment/i]
+];
+
+function sceneForWord(word){
+  const content=[word.word,word.meaning,word.category].concat(arr(word.collocations).map(phraseText),arr(word.phraseCollocations).map(phraseText)).filter(Boolean).join(" ");
+  const topics=arr(word.topics).join(" ");
+  let best="",bestScore=0;
+  SCENE_RULES.forEach(function(rule){
+    const score=(rule[1].test(content)?4:0)+(rule[2].test(topics)?2:0);
+    if(score>bestScore){best=rule[0];bestScore=score}
+  });
+  return best;
+}
+
+function orderSceneWords(source){
+  if(source.length<2)return source;
+  const profiles=source.map(function(word,position){return {word:word,position:position,key:norm(word.word),links:explicitAssociationLinks(word),tokens:associationTokens(word)}});
+  const positionByKey=new Map(profiles.map(function(profile){return [profile.key,profile.position]}));
+  const tokenPositions=new Map();
+  profiles.forEach(function(profile){profile.tokens.forEach(function(token){if(!tokenPositions.has(token))tokenPositions.set(token,[]);tokenPositions.get(token).push(profile.position)})});
+  const remaining=new Set(profiles.map(function(profile){return profile.position}));
+  const ordered=[];
+  let currentPosition=0;
+  while(remaining.size){
+    if(!remaining.has(currentPosition))currentPosition=Math.min.apply(null,Array.from(remaining));
+    const current=profiles[currentPosition];
+    ordered.push(current.word);
+    remaining.delete(currentPosition);
+    if(!remaining.size)break;
+    const scores=new Map();
+    current.links.forEach(function(key){const candidate=positionByKey.get(key);if(remaining.has(candidate))scores.set(candidate,1000)});
+    current.tokens.forEach(function(token){
+      const positions=tokenPositions.get(token)||[];
+      if(positions.length>80)return;
+      const weight=Math.max(12,72-positions.length);
+      positions.forEach(function(candidate){
+        if(!remaining.has(candidate))return;
+        const profile=profiles[candidate];
+        const bonus=profile.key===token||current.key===token?90:0;
+        scores.set(candidate,(scores.get(candidate)||0)+weight+bonus);
+      });
+    });
+    const strongest=Array.from(scores.entries()).filter(function(item){return item[1]>=96}).sort(function(a,b){return b[1]-a[1]||profiles[a[0]].word.originalIndex-profiles[b[0]].word.originalIndex})[0];
+    currentPosition=strongest?strongest[0]:Math.min.apply(null,Array.from(remaining));
+  }
+  return ordered;
+}
+
+function generateStudyList(source,pref){
+  const ordered=source.slice();
+  if(ordered.length<2)return ordered;
+  if(pref.mode==="random"){
+    return ordered.sort(function(a,b){
+      return deterministicHash(pref.seed+":"+norm(a.word)+":"+a.originalIndex)-deterministicHash(pref.seed+":"+norm(b.word)+":"+b.originalIndex);
+    });
+  }
+  const profile=difficultyProfile(ordered);
+  const requestedTier=requestedDifficultyTier(pref.difficultyMode);
+  const eligible=requestedTier&&profile.available
+    ?ordered.filter(function(word){return difficultyTier(word,profile)===requestedTier})
+    :ordered;
+  if(!eligible.length)return [];
+  let groups=[];
+  if(pref.mode==="family"){
+    groups=connectedGroups(eligible,familyLinks).map(function(group){
+      const incoming=new Map();
+      group.forEach(function(word){familyLinks(word).forEach(function(key){incoming.set(key,(incoming.get(key)||0)+1)})});
+      return group.sort(function(a,b){
+        const ak=norm(a.word),bk=norm(b.word);
+        const as=familyLinks(a).length*8+(incoming.get(ak)||0)*3;
+        const bs=familyLinks(b).length*8+(incoming.get(bk)||0)*3;
+        return bs-as||ak.split(" ").length-bk.split(" ").length||ak.length-bk.length||a.originalIndex-b.originalIndex;
+      });
+    });
+  }else if(pref.mode==="association"){
+    const sceneBuckets=new Map();
+    const standalone=[];
+    connectedGroups(eligible,explicitAssociationLinks).forEach(function(group){
+      const scene=group.map(sceneForWord).find(Boolean)||"";
+      if(!scene){standalone.push(group);return}
+      if(!sceneBuckets.has(scene))sceneBuckets.set(scene,[]);
+      sceneBuckets.get(scene).push.apply(sceneBuckets.get(scene),group);
+    });
+    groups=Array.from(sceneBuckets.values()).map(orderSceneWords).concat(standalone);
+  }else{
+    groups=eligible.map(function(word){return [word]});
+  }
+  const direction=difficultyDirection(pref.difficultyMode);
+  if(direction){
+    groups=groups.map(function(group){
+      return group.slice().sort(function(a,b){
+        return (difficultyScore(a)-difficultyScore(b))*direction||a.originalIndex-b.originalIndex;
+      });
+    }).sort(function(a,b){
+      function median(group){
+        const scores=group.map(difficultyScore).sort(function(x,y){return x-y});
+        const middle=Math.floor(scores.length/2);
+        return scores.length%2?scores[middle]:(scores[middle-1]+scores[middle])/2;
+      }
+      return (median(a)-median(b))*direction
+        ||Math.min.apply(null,a.map(function(word){return word.originalIndex}))
+          -Math.min.apply(null,b.map(function(word){return word.originalIndex}));
+    });
+  }else{
+    groups.sort(function(a,b){
+      return Math.min.apply(null,a.map(function(word){return word.originalIndex}))
+        -Math.min.apply(null,b.map(function(word){return word.originalIndex}));
+    });
+  }
+  return groups.flat();
+}
+
+function orderStudyList(source,activeFilter){
+  const pref=wordOrderPreference(activeFilter);
+  const fresh=generateStudyList(source,pref);
+  const snapshotKey=wordOrderSnapshotKey(pref.mode,pref.difficultyMode);
+  if(!isFixedWordOrderMode(pref.mode,pref.difficultyMode)||!pref.snapshots[snapshotKey])return fresh;
+  const previous=pref.snapshots[snapshotKey];
+  const resolved=reconcileWordOrderSnapshot(previous,fresh,fresh);
+  const previousIndices=arr(previous&&previous.indices);
+  const nextIndices=arr(resolved.snapshot&&resolved.snapshot.indices);
+  const changed=Number(previous&&previous.version)!==2
+    ||previous.sourceCount!==resolved.snapshot.sourceCount
+    ||previous.sourceSignature!==resolved.snapshot.sourceSignature
+    ||previous.cursorKey!==resolved.snapshot.cursorKey
+    ||previousIndices.length!==nextIndices.length
+    ||previousIndices.some(function(value,index){return value!==nextIndices[index]});
+  if(changed)saveWordOrderSnapshot(activeFilter,snapshotKey,resolved.snapshot);
+  return resolved.items;
+}
+
+function syncWordOrderControls(){
+  const pref=wordOrderPreference(filter);
+  if(els.orderSelect){
+    els.orderSelect.value=pref.mode;
+    const currentOption=els.orderSelect.querySelector('option[value="current"]');
+    if(currentOption)currentOption.textContent=isFixedWordOrderMode(pref.mode,pref.difficultyMode)?"切回现有顺序":"现有顺序";
+  }
+  if(els.difficultyOrderSelect){
+    const excluded=isIdictationFilter(filter);
+    const available=difficultyProfile(sourceList(filter)).available;
+    els.difficultyOrderSelect.hidden=excluded;
+    els.difficultyOrderSelect.disabled=excluded||pref.mode==="random"||!available;
+    els.difficultyOrderSelect.value=excluded?"default":pref.difficultyMode;
+  }
+}
+
+function meaningsHidden(){
+  return document.documentElement.dataset.studyMeaningsHidden==="true";
+}
+
+function updateMeaningVisibilityButton(){
+  if(!els.meaningVisibilityBtn)return;
+  const hidden=meaningsHidden();
+  els.meaningVisibilityBtn.textContent=hidden?"显示释义":"隐藏释义";
+  els.meaningVisibilityBtn.setAttribute("aria-pressed",String(hidden));
+}
+
+function setMeaningsHidden(hidden){
+  document.documentElement.dataset.studyMeaningsHidden=hidden?"true":"false";
+  try{localStorage.setItem(MEANING_VISIBILITY_KEY,hidden?"1":"0")}catch(e){}
+  updateMeaningVisibilityButton();
+}
 
 
 function filterLabel(value){
@@ -898,6 +1434,23 @@ function countForFilter(activeFilter){
   return words.filter(function(w){return passFilterWith(activeFilter,w)}).length;
 }
 
+function previewWordForFilter(activeFilter,saved,count){
+  if(!saved||count<=0)return "";
+  if(isIdictationFilter(activeFilter)){
+    const source=getIdictationSource(activeFilter.slice(11));
+    const entry=source&&source.entries?source.entries.find(function(w){
+      if(norm(w.word)===saved||norm(w.expectedAnswer)===saved)return true;
+      return arr(w.acceptedAnswers).map(norm).indexOf(saved)>=0;
+    }):null;
+    return entry?(entry.word||entry.expectedAnswer||""):"";
+  }
+  const pool=poolForFilter(activeFilter);
+  const matched=pool.find(function(w,i){
+    return norm(w.word)===saved&&passFilterWith(activeFilter,w,i);
+  });
+  return matched?matched.word:"";
+}
+
 async function ensureIdictationPayload(){
   if(idictationPayload&&idictationPayload.sources) return idictationPayload;
   try{
@@ -908,16 +1461,16 @@ async function ensureIdictationPayload(){
 }
 
 const ENTRY_GROUPS=[
-  {title:"爱听写独立入口",highlight:true,items:[
-    {title:"爱听写听力",desc:"按听力答案词和出现频率整理的独立刷词入口。",filter:"idictation:listening"},
-    {title:"爱听写阅读",desc:"按阅读高频答案词和出现频率整理的独立刷词入口。",filter:"idictation:reading"}
-  ]},
-  {title:"今天优先",items:[
-    {title:"今日任务",desc:"快速扫待学词 + 复习不熟词。",filter:"all"},
+  {title:"今日学习",items:[
+    {title:"待学词浏览",desc:"从全部可刷词中排除已认识词和专项参考词。",filter:"all"},
     {title:"不熟词",desc:"所有标记不熟的词，优先复习。",filter:"unfamiliar"},
     {title:"收藏词",desc:"写作、口语、书信可直接用的重点词。",filter:"favorite"}
   ]},
-  {title:"IELTS G 类用途",items:[
+  {title:"保留专项词库",highlight:true,items:[
+    {title:"爱听写听力",desc:"按听力答案词和出现频率整理的独立刷词入口。",filter:"idictation:listening"},
+    {title:"爱听写阅读",desc:"按阅读高频答案词和出现频率整理的独立刷词入口。",filter:"idictation:reading"}
+  ]},
+  {title:"按使用场景",items:[
     {title:"G类书信",desc:"投诉、申请、预约、感谢、道歉、解释。",filter:"ielts:G类书信"},
     {title:"Listening",desc:"听力生活场景词，优先听音频反应。",filter:"ielts:Listening"},
     {title:"Speaking",desc:"口语可用表达，适合造句。",filter:"ielts:Speaking"},
@@ -925,11 +1478,12 @@ const ENTRY_GROUPS=[
     {title:"Task 2",desc:"社会、教育、环境、科技观点词。",filter:"ielts:Task 2"},
     {title:"生活/工作高频",desc:"住房、交通、健康、消费、工作。",filter:"life-work"}
   ]},
-  {title:"难度层级",items:[
-    {title:"基础必会",desc:"必须快速认出，适合每天扫。",filter:"difficulty:基础高频"},
-    {title:"核心高频",desc:"雅思主力词，优先变熟悉。",filter:"difficulty:中级核心"},
-    {title:"高级认识",desc:"认识即可，不要花太久。",filter:"difficulty:高级加分"},
-    {title:"全部单词",desc:"总仓库，包含熟悉词。",filter:"everything"}
+  {title:"主词库学习层级",items:[
+    {title:"基础必会",desc:"进入后仍可按本入口的相对难度细分。",filter:"difficulty:基础高频"},
+    {title:"核心高频",desc:"进入后可先学相对较易或相对较难部分。",filter:"difficulty:中级核心"},
+    {title:"高级认识",desc:"低频但有价值的扩展词，以识别为主。",filter:"difficulty:高级加分"},
+    {title:"专业参考",desc:"专业词、专名和低频词，只需结合语境识别。",filter:"difficulty:低频认识即可"},
+    {title:"全部可刷词",desc:"全部独立学习卡，包含熟悉词。",filter:"everything"}
   ]}
 ];
 
@@ -945,10 +1499,15 @@ function poolForFilter(activeFilter){
   return words;
 }
 
-function list(activeFilter){
+function sourceList(activeFilter){
   const f=activeFilter||filter;
   const pool=poolForFilter(f);
   return pool.map(function(w,i){return Object.assign({},w,{originalIndex:i})}).filter(function(w){return passFilterWith(f,w)});
+}
+
+function list(activeFilter){
+  const f=activeFilter||filter;
+  return orderStudyList(sourceList(f),f);
 }
 
 function resolveIndexForFilter(activeFilter,options){
@@ -992,6 +1551,7 @@ function switchFilter(nextFilter){
   rememberPositionForCurrentFilter();
   filter=nextFilter||"all";
   progress.filter=filter;
+  syncWordOrderControls();
   applyIndexForFilter(filter);
   render();
   persistNow();
@@ -1157,9 +1717,42 @@ function deleteCurrentWord(){
   if(!baseKey){toast("当前单词无效，无法删除");return}
   const sameCount=words.filter(function(item){return norm(item.word)===baseKey}).length;
   if(!confirm("确定删除这个单词？\\n\\n"+w.word+"\\n\\n将从本机词库隐藏/删除 "+sameCount+" 条同名单词记录。电脑端正式删除后重新发布，会彻底移除。"))return;
+  const oldIndex=index;
+  const previousWords=words;
+  const pref=wordOrderPreference(filter);
+  const oldOrderedQueue=list();
+  const oldQueuePosition=oldOrderedQueue.findIndex(function(item){return item.originalIndex===oldIndex});
+  const oldToNewIndex=new Map();
+  const nextWords=[];
+  words.forEach(function(item,sourceIndex){
+    if(norm(item.word)===baseKey)return;
+    oldToNewIndex.set(sourceIndex,nextWords.length);
+    nextWords.push(item);
+  });
   saveDeletedWord(baseKey);
-  words=words.filter(function(item){return norm(item.word)!==baseKey});
-  index=Math.min(index,Math.max(0,words.length-1));
+  words=nextWords;
+  const remappedSnapshots=remapWordOrderSnapshotsAfterDeletion(pref.snapshots,previousWords);
+  Object.keys(remappedSnapshots).forEach(function(snapshotKey){
+    saveWordOrderSnapshot(filter,snapshotKey,remappedSnapshots[snapshotKey]);
+  });
+  if(isFixedWordOrderMode(pref.mode,pref.difficultyMode)){
+    let survivorsBeforeCurrent=0;
+    const preservedQueue=[];
+    oldOrderedQueue.forEach(function(item,queuePosition){
+      const nextIndex=oldToNewIndex.get(item.originalIndex);
+      if(!Number.isInteger(nextIndex))return;
+      if(queuePosition<oldQueuePosition)survivorsBeforeCurrent+=1;
+      preservedQueue.push(Object.assign({},words[nextIndex],{originalIndex:nextIndex}));
+    });
+    const nextQueuePosition=Math.min(survivorsBeforeCurrent,preservedQueue.length-1);
+    index=preservedQueue.length
+      ?preservedQueue[Math.max(0,nextQueuePosition)].originalIndex
+      :Math.min(oldIndex,Math.max(0,words.length-1));
+    const snapshotKey=wordOrderSnapshotKey(pref.mode,pref.difficultyMode);
+    saveWordOrderSnapshot(filter,snapshotKey,createWordOrderSnapshot(preservedQueue,index));
+  }else{
+    index=Math.min(oldIndex,Math.max(0,words.length-1));
+  }
   persistNow();
   render();
   toast("已删除："+w.word+"（"+sameCount+" 条记录）");
@@ -1283,6 +1876,18 @@ function persistNow(){
       progress.currentWord=w.word||progress.currentWord||"";
       progress.currentWordUpdatedAt=Date.now();
       rememberPositionForCurrentFilter();
+      const pref=wordOrderPreference(filter);
+      const snapshotKey=wordOrderSnapshotKey(pref.mode,pref.difficultyMode);
+      const snapshot=pref.snapshots[snapshotKey];
+      if(isFixedWordOrderMode(pref.mode,pref.difficultyMode)&&snapshot){
+        const cursorKey=wordOrderEntryKey(w);
+        const containsWord=Number(snapshot.version)===2
+          ?arr(snapshot.indices).includes(index)
+          :arr(snapshot.keys).includes(cursorKey);
+        if(containsWord&&snapshot.cursorKey!==cursorKey){
+          saveWordOrderCursor(filter,snapshotKey,cursorKey);
+        }
+      }
     }
     progress.filter=filter;
     progress.mobileMode=mobileMode;
@@ -1536,13 +2141,25 @@ async function play(path,label,fallbackText){
   if(!path){browserSpeak(text,label);return}
   try{
     toast("正在加载 Edge TTS 音频");
-    if(audio){audio.pause();audio.currentTime=0}
+    if(audio){
+      audio.onended=null;
+      audio.onerror=null;
+      try{audio.pause()}catch(e){}
+      try{audio.currentTime=0}catch(e){}
+    }
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
     const url=await cachedAudioUrl(path,1200);
     audio=new Audio(url);
+    audio.preload="auto";
+    audio.playsInline=true;
+    audio.volume=1;
     await audio.play();
     toast("Edge TTS 音频："+(label||"音频"));
   }catch(e){
+    if(audio){
+      try{audio.pause()}catch(ignore){}
+      audio=null;
+    }
     browserSpeak(text,label);
   }
 }
@@ -1605,13 +2222,13 @@ function renderEntryList(){
     group.items.forEach(function(item){
       const count=countForFilter(item.filter);
       const saved=(progress.positions||{})[item.filter]||"";
-      const savedWord=saved?words.find(function(w){return norm(w.word)===saved}):null;
+      const previewWord=previewWordForFilter(item.filter,saved,count);
       const btn=document.createElement("button");
       btn.className="entry-btn"+(filter===item.filter?" active":"");
       btn.innerHTML='<span class="entry-title"></span><span class="entry-desc"></span><span class="entry-meta"></span>';
       btn.querySelector(".entry-title").textContent=item.title;
       btn.querySelector(".entry-desc").textContent=item.desc;
-      btn.querySelector(".entry-meta").textContent=count+" 个"+(savedWord?" · "+savedWord.word:"");
+      btn.querySelector(".entry-meta").textContent=count+" 个"+(previewWord?" · "+previewWord:"");
       btn.onclick=function(){
         switchFilter(item.filter);
         if(els.entryPanel) els.entryPanel.classList.add("hidden");
@@ -1648,6 +2265,8 @@ function updateStatusCounts(){
 function render(){
   updateStatusCounts();
   renderEntryList();
+  syncWordOrderControls();
+  updateMeaningVisibilityButton();
   const l=list();
   const w=current();
   if(!w){
@@ -1656,6 +2275,12 @@ function render(){
     els.loadInfo.textContent="可以切换分类或查看熟悉词库。";
     els.count.textContent="0 / 0";
     els.progressFill.style.width="0%";
+    if(els.progressSeek){
+      els.progressSeek.max="1";
+      els.progressSeek.value="1";
+      els.progressSeek.disabled=true;
+    }
+    if(els.progressJumpForm)els.progressJumpForm.classList.add("hidden");
     persistSoon();
     return;
   }
@@ -1679,8 +2304,55 @@ function render(){
   const pos=Math.max(0,l.findIndex(function(x){return x.originalIndex===index}));
   els.count.textContent=(pos+1)+" / "+l.length;
   els.progressFill.style.width=(l.length?((pos+1)/l.length*100):0)+"%";
+  els.count.setAttribute("aria-label","精确跳转位置，当前第 "+(pos+1)+" / "+l.length+" 个词");
+  if(els.progressSeek){
+    els.progressSeek.max=String(Math.max(1,l.length));
+    els.progressSeek.value=String(pos+1);
+    els.progressSeek.disabled=l.length<2;
+    els.progressSeek.setAttribute("aria-valuetext","第 "+(pos+1)+" / "+l.length+" 个词："+(w.word||""));
+  }
+  if(els.progressJumpInput){
+    els.progressJumpInput.max=String(Math.max(1,l.length));
+    els.progressJumpInput.value=String(pos+1);
+  }
+  if(els.progressJumpTotal)els.progressJumpTotal.textContent="/ "+l.length;
   prewarm(w.audio);
   persistSoon();
+}
+
+function clampProgressPosition(value,total){
+  const max=Math.max(0,Math.floor(Number(total)||0));
+  if(!max)return 0;
+  const parsed=Math.round(Number(value));
+  if(!Number.isFinite(parsed))return 1;
+  return Math.min(max,Math.max(1,parsed));
+}
+
+function previewProgressPosition(value){
+  const l=list();
+  const position=clampProgressPosition(value,l.length);
+  const target=l[position-1];
+  if(!target)return;
+  els.count.textContent=position+" / "+l.length;
+  els.progressFill.style.width=(position/l.length*100)+"%";
+  if(els.progressPreview){
+    els.progressPreview.textContent=target.word||Math.round(position/l.length*100)+"%";
+    els.progressPreview.classList.remove("hidden");
+  }
+  els.progressSeek.setAttribute("aria-valuetext","第 "+position+" / "+l.length+" 个词："+(target.word||""));
+}
+
+function seekProgressPosition(value){
+  const l=list();
+  const position=clampProgressPosition(value,l.length);
+  const target=l[position-1];
+  if(!target)return;
+  restoreFocusWord="";
+  index=target.originalIndex;
+  if(els.progressPreview)els.progressPreview.classList.add("hidden");
+  render();
+  persistNow();
+  scheduleCloudSync();
 }
 
 function step(n){
@@ -2016,36 +2688,48 @@ async function getCloudDoc(){
   const loginStateBeforeRead=await getLoginStateSafe(cloudbaseAuth);
   if(!loginStateBeforeRead) throw new Error("读取前没有登录态 credentials not found");
 
-  const result=await cloudbaseDb
-    .collection("vocab_progress")
-    .where({syncCodeHash:cloudbaseDocId,vocabId:getVocabId()})
-    .limit(1000)
-    .get();
+  const rows=[];
+  let offset=0;
+  while(offset<CLOUD_PROGRESS_MAX_ROWS){
+    const result=await cloudbaseDb
+      .collection("vocab_progress")
+      .where({syncCodeHash:cloudbaseDocId,vocabId:getVocabId()})
+      .skip(offset)
+      .limit(CLOUD_PROGRESS_PAGE_SIZE)
+      .get();
+    const page=(result&&Array.isArray(result.data)?result.data:[])
+      .filter(function(x){return x&&x.syncCodeHash===cloudbaseDocId&&((x.vocabId||"")===getVocabId())});
+    rows.push.apply(rows,page);
+    if(page.length<CLOUD_PROGRESS_PAGE_SIZE)break;
+    offset+=page.length;
+  }
+  if(rows.length>=CLOUD_PROGRESS_MAX_ROWS){
+    console.warn("CloudBase progress rows reached safety limit",CLOUD_PROGRESS_MAX_ROWS);
+  }
 
-  const rows=(result&&Array.isArray(result.data)?result.data:[])
-    .filter(function(x){return x&&x.syncCodeHash===cloudbaseDocId&&((x.vocabId||"")===getVocabId())});
-
-  // 关键修复：同一个同步码下，读取全部设备记录并合并，不再只取最新一条。
+  // 兼容旧版累计产生的多条记录：分页读取后再按单词时间戳合并。
   return mergeCloudRows(rows);
 }
 
 async function setCloudDoc(data){
   if(!cloudbaseDb||!cloudbaseDocId) throw new Error("未连接同步码");
 
-  // 兼容 [READONLY]：
-  // 每台设备只新增自己创建的进度记录，不去修改别的设备创建的记录。
-  // 手机 / 电脑恢复时读取同一同步码下 updatedAt 最新的一条。
+  // READONLY 允许所有用户读取、仅创建者写入。
+  // 每台设备使用自己的稳定文档 ID：第一次创建，之后覆盖本设备记录，
+  // 避免每次操作都新增文档并最终超过 CloudBase 单次 1000 条读取上限。
+  const deviceId=progress.deviceId||getDeviceId();
+  const deviceDocId="progress_"+(await sha256Text(cloudbaseDocId+"|"+getVocabId()+"|"+deviceId)).slice(0,48);
   const payload=Object.assign({
     syncCodeHash:cloudbaseDocId,
     vocabId:getVocabId(),
     syncKey:cloudbaseDocId+"__"+getVocabId(),
-    deviceId:progress.deviceId||getDeviceId(),
+    deviceId:deviceId,
     createdAt:Date.now()
   },data);
 
   const loginStateBeforeWrite=await getLoginStateSafe(cloudbaseAuth);
   if(!loginStateBeforeWrite) throw new Error("写入前没有登录态 credentials not found");
-  await cloudbaseDb.collection("vocab_progress").add(payload);
+  await cloudbaseDb.collection("vocab_progress").doc(deviceDocId).set(payload);
 }
 
 function mergeCloudProgress(remote,forcePosition){
@@ -2263,13 +2947,95 @@ if(els.topToolsToggle) els.topToolsToggle.onclick=function(){
   localStorage.setItem(TOP_TOOLS_PREF_PREFIX+topToolsViewportKey(),topToolsCollapsed?"1":"0");
   applyTopToolsState();
 };
-document.getElementById("shuffleBtn").onclick=function(){
+function changeWordOrderCombination(nextMode,nextDifficultyMode,label){
   restoreFocusWord="";
-  words=[...words].sort(function(){return Math.random()-.5});
-  index=0;
-  toast("已随机");
+  // 先同步保存当前组合的游标，避免用户快速切换时尚未执行延迟保存，
+  // 再切回来却落到该组合的第一个词。
+  persistNow();
+  const currentWord=currentRaw();
+  const source=sourceList(filter);
+  const previous=wordOrderPreference(filter);
+  nextMode=normalizeWordOrderMode(nextMode);
+  nextDifficultyMode=isIdictationFilter(filter)?"default":normalizeDifficultyMode(nextDifficultyMode);
+  if(nextMode==="random"){
+    const seed=Date.now();
+    saveWordOrderPreference(filter,nextMode,previous.difficultyMode,{seed:seed});
+    const next=generateStudyList(source,{mode:nextMode,difficultyMode:"default",seed:seed,snapshots:{}});
+    if(next.length)index=next[0].originalIndex;
+  }else if(isFixedWordOrderMode(nextMode,nextDifficultyMode)){
+    const snapshotKey=wordOrderSnapshotKey(nextMode,nextDifficultyMode);
+    const fresh=generateStudyList(source,{mode:nextMode,difficultyMode:nextDifficultyMode,seed:0,snapshots:previous.snapshots});
+    const existing=previous.snapshots[snapshotKey];
+    const resolved=existing
+      ?reconcileWordOrderSnapshot(existing,fresh,fresh)
+      :{items:fresh,cursorIndex:fresh[0]?.originalIndex,snapshot:createWordOrderSnapshot(fresh,fresh[0]?.originalIndex)};
+    saveWordOrderSnapshot(filter,snapshotKey,resolved.snapshot);
+    saveWordOrderPreference(filter,nextMode,nextDifficultyMode);
+    if(Number.isInteger(resolved.cursorIndex))index=resolved.cursorIndex;
+  }else{
+    saveWordOrderPreference(filter,nextMode,nextDifficultyMode);
+    if(currentWord){
+      const matched=source.find(function(item){return norm(item.word)===norm(currentWord.word)});
+      if(matched)index=matched.originalIndex;
+    }
+  }
   render();
-  scheduleCloudSync();
+  toast("已切换为"+label);
+}
+function completeToolbarSelectAction(control){
+  if(!control)return;
+  control.blur();
+  requestAnimationFrame(function(){
+    if(document.activeElement===control)control.blur();
+  });
+}
+if(els.orderSelect) els.orderSelect.onchange=function(e){
+  const pref=wordOrderPreference(filter);
+  changeWordOrderCombination(e.target.value,pref.difficultyMode,e.target.options[e.target.selectedIndex].text);
+  completeToolbarSelectAction(e.target);
+};
+if(els.difficultyOrderSelect) els.difficultyOrderSelect.onchange=function(e){
+  const pref=wordOrderPreference(filter);
+  changeWordOrderCombination(pref.mode,e.target.value,e.target.options[e.target.selectedIndex].text);
+  completeToolbarSelectAction(e.target);
+};
+if(els.progressSeek){
+  els.progressSeek.oninput=function(e){previewProgressPosition(e.target.value)};
+  els.progressSeek.onchange=function(e){seekProgressPosition(e.target.value)};
+  els.progressSeek.onpointercancel=function(){
+    if(els.progressPreview)els.progressPreview.classList.add("hidden");
+    render();
+  };
+}
+if(els.count)els.count.onclick=function(){
+  const l=list();
+  if(l.length<2||!els.progressJumpForm)return;
+  const open=els.progressJumpForm.classList.contains("hidden");
+  els.progressJumpForm.classList.toggle("hidden",!open);
+  if(open){
+    els.progressJumpInput.focus();
+    els.progressJumpInput.select();
+  }
+};
+if(els.progressJumpForm)els.progressJumpForm.onsubmit=function(e){
+  e.preventDefault();
+  seekProgressPosition(els.progressJumpInput.value);
+  els.progressJumpInput.blur();
+  els.progressJumpForm.classList.add("hidden");
+};
+if(els.progressJumpCancel)els.progressJumpCancel.onclick=function(){
+  els.progressJumpInput.blur();
+  els.progressJumpForm.classList.add("hidden");
+};
+if(els.progressJumpInput)els.progressJumpInput.onkeydown=function(e){
+  if(e.key==="Escape"){
+    e.preventDefault();
+    els.progressJumpInput.blur();
+    els.progressJumpForm.classList.add("hidden");
+  }
+};
+if(els.meaningVisibilityBtn) els.meaningVisibilityBtn.onclick=function(){
+  setMeaningsHidden(!meaningsHidden());
 };
 document.getElementById("knownBtn").onclick=function(){mark("熟悉")};
 document.getElementById("unknownBtn").onclick=function(){mark("不熟")};
@@ -2346,10 +3112,10 @@ els.swipeArea.addEventListener("touchcancel",stopHoldStep,{passive:true});
 window.addEventListener("keydown",function(e){
   const tag=e.target&&e.target.tagName?e.target.tagName.toLowerCase():"";
   const isTyping=tag==="input"||tag==="textarea"||tag==="select"||(e.target&&e.target.isContentEditable);
-  if(isTyping||e.ctrlKey||e.metaKey||e.altKey)return;
-
   const key=e.key||"";
   const code=e.code||"";
+  const isHorizontalArrow=key==="ArrowLeft"||code==="ArrowLeft"||key==="ArrowRight"||code==="ArrowRight";
+  if((isTyping&&!isHorizontalArrow)||e.ctrlKey||e.metaKey||e.altKey)return;
   const isDelete=key==="Delete"||code==="Delete"||e.keyCode===46||e.which===46;
   const isZero=key==="0"||code==="Digit0"||code==="Numpad0";
   const isOne=key==="1"||code==="Digit1"||code==="Numpad1";
@@ -2468,6 +3234,7 @@ const SHELL=[
   "./basic.html",
   "./meaning.html",
   "./reading-g.html",
+  "./reading-paraphrases.html",
   "./reading-words.html",
   "./ielts-538.html",
   "./assets/style.css?v=${STATIC_EXPORT_VERSION}",
@@ -2477,14 +3244,18 @@ const SHELL=[
   "./assets/basic.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/meaning-static.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-g.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/reading-paraphrases.css?v=${STATIC_EXPORT_VERSION}",
+  "./assets/reading-paraphrases.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-words.css?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-words.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/ielts-538.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/study-meaning-visibility.js?v=${STATIC_EXPORT_VERSION}",
   "./sync-config.js?v=${STATIC_EXPORT_VERSION}",
   "./data/words.json",
   "./data/phrases.json",
   "./data/idictation-frequency.json",
   "./data/basic-words.json",
+  "./data/lexicon-tidy-audit.json",
   "./data/reading-g-vocab.json",
   "./data/reading-g-paraphrases.json",
   "./data/reading-g-import-report.json",
@@ -2528,7 +3299,7 @@ self.addEventListener("fetch",function(event){
     return;
   }
 
-  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
+  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-paraphrases.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
     event.respondWith(
       fetch(req).then(function(res){
         if(res&&res.ok) caches.open(CACHE_NAME).then(function(cache){cache.put(req,res.clone()).catch(function(){})});
@@ -2566,8 +3337,6 @@ function buildExport(words, audioIndex, options = {}) {
   const audioFiles = new Map();
 
   function audioFor(text) {
-    if (!includeAudioFiles) return "";
-
     const key = normalizeWord(text);
     const item = audioIndex[key];
 
@@ -2659,6 +3428,11 @@ function buildExport(words, audioIndex, options = {}) {
     count: 0,
     words: []
   });
+  const tidyAuditManifest = readJson(publicAssetPath("data", "lexicon-tidy-audit.json"), {
+    version: 1,
+    updatedAt: 0,
+    records: {}
+  });
   const meaningManifest = readJson(publicAssetPath("data", "meaning-6000.json"), {
     version: "meaning-6000",
     count: 0,
@@ -2685,6 +3459,10 @@ function buildExport(words, audioIndex, options = {}) {
     {
       name: "reading-g.html",
       data: readFileSync(publicAssetPath("reading-g.html"), "utf-8")
+    },
+    {
+      name: "reading-paraphrases.html",
+      data: readFileSync(publicAssetPath("reading-paraphrases.html"), "utf-8")
     },
     {
       name: "reading-words.html",
@@ -2715,6 +3493,14 @@ function buildExport(words, audioIndex, options = {}) {
       data: readFileSync(publicAssetPath("assets", "reading-g.js"), "utf-8")
     },
     {
+      name: "assets/reading-paraphrases.css",
+      data: readFileSync(publicAssetPath("assets", "reading-paraphrases.css"), "utf-8")
+    },
+    {
+      name: "assets/reading-paraphrases.js",
+      data: readFileSync(publicAssetPath("assets", "reading-paraphrases.js"), "utf-8")
+    },
+    {
       name: "assets/reading-words.css",
       data: readFileSync(publicAssetPath("assets", "reading-words.css"), "utf-8")
     },
@@ -2725,6 +3511,10 @@ function buildExport(words, audioIndex, options = {}) {
     {
       name: "assets/ielts-538.js",
       data: readFileSync(publicAssetPath("assets", "ielts-538.js"), "utf-8")
+    },
+    {
+      name: "assets/study-meaning-visibility.js",
+      data: readFileSync(publicAssetPath("assets", "study-meaning-visibility.js"), "utf-8")
     },
     {
       name: "assets/style.css",
@@ -2757,6 +3547,10 @@ function buildExport(words, audioIndex, options = {}) {
     {
       name: "data/basic-words.json",
       data: JSON.stringify(basicManifest)
+    },
+    {
+      name: "data/lexicon-tidy-audit.json",
+      data: JSON.stringify(tidyAuditManifest)
     },
     {
       name: "data/meaning-6000.json",
@@ -2824,6 +3618,7 @@ function buildExport(words, audioIndex, options = {}) {
 index.html          主词库刷单词入口
 basic.html          零基础单词（独立词库）
 reading-g.html      G类阅读提升（静态便携版：词义/短语/同义MCQ）
+reading-paraphrases.html  阅读同义替换记录本（导入、刷词和腾讯云进度同步）
 ielts-538.html      538考点（376词、Section、推荐标记和同义改写）
 meaning.html        看词选意思 · 核心6000
 spelling.html       独立拼写训练入口
@@ -2831,6 +3626,7 @@ assets/style.css    刷单词样式
 assets/app.js       刷单词逻辑
 assets/basic.js     零基础刷词逻辑
 assets/reading-g.js G类阅读提升（含同义MCQ）
+assets/reading-paraphrases.css/js 阅读同义替换记录本
 assets/ielts-538.js 538考点静态学习逻辑
 assets/meaning-static.js  选义训练逻辑
 assets/spelling.css 拼写训练样式
@@ -2841,6 +3637,7 @@ sync-config.js      CloudBase 云同步配置
 data/words.json     主词库数据
 data/phrases.json   独立短语层
 data/basic-words.json  零基础词库
+data/lexicon-tidy-audit.json  主词库整理复核记录
 data/reading-g-vocab.json  G类阅读提升词库
 data/reading-g-paraphrases.json  高可信同义关系
 data/reading-g-import-report.json  导入审计报告

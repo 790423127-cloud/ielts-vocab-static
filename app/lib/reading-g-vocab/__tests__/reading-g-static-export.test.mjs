@@ -53,8 +53,9 @@ test("satellite flashcards do not reserve an absent insight sidebar", () => {
     "utf8"
   );
   const css = fs.readFileSync(path.join(root, "app/globals.css"), "utf8");
-  assert.match(source, /word-flash-shell is-insight-collapsed/);
-  assert.match(source, /bottom bottombar bottombar--status-only/);
+  assert.match(source, /const insightVisible = !isIelts538 && showInsight;/);
+  assert.match(source, /showInsight=\{insightVisible\}/);
+  assert.match(source, /<footer className="bottom bottombar">/);
   assert.match(css, /\.page--word-flash \.word,[\s\S]*\.page--word-flash \.footer-grid \{\s*margin-inline: auto;/);
   assert.match(css, /D2\.3 high-visibility study action dock/);
   assert.match(css, /\.page--word-flash \.top-actions:has\(\.menu\[open\]\) \{\s*overflow: visible;/);

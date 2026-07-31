@@ -10,6 +10,7 @@ export function useSpellingSrsReview(lexiconEntries = [], options = {}) {
   const refreshKey = options.refreshKey || "";
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState("");
 
   const refresh = useCallback(async () => {
@@ -38,10 +39,17 @@ export function useSpellingSrsReview(lexiconEntries = [], options = {}) {
   }, [lexiconEntries, scope]);
 
   useEffect(() => {
-    refresh();
+    let active = true;
+    setInitialized(false);
+    refresh().finally(() => {
+      if (active) setInitialized(true);
+    });
+    return () => {
+      active = false;
+    };
   }, [refresh, refreshKey]);
 
-  return { items, count: items.length, loading, error, refresh };
+  return { items, count: items.length, loading, initialized, error, refresh };
 }
 
 export default useSpellingSrsReview;

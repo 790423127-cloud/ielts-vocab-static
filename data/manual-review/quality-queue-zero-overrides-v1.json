@@ -1,0 +1,489 @@
+{
+  "version": "quality-queue-zero-overrides-v1",
+  "reviewedAt": "2026-07-30",
+  "status": "human-reviewed-ready-to-apply",
+  "policy": {
+    "preserveStableIds": true,
+    "preserveHeadwords": true,
+    "preserveUserState": true,
+    "noPaidAiApi": true
+  },
+  "entries": [
+    {
+      "id": "word_5ca455fa70d8",
+      "word": "wow",
+      "set": {
+        "phraseCollocations": [
+          { "phrase": "wow, that's amazing", "chinese": "哇，那太棒了" }
+        ]
+      }
+    },
+    {
+      "id": "word_d0463a0e4bd5",
+      "word": "currentaccount",
+      "set": {
+        "collocations": [
+          { "phrase": "current account balance", "chinese": "活期账户余额" },
+          { "phrase": "current account holder", "chinese": "活期账户持有人" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "open a current account", "chinese": "开立活期账户" },
+          { "phrase": "pay into a current account", "chinese": "把钱存入活期账户" }
+        ]
+      }
+    },
+    {
+      "id": "word_b2d93ad3d792",
+      "word": "emergencycontact",
+      "set": {
+        "collocations": [
+          { "phrase": "emergency contact details", "chinese": "紧急联系人信息" },
+          { "phrase": "emergency contact person", "chinese": "紧急联系人" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "provide an emergency contact", "chinese": "提供紧急联系人" },
+          { "phrase": "list someone as an emergency contact", "chinese": "把某人列为紧急联系人" }
+        ]
+      }
+    },
+    {
+      "id": "word_6951b2bc778b",
+      "word": "sideeffect",
+      "set": {
+        "collocations": [
+          { "phrase": "common side effect", "chinese": "常见副作用" },
+          { "phrase": "serious side effect", "chinese": "严重副作用" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "suffer from side effects", "chinese": "遭受副作用" },
+          { "phrase": "cause unwanted side effects", "chinese": "引起不良副作用" }
+        ]
+      }
+    },
+    {
+      "id": "word_b27bb197cba0",
+      "word": "yep",
+      "set": {
+        "pos": "interjection; adverb",
+        "phraseCollocations": [
+          { "phrase": "yep, that's right", "chinese": "是的，没错" }
+        ]
+      }
+    },
+    {
+      "id": "word_93791d52fff2",
+      "word": "breakclause",
+      "set": {
+        "collocations": [
+          { "phrase": "standard break clause", "chinese": "标准提前解约条款" },
+          { "phrase": "tenancy break clause", "chinese": "租约提前解约条款" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "include a break clause", "chinese": "包含提前解约条款" },
+          { "phrase": "exercise a break clause", "chinese": "行使提前解约条款" }
+        ]
+      }
+    },
+    {
+      "id": "word_7b55f6d38ed3",
+      "word": "dumping",
+      "set": {
+        "meaning": "倾销；倾倒废物",
+        "definition": "the act of selling goods abroad at an unfairly low price, or getting rid of waste illegally",
+        "category": "IELTS G类 · 贸易与环境",
+        "topics": ["消费", "环境", "贸易", "G类完整学习计划", "G类完整学习计划·阶段2"],
+        "collocations": [
+          { "phrase": "illegal dumping", "chinese": "非法倾倒" },
+          { "phrase": "waste dumping", "chinese": "废物倾倒" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "prevent the dumping of waste", "chinese": "防止倾倒废物" },
+          { "phrase": "accuse a company of dumping", "chinese": "指控某公司倾销" }
+        ]
+      }
+    },
+    {
+      "id": "word_f602e1edec07",
+      "word": "gatherer",
+      "set": {
+        "meaning": "采集者；收集者",
+        "definition": "a person who collects food, objects, or information",
+        "category": "IELTS G类 · 人物与工作",
+        "topics": ["工作", "社会", "阅读", "G类完整学习计划", "G类完整学习计划·阶段1"],
+        "collocations": [
+          { "phrase": "hunter-gatherer society", "chinese": "狩猎采集社会" },
+          { "phrase": "information gatherer", "chinese": "信息收集者" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "work as a gatherer", "chinese": "从事采集工作" },
+          { "phrase": "a gatherer of information", "chinese": "信息收集者" }
+        ]
+      }
+    },
+    {
+      "id": "word_28c77802379e",
+      "word": "chameleon",
+      "set": {
+        "meaning": "变色龙；善于适应环境的人",
+        "definition": "a lizard that can change colour; a person who changes behaviour to suit a situation",
+        "category": "IELTS G类 · 动物与环境",
+        "topics": ["环境", "动物", "阅读", "G类完整学习计划", "G类完整学习计划·阶段1"],
+        "collocations": [
+          { "phrase": "colour-changing chameleon", "chinese": "会变色的变色龙" },
+          { "phrase": "common chameleon", "chinese": "普通变色龙" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "change colour like a chameleon", "chinese": "像变色龙一样变色" },
+          { "phrase": "adapt like a chameleon", "chinese": "像变色龙一样适应环境" }
+        ]
+      }
+    },
+    {
+      "id": "word_b5472f882f03",
+      "word": "hexane",
+      "set": {
+        "definition": "a colourless, flammable liquid hydrocarbon often used as a solvent",
+        "category": "IELTS G类 · 科学参考",
+        "topics": ["科技", "化学", "G类完整学习计划", "G类完整学习计划·阶段2"],
+        "collocations": [
+          { "phrase": "hexane solvent", "chinese": "己烷溶剂" },
+          { "phrase": "liquid hexane", "chinese": "液态己烷" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "dissolve in hexane", "chinese": "溶于己烷" },
+          { "phrase": "exposure to hexane", "chinese": "接触己烷" }
+        ]
+      }
+    },
+    {
+      "id": "word_615d334ed34e",
+      "word": "maggot",
+      "set": {
+        "definition": "the soft larva of a fly, often found in decaying material",
+        "category": "IELTS G类 · 动物参考",
+        "topics": ["环境", "动物", "G类完整学习计划", "G类完整学习计划·阶段2"],
+        "collocations": [
+          { "phrase": "fly maggot", "chinese": "苍蝇幼虫" },
+          { "phrase": "maggot infestation", "chinese": "蛆虫侵扰" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "use maggots as bait", "chinese": "用蛆作饵" },
+          { "phrase": "infested with maggots", "chinese": "受到蛆虫侵扰" }
+        ]
+      }
+    },
+    {
+      "id": "word_gt10500_10152",
+      "word": "stricken",
+      "set": {
+        "collocations": [
+          { "phrase": "poverty-stricken area", "chinese": "贫困地区" },
+          { "phrase": "flood-stricken community", "chinese": "受洪灾影响的社区" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "be stricken by disaster", "chinese": "遭受灾害" },
+          { "phrase": "be stricken with grief", "chinese": "悲痛欲绝" }
+        ]
+      }
+    },
+    {
+      "id": "word_gt10500_10333",
+      "word": "preservative",
+      "set": {
+        "collocations": [
+          { "phrase": "artificial preservative", "chinese": "人工防腐剂" },
+          { "phrase": "food preservative", "chinese": "食品防腐剂" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "contain artificial preservatives", "chinese": "含有人工防腐剂" },
+          { "phrase": "be free from preservatives", "chinese": "不含防腐剂" }
+        ]
+      }
+    },
+    {
+      "id": "word_listening1179_6b1d752dfd10",
+      "word": "pollination",
+      "set": {
+        "collocations": [
+          { "phrase": "cross pollination", "chinese": "异花授粉" },
+          { "phrase": "insect pollination", "chinese": "昆虫授粉" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "pollination by bees", "chinese": "由蜜蜂授粉" },
+          { "phrase": "help with pollination", "chinese": "帮助授粉" }
+        ]
+      }
+    },
+    {
+      "id": "word_listening1179_6307fe494e12",
+      "word": "curly",
+      "set": {
+        "collocations": [
+          { "phrase": "curly hair", "chinese": "卷发" },
+          { "phrase": "curly brackets", "chinese": "花括号" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "have naturally curly hair", "chinese": "天生卷发" },
+          { "phrase": "grow curly in damp weather", "chinese": "在潮湿天气变卷" }
+        ]
+      }
+    },
+    {
+      "id": "word_listening1179_76e7443e02ac",
+      "word": "storey",
+      "set": {
+        "collocations": [
+          { "phrase": "five-storey building", "chinese": "五层建筑" },
+          { "phrase": "top storey", "chinese": "顶层" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "live on the second storey", "chinese": "住在二楼" },
+          { "phrase": "a building with five storeys", "chinese": "一栋五层建筑" }
+        ]
+      }
+    },
+    {
+      "id": "word_listening1179_9e135ab95482",
+      "word": "moss",
+      "set": {
+        "collocations": [
+          { "phrase": "green moss", "chinese": "绿色苔藓" },
+          { "phrase": "thick moss", "chinese": "厚厚的苔藓" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "be covered in moss", "chinese": "长满苔藓" },
+          { "phrase": "moss grows on rocks", "chinese": "苔藓长在岩石上" }
+        ]
+      }
+    },
+    {
+      "id": "word_listening1179_5e60ff5ac0ec",
+      "word": "heading",
+      "set": {
+        "collocations": [
+          { "phrase": "section heading", "chinese": "章节标题" },
+          { "phrase": "main heading", "chinese": "主标题" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "under the heading of", "chinese": "在……标题下" },
+          { "phrase": "give the paragraph a heading", "chinese": "给段落加标题" }
+        ]
+      }
+    },
+    {
+      "id": "word_listening1179_c74276c1d698",
+      "word": "pence",
+      "set": {
+        "collocations": [
+          { "phrase": "fifty pence", "chinese": "五十便士" },
+          { "phrase": "a few pence", "chinese": "几便士" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "cost twenty pence", "chinese": "花费二十便士" },
+          { "phrase": "pay in pounds and pence", "chinese": "用英镑和便士支付" }
+        ]
+      }
+    },
+    {
+      "id": "word_listening1179_16188fca10e3",
+      "word": "dimensional",
+      "set": {
+        "collocations": [
+          { "phrase": "three-dimensional model", "chinese": "三维模型" },
+          { "phrase": "dimensional analysis", "chinese": "量纲分析" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "measured in three dimensions", "chinese": "按三个维度测量" },
+          { "phrase": "add a dimensional perspective", "chinese": "加入维度视角" }
+        ]
+      }
+    },
+    {
+      "id": "word_excel_266550babbb7",
+      "word": "glasses",
+      "set": {
+        "collocations": [
+          { "phrase": "reading glasses", "chinese": "老花镜；阅读眼镜" },
+          { "phrase": "prescription glasses", "chinese": "处方眼镜" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "wear a pair of glasses", "chinese": "戴一副眼镜" },
+          { "phrase": "take off your glasses", "chinese": "摘下眼镜" }
+        ]
+      }
+    },
+    {
+      "id": "word_excel_9251f129e36d",
+      "word": "caffeine",
+      "set": {
+        "example": "Too much caffeine can make it difficult to sleep.",
+        "exampleCn": "摄入过多咖啡因会让人难以入睡。",
+        "collocations": [
+          { "phrase": "caffeine intake", "chinese": "咖啡因摄入量" },
+          { "phrase": "high caffeine content", "chinese": "咖啡因含量高" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "contain a lot of caffeine", "chinese": "含有大量咖啡因" },
+          { "phrase": "cut down on caffeine", "chinese": "减少咖啡因摄入" }
+        ]
+      }
+    },
+    {
+      "id": "word_excel_3a30bfd6a079",
+      "word": "consuming",
+      "set": {
+        "pos": "adjective; present participle",
+        "meaning": "耗时的；消耗性的；消耗（consume 的现在分词）",
+        "definition": "taking a great deal of time or energy; the present participle of consume",
+        "collocations": [
+          { "phrase": "time-consuming task", "chinese": "耗时的任务" },
+          { "phrase": "energy-consuming process", "chinese": "耗能过程" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "consume large amounts of energy", "chinese": "消耗大量能源" },
+          { "phrase": "be extremely time-consuming", "chinese": "极其耗时" }
+        ]
+      }
+    },
+    {
+      "id": "word_excel_695252f664b9",
+      "word": "pre",
+      "set": {
+        "pos": "prefix",
+        "meaning": "在……之前；预先（构词成分）",
+        "definition": "a prefix meaning before or in advance",
+        "studyMode": "reference",
+        "category": "词形参考 · 前缀",
+        "topics": ["词形参考", "构词法", "阅读"]
+      }
+    },
+    {
+      "id": "word_excel_5e81c0ea88d1",
+      "word": "oriented",
+      "set": {
+        "pos": "adjective",
+        "meaning": "以……为导向的；朝向的",
+        "definition": "directed towards a particular purpose, group, or way of thinking",
+        "collocations": [
+          { "phrase": "career-oriented course", "chinese": "职业导向课程" },
+          { "phrase": "student-oriented programme", "chinese": "以学生为导向的项目" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "be oriented towards practical skills", "chinese": "以实用技能为导向" },
+          { "phrase": "be oriented around user needs", "chinese": "围绕用户需求设计" }
+        ]
+      }
+    },
+    {
+      "id": "word_excel_8756de7880a7",
+      "word": "eco",
+      "set": {
+        "pos": "combining form",
+        "meaning": "生态；环保（构词成分）",
+        "definition": "a combining form relating to ecology or the environment",
+        "example": "Eco-friendly products are designed to cause less harm to the environment.",
+        "exampleCn": "环保产品旨在减少对环境的伤害。",
+        "studyMode": "reference",
+        "category": "词形参考 · 构词成分",
+        "topics": ["词形参考", "构词法", "环境"]
+      }
+    },
+    {
+      "id": "word_excel_42d8442af352",
+      "word": "socio",
+      "set": {
+        "pos": "combining form",
+        "meaning": "社会的；社会方面的（构词成分）",
+        "definition": "a combining form relating to society or social conditions",
+        "example": "Socio-economic factors can affect access to education.",
+        "exampleCn": "社会经济因素会影响受教育机会。",
+        "studyMode": "reference",
+        "category": "词形参考 · 构词成分",
+        "topics": ["词形参考", "构词法", "社会"]
+      }
+    },
+    {
+      "id": "word_excel_c1679e80bae3",
+      "word": "mutilation",
+      "set": {
+        "meaning": "严重毁损；残害",
+        "definition": "severe damage to a person's or animal's body, often involving the loss of a body part",
+        "exampleCn": "这次事故导致他的手部严重毁损。",
+        "collocations": [
+          { "phrase": "severe mutilation", "chinese": "严重毁损" },
+          { "phrase": "deliberate mutilation", "chinese": "故意残害" }
+        ],
+        "phraseCollocations": [
+          { "phrase": "mutilation of the body", "chinese": "身体毁损" },
+          { "phrase": "prevent animal mutilation", "chinese": "防止残害动物" }
+        ]
+      }
+    },
+    {
+      "id": "word_excel_1cafa6d851c6",
+      "word": "proto",
+      "set": {
+        "pos": "prefix; combining form",
+        "meaning": "最初的；原始的（构词成分）",
+        "definition": "a prefix meaning first, earliest, or original",
+        "example": "Proto-Indo-European is a reconstructed ancestor of many languages.",
+        "exampleCn": "原始印欧语是许多语言经重建得出的共同祖语。",
+        "studyMode": "reference",
+        "category": "词形参考 · 前缀",
+        "topics": ["词形参考", "构词法", "阅读"]
+      }
+    },
+    {
+      "id": "word_895371520a0f",
+      "word": "leed",
+      "set": {
+        "pos": "spelling variant",
+        "meaning": "lead 的误拼或非标准拼写，学习时请使用 lead",
+        "definition": "a non-standard or mistaken spelling of lead",
+        "example": "The correct spelling is lead, not leed.",
+        "exampleCn": "正确拼写是 lead，而不是 leed。",
+        "studyMode": "reference",
+        "baseWord": "lead",
+        "redirectToWord": "lead",
+        "relationType": "spelling variant",
+        "category": "拼写变体参考",
+        "topics": ["词形参考", "拼写"]
+      }
+    },
+    {
+      "id": "word_excel_53493ffba28c",
+      "word": "lable",
+      "set": {
+        "pos": "spelling variant",
+        "meaning": "label 的常见误拼，学习时请使用 label",
+        "definition": "a common misspelling of label",
+        "example": "The correct spelling is label, not lable.",
+        "exampleCn": "正确拼写是 label，而不是 lable。",
+        "studyMode": "reference",
+        "baseWord": "label",
+        "redirectToWord": "label",
+        "relationType": "spelling variant",
+        "category": "拼写变体参考",
+        "topics": ["词形参考", "拼写"],
+        "collocations": [],
+        "phraseCollocations": []
+      }
+    },
+    {
+      "id": "word_excel_ead906edc10f",
+      "word": "ation",
+      "set": {
+        "pos": "suffix",
+        "meaning": "表示动作、过程、状态或结果的名词后缀",
+        "definition": "a noun-forming suffix used to express an action, process, state, or result",
+        "example": "The suffix -ation appears in words such as education and information.",
+        "exampleCn": "后缀 -ation 出现在 education 和 information 等单词中。",
+        "studyMode": "reference",
+        "category": "词形参考 · 后缀",
+        "topics": ["词形参考", "构词法"],
+        "collocations": [],
+        "phraseCollocations": []
+      }
+    }
+  ]
+}

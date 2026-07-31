@@ -36,6 +36,4 @@ test("static export includes the notebook and its cloud sync client", () => {
   assert.match(staticPage, /腾讯云学习进度同步/);
   assert.match(staticScript, /collection\("vocab_progress"\)/);
   assert.match(staticScript, /vocabId:VOCAB_ID/);
-  assert.match(staticScript, /MAX_IMPORT_BYTES/);
-  assert.match(staticPage, /aria-live="polite"/);
 });

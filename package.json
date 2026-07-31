@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -H 127.0.0.1 -p 3000",
     "prebuild": "npm run lexicon:check",
-    "build": "next build",
+    "build": "node scripts/build-with-running-server-restart.mjs",
     "lint:undef": "npm run lint:errors",
     "lint:errors": "eslint app scripts tests/e2e middleware.js next.config.mjs eslint.config.mjs playwright.config.mjs --quiet",
     "lint:quality": "eslint app scripts tests/e2e middleware.js next.config.mjs eslint.config.mjs playwright.config.mjs",
@@ -23,6 +23,7 @@
     "quality:all": "node scripts/core-vocab-quality-audit.mjs --gate && node scripts/phrase-quality-gate.mjs --gate && node scripts/sync-master-lexicon.mjs --check",
     "lexicon:sync": "node scripts/sync-master-lexicon.mjs",
     "lexicon:check": "node scripts/sync-master-lexicon.mjs --check",
+    "lexicon:rebaseline": "node scripts/sync-master-lexicon.mjs --rebaseline",
     "vocab:recover-ai-cache:dry-run": "node scripts/recover-deepseek-word-cache.mjs --dry-run",
     "vocab:recover-ai-cache:apply": "node scripts/recover-deepseek-word-cache.mjs --apply",
     "phrases:repair-p0": "node scripts/repair-phrase-quality-p0.mjs",

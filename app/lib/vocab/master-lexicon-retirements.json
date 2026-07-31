@@ -1,8 +1,8 @@
 {
-  "version": "v14-13353-user-curated-removal-20260726",
-  "generatedAt": "2026-07-26T10:22:43.513Z",
-  "previousRef": "10b50240719562289dd4ee3176f2b1e67a17b647",
-  "count": 91,
+  "version": "v22-13353-quality-queues-zero-20260730",
+  "generatedAt": "2026-07-31T03:07:44.425Z",
+  "previousRef": "7a958e514a608c55c5d9a7a918af9bb42741fa59",
+  "count": 139,
   "entries": [
     {
       "id": "word_12f29832aa4b",
@@ -457,6 +457,252 @@
     {
       "id": "word_excel_9e5db53b5cf0",
       "word": "bigger",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_7240225b8f36",
+      "word": "inc",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_26bd604bd179",
+      "word": "indian",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_7692c3ad3540",
+      "word": "one",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_listening1179_8b5b9db0c13d",
+      "word": "three",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_d7049f2e5682",
+      "word": "twenty",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_837f561f66f8",
+      "word": "hundred",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_listening1179_fe31dae5ff64",
+      "word": "ATM",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_listening1179_59981069c56a",
+      "word": "vowel",
+      "reason": "user-curated-removal",
+      "morphologyAuditIncluded": false
+    },
+    {
+      "id": "word_6cf0c12e",
+      "word": "samphire",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_646031ef",
+      "word": "motorbike",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_79e7eec2b73f",
+      "word": "british",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fe7f29efae2f",
+      "word": "ireland",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_043a718774c5",
+      "word": "s",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_listening1179_3fc4ccfe7458",
+      "word": "two",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_0efc743ef2b8",
+      "word": "twenty-seventh",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_7358bd4ec877",
+      "word": "tesla",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_cffdc28faeaa",
+      "word": "seventy-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_06271baf4953",
+      "word": "info",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_9b9c69560bb2",
+      "word": "seventy-three",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_0bdb23f9e3ec",
+      "word": "ninety-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_1bcbce780ddd",
+      "word": "twenty-four",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_14493e55e60a",
+      "word": "seventy-nine",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_2acfc7ff4195",
+      "word": "ninety-three",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_17901bab2d97",
+      "word": "ninety-four",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_0c358e5e20b1",
+      "word": "twenty-second",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_1377c1880450",
+      "word": "seventy-eight",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_ef0f027c70f9",
+      "word": "twenty-sixth",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_ac3164d59c69",
+      "word": "twenty-five",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_412866d80035",
+      "word": "twenty-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_ee0d8e38580a",
+      "word": "thirty-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_d376c3658fc4",
+      "word": "fifty-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_07943fed3e15",
+      "word": "sixty-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_db3a6068f1db",
+      "word": "sixty-nine",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_84c4b20b93e4",
+      "word": "seventy-two",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_4dc2e8075c6c",
+      "word": "seventy-five",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_3ba5ea68a8eb",
+      "word": "seventy-six",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_16898b9b8503",
+      "word": "eighty-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_11d5b531ae2c",
+      "word": "forty-seven",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_8562e935d3b8",
+      "word": "ninety-five",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_1ceeaf17724b",
+      "word": "ninety-six",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_1a2516bbaf9c",
+      "word": "ninety-nine",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_3f79bb7b435b",
+      "word": "e",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_1b16b1df538b",
+      "word": "n",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_8257a425c487",
+      "word": "fucking",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_94b8e614ec31",
+      "word": "dna",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_123e3a97bc52",
+      "word": "australia",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_fbc71339bb00",
+      "word": "paris",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_126292fbb051",
+      "word": "iran",
       "reason": "user-curated-removal"
     }
   ]

@@ -30,6 +30,7 @@ test-results/
 blob-report/
 .playwright-cli/
 output/
+tmp/
 
 # audit / local work products (do not ship)
 reports/

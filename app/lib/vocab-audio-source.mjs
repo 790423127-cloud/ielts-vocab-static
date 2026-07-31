@@ -38,6 +38,16 @@ function isAudioIndexFile(file) {
   return path.resolve(String(file || "")) === path.resolve(audioIndexPath());
 }
 
+export function isReadableAudioFile(filepath) {
+  try {
+    if (!filepath) return false;
+    const stat = statSync(filepath);
+    return stat.isFile() && stat.size > 0;
+  } catch {
+    return false;
+  }
+}
+
 export function readJson(file, fallback = {}) {
   try {
     if (!existsSync(file)) return fallback;
@@ -629,7 +639,7 @@ export function getReadableRealAudioEntry(key, audioIndex = {}) {
   if (!isValidCachedRealAudioEntry(existing, existing.text, existing.kind || "word")) return null;
 
   const filepath = path.join(cacheDir(), existing.filename);
-  if (!existsSync(filepath)) return null;
+  if (!isReadableAudioFile(filepath)) return null;
 
   return existing;
 }
@@ -644,7 +654,7 @@ export function lookupCachedAudioEntry(text, index = {}, options = {}) {
   if (!indexed?.hasAudio || !indexed?.filename) return null;
 
   const filepath = path.join(cacheDir(), indexed.filename);
-  if (!existsSync(filepath)) return null;
+  if (!isReadableAudioFile(filepath)) return null;
 
   // Edge-only: never serve real-person cache through the public audio file API.
   if (indexed.realAudio) {
@@ -661,7 +671,7 @@ export function resolveReadableAudioEntry(text, index = {}, options = {}) {
   if (!entry) return null;
 
   const filepath = path.join(cacheDir(), entry.filename);
-  if (!existsSync(filepath)) return null;
+  if (!isReadableAudioFile(filepath)) return null;
 
   return { entry, filepath };
 }
@@ -772,7 +782,7 @@ export async function ensureEdgeAudio(text, audioIndex, options = {}) {
   const filename = `${hashText("edge", voice, rate, cleanText)}.mp3`;
   const filepath = path.join(cacheDir(), filename);
 
-  if (existsSync(filepath)) {
+  if (isReadableAudioFile(filepath)) {
     const cachedEntry = {
       ...(audioIndex[key] || {}),
       text: cleanText,
@@ -808,7 +818,7 @@ export async function ensureEdgeAudio(text, audioIndex, options = {}) {
     kind
   });
 
-  const ok = existsSync(filepath);
+  const ok = isReadableAudioFile(filepath);
   if (ok) {
     const generatedEntry = {
       ...(audioIndex[key] || {}),

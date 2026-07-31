@@ -332,6 +332,27 @@ test("lookupCachedAudioEntry reuses legacy Edge cache versions", () => {
   }
 });
 
+test("lookupCachedAudioEntry rejects a zero-byte cache file so it can be regenerated", () => {
+  const text = "empty edge cache test";
+  const key = normalizeAudioKey(text);
+  const filename = `test-empty-edge-cache-${process.pid}.mp3`;
+  const filepath = path.join(cacheDir(), filename);
+  const entry = {
+    text,
+    filename,
+    hasAudio: true,
+    realAudio: false,
+    source: "edge-generated"
+  };
+
+  fs.writeFileSync(filepath, "");
+  try {
+    assert.equal(lookupCachedAudioEntry(text, { [key]: entry }, { kind: "word" }), null);
+  } finally {
+    fs.rmSync(filepath, { force: true });
+  }
+});
+
 test("preloadSpellingSpeechTexts deduplicates personal wrong write targets", async () => {
   const originalFetch = globalThis.fetch;
   const mock = mockSpeechFetch();

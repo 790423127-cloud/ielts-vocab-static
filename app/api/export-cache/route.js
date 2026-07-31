@@ -18,6 +18,7 @@ import {
   computeLexiconHash,
   validateExportCacheWrite
 } from "../../lib/vocab/lexicon-guard.mjs";
+import { writeMasterLexiconBaseline } from "../../lib/vocab/master-lexicon-baseline-io.mjs";
 import { stripWordUserState } from "../../lib/vocab/word-cache-meta.mjs";
 
 function cacheDir() {
@@ -257,6 +258,24 @@ export async function POST(req) {
       expectedCount: words.length
     });
 
+    // Deleting / editing words changes words.json. Keep the startup baseline in
+    // lockstep so `npm run lexicon:check` and start-windows.bat do not fail
+    // after a normal local delete (they used to stop port 3000 and never restart).
+    let baselineUpdated = false;
+    try {
+      writeMasterLexiconBaseline({
+        count: words.length,
+        version,
+        fileHash: published.fileHash
+      });
+      baselineUpdated = true;
+    } catch (baselineError) {
+      console.error(
+        "[export-cache] lexicon files published, but baseline update failed:",
+        baselineError instanceof Error ? baselineError.message : baselineError
+      );
+    }
+
     return Response.json({
       ok: true,
       count: words.length,
@@ -264,7 +283,8 @@ export async function POST(req) {
       version,
       lexiconHash: prepared.payload.lexiconHash,
       integrityHash: prepared.payload.integrityHash,
-      fileHash: published.fileHash
+      fileHash: published.fileHash,
+      baselineUpdated
     });
   } catch (error) {
     return Response.json(

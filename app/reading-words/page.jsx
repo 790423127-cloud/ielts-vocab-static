@@ -30,7 +30,8 @@ import {
   isMainEntryClassificationIncomplete,
   mergeAiProfileIntoMainEntry,
   needsReadingAiProcessing,
-  reconcileReadingImportsWithMain
+  reconcileReadingImportsWithMain,
+  suggestCanonicalReadingHeadword
 } from "../lib/reading-words/main-lexicon-sync.mjs";
 import {
   buildReadingWordsTransferPackage,
@@ -65,6 +66,7 @@ import {
   buildLexiconDeletionIntent,
   formalLexiconWords
 } from "../lib/vocab/lexicon-delete-intent.mjs";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
 import styles from "./reading-words.module.css";
 
 const EMPTY_DRAFT = {
@@ -230,7 +232,8 @@ export default function ReadingWordsPage() {
       if (migration.mainChanged) {
         const nextCachedMainWords = mergeWordContentWithUserState(
           migration.mainWords,
-          activeMainWords
+          activeMainWords,
+          { includePersonalSupplements: false }
         );
         await saveWordsToIndexedDBWithBackup(
           nextCachedMainWords,
@@ -263,14 +266,22 @@ export default function ReadingWordsPage() {
           throw error;
         }
         setNotice(
-          `已将 ${migration.addedToMain} 个旧阅读生词补入正式主词库；等待 AI 扫描分类。`
+          migration.correctedHeadwords
+            ? `已纠正 ${migration.correctedHeadwords} 个断词，并将 ${migration.addedToMain} 个旧阅读生词补入正式主词库。`
+            : `已将 ${migration.addedToMain} 个旧阅读生词补入正式主词库；等待 AI 扫描分类。`
         );
       } else {
+        if (migration.readingChanged && !writeReadingWordsWithBackup(nextReadingWords, savedWords)) {
+          throw new Error("阅读生词断词纠正写入失败，原记录已保留");
+        }
         const activeIndex = buildMainWordIndex(nextMainWords);
-        nextReadingWords = savedWords.map((word) => {
+        nextReadingWords = migration.words.map((word) => {
           const linked = activeIndex.get(normalizeReadingWordKey(word.word))?.entry;
           return linked ? applyMainEntryToReadingWord(word, linked) : word;
         });
+        if (migration.correctedHeadwords) {
+          setNotice(`已自动纠正 ${migration.correctedHeadwords} 个阅读断词，并复用正式主词库资料。`);
+        }
       }
 
       if (cancelled) return;
@@ -288,6 +299,7 @@ export default function ReadingWordsPage() {
       });
       setRollbackAvailable(
         migration.mainChanged ||
+        migration.readingChanged ||
         backup?.status === "cache-hit" ||
         Boolean(readReadingWordsRollback())
       );
@@ -327,9 +339,10 @@ export default function ReadingWordsPage() {
   );
   const aiTargetWords = useMemo(() => {
     const mainIndex = mainLexiconRef.current.index;
+    const mainWords = mainLexiconRef.current.words;
     return words.filter((word) => {
       const mainEntry = mainIndex.get(normalizeReadingWordKey(word.word))?.entry;
-      return needsReadingAiProcessing(word, mainEntry);
+      return needsReadingAiProcessing(word, mainEntry, mainWords);
     });
   }, [words]);
   const mainEntryMissingWords = useMemo(() => {
@@ -434,41 +447,37 @@ export default function ReadingWordsPage() {
     setSelectedId(visibleWords[nextIndex].id);
   }, [selectedIndex, visibleWords]);
 
-  useEffect(() => {
-    function handleReadingWordNavigation(event) {
-      if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
-      const target = event.target;
-      const tagName = String(target?.tagName || "").toLowerCase();
-      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
-      if (
-        tagName === "input"
-        || tagName === "textarea"
-        || (tagName === "select" && !isHorizontalArrow)
-        || target?.isContentEditable
-      ) return;
-      if (!selectedWord || visibleWords.length < 2) return;
-
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        moveSelection(-1);
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        moveSelection(1);
-      }
-    }
-
-    window.addEventListener("keydown", handleReadingWordNavigation, true);
-    return () => window.removeEventListener("keydown", handleReadingWordNavigation, true);
-  }, [moveSelection, selectedWord, visibleWords.length]);
-
-  const patchSelectedWord = (patch) => {
+  const patchSelectedWord = useCallback((patch) => {
     if (!selectedWord) return;
-    setWords(words.map((word) => (
+    setWords((currentWords) => currentWords.map((word) => (
       word.id === selectedWord.id
         ? { ...word, ...patch, updatedAt: new Date().toISOString() }
         : word
     )));
-  };
+  }, [selectedWord]);
+
+  useEffect(() => {
+    function handleReadingWordNavigation(event) {
+      const action = getStudyKeyboardAction(event);
+      if (!action || !selectedWord) return;
+
+      if ((action === "previous" || action === "next") && visibleWords.length < 2) {
+        return;
+      }
+
+      event.preventDefault();
+      if (action === "word-audio") speak(selectedWord.word);
+      else if (action === "example-audio") speak(selectedWord.example);
+      else if (action === "previous") moveSelection(-1);
+      else if (action === "next") moveSelection(1);
+      else if (action === "known") patchSelectedWord({ status: selectedWord.status === "熟悉" ? "" : "熟悉" });
+      else if (action === "blurry") patchSelectedWord({ status: selectedWord.status === "模糊" ? "" : "模糊" });
+      else if (action === "unknown") patchSelectedWord({ status: selectedWord.status === "不熟" ? "" : "不熟" });
+    }
+
+    window.addEventListener("keydown", handleReadingWordNavigation, true);
+    return () => window.removeEventListener("keydown", handleReadingWordNavigation, true);
+  }, [moveSelection, patchSelectedWord, selectedWord, visibleWords.length]);
 
   const deleteSelectedWord = useCallback(() => {
     if (!selectedWord || aiRunning || mainWriteBusy) return;
@@ -859,45 +868,107 @@ export default function ReadingWordsPage() {
       message: "正在检查阅读生词本，不会扫描正式词库。"
     });
 
+    const failureNotes = [];
+
+    async function requestProfiles(items, { force = true, maxSplitDepth = 2 } = {}) {
+      // items: [{ id, requestWord }] — requestWord may already be canonically corrected.
+      const response = await fetch("/api/generate-words", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            inputId: item.id,
+            word: item.requestWord || item.word
+          })),
+          force,
+          maxSplitDepth,
+          // Reading notebook only needs core sense + classification, not full collocation packs.
+          profileQuality: "reading"
+        })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload?.detail || payload?.error || `HTTP ${response.status}`);
+      }
+      return payload;
+    }
+
     for (let start = 0; start < targets.length; start += 10) {
       if (aiControlRef.current.stopped) break;
       const batch = targets.slice(start, start + 10);
-      let payload;
+      // Fix import/OCR typos against master lexicon BEFORE AI (ncestors → ancestors).
+      const batchPlans = batch.map((word) => {
+        const suggestion = suggestCanonicalReadingHeadword(word.word, workingMainWords, word);
+        return {
+          id: word.id,
+          originalWord: word.word,
+          requestWord: suggestion.word || word.word,
+          corrected: Boolean(suggestion.corrected),
+          mainEntry: suggestion.mainEntry || null
+        };
+      });
+      for (const plan of batchPlans) {
+        if (plan.corrected) {
+          failureNotes.push(`${plan.originalWord} → 已纠正为 ${plan.requestWord}`);
+        }
+      }
 
+      let payload;
       try {
-        const response = await fetch("/api/generate-words", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: JSON.stringify({
-            items: batch.map((word) => ({ inputId: word.id, word: word.word })),
-            force: false,
-            maxSplitDepth: 0
-          })
-        });
-        payload = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(payload?.detail || payload?.error || `HTTP ${response.status}`);
+        // force:true avoids reusing old incomplete cache entries that never
+        // pass reading-word validation; split retries recover truncated JSON.
+        payload = await requestProfiles(batchPlans, { force: true, maxSplitDepth: 2 });
       } catch (error) {
         if (error?.name === "AbortError" || aiControlRef.current.stopped) break;
         processed += batch.length;
         failed += batch.length;
+        failureNotes.push(error?.message || "AI 请求失败");
         setAiRun({
           status: "running",
           processed,
           total: targets.length,
           filled,
           failed,
-          message: `本批失败且未重试：${error?.message || "AI 请求失败"}`
+          message: `本批失败：${error?.message || "AI 请求失败"}`
         });
         continue;
       }
 
       if (aiControlRef.current.stopped) break;
-      const profileById = new Map(
+      let profileById = new Map(
         (Array.isArray(payload?.items) ? payload.items : [])
           .map((item) => [String(item?.inputId || ""), item])
           .filter(([id]) => id)
       );
+
+      // Retry missing/invalid words one-by-one — batch invalid often hides a single hard word.
+      const missing = batchPlans.filter((plan) => !profileById.has(plan.id));
+      for (const plan of missing) {
+        if (aiControlRef.current.stopped) break;
+        try {
+          const retryPayload = await requestProfiles([plan], { force: true, maxSplitDepth: 2 });
+          for (const item of Array.isArray(retryPayload?.items) ? retryPayload.items : []) {
+            if (item?.inputId) profileById.set(String(item.inputId), item);
+          }
+          const invalidItems = retryPayload?.stats?.invalidItems;
+          if (Array.isArray(invalidItems) && invalidItems.length) {
+            failureNotes.push(
+              ...invalidItems.map((item) => `${item.word || plan.requestWord}: ${item.reason || "invalid"}`)
+            );
+          }
+        } catch (error) {
+          if (error?.name === "AbortError" || aiControlRef.current.stopped) break;
+          failureNotes.push(`${plan.requestWord}: ${error?.message || "单词重试失败"}`);
+        }
+      }
+
+      if (Array.isArray(payload?.stats?.invalidItems)) {
+        failureNotes.push(
+          ...payload.stats.invalidItems.map((item) => `${item.word || "?"}: ${item.reason || "invalid"}`)
+        );
+      }
+
       let batchFilled = 0;
       let batchFailed = 0;
       const mainIndex = buildMainWordIndex(workingMainWords);
@@ -906,18 +977,63 @@ export default function ReadingWordsPage() {
       );
       let nextMainWords = [...workingMainWords];
       const previousBatchReadingWords = workingWords;
+      const planById = new Map(batchPlans.map((plan) => [plan.id, plan]));
 
       workingWords = workingWords.map((word) => {
         if (!batch.some((entry) => entry.id === word.id)) return word;
-        const profile = profileById.get(word.id);
+        const plan = planById.get(word.id);
+        let working = word;
+        // Rename notebook headword before merge when lexicon has a better spelling.
+        if (plan?.corrected && plan.requestWord) {
+          working = {
+            ...working,
+            word: plan.requestWord,
+            updatedAt: new Date().toISOString()
+          };
+        }
+
+        let profile = profileById.get(word.id);
+        // If AI still echoed a bad spelling, force profile headword to the corrected form.
+        if (profile && plan?.corrected && plan.requestWord) {
+          profile = {
+            ...profile,
+            word: plan.requestWord,
+            correctedFrom: plan.originalWord
+          };
+        }
+
+        // Prefer reusing a complete master-lexicon entry for the corrected headword.
+        const preferredKey = normalizeReadingWordKey(plan?.requestWord || working.word);
+        let mainLocation = mainIndex.get(preferredKey);
+        if (!mainLocation && plan?.mainEntry) {
+          const ensuredIndex = nextMainWords.findIndex(
+            (entry) => normalizeReadingWordKey(entry?.word) === preferredKey
+          );
+          if (ensuredIndex >= 0) {
+            mainLocation = { entry: nextMainWords[ensuredIndex], index: ensuredIndex };
+            mainIndex.set(preferredKey, mainLocation);
+          }
+        }
+
+        if (!profile && mainLocation?.entry) {
+          // Seed a synthetic profile from the master entry so correction alone can complete.
+          profile = {
+            ...mainLocation.entry,
+            word: mainLocation.entry.word,
+            correctedFrom: plan?.originalWord || word.word,
+            aiGenerated: true,
+            source: "main-lexicon"
+          };
+        }
+
         if (!profile) {
           batchFailed += 1;
-          return word;
+          failureNotes.push(`${working.word}: AI 未返回可用资料（可能词形特殊/模型校验未通过）`);
+          return working;
         }
-        const mainWordKey = normalizeReadingWordKey(word.word);
-        let mainLocation = mainIndex.get(mainWordKey);
+
         if (!mainLocation) {
-          const ensured = ensureReadingWordMainEntry(word, nextMainWords, {
+          const ensured = ensureReadingWordMainEntry(working, nextMainWords, {
             usedIds: usedMainIds,
             now: new Date().toISOString()
           });
@@ -926,15 +1042,54 @@ export default function ReadingWordsPage() {
             entry: ensured.mainEntry,
             index: ensured.mainIndex
           };
-          mainIndex.set(mainWordKey, mainLocation);
+          mainIndex.set(normalizeReadingWordKey(working.word), mainLocation);
         }
-        const merged = mergeReadingWordAiProfile(word, profile);
-        const mergedMain = mergeAiProfileIntoMainEntry(mainLocation.entry, profile);
+
+        // Pull existing master content first (ancestors already in main lexicon).
+        working = applyMainEntryToReadingWord(working, mainLocation.entry);
+        const merged = mergeReadingWordAiProfile(working, profile);
+        let mergedMain = mergeAiProfileIntoMainEntry(mainLocation.entry, profile);
+        if (
+          merged.word &&
+          normalizeReadingWordKey(merged.word) !== normalizeReadingWordKey(mergedMain.word || "")
+        ) {
+          const previousKey = normalizeReadingWordKey(mergedMain.word || word.word);
+          mergedMain = { ...mergedMain, word: merged.word };
+          mainIndex.delete(previousKey);
+          mainIndex.set(normalizeReadingWordKey(merged.word), {
+            entry: mergedMain,
+            index: mainLocation.index
+          });
+        }
+        // Mark relation reviews when master entry already has empty-but-known relations.
+        if (Array.isArray(merged.forms) || merged.formsReviewed) {
+          merged.formsReviewed = true;
+          merged.formsReviewSource = merged.formsReviewSource || "reading-ai";
+        }
+        if (Array.isArray(merged.wordFamily) || merged.wordFamilyReviewed) {
+          merged.wordFamilyReviewed = true;
+          merged.wordFamilyReviewSource = merged.wordFamilyReviewSource || "reading-ai";
+        }
+        if (Array.isArray(merged.synonyms) || merged.synonymsReviewed) {
+          merged.synonymsReviewed = true;
+          merged.synonymsReviewSource = merged.synonymsReviewSource || "reading-ai";
+        }
+
         nextMainWords[mainLocation.index] = mergedMain;
-        if (isReadingWordIncomplete(merged) || isMainEntryClassificationIncomplete(mergedMain)) {
+        const readingMissing = getReadingWordMissingFields(merged);
+        const mainClassIncomplete = isMainEntryClassificationIncomplete(mergedMain);
+        if (readingMissing.length || mainClassIncomplete) {
           batchFailed += 1;
+          const reasons = [
+            ...readingMissing.map((field) => `缺${field}`),
+            ...(mainClassIncomplete ? ["主库缺用途/主题/难度"] : [])
+          ];
+          failureNotes.push(`${merged.word}: 写入后仍不完整（${reasons.join("、")}）`);
         } else {
           batchFilled += 1;
+          if (plan?.corrected) {
+            failureNotes.push(`已将 ${plan.originalWord} 纠正并补全为 ${merged.word}`);
+          }
         }
         return merged;
       });
@@ -1011,6 +1166,8 @@ export default function ReadingWordsPage() {
 
     if (aiControlRef.current.stopped) return;
     aiControlRef.current.controller = null;
+    const uniqueNotes = [...new Set(failureNotes)].slice(0, 6);
+    const noteText = uniqueNotes.length ? ` 原因：${uniqueNotes.join("；")}` : "";
     setAiRun({
       status: "done",
       processed,
@@ -1018,7 +1175,7 @@ export default function ReadingWordsPage() {
       filled,
       failed,
       message: failed
-        ? `补全结束：${filled} 个重新校验通过，${failed} 个仍待处理。`
+        ? `补全结束：${filled} 个通过，${failed} 个仍待处理。${noteText}`
         : `补全结束：${filled} 个重新校验通过。`
     });
   };
@@ -1089,6 +1246,7 @@ export default function ReadingWordsPage() {
           onModeChange={changeWordOrderMode}
           onDifficultyModeChange={changeWordDifficultyMode}
           difficultyAvailable={wordOrdering.difficultyAvailable}
+          difficultyProfile={wordOrdering.difficultyProfile}
         />
         <StudyMeaningToggle className={styles.secondaryButton} />
         <button type="button" className={styles.secondaryButton} onClick={() => setAddOpen((value) => !value)} disabled={actionsDisabled}>

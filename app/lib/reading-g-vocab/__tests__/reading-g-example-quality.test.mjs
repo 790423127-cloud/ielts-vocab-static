@@ -11,6 +11,10 @@ const vocab = JSON.parse(
 const repairPatch = JSON.parse(
   fs.readFileSync(path.join(root, "scripts/data/reading-g-example-repairs.json"), "utf8")
 );
+const retirements = JSON.parse(
+  fs.readFileSync(path.join(root, "public/data/reading-g-retirements.json"), "utf8")
+);
+const retiredIds = new Set((retirements.entries || []).map((entry) => entry.id).filter(Boolean));
 
 const metaExample = /^(?:You will often see the expression\b|In the passage,\s*["'].*["']\s+relates to\b|The word\s+["'].*["']\s+appears in many IELTS General Training reading texts\b)/i;
 
@@ -77,14 +81,20 @@ test("all reviewed repairs are bilingual real-usage examples", () => {
   const seenExamples = new Set();
   const issues = [];
   for (const repair of repairPatch.repairs) {
-    const item = vocab.items.find((candidate) => candidate.id === repair.id);
+    let item = vocab.items.find((candidate) => candidate.id === repair.id);
+    if (!item) {
+      item = vocab.items
+        .flatMap((candidate) => candidate.mergedEntries || [])
+        .find((candidate) => candidate.id === repair.id);
+    }
     const normalizedExample = String(repair.example || "").toLowerCase().replace(/\s+/g, " ").trim();
-    if (!item) issues.push(`${repair.id}:missing_item`);
+    if (!item && !retiredIds.has(repair.id)) issues.push(`${repair.id}:missing_item`);
     if (metaExample.test(repair.example || "")) issues.push(`${repair.id}:meta_example`);
     if (!usesTarget(repair.example, repair.word)) issues.push(`${repair.id}:target_missing`);
     if (!/[\u3400-\u9fff]/u.test(repair.exampleCn || "")) issues.push(`${repair.id}:chinese_missing`);
     if (seenExamples.has(normalizedExample)) issues.push(`${repair.id}:duplicate_example`);
-    if (item && (item.example !== repair.example || item.exampleCn !== repair.exampleCn)) {
+    const itemExampleCn = item?.exampleCn || item?.exampleZh || "";
+    if (item && (item.example !== repair.example || itemExampleCn !== repair.exampleCn)) {
       issues.push(`${repair.id}:dataset_mismatch`);
     }
     seenExamples.add(normalizedExample);

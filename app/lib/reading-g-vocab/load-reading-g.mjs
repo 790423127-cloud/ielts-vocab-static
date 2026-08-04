@@ -1,6 +1,7 @@
 import {
   DATASET_VERSION,
   READING_G_DATA_URL,
+  READING_G_VOCAB_CACHE_KEY,
   READING_G_PARAPHRASES_URL
 } from "./keys.mjs";
 import { normalizeReadingGKey } from "./normalize.mjs";
@@ -10,6 +11,12 @@ import {
   cleanExampleField
 } from "../vocab/example-clean.mjs";
 import { getPosDisplay } from "../vocab/pos-display.mjs";
+import {
+  clearSessionJson,
+  clearSessionValue,
+  loadSessionJson,
+  loadSessionValue
+} from "../browser-json-cache.mjs";
 
 export { normalizeReadingGKey } from "./normalize.mjs";
 export { displayCategoryName } from "./stages.mjs";
@@ -63,7 +70,10 @@ export function normalizeReadingGItem(entry, index = 0) {
     phraseCollocations: Array.isArray(entry.phraseCollocations)
       ? entry.phraseCollocations
       : [],
+    forms: Array.isArray(entry.forms) ? entry.forms : [],
     wordFamily: Array.isArray(entry.wordFamily) ? entry.wordFamily : [],
+    mergedAliases: Array.isArray(entry.mergedAliases) ? entry.mergedAliases : [],
+    mergedEntries: Array.isArray(entry.mergedEntries) ? entry.mergedEntries : [],
     ieltsUse: Array.isArray(entry.ieltsUse)
       ? entry.ieltsUse
       : entry.ieltsUse
@@ -86,20 +96,16 @@ export function normalizeReadingGItem(entry, index = 0) {
       ? entry.alternateMeanings
       : [],
     auditScore: Number(entry.auditScore) || 0,
-    phoneticSource: String(entry.phoneticSource || "").trim()
+    phoneticSource: String(entry.phoneticSource || "").trim(),
+    sourceWordId: String(entry.sourceWordId || "").trim(),
+    meaningDetailZh: String(entry.meaningDetailZh || "").trim(),
+    otherMeanings: Array.isArray(entry.otherMeanings) ? entry.otherMeanings : [],
+    audio: String(entry.audio || "").trim(),
+    exampleAudio: String(entry.exampleAudio || "").trim()
   };
 }
 
-/**
- * Load independent IELTS G Reading lexicon (words + phrases + layers).
- */
-export async function loadReadingGVocab(fetchImpl = fetch) {
-  const response = await fetchImpl(READING_G_DATA_URL, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`G类阅读提升词库加载失败：HTTP ${response.status}`);
-  }
-
-  const data = await response.json();
+function buildReadingGVocabPayload(data) {
   const rawList = Array.isArray(data?.items)
     ? data.items
     : Array.isArray(data?.words)
@@ -140,28 +146,60 @@ export async function loadReadingGVocab(fetchImpl = fetch) {
 }
 
 /**
+ * Load independent IELTS G Reading lexicon (words + phrases + layers).
+ */
+export async function loadReadingGVocab(fetchImpl = fetch) {
+  // G 类词库可在学习过程中删除或由 AI 补全，不能复用进入页面前的旧内存数据。
+  // 每次进入只重新读取本地 JSON；同义关系等只读大数据仍沿用会话缓存。
+  const response = await fetchImpl(READING_G_DATA_URL, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`G类阅读提升词库加载失败：HTTP ${response.status}`);
+  }
+  const data = await response.json();
+  return buildReadingGVocabPayload(data);
+}
+
+export function invalidateReadingGVocabCache() {
+  clearSessionJson(READING_G_DATA_URL);
+  clearSessionValue("reading-g-vocab:normalized");
+  clearSessionValue(READING_G_VOCAB_CACHE_KEY);
+}
+
+/**
  * Load verified paraphrase relation groups.
  */
 export async function loadReadingGParaphrases(fetchImpl = fetch) {
-  const response = await fetchImpl(READING_G_PARAPHRASES_URL, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`G类阅读提升同义关系加载失败：HTTP ${response.status}`);
-  }
-  const data = await response.json();
-  const groups = Array.isArray(data?.groups)
-    ? data.groups
-    : Array.isArray(data?.pairs)
-      ? data.pairs
-      : [];
-  return {
-    version: String(data?.version || ""),
-    count: Number.isFinite(data?.count) ? data.count : groups.length,
-    highConfidenceCount: Number.isFinite(data?.highConfidenceCount)
-      ? data.highConfidenceCount
-      : groups.filter((g) => g.confidence === "high").length,
-    policy: data?.policy || {},
-    groups
-  };
+  const useMemory = fetchImpl === fetch;
+  return loadSessionValue(
+    "reading-g-paraphrases:normalized",
+    async () => {
+      let data;
+      if (useMemory) {
+        data = await loadSessionJson(READING_G_PARAPHRASES_URL, fetchImpl, { cache: "force-cache" });
+      } else {
+        const response = await fetchImpl(READING_G_PARAPHRASES_URL, { cache: "force-cache" });
+        if (!response.ok) {
+          throw new Error(`G类阅读提升同义关系加载失败：HTTP ${response.status}`);
+        }
+        data = await response.json();
+      }
+      const groups = Array.isArray(data?.groups)
+        ? data.groups
+        : Array.isArray(data?.pairs)
+          ? data.pairs
+          : [];
+      return {
+        version: String(data?.version || ""),
+        count: Number.isFinite(data?.count) ? data.count : groups.length,
+        highConfidenceCount: Number.isFinite(data?.highConfidenceCount)
+          ? data.highConfidenceCount
+          : groups.filter((g) => g.confidence === "high").length,
+        policy: data?.policy || {},
+        groups
+      };
+    },
+    { useMemory }
+  );
 }
 
 /**
@@ -183,5 +221,8 @@ export const LAYER_META = [
   { id: "paraCore600", label: "表达识别核心" },
   { id: "tierC800", label: "C层800" },
   { id: "paraExt500", label: "表达识别扩展" },
-  { id: "reference701", label: "参考701" }
+  { id: "reference701", label: "参考701" },
+  { id: "questionBankActive", label: "全题库补充（已有资料）" },
+  { id: "questionBankAiCompleted", label: "全题库补充（AI已补全）" },
+  { id: "questionBankPending", label: "全题库待补资料" }
 ];

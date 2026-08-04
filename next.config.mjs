@@ -29,6 +29,17 @@ const nextConfig = {
             value: "camera=(), microphone=(), geolocation=()"
           }
         ]
+      },
+      // Large static lexicons under /public/data — browser may revalidate, but
+      // same-session navigations should hit disk/HTTP cache instead of re-download.
+      {
+        source: "/data/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, stale-while-revalidate=86400"
+          }
+        ]
       }
     ];
   }

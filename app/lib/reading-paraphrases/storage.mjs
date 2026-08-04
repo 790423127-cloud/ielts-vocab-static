@@ -1,6 +1,7 @@
 import { safeLocalStorageGet, safeLocalStorageSet } from "../browser-storage.mjs";
 
 export const READING_PARAPHRASE_STORAGE_KEY = "ielts_reading_paraphrases_v1";
+export const READING_PARAPHRASE_ROLLBACK_KEY = "ielts_reading_paraphrases_rollback_v1";
 export const READING_PARAPHRASE_SCHEMA_VERSION = 1;
 export const READING_PARAPHRASE_DIRECTION = {
   QUESTION_TO_SOURCE: "question-to-source",
@@ -75,6 +76,10 @@ function normalizeItem(item = {}, index = 0) {
     questionPhrase,
     sourcePhrase,
     note: text(item.note),
+    relationType: text(item.relationType ?? item.relation_type) || "direct-paraphrase",
+    externalSource: text(item.externalSource),
+    externalId: text(item.externalId),
+    externalFingerprint: text(item.externalFingerprint ?? item.fingerprint),
     confidence: Math.max(0, Math.min(1, Number(item.confidence || 0))),
     occurrenceCount: Math.max(1, Number.isFinite(declaredCount) ? declaredCount : 0, sources.length),
     sources,
@@ -156,10 +161,14 @@ export function mergeReadingParaphraseState(currentInput, incomingItems, now = D
     ? currentInput
     : createReadingParaphraseState();
   const byPair = new Map();
+  const pairByExternalId = new Map();
 
   for (const item of Array.isArray(current.items) ? current.items : []) {
     const normalized = normalizeItem(item);
-    if (normalized) byPair.set(normalized.pairKey, normalized);
+    if (normalized) {
+      byPair.set(normalized.pairKey, normalized);
+      if (normalized.externalId) pairByExternalId.set(normalized.externalId, normalized.pairKey);
+    }
   }
 
   let added = 0;
@@ -167,11 +176,18 @@ export function mergeReadingParaphraseState(currentInput, incomingItems, now = D
   for (const incoming of Array.isArray(incomingItems) ? incomingItems : []) {
     const normalized = normalizeItem(incoming);
     if (!normalized) continue;
-    const existing = byPair.get(normalized.pairKey);
+    const previousPairKey = normalized.externalId
+      ? pairByExternalId.get(normalized.externalId)
+      : undefined;
+    const existing = byPair.get(previousPairKey || normalized.pairKey);
     if (!existing) {
       byPair.set(normalized.pairKey, normalized);
+      if (normalized.externalId) pairByExternalId.set(normalized.externalId, normalized.pairKey);
       added += 1;
       continue;
+    }
+    if (previousPairKey && previousPairKey !== normalized.pairKey) {
+      byPair.delete(previousPairKey);
     }
     const sources = mergeSources(existing.sources, normalized.sources);
     byPair.set(normalized.pairKey, {
@@ -180,6 +196,10 @@ export function mergeReadingParaphraseState(currentInput, incomingItems, now = D
       questionPhrase: normalized.questionPhrase,
       sourcePhrase: normalized.sourcePhrase,
       note: normalized.note || existing.note,
+      relationType: normalized.relationType || existing.relationType,
+      externalSource: normalized.externalSource || existing.externalSource,
+      externalId: normalized.externalId || existing.externalId,
+      externalFingerprint: normalized.externalFingerprint || existing.externalFingerprint,
       confidence: Math.max(existing.confidence, normalized.confidence),
       occurrenceCount: Math.max(existing.occurrenceCount, normalized.occurrenceCount, sources.length),
       sources,
@@ -187,6 +207,7 @@ export function mergeReadingParaphraseState(currentInput, incomingItems, now = D
       updatedAt: normalized.updatedAt || existing.updatedAt,
       study: newestStudy(existing.study, normalized.study)
     });
+    if (normalized.externalId) pairByExternalId.set(normalized.externalId, normalized.pairKey);
     updated += 1;
   }
 
@@ -258,4 +279,17 @@ export function saveReadingParaphraseState(state) {
       updatedAt: Number(state?.updatedAt || Date.now())
     })
   );
+}
+
+export function saveReadingParaphraseStateWithBackup(state, previousState) {
+  const backupSaved = safeLocalStorageSet(
+    READING_PARAPHRASE_ROLLBACK_KEY,
+    JSON.stringify({
+      ...createReadingParaphraseState(),
+      ...(previousState || {}),
+      schemaVersion: READING_PARAPHRASE_SCHEMA_VERSION,
+      backedUpAt: Date.now()
+    })
+  );
+  return backupSaved && saveReadingParaphraseState(state);
 }

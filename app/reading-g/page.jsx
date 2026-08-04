@@ -6,11 +6,18 @@ import StableLoadingState from "../components/StableLoadingState";
 import { useOrderedStudyRows } from "../hooks/useOrderedStudyRows.js";
 import {
   LAYER_META,
+  invalidateReadingGVocabCache,
   loadReadingGParaphrases,
   loadReadingGVocab,
+  normalizeReadingGItem,
   normalizeReadingGKey
 } from "../lib/reading-g-vocab/load-reading-g.mjs";
 import { migrateReadingGProgress } from "../lib/reading-g-vocab/migration.mjs";
+import {
+  isReadingGContentComplete,
+  isReadingGContentIncomplete
+} from "../lib/reading-g-vocab/content-completeness.mjs";
+import { countStageUniques } from "../lib/reading-g-vocab/stages.mjs";
 import {
   DEFAULT_SESSION_MODE,
   PARA_SESSION_SIZE,
@@ -79,12 +86,36 @@ import {
   fetchSpeechAudioResult,
   preloadSpeechAudioUrl
 } from "../lib/vocab-speech.mjs";
+import { DELETE_CURRENT_WORD_EVENT } from "../lib/vocab/delete-current-word-request.mjs";
+import { shouldHandleStudyDeleteShortcut } from "../lib/vocab/study-keyboard-shortcuts.mjs";
+import {
+  advanceStudyQueueAfterDelete,
+  advanceStudyQueueAfterExit,
+  resolveCurrentStudyEntryId
+} from "../lib/vocab/study-queue-delete.mjs";
+import { wordStudyIndexAtPosition } from "../lib/vocab/word-study-position.mjs";
 import {
   playSpeechAudio,
   resolveSpeechPlaybackOptions
 } from "../lib/speech-audio-playback.mjs";
 
 const DEFAULT_FILTER = { type: "pathStage", value: "1" };
+const AI_COMPLETION_BATCH_SIZE = 10;
+
+function isPendingAiCompletionEntry(entry) {
+  return (
+    entry?.primaryLayer === "questionBankPending" &&
+    entry?.studyMode === "reference" &&
+    (entry.qualityFlags || []).includes("missing_master_lexicon")
+  );
+}
+
+function prioritizeCurrentAiTarget(entries, currentId) {
+  const current = entries.find((entry) => entry.id === currentId);
+  return current
+    ? [current, ...entries.filter((entry) => entry.id !== current.id)]
+    : entries;
+}
 
 export default function ReadingGVocabPage() {
   const [phase, setPhase] = useState("loading");
@@ -100,11 +131,26 @@ export default function ReadingGVocabPage() {
   });
   const [error, setError] = useState("");
   const [index, setIndex] = useState(0);
+  /** Stable focus for the card on screen — navigation/delete use this, not raw items index. */
+  const [currentEntryId, setCurrentEntryId] = useState("");
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [statusMap, setStatusMap] = useState({});
   const [paraStatusMap, setParaStatusMap] = useState({});
   const [search, setSearch] = useState("");
   const [toast, setToast] = useState("");
+  const [aiRunning, setAiRunning] = useState(false);
+  const [aiAutoRunning, setAiAutoRunning] = useState(false);
+  const [aiMessage, setAiMessage] = useState("");
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  /**
+   * When non-null, this freezes the visible study queue for rapid deletes so we do
+   * NOT re-run easy→hard ordering (~60ms+) on every keypress. Cleared on filter/order change.
+   */
+  const [studyQueueOverride, setStudyQueueOverride] = useState(null);
+  /** Session-long soft deletes so clearing the freeze does not revive removed cards. */
+  const deletedIdsRef = useRef(new Set());
+  /** Authoritative freeze queue for rapid D/Delete — not overwritten by stale renders. */
+  const frozenStudyQueueRef = useRef(null);
   const [dailyCount, setDailyCount] = useState(0);
   const [migrationInfo, setMigrationInfo] = useState(null);
 
@@ -127,6 +173,26 @@ export default function ReadingGVocabPage() {
   const storageReadyRef = useRef(false);
   const positionsRef = useRef({});
   const restoredRef = useRef(false);
+  const deleteLockRef = useRef(false);
+  /** Always-current snapshot for rapid D/Delete (avoids stale closure). */
+  const liveDeleteRef = useRef({
+    items: [],
+    index: 0,
+    currentEntryId: "",
+    studyList: [],
+    filter: DEFAULT_FILTER,
+    phase: "loading",
+    isQuizMode: false,
+    aiRunning: false,
+    isStudyEmpty: true
+  });
+  /** Ids waiting for a batched disk write (merged while the user keeps deleting). */
+  const pendingPersistIdsRef = useRef(new Set());
+  /** Removed entry snapshots for restore if a batch flush fails. */
+  const pendingPersistEntriesRef = useRef(new Map());
+  const persistTimerRef = useRef(0);
+  const persistInFlightRef = useRef(false);
+  const aiAutoStopRef = useRef(false);
 
   const isQuizMode = filter.type === "paraphraseQuiz";
   const learnMode = useMemo(() => {
@@ -166,6 +232,8 @@ export default function ReadingGVocabPage() {
         const savedPara = readRgParaphraseStatusMap();
         const savedReview = readRgParaphraseReview();
         const savedParaSession = readRgParaphraseSession();
+        const shouldResumeParaphraseOnLoad =
+          Boolean(savedParaSession) && savedSession?.filter?.type === "paraphraseQuiz";
 
         positionsRef.current = savedPositions || {};
         setStatusMap(savedStatus);
@@ -175,7 +243,9 @@ export default function ReadingGVocabPage() {
           setResumeOffer(savedParaSession);
           const resumeMode = savedParaSession.mode === "wrongReview" ? "guided" : savedParaSession.mode;
           setQuizSessionMode(resumeMode);
-          setFilter({ type: "paraphraseQuiz", value: "", sessionMode: resumeMode });
+          if (shouldResumeParaphraseOnLoad) {
+            setFilter({ type: "paraphraseQuiz", value: "", sessionMode: resumeMode });
+          }
         }
         setDailyCount(savedDaily);
         setItems(loaded.items);
@@ -209,17 +279,49 @@ export default function ReadingGVocabPage() {
           );
         }
 
+        // Restore study filter + word position. Soft-delete sessions may point at a
+        // removed id — fall back to per-filter position, then first study row.
+        const sessionIsQuiz = shouldResumeParaphraseOnLoad;
+        const restoreFilter =
+          !sessionIsQuiz
+          && savedSession?.filter
+          && typeof savedSession.filter === "object"
+          && savedSession.filter.type
+            ? savedSession.filter
+            : DEFAULT_FILTER;
+        if (!sessionIsQuiz && restoreFilter !== DEFAULT_FILTER) {
+          const sameDefault =
+            restoreFilter.type === DEFAULT_FILTER.type
+            && String(restoreFilter.value || "") === String(DEFAULT_FILTER.value || "");
+          if (!sameDefault) setFilter(restoreFilter);
+        }
         const restoreKey =
-          savedSession?.wordKey ||
-          positionsRef.current[filterKey(DEFAULT_FILTER)] ||
+          (!sessionIsQuiz && savedSession?.wordKey) ||
+          positionsRef.current[filterKey(restoreFilter)] ||
           "";
-        if (restoreKey && savedSession?.filter?.type !== "paraphraseQuiz") {
-          const found = loaded.items.findIndex(
-            (row) =>
-              getEntryProgressKey(row) === restoreKey ||
-              normalizeReadingGKey(row.word) === restoreKey
-          );
-          if (found >= 0) setIndex(found);
+        if (!sessionIsQuiz) {
+          let found = -1;
+          if (restoreKey) {
+            found = loaded.items.findIndex(
+              (row) =>
+                getEntryProgressKey(row) === restoreKey ||
+                normalizeReadingGKey(row.word) === restoreKey
+            );
+          }
+          if (found < 0) {
+            const restoreMode = resolveLearnMode(undefined, null, restoreFilter);
+            const fallbackList = buildRgStudyList(
+              loaded.items,
+              restoreFilter,
+              savedStatus,
+              restoreMode
+            );
+            found = fallbackList[0]?.originalIndex ?? -1;
+          }
+          if (found >= 0) {
+            setIndex(found);
+            setCurrentEntryId(String(loaded.items[found]?.id || "").trim());
+          }
         }
         restoredRef.current = true;
       } catch (err) {
@@ -260,9 +362,10 @@ export default function ReadingGVocabPage() {
 
   const baseStudyList = useMemo(() => {
     if (isQuizMode) return [];
+    let list;
     if (filter.type === "paraphrase") {
       const keys = new Set();
-      const list = [];
+      list = [];
       for (const g of verifiedParas) {
         const surfaces = [g.anchor, ...(g.members || [])];
         for (const s of surfaces) {
@@ -277,23 +380,38 @@ export default function ReadingGVocabPage() {
           }
         }
       }
-      return list;
+    } else {
+      list = buildRgStudyList(items, filter, statusMap, learnMode);
     }
-    return buildRgStudyList(items, filter, statusMap, learnMode);
-  }, [items, filter, statusMap, verifiedParas, isQuizMode, learnMode]);
+    if (!deletedIdsRef.current.size) return list;
+    return list.filter((row) => row?.entry?.id && !deletedIdsRef.current.has(row.entry.id));
+  }, [items, filter, statusMap, verifiedParas, isQuizMode, learnMode, studyQueueOverride]);
   const wordOrdering = useOrderedStudyRows({
     orderKey: `reading-g:${filterKey(filter)}:${learnMode}`,
     rows: baseStudyList,
     pool: items,
     currentIndex: index,
-    enabled: !isQuizMode
+    // While a delete burst freezes the queue, skip expensive reorder work.
+    enabled: !isQuizMode && !studyQueueOverride && !frozenStudyQueueRef.current
   });
-  const studyList = wordOrdering.rows;
+  // Prefer the freeze ref (sync for rapid deletes) then React state override.
+  // Note: empty array is truthy — freeze path always stores null when empty.
+  const studyList = frozenStudyQueueRef.current || studyQueueOverride || wordOrdering.rows;
 
-  const currentStudyPosition = useMemo(
-    () => studyList.findIndex((row) => row.originalIndex === index),
-    [studyList, index]
+  const activeEntryId = useMemo(
+    () => resolveCurrentStudyEntryId({
+      focusEntryId: currentEntryId,
+      studyList,
+      items,
+      index
+    }),
+    [currentEntryId, studyList, items, index]
   );
+
+  const currentStudyPosition = useMemo(() => {
+    if (!activeEntryId) return -1;
+    return studyList.findIndex((row) => String(row?.entry?.id || "").trim() === activeEntryId);
+  }, [studyList, activeEntryId]);
   const safeStudyPosition = isQuizMode
     ? Math.min(quizPos, Math.max(0, (paraSession?.baseGroupCount || quizQueue.length || 1) - 1))
     : currentStudyPosition >= 0
@@ -325,23 +443,33 @@ export default function ReadingGVocabPage() {
         senses: []
       };
     }
-    const baseItem = isStudyEmpty
-      ? {
-          word: phase === "loading" ? "正在读取 G类阅读提升词库" : "完成",
-          phonetic: "",
-          pos: "",
-          meaning: phase === "loading" ? "请稍候" : "当前范围没有待学内容",
-          example: "",
-          exampleCn: "",
-          definition: "",
-          entryType: "word",
-          domain: "",
-          layers: [],
-          senses: []
-        }
-      : items[index] || studyList[0]?.entry || {};
-    return baseItem;
-  }, [isQuizMode, quizQuestion, quizRevealed, isStudyEmpty, phase, items, index, studyList]);
+    if (isStudyEmpty) {
+      return {
+        word: phase === "loading" ? "正在读取 G类阅读提升词库" : "完成",
+        phonetic: "",
+        pos: "",
+        meaning: phase === "loading" ? "请稍候" : "当前范围没有待学内容",
+        example: "",
+        exampleCn: "",
+        definition: "",
+        entryType: "word",
+        domain: "",
+        layers: [],
+        senses: []
+      };
+    }
+    // Card content always follows the focused entry id inside the active study queue.
+    // Never fall back to studyList[0] — that is the classic "delete jumps to first word" bug.
+    if (activeEntryId) {
+      const focused =
+        studyList.find((row) => String(row?.entry?.id || "").trim() === activeEntryId)?.entry
+        || items.find((entry) => String(entry?.id || "").trim() === activeEntryId)
+        || null;
+      if (focused) return focused;
+    }
+    const byIndex = studyList.find((row) => row.originalIndex === index)?.entry;
+    return byIndex || items[index] || {};
+  }, [isQuizMode, quizQuestion, quizRevealed, isStudyEmpty, phase, items, index, studyList, activeEntryId]);
 
   const relatedParas = useMemo(() => {
     if (!item?.word || isQuizMode) return [];
@@ -351,6 +479,25 @@ export default function ReadingGVocabPage() {
       return all.includes(nk);
     });
   }, [item?.word, verifiedParas, isQuizMode]);
+
+  const questionBankCompleteCount = useMemo(
+    () => items.filter((entry) => (
+      entry.primaryLayer === "questionBankActive" && isReadingGContentComplete(entry)
+    )).length,
+    [items]
+  );
+  const incompleteContentEntries = useMemo(
+    () => items.filter(isReadingGContentIncomplete),
+    [items]
+  );
+  const questionBankAiCompletedCount = useMemo(
+    () => items.filter((entry) => entry.primaryLayer === "questionBankAiCompleted").length,
+    [items]
+  );
+  const pendingAiEntries = useMemo(
+    () => items.filter(isPendingAiCompletionEntry),
+    [items]
+  );
 
   const prevItem = isQuizMode
     ? null
@@ -389,20 +536,33 @@ export default function ReadingGVocabPage() {
 
   const familiarCount = statusCounts.meaningFamiliar;
 
+  const stageTotals = useMemo(() => countStageUniques(items), [items]);
+
   const learningEntryGroups = useMemo(() => {
     return RG_LEARNING_ENTRIES.map((group) => ({
       ...group,
-      items: group.items.map((entry) => ({
-        ...entry,
-        count:
+      items: group.items.map((entry) => {
+        const count =
           entry.filter.type === "paraphrase"
             ? verifiedParas.length
             : entry.filter.type === "paraphraseQuiz"
               ? highQuizParas.length
-            : buildRgStudyList(items, entry.filter, statusMap, learnMode).length
-      }))
+              : buildRgStudyList(items, entry.filter, statusMap, learnMode).length;
+        const stageTotal = entry.filter.type === "pathStage"
+          ? stageTotals[`stage${entry.filter.value}`]
+          : null;
+        return {
+          ...entry,
+          count,
+          countLabel: Number.isInteger(stageTotal)
+            ? entry.filter.value === "4" || stageTotal === count
+              ? `范围 ${stageTotal.toLocaleString()} 个`
+              : `范围 ${stageTotal.toLocaleString()} · 当前待学 ${count.toLocaleString()} 个`
+            : undefined
+        };
+      })
     }));
-  }, [items, statusMap, highQuizParas, verifiedParas, learnMode]);
+  }, [items, statusMap, highQuizParas, verifiedParas, learnMode, stageTotals]);
 
   const libraryRows = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -418,7 +578,7 @@ export default function ReadingGVocabPage() {
   }, [items, search]);
 
   const persistSession = useCallback(
-    (nextIndex, nextFilter = filter) => {
+    (nextIndex, nextFilter = filter, entryOverride = null) => {
       if (!storageReadyRef.current || !restoredRef.current) return;
       if (nextFilter.type === "paraphraseQuiz") {
         writeRgSession({
@@ -430,9 +590,16 @@ export default function ReadingGVocabPage() {
         });
         return;
       }
-      const row = items[nextIndex];
-      if (!row) return;
+      // Prefer explicit entry (delete path) so soft-deleted queue freezes still save the right word.
+      const row =
+        entryOverride ||
+        items[nextIndex] ||
+        (Array.isArray(studyQueueOverride)
+          ? studyQueueOverride.find((r) => r?.originalIndex === nextIndex)?.entry
+          : null);
+      if (!row || (row.id && deletedIdsRef.current.has(row.id))) return;
       const key = getEntryProgressKey(row) || normalizeReadingGKey(row.word);
+      if (!key) return;
       positionsRef.current[filterKey(nextFilter)] = key;
       writeRgPositions(positionsRef.current);
       writeRgSession({
@@ -442,21 +609,112 @@ export default function ReadingGVocabPage() {
         savedAt: new Date().toISOString()
       });
     },
-    [filter, items, quizPos]
+    [filter, items, quizPos, studyQueueOverride]
+  );
+
+  const studyIndices = useMemo(
+    () => studyList.map((row) => row.originalIndex),
+    [studyList]
+  );
+
+  const focusStudyRow = useCallback((row, nextFilter = filter) => {
+    if (!row?.entry) return;
+    const id = String(row.entry.id || "").trim();
+    let originalIndex = Number.isInteger(row.originalIndex) ? row.originalIndex : -1;
+    if (originalIndex < 0 && id) {
+      originalIndex = items.findIndex((entry) => String(entry?.id || "").trim() === id);
+    }
+    if (id) setCurrentEntryId(id);
+    if (originalIndex >= 0) setIndex(originalIndex);
+    if (originalIndex >= 0) persistSession(originalIndex, nextFilter, row.entry);
+  }, [filter, items, persistSession]);
+
+  useEffect(() => {
+    if (
+      phase !== "ready" ||
+      isQuizMode ||
+      !storageReadyRef.current ||
+      !restoredRef.current ||
+      frozenStudyQueueRef.current ||
+      studyQueueOverride
+    ) {
+      return;
+    }
+    if (!studyList.length) {
+      if (currentEntryId) setCurrentEntryId("");
+      return;
+    }
+
+    const focusedId = String(currentEntryId || "").trim();
+    if (
+      focusedId &&
+      studyList.some((row) => String(row?.entry?.id || "").trim() === focusedId)
+    ) {
+      return;
+    }
+
+    const cursorRow = Number.isInteger(wordOrdering.cursorIndex)
+      ? studyList.find((row) => row.originalIndex === wordOrdering.cursorIndex)
+      : null;
+    const indexRow = Number.isInteger(index)
+      ? studyList.find((row) => row.originalIndex === index)
+      : null;
+    const row = cursorRow || indexRow || studyList[0] || null;
+    if (row?.entry) focusStudyRow(row);
+  }, [
+    currentEntryId,
+    focusStudyRow,
+    index,
+    isQuizMode,
+    phase,
+    studyList,
+    studyQueueOverride,
+    wordOrdering.cursorIndex
+  ]);
+
+  const freezeStudyQueueRows = useCallback((rows) => {
+    const nextRows = Array.isArray(rows) && rows.length ? rows : null;
+    frozenStudyQueueRef.current = nextRows;
+    setStudyQueueOverride(nextRows);
+  }, []);
+
+  const clearStudyQueueFreeze = useCallback(() => {
+    freezeStudyQueueRows(null);
+  }, [freezeStudyQueueRows]);
+
+  const seekStudyPosition = useCallback((position) => {
+    if (isQuizMode) return;
+    const targetIndex = wordStudyIndexAtPosition(studyIndices, position);
+    if (!Number.isInteger(targetIndex)) return;
+    const row = studyList.find((r) => r.originalIndex === targetIndex)
+      || studyList[position - 1]
+      || null;
+    if (row) focusStudyRow(row);
+    else {
+      setIndex(targetIndex);
+      persistSession(targetIndex);
+    }
+  }, [isQuizMode, persistSession, studyIndices, studyList, focusStudyRow]);
+  const getStudyPositionPreview = useCallback(
+    (position) => studyList[position - 1]?.entry?.word || "",
+    [studyList]
   );
 
   const changeWordOrderMode = useCallback((nextMode) => {
+    // Drop delete freeze so the new ordering can take over.
+    clearStudyQueueFreeze();
     const nextIndex = wordOrdering.changeMode(nextMode);
     if (!Number.isInteger(nextIndex)) return;
-    setIndex(nextIndex);
-    persistSession(nextIndex);
-  }, [persistSession, wordOrdering]);
+    const row = { originalIndex: nextIndex, entry: items[nextIndex] };
+    focusStudyRow(row);
+  }, [clearStudyQueueFreeze, focusStudyRow, items, wordOrdering]);
   const changeWordDifficultyMode = useCallback((nextMode) => {
+    clearStudyQueueFreeze();
     const nextIndex = wordOrdering.changeDifficultyMode(nextMode);
     if (!Number.isInteger(nextIndex)) return;
-    setIndex(nextIndex);
-    persistSession(nextIndex);
-  }, [persistSession, wordOrdering]);
+    const row = { originalIndex: nextIndex, entry: items[nextIndex] };
+    focusStudyRow(row);
+  }, [clearStudyQueueFreeze, focusStudyRow, items, wordOrdering]);
 
   const speakText = useCallback(async (text, kind = "word") => {
     const value = String(text || "").trim();
@@ -587,10 +845,17 @@ export default function ReadingGVocabPage() {
       return;
     }
     if (!studyList.length) return;
-    const nextPos = (safeStudyPosition + delta + studyList.length) % studyList.length;
-    const nextIndex = studyList[nextPos].originalIndex;
-    setIndex(nextIndex);
-    persistSession(nextIndex);
+    // Prefer stable id — never fall back to queue head (that feels like a random jump).
+    const currentId = activeEntryId || item?.id || items[index]?.id || "";
+    let pos = studyList.findIndex((row) => String(row?.entry?.id || "").trim() === String(currentId || "").trim());
+    if (pos < 0) {
+      pos = studyList.findIndex((row) => row.originalIndex === index);
+    }
+    if (pos < 0) {
+      pos = Math.min(Math.max(0, safeStudyPosition), studyList.length - 1);
+    }
+    const nextPos = (pos + delta + studyList.length) % studyList.length;
+    focusStudyRow(studyList[nextPos]);
   }
 
   function setLibraryFilter(nextFilter) {
@@ -648,8 +913,17 @@ export default function ReadingGVocabPage() {
       });
       if (found) nextIndex = found.originalIndex;
     }
-    setIndex(nextIndex);
-    persistSession(nextIndex, nextFilter);
+    clearStudyQueueFreeze();
+    const nextRow = {
+      originalIndex: nextIndex,
+      entry: items[nextIndex] || null
+    };
+    if (nextRow.entry) focusStudyRow(nextRow, nextFilter);
+    else {
+      setIndex(nextIndex);
+      setCurrentEntryId(String(items[nextIndex]?.id || "").trim());
+      persistSession(nextIndex, nextFilter);
+    }
     setToast((t) =>
       nextFilter.type === "reference" ||
       nextFilter.type === "paraphrase" ||
@@ -657,6 +931,146 @@ export default function ReadingGVocabPage() {
         ? t
         : `已切换：${getRgFilterLabel(nextFilter)}`
     );
+  }
+
+  function applyAiCompletionResult(result, sourceItems) {
+    const updatedById = new Map(
+      (result.updatedEntries || []).map((entry, entryIndex) => [
+        entry.id,
+        normalizeReadingGItem(entry, entryIndex)
+      ])
+    );
+    const nextItems = sourceItems.map((entry) => updatedById.get(entry.id) || entry);
+    invalidateReadingGVocabCache();
+    setItems(nextItems);
+    if (result.totals) {
+      setMeta((current) => ({
+        ...current,
+        count: result.totals.count,
+        wordCount: result.totals.wordCount,
+        phraseCount: result.totals.phraseCount,
+        activeCount: result.totals.activeCount,
+        referenceCount: result.totals.referenceCount
+      }));
+    }
+
+    const nextPendingIndex = nextItems.findIndex(isPendingAiCompletionEntry);
+    setFilter({ type: "primaryLayer", value: "questionBankPending" });
+    const aiIndex = nextPendingIndex >= 0 ? nextPendingIndex : 0;
+    setIndex(aiIndex);
+    setCurrentEntryId(String(nextItems[aiIndex]?.id || "").trim());
+    return nextItems;
+  }
+
+  async function requestAiCompletionBatch(targets, sourceItems) {
+    setAiMessage(`正在补全：${targets.map((entry) => entry.word).join("、")}`);
+    const response = await fetch("/api/reading-g/complete-pending", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entryIds: targets.map((entry) => entry.id) })
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || result.detail || "G类待补词AI补全失败");
+    }
+    return {
+      result,
+      nextItems: applyAiCompletionResult(result, sourceItems)
+    };
+  }
+
+  function stopAutoAiCompletion() {
+    aiAutoStopRef.current = true;
+    const message = "已请求停止：当前批完成后不再继续自动补全";
+    setAiMessage(message);
+    setToast(message);
+  }
+
+  async function runPendingAiCompletion({ currentOnly = false, autoAll = false } = {}) {
+    if (aiRunning) return;
+    const prioritizedPending = prioritizeCurrentAiTarget(pendingAiEntries, item?.id);
+    const currentPending = prioritizedPending.find((entry) => entry.id === item?.id);
+    const targets = autoAll
+      ? prioritizedPending
+      : currentOnly
+      ? (currentPending ? [currentPending] : [])
+      : prioritizedPending.slice(0, AI_COMPLETION_BATCH_SIZE);
+
+    if (!targets.length) {
+      setToast(currentOnly ? "当前词不是待补词，请先点击“待补词”" : "没有需要AI补全的G类待补词");
+      return;
+    }
+
+    const confirmed = autoAll
+      ? window.confirm(
+          `准备自动补全全部 ${targets.length} 个G类待补词，预计 ${Math.ceil(targets.length / AI_COMPLETION_BATCH_SIZE)} 批，每批最多 ${AI_COMPLETION_BATCH_SIZE} 词、1次请求、顺序执行不并发。\n\n` +
+          "只写回G类阅读词库，不修改总词库和学习进度。缓存命中不调用付费模型；未命中会调用 DeepSeek，可能产生费用。开始后可点“停止自动补全”，当前批完成后不再继续；失败词本轮不自动重试。\n\n确定继续吗？"
+        )
+      : window.confirm(
+          `准备补全 ${targets.length} 个G类待补词：${targets.map((entry) => entry.word).join("、")}\n\n` +
+          "只写回G类阅读词库，不修改总词库和学习进度。缓存未命中时会调用 DeepSeek API，可能产生费用；本批最多发起1次请求，不自动重试。\n\n确定继续吗？"
+        );
+    if (!confirmed) return;
+
+    try {
+      setAiRunning(true);
+      setAiAutoRunning(autoAll);
+      aiAutoStopRef.current = false;
+
+      let workingItems = items;
+      let remainingTargets = targets;
+      let completedTotal = 0;
+      let cacheHitTotal = 0;
+      let deepseekTotal = 0;
+      let failedTotal = 0;
+      let lastPendingCount = pendingAiEntries.length;
+      const attemptedIds = new Set();
+      const plannedTotal = targets.length;
+      let batchNumber = 0;
+
+      do {
+        const batch = remainingTargets.slice(0, AI_COMPLETION_BATCH_SIZE);
+        batchNumber += 1;
+        batch.forEach((entry) => attemptedIds.add(entry.id));
+        if (autoAll) {
+          setAiMessage(
+            `自动补全第 ${batchNumber} 批：${batch.map((entry) => entry.word).join("、")}（已完成 ${completedTotal}/${plannedTotal}）`
+          );
+        }
+
+        const { result, nextItems } = await requestAiCompletionBatch(batch, workingItems);
+        workingItems = nextItems;
+        const stats = result.stats || {};
+        completedTotal += Number(stats.completed) || 0;
+        cacheHitTotal += Number(stats.cacheHit) || 0;
+        deepseekTotal += Number(stats.deepseek) || 0;
+        failedTotal += Number(stats.failed) || 0;
+        lastPendingCount =
+          result.totals?.pendingCount ??
+          items.filter(isPendingAiCompletionEntry).length - completedTotal;
+
+        if (!autoAll) break;
+        remainingTargets = prioritizeCurrentAiTarget(
+          workingItems.filter(isPendingAiCompletionEntry),
+          item?.id
+        ).filter((entry) => !attemptedIds.has(entry.id));
+      } while (autoAll && remainingTargets.length && !aiAutoStopRef.current);
+
+      const stopped = autoAll && aiAutoStopRef.current;
+      const message = autoAll
+        ? `${stopped ? "自动补全已停止" : "自动补全完成"}：完成 ${completedTotal}/${plannedTotal}，缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，失败/跳过 ${failedTotal}，仍待补 ${lastPendingCount}`
+        : `AI补全完成 ${completedTotal} 个：缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，仍待补 ${lastPendingCount}`;
+      setAiMessage(message);
+      setToast(message);
+    } catch (error) {
+      const message = error?.message || "G类待补词AI补全失败";
+      setAiMessage(message);
+      setToast(message);
+    } finally {
+      aiAutoStopRef.current = false;
+      setAiAutoRunning(false);
+      setAiRunning(false);
+    }
   }
 
   function markStatus(status) {
@@ -706,14 +1120,40 @@ export default function ReadingGVocabPage() {
 
     window.setTimeout(() => {
       const nextList = buildRgStudyList(items, filter, nextMap, mode);
-      if (!nextList.length) return;
-      const stillHere = nextList.some((row) => row.originalIndex === index);
+      const stillHere = nextList.some((row) => String(row?.entry?.id || "").trim() === activeEntryId);
       if (!stillHere) {
-        const nextIndex =
-          nextList[Math.min(safeStudyPosition, nextList.length - 1)]?.originalIndex ??
-          nextList[0].originalIndex;
-        setIndex(nextIndex);
-        persistSession(nextIndex);
+        const advanced = advanceStudyQueueAfterExit(studyList, activeEntryId, nextList);
+        if (advanced) freezeStudyQueueRows(advanced.nextList);
+        const row =
+          advanced?.landingRow
+          || nextList[Math.min(safeStudyPosition, Math.max(0, nextList.length - 1))]
+          || nextList[0]
+          || null;
+        if (row) {
+          const landingId = String(row.entry?.id || "").trim();
+          const landingIndex = Number.isInteger(row.originalIndex) ? row.originalIndex : 0;
+          liveDeleteRef.current = {
+            ...liveDeleteRef.current,
+            index: landingIndex,
+            currentEntryId: landingId,
+            studyList: advanced?.nextList || nextList,
+            isStudyEmpty: false,
+            safeStudyPosition: Math.max(0, advanced?.landingPos ?? safeStudyPosition)
+          };
+          focusStudyRow(row);
+        } else {
+          freezeStudyQueueRows(null);
+          setCurrentEntryId("");
+          setIndex(0);
+          liveDeleteRef.current = {
+            ...liveDeleteRef.current,
+            index: 0,
+            currentEntryId: "",
+            studyList: [],
+            isStudyEmpty: true,
+            safeStudyPosition: 0
+          };
+        }
       } else if (nextStatus === RG_STATUS.FAMILIAR) {
         goToStudyOffset(1);
       }
@@ -756,8 +1196,7 @@ export default function ReadingGVocabPage() {
     }
     if (!studyList.length) return;
     const pick = studyList[Math.floor(Math.random() * studyList.length)];
-    setIndex(pick.originalIndex);
-    persistSession(pick.originalIndex);
+    focusStudyRow(pick);
     setToast("已随机跳转");
   }
 
@@ -901,6 +1340,247 @@ export default function ReadingGVocabPage() {
     setToast(`错题复习 · ${ids.length} 组`);
   }
 
+  function flushPendingReadingGDeletes() {
+    if (persistInFlightRef.current) return;
+    const ids = [...pendingPersistIdsRef.current];
+    if (!ids.length) {
+      setDeleteBusy(false);
+      return;
+    }
+    pendingPersistIdsRef.current = new Set();
+    persistInFlightRef.current = true;
+    setDeleteBusy(true);
+    invalidateReadingGVocabCache();
+
+    fetch("/api/reading-g/delete-entry", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entryIds: ids })
+    })
+      .then(async (response) => {
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || "删除当前G类词条失败");
+        }
+        invalidateReadingGVocabCache();
+        for (const id of ids) pendingPersistEntriesRef.current.delete(id);
+        if (result.totals) {
+          setMeta((current) => ({
+            ...current,
+            count: result.totals.count,
+            wordCount: result.totals.wordCount,
+            phraseCount: result.totals.phraseCount,
+            activeCount: result.totals.activeCount,
+            referenceCount: result.totals.referenceCount
+          }));
+        }
+        const count = Number(result.deletedCount) || ids.length;
+        if (count > 1) setToast(`已删除 ${count} 个词`);
+        else {
+          const word = result.deleted?.[0]?.word || "";
+          setToast(word ? `已删除：${word}` : "已删除");
+        }
+      })
+      .catch((error) => {
+        for (const id of ids) {
+          deletedIdsRef.current.delete(id);
+          pendingPersistIdsRef.current.delete(id);
+        }
+        const restoredRows = ids
+          .map((id) => pendingPersistEntriesRef.current.get(id))
+          .filter(Boolean);
+        for (const id of ids) pendingPersistEntriesRef.current.delete(id);
+        if (restoredRows.length) {
+          setStudyQueueOverride((current) => {
+            const list = Array.isArray(current) ? current.slice() : [];
+            const have = new Set(list.map((row) => row?.entry?.id).filter(Boolean));
+            const prefix = [];
+            for (const row of restoredRows) {
+              if (have.has(row.entry?.id)) continue;
+              prefix.push(row);
+              have.add(row.entry?.id);
+            }
+            const merged = prefix.length ? [...prefix, ...list] : list;
+            frozenStudyQueueRef.current = merged.length ? merged : null;
+            return merged.length ? merged : null;
+          });
+        }
+        setToast(`${error?.message || "批量删除失败"}；已放回 ${ids.length} 个词`);
+      })
+      .finally(() => {
+        persistInFlightRef.current = false;
+        if (pendingPersistIdsRef.current.size) {
+          persistTimerRef.current = window.setTimeout(() => {
+            flushPendingReadingGDeletes();
+          }, 80);
+        } else {
+          setDeleteBusy(false);
+        }
+      });
+  }
+
+  function scheduleReadingGDeletePersist(entryId, removedRow) {
+    pendingPersistIdsRef.current.add(entryId);
+    if (removedRow) pendingPersistEntriesRef.current.set(entryId, removedRow);
+    setDeleteBusy(true);
+    window.clearTimeout(persistTimerRef.current);
+    persistTimerRef.current = window.setTimeout(() => {
+      flushPendingReadingGDeletes();
+    }, 280);
+  }
+
+  function deleteCurrentReadingGEntry() {
+    const live = liveDeleteRef.current;
+    if (
+      live.phase !== "ready"
+      || live.isQuizMode
+      || live.isStudyEmpty
+      || live.aiRunning
+      || deleteLockRef.current
+    ) {
+      return;
+    }
+
+    // Authoritative queue: freeze ref (in-burst) → live snapshot from last render.
+    const currentStudyList = Array.isArray(frozenStudyQueueRef.current) && frozenStudyQueueRef.current.length
+      ? frozenStudyQueueRef.current
+      : (Array.isArray(live.studyList) ? live.studyList : []);
+    if (!currentStudyList.length) return;
+
+    const currentId = resolveCurrentStudyEntryId({
+      focusEntryId: live.currentEntryId || currentEntryId,
+      studyList: currentStudyList,
+      items: live.items,
+      index: live.index
+    });
+    if (!currentId || deletedIdsRef.current.has(currentId)) return;
+
+    const advanced = advanceStudyQueueAfterDelete(currentStudyList, currentId);
+    if (!advanced) return;
+
+    const removedRow = currentStudyList[advanced.pos];
+    const removedEntry = removedRow?.entry;
+    const removedId = String(removedEntry?.id || currentId).trim();
+    if (!removedId || !removedEntry) return;
+
+    const removedIsPhrase = removedEntry.entryType === "phrase";
+    const removedIsReference = removedEntry.studyMode === "reference";
+    const nextStudyList = advanced.nextList;
+    const landingRow = advanced.landingRow;
+    const landingIndex = advanced.landingOriginalIndex;
+    const landingId = advanced.landingEntryId;
+
+    deleteLockRef.current = true;
+    deletedIdsRef.current.add(removedId);
+
+    // Freeze queue order immediately (ref is sync for the next keypress before paint).
+    freezeStudyQueueRows(nextStudyList);
+    if (landingId && landingRow) {
+      setCurrentEntryId(landingId);
+      setIndex(landingIndex);
+      persistSession(landingIndex, live.filter || filter, landingRow.entry);
+    } else {
+      setCurrentEntryId("");
+      setIndex(0);
+    }
+    setMeta((current) => ({
+      ...current,
+      count: Math.max(0, current.count - 1),
+      wordCount: Math.max(0, current.wordCount - (removedIsPhrase ? 0 : 1)),
+      phraseCount: Math.max(0, current.phraseCount - (removedIsPhrase ? 1 : 0)),
+      activeCount: Math.max(0, current.activeCount - (removedIsReference ? 0 : 1)),
+      referenceCount: Math.max(0, current.referenceCount - (removedIsReference ? 1 : 0))
+    }));
+
+    // Sync live snapshot before React re-renders so rapid D/Delete never sees a stale queue.
+    liveDeleteRef.current = {
+      ...liveDeleteRef.current,
+      index: landingId ? landingIndex : 0,
+      currentEntryId: landingId,
+      studyList: nextStudyList,
+      isStudyEmpty: nextStudyList.length === 0,
+      safeStudyPosition: Math.max(0, advanced.landingPos)
+    };
+    deleteLockRef.current = false;
+
+    scheduleReadingGDeletePersist(removedId, {
+      entry: removedEntry,
+      originalIndex: removedRow.originalIndex
+    });
+  }
+
+  // Only leave the delete freeze when the study scope changes.
+  // Do NOT depend on wordOrdering.mode/difficultyMode — those used to flip while the
+  // freeze disabled ordering, which cleared the queue and made delete jump randomly.
+  useEffect(() => {
+    clearStudyQueueFreeze();
+  }, [filter, learnMode, clearStudyQueueFreeze]);
+
+  // Flush queued deletes when leaving the page.
+  useEffect(() => () => {
+    window.clearTimeout(persistTimerRef.current);
+    const ids = [...pendingPersistIdsRef.current];
+    pendingPersistIdsRef.current = new Set();
+    if (ids.length) {
+      fetch("/api/reading-g/delete-entry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entryIds: ids }),
+        keepalive: true
+      }).catch(() => {});
+    }
+  }, []);
+
+  // Belt-and-suspenders: write study position on tab close / hard refresh.
+  useEffect(() => {
+    function persistLiveSession() {
+      if (!storageReadyRef.current || !restoredRef.current) return;
+      const live = liveDeleteRef.current;
+      if (!live || live.phase !== "ready" || live.isQuizMode || live.isStudyEmpty) return;
+      const row =
+        live.items?.[live.index]
+        || live.studyList?.find((r) => r?.originalIndex === live.index)?.entry
+        || null;
+      if (!row || (row.id && deletedIdsRef.current.has(row.id))) return;
+      const key = getEntryProgressKey(row) || normalizeReadingGKey(row.word);
+      if (!key) return;
+      const f = live.filter || DEFAULT_FILTER;
+      positionsRef.current[filterKey(f)] = key;
+      writeRgPositions(positionsRef.current);
+      writeRgSession({
+        wordKey: key,
+        filter: f,
+        index: live.index,
+        savedAt: new Date().toISOString()
+      });
+    }
+    function onPageHide() {
+      persistLiveSession();
+    }
+    window.addEventListener("pagehide", onPageHide);
+    window.addEventListener("beforeunload", onPageHide);
+    return () => {
+      window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("beforeunload", onPageHide);
+      persistLiveSession();
+    };
+  }, []);
+
+  // Keep live delete snapshot in sync every render.
+  // Prefer the freeze ref for studyList so a stale render cannot resurrect the pre-delete queue.
+  liveDeleteRef.current = {
+    items,
+    index,
+    currentEntryId: activeEntryId || currentEntryId,
+    studyList: (frozenStudyQueueRef.current || studyList),
+    filter,
+    phase,
+    isQuizMode,
+    aiRunning,
+    isStudyEmpty,
+    safeStudyPosition
+  };
+
   useEffect(() => {
     function onKeyDown(event) {
       if (phase !== "ready") return;
@@ -911,6 +1591,13 @@ export default function ReadingGVocabPage() {
         || tag === "textarea"
         || (tag === "select" && !isHorizontalArrow)
       ) return;
+
+      if (!isQuizMode && shouldHandleStudyDeleteShortcut(event)) {
+        event.preventDefault();
+        event.stopPropagation();
+        deleteCurrentReadingGEntry();
+        return;
+      }
 
       if (event.key === "ArrowRight" || event.key === "ArrowDown") {
         event.preventDefault();
@@ -942,23 +1629,49 @@ export default function ReadingGVocabPage() {
       }
     }
 
+    function onDeleteRequest() {
+      if (isQuizMode) return;
+      deleteCurrentReadingGEntry();
+    }
+
     window.addEventListener("keydown", onKeyDown, true);
-    return () => window.removeEventListener("keydown", onKeyDown, true);
+    window.addEventListener(DELETE_CURRENT_WORD_EVENT, onDeleteRequest);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown, true);
+      window.removeEventListener(DELETE_CURRENT_WORD_EVENT, onDeleteRequest);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     phase,
+    item?.id,
     item?.word,
     item?.example,
     item?.entryType,
     studyList,
+    items,
     safeStudyPosition,
     statusMap,
     filter,
+    learnMode,
     index,
     isQuizMode,
     quizRevealed,
-    quizQuestion
+    quizQuestion,
+    deleteBusy,
+    aiRunning
   ]);
+
+  // Light overview rows — avoid spreading full lexicon entries on every keypress.
+  const overviewWords = useMemo(
+    () => studyList.map(({ entry }) => ({
+      word: entry.word,
+      meaning: entry.meaning || entry.primaryMeaningZh || "",
+      status: getRgStatus(entry, statusMap, resolveLearnMode(learnMode, entry, filter)),
+      favorite: isRgFavorite(entry, statusMap),
+      id: entry.id
+    })),
+    [studyList, statusMap, learnMode, filter]
+  );
 
   if (phase === "loading") {
     return (
@@ -1018,69 +1731,35 @@ export default function ReadingGVocabPage() {
 
   const chipGroups = [
     {
-      title: "模式",
+      title: "更多筛选",
       chips: [
-        { label: "词义学习", filter: { type: "learnMode", value: "meaning" } },
-        { label: "短语学习", filter: { type: "learnMode", value: "phrase" } },
-        {
-          label: "引导学习·10组",
-          filter: { type: "paraphraseQuiz", value: "", sessionMode: "guided" }
-        },
-        {
-          label: "快速测验·20题",
-          filter: { type: "paraphraseQuiz", value: "", sessionMode: "quick" }
-        },
         {
           label: "完整测验·80题",
           filter: { type: "paraphraseQuiz", value: "", sessionMode: "full" }
-        }
-      ]
-    },
-    {
-      title: "阶段",
-      chips: [
-        { label: "阶段1", filter: { type: "pathStage", value: "1" } },
-        { label: "阶段2", filter: { type: "pathStage", value: "2" } },
-        { label: "阶段3", filter: { type: "pathStage", value: "3" } },
-        { label: "阶段4", filter: { type: "pathStage", value: "4" } }
-      ]
-    },
-    {
-      title: "路径",
-      chips: [
-        { label: "默认待学", filter: { type: "active", value: "" } },
-        { label: "全部含参考", filter: { type: "everything", value: "" } },
-        { label: "不熟", filter: { type: "status", value: "不熟" } },
+        },
         { label: "熟悉", filter: { type: "status", value: "熟悉" } },
-        { label: "收藏", filter: { type: "status", value: "收藏" } }
+        { label: "全部含参考", filter: { type: "everything", value: "" } },
+        { label: "单词（含参考）", filter: { type: "entryType", value: "word" } },
+        { label: "词组（含参考）", filter: { type: "entryType", value: "phrase" } },
+        { label: "参考查阅", filter: { type: "reference", value: "" } }
       ]
     },
     {
-      title: "分层",
+      title: "专项层",
       chips: [
-        { label: "优先核心1500", filter: { type: "layer", value: "priority1500" } },
-        { label: "答案词强化250", filter: { type: "layer", value: "answerCore250" } },
-        { label: "逻辑连接120", filter: { type: "layer", value: "logic120" } },
-        { label: "高频词组400", filter: { type: "layer", value: "phrases400" } },
+        { label: "核心1500", filter: { type: "layer", value: "priority1500" } },
         { label: "B层1200", filter: { type: "layer", value: "tierB1200" } },
-        { label: "真题同义300", filter: { type: "paraphrase", value: "" } },
-        { label: "表达识别核心", filter: { type: "layer", value: "paraCore600" } },
         { label: "C层800", filter: { type: "layer", value: "tierC800" } },
-        { label: "表达识别扩展", filter: { type: "layer", value: "paraExt500" } },
-        { label: "参考701", filter: { type: "reference", value: "" } }
-      ]
-    },
-    {
-      title: "形态",
-      chips: [
-        { label: "仅单词", filter: { type: "entryType", value: "word" } },
-        { label: "仅词组", filter: { type: "entryType", value: "phrase" } }
+        { label: "真题同义浏览", filter: { type: "paraphrase", value: "" } },
+        { label: "全题库已有", filter: { type: "layer", value: "questionBankActive" } },
+        { label: "AI已补全", filter: { type: "layer", value: "questionBankAiCompleted" } },
+        { label: "待补资料", filter: { type: "layer", value: "questionBankPending" } }
       ]
     }
   ];
 
   const studyPathNote =
-    "已验证同义关系：安全题库233组；仅浏览关系67组。表达识别核心1006个表达、扩展500个表达，用于扩展阅读表达识别，不代表每个词都已建立可靠同义关系。";
+    "四个阶段按首次进入路线的阶段归类，彼此不重复。建议先阶段1，再阶段2；同义替换单独用训练方式。";
 
   return (
     <SatelliteLexiconFlashcard
@@ -1105,13 +1784,21 @@ export default function ReadingGVocabPage() {
       safeStudyPosition={safeStudyPosition}
       studyCount={studyCount}
       progressPercent={progressPercent}
+      onPositionCommit={isQuizMode ? null : seekStudyPosition}
+      getPositionPreview={isQuizMode ? null : getStudyPositionPreview}
       search={search}
       setSearch={setSearch}
       onFilter={setLibraryFilter}
       onJumpIndex={(originalIndex) => {
         if (isQuizMode) return;
-        setIndex(originalIndex);
-        persistSession(originalIndex);
+        const row = studyList.find((r) => r.originalIndex === originalIndex)
+          || { originalIndex, entry: items[originalIndex] };
+        if (row?.entry) focusStudyRow(row);
+        else {
+          setIndex(originalIndex);
+          setCurrentEntryId(String(items[originalIndex]?.id || "").trim());
+          persistSession(originalIndex);
+        }
       }}
       onMarkFamiliar={() => markStatus(RG_STATUS.FAMILIAR)}
       onMarkUnfamiliar={() => markStatus(RG_STATUS.UNFAMILIAR)}
@@ -1123,15 +1810,12 @@ export default function ReadingGVocabPage() {
       wordOrderMode={wordOrdering.mode}
       wordOrderDifficultyMode={wordOrdering.difficultyMode}
       wordOrderDifficultyAvailable={wordOrdering.difficultyAvailable}
+      wordOrderDifficultyProfile={wordOrdering.difficultyProfile}
       onWordOrderModeChange={changeWordOrderMode}
       onWordDifficultyModeChange={changeWordDifficultyMode}
       onPrev={() => goToStudyOffset(-1)}
       onNext={() => goToStudyOffset(1)}
-      overviewWords={studyList.map(({ entry }) => ({
-        ...entry,
-        status: getRgStatus(entry, statusMap, resolveLearnMode(learnMode, entry, filter)),
-        favorite: isRgFavorite(entry, statusMap)
-      }))}
+      overviewWords={overviewWords}
       overviewStats={{
         familiar: familiarCount,
         unfamiliar: items.filter((entry) =>
@@ -1141,11 +1825,72 @@ export default function ReadingGVocabPage() {
       }}
       statsLine={`词库 ${meta.count.toLocaleString()} · 单词 ${meta.wordCount.toLocaleString()} · 词组 ${meta.phraseCount.toLocaleString()} · active ${meta.activeCount.toLocaleString()} · 参考 ${meta.referenceCount.toLocaleString()} · 同义可训 ${highQuizParas.length} · 词义熟悉 ${familiarCount} · 今日 ${dailyCount}${migrationInfo?.v4?.matchedCount != null ? ` · 迁移${migrationInfo.v4.matchedCount}` : ""}`}
       toast={toast}
-      extraLinks={[
-        { href: "/basic", label: "零基础单词" },
-        { href: "/spelling-words", label: "单词拼写训练" },
-        { href: "/meaning", label: "看词选意思 · 核心6000" }
-      ]}
+      extraActions={(
+        <>
+          <button
+            type="button"
+            className="top-pill spelling-entry-link"
+            onClick={() => setLibraryFilter({ type: "questionBankComplete", value: "" })}
+          >
+            新增完整词 {questionBankCompleteCount}
+          </button>
+          <button
+            type="button"
+            className="top-pill spelling-entry-link"
+            onClick={() => setLibraryFilter({ type: "contentIncomplete", value: "" })}
+          >
+            待补词 {incompleteContentEntries.length}
+          </button>
+          <details className="menu reading-g-ai-menu">
+            <summary className="top-pill">AI补全待补词</summary>
+            <div className="menu-panel wide reading-g-ai-panel">
+              <h2 className="panel-title">G类待补词专用 AI</h2>
+              <p className="panel-desc">
+                页面“待补词”按实际字段缺失统计 {incompleteContentEntries.length} 个；其中本专用 AI 仅处理“全题库·待补资料” {pendingAiEntries.length} 个。已由 AI 补全 {questionBankAiCompletedCount} 个，不会修改原有词、总词库或学习进度。
+              </p>
+              <p className="ai-warning">
+                每批最多10词、1次请求、自动重试0次。缓存命中不调用付费模型；未命中会调用 DeepSeek，开始前还会再次确认。
+              </p>
+              <div className="action-grid">
+                <button
+                  type="button"
+                  className="small-btn warm"
+                  disabled={aiRunning || !pendingAiEntries.some((entry) => entry.id === item?.id)}
+                  onClick={() => runPendingAiCompletion({ currentOnly: true })}
+                >
+                  {aiRunning ? "处理中" : "补全当前待补词"}
+                </button>
+                <button
+                  type="button"
+                  className="small-btn ai-paid"
+                  disabled={aiRunning || !pendingAiEntries.length}
+                  onClick={() => runPendingAiCompletion({ currentOnly: false })}
+                >
+                  {aiRunning ? "处理中" : `补全下一批 ${Math.min(AI_COMPLETION_BATCH_SIZE, pendingAiEntries.length)} 词（可能扣费）`}
+                </button>
+                <button
+                  type="button"
+                  className="small-btn ai-paid"
+                  disabled={aiRunning || !pendingAiEntries.length}
+                  onClick={() => runPendingAiCompletion({ autoAll: true })}
+                >
+                  {aiRunning ? "处理中" : `自动补全全部 ${pendingAiEntries.length} 词（可能扣费）`}
+                </button>
+                {aiAutoRunning ? (
+                  <button
+                    type="button"
+                    className="small-btn warm"
+                    onClick={stopAutoAiCompletion}
+                  >
+                    停止自动补全
+                  </button>
+                ) : null}
+              </div>
+              {aiMessage ? <div className="status-line">{aiMessage}</div> : null}
+            </div>
+          </details>
+        </>
+      )}
       chipGroups={chipGroups}
       studyPathNote={studyPathNote}
       layerMeta={LAYER_META}

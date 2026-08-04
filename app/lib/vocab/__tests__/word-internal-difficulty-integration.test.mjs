@@ -9,7 +9,7 @@ import {
 } from "../word-study-ordering.mjs";
 import {
   WORD_STUDY_DIFFICULTY_MODE,
-  wordInternalDifficultyScore
+  wordInternalDifficultySortKey
 } from "../word-internal-difficulty.mjs";
 import {
   LEARNING_ENTRIES
@@ -48,8 +48,8 @@ test("every main lexicon level is split relatively without leaking words from an
     const easyToHard = orderStudyWordIndices(indices, words, {
       difficultyMode: WORD_STUDY_DIFFICULTY_MODE.EASY_TO_HARD
     });
-    const scores = easyToHard.map((index) => wordInternalDifficultyScore(words[index]));
-    assert.ok(scores.every((score, index) => index === 0 || scores[index - 1] <= score));
+    const sortKeys = easyToHard.map((index) => wordInternalDifficultySortKey(words[index]));
+    assert.ok(sortKeys.every((sortKey, index) => index === 0 || sortKeys[index - 1] <= sortKey));
   }
 });
 
@@ -76,7 +76,7 @@ test("538 and iDictation keep their original classification behavior", () => {
   assert.match(mainPage, /wordOrderDifficultyEnabled\s*=\s*!idictationFlashSourceKey/);
 });
 
-test("word-order controls release focus and horizontal arrows remain word navigation", () => {
+test("word-order controls release focus and focused toolbar controls keep horizontal arrows", () => {
   const controls = fs.readFileSync(
     path.join(ROOT, "app", "components", "WordStudyOrderControls.jsx"),
     "utf8"
@@ -92,8 +92,8 @@ test("word-order controls release focus and horizontal arrows remain word naviga
   const globalStyles = fs.readFileSync(path.join(ROOT, "app", "globals.css"), "utf8");
 
   assert.match(controls, /control\.blur\(\)/);
-  assert.match(navigation, /isTypingTarget\(event\.target\)\s*&&\s*!isHorizontalArrow/);
-  assert.match(staticExport, /isTyping&&!isHorizontalArrow/);
+  assert.match(navigation, /getStudyKeyboardAction\(event\)/);
+  assert.match(staticExport, /if\(isTyping\|\|e\.ctrlKey/);
   assert.match(staticExport, /completeToolbarSelectAction\(e\.target\)/);
   assert.match(staticExport, /document\.activeElement===control/);
   assert.match(globalStyles, /\.word-difficulty-select/);
@@ -106,6 +106,8 @@ test("an unloaded pool cannot erase a saved fixed-order snapshot and random is i
     "utf8"
   );
   const mainPage = fs.readFileSync(path.join(ROOT, "app", "page.jsx"), "utf8");
+  const readingGPage = fs.readFileSync(path.join(ROOT, "app", "reading-g", "page.jsx"), "utf8");
+  const staticReadingG = fs.readFileSync(path.join(ROOT, "public", "assets", "reading-g.js"), "utf8");
   const staticExport = fs.readFileSync(
     path.join(ROOT, "app", "api", "export-static", "route.js"),
     "utf8"
@@ -115,6 +117,11 @@ test("an unloaded pool cannot erase a saved fixed-order snapshot and random is i
     orderedRowsHook,
     /baseIndices\.length\s*===\s*0[\s\S]*!isFixedWordStudyOrderMode/
   );
+  assert.match(orderedRowsHook, /cursorIndex:\s*reconciled\?\.cursorIndex\s*\?\?\s*null/);
+  assert.match(readingGPage, /wordOrdering\.cursorIndex/);
+  assert.match(readingGPage, /focusedId[\s\S]*studyList\.some/);
+  assert.match(staticReadingG, /function saveSession\(\)/);
+  assert.match(staticReadingG, /function restoreSession\(\)/);
   assert.match(
     mainPage,
     /!baseStudyWordIndices\.length[\s\S]*!isFixedWordStudyOrderMode/

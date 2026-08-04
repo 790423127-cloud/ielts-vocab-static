@@ -20,7 +20,7 @@ export function buildParaphraseLexiconMeta(payload = {}, entries = []) {
 }
 
 export async function loadLrParaphrases(url = LR_PARAPHRASE_URL) {
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url, { cache: "force-cache" });
   if (!response?.ok) throw new Error(`同义替换库加载失败（HTTP ${response?.status || "unknown"}）`);
   const payload = await response.json().catch(() => null);
   if (!payload) throw new Error("同义替换 JSON 解析失败");

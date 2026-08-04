@@ -184,8 +184,9 @@ test("word flashcard keyboard shortcuts are scoped to word mode only", () => {
   assert.match(navHook, /speakWordRef\.current\(true\)/);
   assert.match(navHook, /nextWordRef\.current\(\)/);
   assert.match(navHook, /\}, \[flashStudyMode\]\);/);
-  assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakWordRef/);
-  assert.match(navHook, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*nextWordRef/);
+  assert.match(navHook, /const action = getStudyKeyboardAction\(event\)/);
+  assert.match(navHook, /if \(action === "word-audio"\)[\s\S]*speakWordRef\.current\(true\)/);
+  assert.match(navHook, /if \(action === "next"\)[\s\S]*nextWordRef\.current\(\)/);
   assert.match(pageSource, /useHomeWordSpeech/);
   assert.match(pageSource, /\{ text: item\.example, kind: "sentence" \}/);
   assert.doesNotMatch(pageSource, /nextItem\?\.example/);

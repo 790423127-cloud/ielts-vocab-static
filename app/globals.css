@@ -3131,6 +3131,16 @@ body:has(.spelling-page-shell) .font-scale-dock {
 .entry-title { font-size: calc(12.5px * var(--font-scale)); font-weight: 850; color: var(--green); }
 .entry-desc { font-size: calc(10.5px * var(--font-scale)); line-height: 1.35; color: var(--muted); }
 .entry-meta { font-size: calc(10.5px * var(--font-scale)); color: #9a6a20; font-weight: 750; }
+.reading-g-study .entry-group { margin-top: 10px; }
+.reading-g-study .entry-grid { gap: 6px; }
+.reading-g-study .entry-btn {
+  min-height: 68px;
+  border-radius: 14px;
+  padding: 9px 10px;
+}
+.reading-g-study .entry-title { font-size: calc(12px * var(--font-scale)); }
+.reading-g-study .entry-desc { font-size: calc(10px * var(--font-scale)); }
+.reading-g-study .filter-group { margin-top: 10px; }
 @media (max-width: 640px) { .entry-grid { grid-template-columns: 1fr; } }
 
 
@@ -5365,6 +5375,44 @@ body > main {
   margin-left: var(--study-sidebar-width) !important;
 }
 
+/* Top progress line while switching study modules (click feedback). */
+.study-nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1400;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  background: transparent;
+  overflow: hidden;
+  transition: opacity 0.15s ease;
+}
+
+.study-nav-progress.is-active {
+  opacity: 1;
+  background: rgba(215, 101, 56, 0.12);
+}
+
+.study-nav-progress.is-active::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 38%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: study-nav-progress-slide 0.9s ease-in-out infinite;
+}
+
+@keyframes study-nav-progress-slide {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+html[data-nav-pending="1"] {
+  cursor: progress;
+}
+
 .study-brand-header {
   position: sticky;
   top: 0;
@@ -7379,6 +7427,12 @@ body > main {
   align-items: center;
   justify-content: flex-end;
   gap: 5px;
+}
+
+.auto-scroll-control.is-hotkey-hit {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 999px;
 }
 
 .auto-scroll-control {

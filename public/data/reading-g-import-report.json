@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T07:24:36.624Z",
+  "generatedAt": "2026-08-03T18:08:41.979Z",
   "dataSchemaVersion": 3,
   "progressSchemaVersion": 3,
   "datasetVersion": "reading-g-core-v3",
@@ -85,6 +85,40 @@
       "sha256": "c99877caf29bd8930a4f9865c2e5dce5352650f5494ef41614c2cdc2c8db0993",
       "rawCount": 300,
       "role": "verified_paraphrases"
+    },
+    "scripts/data/reading-g-question-bank-3109.json": {
+      "bytes": 50222,
+      "sha256": "2586e5b90cef35618c5ddbdcf97b5a8140310057cce10fd570fcea3bd22d92a2",
+      "rawCount": 3109,
+      "role": "question_bank_expansion",
+      "layerIds": [
+        "questionBankActive",
+        "questionBankAiCompleted",
+        "questionBankPending"
+      ]
+    },
+    "public/data/reading-g-ai-completions.json": {
+      "bytes": 1513809,
+      "sha256": "0d2b92c66ae8767490481e9b46b776a3d533af27c7f2348522aebf7af47b121c",
+      "rawCount": 691,
+      "role": "reading_g_ai_completions",
+      "layerIds": [
+        "questionBankAiCompleted"
+      ]
+    },
+    "public/data/reading-g-retirements.json": {
+      "bytes": 60886,
+      "sha256": "fa46e09699be74abb1440a0e893d8094acce3ead5ade394e61a39c6c4f5cb19b",
+      "rawCount": 533,
+      "role": "reading_g_retirements",
+      "removedCount": 200
+    },
+    "public/data/reading-g-word-family-compaction.json": {
+      "bytes": 440909,
+      "sha256": "3c6b668fd9ed894e29627b578540972aa4118ed2999e692410ed4ebd3d6aa1cd",
+      "rawCount": 1330,
+      "role": "reading_g_internal_word_family_compaction",
+      "removedIndependentWordCount": 0
     }
   },
   "layerStats": {
@@ -186,6 +220,37 @@
       "primaryNewCount": 630,
       "cumulativePrimary": 4743,
       "filterCount": 701
+    },
+    "questionBankActive": {
+      "name": "全题库补充（已有资料）",
+      "rawCount": 1338,
+      "uniqueKeysInLayer": 1338,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 10,
+      "primaryNewCount": 1338,
+      "filterCount": 3139
+    },
+    "questionBankPending": {
+      "name": "全题库待补资料",
+      "rawCount": 1006,
+      "uniqueKeysInLayer": 1006,
+      "skippedEmpty": 0,
+      "mode": "reference",
+      "rank": 12,
+      "primaryNewCount": 0,
+      "actionableCount": 0,
+      "filterCount": 1006
+    },
+    "questionBankAiCompleted": {
+      "name": "全题库补充（AI已补全）",
+      "rawCount": 684,
+      "uniqueKeysInLayer": 684,
+      "skippedEmpty": 0,
+      "mode": "active",
+      "rank": 11,
+      "primaryNewCount": 684,
+      "filterCount": 686
     }
   },
   "warnings": [
@@ -1794,17 +1859,185 @@
   "mainEnhancedEnriched": 2,
   "multiSenseTagged": 150,
   "summary": {
-    "itemCount": 4978,
-    "wordCount": 4310,
+    "itemCount": 7388,
+    "wordCount": 6720,
     "phraseCount": 668,
-    "activeCount": 4348,
-    "referenceOnlyCount": 630,
-    "multiSenseCount": 795,
+    "activeCount": 6928,
+    "referenceOnlyCount": 460,
+    "multiSenseCount": 939,
     "paraphraseHighCount": 300,
     "networkCandidateExpressions": 2187,
     "emptyWord": 0,
     "emptyMeaning": 0,
     "conflictSamples": 7114,
     "mergeMapSize": 4978
+  },
+  "questionBankExpansion": {
+    "version": "reading-g-question-bank-expansion-v1",
+    "source": "scripts/data/reading-g-question-bank-3109.json",
+    "targetCount": 3109,
+    "masterLexiconCount": 13375,
+    "masterLexiconHash": "00e46af8a37a6c745b06911a6207212f6c8a237e79a78aac250ca5508cba698a",
+    "masterMatchedCount": 1338,
+    "masterMissingCount": 1771,
+    "aiCompletedCount": 684,
+    "pendingCount": 0,
+    "pendingIndependentCount": 0,
+    "pendingLayerCount": 1006,
+    "retiredCount": 533,
+    "retiredSourceHeadwordCount": 192,
+    "compactedSourceHeadwordCount": 1260,
+    "suppressedSourceHeadwordCount": 150,
+    "effectiveTargetCount": 1507,
+    "representedTargetCount": 2767,
+    "activeCount": 2021,
+    "referenceCount": 0,
+    "addedCount": 174,
+    "refreshedCount": 1323,
+    "alreadyInCoreCount": 202
+  },
+  "morphologyEnrichment": {
+    "version": "reading-g-master-morphology-v1",
+    "source": "public/data/words.json",
+    "masterLexiconHash": "00e46af8a37a6c745b06911a6207212f6c8a237e79a78aac250ca5508cba698a",
+    "updatedAt": "2026-08-04T07:33:40.093Z",
+    "wordEntries": 6694,
+    "exactMasterMatches": 5210,
+    "entriesWithMasterMorphology": 2012,
+    "entriesChanged": 718,
+    "masterFormsAdded": 1,
+    "masterFamilyAdded": 316,
+    "familyRowsMovedToForms": 182,
+    "formRowsMovedToFamily": 201,
+    "crossCategoryDuplicatesRemoved": 209,
+    "selfLinksRemoved": 0,
+    "duplicateRowsMerged": 2669,
+    "entriesWithForms": 2079,
+    "entriesWithWordFamily": 2038,
+    "formRows": 3339,
+    "wordFamilyRows": 3079
+  },
+  "wordFamilyCompaction": {
+    "version": "reading-g-word-only-inflection-review-v2-20260804",
+    "source": "public/data/reading-g-word-family-compaction.json",
+    "updatedAt": "2026-08-04T07:33:40.093Z",
+    "sourceWordCount": 6694,
+    "resultingWordCount": 6720,
+    "configuredFamilyCount": 1330,
+    "appliedFamilyCount": 0,
+    "removedIndependentWordCount": 0,
+    "representedAliasCount": 2591,
+    "suppressedBecauseCanonicalMissing": 0
+  },
+  "relationMeaningEnrichment": {
+    "version": "reading-g-relation-meanings-v1",
+    "updatedAt": "2026-08-04T07:33:40.093Z",
+    "wordEntries": 6694,
+    "formRows": 3183,
+    "familyRows": 2525,
+    "formsReusedExisting": 3070,
+    "formsFilledFromKnownWord": 62,
+    "formsFilledFromHeadword": 51,
+    "familiesReusedExisting": 2481,
+    "familiesFilledFromKnownWord": 44,
+    "familiesFilledFromHeadword": 0,
+    "invalidFamilyStemsRemoved": 15,
+    "formsMissingMeaning": 0,
+    "familiesMissingMeaning": 0
+  },
+  "relationAudit": {
+    "version": "reading-g-relation-audit-v1",
+    "updatedAt": "2026-08-04T07:33:40.093Z",
+    "wordEntries": 6694,
+    "formRowsBefore": 3339,
+    "familyRowsBefore": 3079,
+    "formRowsKept": 2966,
+    "familyRowsKept": 2298,
+    "formsMovedToFamily": 242,
+    "familyRowsMovedToForms": 217,
+    "unsafeFormRowsRemoved": 131,
+    "unsafeFamilyRowsRemoved": 559,
+    "fragmentFamilyRowsRemoved": 5,
+    "placeholderRowsRemoved": 0,
+    "phraseEntriesCleared": 0,
+    "phraseRelationRowsRemoved": 0,
+    "selfLinksRemoved": 0,
+    "crossCategoryDuplicatesRemoved": 0
+  },
+  "pendingInflectionMerge": {
+    "version": "reading-g-pending-inflection-merge-v1",
+    "updatedAt": "2026-08-03T18:08:41.979Z",
+    "scope": "reading-g-only",
+    "mergedCount": 508,
+    "pendingBefore": 1222,
+    "pendingAfter": 714,
+    "generatedCount": 444,
+    "explicitOnlyCount": 64,
+    "retainedReviewWords": [
+      "attractions",
+      "gatherings",
+      "evenings"
+    ],
+    "countsByType": {
+      "adverbial form": 13,
+      "comparative": 3,
+      "explicit G form": 64,
+      "past tense/participle": 40,
+      "plural": 271,
+      "present participle/gerund": 60,
+      "superlative": 4,
+      "third-person singular": 53
+    }
+  },
+  "reviewedInflectionMerge": {
+    "version": "reading-g-word-only-inflection-review-v2-20260804",
+    "updatedAt": "2026-08-04T07:07:25.126Z",
+    "scope": "reading-g-only; direct inflections merge; word families and lexicalised forms stay standalone",
+    "priorVisibleWordCount": 6548,
+    "historicalAliasesReviewed": 1773,
+    "expandedAliasCount": 1578,
+    "keptMergedInflectionCount": 1409,
+    "restoredStandaloneCount": 172,
+    "standaloneDecisionCount": 172,
+    "suppressedDeletedCanonicalRuleCount": 146,
+    "relationReclassification": {
+      "movedFormsToFamily": 460,
+      "movedFamilyToForms": 247,
+      "duplicateRelationsRemoved": 5
+    },
+    "stageCounts": {
+      "stage1": 2010,
+      "stage2": 1338,
+      "stage3": 3567,
+      "stage4": 473
+    }
+  },
+  "itemCount": 7388,
+  "wordCount": 6720,
+  "phraseCount": 668,
+  "activeCount": 6915,
+  "referenceCount": 473,
+  "wordOnlyInflectionReview": {
+    "version": "reading-g-word-only-inflection-review-v2-20260804",
+    "updatedAt": "2026-08-04T07:07:25.126Z",
+    "scope": "reading-g-only; direct inflections merge; word families and lexicalised forms stay standalone",
+    "priorVisibleWordCount": 6548,
+    "historicalAliasesReviewed": 1773,
+    "expandedAliasCount": 1578,
+    "keptMergedInflectionCount": 1409,
+    "restoredStandaloneCount": 172,
+    "standaloneDecisionCount": 172,
+    "suppressedDeletedCanonicalRuleCount": 146,
+    "relationReclassification": {
+      "movedFormsToFamily": 460,
+      "movedFamilyToForms": 247,
+      "duplicateRelationsRemoved": 5
+    },
+    "stageCounts": {
+      "stage1": 2010,
+      "stage2": 1338,
+      "stage3": 3567,
+      "stage4": 473
+    }
   }
 }

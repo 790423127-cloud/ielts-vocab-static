@@ -6,7 +6,8 @@ import {
   ensureReadingWordMainEntry,
   mergeAiProfileIntoMainEntry,
   needsReadingAiProcessing,
-  reconcileReadingImportsWithMain
+  reconcileReadingImportsWithMain,
+  suggestCanonicalReadingHeadword
 } from "../main-lexicon-sync.mjs";
 
 test("legacy reading words missing from the formal lexicon are backfilled once", () => {
@@ -51,6 +52,71 @@ test("legacy reading words missing from the formal lexicon are backfilled once",
   assert.equal(second.addedToMain, 0);
   assert.equal(second.mainChanged, false);
   assert.equal(second.mainWords.length, 2);
+});
+
+test("a high-confidence missing-first-letter reading word reuses the canonical main entry", () => {
+  const mainWords = [{
+    id: "main-ancestors",
+    wordId: "main-ancestors",
+    word: "ancestors",
+    pos: "noun",
+    meaning: "祖先",
+    definition: "people from whom one is descended",
+    example: "We study our ancestors.",
+    exampleCn: "我们研究祖先。",
+    ieltsUse: ["Reading"],
+    topics: ["历史"],
+    difficulty: "基础高频"
+  }];
+  const readingWord = {
+    id: "reading-ncestors",
+    wordId: "reading-ncestors",
+    word: "ncestors",
+    pos: "noun",
+    meaning: "祖先",
+    definition: "people from whom one is descended",
+    example: "We study our ancestors.",
+    exampleCn: "我们研究祖先。",
+    forms: [],
+    formsReviewed: true,
+    wordFamily: [],
+    wordFamilyReviewed: true,
+    synonyms: [],
+    synonymsReviewed: true
+  };
+
+  const suggestion = suggestCanonicalReadingHeadword("ncestors", mainWords, readingWord);
+  const result = backfillReadingWordsIntoMain([readingWord], mainWords, {
+    now: "2026-08-02T00:00:00.000Z"
+  });
+
+  assert.equal(suggestion.corrected, true);
+  assert.equal(suggestion.word, "ancestors");
+  assert.equal(result.addedToMain, 0);
+  assert.equal(result.correctedHeadwords, 1);
+  assert.equal(result.readingChanged, true);
+  assert.equal(result.words[0].word, "ancestors");
+  assert.equal(result.words[0].correctedFrom, "ncestors");
+  assert.equal(result.words[0].mainWordId, "main-ancestors");
+  assert.equal(result.mainWords.length, 1);
+  assert.equal(needsReadingAiProcessing(readingWord, {}, mainWords), true);
+});
+
+test("canonical correction does not replace a trusted word or a word with a different meaning", () => {
+  const mainWords = [
+    { id: "main-rate", word: "rate", meaning: "比率", source: "curated" },
+    { id: "main-irate", word: "irate", meaning: "愤怒的", source: "curated" },
+    { id: "main-cart", word: "cart", meaning: "手推车", source: "curated" }
+  ];
+
+  assert.equal(
+    suggestCanonicalReadingHeadword("rate", mainWords, { word: "rate", meaning: "比率" }).corrected,
+    false
+  );
+  assert.equal(
+    suggestCanonicalReadingHeadword("art", mainWords, { word: "art", meaning: "艺术" }).corrected,
+    false
+  );
 });
 
 test("existing main entry supplies canonical pos, forms and family without changing its stable id", () => {

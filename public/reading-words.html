@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f4f6f5" />
   <title>阅读生词本 · IELTS Vocab 静态版</title>
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
-  <link rel="stylesheet" href="./assets/reading-words.css?v=20260729_reading_synonym_meanings_v5" />
+  <link rel="stylesheet" href="./assets/reading-words.css?v=20260802_reading_headword_fix_v7" />
 </head>
 <body>
   <header class="reading-header">
@@ -83,10 +83,10 @@
             <div><span id="frequencyBadge"></span><button id="favoriteBtn" type="button" aria-pressed="false">☆ 收藏</button></div>
           </div>
           <div class="example study-answer-content">
-            <button id="exampleSoundBtn" type="button" aria-label="播放例句">🔊</button>
+            <button id="exampleSoundBtn" type="button" aria-label="播放例句，快捷键空格" title="播放例句（空格）">🔊</button>
             <div><p id="exampleText"></p><span id="exampleCnText"></span></div>
           </div>
-          <button id="wordSoundBtn" class="word" type="button"></button>
+          <button id="wordSoundBtn" class="word" type="button" title="播放单词发音（Tab）"></button>
           <div class="word-meta study-answer-content"><span id="phoneticText"></span><b id="posText"></b></div>
           <h2 id="meaningText" class="study-answer-content"></h2>
           <div class="detail-grid study-answer-content">
@@ -96,9 +96,9 @@
           </div>
           <footer class="study-actions" aria-label="学习操作">
             <button id="prevBtn" type="button" title="上一个（快捷键：←）">← 上一个</button>
-            <button id="knownBtn" type="button">认识</button>
-            <button id="blurryBtn" type="button">模糊</button>
-            <button id="unknownBtn" type="button">不熟</button>
+            <button id="knownBtn" type="button" title="快捷键：1">认识</button>
+            <button id="blurryBtn" type="button" title="快捷键：2">模糊</button>
+            <button id="unknownBtn" type="button" title="快捷键：3">不熟</button>
             <button id="nextBtn" type="button" title="下一个（快捷键：→）">下一个 →</button>
             <button id="deleteBtn" class="danger" type="button" title="只从阅读生词本删除（D / Delete）">删除</button>
           </footer>
@@ -113,6 +113,6 @@
   </main>
   <div id="toast" class="toast" role="status"></div>
   <script src="./assets/study-meaning-visibility.js?v=20260730_word_order_meaning_visibility_v1"></script>
-  <script src="./assets/reading-words.js?v=20260729_reading_synonym_meanings_v5"></script>
+  <script src="./assets/reading-words.js?v=20260802_reading_headword_fix_v7"></script>
 </body>
 </html>

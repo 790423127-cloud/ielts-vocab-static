@@ -12,6 +12,7 @@ import {
   removeReadingWordEntry,
   shouldHandleReadingWordDeleteShortcut
 } from "../../reading-words/delete.mjs";
+import { getStudyKeyboardAction } from "../study-keyboard-shortcuts.mjs";
 
 const FIXED_OPTIONS = {
   idFactory: (() => {
@@ -82,6 +83,20 @@ test("reading delete shortcut accepts D and Delete outside editors only", () => 
   assert.equal(shouldHandleReadingWordDeleteShortcut({ key: "d", target: { tagName: "INPUT" } }), false);
   assert.equal(shouldHandleReadingWordDeleteShortcut({ key: "Delete", target: { tagName: "TEXTAREA" } }), false);
   assert.equal(shouldHandleReadingWordDeleteShortcut({ key: "d", ctrlKey: true, target: { tagName: "BODY" } }), false);
+});
+
+test("reading word study shortcuts match the main flashcard outside editors", () => {
+  const body = { tagName: "BODY" };
+  assert.equal(getStudyKeyboardAction({ key: "Tab", target: body }), "word-audio");
+  assert.equal(getStudyKeyboardAction({ key: " ", code: "Space", target: body }), "example-audio");
+  assert.equal(getStudyKeyboardAction({ key: "ArrowLeft", target: body }), "previous");
+  assert.equal(getStudyKeyboardAction({ key: "ArrowRight", target: body }), "next");
+  assert.equal(getStudyKeyboardAction({ key: "1", code: "Digit1", target: body }), "known");
+  assert.equal(getStudyKeyboardAction({ key: "2", code: "Digit2", target: body }), "blurry");
+  assert.equal(getStudyKeyboardAction({ key: "3", code: "Digit3", target: body }), "unknown");
+  assert.equal(getStudyKeyboardAction({ key: "Tab", target: { tagName: "INPUT" } }), "");
+  assert.equal(getStudyKeyboardAction({ key: " ", code: "Space", target: { tagName: "SELECT" } }), "");
+  assert.equal(getStudyKeyboardAction({ key: "Tab", repeat: true, target: body }), "");
 });
 
 test("the shortcut and button are wired only into the reading words page", () => {

@@ -1,4 +1,17 @@
 @echo off
+if /I "%~1"=="--single-instance-active" goto guarded_start
+
+where node >nul 2>nul
+if errorlevel 1 (
+  echo Node.js is not installed. Please install Node.js LTS first.
+  pause
+  exit /b 1
+)
+
+node "%~dp0scripts\start-windows-single-instance.mjs" "%~f0"
+exit /b %ERRORLEVEL%
+
+:guarded_start
 title IELTS Vocab DeepSeek - Start
 cd /d "%~dp0"
 set "APP_URL=http://localhost:3000"
@@ -64,5 +77,12 @@ echo Open this in browser: %APP_URL%
 copy /y ".next\BUILD_ID" ".next\.running-build-id" >nul
 start "" %APP_URL%
 call npm.cmd start
+set "SERVER_EXIT_CODE=%ERRORLEVEL%"
 del /q ".next\.running-build-id" >nul 2>nul
-pause
+if not "%SERVER_EXIT_CODE%"=="0" (
+  echo.
+  echo The local website server stopped with exit code %SERVER_EXIT_CODE%.
+  echo This window will close automatically in 5 seconds.
+  timeout /t 5 >nul
+)
+exit /b %SERVER_EXIT_CODE%

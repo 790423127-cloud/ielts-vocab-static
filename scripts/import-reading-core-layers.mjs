@@ -20,6 +20,7 @@ import {
   cleanExampleCnField,
   isMetaExamplePlaceholder
 } from "../app/lib/vocab/example-clean.mjs";
+import { applyReadingGQuestionBankExpansion } from "./expand-reading-g-question-bank.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, "..");
@@ -274,6 +275,7 @@ function createEmptyEntry(entryType, normalizedKey, surface, layer) {
     senses: [],
     collocations: [],
     phraseCollocations: [],
+    forms: [],
     wordFamily: [],
     topics: [],
     ieltsUse: [],
@@ -475,10 +477,25 @@ function applyRawToEntry(entry, raw, layer, sourceFile, fieldPriority, conflicts
     .filter((c) => c.phrase);
   mergeList(entry.phraseCollocations, phraseCols, (c) => normalizeKey(c.phrase));
 
-  const family = asArray(raw.wordFamily || raw.forms)
-    .map((f) => (typeof f === "string" ? f : str(f.word || f.form || "")))
+  const forms = asArray(raw.forms)
+    .map((form) => {
+      const word = typeof form === "string" ? str(form) : str(form.word || form.form || form.value);
+      if (!word) return null;
+      return typeof form === "string"
+        ? { word, type: "form" }
+        : { ...form, word, type: str(form.type) || "form" };
+    })
     .filter(Boolean);
-  mergeList(entry.wordFamily, family, (x) => normalizeKey(x));
+  mergeList(entry.forms, forms, (form) => normalizeKey(form.word));
+
+  const family = asArray(raw.wordFamily)
+    .map((member) => {
+      const word = typeof member === "string" ? str(member) : str(member.word || member.form || member.value);
+      if (!word) return null;
+      return typeof member === "string" ? { word } : { ...member, word };
+    })
+    .filter(Boolean);
+  mergeList(entry.wordFamily, family, (member) => normalizeKey(member.word));
 
   const topics = asArray(raw.topics).map(str).filter(Boolean);
   mergeList(entry.topics, topics, (x) => x);
@@ -1141,6 +1158,15 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
     groups: paraphrases
   };
 
+  // Keep the user-approved 5,262 question-bank coverage after every clean
+  // reading-core import; otherwise a base-layer rebuild would silently remove
+  // the 3,109 supplemental headwords.
+  const questionBankExpansion = applyReadingGQuestionBankExpansion({
+    vocab: vocabOut,
+    report,
+    projectRoot: root
+  });
+
   const outVocab = path.join(root, "public", "data", "reading-g-vocab.json");
   const outPara = path.join(root, "public", "data", "reading-g-paraphrases.json");
   const outReport = path.join(root, "public", "data", "reading-g-import-report.json");
@@ -1157,6 +1183,7 @@ export async function runImport({ sourceDir, projectRoot: root = projectRoot } =
         outPara,
         outReport,
         summary: report.summary,
+        questionBankExpansion,
         layerPrimaryNew: Object.fromEntries(
           Object.entries(report.layerStats).map(([k, v]) => [k, v.primaryNewCount])
         )

@@ -5,7 +5,6 @@ import { useWordStudyOrdering } from "./useWordStudyOrdering.js";
 import {
   WORD_STUDY_ORDER_MODE,
   createWordStudyOrderSnapshot,
-  hasWordStudyInternalDifficulty,
   isFixedWordStudyOrderMode,
   orderStudyWordIndices,
   reconcileWordStudyOrderSnapshot,
@@ -14,6 +13,7 @@ import {
 } from "../lib/vocab/word-study-ordering.mjs";
 import {
   WORD_STUDY_DIFFICULTY_MODE,
+  createWordInternalDifficultyProfile,
   normalizeWordStudyDifficultyMode
 } from "../lib/vocab/word-internal-difficulty.mjs";
 
@@ -44,6 +44,16 @@ export function useOrderedStudyRows({
     () => baseRows.map((row) => row.originalIndex),
     [baseRows]
   );
+  const difficultyProfile = useMemo(() => {
+    if (!difficultyEnabled || !baseIndices.length) return null;
+    const words = baseIndices.map((sourceIndex) => {
+      if (idictation) {
+        return pool?.find((word) => word?.originalIndex === sourceIndex) || null;
+      }
+      return pool?.[sourceIndex] || null;
+    }).filter(Boolean);
+    return createWordInternalDifficultyProfile(words);
+  }, [baseIndices, difficultyEnabled, idictation, pool]);
   const generatedIndices = useMemo(
     () => orderStudyWordIndices(baseIndices, pool, {
       mode: enabled ? mode : WORD_STUDY_ORDER_MODE.CURRENT,
@@ -51,12 +61,14 @@ export function useOrderedStudyRows({
         ? difficultyMode
         : WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
       difficultyEnabled,
+      difficultyProfile,
       seed,
       idictation
     }),
     [
       baseIndices,
       difficultyEnabled,
+      difficultyProfile,
       difficultyMode,
       enabled,
       idictation,
@@ -143,7 +155,7 @@ export function useOrderedStudyRows({
   ]);
 
   const activateCombination = useCallback((nextMode, nextDifficultyMode) => {
-    if (!enabled) return null;
+    // Still allow preference changes while row emission is frozen (e.g. delete burst).
     const normalizedDifficultyMode = difficultyEnabled
       ? normalizeWordStudyDifficultyMode(nextDifficultyMode)
       : WORD_STUDY_DIFFICULTY_MODE.DEFAULT;
@@ -151,12 +163,14 @@ export function useOrderedStudyRows({
       const nextSeed = Date.now();
       const nextOrder = orderStudyWordIndices(baseIndices, pool, {
         mode: nextMode,
-        difficultyMode: WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
-        difficultyEnabled: false,
+        difficultyMode: normalizedDifficultyMode,
+        difficultyEnabled,
+        difficultyProfile,
         seed: nextSeed,
         idictation
       });
       setMode(nextMode, { seed: nextSeed });
+      setDifficultyMode(normalizedDifficultyMode);
       return nextOrder[0] ?? null;
     }
     const nextSnapshotKey = wordStudyOrderSnapshotKey(
@@ -168,6 +182,7 @@ export function useOrderedStudyRows({
         mode: nextMode,
         difficultyMode: normalizedDifficultyMode,
         difficultyEnabled,
+        difficultyProfile,
         idictation
       });
       const existing = snapshots[nextSnapshotKey];
@@ -199,7 +214,7 @@ export function useOrderedStudyRows({
     baseIndices,
     currentIndex,
     difficultyEnabled,
-    enabled,
+    difficultyProfile,
     idictation,
     pool,
     saveCursor,
@@ -219,22 +234,21 @@ export function useOrderedStudyRows({
   );
 
   const difficultyAvailable = useMemo(
-    () => difficultyEnabled && hasWordStudyInternalDifficulty(
-      baseIndices,
-      pool,
-      { idictation }
-    ),
-    [baseIndices, difficultyEnabled, idictation, pool]
+    () => difficultyEnabled && Boolean(difficultyProfile?.available),
+    [difficultyEnabled, difficultyProfile]
   );
 
   return {
-    mode: enabled ? mode : WORD_STUDY_ORDER_MODE.CURRENT,
-    difficultyMode: enabled
-      ? activeDifficultyMode
-      : WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
+    // Always expose the real preference values. Masking them as CURRENT/DEFAULT when
+    // `enabled` is false caused consumers (e.g. reading-g delete freeze) to think the
+    // mode changed and clear their stable study queue mid-delete.
+    mode,
+    difficultyMode: activeDifficultyMode,
     rows: enabled ? orderedRows : baseRows,
+    cursorIndex: reconciled?.cursorIndex ?? null,
     changeMode,
     changeDifficultyMode,
-    difficultyAvailable
+    difficultyAvailable,
+    difficultyProfile
   };
 }

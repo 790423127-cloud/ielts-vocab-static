@@ -26,11 +26,6 @@ export function removeReadingWordEntry(words = [], selectedId = "", visibleWords
 }
 
 export function shouldHandleReadingWordDeleteShortcut(event = {}) {
-  if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return false;
-  const target = event.target;
-  const tag = String(target?.tagName || "").toLowerCase();
-  if (tag === "input" || tag === "textarea" || tag === "select" || target?.isContentEditable) return false;
-  const key = String(event.key || "").toLowerCase();
-  const code = String(event.code || "");
-  return key === "d" || key === "delete" || code === "Delete";
+  return shouldHandleStudyDeleteShortcut(event);
 }
+import { shouldHandleStudyDeleteShortcut } from "../vocab/study-keyboard-shortcuts.mjs";

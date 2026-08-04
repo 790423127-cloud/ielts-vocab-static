@@ -272,7 +272,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260730_mobile_sync_cursor_v11";
+const STATIC_EXPORT_VERSION = "20260804_reading_g_autoplay_v18";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -778,6 +778,11 @@ let holdStepDelayTimer=null;
 let holdStepDir=0;
 let holdTouchActive=false;
 let suppressNextSwipe=false;
+let studyListCache=new Map();
+
+function invalidateStudyListCache(){
+  studyListCache.clear();
+}
 
 const els={
   top:document.querySelector(".top"),
@@ -853,27 +858,39 @@ function arr(v){return Array.isArray(v)?v:[]}
 function uniq(values){return Array.from(new Set(values.map(x=>String(x||"").trim()).filter(Boolean)))}
 function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 const FIXED_WORD_ORDER_MODES=["family","association"];
+const WORD_ORDER_SNAPSHOT_VERSION=4;
 const WORD_DIFFICULTY_MODES=["default","easy-to-hard","hard-to-easy","easier-only","standard-only","harder-only"];
 function normalizeWordOrderMode(mode){return ["current","random","family","association"].includes(mode)?mode:"current"}
 function normalizeDifficultyMode(mode){return WORD_DIFFICULTY_MODES.includes(mode)?mode:"default"}
 function wordOrderSnapshotKey(mode,difficultyMode){return normalizeWordOrderMode(mode)+"|"+normalizeDifficultyMode(difficultyMode)}
 function isFixedWordOrderMode(mode,difficultyMode){return FIXED_WORD_ORDER_MODES.includes(mode)||normalizeDifficultyMode(difficultyMode)!=="default"}
+function intrinsicDifficulty(word){
+  const key=norm(word&&word.word);
+  const letters=key.replace(/[^a-z]/g,"");
+  if(!letters)return 50;
+  const syllables=Math.max(1,(letters.replace(/e$/,"").match(/[aeiouy]+/g)||[]).length);
+  const tokenCount=key.split(/[\\s-]+/).filter(Boolean).length;
+  const rare=(letters.match(/[jqxz]/g)||[]).length;
+  const clusters=letters.match(/[bcdfghjklmnpqrstvwxyz]{3,}/g)||[];
+  const clusterLoad=clusters.reduce(function(sum,cluster){return sum+Math.max(1,cluster.length-2)},0);
+  const opaque=(letters.match(/(?:ough|augh|eigh|queue|sch|tch|dge|ph|rh|ps|mn|gn|kn|wr|eau)/g)||[]).length;
+  let score=6+Math.max(0,Math.min(42,(letters.length-2)*4));
+  score+=Math.max(0,Math.min(20,(syllables-1)*5));
+  score+=Math.max(0,Math.min(14,(tokenCount-1)*7));
+  if(key.includes("-"))score+=3;
+  score+=Math.max(0,Math.min(6,rare*1.5));
+  score+=Math.max(0,Math.min(8,clusterLoad*2));
+  score+=Math.max(0,Math.min(9,opaque*3));
+  if(/(?:tion|sion|ation|isation|ization|ology|ologist|graphy|metry|phobia|cracy|ence|ance|ment|ness|ity|ative|ively|ically|ability|ibility)$/i.test(letters))score+=4;
+  if(letters.length>=9&&/^(?:anti|counter|dis|inter|micro|mis|multi|non|over|post|pre|re|sub|super|trans|un)/i.test(letters))score+=3;
+  return Math.max(0,Math.min(100,Math.round(score)));
+}
 function difficultyScore(word){
   const explicit=Number(word&&word.studyDifficultyScore);
   if(Number.isFinite(explicit))return Math.max(0,Math.min(100,Math.round(explicit)));
-  const key=norm(word&&word.word);
-  const letters=key.replace(/[^a-z]/g,"");
-  const syllables=Math.max(1,(letters.replace(/e$/,"").match(/[aeiouy]+/g)||[]).length);
-  const posParts=String(word&&word.pos||"").split(/[/,;|]+|\\s+or\\s+/i).filter(Boolean).length||1;
-  const meaningParts=String(word&&word.meaning||"").split(/[;；,，、/]+/).filter(Boolean).length||1;
-  let score=31+Math.max(0,Math.min(13,(letters.length-4)*1.3));
-  score+=Math.max(0,Math.min(9,(syllables-1)*2.25));
-  score+=Math.max(0,Math.min(6,(posParts-1)*2));
-  score+=Math.max(0,Math.min(7,(meaningParts-1)*1.4));
-  if(/[\\s-]/.test(key))score+=4;
-  if(arr(word&&word.wordFamily).length)score-=3;
-  return Math.max(0,Math.min(100,Math.round(score)));
+  return intrinsicDifficulty(word);
 }
+function difficultySortKey(word){return intrinsicDifficulty(word)*1000+Math.min(999,difficultyScore(word))}
 function difficultyProfile(source){
   const scores=source.map(difficultyScore).sort(function(a,b){return a-b});
   const at=function(ratio){return scores[Math.max(0,Math.min(scores.length-1,Math.floor((scores.length-1)*ratio)))]||0};
@@ -893,6 +910,25 @@ function requestedDifficultyTier(mode){
   return "";
 }
 function difficultyDirection(mode){return mode==="easy-to-hard"?1:mode==="hard-to-easy"?-1:0}
+function filterDifficultyTier(source,profile,tier){
+  if(!tier||!profile.available)return source;
+  const exact=source.filter(function(word){return difficultyTier(word,profile)===tier});
+  if(exact.length)return exact;
+  const scored=source.map(function(word,order){return {word:word,order:order,score:difficultyScore(word)}}).sort(function(a,b){return a.score-b.score||a.order-b.order});
+  if(!scored.length)return source;
+  if(tier==="easier"){
+    const limit=scored[Math.max(0,Math.floor((scored.length-1)*.35))].score;
+    return scored.filter(function(item){return item.score<=limit}).map(function(item){return item.word});
+  }
+  if(tier==="harder"){
+    const limit=scored[Math.min(scored.length-1,Math.ceil((scored.length-1)*.65))].score;
+    return scored.filter(function(item){return item.score>=limit}).map(function(item){return item.word});
+  }
+  const low=scored[Math.max(0,Math.floor((scored.length-1)*.25))].score;
+  const high=scored[Math.min(scored.length-1,Math.ceil((scored.length-1)*.75))].score;
+  const middle=scored.filter(function(item){return item.score>=low&&item.score<=high}).map(function(item){return item.word});
+  return middle.length?middle:source;
+}
 
 function readWordOrderPreferences(){
   try{
@@ -992,17 +1028,19 @@ function wordOrderSourceSignature(sourceCount){
 
 function createWordOrderSnapshot(ordered,cursorIndex){
   const indices=[];
+  const keys=[];
   const seen=new Set();
   ordered.forEach(function(word){
     const key=wordOrderEntryKey(word);
-    if(key&&!seen.has(key)){seen.add(key);indices.push(word.originalIndex)}
+    if(key&&!seen.has(key)){seen.add(key);indices.push(word.originalIndex);keys.push(key)}
   });
   const cursor=ordered.find(function(word){return word.originalIndex===cursorIndex});
   const first=ordered.find(function(word){return word.originalIndex===indices[0]});
   const cursorKey=cursor?wordOrderEntryKey(cursor):(first?wordOrderEntryKey(first):"");
   return {
-    version:2,
+    version:WORD_ORDER_SNAPSHOT_VERSION,
     indices:indices,
+    keys:keys,
     sourceCount:words.length,
     sourceSignature:wordOrderSourceSignature(),
     cursorKey:seen.has(cursorKey)?cursorKey:(first?wordOrderEntryKey(first):"")
@@ -1021,7 +1059,7 @@ function reconcileWordOrderSnapshot(snapshot,source,fallback){
     seenIndices.add(word.originalIndex);
     items.push(word);
   }
-  const compactMatches=Number(snapshot&&snapshot.version)===2
+  const compactMatches=Number(snapshot&&snapshot.version)===WORD_ORDER_SNAPSHOT_VERSION
     &&Array.isArray(snapshot&&snapshot.indices)
     &&(
       snapshot.sourceSignature===wordOrderSourceSignature()
@@ -1059,7 +1097,7 @@ function remapWordOrderSnapshotsAfterDeletion(snapshots,previousWords){
   const result={};
   Object.keys(snapshots||{}).forEach(function(snapshotKey){
     const snapshot=snapshots[snapshotKey]||{};
-    const orderedKeys=Number(snapshot.version)===2&&Array.isArray(snapshot.indices)
+    const orderedKeys=Number(snapshot.version)===WORD_ORDER_SNAPSHOT_VERSION&&Array.isArray(snapshot.indices)
       ?snapshot.indices.map(function(sourceIndex){
         const word=previousWords[sourceIndex];
         return word?wordOrderEntryKey(word):"";
@@ -1125,8 +1163,47 @@ function connectedGroups(entries,linksForWord){
   return Array.from(groups.values());
 }
 
+function familyConnectedGroups(entries){
+  const parent=entries.map(function(_,i){return i});
+  const byWord=new Map();
+  const byExplicitRoot=new Map();
+  function find(i){while(parent[i]!==i){parent[i]=parent[parent[i]];i=parent[i]}return i}
+  function join(a,b){const ar=find(a),br=find(b);if(ar!==br)parent[br]=ar}
+  entries.forEach(function(entry,i){
+    const key=norm(entry.word);
+    if(key)byWord.set(key,i);
+    const root=[entry.familyRoot,entry.rootWord,entry.baseWord,entry.lemma].map(norm).find(Boolean);
+    if(root){if(!byExplicitRoot.has(root))byExplicitRoot.set(root,[]);byExplicitRoot.get(root).push(i)}
+  });
+  entries.forEach(function(entry,i){
+    familyLinks(entry).forEach(function(key){const target=byWord.get(key);if(Number.isInteger(target))join(i,target)});
+  });
+  byExplicitRoot.forEach(function(positions,root){
+    positions.slice(1).forEach(function(position){join(positions[0],position)});
+    const target=byWord.get(root);if(Number.isInteger(target))join(positions[0],target);
+  });
+  const groups=new Map();
+  entries.forEach(function(entry,i){const root=find(i);if(!groups.has(root))groups.set(root,[]);groups.get(root).push(entry)});
+  return Array.from(groups.values());
+}
+
 function familyLinks(word){
-  return relationKeys(word.wordFamily).concat([word.familyRoot,word.rootWord,word.baseWord,word.lemma].map(norm).filter(Boolean));
+  return relationKeys(word.wordFamily)
+    .concat(relationKeys(word.forms),relationKeys(word.mergedAliases),relationKeys(word.mergedEntries))
+    .concat([word.familyRoot,word.rootWord,word.baseWord,word.lemma].map(norm).filter(Boolean));
+}
+
+const IRREGULAR_SURFACE_FORMS={be:["am","is","are","was","were","been","being"],go:["goes","went","gone","going"],do:["does","did","done","doing"],have:["has","had","having"],write:["writes","wrote","written","writing"],seek:["seeks","sought","seeking"],child:["children"],person:["people"],man:["men"],woman:["women"],analysis:["analyses"],basis:["bases"],crisis:["crises"],datum:["data"],phenomenon:["phenomena"]};
+function isSurfaceInflection(baseValue,formValue){
+  const base=norm(baseValue),form=norm(formValue);
+  if(!base||!form||base===form)return false;
+  if((IRREGULAR_SURFACE_FORMS[base]||[]).includes(form))return true;
+  const forms=new Set([base+"s",base+"es",base+"ed",base+"ing"]);
+  if(base.endsWith("e")){forms.add(base+"d");forms.add(base.slice(0,-1)+"ing")}
+  if(/[^aeiou]y$/.test(base)){forms.add(base.slice(0,-1)+"ies");forms.add(base.slice(0,-1)+"ied")}
+  if(/(?:s|x|z|ch|sh|o)$/.test(base))forms.add(base+"es");
+  if(/[aeiou][bcdfghjklmnpqrstvwxyz]$/.test(base)){forms.add(base+base.slice(-1)+"ed");forms.add(base+base.slice(-1)+"ing")}
+  return forms.has(form);
 }
 
 function explicitAssociationLinks(word){
@@ -1178,23 +1255,27 @@ function sceneForWord(word){
   const topics=arr(word.topics).join(" ");
   let best="",bestScore=0;
   SCENE_RULES.forEach(function(rule){
-    const score=(rule[1].test(content)?4:0)+(rule[2].test(topics)?2:0);
+    const score=(rule[1].test(content)?4:0)+(rule[2].test(topics)?4:0);
     if(score>bestScore){best=rule[0];bestScore=score}
   });
   return best;
 }
 
-function orderSceneWords(source){
+function orderSceneWords(source,preferredScene){
   if(source.length<2)return source;
-  const profiles=source.map(function(word,position){return {word:word,position:position,key:norm(word.word),links:explicitAssociationLinks(word),tokens:associationTokens(word)}});
+  const profiles=source.map(function(word,position){return {word:word,position:position,key:norm(word.word),scene:sceneForWord(word)||preferredScene||"",links:explicitAssociationLinks(word),tokens:associationTokens(word)}});
   const positionByKey=new Map(profiles.map(function(profile){return [profile.key,profile.position]}));
   const tokenPositions=new Map();
   profiles.forEach(function(profile){profile.tokens.forEach(function(token){if(!tokenPositions.has(token))tokenPositions.set(token,[]);tokenPositions.get(token).push(profile.position)})});
   const remaining=new Set(profiles.map(function(profile){return profile.position}));
   const ordered=[];
-  let currentPosition=0;
+  let currentPosition=Math.min.apply(null,Array.from(remaining));
   while(remaining.size){
-    if(!remaining.has(currentPosition))currentPosition=Math.min.apply(null,Array.from(remaining));
+    if(!remaining.has(currentPosition)){
+      const activeScene=ordered.length?sceneForWord(ordered[ordered.length-1]):preferredScene;
+      const sameScene=Array.from(remaining).filter(function(position){return !activeScene||profiles[position].scene===activeScene}).sort(function(a,b){return profiles[a].word.originalIndex-profiles[b].word.originalIndex});
+      currentPosition=sameScene[0]??Math.min.apply(null,Array.from(remaining));
+    }
     const current=profiles[currentPosition];
     ordered.push(current.word);
     remaining.delete(currentPosition);
@@ -1209,11 +1290,14 @@ function orderSceneWords(source){
         if(!remaining.has(candidate))return;
         const profile=profiles[candidate];
         const bonus=profile.key===token||current.key===token?90:0;
-        scores.set(candidate,(scores.get(candidate)||0)+weight+bonus);
+        const sceneBonus=current.scene&&profile.scene===current.scene?24:0;
+        scores.set(candidate,(scores.get(candidate)||0)+weight+bonus+sceneBonus);
       });
     });
     const strongest=Array.from(scores.entries()).filter(function(item){return item[1]>=96}).sort(function(a,b){return b[1]-a[1]||profiles[a[0]].word.originalIndex-profiles[b[0]].word.originalIndex})[0];
-    currentPosition=strongest?strongest[0]:Math.min.apply(null,Array.from(remaining));
+    if(strongest){currentPosition=strongest[0];continue}
+    const sameScene=Array.from(remaining).filter(function(position){return current.scene&&profiles[position].scene===current.scene}).sort(function(a,b){return profiles[a].word.originalIndex-profiles[b].word.originalIndex});
+    currentPosition=sameScene[0]??Math.min.apply(null,Array.from(remaining));
   }
   return ordered;
 }
@@ -1221,27 +1305,28 @@ function orderSceneWords(source){
 function generateStudyList(source,pref){
   const ordered=source.slice();
   if(ordered.length<2)return ordered;
-  if(pref.mode==="random"){
-    return ordered.sort(function(a,b){
-      return deterministicHash(pref.seed+":"+norm(a.word)+":"+a.originalIndex)-deterministicHash(pref.seed+":"+norm(b.word)+":"+b.originalIndex);
-    });
-  }
   const profile=difficultyProfile(ordered);
   const requestedTier=requestedDifficultyTier(pref.difficultyMode);
-  const eligible=requestedTier&&profile.available
-    ?ordered.filter(function(word){return difficultyTier(word,profile)===requestedTier})
-    :ordered;
+  const eligible=filterDifficultyTier(ordered,profile,requestedTier);
   if(!eligible.length)return [];
+  if(pref.mode==="random"){
+    return eligible.sort(function(a,b){
+      return deterministicHash(pref.seed+":"+norm(a.word)+":"+a.originalIndex)-deterministicHash(pref.seed+":"+norm(b.word)+":"+b.originalIndex)||a.originalIndex-b.originalIndex;
+    });
+  }
   let groups=[];
   if(pref.mode==="family"){
-    groups=connectedGroups(eligible,familyLinks).map(function(group){
+    groups=familyConnectedGroups(eligible).map(function(group){
       const incoming=new Map();
-      group.forEach(function(word){familyLinks(word).forEach(function(key){incoming.set(key,(incoming.get(key)||0)+1)})});
+      const activeKeys=new Set(group.map(function(word){return norm(word.word)}));
+      group.forEach(function(word){familyLinks(word).filter(function(key){return activeKeys.has(key)}).forEach(function(key){incoming.set(key,(incoming.get(key)||0)+1)})});
       return group.sort(function(a,b){
         const ak=norm(a.word),bk=norm(b.word);
+        const ai=Array.from(activeKeys).some(function(base){return isSurfaceInflection(base,ak)})?1:0;
+        const bi=Array.from(activeKeys).some(function(base){return isSurfaceInflection(base,bk)})?1:0;
         const as=familyLinks(a).length*8+(incoming.get(ak)||0)*3;
         const bs=familyLinks(b).length*8+(incoming.get(bk)||0)*3;
-        return bs-as||ak.split(" ").length-bk.split(" ").length||ak.length-bk.length||a.originalIndex-b.originalIndex;
+        return ai-bi||bs-as||ak.split(" ").length-bk.split(" ").length||ak.length-bk.length||a.originalIndex-b.originalIndex;
       });
     });
   }else if(pref.mode==="association"){
@@ -1253,7 +1338,11 @@ function generateStudyList(source,pref){
       if(!sceneBuckets.has(scene))sceneBuckets.set(scene,[]);
       sceneBuckets.get(scene).push.apply(sceneBuckets.get(scene),group);
     });
-    groups=Array.from(sceneBuckets.values()).map(orderSceneWords).concat(standalone);
+    groups=Array.from(sceneBuckets.entries()).sort(function(a,b){
+      return Math.min.apply(null,a[1].map(function(word){return word.originalIndex}))-Math.min.apply(null,b[1].map(function(word){return word.originalIndex}));
+    }).map(function(entry){return orderSceneWords(entry[1],entry[0])}).concat(standalone.sort(function(a,b){
+      return Math.min.apply(null,a.map(function(word){return word.originalIndex}))-Math.min.apply(null,b.map(function(word){return word.originalIndex}));
+    }).map(function(group){return orderSceneWords(group)}));
   }else{
     groups=eligible.map(function(word){return [word]});
   }
@@ -1261,11 +1350,11 @@ function generateStudyList(source,pref){
   if(direction){
     groups=groups.map(function(group){
       return group.slice().sort(function(a,b){
-        return (difficultyScore(a)-difficultyScore(b))*direction||a.originalIndex-b.originalIndex;
+        return (difficultySortKey(a)-difficultySortKey(b))*direction||a.originalIndex-b.originalIndex;
       });
     }).sort(function(a,b){
       function median(group){
-        const scores=group.map(difficultyScore).sort(function(x,y){return x-y});
+        const scores=group.map(difficultySortKey).sort(function(x,y){return x-y});
         const middle=Math.floor(scores.length/2);
         return scores.length%2?scores[middle]:(scores[middle-1]+scores[middle])/2;
       }
@@ -1291,7 +1380,7 @@ function orderStudyList(source,activeFilter){
   const resolved=reconcileWordOrderSnapshot(previous,fresh,fresh);
   const previousIndices=arr(previous&&previous.indices);
   const nextIndices=arr(resolved.snapshot&&resolved.snapshot.indices);
-  const changed=Number(previous&&previous.version)!==2
+  const changed=Number(previous&&previous.version)!==WORD_ORDER_SNAPSHOT_VERSION
     ||previous.sourceCount!==resolved.snapshot.sourceCount
     ||previous.sourceSignature!==resolved.snapshot.sourceSignature
     ||previous.cursorKey!==resolved.snapshot.cursorKey
@@ -1507,7 +1596,12 @@ function sourceList(activeFilter){
 
 function list(activeFilter){
   const f=activeFilter||filter;
-  return orderStudyList(sourceList(f),f);
+  const pref=wordOrderPreference(f);
+  const cacheKey=[f,restoreFocusWord,pref.mode,pref.difficultyMode,pref.seed].join("\\u0001");
+  if(studyListCache.has(cacheKey))return studyListCache.get(cacheKey);
+  const ordered=orderStudyList(sourceList(f),f);
+  studyListCache.set(cacheKey,ordered);
+  return ordered;
 }
 
 function resolveIndexForFilter(activeFilter,options){
@@ -1548,6 +1642,7 @@ function applyIndexForFilter(activeFilter,options){
 
 function switchFilter(nextFilter){
   restoreFocusWord="";
+  invalidateStudyListCache();
   rememberPositionForCurrentFilter();
   filter=nextFilter||"all";
   progress.filter=filter;
@@ -1731,6 +1826,7 @@ function deleteCurrentWord(){
   });
   saveDeletedWord(baseKey);
   words=nextWords;
+  invalidateStudyListCache();
   const remappedSnapshots=remapWordOrderSnapshotsAfterDeletion(pref.snapshots,previousWords);
   Object.keys(remappedSnapshots).forEach(function(snapshotKey){
     saveWordOrderSnapshot(filter,snapshotKey,remappedSnapshots[snapshotKey]);
@@ -1797,6 +1893,7 @@ function saveEditCurrentWord(){
     editedAt:Date.now()
   });
   words[index]=next;
+  invalidateStudyListCache();
   rememberPositionForCurrentFilter();
   saveWordsToLocal();
   persistNow();
@@ -1881,7 +1978,7 @@ function persistNow(){
       const snapshot=pref.snapshots[snapshotKey];
       if(isFixedWordOrderMode(pref.mode,pref.difficultyMode)&&snapshot){
         const cursorKey=wordOrderEntryKey(w);
-        const containsWord=Number(snapshot.version)===2
+        const containsWord=Number(snapshot.version)===WORD_ORDER_SNAPSHOT_VERSION
           ?arr(snapshot.indices).includes(index)
           :arr(snapshot.keys).includes(cursorKey);
         if(containsWord&&snapshot.cursorKey!==cursorKey){
@@ -1942,6 +2039,7 @@ function loadProgress(){
     const x=progress.statuses[norm(w.word)];
     return x?Object.assign({},w,{status:x.status||"",favorite:!!x.favorite}):w;
   });
+  invalidateStudyListCache();
 
   filter=progress.filter||"all";
   mobileMode=!!progress.mobileMode;
@@ -2263,6 +2361,7 @@ function updateStatusCounts(){
 }
 
 function render(){
+  invalidateStudyListCache();
   updateStatusCounts();
   renderEntryList();
   syncWordOrderControls();
@@ -2400,6 +2499,7 @@ function mark(status){
   const w=current();
   if(!w)return;
   w.status=(status==="不熟"&&w.status==="不熟")?"":status;
+  invalidateStudyListCache();
   rememberWord(w);
   if(status==="熟悉"){
     // 修复：即使当前入口是“全部单词”，熟悉词仍然可见，也要强制跳过当前词。
@@ -2795,6 +2895,7 @@ function applyProgressToWords(){
     const x=progress.statuses[norm(w.word)];
     return Object.assign({},w,{status:x?.status||"",favorite:!!x?.favorite});
   });
+  invalidateStudyListCache();
   filter=progress.filter||filter||"all";
   mobileMode=!!progress.mobileMode;
   applyIndexForFilter(filter);
@@ -3041,7 +3142,7 @@ document.getElementById("knownBtn").onclick=function(){mark("熟悉")};
 document.getElementById("unknownBtn").onclick=function(){mark("不熟")};
 els.favoriteBtn.onclick=function(){
   const w=current();
-  if(w){w.favorite=!w.favorite;rememberWord(w);render();persistNow();scheduleCloudSync()}
+  if(w){w.favorite=!w.favorite;invalidateStudyListCache();rememberWord(w);render();persistNow();scheduleCloudSync()}
 };
 document.getElementById("wordSoundBtn").onclick=function(){const w=current();if(w)play(w.audio,w.word,w.word)};
 els.word.onclick=function(){const w=current();if(w)play(w.audio,w.word,w.word)};
@@ -3114,8 +3215,7 @@ window.addEventListener("keydown",function(e){
   const isTyping=tag==="input"||tag==="textarea"||tag==="select"||(e.target&&e.target.isContentEditable);
   const key=e.key||"";
   const code=e.code||"";
-  const isHorizontalArrow=key==="ArrowLeft"||code==="ArrowLeft"||key==="ArrowRight"||code==="ArrowRight";
-  if((isTyping&&!isHorizontalArrow)||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(isTyping||e.ctrlKey||e.metaKey||e.altKey)return;
   const isDelete=key==="Delete"||code==="Delete"||e.keyCode===46||e.which===46;
   const isZero=key==="0"||code==="Digit0"||code==="Numpad0";
   const isOne=key==="1"||code==="Digit1"||code==="Numpad1";
@@ -3259,6 +3359,7 @@ const SHELL=[
   "./data/reading-g-vocab.json",
   "./data/reading-g-paraphrases.json",
   "./data/reading-g-import-report.json",
+  "./data/reading-g-retirements.json",
   "./data/ielts-538-words.json",
   "./manifest.webmanifest?v=${STATIC_EXPORT_VERSION}"
 ];
@@ -3299,7 +3400,7 @@ self.addEventListener("fetch",function(event){
     return;
   }
 
-  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-paraphrases.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
+  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/reading-g-retirements.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-paraphrases.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
     event.respondWith(
       fetch(req).then(function(res){
         if(res&&res.ok) caches.open(CACHE_NAME).then(function(cache){cache.put(req,res.clone()).catch(function(){})});
@@ -3586,6 +3687,18 @@ function buildExport(words, audioIndex, options = {}) {
       )
     },
     {
+      name: "data/reading-g-retirements.json",
+      data: JSON.stringify(
+        readJson(publicAssetPath("data", "reading-g-retirements.json"), {
+          version: "reading-g-retirements-v1",
+          count: 0,
+          entries: []
+        }),
+        null,
+        2
+      )
+    },
+    {
       name: "data/ielts-538-words.json",
       data: JSON.stringify(
         readJson(publicAssetPath("data", "ielts-538-words.json"), {
@@ -3641,6 +3754,7 @@ data/lexicon-tidy-audit.json  主词库整理复核记录
 data/reading-g-vocab.json  G类阅读提升词库
 data/reading-g-paraphrases.json  高可信同义关系
 data/reading-g-import-report.json  导入审计报告
+data/reading-g-retirements.json  G类词库删除记录（防止重建后重新出现）
 data/ielts-538-words.json 538考点词库与同义改写
 data/meaning-6000.json 选义训练词库
 data/idictation-frequency.json  爱听写频率词表

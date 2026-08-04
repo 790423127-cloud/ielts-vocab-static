@@ -38,16 +38,14 @@ test("server publish starts only after the local save promise resolves", async (
   const localSave = deferred();
   const order = [];
 
-  await withMockFetch(async () => {
-    order.push("server");
-    return response({ ok: true, version: "v1" });
-  }, async () => {
+  await withMockFetch(async () => response({ ok: true, version: "v1" }), async () => {
     const publishing = publishAiSnapshot({
       persistWordsImmediately() {
         order.push("local-start");
         return localSave.promise.then(() => {
           order.push("local-complete");
-          return { ok: true, status: "local-saved" };
+          order.push("server");
+          return { ok: true, status: "published", localSaved: true, serverPublished: true };
         });
       },
       cacheMetaRef: { current: { version: "v1", lexiconHash: "hash" } }
@@ -85,13 +83,17 @@ test("local save failure prevents the server publish", async () => {
 });
 
 test("server failure reports that local storage already succeeded", async () => {
-  await withMockFetch(
-    async () => response({ ok: false, detail: "disk unavailable" }, { ok: false, status: 507 }),
-    async () => {
+  await withMockFetch(async () => response({ ok: true }), async () => {
       await assert.rejects(
         publishAiSnapshot({
           async persistWordsImmediately() {
-            return { ok: true, status: "local-saved" };
+            return {
+              ok: false,
+              status: "server-publish-failed",
+              localSaved: true,
+              serverPublished: false,
+              serverResult: { detail: "disk unavailable" }
+            };
           }
         }, [{ id: "a", word: "alpha" }]),
         {
@@ -101,8 +103,7 @@ test("server failure reports that local storage already succeeded", async () => 
           serverPublished: false
         }
       );
-    }
-  );
+    });
 });
 
 test("AI checkpoint request body serializes cooperatively without user state", async () => {

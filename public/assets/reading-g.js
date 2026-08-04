@@ -10,7 +10,7 @@
   var SESSION_KEY = "ielts_reading_g_session_v3";
   var CONTROLS_COLLAPSED_KEY = "ielts_static_reading_g_controls_collapsed_v1_";
   var MIG_V4 = "ielts_reading_g_migration_v4";
-  var DATA_URL = "./data/reading-g-vocab.json";
+  var DATA_URL = "./data/reading-g-vocab.json?v=20260804-grok-excel-part1-2-missing-v1";
   var PARA_URL = "./data/reading-g-paraphrases.json";
   var DATA_VERSION = "20260714_d28_load_performance_v1";
   var SESSION_SIZES = { guided: 10, quick: 20, full: 80 };
@@ -69,6 +69,9 @@
 
   var controlsViewport = "";
   var controlsCollapsed = false;
+  var autoPlayActive = false;
+  var autoPlaySeconds = 6;
+  var autoPlayTimer = null;
 
   function controlsViewportKey() {
     if (window.matchMedia("(max-width: 900px)").matches) return "mobile";
@@ -92,7 +95,10 @@
     if (filter.type === "layer") {
       var layerLabels = {
         paraCore600: "表达识别核心",
-        paraExt500: "表达识别扩展"
+        paraExt500: "表达识别扩展",
+        questionBankActive: "全题库补充（已有资料）",
+        questionBankAiCompleted: "全题库补充（AI已补全）",
+        questionBankPending: "全题库待补资料"
       };
       return layerLabels[filter.value] || "专项分层";
     }
@@ -176,6 +182,45 @@
     if (item.id) return String(item.id);
     var t = item.entryType === "phrase" || /\s/.test(item.word || "") ? "phrase" : "word";
     return t + "::" + (item.normalizedKey || nk(item.word));
+  }
+
+  function saveSession() {
+    if (isQuiz()) return;
+    var item = words[index];
+    var key = entryKey(item);
+    if (!key) return;
+    saveJson(SESSION_KEY, {
+      wordKey: key,
+      filter: filter,
+      index: index,
+      savedAt: new Date().toISOString()
+    });
+  }
+
+  function restoreSession() {
+    var saved = loadJson(SESSION_KEY, null);
+    if (!saved || !saved.filter || saved.filter.type === "paraphraseQuiz") return false;
+    filter = saved.filter;
+    rebuildStudy();
+    if (!study.length) return true;
+
+    var key = String(saved.wordKey || "");
+    var found = -1;
+    if (key) {
+      for (var i = 0; i < study.length; i++) {
+        var sourceIndex = study[i];
+        var item = words[sourceIndex];
+        if (entryKey(item) === key || nk(item && item.word) === key) {
+          found = sourceIndex;
+          break;
+        }
+      }
+    }
+    if (found < 0 && Number.isInteger(saved.index) && study.indexOf(saved.index) >= 0) {
+      found = saved.index;
+    }
+    index = found >= 0 ? found : study[0];
+    return true;
   }
 
   function normalizeEntry(entry, i) {
@@ -306,32 +351,20 @@
 
   function matchStage(item, stage) {
     var layers = item.layers || [];
-    if (stage === "1") {
-      if (item.studyMode === "reference") return false;
-      if (
-        layers.indexOf("priority1500") >= 0 ||
-        layers.indexOf("answerCore250") >= 0 ||
-        layers.indexOf("logic120") >= 0
-      )
-        return true;
-      return layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 1;
-    }
-    if (stage === "2") {
-      if (item.studyMode === "reference") return false;
-      if (layers.indexOf("tierB1200") >= 0) return true;
-      return layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 2;
-    }
-    if (stage === "3") {
-      if (item.studyMode === "reference") return false;
-      return (
-        layers.indexOf("paraCore600") >= 0 ||
-        layers.indexOf("tierC800") >= 0 ||
-        layers.indexOf("paraExt500") >= 0
-      );
-    }
-    if (stage === "4") {
-      return item.studyMode === "reference" || layers.indexOf("reference701") >= 0;
-    }
+    if (stage === "4") return item.studyMode === "reference";
+    if (item.studyMode !== "active") return false;
+    var inStage1 =
+      layers.indexOf("priority1500") >= 0 ||
+      layers.indexOf("answerCore250") >= 0 ||
+      layers.indexOf("logic120") >= 0 ||
+      (layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 1);
+    var inStage2 =
+      !inStage1 &&
+      (layers.indexOf("tierB1200") >= 0 ||
+        (layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 2));
+    if (stage === "1") return inStage1;
+    if (stage === "2") return inStage2;
+    if (stage === "3") return !inStage1 && !inStage2;
     return false;
   }
 
@@ -878,6 +911,7 @@
     if (els.knownBtn) { els.knownBtn.textContent = "熟悉"; els.knownBtn.style.display = isQuiz() ? "none" : ""; }
     if (els.unknownBtn) { els.unknownBtn.textContent = st === "不熟" ? "取消不熟" : "不熟"; els.unknownBtn.style.display = isQuiz() ? "none" : ""; }
 
+    updateAutoPlayUi();
     renderQuiz();
   }
 
@@ -891,6 +925,7 @@
     if (p < 0) p = 0;
     p = (p + delta + study.length) % study.length;
     index = study[p];
+    saveSession();
     render();
   }
 
@@ -898,6 +933,7 @@
     filter = next;
     quizRevealed = false;
     quizSelected = null;
+    if (filter.type === "paraphraseQuiz") stopAutoPlay();
     if (filter.type === "paraphraseQuiz") {
       quizSessionMode = filter.sessionMode || "guided";
       rebuildQuiz(quizSessionMode);
@@ -910,6 +946,7 @@
       );
     } else {
       rebuildStudy();
+      saveSession();
     }
     renderTopics();
     render();
@@ -918,20 +955,16 @@
   function renderTopics() {
     if (!els.topicBar) return;
     var chips = [
+      { label: "阶段1主线", f: { type: "pathStage", value: "1" } },
+      { label: "阶段2扩展", f: { type: "pathStage", value: "2" } },
+      { label: "阶段3真题", f: { type: "pathStage", value: "3" } },
+      { label: "阶段4查阅", f: { type: "pathStage", value: "4" } },
+      { label: "全部待学", f: { type: "active", value: "" } },
       { label: "词义", f: { type: "learnMode", value: "meaning" } },
       { label: "短语", f: { type: "learnMode", value: "phrase" } },
-      { label: "引导学习·10组", f: { type: "paraphraseQuiz", value: "", sessionMode: "guided" } },
-      { label: "快速测验·20题", f: { type: "paraphraseQuiz", value: "", sessionMode: "quick" } },
-      { label: "完整测验·80题", f: { type: "paraphraseQuiz", value: "", sessionMode: "full" } },
-      { label: "表达识别核心·1006个表达", f: { type: "layer", value: "paraCore600" } },
-      { label: "表达识别扩展·500个表达", f: { type: "layer", value: "paraExt500" } },
-      { label: "阶段1", f: { type: "pathStage", value: "1" } },
-      { label: "阶段2", f: { type: "pathStage", value: "2" } },
-      { label: "阶段3", f: { type: "pathStage", value: "3" } },
-      { label: "阶段4", f: { type: "pathStage", value: "4" } },
-      { label: "不熟", f: { type: "status", value: "不熟" } },
-      { label: "熟悉", f: { type: "status", value: "熟悉" } },
-      { label: "active", f: { type: "active", value: "" } }
+      { label: "同义10组", f: { type: "paraphraseQuiz", value: "", sessionMode: "guided" } },
+      { label: "测验20题", f: { type: "paraphraseQuiz", value: "", sessionMode: "quick" } },
+      { label: "不熟", f: { type: "status", value: "不熟" } }
     ];
     els.topicBar.innerHTML = "";
     chips.forEach(function (c) {
@@ -962,14 +995,22 @@
     }
     var item = words[index];
     if (!item) return;
+    var previousStudy = study.slice();
+    var previousStudyPosition = previousStudy.indexOf(index);
     var cur = getUiStatus(item);
     var next = kind;
     if (kind === "不熟" && cur === "不熟") next = "";
     patchStatus(item, { status: next });
     toast(next === "熟悉" ? "已熟悉" : next === "不熟" ? "已不熟" : "已取消");
     rebuildStudy();
-    if (next === "熟悉") go(1);
-    else render();
+    if (next === "熟悉" && study.length) {
+      var landingPosition = previousStudyPosition >= 0
+        ? Math.min(previousStudyPosition, study.length - 1)
+        : study.indexOf(index);
+      index = study[Math.max(0, landingPosition)];
+    }
+    saveSession();
+    render();
   }
 
   function migrateV4Once() {
@@ -1029,14 +1070,70 @@
     } catch (e) {}
   }
 
+  function canAutoPlay() {
+    return !isQuiz() && study.length >= 2;
+  }
+
+  function updateAutoPlayUi() {
+    var btn = document.getElementById("autoPlayBtn");
+    var speed = document.getElementById("autoPlaySpeed");
+    if (btn) {
+      btn.disabled = !canAutoPlay();
+      btn.textContent = autoPlayActive ? "暂停播放 · " + autoPlaySeconds + "s" : "自动播放 · A";
+    }
+    if (speed) {
+      speed.disabled = !canAutoPlay();
+      speed.value = String(autoPlaySeconds);
+    }
+  }
+
+  function stopAutoPlay() {
+    autoPlayActive = false;
+    if (autoPlayTimer) {
+      window.clearInterval(autoPlayTimer);
+      autoPlayTimer = null;
+    }
+    updateAutoPlayUi();
+  }
+
+  function startAutoPlay() {
+    if (!canAutoPlay()) {
+      updateAutoPlayUi();
+      return;
+    }
+    autoPlayActive = true;
+    if (autoPlayTimer) window.clearInterval(autoPlayTimer);
+    updateAutoPlayUi();
+    speak(currentItem() && currentItem().word);
+    autoPlayTimer = window.setInterval(function () {
+      if (!canAutoPlay() || document.hidden) return;
+      go(1);
+      speak(currentItem() && currentItem().word);
+    }, autoPlaySeconds * 1000);
+  }
+
+  function toggleAutoPlay() {
+    if (autoPlayActive) stopAutoPlay();
+    else startAutoPlay();
+  }
+
   function bind() {
     var prev = document.getElementById("prevBtn");
     var next = document.getElementById("nextBtn");
     var shuffle = document.getElementById("shuffleBtn");
+    var autoPlay = document.getElementById("autoPlayBtn");
+    var autoPlaySpeed = document.getElementById("autoPlaySpeed");
     var wordSound = document.getElementById("wordSoundBtn");
     var exampleSound = document.getElementById("exampleSoundBtn");
     if (prev) prev.onclick = function () { go(-1); };
     if (next) next.onclick = function () { go(1); };
+    if (autoPlay) autoPlay.onclick = toggleAutoPlay;
+    if (autoPlaySpeed)
+      autoPlaySpeed.onchange = function () {
+        autoPlaySeconds = Number(autoPlaySpeed.value) || 6;
+        if (autoPlayActive) startAutoPlay();
+        else updateAutoPlayUi();
+      };
     if (shuffle)
       shuffle.onclick = function () {
         if (isQuiz()) {
@@ -1108,6 +1205,30 @@
         }
 
         if (!isQuiz()) {
+          if (e.key === "Escape" && autoPlayActive) {
+            e.preventDefault();
+            stopAutoPlay();
+            return;
+          }
+          if (e.code === "KeyA") {
+            e.preventDefault();
+            toggleAutoPlay();
+            return;
+          }
+          if (e.code === "BracketLeft" || e.key === "[") {
+            e.preventDefault();
+            autoPlaySeconds = autoPlaySeconds === 10 ? 6 : autoPlaySeconds === 6 ? 4 : autoPlaySeconds === 4 ? 2 : 10;
+            if (autoPlayActive) startAutoPlay();
+            else updateAutoPlayUi();
+            return;
+          }
+          if (e.code === "BracketRight" || e.key === "]") {
+            e.preventDefault();
+            autoPlaySeconds = autoPlaySeconds === 2 ? 4 : autoPlaySeconds === 4 ? 6 : autoPlaySeconds === 6 ? 10 : 2;
+            if (autoPlayActive) startAutoPlay();
+            else updateAutoPlayUi();
+            return;
+          }
           if (e.key === "Tab") {
             e.preventDefault();
             var c = currentItem();
@@ -1170,7 +1291,7 @@
         paraMap = loadJson(PARA_KEY, {}) || {};
         paraReview = loadJson(REVIEW_KEY, { version: 1, groups: {}, updatedAt: 0 }) || { version: 1, groups: {}, updatedAt: 0 };
         migrateV4Once();
-        rebuildStudy();
+        if (!restoreSession()) rebuildStudy();
         loadCoverage();
         var savedParaSession = loadJson(PARA_SESSION_KEY, null);
         if (savedParaSession && !savedParaSession.completed && Array.isArray(savedParaSession.currentSessionGroupIds) && savedParaSession.currentSessionGroupIds.length) {

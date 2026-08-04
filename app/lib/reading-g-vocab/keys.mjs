@@ -1,6 +1,7 @@
 /** Storage keys for IELTS G-class Reading vocab v3 data / v4 progress. */
 
-export const READING_G_DATA_URL = "/data/reading-g-vocab.json";
+export const READING_G_DATA_URL = "/data/reading-g-vocab.json?v=20260804-grok-excel-part1-2-missing-v1";
+export const READING_G_VOCAB_CACHE_KEY = "reading-g-vocab:normalized:20260804-grok-excel-part1-2-missing-v1";
 export const READING_G_PARAPHRASES_URL = "/data/reading-g-paraphrases.json";
 export const READING_G_REPORT_URL = "/data/reading-g-import-report.json";
 

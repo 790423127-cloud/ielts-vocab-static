@@ -32,6 +32,9 @@ function getRelatedWords(item, displayFamily, activeWordPool) {
   return [...found.values()].slice(0, 3);
 }
 
+/** Interval options for auto-scroll (seconds). Keep in sync with the speed <select>. */
+const AUTO_SCROLL_SPEEDS = [2, 4, 6, 10];
+
 /**
  * Existing word-study business logic is supplied through grouped props; this
  * component only owns layout, menus, and lightweight presentation state.
@@ -122,6 +125,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     wordOrderDifficultyMode,
     wordOrderDifficultyAvailable,
     wordOrderDifficultyEnabled,
+    wordOrderDifficultyProfile,
     setWordOrderMode,
     setWordDifficultyMode,
     nextWord,
@@ -147,8 +151,29 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
 
   nextWordRef.current = nextWord;
 
+  const canAutoScroll = !isStudyEmpty && studyWords.length >= 2;
+  const canAutoScrollRef = useRef(canAutoScroll);
+  const autoScrollActiveRef = useRef(autoScrollActive);
+  canAutoScrollRef.current = canAutoScroll;
+  autoScrollActiveRef.current = autoScrollActive;
+
+  const toggleAutoScroll = useCallback(() => {
+    if (!canAutoScrollRef.current) return false;
+    setAutoScrollActive((active) => !active);
+    return true;
+  }, []);
+
+  const cycleAutoScrollSpeed = useCallback((direction = 1) => {
+    setAutoScrollSeconds((current) => {
+      const index = AUTO_SCROLL_SPEEDS.indexOf(Number(current));
+      const safeIndex = index >= 0 ? index : AUTO_SCROLL_SPEEDS.indexOf(6);
+      const nextIndex = (safeIndex + direction + AUTO_SCROLL_SPEEDS.length) % AUTO_SCROLL_SPEEDS.length;
+      return AUTO_SCROLL_SPEEDS[nextIndex];
+    });
+  }, []);
+
   useEffect(() => {
-    if (!autoScrollActive || isStudyEmpty || studyWords.length < 2) return undefined;
+    if (!autoScrollActive || !canAutoScroll) return undefined;
 
     const timer = window.setInterval(() => {
       const activeElement = document.activeElement;
@@ -168,7 +193,91 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     }, autoScrollSeconds * 1000);
 
     return () => window.clearInterval(timer);
-  }, [autoScrollActive, autoScrollSeconds, isStudyEmpty, studyWords.length]);
+  }, [autoScrollActive, autoScrollSeconds, canAutoScroll]);
+
+  // Keyboard: A = toggle auto-scroll, Esc = pause, [ / ] = slower / faster.
+  // Uses event.code (physical key) so IME / layout variants still work.
+  useEffect(() => {
+    function isTextEntryTarget(target) {
+      if (!target || !(target instanceof Element)) return false;
+      const tag = target.tagName?.toLowerCase();
+      if (tag === "textarea") return true;
+      if (target.isContentEditable) return true;
+      if (tag === "input") {
+        const type = String(target.getAttribute("type") || "text").toLowerCase();
+        // Range / checkbox / button inputs should not block study hotkeys.
+        return !["button", "checkbox", "radio", "range", "file", "submit", "reset", "color"].includes(type);
+      }
+      return false;
+    }
+
+    function flashAutoScrollControl() {
+      const control = document.querySelector(".auto-scroll-control");
+      if (!control) return;
+      control.classList.add("is-hotkey-hit");
+      window.setTimeout(() => control.classList.remove("is-hotkey-hit"), 220);
+    }
+
+    function handleKeyDown(event) {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      // Allow first keydown only (ignore key-repeat spam).
+      if (event.repeat) return;
+      // While composing Chinese IME, ignore letter keys but still allow Esc.
+      if (event.isComposing && event.code !== "Escape") return;
+
+      const key = event.key || "";
+      const code = event.code || "";
+      const inTextField = isTextEntryTarget(event.target);
+
+      // Esc pauses even if a non-text control is focused.
+      if ((key === "Escape" || code === "Escape") && autoScrollActiveRef.current) {
+        if (inTextField) return;
+        event.preventDefault();
+        event.stopPropagation();
+        setAutoScrollActive(false);
+        flashAutoScrollControl();
+        return;
+      }
+
+      // Text fields keep letters for typing; select/dropdown still allow study hotkeys.
+      if (inTextField) return;
+
+      // Physical A key (not event.key, which can be "Process" under IME).
+      if (code === "KeyA") {
+        event.preventDefault();
+        event.stopPropagation();
+        // Blur focused select/button so subsequent hotkeys are not swallowed by native widgets.
+        if (event.target instanceof HTMLElement) {
+          const tag = event.target.tagName?.toLowerCase();
+          if (tag === "select" || tag === "button") event.target.blur();
+        }
+        if (!canAutoScrollRef.current) {
+          flashAutoScrollControl();
+          return;
+        }
+        toggleAutoScroll();
+        flashAutoScrollControl();
+        return;
+      }
+
+      if (code === "BracketLeft" || key === "[") {
+        event.preventDefault();
+        event.stopPropagation();
+        cycleAutoScrollSpeed(-1);
+        flashAutoScrollControl();
+        return;
+      }
+      if (code === "BracketRight" || key === "]") {
+        event.preventDefault();
+        event.stopPropagation();
+        cycleAutoScrollSpeed(1);
+        flashAutoScrollControl();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [cycleAutoScrollSpeed, toggleAutoScroll]);
 
   useEffect(() => {
     const openLibrary = () => {
@@ -401,26 +510,28 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                   onDifficultyModeChange={setWordDifficultyMode}
                   difficultyAvailable={wordOrderDifficultyAvailable}
                   difficultyEnabled={wordOrderDifficultyEnabled}
+                  difficultyProfile={wordOrderDifficultyProfile}
                 />
                 <div className={`auto-scroll-control${autoScrollActive ? " is-active" : ""}`}>
                   <button
                     type="button"
                     className="top-pill auto-scroll-toggle"
-                    disabled={isStudyEmpty || studyWords.length < 2}
+                    disabled={!canAutoScroll}
                     aria-pressed={autoScrollActive}
                     aria-label={autoScrollActive ? "暂停自动滚动" : "开启自动滚动"}
-                    title="自动切换到下一个词，不会自动标记熟悉"
-                    onClick={() => setAutoScrollActive((active) => !active)}
+                    title="自动切换到下一个词，不会自动标记熟悉。快捷键：A 开关 · Esc 暂停 · [ ] 调间隔（先点页面空白处再按，勿在搜索框里按）"
+                    onClick={toggleAutoScroll}
+                    data-testid="auto-scroll-toggle"
                   >
                     {autoScrollActive ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-                    {autoScrollActive ? "暂停滚动" : "自动滚动"}
+                    {autoScrollActive ? `暂停滚动 · ${autoScrollSeconds}s` : `自动滚动 · A`}
                   </button>
                   <select
                     className="auto-scroll-speed"
                     value={autoScrollSeconds}
                     onChange={(event) => setAutoScrollSeconds(Number(event.target.value))}
                     aria-label="自动滚动间隔"
-                    title="自动滚动间隔"
+                    title="自动滚动间隔（快捷键 [ 变慢 · ] 变快）"
                   >
                     <option value={2}>2秒</option>
                     <option value={4}>4秒</option>

@@ -28,12 +28,20 @@ test("notebook supports import, recall direction, reveal, ratings and position n
   assert.match(page, /模糊/);
   assert.match(page, /不熟/);
   assert.match(page, /type="range"/);
+  assert.match(page, /window\.addEventListener\("keydown", handleHorizontalNavigation\)/);
+  assert.match(page, /event\.key === "ArrowLeft"/);
+  assert.match(page, /event\.key !== "ArrowRight"/);
+  assert.match(page, /aria-label="中文释义"/);
 });
 
 test("static export includes the notebook and its cloud sync client", () => {
   assert.match(exportRoute, /name: "reading-paraphrases\.html"/);
   assert.match(exportRoute, /name: "assets\/reading-paraphrases\.js"/);
+  assert.match(staticPage, /aria-label="中文释义"/);
   assert.match(staticPage, /腾讯云学习进度同步/);
+  assert.match(staticScript, /event\.key==="ArrowLeft"/);
+  assert.match(staticScript, /event\.key!=="ArrowRight"/);
+  assert.match(staticScript, /translationBox\.classList\.toggle/);
   assert.match(staticScript, /collection\("vocab_progress"\)/);
   assert.match(staticScript, /vocabId:VOCAB_ID/);
 });

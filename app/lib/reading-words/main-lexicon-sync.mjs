@@ -33,6 +33,38 @@ function createMainWordId(idFactory) {
   return `personal-reading-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function meaningKey(entry = {}) {
+  return cleanText(entry?.meaning || entry?.meaningZh || entry?.chineseMeaning)
+    .toLowerCase()
+    .replace(/[；;，,。.!！?？、\s]+/g, "");
+}
+
+function isPersonalReadingMainEntry(entry = {}) {
+  return entry?.source === "personal-reading" || entry?.addedFromReadingWords === true;
+}
+
+function canonicalizeReadingWordAgainstMain(readingWord = {}, mainWords = [], options = {}) {
+  const previousWord = cleanText(readingWord?.word || readingWord?.headword);
+  const suggestion = suggestCanonicalReadingHeadword(previousWord, mainWords, readingWord);
+  if (!suggestion.corrected) {
+    return { readingWord, suggestion, corrected: false };
+  }
+
+  return {
+    readingWord: {
+      ...readingWord,
+      word: suggestion.word,
+      correctedFrom: cleanText(readingWord.correctedFrom) || previousWord,
+      mainWordId: cleanText(
+        suggestion.mainEntry?.id || suggestion.mainEntry?.wordId || readingWord.mainWordId
+      ),
+      updatedAt: cleanText(options.now) || readingWord.updatedAt
+    },
+    suggestion,
+    corrected: true
+  };
+}
+
 export function applyMainEntryToReadingWord(readingWord = {}, mainEntry = {}, now = "") {
   if (!mainEntry?.word) return readingWord;
   const next = {
@@ -97,7 +129,9 @@ export function buildPersonalReadingMainEntry(readingWord = {}, options = {}) {
 
 export function ensureReadingWordMainEntry(readingWord = {}, currentMainWords = [], options = {}) {
   const mainWords = Array.isArray(currentMainWords) ? currentMainWords : [];
-  const wordKey = normalizeReadingWordKey(readingWord?.word);
+  const canonical = canonicalizeReadingWordAgainstMain(readingWord, mainWords, options);
+  const canonicalReadingWord = canonical.readingWord;
+  const wordKey = normalizeReadingWordKey(canonicalReadingWord?.word);
   const existingIndex = mainWords.findIndex(
     (entry) => normalizeReadingWordKey(entry?.word) === wordKey
   );
@@ -106,6 +140,8 @@ export function ensureReadingWordMainEntry(readingWord = {}, currentMainWords = 
       mainWords,
       mainEntry: mainWords[existingIndex],
       mainIndex: existingIndex,
+      readingWord: canonicalReadingWord,
+      corrected: canonical.corrected,
       added: false
     };
   }
@@ -115,7 +151,7 @@ export function ensureReadingWordMainEntry(readingWord = {}, currentMainWords = 
     : new Set(
       mainWords.flatMap((entry) => [cleanText(entry?.id), cleanText(entry?.wordId)]).filter(Boolean)
     );
-  const mainEntry = buildPersonalReadingMainEntry(readingWord, {
+  const mainEntry = buildPersonalReadingMainEntry(canonicalReadingWord, {
     ...options,
     usedIds
   });
@@ -123,6 +159,8 @@ export function ensureReadingWordMainEntry(readingWord = {}, currentMainWords = 
     mainWords: [...mainWords, mainEntry],
     mainEntry,
     mainIndex: mainWords.length,
+    readingWord: canonicalReadingWord,
+    corrected: canonical.corrected,
     added: true
   };
 }
@@ -140,6 +178,7 @@ export function backfillReadingWordsIntoMain(
   );
   let mainWords = Array.isArray(currentMainWords) ? [...currentMainWords] : [];
   let addedToMain = 0;
+  let correctedHeadwords = 0;
 
   const words = (Array.isArray(readingWords) ? readingWords : []).map((readingWord) => {
     if (!normalizeReadingWordKey(readingWord?.word)) return readingWord;
@@ -150,10 +189,11 @@ export function backfillReadingWordsIntoMain(
     });
     mainWords = ensured.mainWords;
     if (ensured.added) addedToMain += 1;
+    if (ensured.corrected) correctedHeadwords += 1;
     return applyMainEntryToReadingWord(
-      readingWord,
+      ensured.readingWord,
       ensured.mainEntry,
-      ensured.added ? now : ""
+      ensured.added || ensured.corrected ? now : ""
     );
   });
 
@@ -161,6 +201,8 @@ export function backfillReadingWordsIntoMain(
     words,
     mainWords,
     mainChanged: addedToMain > 0,
+    readingChanged: correctedHeadwords > 0,
+    correctedHeadwords,
     addedToMain
   };
 }
@@ -186,17 +228,25 @@ export function reconcileReadingImportsWithMain(
   options = {}
 ) {
   const now = cleanText(options.now) || new Date().toISOString();
-  const importResult = mergeReadingWordImports(currentReadingWords, incomingWords, {
+  const mainWords = Array.isArray(currentMainWords) ? [...currentMainWords] : [];
+  let correctedHeadwords = 0;
+  const canonicalizeList = (list) => (Array.isArray(list) ? list : []).map((word) => {
+    const canonical = canonicalizeReadingWordAgainstMain(word, mainWords, { now });
+    if (canonical.corrected) correctedHeadwords += 1;
+    return canonical.readingWord;
+  });
+  const canonicalCurrentWords = canonicalizeList(currentReadingWords);
+  const canonicalIncomingWords = canonicalizeList(incomingWords);
+  const importResult = mergeReadingWordImports(canonicalCurrentWords, canonicalIncomingWords, {
     idFactory: options.readingIdFactory,
     now
   });
   const incomingCounts = new Map();
-  for (const item of Array.isArray(incomingWords) ? incomingWords : []) {
+  for (const item of canonicalIncomingWords) {
     const key = normalizeReadingWordKey(item?.word || item?.headword);
     if (key) incomingCounts.set(key, (incomingCounts.get(key) || 0) + 1);
   }
 
-  const mainWords = Array.isArray(currentMainWords) ? [...currentMainWords] : [];
   const mainIndexByKey = new Map(
     mainWords.map((entry, index) => [normalizeReadingWordKey(entry?.word), index])
   );
@@ -252,6 +302,8 @@ export function reconcileReadingImportsWithMain(
     words: readingWords,
     mainWords,
     mainChanged,
+    readingChanged: correctedHeadwords > 0,
+    correctedHeadwords,
     reusedMain,
     addedToMain
   };
@@ -267,8 +319,109 @@ export function isMainEntryClassificationIncomplete(entry = {}) {
   );
 }
 
-export function needsReadingAiProcessing(readingWord = {}, mainEntry = {}) {
-  return isReadingWordIncomplete(readingWord) || isMainEntryClassificationIncomplete(mainEntry);
+function mainEntryCompletenessScore(entry = {}) {
+  if (!entry || typeof entry !== "object") return -1;
+  let score = 0;
+  if (cleanText(entry.pos)) score += 1;
+  if (cleanText(entry.meaning)) score += 2;
+  if (cleanText(entry.definition)) score += 2;
+  if (cleanText(entry.example) && cleanText(entry.exampleCn)) score += 2;
+  if (cleanText(entry.difficulty)) score += 1;
+  if (Array.isArray(entry.ieltsUse) && entry.ieltsUse.length) score += 1;
+  if (Array.isArray(entry.topics) && entry.topics.length) score += 1;
+  if (Array.isArray(entry.forms) && entry.forms.length) score += 1;
+  if (Array.isArray(entry.wordFamily) && entry.wordFamily.length) score += 1;
+  return score;
+}
+
+/**
+ * Prefer canonical spellings already in the master lexicon.
+ * Handles common import/OCR typos such as missing first letter:
+ * "ncestors" → "ancestors".
+ */
+export function suggestCanonicalReadingHeadword(rawWord = "", mainWords = [], readingWord = {}) {
+  const previousWord = cleanText(rawWord);
+  const key = normalizeReadingWordKey(previousWord);
+  if (!key) {
+    return { word: previousWord, key: "", corrected: false, mainEntry: null, previousWord };
+  }
+
+  const byKey = new Map();
+  for (const entry of Array.isArray(mainWords) ? mainWords : []) {
+    const entryKey = normalizeReadingWordKey(entry?.word);
+    if (!entryKey || byKey.has(entryKey)) continue;
+    byKey.set(entryKey, entry);
+  }
+
+  let bestKey = key;
+  let bestEntry = byKey.get(key) || null;
+  let bestScore = mainEntryCompletenessScore(bestEntry);
+  const originalEntry = bestEntry;
+  const sourceMeaning = meaningKey(readingWord);
+
+  // Never replace a trusted existing headword. Automatic correction is only
+  // allowed for a missing entry or a provisional entry created by reading import.
+  if (bestEntry && !isPersonalReadingMainEntry(bestEntry)) {
+    return { word: cleanText(bestEntry.word), key, corrected: false, mainEntry: bestEntry, previousWord };
+  }
+
+  function supportsReadingMeaning(candidateEntry) {
+    const candidateMeaning = meaningKey(candidateEntry);
+    return Boolean(sourceMeaning && candidateMeaning && sourceMeaning === candidateMeaning);
+  }
+
+  // Missing first letter: a+key, b+key, ...
+  const prefixedCandidates = [];
+  for (let code = 97; code <= 122; code += 1) {
+    const candidateKey = `${String.fromCharCode(code)}${key}`;
+    const candidateEntry = byKey.get(candidateKey);
+    if (!candidateEntry || !supportsReadingMeaning(candidateEntry)) continue;
+    prefixedCandidates.push({ candidateKey, candidateEntry });
+  }
+  if (prefixedCandidates.length === 1) {
+    const [{ candidateKey, candidateEntry }] = prefixedCandidates;
+    const score = mainEntryCompletenessScore(candidateEntry);
+    if (
+      score > bestScore ||
+      (score === bestScore && candidateKey.length > bestKey.length) ||
+      (!originalEntry && score >= 0)
+    ) {
+      bestKey = candidateKey;
+      bestEntry = candidateEntry;
+      bestScore = score;
+    }
+  }
+
+  // Extra first letter on the raw token (rarer).
+  if (key.length >= 6) {
+    const candidateKey = key.slice(1);
+    const candidateEntry = byKey.get(candidateKey);
+    if (candidateEntry && supportsReadingMeaning(candidateEntry)) {
+      const score = mainEntryCompletenessScore(candidateEntry);
+      if (score >= bestScore + 2) {
+        bestKey = candidateKey;
+        bestEntry = candidateEntry;
+        bestScore = score;
+      }
+    }
+  }
+
+  const word = cleanText(bestEntry?.word) || previousWord;
+  return {
+    word,
+    key: bestKey,
+    corrected: normalizeReadingWordKey(word) !== key,
+    mainEntry: bestEntry,
+    previousWord
+  };
+}
+
+export function needsReadingAiProcessing(readingWord = {}, mainEntry = {}, mainWords = []) {
+  return (
+    isReadingWordIncomplete(readingWord)
+    || isMainEntryClassificationIncomplete(mainEntry)
+    || suggestCanonicalReadingHeadword(readingWord?.word, mainWords, readingWord).corrected
+  );
 }
 
 export function mergeAiProfileIntoMainEntry(mainEntry = {}, profile = {}, options = {}) {

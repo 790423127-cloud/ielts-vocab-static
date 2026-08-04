@@ -51,9 +51,13 @@ export function applyWordUserStateMap(words = [], state = {}) {
 
 export function buildWordCacheMeta(words = [], sourceMeta = {}) {
   const list = Array.isArray(words) ? words : [];
+  const declaredSourceCount = Number(sourceMeta.sourceCount ?? sourceMeta.count);
   return {
     schemaVersion: WORD_CACHE_SCHEMA_VERSION,
     count: list.length,
+    sourceCount: Number.isInteger(declaredSourceCount) && declaredSourceCount >= 0
+      ? declaredSourceCount
+      : list.length,
     version: String(sourceMeta.version || ""),
     lexiconHash: String(sourceMeta.lexiconHash || ""),
     savedAt: String(sourceMeta.savedAt || ""),
@@ -64,8 +68,9 @@ export function buildWordCacheMeta(words = [], sourceMeta = {}) {
 
 export function isWordCacheCurrent(cacheMeta = {}, apiMeta = {}) {
   if (!cacheMeta.lexiconHash || !apiMeta.lexiconHash) return false;
+  const cachedSourceCount = Number(cacheMeta.sourceCount ?? cacheMeta.count);
   return (
-    Number(cacheMeta.count) === Number(apiMeta.count) &&
+    cachedSourceCount === Number(apiMeta.count) &&
     String(cacheMeta.version || "") === String(apiMeta.version || "") &&
     String(cacheMeta.lexiconHash) === String(apiMeta.lexiconHash)
   );

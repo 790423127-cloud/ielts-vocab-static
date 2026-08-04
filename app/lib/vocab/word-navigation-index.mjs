@@ -28,14 +28,19 @@ export function buildAtomicDeletionNavigation({
   filter,
   wordMatchesFilter,
   normalizeWord,
+  getEntryKey,
   sortQueue,
   orderedQueue
 }) {
   const sourceWords = Array.isArray(words) ? words : [];
   if (!Number.isInteger(currentIndex) || !sourceWords[currentIndex]) return null;
-  if (typeof wordMatchesFilter !== "function" || typeof normalizeWord !== "function") return null;
+  if (typeof wordMatchesFilter !== "function") return null;
+  if (typeof getEntryKey !== "function" && typeof normalizeWord !== "function") return null;
 
-  const targetKey = normalizeWord(sourceWords[currentIndex]?.word);
+  const resolveEntryKey = typeof getEntryKey === "function"
+    ? (entry) => String(getEntryKey(entry) || "").trim()
+    : (entry) => normalizeWord(entry?.word);
+  const targetKey = resolveEntryKey(sourceWords[currentIndex]);
   if (!targetKey) return null;
 
   const visibleQueue = Array.isArray(orderedQueue)
@@ -72,7 +77,7 @@ export function buildAtomicDeletionNavigation({
 
   for (let sourceIndex = 0; sourceIndex < sourceWords.length; sourceIndex += 1) {
     const word = sourceWords[sourceIndex];
-    if (normalizeWord(word?.word) === targetKey) {
+    if (resolveEntryKey(word) === targetKey) {
       deletedCount += 1;
       continue;
     }

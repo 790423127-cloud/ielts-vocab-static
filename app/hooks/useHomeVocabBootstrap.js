@@ -152,13 +152,18 @@ export function useHomeVocabBootstrap({ setToast }) {
 
     const task = (async () => {
       try {
+        const formalWords = formalLexiconWords(nextWords);
         const localResult = await persistWordsWithLocalStore(nextWords, {
-          sourceMeta: cacheMetaRef.current,
+          sourceMeta: {
+            ...cacheMetaRef.current,
+            count: formalWords.length,
+            sourceCount: formalWords.length
+          },
           onStatus(message) {
             setToast?.(message);
           }
         });
-        const serverResult = await postExportCache(formalLexiconWords(nextWords), cacheMetaRef.current, {
+        const serverResult = await postExportCache(formalWords, cacheMetaRef.current, {
           source: "main-lexicon-content-edit",
           forceRefresh: true,
           ...(options.deletionIntent ? { deletionIntent: options.deletionIntent } : {})
@@ -278,6 +283,11 @@ export function useHomeVocabBootstrap({ setToast }) {
       let cachedNeedsRepair = false;
 
       try {
+        // Parallel: paint from IndexedDB ASAP while meta/version check is in flight.
+        const metaPromise = fetch("/api/vocab-meta", { cache: "no-store" })
+          .then((response) => (response?.ok ? response.json().catch(() => null) : null))
+          .catch(() => null);
+
         const stored = await withTimeout(loadWordsFromIndexedDB(), 2500, null);
         if (stored?.words?.length) {
           cachedWords = stored.words;
@@ -288,21 +298,24 @@ export function useHomeVocabBootstrap({ setToast }) {
             if (cachedMeta) cacheMetaRef.current = cachedMeta;
             hydratedWordsRef.current = cachedWords;
             startTransition(() => setWordsState(cachedWords));
+            // Optimistic online: show the study UI from local cache immediately.
+            // Background meta may still force a full refresh if hashes diverge.
             setVocabRuntime({
-              status: "loading",
-              count: cachedMeta?.count || cachedWords.length,
+              status: "online",
+              count: cachedMeta?.sourceCount || cachedMeta?.count || cachedWords.length,
               version: cachedMeta?.version || "",
               lexiconHash: cachedMeta?.lexiconHash || "",
               savedAt: cachedMeta?.savedAt || ""
             });
+            primeSpellingLexiconCache(cachedWords, {
+              headwordVersion: cachedMeta?.version || "indexeddb-cache"
+            });
           }
         }
 
-        const metaResponse = await fetch("/api/vocab-meta", { cache: "no-store" });
-        const apiMeta = metaResponse?.ok ? await metaResponse.json().catch(() => null) : null;
+        const apiMeta = await metaPromise;
 
         if (
-          cachedWords?.length === Number(apiMeta?.count) &&
           apiMeta?.lexiconHash &&
           isWordCacheCurrent(cachedMeta || {}, apiMeta)
         ) {
@@ -320,6 +333,7 @@ export function useHomeVocabBootstrap({ setToast }) {
           return;
         }
 
+        // Only download the multi‑MB lexicon when local cache is missing/stale.
         const response = await fetch("/api/vocab-data", { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
@@ -392,7 +406,7 @@ export function useHomeVocabBootstrap({ setToast }) {
 
         if (cachedWords?.length) {
           const offlineMeta = {
-            count: cachedMeta?.count || cachedWords.length,
+            count: cachedMeta?.sourceCount || cachedMeta?.count || cachedWords.length,
             version: cachedMeta?.version || "未知版本",
             lexiconHash: cachedMeta?.lexiconHash || "",
             savedAt: cachedMeta?.savedAt || ""

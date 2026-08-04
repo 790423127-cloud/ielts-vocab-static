@@ -59,15 +59,17 @@ async function encodePayload(encoding) {
 
   if (encoding === "br") {
     if (!cachedBrotliPromise) {
+      // Quality 4 is much faster to produce for ~30MB JSON while still
+      // shrinking transfer size enough for local LAN / loopback.
       cachedBrotliPromise = compressBrotli(input, {
-        params: { [constants.BROTLI_PARAM_QUALITY]: 5 }
+        params: { [constants.BROTLI_PARAM_QUALITY]: 4 }
       });
     }
     return cachedBrotliPromise;
   }
 
   if (!cachedGzipPromise) {
-    cachedGzipPromise = compressGzip(input, { level: 6 });
+    cachedGzipPromise = compressGzip(input, { level: 4 });
   }
   return cachedGzipPromise;
 }

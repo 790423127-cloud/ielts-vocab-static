@@ -43,6 +43,56 @@ test("layer filter and stage1 semantics", () => {
   );
 });
 
+test("question-bank shortcut filters only independent primary entries", () => {
+  const inheritedLayerItem = {
+    word: "existing",
+    entryType: "word",
+    studyMode: "active",
+    layers: ["priority1500", "questionBankActive"],
+    primaryLayer: "priority1500",
+    normalizedKey: "existing"
+  };
+  const independentItem = {
+    word: "added",
+    entryType: "word",
+    studyMode: "active",
+    layers: ["questionBankActive"],
+    primaryLayer: "questionBankActive",
+    normalizedKey: "added"
+  };
+
+  assert.equal(
+    itemMatchesRgFilter(inheritedLayerItem, { type: "layer", value: "questionBankActive" }, {}),
+    true
+  );
+  assert.equal(
+    itemMatchesRgFilter(inheritedLayerItem, { type: "primaryLayer", value: "questionBankActive" }, {}),
+    false
+  );
+  assert.equal(
+    itemMatchesRgFilter(independentItem, { type: "primaryLayer", value: "questionBankActive" }, {}),
+    true
+  );
+});
+
+test("primary question-bank shortcuts include familiar entries so displayed totals stay stable", () => {
+  const item = {
+    id: "rg_added",
+    word: "added",
+    entryType: "word",
+    studyMode: "active",
+    layers: ["questionBankActive"],
+    primaryLayer: "questionBankActive",
+    normalizedKey: "added"
+  };
+  const statusMap = { rg_added: { meaningStatus: "熟悉" } };
+
+  assert.equal(
+    itemMatchesRgFilter(item, { type: "primaryLayer", value: "questionBankActive" }, statusMap),
+    true
+  );
+});
+
 test("active layer forces active studyMode in dataset", () => {
   const data = JSON.parse(fs.readFileSync(vocabPath, "utf8"));
   const bad = data.items.filter(
@@ -58,7 +108,9 @@ test("active layer forces active studyMode in dataset", () => {
           "tierB1200",
           "paraCore600",
           "tierC800",
-          "paraExt500"
+          "paraExt500",
+          "questionBankActive",
+          "questionBankAiCompleted"
         ].includes(l)
       )
   );

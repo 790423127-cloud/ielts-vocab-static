@@ -1,5 +1,53 @@
 import { expect, test } from "@playwright/test";
 
+async function installReadingShortcutFixture(page) {
+  await page.addInitScript(() => {
+    const now = new Date().toISOString();
+    window.__readingShortcutSpeech = [];
+    class MockSpeechSynthesisUtterance {
+      constructor(text) {
+        this.text = String(text || "");
+      }
+    }
+    Object.defineProperty(window, "SpeechSynthesisUtterance", {
+      configurable: true,
+      value: MockSpeechSynthesisUtterance
+    });
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: {
+        cancel() {},
+        speak(utterance) {
+          window.__readingShortcutSpeech.push(utterance.text);
+        }
+      }
+    });
+    localStorage.setItem("ielts-personal-reading-words-v1", JSON.stringify({
+      version: 1,
+      updatedAt: now,
+      words: [{
+        id: "reading-keyboard-term",
+        wordId: "reading-keyboard-term",
+        word: "keyboardreadingterm",
+        pos: "noun",
+        meaning: "快捷键测试词",
+        definition: "a deterministic keyboard shortcut fixture",
+        example: "Keyboard shortcuts should play this example.",
+        exampleCn: "快捷键应播放这个例句。",
+        forms: [],
+        formsReviewed: true,
+        wordFamily: [],
+        wordFamilyReviewed: true,
+        synonyms: [],
+        synonymsReviewed: true,
+        importCount: 1,
+        createdAt: now,
+        updatedAt: now
+      }]
+    }));
+  });
+}
+
 test("legacy reading words are backfilled into the formal lexicon and show synonym meanings", async ({ page }) => {
   let publishedWords = [];
   await page.route("**/api/export-cache", async (route) => {
@@ -58,6 +106,54 @@ test("legacy reading words are backfilled into the formal lexicon and show synon
   ).toBe(true);
 });
 
+test("a complete-looking truncated reading word is corrected to the existing canonical headword", async ({ page }) => {
+  await page.addInitScript(() => {
+    const now = new Date().toISOString();
+    localStorage.setItem("ielts-personal-reading-words-v1", JSON.stringify({
+      version: 1,
+      updatedAt: now,
+      words: [{
+        id: "reading-truncated-ancestors",
+        wordId: "reading-truncated-ancestors",
+        word: "ncestors",
+        pos: "noun",
+        meaning: "祖先",
+        definition: "A person from whom one is descended.",
+        example: "Many people trace their ancestors.",
+        exampleCn: "许多人追溯自己的祖先。",
+        forms: [],
+        formsReviewed: true,
+        wordFamily: [],
+        wordFamilyReviewed: true,
+        synonyms: [],
+        synonymsReviewed: true,
+        importCount: 1,
+        createdAt: now,
+        updatedAt: now
+      }]
+    }));
+  });
+
+  for (const path of ["/reading-words", "/reading-words.html"]) {
+    await page.goto(path);
+    await expect(page.getByText("ancestors", { exact: true }).first()).toBeVisible({ timeout: 45_000 });
+    await expect(page.getByText("ncestors", { exact: true })).toHaveCount(0);
+    await expect.poll(() => page.evaluate(() => {
+      const payload = JSON.parse(localStorage.getItem("ielts-personal-reading-words-v1") || "null");
+      const word = Array.isArray(payload) ? payload[0] : payload?.words?.[0];
+      return {
+        word: word?.word,
+        correctedFrom: word?.correctedFrom,
+        mainWordId: word?.mainWordId
+      };
+    })).toEqual({
+      word: "ancestors",
+      correctedFrom: "ncestors",
+      mainWordId: "word_excel_4c679af3eb0d"
+    });
+  }
+});
+
 test("reading words reuse main data, count repeated imports, and migrate to another device profile", async ({ page, browser }) => {
   await page.route("**/api/export-cache", (route) => route.fulfill({
     status: 200,
@@ -102,6 +198,38 @@ test("reading words reuse main data, count repeated imports, and migrate to anot
   await secondPage.getByLabel("跨设备导入").setInputFiles(transferPath);
   await expect(secondPage.getByRole("button", { name: /retain 保留/ })).toContainText("高频 ×2");
   await secondDevice.close();
+});
+
+test("reading words share flashcard audio and status keyboard shortcuts in Next and static pages", async ({ page }) => {
+  await installReadingShortcutFixture(page);
+  await page.route("**/api/export-cache", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ ok: true, version: "e2e-reading-keyboard", savedAt: new Date().toISOString() })
+  }));
+  await page.route("**/data/words.json*", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ words: [] })
+  }));
+
+  for (const path of ["/reading-words", "/reading-words.html"]) {
+    await page.goto(path);
+    await expect(page.getByText("keyboardreadingterm", { exact: true }).first()).toBeVisible({
+      timeout: 45_000
+    });
+    await page.evaluate(() => document.activeElement?.blur());
+
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Space");
+    await expect.poll(() => page.evaluate(() => window.__readingShortcutSpeech)).toEqual([
+      "keyboardreadingterm",
+      "Keyboard shortcuts should play this example."
+    ]);
+
+    await page.keyboard.press("Digit3");
+    await expect(page.getByRole("button", { name: "不熟" })).toHaveClass(/active|is-selected/);
+  }
 });
 
 test("zoomed-out word view keeps all four dictionary modules aligned without horizontal overflow", async ({ page }) => {

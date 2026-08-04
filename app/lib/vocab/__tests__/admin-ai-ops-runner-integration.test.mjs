@@ -174,7 +174,7 @@ test("generateHundredByFiveBatch fills data without changing the headword", asyn
   assert.equal(state.getWords()[0].status, "learning");
 });
 
-test("generateHundredByFiveBatch stops after one failed probe chunk and reports the cause", async () => {
+test("generateHundredByFiveBatch isolates a failed probe and continues with later chunks", async () => {
   const headwords = [
     "alpha", "bravo", "charlie", "delta", "echo",
     "foxtrot", "golf", "hotel", "india", "juliet",
@@ -192,14 +192,14 @@ test("generateHundredByFiveBatch stops after one failed probe chunk and reports 
     );
   }, async () => {
     const result = await createAiOps(state.ctx).generateHundredByFiveBatch();
-    assert.equal(result.total, 10);
+    assert.equal(result.total, 20);
     assert.equal(result.filled, 0);
-    assert.equal(result.failed, 10);
+    assert.equal(result.failed, 20);
     assert.equal(result.error, "stale production build");
   });
 
-  assert.equal(requests, 1);
-  assert.match(state.toasts.at(-1), /失败 10/);
+  assert.equal(requests, 4);
+  assert.match(state.toasts.at(-1), /失败 20/);
 });
 
 test("categorizeWords sends lexical context and merges classification only", async () => {

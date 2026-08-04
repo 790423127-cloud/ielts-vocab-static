@@ -1,4 +1,5 @@
 import { asPhraseList } from "../spelling/lexicon-merge.mjs";
+import { loadSessionJson, loadSessionValue } from "../browser-json-cache.mjs";
 
 const PHRASES_URL = "/data/phrases.json";
 
@@ -26,29 +27,31 @@ export function buildPhraseLexiconMeta(payload = {}, phrases = []) {
 }
 
 export async function fetchPhrasesPayload(url = PHRASES_URL) {
-  const response = await fetch(url, { cache: "no-store" });
+  return loadSessionValue(`phrases:${url}`, async () => {
+    const payload = await loadSessionJson(url, fetch, { cache: "force-cache" }).catch(async () => {
+      const response = await fetch(url, { cache: "force-cache" });
+      if (!response?.ok) {
+        throw new Error(`词组库加载失败（HTTP ${response?.status || "unknown"}）`);
+      }
+      return response.json();
+    });
 
-  if (!response?.ok) {
-    throw new Error(`词组库加载失败（HTTP ${response?.status || "unknown"}）`);
-  }
+    if (!payload) {
+      throw new Error("词组库 JSON 解析失败");
+    }
 
-  const payload = await response.json().catch(() => null);
+    const phrases = asPhraseList(payload);
 
-  if (!payload) {
-    throw new Error("词组库 JSON 解析失败");
-  }
+    if (!phrases.length) {
+      throw new Error("词组库为空，请检查 public/data/phrases.json");
+    }
 
-  const phrases = asPhraseList(payload);
-
-  if (!phrases.length) {
-    throw new Error("词组库为空，请检查 public/data/phrases.json");
-  }
-
-  return {
-    payload,
-    phrases,
-    meta: buildPhraseLexiconMeta(payload, phrases)
-  };
+    return {
+      payload,
+      phrases,
+      meta: buildPhraseLexiconMeta(payload, phrases)
+    };
+  });
 }
 
 /** Browser-only unified phrase loader. Never merges into word lists. */

@@ -6,7 +6,7 @@ import {
 } from "../lib/vocab/word-study-ordering.mjs";
 import {
   WORD_STUDY_DIFFICULTY_MODE,
-  WORD_STUDY_DIFFICULTY_MODES
+  listWordStudyDifficultyModeOptions
 } from "../lib/vocab/word-internal-difficulty.mjs";
 
 function completeSelectAction(control) {
@@ -23,10 +23,14 @@ export default function WordStudyOrderControls({
   onModeChange,
   onDifficultyModeChange,
   difficultyAvailable = true,
-  difficultyEnabled = true
+  difficultyEnabled = true,
+  difficultyProfile = null
 }) {
   const random = mode === WORD_STUDY_ORDER_MODE.RANDOM;
-  const difficultyDisabled = !difficultyEnabled || !difficultyAvailable || random;
+  const difficultyDisabled = !difficultyEnabled || !difficultyAvailable;
+  const difficultyOptions = listWordStudyDifficultyModeOptions(
+    difficultyAvailable ? difficultyProfile : null
+  );
 
   return (
     <div className="word-order-controls" aria-label="刷词排列方式">
@@ -60,13 +64,17 @@ export default function WordStudyOrderControls({
             onDifficultyModeChange?.(nextMode);
             completeSelectAction(control);
           }}
-          aria-label="入口内部难度"
-          title={random
-            ? "随机模式本轮暂时忽略难度；退出随机后恢复当前难度设置"
-            : "只在当前词汇入口内部划分相对较易、常规和相对较难"}
+          aria-label="入口内部相对难度"
+          title={
+            difficultyDisabled
+              ? "当前词量太少或分数区分不够，暂无法划分相对难度"
+              : random
+                ? "随机会在当前难度档内部洗牌（例如只刷较难里随机）"
+                : "按当前入口内的相对较易 / 常规 / 较难划分，不是官方难度标签"
+          }
           disabled={difficultyDisabled}
         >
-          {WORD_STUDY_DIFFICULTY_MODES.map((option) => (
+          {difficultyOptions.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>

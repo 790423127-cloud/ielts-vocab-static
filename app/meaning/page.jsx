@@ -14,6 +14,8 @@ const WORD_BANK_URL = "/data/meaning-6000.json";
 
 let meaningExampleRuntime = null;
 let meaningExampleRuntimePromise = null;
+let meaningWordBankPromise = null;
+let meaningWordBankItems = null;
 
 // 大索引（example / semantic distractor 等）按需 dynamic import，避免首屏打进 MB 级 chunk。
 // 长期可改为 public/data/*.json + fetch；当前策略已满足 First Load ~109kB。
@@ -71,16 +73,25 @@ export default function MeaningPage() {
 
     async function load() {
       try {
-        const res = await fetch(WORD_BANK_URL);
-        if (!res.ok) throw new Error("Failed to load word bank: " + res.status);
-        const data = await res.json();
-        if (cancelled) return;
-        if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
-          setError("Word bank is empty. Please run build-meaning-6000 first.");
-          setPhase("error");
-          return;
+        if (!meaningWordBankPromise) {
+          meaningWordBankPromise = (async () => {
+            if (meaningWordBankItems) return meaningWordBankItems;
+            const res = await fetch(WORD_BANK_URL, { cache: "force-cache" });
+            if (!res.ok) throw new Error("Failed to load word bank: " + res.status);
+            const data = await res.json();
+            if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
+              throw new Error("Word bank is empty. Please run build-meaning-6000 first.");
+            }
+            meaningWordBankItems = data.items;
+            return meaningWordBankItems;
+          })().catch((error) => {
+            meaningWordBankPromise = null;
+            throw error;
+          });
         }
-        setWordBank(data.items);
+        const items = await meaningWordBankPromise;
+        if (cancelled) return;
+        setWordBank(items);
         const progressState = loadAdaptiveState() || migrateFromV1() || { version: 2, words: {} };
         setStats(getAdaptiveStats(progressState));
         setPhase("ready");

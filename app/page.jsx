@@ -63,7 +63,6 @@ import {
 import {
   WORD_STUDY_ORDER_MODE,
   createWordStudyOrderSnapshot,
-  hasWordStudyInternalDifficulty,
   isFixedWordStudyOrderMode,
   remapWordStudyOrderSnapshotsAfterDeletion,
   reconcileWordStudyOrderSnapshot,
@@ -73,6 +72,7 @@ import {
 } from "./lib/vocab/word-study-ordering.mjs";
 import {
   WORD_STUDY_DIFFICULTY_MODE,
+  createWordInternalDifficultyProfile,
   normalizeWordStudyDifficultyMode
 } from "./lib/vocab/word-internal-difficulty.mjs";
 import { wordStudyIndexAtPosition } from "./lib/vocab/word-study-position.mjs";
@@ -551,12 +551,13 @@ function Home() {
       const seed = Date.now();
       const nextOrder = orderStudyWordIndices(baseStudyWordIndices, activeWordPool, {
         mode: nextMode,
-        difficultyMode: WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
-        difficultyEnabled: false,
+        difficultyMode: normalizedDifficultyMode,
+        difficultyEnabled,
         seed,
         idictation
       });
       setWordOrderMode(nextMode, { seed });
+      setWordDifficultyMode(normalizedDifficultyMode);
       targetIndex = nextOrder[0];
     } else if (isFixedWordStudyOrderMode(nextMode, normalizedDifficultyMode)) {
       const freshOrder = orderStudyWordIndices(baseStudyWordIndices, activeWordPool, {
@@ -701,18 +702,24 @@ function Home() {
     studySessionRef,
     studyWordIndices
   ]);
-  const wordOrderDifficultyAvailable = useMemo(
-    () => wordOrderDifficultyEnabled && hasWordStudyInternalDifficulty(
-      baseStudyWordIndices,
-      activeWordPool,
-      { idictation: Boolean(idictationFlashSourceKey) }
-    ),
-    [
-      activeWordPool,
-      baseStudyWordIndices,
-      idictationFlashSourceKey,
-      wordOrderDifficultyEnabled
-    ]
+  const wordOrderDifficultyProfile = useMemo(() => {
+    if (!wordOrderDifficultyEnabled || !baseStudyWordIndices.length) return null;
+    const idictation = Boolean(idictationFlashSourceKey);
+    const words = baseStudyWordIndices.map((sourceIndex) => {
+      if (idictation) {
+        return activeWordPool.find((word) => word?.originalIndex === sourceIndex) || null;
+      }
+      return activeWordPool[sourceIndex] || null;
+    }).filter(Boolean);
+    return createWordInternalDifficultyProfile(words);
+  }, [
+    activeWordPool,
+    baseStudyWordIndices,
+    idictationFlashSourceKey,
+    wordOrderDifficultyEnabled
+  ]);
+  const wordOrderDifficultyAvailable = Boolean(
+    wordOrderDifficultyEnabled && wordOrderDifficultyProfile?.available
   );
 
   latestStateRef.current = {
@@ -1086,6 +1093,8 @@ function Home() {
     }
 
     let deletionResult = null;
+    // Only flush words+index so the successor paints immediately. Snapshot remap
+    // and session persist run after, so连点删除 is not blocked by localStorage.
     flushSync(() => {
       deletionResult = deleteCurrentWord(deletionPlan);
       if (!deletionResult?.deleted) return;
@@ -1097,41 +1106,46 @@ function Home() {
         ...deletionResult.words[sourceIndex],
         originalIndex: sourceIndex
       }));
+    });
 
-      if (activeFilter?.type === LEXICON_TIDY_FILTER_TYPE) {
-        recordTidyDeletedWords(sourceWords, targetIndex);
-      }
+    if (!deletionResult?.deleted) return deletionResult;
 
-      const remappedSnapshots = remapWordStudyOrderSnapshotsAfterDeletion(
-        wordOrderSnapshots,
-        sourceWords,
-        deletionResult.words
+    if (activeFilter?.type === LEXICON_TIDY_FILTER_TYPE) {
+      recordTidyDeletedWords(sourceWords, targetIndex);
+    }
+
+    const remappedSnapshots = remapWordStudyOrderSnapshotsAfterDeletion(
+      wordOrderSnapshots,
+      sourceWords,
+      deletionResult.words
+    );
+    if (isFixedWordStudyOrderMode(wordOrderMode, wordOrderDifficultyMode)) {
+      remappedSnapshots[activeWordOrderSnapshotKey] = createWordStudyOrderSnapshot(
+        deletionResult.queueIndices,
+        deletionResult.words,
+        { cursorIndex: deletionResult.index }
       );
-      if (isFixedWordStudyOrderMode(wordOrderMode, wordOrderDifficultyMode)) {
-        remappedSnapshots[activeWordOrderSnapshotKey] = createWordStudyOrderSnapshot(
-          deletionResult.queueIndices,
-          deletionResult.words,
-          { cursorIndex: deletionResult.index }
-        );
-      }
+    }
+    // Defer snapshot/cursor writes — not needed for the next paint.
+    queueMicrotask(() => {
       Object.entries(remappedSnapshots).forEach(([snapshotKey, snapshot]) => {
         saveWordOrderSnapshot(snapshotKey, snapshot);
         saveWordOrderCursor(snapshotKey, snapshot.cursorKey);
       });
     });
 
-    if (!deletionResult?.deleted) return deletionResult;
-
     const sessionState = studySessionRef.current;
     sessionState.userAdjusted = true;
     sessionState.restoreTargetIndex = null;
     sessionState.persistBlocked = false;
     sessionState.settling = false;
-    persistWordFlashSessionNow(
-      deletionResult.index,
-      activeFilter,
-      deletionResult.words
-    );
+    queueMicrotask(() => {
+      persistWordFlashSessionNow(
+        deletionResult.index,
+        activeFilter,
+        deletionResult.words
+      );
+    });
     return deletionResult;
   }, [
     activeWordOrderSnapshotKey,
@@ -1545,6 +1559,7 @@ function Home() {
             wordOrderDifficultyMode,
             wordOrderDifficultyAvailable,
             wordOrderDifficultyEnabled,
+            wordOrderDifficultyProfile,
             setWordOrderMode: handleWordOrderModeChange,
             setWordDifficultyMode: handleWordDifficultyModeChange,
             nextWord,

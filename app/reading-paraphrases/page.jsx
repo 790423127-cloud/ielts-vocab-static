@@ -129,6 +129,25 @@ export default function ReadingParaphrasesPage() {
     goToIndex(index + delta);
   }, [goToIndex, index]);
 
+  useEffect(() => {
+    function handleHorizontalNavigation(event) {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+
+      const target = event.target;
+      if (target instanceof HTMLElement && (
+        target.isContentEditable
+        || ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName)
+      )) return;
+
+      event.preventDefault();
+      move(event.key === "ArrowLeft" ? -1 : 1);
+    }
+
+    window.addEventListener("keydown", handleHorizontalNavigation);
+    return () => window.removeEventListener("keydown", handleHorizontalNavigation);
+  }, [move]);
+
   function setDirection(direction) {
     setState((existing) => ({ ...existing, direction, updatedAt: Date.now() }));
     setRevealed(false);
@@ -291,7 +310,12 @@ export default function ReadingParaphrasesPage() {
             <div className={`${styles.answer} ${answerVisible ? styles.answerVisible : ""}`} aria-hidden={!answerVisible}>
               <span>{state.direction === READING_PARAPHRASE_DIRECTION.SOURCE_TO_QUESTION ? "题目表达" : "原文表达"}</span>
               <h3>{answerVisible ? answerText : "点击后查看"}</h3>
-              {answerVisible && current.note ? <p className={styles.note}>{current.note}</p> : null}
+              {answerVisible && current.note ? (
+                <div className={styles.translation} aria-label="中文释义">
+                  <strong>中文释义</strong>
+                  <p>{current.note}</p>
+                </div>
+              ) : null}
             </div>
 
             {answerVisible && current.sources?.length ? (
@@ -329,13 +353,13 @@ export default function ReadingParaphrasesPage() {
           </section>
 
           <footer className={styles.actions}>
-            <button type="button" onClick={() => move(-1)} disabled={index === 0}><ArrowLeft size={18} />上一个</button>
+            <button type="button" onClick={() => move(-1)} disabled={index === 0}><ArrowLeft size={18} />上一个 <kbd>←</kbd></button>
             <div className={styles.ratings}>
               <button type="button" className={styles.known} onClick={() => mark(READING_PARAPHRASE_STATUS.KNOWN)}><Check size={17} />认识</button>
               <button type="button" className={styles.fuzzy} onClick={() => mark(READING_PARAPHRASE_STATUS.FUZZY)}><RotateCcw size={17} />模糊</button>
               <button type="button" className={styles.unfamiliar} onClick={() => mark(READING_PARAPHRASE_STATUS.UNFAMILIAR)}>不熟</button>
             </div>
-            <button type="button" onClick={() => move(1)} disabled={index >= visibleItems.length - 1}>下一个<ArrowRight size={18} /></button>
+            <button type="button" onClick={() => move(1)} disabled={index >= visibleItems.length - 1}>下一个 <kbd>→</kbd><ArrowRight size={18} /></button>
             <button type="button" className={styles.delete} onClick={deleteCurrent} aria-label="删除当前同义替换"><Trash2 size={18} /></button>
           </footer>
         </>

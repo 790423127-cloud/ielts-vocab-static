@@ -41,15 +41,16 @@
         <div class="rp-prompt"><span id="promptLabel">题目表达</span><h2 id="promptText"></h2></div>
         <button id="revealBtn" class="rp-reveal" type="button">显示答案</button>
         <div id="answerArea" class="rp-answer">
-          <span id="answerLabel">原文表达</span><h3 id="answerText">点击后查看</h3><p id="noteText"></p>
+          <span id="answerLabel">原文表达</span><h3 id="answerText">点击后查看</h3>
+          <div id="translationBox" class="rp-translation hidden" aria-label="中文释义"><strong>中文释义</strong><p id="noteText"></p></div>
         </div>
         <div id="sources" class="rp-sources hidden"></div>
       </article>
       <section class="rp-progress"><label for="positionRange">拖动或点击回到指定位置</label><input id="positionRange" type="range" min="1" max="1" value="1" /></section>
       <footer class="rp-actions">
-        <button id="prevBtn" type="button">← 上一个</button>
+        <button id="prevBtn" type="button">← 上一个 <kbd>←</kbd></button>
         <div><button id="knownBtn" class="known" type="button">认识</button><button id="fuzzyBtn" class="fuzzy" type="button">模糊</button><button id="unfamiliarBtn" class="unfamiliar" type="button">不熟</button></div>
-        <button id="nextBtn" type="button">下一个 →</button>
+        <button id="nextBtn" type="button">下一个 <kbd>→</kbd> →</button>
         <button id="deleteBtn" class="delete" type="button">删除</button>
       </footer>
     </section>

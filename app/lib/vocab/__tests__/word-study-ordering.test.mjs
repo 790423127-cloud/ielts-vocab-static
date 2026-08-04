@@ -16,7 +16,11 @@ import {
   wordStudyOrderSnapshotKey
 } from "../word-study-ordering.mjs";
 import {
-  WORD_STUDY_DIFFICULTY_MODE
+  WORD_STUDY_DIFFICULTY_MODE,
+  createWordInternalDifficultyProfile,
+  wordInternalDifficultyScore,
+  wordInternalDifficultySortKey,
+  wordIntrinsicDifficultyScore
 } from "../word-internal-difficulty.mjs";
 
 const WORDS = [
@@ -80,6 +84,30 @@ test("family order joins members that share a root outside the active entry", ()
   assert.deepEqual(positions, [positions[0], positions[0] + 1]);
 });
 
+test("family order keeps standalone form relations next to their headword", () => {
+  const words = [
+    { word: "unrelated" },
+    {
+      word: "fit",
+      forms: [
+        { word: "fitted", relation: "merged-independent-entry" },
+        { word: "fitting", relation: "merged-independent-entry" }
+      ],
+      mergedEntries: [{ key: "fitting", relationType: "form" }]
+    },
+    { word: "another" },
+    { word: "fitting", forms: [{ word: "fittings", type: "plural" }] }
+  ];
+  const ordered = orderStudyWordIndices([0, 1, 2, 3], words, {
+    mode: WORD_STUDY_ORDER_MODE.FAMILY
+  });
+  const fitPosition = ordered.indexOf(1);
+  const fittingPosition = ordered.indexOf(3);
+
+  assert.equal(Math.abs(fitPosition - fittingPosition), 1);
+  assert.ok(fitPosition < fittingPosition);
+});
+
 test("association order joins expressions, synonyms and concrete scenes", () => {
   const ordered = orderStudyWordIndices(
     WORDS.map((_, index) => index),
@@ -135,6 +163,78 @@ test("difficulty order is relative inside one entry instead of sorting formal ca
   );
 });
 
+test("easy-to-hard ignores formal labels when word-derived scores tie", () => {
+  const words = [
+    { word: "gamma", difficulty: "高级加分", studyDifficultyScore: 40 },
+    { word: "alpha", difficulty: "基础高频", studyDifficultyScore: 40 },
+    { word: "beta phrase", difficulty: "基础高频", studyDifficultyScore: 40 },
+    { word: "delta", difficulty: "中级核心", studyDifficultyScore: 40 },
+    { word: "epsilon", difficulty: "基础高频", studyDifficultyScore: 50 }
+  ];
+  const ordered = orderStudyWordIndices([0, 1, 2, 3, 4], words, {
+    difficultyMode: WORD_STUDY_DIFFICULTY_MODE.EASY_TO_HARD
+  }).map((index) => words[index].word);
+
+  // Intrinsic word shape owns the high-order key. A compact single word stays
+  // ahead of the longer phrase even when its serialized correction is higher.
+  assert.deepEqual([...ordered.slice(0, 3)].sort(), ["alpha", "delta", "gamma"]);
+  assert.equal(ordered[3], "epsilon");
+  assert.equal(ordered[4], "beta phrase");
+
+  const reverse = orderStudyWordIndices([0, 1, 2, 3, 4], words, {
+    difficultyMode: WORD_STUDY_DIFFICULTY_MODE.HARD_TO_EASY
+  }).map((index) => words[index].word);
+  assert.equal(reverse[0], "beta phrase");
+  assert.equal(reverse[1], "epsilon");
+
+  const relabelled = words.map((word, index) => ({
+    ...word,
+    difficulty: ["低频认识即可", "高级加分", "中级核心", "基础高频"][index % 4]
+  }));
+  assert.deepEqual(
+    orderStudyWordIndices([0, 1, 2, 3, 4], relabelled, {
+      difficultyMode: WORD_STUDY_DIFFICULTY_MODE.EASY_TO_HARD
+    }),
+    orderStudyWordIndices([0, 1, 2, 3, 4], words, {
+      difficultyMode: WORD_STUDY_DIFFICULTY_MODE.EASY_TO_HARD
+    })
+  );
+});
+
+test("serialized static scores cannot replace intrinsic word shape as the sort axis", () => {
+  const words = [
+    { word: "methodological", studyDifficultyScore: 1, difficulty: "基础高频" },
+    { word: "cat", studyDifficultyScore: 99, difficulty: "低频认识即可" }
+  ];
+  const ordered = orderStudyWordIndices([0, 1], words, {
+    difficultyMode: WORD_STUDY_DIFFICULTY_MODE.EASY_TO_HARD
+  });
+
+  assert.deepEqual(ordered, [1, 0]);
+});
+
+test("family order does not connect unrelated entries through a shared absent relation", () => {
+  const words = [
+    { word: "alpha", wordFamily: [{ word: "missing-bridge" }] },
+    { word: "standalone" },
+    { word: "omega", wordFamily: [{ word: "missing-bridge" }] }
+  ];
+  const ordered = orderStudyWordIndices([0, 1, 2], words, {
+    mode: WORD_STUDY_ORDER_MODE.FAMILY
+  });
+
+  assert.deepEqual(ordered, [0, 1, 2]);
+});
+
+test("intrinsic spelling complexity puts visibly simpler words first", () => {
+  assert.ok(wordIntrinsicDifficultyScore({ word: "cat" }) < wordIntrinsicDifficultyScore({ word: "catalogue" }));
+  assert.ok(wordIntrinsicDifficultyScore({ word: "plane" }) < wordIntrinsicDifficultyScore({ word: "queue" }));
+  assert.ok(wordIntrinsicDifficultyScore({ word: "mail" }) < wordIntrinsicDifficultyScore({ word: "surface mail" }));
+  assert.ok(wordIntrinsicDifficultyScore({ word: "method" }) < wordIntrinsicDifficultyScore({ word: "methodological" }));
+  assert.ok(wordInternalDifficultyScore({ word: "news" }) < wordInternalDifficultyScore({ word: "general" }));
+  assert.ok(wordInternalDifficultySortKey({ word: "simple" }) < wordInternalDifficultySortKey({ word: "method" }));
+});
+
 test("internal difficulty enables within one formal category and uses a separate fixed dimension", () => {
   assert.equal(
     hasWordStudyInternalDifficulty(
@@ -173,7 +273,7 @@ test("internal difficulty enables within one formal category and uses a separate
   );
 });
 
-test("relative tier filters stay inside the active entry and random ignores difficulty", () => {
+test("relative tier filters stay inside the active entry and random shuffles within the band", () => {
   const words = [10, 20, 30, 40, 50, 60, 70, 80, 90].map((score, index) => ({
     word: `entry-${index}`,
     difficulty: "基础高频",
@@ -194,8 +294,27 @@ test("relative tier filters stay inside the active entry and random ignores diff
     difficultyMode: WORD_STUDY_DIFFICULTY_MODE.HARDER_ONLY,
     seed: 42
   });
-  assert.deepEqual(randomWithDifficulty, randomDefault);
-  assert.equal(randomWithDifficulty.length, words.length);
+  assert.equal(randomDefault.length, words.length);
+  assert.deepEqual([...randomWithDifficulty].sort((a, b) => a - b), harderOnly);
+  assert.notDeepEqual(randomWithDifficulty, harderOnly);
+});
+
+test("a precomputed difficulty profile produces the same relative tier queue", () => {
+  const words = [10, 20, 30, 40, 50, 60, 70, 80, 90].map((score, index) => ({
+    word: `cached-${index}`,
+    studyDifficultyScore: score
+  }));
+  const indices = words.map((_, index) => index);
+  const profile = createWordInternalDifficultyProfile(words);
+  const expected = orderStudyWordIndices(indices, words, {
+    difficultyMode: WORD_STUDY_DIFFICULTY_MODE.STANDARD_ONLY
+  });
+  const actual = orderStudyWordIndices(indices, words, {
+    difficultyMode: WORD_STUDY_DIFFICULTY_MODE.STANDARD_ONLY,
+    difficultyProfile: profile
+  });
+
+  assert.deepEqual(actual, expected);
 });
 
 test("order preferences use a separate entry for every learning range", () => {
@@ -251,19 +370,15 @@ test("fixed family and association snapshots keep their first generated order", 
   assert.equal(reconciled.changed, false);
 });
 
-test("fixed snapshots use compact indices instead of duplicating every stable id", () => {
+test("fixed snapshots keep indices plus stable keys for deletion remaps", () => {
   const indices = WORDS.map((_, index) => index);
   const snapshot = createWordStudyOrderSnapshot(indices, WORDS);
-  const legacySize = JSON.stringify({
-    version: 1,
-    keys: WORDS.map((word) => `word:${word.word}`),
-    cursorKey: `word:${WORDS[0].word}`
-  }).length;
 
-  assert.equal(snapshot.version, 2);
+  assert.equal(snapshot.version, 4);
   assert.deepEqual(snapshot.indices, indices);
-  assert.equal("keys" in snapshot, false);
-  assert.ok(JSON.stringify(snapshot).length < legacySize);
+  assert.equal(Array.isArray(snapshot.keys), true);
+  assert.equal(snapshot.keys.length, indices.length);
+  assert.ok(snapshot.keys.every((key) => String(key).startsWith("word:") || String(key).startsWith("id:")));
 });
 
 test("fixed snapshots resume their cursor and append newly eligible words", () => {
@@ -284,7 +399,7 @@ test("fixed snapshots resume their cursor and append newly eligible words", () =
   assert.equal(reconciled.snapshot.cursorKey, "word:opening");
 });
 
-test("compact snapshots regenerate safely when the physical pool changes", () => {
+test("compact snapshots remap by stable keys when the physical pool changes", () => {
   const initialPool = [
     { id: "word-a", word: "alpha" },
     { id: "word-b", word: "beta" }
@@ -302,7 +417,28 @@ test("compact snapshots regenerate safely when the physical pool changes", () =>
     { fallbackOrder: [0, 1, 2] }
   );
 
-  assert.deepEqual(reconciled.indices, [0, 1, 2]);
+  // Prior order was beta, alpha; survivors keep that order, then append new.
+  assert.deepEqual(reconciled.indices, [2, 1, 0]);
+  assert.equal(reconciled.changed, true);
+});
+
+test("version 2 difficulty snapshots keep order via stable keys and upgrade to current version", () => {
+  const legacySnapshot = {
+    ...createWordStudyOrderSnapshot([2, 1, 0], WORDS, { cursorIndex: 1 }),
+    version: 2
+  };
+  const reconciled = reconcileWordStudyOrderSnapshot(
+    legacySnapshot,
+    [0, 1, 2],
+    WORDS,
+    { fallbackOrder: [0, 1, 2] }
+  );
+
+  // Keys preserve the prior easy/hard sequence instead of regenerating.
+  assert.deepEqual(reconciled.indices, [2, 1, 0]);
+  assert.equal(reconciled.cursorIndex, 1);
+  assert.equal(reconciled.snapshot.cursorKey, legacySnapshot.cursorKey);
+  assert.equal(reconciled.snapshot.version, 4);
   assert.equal(reconciled.changed, true);
 });
 
@@ -379,5 +515,5 @@ test("legacy stable-id snapshots migrate without losing their previous order", (
 
   assert.deepEqual(reconciled.indices, [2, 1, 0]);
   assert.equal(reconciled.cursorIndex, 2);
-  assert.equal(reconciled.snapshot.version, 2);
+  assert.equal(reconciled.snapshot.version, 4);
 });

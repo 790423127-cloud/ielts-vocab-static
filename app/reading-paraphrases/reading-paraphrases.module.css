@@ -184,7 +184,17 @@
   font: 650 clamp(30px, 4vw, 52px)/1.15 Georgia, "Times New Roman", serif;
   overflow-wrap: anywhere;
 }
-.note { margin: 14px auto 0; max-width: 760px; color: #526861; line-height: 1.7; }
+.translation {
+  max-width: 760px;
+  margin: 18px auto 0;
+  padding: 13px 16px;
+  border: 1px solid #cfe4dc;
+  border-radius: 9px;
+  background: #f1f8f5;
+  text-align: left;
+}
+.translation strong { color: #0b745c; font-size: 12px; }
+.translation p { margin: 5px 0 0; color: #3f5b52; line-height: 1.7; }
 
 .sources {
   display: grid;
@@ -234,6 +244,16 @@
 .ratings .fuzzy { border-color: #e7ca8f; background: #fff8e8; color: #8b610b; }
 .ratings .unfamiliar { border-color: #e5afa8; background: #fff0ee; color: #a23f35; }
 .actions .delete { width: 42px; padding: 0; color: #a23f35; }
+.actions kbd {
+  min-width: 22px;
+  padding: 2px 5px;
+  border: 1px solid #d5dfdb;
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: #f7f9f8;
+  color: #60736c;
+  font: 700 12px/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
 .actions button:disabled { opacity: .45; cursor: not-allowed; }
 
 .empty,

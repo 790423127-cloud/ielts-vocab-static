@@ -195,7 +195,7 @@ test("reviewed empty reading relations are shown with explicit labels", () => {
 });
 
 
-test("legacy or main-lexicon review flags do not mark a reading word complete", () => {
+test("legacy reviewed flags survive normalization so completed reading words stay complete", () => {
   const legacy = normalizeReadingWord({
     word: "brochure",
     pos: "noun",
@@ -217,10 +217,10 @@ test("legacy or main-lexicon review flags do not mark a reading word complete", 
     synonymsReviewed: true
   });
 
-  assert.equal(linked.formsReviewed, false);
-  assert.equal(linked.wordFamilyReviewed, false);
-  assert.equal(linked.synonymsReviewed, false);
-  assert.deepEqual(getReadingWordMissingFields(linked), ["forms", "wordFamily", "synonyms"]);
+  assert.equal(linked.formsReviewed, true);
+  assert.equal(linked.wordFamilyReviewed, true);
+  assert.equal(linked.synonymsReviewed, true);
+  assert.deepEqual(getReadingWordMissingFields(linked), []);
 });
 
 test("reading AI review provenance survives normalization and avoids repeat processing", () => {

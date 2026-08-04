@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const VERSION = "20260729_reading_synonym_meanings_v5";
+  const VERSION = "20260802_reading_headword_fix_v7";
   const READING_KEY = "ielts-personal-reading-words-v1";
   const MAIN_SUPPLEMENT_KEY = "static_personal_reading_main_v1";
   const TRANSFER_TYPE = "ielts-reading-words-transfer";
@@ -29,6 +29,60 @@
 
   function key(value) {
     return clean(value).toLowerCase().replace(/[’‘]/g, "'").replace(/[“”]/g, '"');
+  }
+
+  function meaningKey(entry) {
+    return clean(entry?.meaning || entry?.meaningZh || entry?.chineseMeaning)
+      .toLowerCase()
+      .replace(/[；;，,。.!！?？、\s]+/g, "");
+  }
+
+  function isPersonalReadingMainEntry(entry) {
+    return entry?.source === "personal-reading" || entry?.addedFromReadingWords === true;
+  }
+
+  function suggestCanonicalReadingHeadword(readingWord, candidates) {
+    const previousWord = clean(readingWord?.word || readingWord?.headword);
+    const previousKey = key(previousWord);
+    const sourceMeaning = meaningKey(readingWord);
+    const entries = Array.isArray(candidates) ? candidates : [];
+    const byKey = new Map(entries.map((entry) => [key(entry?.word), entry]).filter(([entryKey]) => entryKey));
+    const exact = byKey.get(previousKey);
+    if (!previousKey || !sourceMeaning || (exact && !isPersonalReadingMainEntry(exact))) {
+      return { word: previousWord, corrected: false, mainEntry: exact || null };
+    }
+
+    const matchesMeaning = (entry) => (
+      !isPersonalReadingMainEntry(entry) && meaningKey(entry) === sourceMeaning
+    );
+    const prefixed = [];
+    for (let code = 97; code <= 122; code += 1) {
+      const entry = byKey.get(`${String.fromCharCode(code)}${previousKey}`);
+      if (entry && matchesMeaning(entry)) prefixed.push(entry);
+    }
+    if (prefixed.length === 1) {
+      return { word: clean(prefixed[0].word), corrected: true, mainEntry: prefixed[0] };
+    }
+
+    if (previousKey.length >= 6) {
+      const entry = byKey.get(previousKey.slice(1));
+      if (entry && matchesMeaning(entry)) {
+        return { word: clean(entry.word), corrected: true, mainEntry: entry };
+      }
+    }
+    return { word: previousWord, corrected: false, mainEntry: exact || null };
+  }
+
+  function canonicalizeReadingWord(readingWord, candidates) {
+    const suggestion = suggestCanonicalReadingHeadword(readingWord, candidates);
+    if (!suggestion.corrected) return readingWord;
+    return {
+      ...readingWord,
+      word: suggestion.word,
+      correctedFrom: clean(readingWord.correctedFrom) || clean(readingWord.word),
+      mainWordId: clean(suggestion.mainEntry?.id || suggestion.mainEntry?.wordId),
+      updatedAt: new Date().toISOString()
+    };
   }
 
   const SYNONYM_VARIANT_GROUPS = [
@@ -192,7 +246,7 @@
     let added = 0;
     let repeated = 0;
     for (const raw of items) {
-      const incoming = normalizeReadingWord(raw, now);
+      const incoming = canonicalizeReadingWord(normalizeReadingWord(raw, now), mainWords);
       const normalizedKey = key(incoming.word);
       if (!normalizedKey) continue;
       const existingIndex = index.get(normalizedKey);
@@ -358,7 +412,9 @@
   function mark(status) {
     const current = currentWord();
     if (!current) return;
-    words = words.map((word) => word.id === current.id ? { ...word, status, updatedAt: new Date().toISOString() } : word);
+    words = words.map((word) => word.id === current.id
+      ? { ...word, status: word.status === status ? "" : status, updatedAt: new Date().toISOString() }
+      : word);
     saveReadingWords();
     render();
   }
@@ -379,6 +435,20 @@
     if (tag === "input" || tag === "textarea" || tag === "select" || event.target?.isContentEditable) return false;
     const shortcutKey = String(event.key || "").toLowerCase();
     return shortcutKey === "d" || shortcutKey === "delete" || event.code === "Delete";
+  }
+
+  function getStudyKeyboardAction(event) {
+    if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return "";
+    const tag = String(event.target?.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select" || event.target?.isContentEditable) return "";
+    if (event.key === "Tab") return "word-audio";
+    if (event.key === " " || event.code === "Space" || event.key === "Spacebar") return "example-audio";
+    if (event.key === "ArrowLeft") return "previous";
+    if (event.key === "ArrowRight") return "next";
+    if (event.code === "Digit1" || event.code === "Numpad1" || event.key === "1") return "known";
+    if (event.code === "Digit2" || event.code === "Numpad2" || event.key === "2") return "blurry";
+    if (event.code === "Digit3" || event.code === "Numpad3" || event.key === "3") return "unknown";
+    return "";
   }
 
   function deleteCurrentReadingWord() {
@@ -516,24 +586,16 @@
       deleteCurrentReadingWord();
       return;
     }
-    const tag = String(event.target?.tagName || "").toLowerCase();
-    if (
-      event.repeat
-      || event.ctrlKey
-      || event.metaKey
-      || event.altKey
-      || tag === "input"
-      || tag === "textarea"
-      || tag === "select"
-      || event.target?.isContentEditable
-    ) return;
-    if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      move(-1);
-    } else if (event.key === "ArrowRight") {
-      event.preventDefault();
-      move(1);
-    }
+    const action = getStudyKeyboardAction(event);
+    if (!action || !currentWord()) return;
+    event.preventDefault();
+    if (action === "word-audio") speak(currentWord()?.word);
+    else if (action === "example-audio") speak(currentWord()?.example);
+    else if (action === "previous") move(-1);
+    else if (action === "next") move(1);
+    else if (action === "known") mark("熟悉");
+    else if (action === "blurry") mark("模糊");
+    else if (action === "unknown") mark("不熟");
   });
 
   async function boot() {
@@ -543,15 +605,26 @@
       const payload = await response.json();
       const formalWords = Array.isArray(payload?.words) ? payload.words : Array.isArray(payload) ? payload : [];
       const supplements = readSupplements();
+      let correctedHeadwords = 0;
+      words = words.map((word) => {
+        const canonical = canonicalizeReadingWord(word, formalWords);
+        if (key(canonical.word) !== key(word.word)) correctedHeadwords += 1;
+        return canonical;
+      });
+      const retainedSupplements = supplements.filter(
+        (entry) => !suggestCanonicalReadingHeadword(entry, formalWords).corrected
+      );
+      if (retainedSupplements.length !== supplements.length) saveSupplements(retainedSupplements);
       mainWords = [...formalWords];
       const known = new Set(formalWords.map((entry) => key(entry.word)));
-      for (const supplement of supplements) {
+      for (const supplement of retainedSupplements) {
         if (!known.has(key(supplement.word))) mainWords.push(supplement);
       }
       mainIndex = new Map(mainWords.map((entry) => [key(entry.word), entry]));
       words = words.map((word) => applyMain(word, mainIndex.get(key(word.word))));
       saveReadingWords();
       els.mainStatus.textContent = `已连接主词库 ${formalWords.length.toLocaleString("zh-CN")} 词`;
+      if (correctedHeadwords) toast(`已自动纠正 ${correctedHeadwords} 个阅读断词。`);
     } catch (error) {
       els.mainStatus.textContent = error.message;
     }

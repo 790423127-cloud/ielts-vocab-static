@@ -5,6 +5,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { buildVocabDataPayload, validateVocabDataPayload } from "../vocab-data-meta.mjs";
+import { readVocabFileMetaFast } from "../vocab-file-meta.mjs";
 import {
   buildWordCacheMeta,
   formatOfflineVocabNotice,
@@ -86,6 +87,33 @@ test("word cache metadata invalidates on version or hash changes", () => {
   assert.equal(isWordCacheCurrent(meta, { count: 1, version: "v1", lexiconHash: "hash-a" }), true);
   assert.equal(isWordCacheCurrent(meta, { count: 1, version: "v2", lexiconHash: "hash-a" }), false);
   assert.equal(isWordCacheCurrent(meta, { count: 1, version: "v1", lexiconHash: "hash-b" }), false);
+});
+
+test("fast vocab metadata reads the top-level version instead of nested audit versions", () => {
+  const source = JSON.parse(fs.readFileSync(wordsPath, "utf8"));
+  const meta = readVocabFileMetaFast(wordsPath);
+
+  assert.equal(meta.version, source.version);
+  assert.notEqual(meta.version, source.morphologyAudit?.version);
+  assert.equal(meta.count, source.words.length);
+  assert.equal(meta.lexiconHash, source.lexiconHash);
+});
+
+test("word cache stays current when personal supplements extend the stored list", () => {
+  const cachedWords = [
+    { id: "w1", word: "work" },
+    { id: "personal-reading-1", word: "microhabitat", source: "personal-reading" }
+  ];
+  const meta = buildWordCacheMeta(cachedWords, {
+    count: 1,
+    version: "v1",
+    lexiconHash: "hash-a"
+  });
+
+  assert.equal(meta.count, 2);
+  assert.equal(meta.sourceCount, 1);
+  assert.equal(isWordCacheCurrent(meta, { count: 1, version: "v1", lexiconHash: "hash-a" }), true);
+  assert.equal(isWordCacheCurrent(meta, { count: 2, version: "v1", lexiconHash: "hash-a" }), false);
 });
 
 test("fresh word content preserves cached user progress fields", () => {

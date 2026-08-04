@@ -22,6 +22,7 @@ import {
   buildLexiconRetirementPayload,
   validateLexiconDeletionIntent
 } from "../../lib/vocab/lexicon-delete-intent.mjs";
+import { writeMasterLexiconBaseline } from "../../lib/vocab/master-lexicon-baseline-io.mjs";
 import { stripWordUserState } from "../../lib/vocab/word-cache-meta.mjs";
 
 function cacheDir() {
@@ -389,6 +390,23 @@ export async function POST(req) {
       retirementText
     });
 
+    // Keep master-lexicon-baseline.mjs in lockstep after local deletes/edits so
+    // lexicon:check / start-windows.bat do not fail with a stale expected count.
+    let baselineUpdated = false;
+    try {
+      writeMasterLexiconBaseline({
+        count: words.length,
+        version,
+        fileHash: published.fileHash
+      });
+      baselineUpdated = true;
+    } catch (baselineError) {
+      console.error(
+        "[export-cache] lexicon published, but baseline update failed:",
+        baselineError instanceof Error ? baselineError.message : baselineError
+      );
+    }
+
     return Response.json({
       ok: true,
       count: words.length,
@@ -397,7 +415,8 @@ export async function POST(req) {
       lexiconHash: prepared.payload.lexiconHash,
       integrityHash: prepared.payload.integrityHash,
       fileHash: published.fileHash,
-      deletionBackup
+      deletionBackup,
+      baselineUpdated
     });
   } catch (error) {
     return Response.json(

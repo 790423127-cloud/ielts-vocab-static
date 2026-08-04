@@ -29,6 +29,15 @@ function formsReferenceCanonical(entry, canonical) {
   return forms.some((form) => normalizeHeadword(form.word) === canonical);
 }
 
+function isDeclaredInflectionOfHeadword(entry, canonical) {
+  const forms = Array.isArray(entry.forms) ? entry.forms : [];
+  return forms.some((form) => {
+    if (normalizeHeadword(form.word) !== canonical) return false;
+    const type = String(form.type || "").trim().toLowerCase();
+    return /plural|past tense|past participle|present participle|gerund|third[- ]person/.test(type);
+  });
+}
+
 function formsImplyTruncatedCanonical(entry, headword, canonical) {
   const forms = Array.isArray(entry.forms) ? entry.forms : [];
   return forms.some((form) => {
@@ -110,6 +119,10 @@ function exampleImprovesWhenReplaced(entry, headword, canonical) {
 
 function hasTruncationCorruption(entry, headword, canonical) {
   if (isPluralizationFalsePositive(headword, canonical, entry)) return false;
+  // A longer form explicitly labelled as an inflection is evidence that the
+  // shorter value is the correct lemma (activate -> activated), not a damaged
+  // headword. Treating it as truncation produced a large false-positive queue.
+  if (isDeclaredInflectionOfHeadword(entry, canonical)) return false;
 
   return (
     isLikelyTruncatedCanonical(headword, canonical) &&

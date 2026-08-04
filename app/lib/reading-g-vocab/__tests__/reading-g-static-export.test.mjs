@@ -13,7 +13,8 @@ test("static export assets and data files exist", () => {
     "public/assets/reading-g.js",
     "public/data/reading-g-vocab.json",
     "public/data/reading-g-paraphrases.json",
-    "public/data/reading-g-import-report.json"
+    "public/data/reading-g-import-report.json",
+    "public/data/reading-g-retirements.json"
   ];
   for (const f of files) {
     assert.ok(fs.existsSync(path.join(root, f)), `missing ${f}`);
@@ -28,6 +29,12 @@ test("static HTML references relative data paths", () => {
   assert.match(js, /\.\/data\/reading-g-vocab\.json/);
   assert.match(js, /\.\/data\/reading-g-paraphrases\.json/);
   assert.match(js, /paraphraseQuiz|同义/);
+  assert.match(js, /questionBankActive/);
+  assert.match(js, /questionBankAiCompleted/);
+  assert.match(js, /questionBankPending/);
+  assert.match(js, /if \(stage === "3"\) return !inStage1 && !inStage2;/);
+  assert.match(js, /previousStudyPosition/);
+  assert.doesNotMatch(js, /rebuildStudy\(\);\s*if \(next === "熟悉"\) go\(1\);/);
   // forbid root-absolute data paths that break under /beidanci/
   assert.doesNotMatch(js, /["']\/data\/reading-g-vocab\.json["']/);
   assert.doesNotMatch(js, /["']\/data\/reading-g-paraphrases\.json["']/);
@@ -91,6 +98,8 @@ test("export-static route packs paraphrases", () => {
   );
   assert.match(route, /reading-g-paraphrases\.json/);
   assert.match(route, /reading-g-import-report\.json/);
+  assert.match(route, /reading-g-retirements\.json/);
+  assert.match(route, /20260804_reading_g_autoplay_v18/);
 });
 
 test("static paraphrase quiz can initialize from real data", () => {

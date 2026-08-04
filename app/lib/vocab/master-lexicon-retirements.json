@@ -1,8 +1,8 @@
 {
   "version": "v22-13353-quality-queues-zero-20260730",
-  "generatedAt": "2026-07-30T13:15:00.000Z",
+  "generatedAt": "2026-08-02T14:46:34.968Z",
   "previousRef": "7a958e514a608c55c5d9a7a918af9bb42741fa59",
-  "count": 105,
+  "count": 108,
   "entries": [
     {
       "id": "word_12f29832aa4b",
@@ -534,6 +534,21 @@
       "id": "word_listening1179_3fc4ccfe7458",
       "word": "two",
       "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_3f79bb7b435b",
+      "word": "e",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "word_excel_1b16b1df538b",
+      "word": "n",
+      "reason": "user-curated-removal"
+    },
+    {
+      "id": "reading-768c40b6-fe28-48b3-9d61-ba95d23f01f3",
+      "word": "ncestors",
+      "reason": "reading-headword-correction-to-ancestors"
     }
   ]
 }

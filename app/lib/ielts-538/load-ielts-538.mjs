@@ -1,4 +1,5 @@
 import { getPosDisplay } from "../vocab/pos-display.mjs";
+import { loadSessionJson, loadSessionValue } from "../browser-json-cache.mjs";
 import { IELTS_538_DATA_URL } from "./keys.mjs";
 
 export function normalizeIelts538WordKey(word) {
@@ -96,24 +97,35 @@ export function normalizeIelts538Item(entry, index = 0) {
 }
 
 export async function loadIelts538Words(fetchImpl = fetch) {
-  const response = await fetchImpl(IELTS_538_DATA_URL, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`538 考点词库加载失败：HTTP ${response.status}`);
-  }
+  const useMemory = fetchImpl === fetch;
+  return loadSessionValue(
+    "ielts-538:normalized",
+    async () => {
+      let data;
+      if (useMemory) {
+        data = await loadSessionJson(IELTS_538_DATA_URL, fetchImpl, { cache: "force-cache" });
+      } else {
+        const response = await fetchImpl(IELTS_538_DATA_URL, { cache: "force-cache" });
+        if (!response.ok) {
+          throw new Error(`538 考点词库加载失败：HTTP ${response.status}`);
+        }
+        data = await response.json();
+      }
+      const rawList = Array.isArray(data?.words) ? data.words : [];
+      const words = rawList.map(normalizeIelts538Item).filter(Boolean);
 
-  const data = await response.json();
-  const rawList = Array.isArray(data?.words) ? data.words : [];
-  const words = rawList.map(normalizeIelts538Item).filter(Boolean);
+      if (Number(data?.count) !== words.length) {
+        throw new Error(`538 考点词库数量不一致：声明 ${data?.count}，实际 ${words.length}`);
+      }
 
-  if (Number(data?.count) !== words.length) {
-    throw new Error(`538 考点词库数量不一致：声明 ${data?.count}，实际 ${words.length}`);
-  }
-
-  return {
-    version: String(data?.version || "ielts-538-v1"),
-    count: words.length,
-    generatedAt: String(data?.generatedAt || ""),
-    note: String(data?.note || ""),
-    words
-  };
+      return {
+        version: String(data?.version || "ielts-538-v1"),
+        count: words.length,
+        generatedAt: String(data?.generatedAt || ""),
+        note: String(data?.note || ""),
+        words
+      };
+    },
+    { useMemory }
+  );
 }

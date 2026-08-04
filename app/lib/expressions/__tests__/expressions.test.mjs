@@ -232,9 +232,10 @@ describe("system navigation and UI parity", () => {
     const root = join(__dirname, "..", "..", "..", "components");
     const source = readFileSync(join(root, "GlobalStudyHeader.jsx"), "utf-8");
     assert.match(source, /const mobileMoreActive = MOBILE_MORE_NAV\.some/);
-    assert.match(source, /训练模式/);
+    assert.match(source, /aria-current=\{mobileMoreActive \? "page" : undefined\}/);
     assert.doesNotMatch(source, /<House aria-hidden=/);
-    assert.ok((source.match(/prefetch=\{false\}/g) || []).length >= 5);
+    // Reusable NavItem carries this once for all generated navigation links.
+    assert.ok((source.match(/prefetch=\{false\}/g) || []).length >= 3);
   });
 
   it("shows total-pool and per-round counts with the shared high-visibility progress", () => {

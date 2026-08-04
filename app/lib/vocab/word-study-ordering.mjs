@@ -1,13 +1,18 @@
 import {
   WORD_STUDY_DIFFICULTY_MODE,
+  compareWordInternalDifficulty,
   createWordInternalDifficultyProfile,
   difficultyModeDirection,
   difficultyModeTier,
+  filterWordsByDifficultyTier,
   isFixedWordStudyDifficultyMode,
   normalizeWordStudyDifficultyMode,
-  wordInternalDifficultyScore,
+  wordInternalDifficultySortKey,
   wordInternalDifficultyTier
 } from "./word-internal-difficulty.mjs";
+import {
+  classifySurfaceInflection
+} from "./word-surface-morphology.mjs";
 
 export const WORD_STUDY_ORDER_MODE = Object.freeze({
   CURRENT: "current",
@@ -36,7 +41,7 @@ export const WORD_STUDY_RELATION_MODES = Object.freeze(
 
 export const WORD_STUDY_ORDER_STORAGE_KEY = "ielts_vocab_word_order_modes_v1";
 export const WORD_STUDY_ORDER_CURSOR_STORAGE_KEY = "ielts_vocab_word_order_cursors_v1";
-export const WORD_STUDY_ORDER_SNAPSHOT_VERSION = 2;
+export const WORD_STUDY_ORDER_SNAPSHOT_VERSION = 4;
 
 const TOKEN_STOP_WORDS = new Set([
   "a", "an", "and", "as", "at", "be", "by", "for", "from", "in", "into",
@@ -87,7 +92,7 @@ function normalizeKey(value) {
 
 function wordFromRelation(value) {
   if (typeof value === "string") return value;
-  return value?.word || value?.replacement || value?.term || value?.text || "";
+  return value?.word || value?.key || value?.replacement || value?.term || value?.text || "";
 }
 
 function phraseFromRelation(value) {
@@ -243,9 +248,54 @@ function groupConnectedEntries(entries, linkResolver) {
   return [...components.values()];
 }
 
+function groupFamilyEntries(entries) {
+  const unionFind = createUnionFind(entries.length);
+  const positionsByWord = new Map();
+  const positionsByExplicitRoot = new Map();
+
+  entries.forEach((entry, position) => {
+    const key = normalizeKey(entry.word?.word);
+    if (key) positionsByWord.set(key, position);
+    const root = [
+      entry.word?.familyRoot,
+      entry.word?.rootWord,
+      entry.word?.baseWord,
+      entry.word?.lemma
+    ].map(normalizeKey).find(Boolean);
+    if (root) {
+      if (!positionsByExplicitRoot.has(root)) positionsByExplicitRoot.set(root, []);
+      positionsByExplicitRoot.get(root).push(position);
+    }
+  });
+
+  entries.forEach((entry, position) => {
+    familyLinks(entry.word).forEach((linkedKey) => {
+      const linkedPosition = positionsByWord.get(linkedKey);
+      if (Number.isInteger(linkedPosition)) unionFind.union(position, linkedPosition);
+    });
+  });
+  positionsByExplicitRoot.forEach((positions, root) => {
+    const first = positions[0];
+    positions.slice(1).forEach((position) => unionFind.union(first, position));
+    const rootPosition = positionsByWord.get(root);
+    if (Number.isInteger(rootPosition)) unionFind.union(first, rootPosition);
+  });
+
+  const components = new Map();
+  entries.forEach((entry, position) => {
+    const root = unionFind.find(position);
+    if (!components.has(root)) components.set(root, []);
+    components.get(root).push(entry);
+  });
+  return [...components.values()];
+}
+
 function familyLinks(word) {
   return [
     ...relationWords(word?.wordFamily),
+    ...relationWords(word?.forms),
+    ...relationWords(word?.mergedAliases),
+    ...relationWords(word?.mergedEntries),
     ...[
       word?.familyRoot,
       word?.rootWord,
@@ -282,8 +332,9 @@ function groupSortValue(group) {
 
 function sortFamilyMembers(group) {
   const incomingLinks = new Map();
+  const activeKeys = new Set(group.map((entry) => normalizeKey(entry.word?.word)).filter(Boolean));
   group.forEach((entry) => {
-    familyLinks(entry.word).forEach((key) => {
+    familyLinks(entry.word).filter((key) => activeKeys.has(key)).forEach((key) => {
       incomingLinks.set(key, (incomingLinks.get(key) || 0) + 1);
     });
   });
@@ -291,9 +342,14 @@ function sortFamilyMembers(group) {
   return [...group].sort((left, right) => {
     const leftKey = normalizeKey(left.word?.word);
     const rightKey = normalizeKey(right.word?.word);
-    const leftRootScore = familyLinks(left.word).length * 8 + (incomingLinks.get(leftKey) || 0) * 3;
-    const rightRootScore = familyLinks(right.word).length * 8 + (incomingLinks.get(rightKey) || 0) * 3;
-    return rightRootScore - leftRootScore
+    const leftActiveLinks = familyLinks(left.word).filter((key) => activeKeys.has(key)).length;
+    const rightActiveLinks = familyLinks(right.word).filter((key) => activeKeys.has(key)).length;
+    const leftRootScore = leftActiveLinks * 8 + (incomingLinks.get(leftKey) || 0) * 12;
+    const rightRootScore = rightActiveLinks * 8 + (incomingLinks.get(rightKey) || 0) * 12;
+    const leftIsInflection = [...activeKeys].some((key) => classifySurfaceInflection(key, leftKey));
+    const rightIsInflection = [...activeKeys].some((key) => classifySurfaceInflection(key, rightKey));
+    return Number(leftIsInflection) - Number(rightIsInflection)
+      || rightRootScore - leftRootScore
       || leftKey.split(" ").length - rightKey.split(" ").length
       || leftKey.length - rightKey.length
       || left.order - right.order;
@@ -313,7 +369,9 @@ function sceneKeyForWord(word) {
   let bestScore = 0;
 
   SCENE_RULES.forEach(([scene, contentPattern, topicPattern]) => {
-    const score = (contentPattern.test(content) ? 4 : 0) + (topicPattern.test(topics) ? 2 : 0);
+    // Topics are curated; weight them closer to content matches so scene
+    // clustering relies less on sparse synonym graphs.
+    const score = (contentPattern.test(content) ? 4 : 0) + (topicPattern.test(topics) ? 4 : 0);
     if (score > bestScore) {
       bestScene = scene;
       bestScore = score;
@@ -323,13 +381,14 @@ function sceneKeyForWord(word) {
   return bestScene;
 }
 
-function orderSceneEntries(entries) {
+function orderSceneEntries(entries, preferredScene = "") {
   if (entries.length < 2) return entries;
 
   const profiles = entries.map((entry, position) => ({
     entry,
     position,
     key: normalizeKey(entry.word?.word),
+    scene: sceneKeyForWord(entry.word) || preferredScene || "",
     links: explicitAssociationLinks(entry.word),
     tokens: associationTokens(entry.word)
   }));
@@ -348,7 +407,16 @@ function orderSceneEntries(entries) {
   let currentPosition = Math.min(...remaining);
 
   while (remaining.size) {
-    if (!remaining.has(currentPosition)) currentPosition = Math.min(...remaining);
+    if (!remaining.has(currentPosition)) {
+      // Prefer continuing inside the active scene before jumping globally.
+      const activeScene = ordered.length
+        ? sceneKeyForWord(ordered[ordered.length - 1].word)
+        : preferredScene;
+      const sameScene = [...remaining]
+        .filter((position) => !activeScene || profiles[position].scene === activeScene)
+        .sort((left, right) => profiles[left].entry.order - profiles[right].entry.order);
+      currentPosition = sameScene[0] ?? Math.min(...remaining);
+    }
     const current = profiles[currentPosition];
     ordered.push(current.entry);
     remaining.delete(currentPosition);
@@ -367,9 +435,10 @@ function orderSceneEntries(entries) {
         if (!remaining.has(candidatePosition)) return;
         const candidate = profiles[candidatePosition];
         const headwordBonus = candidate.key === token || current.key === token ? 90 : 0;
+        const sceneBonus = current.scene && candidate.scene === current.scene ? 24 : 0;
         scores.set(
           candidatePosition,
-          (scores.get(candidatePosition) || 0) + tokenWeight + headwordBonus
+          (scores.get(candidatePosition) || 0) + tokenWeight + headwordBonus + sceneBonus
         );
       });
     });
@@ -378,7 +447,16 @@ function orderSceneEntries(entries) {
       .filter(([, score]) => score >= 96)
       .sort((left, right) => right[1] - left[1]
         || profiles[left[0]].entry.order - profiles[right[0]].entry.order)[0];
-    currentPosition = strongest?.[0] ?? Math.min(...remaining);
+    if (strongest) {
+      currentPosition = strongest[0];
+      continue;
+    }
+
+    // Soft break: stay in-scene when possible instead of jumping to global min order.
+    const sameSceneRemaining = [...remaining]
+      .filter((position) => current.scene && profiles[position].scene === current.scene)
+      .sort((left, right) => profiles[left].entry.order - profiles[right].entry.order);
+    currentPosition = sameSceneRemaining[0] ?? Math.min(...remaining);
   }
 
   return ordered;
@@ -399,10 +477,14 @@ function buildAssociationGroups(entries) {
     sceneBuckets.get(scene).push(...component);
   }
 
-  return [...sceneBuckets.values()]
-    .sort((left, right) => groupSortValue(left) - groupSortValue(right))
-    .map(orderSceneEntries)
-    .concat(standalone.sort((left, right) => groupSortValue(left) - groupSortValue(right)));
+  return [...sceneBuckets.entries()]
+    .sort((left, right) => groupSortValue(left[1]) - groupSortValue(right[1]))
+    .map(([scene, group]) => orderSceneEntries(group, scene))
+    .concat(
+      standalone
+        .sort((left, right) => groupSortValue(left) - groupSortValue(right))
+        .map((group) => orderSceneEntries(group))
+    );
 }
 
 export function normalizeWordStudyOrderMode(value) {
@@ -416,6 +498,8 @@ export function isFixedWordStudyOrderMode(
   difficultyMode = WORD_STUDY_DIFFICULTY_MODE.DEFAULT
 ) {
   const normalized = normalizeWordStudyOrderMode(value);
+  // Random must stay seed-driven; never freeze it into a fixed snapshot queue.
+  if (normalized === WORD_STUDY_ORDER_MODE.RANDOM) return false;
   return isFixedWordStudyDifficultyMode(difficultyMode) || [
     WORD_STUDY_ORDER_MODE.FAMILY,
     WORD_STUDY_ORDER_MODE.ASSOCIATION
@@ -443,28 +527,65 @@ export function hasWordStudyInternalDifficulty(indices, pool, {
 export const hasMultipleWordStudyDifficultyLevels = hasWordStudyInternalDifficulty;
 
 function groupDifficultyScore(group) {
-  const scores = group.map((entry) => wordInternalDifficultyScore(entry.word))
+  // Use the fine-grained sort key median so family/scene clusters order by the
+  // same progressive scale as single-word easy→hard, not only the coarse primary.
+  const keys = group.map((entry) => wordInternalDifficultySortKey(entry.word))
     .sort((left, right) => left - right);
-  return scores[Math.floor((scores.length - 1) / 2)] || 0;
+  return keys[Math.floor((keys.length - 1) / 2)] || 0;
 }
 
 function applyDifficultyToGroups(groups, direction) {
   if (!direction) return groups;
   return groups
-    .map((group) => [...group].sort((left, right) => (
-      (wordInternalDifficultyScore(left.word) - wordInternalDifficultyScore(right.word)) * direction
-      || left.order - right.order
+    .map((group) => [...group].sort((left, right) => compareWordInternalDifficulty(
+      left.word,
+      right.word,
+      direction,
+      left.order,
+      right.order
     )))
-    .sort((left, right) => (
-      (groupDifficultyScore(left) - groupDifficultyScore(right)) * direction
-      || groupSortValue(left) - groupSortValue(right)
-    ));
+    .sort((left, right) => {
+      const leftScore = groupDifficultyScore(left);
+      const rightScore = groupDifficultyScore(right);
+      if (leftScore !== rightScore) return (leftScore - rightScore) * direction;
+      return groupSortValue(left) - groupSortValue(right);
+    });
+}
+
+function applyDifficultyFilter(resolvedEntries, difficultyMode, providedProfile = null) {
+  const requestedTier = difficultyModeTier(difficultyMode);
+  if (!requestedTier) {
+    return { entries: resolvedEntries, profile: providedProfile };
+  }
+  const profile = providedProfile || createWordInternalDifficultyProfile(
+    resolvedEntries.map((entry) => entry.word)
+  );
+  if (!profile.available) {
+    return { entries: resolvedEntries, profile };
+  }
+
+  const exact = resolvedEntries.filter((entry) => (
+    wordInternalDifficultyTier(entry.word, profile) === requestedTier
+  ));
+  if (exact.length) return { entries: exact, profile };
+
+  // Soft expand when a band collapses (heavy score ties / tiny pools).
+  const expandedWords = new Set(
+    filterWordsByDifficultyTier(
+      resolvedEntries.map((entry) => entry.word),
+      profile,
+      requestedTier
+    )
+  );
+  const expanded = resolvedEntries.filter((entry) => expandedWords.has(entry.word));
+  return { entries: expanded.length ? expanded : resolvedEntries, profile };
 }
 
 export function orderStudyWordIndices(indices, pool, {
   mode = WORD_STUDY_ORDER_MODE.CURRENT,
   difficultyMode = WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
   difficultyEnabled = true,
+  difficultyProfile = null,
   seed = 0,
   idictation = false
 } = {}) {
@@ -478,8 +599,16 @@ export function orderStudyWordIndices(indices, pool, {
   const resolvedEntries = resolveIndexedWords(source, pool, idictation);
   if (resolvedEntries.length !== source.length) return source;
 
+  const { entries } = applyDifficultyFilter(
+    resolvedEntries,
+    normalizedDifficultyMode,
+    difficultyProfile
+  );
+  if (!entries.length) return [];
+
+  // Random now respects the active relative-difficulty filter (shuffle within band).
   if (normalizedMode === WORD_STUDY_ORDER_MODE.RANDOM) {
-    return [...resolvedEntries]
+    return [...entries]
       .sort((left, right) => (
         deterministicHash(`${seed}:${normalizeKey(left.word?.word)}:${left.sourceIndex}`)
         - deterministicHash(`${seed}:${normalizeKey(right.word?.word)}:${right.sourceIndex}`)
@@ -488,20 +617,9 @@ export function orderStudyWordIndices(indices, pool, {
       .map((entry) => entry.sourceIndex);
   }
 
-  const profile = createWordInternalDifficultyProfile(
-    resolvedEntries.map((entry) => entry.word)
-  );
-  const requestedTier = difficultyModeTier(normalizedDifficultyMode);
-  const entries = requestedTier && profile.available
-    ? resolvedEntries.filter((entry) => (
-      wordInternalDifficultyTier(entry.word, profile) === requestedTier
-    ))
-    : resolvedEntries;
-  if (!entries.length) return [];
-
   let groups;
   if (normalizedMode === WORD_STUDY_ORDER_MODE.FAMILY) {
-    groups = groupConnectedEntries(entries, familyLinks)
+    groups = groupFamilyEntries(entries)
       .map(sortFamilyMembers)
       .sort((left, right) => groupSortValue(left) - groupSortValue(right));
   } else if (normalizedMode === WORD_STUDY_ORDER_MODE.ASSOCIATION) {
@@ -548,6 +666,7 @@ export function createWordStudyOrderSnapshot(orderedIndices, pool, {
 } = {}) {
   const byIndex = wordBySourceIndex(pool, idictation);
   const indices = [];
+  const keys = [];
   const seen = new Set();
 
   (Array.isArray(orderedIndices) ? orderedIndices : []).forEach((sourceIndex) => {
@@ -557,6 +676,7 @@ export function createWordStudyOrderSnapshot(orderedIndices, pool, {
     if (!key || seen.has(key)) return;
     seen.add(key);
     indices.push(sourceIndex);
+    keys.push(key);
   });
 
   const cursorWord = byIndex.get(cursorIndex);
@@ -569,6 +689,8 @@ export function createWordStudyOrderSnapshot(orderedIndices, pool, {
   return {
     version: WORD_STUDY_ORDER_SNAPSHOT_VERSION,
     indices,
+    // Stable ids let us preserve easy→hard order after deletions shift numeric indices.
+    keys,
     sourceCount: Array.isArray(pool) ? pool.length : 0,
     sourceSignature: snapshotSourceSignature(pool, idictation),
     cursorKey: seen.has(cursorKey)
@@ -630,14 +752,16 @@ export function reconcileWordStudyOrderSnapshot(
       snapshot?.sourceSignature === currentSignature
       || appendedPoolMatches
     );
+  const stableKeys = Array.isArray(snapshot?.keys) ? snapshot.keys : [];
 
-  if (compactSnapshotMatches) {
-    snapshot.indices.forEach(appendIndex);
-  } else {
-    // Version 1 snapshots are migrated once by their stable word keys.
-    (Array.isArray(snapshot?.keys) ? snapshot.keys : []).forEach((key) => {
+  // Prefer stable keys whenever available so easy→hard order survives deletions
+  // (numeric indices in the pool shift, keys do not).
+  if (stableKeys.length) {
+    stableKeys.forEach((key) => {
       appendIndex(eligibleByKey.get(key));
     });
+  } else if (compactSnapshotMatches) {
+    snapshot.indices.forEach(appendIndex);
   }
 
   (Array.isArray(fallbackOrder) ? fallbackOrder : []).forEach((sourceIndex) => {
@@ -702,8 +826,7 @@ export function remapWordStudyOrderSnapshotsAfterDeletion(
   return Object.fromEntries(
     Object.entries(snapshots && typeof snapshots === "object" ? snapshots : {})
       .map(([snapshotKey, snapshot]) => {
-        const orderedKeys = Number(snapshot?.version) === WORD_STUDY_ORDER_SNAPSHOT_VERSION
-          && Array.isArray(snapshot?.indices)
+        const orderedKeys = Array.isArray(snapshot?.indices)
           ? snapshot.indices.map((sourceIndex) => {
             const word = previousByIndex.get(sourceIndex);
             return word

@@ -57,7 +57,7 @@ test("stage4 is reference-only consult; not default active queue", () => {
   const s4 = items.filter((it) => itemMatchesPathStage(it, "4"));
   assert.ok(s4.length > 0);
   for (const it of s4) {
-    assert.ok(it.studyMode === "reference" || (it.layers || []).includes("reference701"));
+    assert.equal(it.studyMode, "reference");
   }
   // default active filter must not include pure reference-only
   const active = buildRgStudyList(items, { type: "active", value: "" }, {});
@@ -66,11 +66,32 @@ test("stage4 is reference-only consult; not default active queue", () => {
   }
 });
 
-test("stage unique counts are positive and ordered sensibly", () => {
+test("stage route partitions the whole dataset without overlap", () => {
   const items = loadItems();
   const u = countStageUniques(items);
   assert.ok(u.stage1 > 1000);
   assert.ok(u.stage2 > 500);
   assert.ok(u.stage3 > 500);
-  assert.ok(u.stage4 > 500);
+  assert.ok(u.stage4 > 100);
+
+  const stageHits = items.map((item) =>
+    ["1", "2", "3", "4"].filter((stage) => itemMatchesPathStage(item, stage))
+  );
+  assert.ok(stageHits.every((hits) => hits.length === 1));
+  assert.equal(u.stage1 + u.stage2 + u.stage3 + u.stage4, items.length);
+});
+
+test("an overlapping item is assigned to its earliest route stage", () => {
+  const item = {
+    word: "overlap",
+    entryType: "word",
+    studyMode: "active",
+    normalizedKey: "overlap",
+    layers: ["priority1500", "tierB1200", "tierC800", "questionBankActive"]
+  };
+
+  assert.equal(itemMatchesPathStage(item, "1"), true);
+  assert.equal(itemMatchesPathStage(item, "2"), false);
+  assert.equal(itemMatchesPathStage(item, "3"), false);
+  assert.equal(itemMatchesPathStage(item, "4"), false);
 });

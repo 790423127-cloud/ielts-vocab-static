@@ -52,7 +52,9 @@ test("home order controls keep horizontal arrows as word navigation and resume a
   await expect(difficulty).toHaveValue("hard-to-easy");
   await order.selectOption("random");
   await expect(order).toHaveValue("random");
-  await expect(difficulty).toBeDisabled();
+  // Random only regenerates the order; the selected difficulty slice remains
+  // active so users can randomize within “较易 / 常规 / 较难”.
+  await expect(difficulty).toBeEnabled();
   await expect(difficulty).toHaveValue("hard-to-easy");
   await order.selectOption("current");
   await expect(difficulty).toBeEnabled();

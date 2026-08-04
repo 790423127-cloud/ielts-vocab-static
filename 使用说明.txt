@@ -1,0 +1,27 @@
+﻿修复内容
+
+上一版 BAT 把带结尾反斜杠的项目路径传给 PowerShell，
+导致 Resolve-Path 报“路径中具有非法字符”。
+
+这一版不再传路径参数。
+PowerShell 直接使用 $PSScriptRoot，也就是脚本自身所在文件夹。
+
+使用方法
+
+1. 解压 ZIP。
+2. 把下面两个文件放到 package.json 所在的项目根目录：
+   - start-windows.bat
+   - restart-vocab-service.ps1
+3. 覆盖上一版文件。
+4. 双击 start-windows.bat。
+
+注意
+
+启动器会运行词库同步。
+如果你删除的单词属于受保护的主词库，这一步可能把它们恢复回来。
+
+如果你希望永久保留删除结果，需要修改词库基线数量和哈希。
+这需要进一步检查：
+- package.json
+- scripts/sync-master-lexicon.mjs
+- baseline 或 manifest 文件

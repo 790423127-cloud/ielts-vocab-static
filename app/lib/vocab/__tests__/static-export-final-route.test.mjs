@@ -54,6 +54,12 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("assets/app.js"), /progressSeek\.oninput/);
   assert.match(entries.get("assets/app.js"), /progressJumpForm\.onsubmit/);
   assert.match(entries.get("assets/app.js"), /progressJumpInput\.blur\(\)/);
+  assert.match(entries.get("assets/app.js"), /const WORD_ORDER_SNAPSHOT_VERSION=4/);
+  assert.match(entries.get("assets/app.js"), /function difficultySortKey/);
+  assert.match(entries.get("assets/app.js"), /function familyConnectedGroups/);
+  assert.match(entries.get("assets/app.js"), /function filterDifficultyTier/);
+  assert.match(entries.get("assets/app.js"), /sceneBonus=current\.scene/);
+  assert.match(entries.get("assets/app.js"), /let studyListCache=new Map\(\)/);
   assert.match(entries.get("assets/app.js"), /arr\(snapshot\.indices\)\.includes\(index\)/);
   assert.match(entries.get("assets/app.js"), /function changeWordOrderCombination[\s\S]*?persistNow\(\);[\s\S]*?const currentWord=currentRaw\(\)/);
   assert.match(entries.get("assets/app.js"), /\.skip\(offset\)[\s\S]*?\.limit\(CLOUD_PROGRESS_PAGE_SIZE\)/);

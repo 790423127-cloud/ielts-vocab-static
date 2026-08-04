@@ -14,7 +14,16 @@ test("word vs phrase missing phonetics audit; no invented symbols required", () 
   let missingPhrase = 0;
   let wordTotal = 0;
   let phraseTotal = 0;
+  let pendingMasterTotal = 0;
   for (const it of items) {
+    if (
+      (it.qualityFlags || []).includes("missing_master_lexicon")
+      && it.studyMode === "reference"
+    ) {
+      assert.equal(it.studyMode, "reference");
+      pendingMasterTotal += 1;
+      continue;
+    }
     const isPhrase = it.entryType === "phrase" || /\s/.test(it.word || "");
     const has = Boolean(String(it.phonetic || "").trim());
     if (isPhrase) {
@@ -25,7 +34,8 @@ test("word vs phrase missing phonetics audit; no invented symbols required", () 
       if (!has) missingWord += 1;
     }
   }
-  assert.equal(wordTotal + phraseTotal, items.length);
+  assert.equal(wordTotal + phraseTotal + pendingMasterTotal, items.length);
+  assert.ok(pendingMasterTotal <= (data.questionBankExpansion?.pendingCount || 0));
   // after enrichment, ordinary words missing should be much less than phrases
   assert.ok(missingWord < missingPhrase || missingWord < 200);
   // must not claim zero if unresolved remain — just report

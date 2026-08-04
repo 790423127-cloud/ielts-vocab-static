@@ -1,13 +1,6 @@
 "use client";
 
-function requestCurrentWordDeletion() {
-  window.dispatchEvent(new KeyboardEvent("keydown", {
-    key: "Delete",
-    code: "Delete",
-    bubbles: true,
-    cancelable: true
-  }));
-}
+import { requestCurrentWordDeletion } from "../lib/vocab/delete-current-word-request.mjs";
 
 export default function WordStudyActions({
   item,

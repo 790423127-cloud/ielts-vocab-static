@@ -68,11 +68,10 @@ export default function MeaningEnPage() {
           import("../lib/meaning-en/engine.mjs"),
           loadMeaningEnExampleRuntime()
         ]);
-        const response = await fetch(WORD_BANK_URL);
-        if (!response.ok) throw new Error("词库加载失败: " + response.status);
-        const data = await response.json();
+        const { loadSessionJson } = await import("../lib/browser-json-cache.mjs");
+        const data = await loadSessionJson(WORD_BANK_URL, fetch, { cache: "force-cache" });
         if (cancelled) return;
-        if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
+        if (!data?.items || !Array.isArray(data.items) || data.items.length === 0) {
           setError("词库为空，请先生成 meaning-6000 数据。");
           setPhase("error");
           return;

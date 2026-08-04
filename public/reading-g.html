@@ -79,10 +79,14 @@
       <div id="readingControlsBody" class="reading-controls-body">
         <div class="top-actions">
           <a href="./index.html" class="top-btn">← 主词库</a>
-          <a href="./basic.html" class="top-btn">零基础</a>
-          <a href="./meaning.html" class="top-btn">看词选意思</a>
-          <a href="./spelling.html" class="top-btn">拼写训练</a>
           <button class="top-btn" type="button" data-study-meaning-toggle>隐藏释义</button>
+          <button id="autoPlayBtn" class="top-btn" type="button">自动播放 · A</button>
+          <select id="autoPlaySpeed" class="top-select" aria-label="自动播放间隔">
+            <option value="2">2秒</option>
+            <option value="4">4秒</option>
+            <option value="6" selected>6秒</option>
+            <option value="10">10秒</option>
+          </select>
           <button id="shuffleBtn" class="top-btn" type="button">随机</button>
           <button id="nextBtn" class="top-btn" type="button">下一个</button>
         </div>
@@ -90,7 +94,7 @@
           <span class="meta-pill" id="bankMeta">G类阅读提升</span>
         </div>
         <div class="topic-bar" id="topicBar" aria-label="学习范围筛选"></div>
-        <p class="expression-note">同义训练仅使用安全题库233组；仅浏览关系67组不进入选择题。表达识别核心1006个表达、扩展500个表达，不代表每个词都已建立可靠同义关系。</p>
+        <p class="expression-note">同义训练仅使用安全题库233组；仅浏览关系67组不进入选择题。表达识别核心1006个表达、扩展500个表达。AI补全需要安全的本地服务器环境，请在电脑本地版使用“AI补全待补词”。</p>
       </div>
     </section>
 
@@ -129,6 +133,6 @@
   </main>
   <div id="toast" class="toast"></div>
   <script src="./assets/study-meaning-visibility.js?v=20260730_word_order_meaning_visibility_v1"></script>
-  <script src="./assets/reading-g.js?v=20260726_ielts538_v2"></script>
+  <script src="./assets/reading-g.js?v=20260804-reading-g-autoplay-v1"></script>
 </body>
 </html>

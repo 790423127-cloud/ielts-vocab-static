@@ -614,6 +614,7 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
       wordOrderDifficultyMode={wordOrdering.difficultyMode}
       wordOrderDifficultyAvailable={wordOrdering.difficultyAvailable}
       wordOrderDifficultyEnabled={lexicon !== "ielts538"}
+      wordOrderDifficultyProfile={wordOrdering.difficultyProfile}
       onWordOrderModeChange={changeWordOrderMode}
       onWordDifficultyModeChange={changeWordDifficultyMode}
       onPrev={() => goToStudyOffset(-1)}

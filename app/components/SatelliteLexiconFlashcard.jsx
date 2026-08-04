@@ -8,16 +8,23 @@
  * layoutMode="default": original behavior for /basic.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Bookmark, PanelRightOpen, Shuffle } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Bookmark, PanelRightOpen, Pause, Play, Shuffle } from "lucide-react";
 import VirtualList from "./VirtualList";
 import WordStudyOverview from "./WordStudyOverview";
 import WordStudyProgress from "./WordStudyProgress";
 import WordStudyWorkspace from "./WordStudyWorkspace";
+import {
+  normalizeReadingGForms,
+  normalizeReadingGWordFamily
+} from "../lib/reading-g-vocab/morphology.mjs";
+import { getFormChineseType } from "../lib/vocab/page-word-helpers.mjs";
 import StudyMeaningToggle from "./StudyMeaningToggle";
 import WordStudyOrderControls from "./WordStudyOrderControls";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
 import rgStyles from "../reading-g/reading-g.module.css";
+
+const AUTO_PLAY_SPEEDS = [2, 4, 6, 10];
 
 function fallback(value, text) {
   return value && String(value).trim() ? value : text;
@@ -143,6 +150,8 @@ export default function SatelliteLexiconFlashcard({
   safeStudyPosition,
   studyCount,
   progressPercent,
+  onPositionCommit = null,
+  getPositionPreview = null,
   search,
   setSearch,
   onFilter,
@@ -158,11 +167,13 @@ export default function SatelliteLexiconFlashcard({
   wordOrderDifficultyMode = "default",
   wordOrderDifficultyAvailable = true,
   wordOrderDifficultyEnabled = true,
+  wordOrderDifficultyProfile = null,
   onWordOrderModeChange = null,
   onWordDifficultyModeChange = null,
   statsLine,
   toast,
   extraLinks = [],
+  extraActions = null,
   chipGroups = [],
   layoutMode = "default",
   studyPathNote = "",
@@ -196,16 +207,25 @@ export default function SatelliteLexiconFlashcard({
 }) {
   const [showInsight, setShowInsight] = useState(true);
   const [showRelatedMeanings, setShowRelatedMeanings] = useState(true);
+  const [autoPlayActive, setAutoPlayActive] = useState(false);
+  const [autoPlaySeconds, setAutoPlaySeconds] = useState(6);
   const [paraphraseSelection, setParaphraseSelection] = useState({
     itemKey: "",
     replacement: ""
   });
   const swipeStartRef = useRef(null);
+  const autoPlayActiveRef = useRef(false);
+  const canAutoPlayRef = useRef(false);
+  const onNextRef = useRef(onNext);
+  const onSpeakWordRef = useRef(onSpeakWord);
   const isReadingG = layoutMode === "readingG";
   const isIelts538 = layoutMode === "ielts538";
   const insightVisible = !isIelts538 && showInsight;
   const commonCollocations = normalizePhraseItems(item?.collocations);
   const phraseCollocations = normalizePhraseItems(item?.phraseCollocations);
+  const displayForms = normalizeReadingGForms(item?.forms, item?.word).slice(0, 6);
+  const displayWordFamily = normalizeReadingGWordFamily(item?.wordFamily, item?.word).slice(0, 6);
+  const canAutoPlay = isReadingG && !quizMode && !isStudyEmpty && studyCount >= 2 && typeof onNext === "function";
   const collocationFallback = [{ phrase: "暂无搭配", chinese: "" }];
   const phraseCollocationFallback = [{ phrase: "暂无短语搭配", chinese: "" }];
   const speakSmall = onSpeakSmall || (() => {});
@@ -351,6 +371,135 @@ export default function SatelliteLexiconFlashcard({
   ) || null;
   const selectedReplacementSection =
     selectedParaphrase?.readingSection || selectedRelatedEntry?.readingSection || "";
+
+  autoPlayActiveRef.current = autoPlayActive;
+  canAutoPlayRef.current = canAutoPlay;
+  onNextRef.current = onNext;
+  onSpeakWordRef.current = onSpeakWord;
+
+  const toggleAutoPlay = useCallback(() => {
+    if (!canAutoPlayRef.current) return false;
+    setAutoPlayActive((active) => !active);
+    return true;
+  }, []);
+
+  const cycleAutoPlaySpeed = useCallback((direction = 1) => {
+    setAutoPlaySeconds((current) => {
+      const currentIndex = AUTO_PLAY_SPEEDS.indexOf(Number(current));
+      const safeIndex = currentIndex >= 0 ? currentIndex : AUTO_PLAY_SPEEDS.indexOf(6);
+      const nextIndex = (safeIndex + direction + AUTO_PLAY_SPEEDS.length) % AUTO_PLAY_SPEEDS.length;
+      return AUTO_PLAY_SPEEDS[nextIndex];
+    });
+  }, []);
+
+  useEffect(() => {
+    if (canAutoPlay || !autoPlayActive) return;
+    setAutoPlayActive(false);
+  }, [autoPlayActive, canAutoPlay]);
+
+  useEffect(() => {
+    if (!autoPlayActive || !canAutoPlay) return undefined;
+    const timer = window.setInterval(() => {
+      const activeElement = document.activeElement;
+      const tagName = activeElement?.tagName?.toLowerCase();
+      if (
+        document.hidden ||
+        document.querySelector("details.menu[open]") ||
+        tagName === "input" ||
+        tagName === "textarea" ||
+        activeElement?.isContentEditable
+      ) return;
+
+      onNextRef.current?.();
+      window.requestAnimationFrame(() => {
+        document.querySelector(".word-study-progress")?.scrollIntoView({ block: "start", behavior: "smooth" });
+      });
+    }, autoPlaySeconds * 1000);
+
+    return () => window.clearInterval(timer);
+  }, [autoPlayActive, autoPlaySeconds, canAutoPlay]);
+
+  useEffect(() => {
+    if (!autoPlayActive || !canAutoPlay) return undefined;
+    const timer = window.setTimeout(() => {
+      if (!document.hidden && !document.querySelector("details.menu[open]")) {
+        onSpeakWordRef.current?.();
+      }
+    }, 220);
+    return () => window.clearTimeout(timer);
+  }, [autoPlayActive, canAutoPlay, item?.id, item?.word]);
+
+  useEffect(() => {
+    function isTextEntryTarget(target) {
+      if (!target || !(target instanceof Element)) return false;
+      const tagName = target.tagName?.toLowerCase();
+      if (tagName === "textarea") return true;
+      if (target.isContentEditable) return true;
+      if (tagName === "input") {
+        const type = String(target.getAttribute("type") || "text").toLowerCase();
+        return !["button", "checkbox", "radio", "range", "file", "submit", "reset", "color"].includes(type);
+      }
+      return false;
+    }
+
+    function flashAutoPlayControl() {
+      const control = document.querySelector(".reading-g-auto-play-control");
+      if (!control) return;
+      control.classList.add("is-hotkey-hit");
+      window.setTimeout(() => control.classList.remove("is-hotkey-hit"), 220);
+    }
+
+    function handleKeyDown(event) {
+      if (!isReadingG || quizMode || event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
+      if (event.isComposing && event.code !== "Escape") return;
+
+      const key = event.key || "";
+      const code = event.code || "";
+      const inTextField = isTextEntryTarget(event.target);
+
+      if ((key === "Escape" || code === "Escape") && autoPlayActiveRef.current) {
+        if (inTextField) return;
+        event.preventDefault();
+        event.stopPropagation();
+        setAutoPlayActive(false);
+        flashAutoPlayControl();
+        return;
+      }
+
+      if (inTextField) return;
+
+      if (code === "KeyA") {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.target instanceof HTMLElement) {
+          const tagName = event.target.tagName?.toLowerCase();
+          if (tagName === "select" || tagName === "button") event.target.blur();
+        }
+        toggleAutoPlay();
+        flashAutoPlayControl();
+        return;
+      }
+
+      if (code === "BracketLeft" || key === "[") {
+        event.preventDefault();
+        event.stopPropagation();
+        cycleAutoPlaySpeed(-1);
+        flashAutoPlayControl();
+        return;
+      }
+
+      if (code === "BracketRight" || key === "]") {
+        event.preventDefault();
+        event.stopPropagation();
+        cycleAutoPlaySpeed(1);
+        flashAutoPlayControl();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [cycleAutoPlaySpeed, isReadingG, quizMode, toggleAutoPlay]);
+
   const handleSwipeStart = (event) => {
     if (!isIelts538 || event.touches.length !== 1) return;
     if (event.target.closest("button, a, input, select, textarea, [role='button']")) {
@@ -422,7 +571,7 @@ export default function SatelliteLexiconFlashcard({
       <h2 className="panel-title">筛选</h2>
       <p className="panel-desc">
         {isReadingG
-          ? "选择学习范围。完整路线见面板底部说明。"
+          ? "阶段路线互不重复；范围总数相加等于词库总数，当前待学会随熟悉状态减少。"
           : `${modeLabel}独立词库；每个入口单独记当前位置，不改动主词库。`}
       </p>
 
@@ -451,7 +600,7 @@ export default function SatelliteLexiconFlashcard({
               >
                 <span className="entry-title">{entry.title}</span>
                 <span className="entry-desc">{entry.desc}</span>
-                <span className="entry-meta">{entry.count} 个</span>
+                <span className="entry-meta">{entry.countLabel || `${entry.count} 个`}</span>
               </button>
             ))}
           </div>
@@ -622,6 +771,8 @@ export default function SatelliteLexiconFlashcard({
           current={isStudyEmpty ? 0 : safeStudyPosition + 1}
           total={studyCount}
           percent={progressPercent}
+          onPositionCommit={onPositionCommit}
+          getPositionPreview={getPositionPreview}
           actions={(
           <header className="topbar">
           <div className="previous">
@@ -643,7 +794,39 @@ export default function SatelliteLexiconFlashcard({
                 onDifficultyModeChange={onWordDifficultyModeChange}
                 difficultyAvailable={wordOrderDifficultyAvailable}
                 difficultyEnabled={wordOrderDifficultyEnabled}
+                difficultyProfile={wordOrderDifficultyProfile}
               />
+            ) : null}
+            {isReadingG && !quizMode ? (
+              <div className={`auto-scroll-control reading-g-auto-play-control${autoPlayActive ? " is-active" : ""}`}>
+                <button
+                  type="button"
+                  className="top-pill auto-scroll-toggle"
+                  disabled={!canAutoPlay}
+                  aria-pressed={autoPlayActive}
+                  aria-label={autoPlayActive ? "暂停自动播放" : "开启自动播放"}
+                  title="自动读当前词并切到下一个；快捷键：A 开关 · Esc 暂停 · [ ] 调间隔。"
+                  onClick={toggleAutoPlay}
+                  data-testid="reading-g-auto-play-toggle"
+                >
+                  {autoPlayActive ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
+                  {autoPlayActive ? `暂停播放 · ${autoPlaySeconds}s` : "自动播放 · A"}
+                </button>
+                <select
+                  className="auto-scroll-speed"
+                  value={autoPlaySeconds}
+                  disabled={!canAutoPlay}
+                  onChange={(event) => setAutoPlaySeconds(Number(event.target.value))}
+                  aria-label="自动播放间隔"
+                  title="自动播放间隔（快捷键 [ 变慢 · ] 变快）"
+                >
+                  {AUTO_PLAY_SPEEDS.map((seconds) => (
+                    <option key={seconds} value={seconds}>
+                      {seconds}秒
+                    </option>
+                  ))}
+                </select>
+              </div>
             ) : null}
             {quizMode && onShuffle ? (
               <button type="button" className="top-pill shuffle-pill" onClick={onShuffle}>
@@ -659,6 +842,7 @@ export default function SatelliteLexiconFlashcard({
                 {link.label}
               </a>
             ))}
+            {extraActions}
 
             <details className="menu">
               <summary className="top-pill">学习范围</summary>
@@ -1224,7 +1408,55 @@ export default function SatelliteLexiconFlashcard({
                     ) : null
                   ) : (
                   <div className="grid footer-grid">
-                    <div className="block">
+                    {isReadingG ? (
+                      <div className="block">
+                        <div className="block-title">变形</div>
+                        <div className="list">
+                          {displayForms.length ? displayForms.map((form) => (
+                            <div className="item with-sound" key={`form-${form.word}`}>
+                              <button
+                                className="mini-sound"
+                                type="button"
+                                onClick={() => speakSmall(form.word, "变形")}
+                                title="播放变形发音"
+                              >
+                                🔊
+                              </button>
+                              <div className="pair-text">
+                                <div className="en">{form.word}</div>
+                                <div className="zh">{form.meaning || form.note || getFormChineseType(form.type)}</div>
+                              </div>
+                            </div>
+                          )) : <div className="item"><div className="pair-text"><div className="zh">当前词暂无重要变形</div></div></div>}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {isReadingG ? (
+                      <div className="block">
+                        <div className="block-title">词族</div>
+                        <div className="list">
+                          {displayWordFamily.length ? displayWordFamily.map((family) => (
+                            <div className="item with-sound" key={`family-${family.word}`}>
+                              <button
+                                className="mini-sound"
+                                type="button"
+                                onClick={() => speakSmall(family.word, "词族")}
+                                title="播放词族发音"
+                              >
+                                🔊
+                              </button>
+                              <div className="pair-text">
+                                <div className="en">{family.word}</div>
+                                <div className="zh">{[getPosDisplay(family.pos), family.meaning].filter(Boolean).join(" · ") || "同词族词条"}</div>
+                              </div>
+                            </div>
+                          )) : <div className="item"><div className="pair-text"><div className="zh">当前词暂无词族信息</div></div></div>}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {!isReadingG ? <div className="block">
                       <div className="block-title">常见搭配</div>
                       <div className="list">
                         {(commonCollocations.length ? commonCollocations : collocationFallback)
@@ -1250,9 +1482,9 @@ export default function SatelliteLexiconFlashcard({
                             </div>
                           ))}
                       </div>
-                    </div>
+                    </div> : null}
 
-                    <div className="block">
+                    {!isReadingG ? <div className="block">
                       <div className="block-title">短语 / 介词搭配</div>
                       <div className="list">
                         {(phraseCollocations.length
@@ -1281,7 +1513,7 @@ export default function SatelliteLexiconFlashcard({
                             </div>
                           ))}
                       </div>
-                    </div>
+                    </div> : null}
 
                     {/* 分类标签卡片：readingG 模式正文彻底不展示；default 保留给 /basic */}
                     {!isReadingG &&

@@ -224,16 +224,26 @@ test("真实整理候选按稳定ID匹配，删除后索引移动仍进入下一
   assert.equal(result.words[result.index].word, "school");
 });
 
-test("整理页删除按钮复用 Delete 快捷键的原子导航流程", () => {
+test("整理页删除按钮复用统一删除请求与快捷键原子导航流程", () => {
   const source = readFileSync(
     new URL("../../../components/WordStudyActions.jsx", import.meta.url),
     "utf8"
   );
+  const requestSource = readFileSync(
+    new URL("../delete-current-word-request.mjs", import.meta.url),
+    "utf8"
+  );
+  const navigationSource = readFileSync(
+    new URL("../../../hooks/useWordFlashNavigation.js", import.meta.url),
+    "utf8"
+  );
 
-  assert.match(source, /function requestCurrentWordDeletion\(\)/);
-  assert.match(source, /key:\s*"Delete"/);
+  assert.match(source, /requestCurrentWordDeletion/);
   assert.match(source, /onClick=\{requestCurrentWordDeletion\}/);
   assert.doesNotMatch(source, /onClick=\{tidyReview\.onDelete\}/);
+  assert.match(requestSource, /ielts-vocab:delete-current-word/);
+  assert.match(navigationSource, /ielts-vocab:delete-current-word/);
+  assert.match(navigationSource, /KeyD/);
 });
 
 test("删除状态、固定队列快照和后继位置由主页统一使用 flushSync 一次提交", () => {

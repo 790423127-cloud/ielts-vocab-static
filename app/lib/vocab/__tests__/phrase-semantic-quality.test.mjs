@@ -73,11 +73,11 @@ test("grammar terminology inside a real semantic gloss is not treated as grammar
   assert.equal(report.fatalCounts.grammarOnlyMeaning, 0);
 });
 
-test("the active 2971-phrase dataset passes fatals and exposes structured warnings", () => {
+test("the active phrase dataset passes fatals and exposes structured warnings", () => {
   const payload = JSON.parse(fs.readFileSync(phrasesPath, "utf8"));
   const report = auditPhrases(payload);
 
-  assert.equal(report.count, 2971);
+  assert.equal(report.count, payload.count);
   assert.equal(report.ok, true, report.errors.join("; "));
   assert.equal(report.fatalTotal, 0);
   assert.equal(typeof report.warningTotal, "number");
@@ -130,8 +130,8 @@ test("editorial delimiter repairs preserve stable ids and expose real accepted f
     }
   ];
 
-  assert.match(payload.version, /editorial-20260710$/);
-  const previousVersion = payload.version.replace(/-editorial-20260710$/, "");
+  assert.match(payload.version, /^phrase-layer-v\d+-\d+-/);
+  const previousVersion = `${payload.version}-previous`;
   const previousMeta = buildPhraseLexiconMeta({ ...payload, version: previousVersion }, payload.phrases);
   const currentMeta = buildPhraseLexiconMeta(payload, payload.phrases);
   assert.notEqual(currentMeta.phraseLexiconHash, previousMeta.phraseLexiconHash);

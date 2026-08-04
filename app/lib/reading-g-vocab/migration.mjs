@@ -52,16 +52,25 @@ export function buildItemKeyIndex(items) {
   const byNorm = new Map();
   const byId = new Map();
   const byMerge = new Map();
+  const indexNorm = (key, item) => {
+    if (!key) return;
+    if (!byNorm.has(key)) byNorm.set(key, []);
+    if (!byNorm.get(key).includes(item)) byNorm.get(key).push(item);
+  };
   for (const item of items || []) {
     const nk = item.normalizedKey || normalizeReadingGKey(item.word);
     const id = item.id;
     const mk = `${item.entryType || "word"}::${nk}`;
-    if (nk) {
-      if (!byNorm.has(nk)) byNorm.set(nk, []);
-      byNorm.get(nk).push(item);
-    }
+    indexNorm(nk, item);
     if (id) byId.set(id, item);
     byMerge.set(mk, item);
+    for (const alias of Array.isArray(item.mergedAliases) ? item.mergedAliases : []) {
+      const aliasKey = normalizeReadingGKey(alias?.key || alias?.word);
+      const aliasId = String(alias?.id || "").trim();
+      indexNorm(aliasKey, item);
+      if (aliasId) byId.set(aliasId, item);
+      if (aliasKey) byMerge.set(`word::${aliasKey}`, item);
+    }
   }
   // convenience: single-item get for tests
   const byNormSingle = new Map();

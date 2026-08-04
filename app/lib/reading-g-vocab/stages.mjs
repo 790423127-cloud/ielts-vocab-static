@@ -14,26 +14,42 @@ export const STAGE_PRESETS = {
   stage2: {
     id: "stage2",
     title: "阶段2：扩大覆盖",
-    desc: "tierB1200 + 词组后200（同义300另计）",
+    desc: "阶段1之外的 tierB1200 + 词组后200（同义300另计）",
     filter: { type: "pathStage", value: "2" }
   },
   stage3: {
     id: "stage3",
     title: "阶段3：同义与Section3强化",
-    desc: "paraCore600 + tierC800 + paraExt500（识别，非自动同义题）",
+    desc: "前两阶段之外的全部 active 词条",
     filter: { type: "pathStage", value: "3" }
   },
   stage4: {
     id: "stage4",
     title: "阶段4：参考查阅",
-    desc: "reference701 只查阅，不进默认待学",
+    desc: "全部 reference 词条，只查阅，不进默认待学",
     filter: { type: "pathStage", value: "4" }
   }
 };
 
 export const STAGE1_WORD_LAYERS = ["priority1500", "answerCore250", "logic120"];
 export const STAGE2_WORD_LAYERS = ["tierB1200"];
-export const STAGE3_LAYERS = ["paraCore600", "tierC800", "paraExt500"];
+export const STAGE3_LAYERS = [
+  "paraCore600",
+  "tierC800",
+  "paraExt500",
+  "questionBankActive",
+  "questionBankAiCompleted"
+];
+
+function matchesStage1Content(item, layers) {
+  if (STAGE1_WORD_LAYERS.some((layer) => layers.includes(layer))) return true;
+  return layers.includes("phrases400") && Number(item.phraseStudyStage) === 1;
+}
+
+function matchesStage2Content(item, layers) {
+  if (STAGE2_WORD_LAYERS.some((layer) => layers.includes(layer))) return true;
+  return layers.includes("phrases400") && Number(item.phraseStudyStage) === 2;
+}
 
 /**
  * Whether item belongs to a path stage (vocab items only; paraphrases separate).
@@ -43,33 +59,26 @@ export function itemMatchesPathStage(item, stageValue) {
   const layers = Array.isArray(item.layers) ? item.layers : [];
   const stage = String(stageValue || "");
 
+  // The route is a partition, not four independent layer filters. A word is
+  // assigned once, to the earliest stage that introduces it.
+  if (stage === "4") return item.studyMode === "reference";
+  if (item.studyMode !== "active") return false;
+
+  const inStage1 = matchesStage1Content(item, layers);
+  const inStage2 = !inStage1 && matchesStage2Content(item, layers);
+
   if (stage === "1") {
-    // words/layers core
-    if (STAGE1_WORD_LAYERS.some((l) => layers.includes(l))) {
-      if (item.studyMode === "reference") return false;
-      return true;
-    }
-    // phrases400 front 200 only
-    if (layers.includes("phrases400") && item.studyMode !== "reference") {
-      return Number(item.phraseStudyStage) === 1;
-    }
-    return false;
+    return inStage1;
   }
 
   if (stage === "2") {
-    if (item.studyMode === "reference") return false;
-    if (STAGE2_WORD_LAYERS.some((l) => layers.includes(l))) return true;
-    if (layers.includes("phrases400") && Number(item.phraseStudyStage) === 2) return true;
-    return false;
+    return inStage2;
   }
 
   if (stage === "3") {
-    if (item.studyMode === "reference") return false;
-    return STAGE3_LAYERS.some((l) => layers.includes(l));
-  }
-
-  if (stage === "4") {
-    return item.studyMode === "reference" || layers.includes("reference701");
+    // Stage 3 is the final active stage, so it owns every active entry not
+    // already introduced by stages 1 or 2 (including compacted family heads).
+    return !inStage1 && !inStage2;
   }
 
   return false;

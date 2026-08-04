@@ -14,6 +14,10 @@ import { emptyParaphraseReviewState, normalizeParaphraseReviewState } from "./pa
 import { normalizeParaphraseSession } from "./paraphrase-session.mjs";
 import { itemMatchesPathStage } from "./stages.mjs";
 import { normalizeReadingGKey } from "./normalize.mjs";
+import {
+  isReadingGContentComplete,
+  isReadingGContentIncomplete
+} from "./content-completeness.mjs";
 import { isInflectedReferenceWord } from "../vocab/word-study-eligibility.mjs";
 
 function safeGet(key, fallback) {
@@ -429,6 +433,13 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
 
   if (filter.type === "everything") return true;
 
+  if (filter.type === "contentIncomplete") {
+    return isReadingGContentIncomplete(item);
+  }
+  if (filter.type === "questionBankComplete") {
+    return item.primaryLayer === "questionBankActive" && isReadingGContentComplete(item);
+  }
+
   if (filter.type === "status") {
     if (filter.value === "不熟") return status === RG_STATUS.UNFAMILIAR;
     if (filter.value === "熟悉") return status === RG_STATUS.FAMILIAR;
@@ -443,6 +454,7 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
     filter.type !== "paraphrase" &&
     filter.type !== "paraphraseQuiz" &&
     filter.type !== "reference" &&
+    filter.type !== "primaryLayer" &&
     !(filter.type === "pathStage" && filter.value === "4")
   ) {
     return false;
@@ -466,6 +478,7 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
     return false;
   }
   if (filter.type === "layer") return layers.includes(filter.value);
+  if (filter.type === "primaryLayer") return item.primaryLayer === filter.value;
   if (filter.type === "entryType") return item.entryType === filter.value;
   if (filter.type === "domain") return item.domain === filter.value;
   if (filter.type === "topic") return Array.isArray(item.topics) && item.topics.includes(filter.value);
@@ -491,7 +504,7 @@ export function getRgFilterLabel(filter) {
     return "阶段1：基础保分";
   }
   if (filter.type === "pathStage" && filter.value === "2") return "阶段2：扩大覆盖";
-  if (filter.type === "pathStage" && filter.value === "3") return "阶段3：同义与Section3强化";
+  if (filter.type === "pathStage" && filter.value === "3") return "阶段3：真题强化";
   if (filter.type === "pathStage" && filter.value === "4") return "阶段4：参考查阅";
   if (filter.type === "active") return "默认待学（全部active）";
   if (filter.type === "reference") return "参考701（查阅）";
@@ -506,6 +519,18 @@ export function getRgFilterLabel(filter) {
   if (filter.type === "status" && filter.value === "收藏") return "收藏";
   if (filter.type === "entryType" && filter.value === "word") return "仅单词";
   if (filter.type === "entryType" && filter.value === "phrase") return "仅词组";
+  if (filter.type === "primaryLayer" && filter.value === "questionBankActive") {
+    return "新增完整词（独立词条）";
+  }
+  if (filter.type === "questionBankComplete") {
+    return "新增完整词（按实际字段）";
+  }
+  if (filter.type === "contentIncomplete") {
+    return "待补词（按实际字段）";
+  }
+  if (filter.type === "primaryLayer" && filter.value === "questionBankPending") {
+    return "待补词（独立词条）";
+  }
   if (filter.type === "layer") {
     const map = {
       priority1500: "优先核心1500",
@@ -516,7 +541,10 @@ export function getRgFilterLabel(filter) {
       paraCore600: "表达识别核心",
       tierC800: "C层800",
       paraExt500: "表达识别扩展",
-      reference701: "参考701"
+      reference701: "参考701",
+      questionBankActive: "全题库补充（已有资料）",
+      questionBankAiCompleted: "全题库补充（AI已补全）",
+      questionBankPending: "全题库待补资料"
     };
     return map[filter.value] || `层：${filter.value}`;
   }
@@ -527,113 +555,77 @@ export function getRgFilterLabel(filter) {
 
 export const RG_LEARNING_ENTRIES = [
   {
-    group: "学习模式",
+    group: "常用入口",
+    items: [
+      {
+        title: "阶段1：主线保分",
+        desc: "优先核心、答案词、逻辑词与前200词组",
+        filter: { type: "pathStage", value: "1" }
+      },
+      {
+        title: "全部待学",
+        desc: "所有可刷 active 词条",
+        filter: { type: "active", value: "" }
+      },
+      {
+        title: "不熟复习",
+        desc: "优先回收标记为不熟的内容",
+        filter: { type: "status", value: "不熟" }
+      },
+      {
+        title: "收藏重点",
+        desc: "只看手动收藏的词条",
+        filter: { type: "status", value: "收藏" }
+      }
+    ]
+  },
+  {
+    group: "训练方式",
     items: [
       {
         title: "词义学习",
-        desc: "普通单词 · 只写 meaningStatus",
+        desc: "单词释义主训练",
         filter: { type: "learnMode", value: "meaning" }
       },
       {
         title: "短语学习",
-        desc: "固定词组 · 只写 phraseStatus",
+        desc: "固定搭配与短语",
         filter: { type: "learnMode", value: "phrase" }
       },
       {
-        title: "引导学习·每轮10组",
-        desc: "安全题库233组 · 关系预览→主动回忆→四选一",
+        title: "同义引导·10组",
+        desc: "预览→回忆→四选一",
         filter: { type: "paraphraseQuiz", value: "", sessionMode: "guided" }
       },
       {
-        title: "快速测验·每轮20题",
-        desc: "安全题库233 · 每轮20题",
+        title: "同义测验·20题",
+        desc: "快速检查掌握度",
         filter: { type: "paraphraseQuiz", value: "", sessionMode: "quick" }
-      },
-      {
-        title: "完整测验·每轮80题",
-        desc: "安全题库233组 · 可选长测验",
-        filter: { type: "paraphraseQuiz", value: "", sessionMode: "full" }
       }
     ]
   },
   {
-    group: "阶段路径",
+    group: "阶段路线",
     items: [
       {
         title: "阶段1：基础保分",
-        desc: "1500+250+120+词组前200",
+        desc: "先把高收益词吃稳",
         filter: { type: "pathStage", value: "1" }
       },
       {
         title: "阶段2：扩大覆盖",
-        desc: "B层1200+词组后200（同义另训）",
+        desc: "阶段1之外的B层与后200词组",
         filter: { type: "pathStage", value: "2" }
       },
       {
-        title: "阶段3：同义与Section3",
-        desc: "网络同义600+C层800+扩展500",
+        title: "阶段3：真题强化",
+        desc: "前两阶段之外的全部可学习词",
         filter: { type: "pathStage", value: "3" }
       },
       {
         title: "阶段4：参考查阅",
-        desc: "reference701 只查阅",
+        desc: "仅参考词，只查阅不打断主线",
         filter: { type: "pathStage", value: "4" }
-      }
-    ]
-  },
-  {
-    group: "推荐 / 状态",
-    items: [
-      {
-        title: "默认待学",
-        desc: "全部 studyMode=active",
-        filter: { type: "active", value: "" }
-      },
-      {
-        title: "不熟",
-        desc: "当前模式下的不熟",
-        filter: { type: "status", value: "不熟" }
-      },
-      {
-        title: "熟悉",
-        desc: "当前模式下的熟悉",
-        filter: { type: "status", value: "熟悉" }
-      },
-      {
-        title: "收藏",
-        desc: "收藏重点",
-        filter: { type: "status", value: "收藏" }
-      },
-      {
-        title: "全部（含参考）",
-        desc: "含 reference701",
-        filter: { type: "everything", value: "" }
-      }
-    ]
-  },
-  {
-    group: "分层类目",
-    items: [
-      { title: "优先核心1500", desc: "第一优先。", filter: { type: "layer", value: "priority1500" } },
-      { title: "答案词强化250", desc: "答案敏感词。", filter: { type: "layer", value: "answerCore250" } },
-      { title: "逻辑连接120", desc: "转折/条件。", filter: { type: "layer", value: "logic120" } },
-      { title: "高频词组400", desc: "整层400（阶段用前后200）。", filter: { type: "layer", value: "phrases400" } },
-      { title: "B层1200", desc: "扩大覆盖。", filter: { type: "layer", value: "tierB1200" } },
-      { title: "表达识别核心", desc: "1006个表达 · 不代表每个词都有可靠同义关系。", filter: { type: "layer", value: "paraCore600" } },
-      { title: "C层800", desc: "Section3 扩展。", filter: { type: "layer", value: "tierC800" } },
-      { title: "表达识别扩展", desc: "500个表达 · 仅做阅读表达识别。", filter: { type: "layer", value: "paraExt500" } },
-      { title: "参考701", desc: "只查阅。", filter: { type: "reference", value: "" } }
-    ]
-  },
-  {
-    group: "形态",
-    items: [
-      { title: "仅单词", desc: "entryType=word", filter: { type: "entryType", value: "word" } },
-      { title: "仅词组", desc: "entryType=phrase", filter: { type: "entryType", value: "phrase" } },
-      {
-        title: "真题高可信同义300",
-        desc: "关系浏览（非MCQ）",
-        filter: { type: "paraphrase", value: "" }
       }
     ]
   }

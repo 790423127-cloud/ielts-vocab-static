@@ -2,7 +2,12 @@ import { existsSync, fstatSync, openSync, readFileSync, readSync, closeSync } fr
 import path from "node:path";
 
 const META_TAIL_BYTES = 1536;
-const META_HEAD_BYTES = 1024;
+const META_HEAD_BYTES = 8192;
+
+function lastMatchedValue(text, pattern, fallback = "") {
+  const matches = [...String(text || "").matchAll(pattern)];
+  return matches.at(-1)?.[1] ?? fallback;
+}
 
 export function resolveVocabWordsFile(cwd = process.cwd()) {
   const cachePath = path.join(cwd, ".static-export-cache", "words.json");
@@ -38,14 +43,20 @@ export function readVocabFileMetaFast(filePath = resolveVocabWordsFile()) {
 
     const head = headBuf.toString("utf8");
     const tail = tailBuf.toString("utf8");
+    // The file may start with nested audit objects that have their own
+    // `version`. The formal lexicon version is the top-level value directly
+    // before the `words` array, not the first `version` token in the file.
+    const rootVersion = head.match(
+      /"version"\s*:\s*"([^"]+)"\s*,\s*"words"\s*:/s
+    )?.[1] || "";
 
     return {
       bytes: stat.size,
-      version: head.match(/"version"\s*:\s*"([^"]+)"/)?.[1] || "",
-      count: Number(tail.match(/"count"\s*:\s*(\d+)/)?.[1] || 0),
-      savedAt: tail.match(/"savedAt"\s*:\s*"([^"]+)"/)?.[1] || "",
-      lexiconHash: tail.match(/"lexiconHash"\s*:\s*"([^"]+)"/)?.[1] || "",
-      integrityHash: tail.match(/"integrityHash"\s*:\s*"([^"]+)"/)?.[1] || ""
+      version: rootVersion,
+      count: Number(lastMatchedValue(tail, /"count"\s*:\s*(\d+)/g, 0)),
+      savedAt: lastMatchedValue(tail, /"savedAt"\s*:\s*"([^"]+)"/g),
+      lexiconHash: lastMatchedValue(tail, /"lexiconHash"\s*:\s*"([^"]+)"/g),
+      integrityHash: lastMatchedValue(tail, /"integrityHash"\s*:\s*"([^"]+)"/g)
     };
   } finally {
     closeSync(fd);

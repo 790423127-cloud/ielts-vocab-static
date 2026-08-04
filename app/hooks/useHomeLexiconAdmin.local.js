@@ -602,13 +602,22 @@ export function createLocalOps(ctx) {
 
     const sameCount = sourceWords.filter((word) => normalizeWord(word.word) === targetKey).length;
 
-    const ok = confirm(
-      `确定删除这个单词？\n\n${currentWord.word}\n\n` +
-      `将从本地总词库删除 ${sameCount} 条同名单词记录。\n` +
-      `删除后会立即保存；重新发布后手机端也会移除。`
-    );
-
-    if (!ok) return null;
+    // Burst delete: after one confirmed delete, skip confirm for a short window
+    // so D/Delete 连点 only pays the dialog cost once.
+    const now = Date.now();
+    const quietUntil = Number(latestStateRef.current?.deleteConfirmQuietUntil) || 0;
+    const skipConfirm = now < quietUntil;
+    if (!skipConfirm) {
+      const ok = confirm(
+        `确定删除这个单词？\n\n${currentWord.word}\n\n` +
+        `将从本地总词库删除 ${sameCount} 条同名单词记录。\n` +
+        `删除后会保存；8 秒内连点删除不再弹窗。`
+      );
+      if (!ok) return null;
+    }
+    if (latestStateRef.current) {
+      latestStateRef.current.deleteConfirmQuietUntil = now + 8000;
+    }
 
     const canUsePreparedDeletion = preparedDeletion?.targetKey === targetKey
       && Array.isArray(preparedDeletion.words)
@@ -623,9 +632,18 @@ export function createLocalOps(ctx) {
     recordLocalChange("删除当前单词", sourceWords, next);
     setWords(next);
     setIndex(nextIndex);
-    persistConfirmedChange(next, sourceWords, "delete-current-word");
+    // Persist off the hot path so the next card can paint before disk/API work.
+    const persistWords = next;
+    const persistBefore = sourceWords;
+    queueMicrotask(() => {
+      persistConfirmedChange(persistWords, persistBefore, "delete-current-word");
+    });
 
-    setToast(`已彻底删除：${currentWord.word}（${sameCount} 条记录）｜已生成修改记录，可撤回`);
+    setToast(
+      skipConfirm
+        ? `已删除：${currentWord.word}`
+        : `已彻底删除：${currentWord.word}（${sameCount} 条）｜8 秒内连点可免确认`
+    );
     return {
       ...(canUsePreparedDeletion ? preparedDeletion : {}),
       deleted: true,

@@ -3,42 +3,40 @@
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Trash2 } from "lucide-react";
+import { requestCurrentWordDeletion } from "../lib/vocab/delete-current-word-request.mjs";
 
-function isTypingTarget(target) {
-  const tagName = target?.tagName?.toLowerCase();
-  return (
-    tagName === "input" ||
-    tagName === "textarea" ||
-    tagName === "select" ||
-    target?.isContentEditable
-  );
+function resolveDeletePortalTarget() {
+  // Prefer the main flash topbar; fall back if layout wrappers rename slightly.
+  const selectors = [
+    ".word-flash-shell .topbar",
+    ".page--word-flash .topbar",
+    ".word-study-progress__actions .topbar",
+    ".word-flash-shell header.topbar"
+  ];
+  for (const selector of selectors) {
+    const node = document.querySelector(selector);
+    if (node instanceof HTMLElement) return node;
+  }
+  return null;
 }
 
 /**
- * Reuse the page's existing Delete-key workflow instead of locating the hidden
- * tools button by its visible Chinese label. Saving, study-session guards, and
- * undo logging stay in the single existing delete path.
+ * Floating delete control for the main word flash page.
+ * D / Delete shortcuts are handled in useWordFlashNavigation; this button only
+ * raises the shared delete request event so confirm/save stay on one path.
  */
-function requestCurrentWordDeletion() {
-  window.dispatchEvent(new KeyboardEvent("keydown", {
-    key: "Delete",
-    code: "Delete",
-    bubbles: true,
-    cancelable: true
-  }));
-}
-
 export default function QuickDeleteCurrentWordButton() {
   const [portalTarget, setPortalTarget] = useState(null);
   const [disabled, setDisabled] = useState(true);
 
   const syncButtonState = useCallback(() => {
-    const topbar = document.querySelector(".word-flash-shell .topbar");
-    const favoriteButton = document.querySelector('button[aria-label="收藏当前单词"]');
+    const topbar = resolveDeletePortalTarget();
+    const favoriteButton = document.querySelector(
+      '.word-flash-shell button[aria-label="收藏当前单词"], button[aria-label="收藏当前单词"]'
+    );
 
-    setPortalTarget(topbar instanceof HTMLElement ? topbar : null);
-    // The favorite control uses the same empty/external-item guards as deletion.
-    // Loading is still guarded by the existing Delete-key handler itself.
+    setPortalTarget(topbar);
+    // Favorite control shares empty/external-item disabled state with deletion.
     setDisabled(!topbar || Boolean(favoriteButton?.disabled));
   }, []);
 
@@ -65,28 +63,8 @@ export default function QuickDeleteCurrentWordButton() {
     };
   }, [syncButtonState]);
 
-  useEffect(() => {
-    function handleKeyDown(event) {
-      const isDShortcut = event.key?.toLowerCase() === "d" || event.code === "KeyD";
-      if (!isDShortcut) return;
-      if (
-        event.repeat ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.altKey ||
-        isTypingTarget(event.target)
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-      requestCurrentWordDeletion();
-    }
-
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => window.removeEventListener("keydown", handleKeyDown, true);
-  }, []);
+  // Keyboard D/Delete are owned by useWordFlashNavigation to avoid double confirm.
+  // This component only mounts the visible delete control.
 
   if (!portalTarget) return null;
 

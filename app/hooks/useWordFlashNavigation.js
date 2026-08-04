@@ -7,6 +7,7 @@ import {
 } from "../lib/vocab/word-flashcard-study-pool.mjs";
 import { orderStudyWordIndices } from "../lib/vocab/word-study-ordering.mjs";
 import { resolveMissingQueuePosition } from "../lib/vocab/word-navigation-index.mjs";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
 
 /**
  * Word flashcard navigation: markStatus, prev/next, shuffle, keyboard shortcuts.
@@ -210,8 +211,38 @@ export function useWordFlashNavigation({
   speakWordRef.current = speakWord;
   speakExampleRef.current = speakExample;
 
-  // 1/2/3 mark status + Delete current word
+  // 1/2/3 mark status + D/Delete current word
   useEffect(() => {
+    const deleteFnRef = { current: deleteCurrentWord };
+
+    function runDeleteCurrentWord() {
+      const latest = latestStateRef.current || {};
+      if (latest.loading || latest.isStudyEmpty || quickStatusLockRef.current) {
+        return;
+      }
+      const deleteFn = deleteFnRef.current;
+      if (typeof deleteFn !== "function") return;
+
+      quickStatusLockRef.current = true;
+      let deletionResult = null;
+      try {
+        deletionResult = deleteFn();
+      } catch {
+        deletionResult = null;
+      }
+
+      // confirm() cancel or guarded delete returns null — always release the lock.
+      if (!deletionResult?.deleted) {
+        quickStatusLockRef.current = false;
+        return;
+      }
+
+      // Short lock: block only double-fire on the same keydown, not the next delete.
+      window.setTimeout(() => {
+        quickStatusLockRef.current = false;
+      }, 40);
+    }
+
     function handleQuickStatus(event) {
       if (flashStudyModeRef.current !== "word") return;
 
@@ -221,6 +252,7 @@ export function useWordFlashNavigation({
       if (
         tagName === "input" ||
         tagName === "textarea" ||
+        tagName === "select" ||
         target?.isContentEditable ||
         event.ctrlKey ||
         event.metaKey ||
@@ -232,32 +264,14 @@ export function useWordFlashNavigation({
 
       const key = event.key || "";
       const code = event.code || "";
-      const isDelete = key === "Delete" || code === "Delete" || event.keyCode === 46 || event.which === 46;
+      const isDeleteKey = key === "Delete" || code === "Delete" || event.keyCode === 46 || event.which === 46;
+      // Handle real D directly (do not rely on synthetic Delete KeyboardEvents).
+      const isDShortcut = key.toLowerCase() === "d" || code === "KeyD";
 
-      if (isDelete) {
+      if (isDeleteKey || isDShortcut) {
         event.preventDefault();
         event.stopPropagation();
-
-        const latest = latestStateRef.current;
-
-        if (latest.loading || latest.isStudyEmpty || quickStatusLockRef.current) {
-          return;
-        }
-
-        quickStatusLockRef.current = true;
-        const deletionResult = typeof deleteCurrentWord === "function"
-          ? deleteCurrentWord()
-          : null;
-
-        if (!deletionResult?.deleted) {
-          quickStatusLockRef.current = false;
-          return;
-        }
-
-        window.setTimeout(() => {
-          quickStatusLockRef.current = false;
-        }, 180);
-
+        runDeleteCurrentWord();
         return;
       }
 
@@ -290,43 +304,49 @@ export function useWordFlashNavigation({
       }, 90);
     }
 
+    function handleDeleteRequest() {
+      if (flashStudyModeRef.current !== "word") return;
+      runDeleteCurrentWord();
+    }
+
+    deleteFnRef.current = deleteCurrentWord;
     window.addEventListener("keydown", handleQuickStatus, true);
+    window.addEventListener("ielts-vocab:delete-current-word", handleDeleteRequest);
 
     return () => {
       window.removeEventListener("keydown", handleQuickStatus, true);
+      window.removeEventListener("ielts-vocab:delete-current-word", handleDeleteRequest);
     };
-  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef, matchesStudyWord, persistWordFlashSessionNow, setIndex, studySessionRef]);
+  }, [deleteCurrentWord, flashStudyModeRef, latestStateRef]);
 
-  // Tab plays the word; Space and arrows navigate.
+  // Tab = word audio; Space = example audio; arrows = navigate.
   useEffect(() => {
-    function isTypingTarget(target) {
-      const tag = target?.tagName?.toLowerCase();
-      return tag === "input" || tag === "textarea" || tag === "select" || target?.isContentEditable;
-    }
-
     function handleKeyDown(event) {
       if (flashStudyMode !== "word") return;
-      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
-      if (isTypingTarget(event.target) && !isHorizontalArrow) return;
+      const action = getStudyKeyboardAction(event);
 
-      if (event.key === "Tab") {
-        if (event.repeat) return;
+      if (action === "word-audio") {
         event.preventDefault();
         speakWordRef.current(true);
+        return;
       }
 
-      if (event.key === " " || event.code === "Space" || event.key === "Spacebar") {
-        if (event.repeat) return;
+      if (action === "example-audio") {
+        event.preventDefault();
+        // Match UI: "快捷键空格" on the example speaker button.
+        if (typeof speakExampleRef.current === "function") {
+          speakExampleRef.current();
+        }
+        return;
+      }
+
+      if (action === "next") {
         event.preventDefault();
         nextWordRef.current();
+        return;
       }
 
-      if (event.key === "ArrowRight") {
-        event.preventDefault();
-        nextWordRef.current();
-      }
-
-      if (event.key === "ArrowLeft") {
+      if (action === "previous") {
         event.preventDefault();
         prevWordRef.current();
       }

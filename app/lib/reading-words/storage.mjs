@@ -94,13 +94,28 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
     forms: Array.isArray(input.forms) ? input.forms : [],
     wordFamily: Array.isArray(input.wordFamily) ? input.wordFamily : [],
     synonyms: normalizeReadingSynonyms(input.synonyms || input.validatedSynonyms || input.recommendedSynonyms, word),
-    formsReviewed: input.formsReviewed === true && cleanText(input.formsReviewSource) === READING_AI_REVIEW_SOURCE,
-    formsReviewSource: cleanText(input.formsReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
-    wordFamilyReviewed: input.wordFamilyReviewed === true && cleanText(input.wordFamilyReviewSource) === READING_AI_REVIEW_SOURCE,
-    wordFamilyReviewSource: cleanText(input.wordFamilyReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
-    synonymsReviewed: input.synonymsReviewed === true && cleanText(input.synonymsReviewSource) === READING_AI_REVIEW_SOURCE,
-    synonymsReviewSource: cleanText(input.synonymsReviewSource) === READING_AI_REVIEW_SOURCE ? READING_AI_REVIEW_SOURCE : "",
+    // Keep AI review flags even if an older write lost the exact source tag;
+    // otherwise words can stay "incomplete" forever after a successful AI pass.
+    formsReviewed: input.formsReviewed === true,
+    formsReviewSource: input.formsReviewed === true
+      ? (cleanText(input.formsReviewSource) || READING_AI_REVIEW_SOURCE)
+      : "",
+    wordFamilyReviewed: input.wordFamilyReviewed === true,
+    wordFamilyReviewSource: input.wordFamilyReviewed === true
+      ? (cleanText(input.wordFamilyReviewSource) || READING_AI_REVIEW_SOURCE)
+      : "",
+    synonymsReviewed: input.synonymsReviewed === true,
+    synonymsReviewSource: input.synonymsReviewed === true
+      ? (cleanText(input.synonymsReviewSource) || READING_AI_REVIEW_SOURCE)
+      : "",
     mainWordId: cleanText(input.mainWordId),
+    externalSource: cleanText(input.externalSource),
+    externalId: cleanText(input.externalId),
+    externalFingerprint: cleanText(input.externalFingerprint),
+    readingMeaning: cleanText(input.readingMeaning),
+    readingNote: cleanText(input.readingNote),
+    readingStatus: cleanText(input.readingStatus),
+    readingSources: Array.isArray(input.readingSources) ? input.readingSources : [],
     importCount,
     highFrequency: input.highFrequency === true || importCount >= 2,
     firstImportedAt: cleanText(input.firstImportedAt) || cleanText(input.createdAt) || now,
@@ -280,24 +295,54 @@ export function mergeReadingWordImports(currentWords, incomingWords, { idFactory
 
 export function mergeReadingWordAiProfile(word, profile = {}) {
   const next = { ...word };
+  // Accept OCR/import typo fixes from AI (e.g. ncestors → ancestors).
+  const corrected = cleanText(profile.word);
+  const correctedFrom = cleanText(profile.correctedFrom);
+  if (
+    corrected &&
+    correctedFrom &&
+    normalizeReadingWordKey(correctedFrom) === normalizeReadingWordKey(next.word) &&
+    normalizeReadingWordKey(corrected) !== normalizeReadingWordKey(next.word)
+  ) {
+    next.word = corrected;
+  } else if (
+    corrected &&
+    normalizeReadingWordKey(corrected) !== normalizeReadingWordKey(next.word) &&
+    // single-letter drop/add near miss without explicit correctedFrom
+    (normalizeReadingWordKey(next.word).slice(1) === normalizeReadingWordKey(corrected) ||
+      normalizeReadingWordKey(corrected).slice(1) === normalizeReadingWordKey(next.word))
+  ) {
+    next.word = corrected;
+  }
   for (const field of ["phonetic", "pos", "meaning", "meaningDetailZh", "definition", "example", "exampleCn"]) {
     if (!cleanText(next[field]) && cleanText(profile[field])) next[field] = cleanText(profile[field]);
   }
   for (const field of ["otherMeanings", "forms", "wordFamily"]) {
     if ((!Array.isArray(next[field]) || !next[field].length) && Array.isArray(profile[field])) next[field] = profile[field];
   }
-  if (!Array.isArray(next.synonyms) || !next.synonyms.length) next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
-  if (Array.isArray(profile.forms)) {
+  if (!Array.isArray(next.synonyms) || !next.synonyms.length) {
+    next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
+  }
+  // Usable AI profiles always include relation arrays (possibly empty). Mark
+  // them reviewed so empty-but-checked relations do not keep the card incomplete.
+  const aiMarkedRelations = profile?.aiGenerated === true
+    || profile?.source === "deepseek"
+    || profile?.source === "ai-cache"
+    || profile?.aiContentProfile;
+  if (Array.isArray(profile.forms) || aiMarkedRelations) {
     next.formsReviewed = true;
     next.formsReviewSource = READING_AI_REVIEW_SOURCE;
+    if (!Array.isArray(next.forms)) next.forms = [];
   }
-  if (Array.isArray(profile.wordFamily)) {
+  if (Array.isArray(profile.wordFamily) || aiMarkedRelations) {
     next.wordFamilyReviewed = true;
     next.wordFamilyReviewSource = READING_AI_REVIEW_SOURCE;
+    if (!Array.isArray(next.wordFamily)) next.wordFamily = [];
   }
-  if (Array.isArray(profile.synonyms)) {
+  if (Array.isArray(profile.synonyms) || aiMarkedRelations) {
     next.synonymsReviewed = true;
     next.synonymsReviewSource = READING_AI_REVIEW_SOURCE;
+    if (!Array.isArray(next.synonyms)) next.synonyms = [];
   }
   next.updatedAt = new Date().toISOString();
   return next;

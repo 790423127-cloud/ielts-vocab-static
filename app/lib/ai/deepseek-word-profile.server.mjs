@@ -164,6 +164,84 @@ export function isUsableAiProfile(word) {
   );
 }
 
+/** Looser gate for reading-notebook completion (does not require collocation packs). */
+export function isUsableReadingAiProfile(word) {
+  return Boolean(
+    word?.word &&
+    word?.pos &&
+    word?.meaning &&
+    word?.definition &&
+    word?.example &&
+    word?.exampleCn &&
+    Array.isArray(word?.forms) &&
+    Array.isArray(word?.wordFamily) &&
+    Array.isArray(word?.synonyms) &&
+    Array.isArray(word?.ieltsUse) && word.ieltsUse.length &&
+    Array.isArray(word?.topics) && word.topics.length &&
+    word?.difficulty
+  );
+}
+
+export function describeUnusableAiProfile(word) {
+  const reasons = [];
+  if (!word?.word) reasons.push("missing word");
+  if (!word?.pos) reasons.push("missing pos");
+  if (!word?.meaning) reasons.push("missing meaning");
+  if (!word?.meaningDetailZh) reasons.push("missing meaningDetailZh");
+  if (!word?.definition) reasons.push("missing definition");
+  if (!word?.example) reasons.push("missing example");
+  if (!word?.exampleCn) reasons.push("missing exampleCn");
+  if (!Array.isArray(word?.otherMeanings)) reasons.push("missing otherMeanings");
+  if (!Array.isArray(word?.forms)) reasons.push("missing forms");
+  if (!Array.isArray(word?.wordFamily)) reasons.push("missing wordFamily");
+  if (!Array.isArray(word?.synonyms)) reasons.push("missing synonyms");
+  if (!Array.isArray(word?.ieltsUse) || !word.ieltsUse.length) reasons.push("missing ieltsUse");
+  if (!Array.isArray(word?.topics) || !word.topics.length) reasons.push("missing topics");
+  if (!word?.difficulty) reasons.push("missing difficulty");
+  if (word?.aiContentProfile !== AI_CONTENT_PROFILE_VERSION) {
+    reasons.push(`profile version ${word?.aiContentProfile || "(none)"}`);
+  }
+  if (!isAiCoreContentComplete(word)) reasons.push("core/collocation incomplete");
+  return reasons;
+}
+
+/**
+ * Accept AI-corrected headwords for common OCR/import typos, e.g. "ncestors" → "ancestors".
+ */
+export function isNearMissHeadword(expected, returned) {
+  const a = normalizeProfileKey(expected);
+  const b = normalizeProfileKey(returned);
+  if (!a || !b || a === b) return a === b;
+  if (a.length < 4 || b.length < 4) return false;
+  // Missing/extra first letter: ncestors / ancestors
+  if (a.slice(1) === b || b.slice(1) === a) return true;
+  if (a.slice(0, -1) === b || b.slice(0, -1) === a) return true;
+  // Small edit distance for similar length
+  if (Math.abs(a.length - b.length) > 2) return false;
+  let i = 0;
+  let j = 0;
+  let edits = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) {
+      i += 1;
+      j += 1;
+      continue;
+    }
+    edits += 1;
+    if (edits > 2) return false;
+    if (a.length === b.length) {
+      i += 1;
+      j += 1;
+    } else if (a.length > b.length) {
+      i += 1;
+    } else {
+      j += 1;
+    }
+  }
+  edits += (a.length - i) + (b.length - j);
+  return edits <= 2;
+}
+
 function addUsage(left, right) {
   if (!left) return right || null;
   if (!right) return left;
@@ -178,7 +256,7 @@ function addUsage(left, right) {
   return merged;
 }
 
-async function requestProfileBatch(items, { timeoutMs, maxTokens }) {
+async function requestProfileBatch(items, { timeoutMs, maxTokens, profileQuality = "full" }) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-flash";
 
@@ -276,12 +354,18 @@ async function requestProfileBatch(items, { timeoutMs, maxTokens }) {
     if (inputId && !rawByInputId.has(inputId)) rawByInputId.set(inputId, rawItem);
   }
 
+  const quality = profileQuality === "reading" ? "reading" : "full";
   const resolved = new Map();
   const invalid = [];
   for (const expected of items) {
     const rawItem = items.length === 1 ? rawItems[0] : rawByInputId.get(expected.inputId);
     const returnedWord = String(rawItem?.word || "").trim();
-    if (!rawItem || normalizeProfileKey(returnedWord) !== normalizeProfileKey(expected.word)) {
+    const expectedKey = normalizeProfileKey(expected.word);
+    const returnedKey = normalizeProfileKey(returnedWord);
+    const exactMatch = Boolean(rawItem && returnedKey && returnedKey === expectedKey);
+    const nearMiss = Boolean(rawItem && returnedKey && isNearMissHeadword(expected.word, returnedWord));
+
+    if (!rawItem || (!exactMatch && !nearMiss)) {
       invalid.push({
         inputId: expected.inputId,
         word: expected.word,
@@ -290,12 +374,23 @@ async function requestProfileBatch(items, { timeoutMs, maxTokens }) {
       continue;
     }
 
-    const entry = normalizeAiGeneratedEntry(rawItem, expected.word);
-    if (!isUsableAiProfile(entry)) {
+    // Prefer AI-corrected spelling for near-miss OCR/import typos.
+    const canonicalWord = nearMiss && !exactMatch ? returnedWord : expected.word;
+    const entry = normalizeAiGeneratedEntry(rawItem, canonicalWord);
+    if (nearMiss && !exactMatch) {
+      entry.word = canonicalWord;
+      entry.correctedFrom = expected.word;
+    }
+
+    const usable = quality === "reading"
+      ? isUsableReadingAiProfile(entry)
+      : isUsableAiProfile(entry);
+    if (!usable) {
+      const reasons = describeUnusableAiProfile(entry);
       invalid.push({
         inputId: expected.inputId,
         word: expected.word,
-        reason: "incomplete or invalid profile"
+        reason: `incomplete or invalid profile (${reasons.slice(0, 4).join(", ") || "unknown"})`
       });
       continue;
     }
@@ -367,12 +462,13 @@ async function resolveProfiles(items, options, depth = 0) {
 export async function requestDeepseekProfiles(inputItems, {
   timeoutMs = 75000,
   maxTokens = 14000,
-  maxSplitDepth = 6
+  maxSplitDepth = 6,
+  profileQuality = "full"
 } = {}) {
   const items = inputItems.map((item, index) => ({
     inputId: String(item.inputId || `item-${index + 1}`),
     word: String(item.word || "").trim()
   }));
 
-  return resolveProfiles(items, { timeoutMs, maxTokens, maxSplitDepth });
+  return resolveProfiles(items, { timeoutMs, maxTokens, maxSplitDepth, profileQuality });
 }

@@ -8,6 +8,20 @@ import { itemMatchesRgFilter } from "../storage.mjs";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 const vocabPath = path.join(root, "public/data/reading-g-vocab.json");
 
+function completeWord(overrides = {}) {
+  return {
+    entryType: "word",
+    phonetic: "/example/",
+    primaryPos: "noun",
+    primaryMeaningZh: "示例词",
+    definition: "an example word",
+    example: "This is an example word.",
+    exampleCn: "这是一个示例词。",
+    senses: [],
+    ...overrides
+  };
+}
+
 test("dataset has layered items and active/reference split", () => {
   assert.ok(fs.existsSync(vocabPath), "vocab file exists");
   const data = JSON.parse(fs.readFileSync(vocabPath, "utf8"));
@@ -23,13 +37,12 @@ test("dataset has layered items and active/reference split", () => {
 });
 
 test("layer filter and stage1 semantics", () => {
-  const item = {
+  const item = completeWord({
     word: "however",
-    entryType: "word",
     studyMode: "active",
     layers: ["logic120", "priority1500"],
     normalizedKey: "however"
-  };
+  });
   assert.equal(itemMatchesRgFilter(item, { type: "layer", value: "logic120" }, {}), true);
   assert.equal(itemMatchesRgFilter(item, { type: "stage1", value: "" }, {}), true);
   assert.equal(itemMatchesRgFilter(item, { type: "reference", value: "" }, {}), false);
@@ -44,22 +57,20 @@ test("layer filter and stage1 semantics", () => {
 });
 
 test("question-bank shortcut filters only independent primary entries", () => {
-  const inheritedLayerItem = {
+  const inheritedLayerItem = completeWord({
     word: "existing",
-    entryType: "word",
     studyMode: "active",
     layers: ["priority1500", "questionBankActive"],
     primaryLayer: "priority1500",
     normalizedKey: "existing"
-  };
-  const independentItem = {
+  });
+  const independentItem = completeWord({
     word: "added",
-    entryType: "word",
     studyMode: "active",
     layers: ["questionBankActive"],
     primaryLayer: "questionBankActive",
     normalizedKey: "added"
-  };
+  });
 
   assert.equal(
     itemMatchesRgFilter(inheritedLayerItem, { type: "layer", value: "questionBankActive" }, {}),
@@ -76,15 +87,14 @@ test("question-bank shortcut filters only independent primary entries", () => {
 });
 
 test("primary question-bank shortcuts include familiar entries so displayed totals stay stable", () => {
-  const item = {
+  const item = completeWord({
     id: "rg_added",
     word: "added",
-    entryType: "word",
     studyMode: "active",
     layers: ["questionBankActive"],
     primaryLayer: "questionBankActive",
     normalizedKey: "added"
-  };
+  });
   const statusMap = { rg_added: { meaningStatus: "熟悉" } };
 
   assert.equal(

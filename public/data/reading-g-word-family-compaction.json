@@ -1,9 +1,9 @@
 {
   "version": "reading-g-word-only-inflection-review-v2-20260804",
-  "generatedAt": "2026-08-04T07:07:25.126Z",
+  "generatedAt": "2026-08-05T15:28:22.344Z",
   "scope": "reading-g-direct-inflections-only-word-derived-no-family-compaction",
-  "sourceWordCount": 8129,
-  "resultingWordCount": 6720,
+  "sourceWordCount": 8110,
+  "resultingWordCount": 6708,
   "rules": [
     {
       "canonicalKey": "abandon",
@@ -2750,7 +2750,9 @@
           "word": "checks",
           "relationType": "form"
         }
-      ]
+      ],
+      "suppressionOnly": true,
+      "suppressionReason": "canonical-retired-by-user"
     },
     {
       "canonicalKey": "cheque",
@@ -7408,7 +7410,9 @@
           "word": "games",
           "relationType": "form"
         }
-      ]
+      ],
+      "suppressionOnly": true,
+      "suppressionReason": "canonical-retired-by-user"
     },
     {
       "canonicalKey": "gap",
@@ -15097,7 +15101,9 @@
           "word": "seats",
           "relationType": "form"
         }
-      ]
+      ],
+      "suppressionOnly": true,
+      "suppressionReason": "canonical-retired-by-user"
     },
     {
       "canonicalKey": "section",
@@ -15652,7 +15658,9 @@
           "word": "sizes",
           "relationType": "form"
         }
-      ]
+      ],
+      "suppressionOnly": true,
+      "suppressionReason": "canonical-retired-by-user"
     },
     {
       "canonicalKey": "skill",
@@ -17407,7 +17415,9 @@
           "word": "things",
           "relationType": "form"
         }
-      ]
+      ],
+      "suppressionOnly": true,
+      "suppressionReason": "canonical-retired-by-user"
     },
     {
       "canonicalKey": "thousand",
@@ -19193,14 +19203,14 @@
   "stats": {
     "familyCount": 1330,
     "aliasCount": 1597,
-    "activeInflectionRuleCount": 1184,
-    "activeInflectionAliasCount": 1409,
-    "standaloneRestoredCount": 172,
-    "suppressedDeletedCanonicalRuleCount": 146,
+    "activeInflectionRuleCount": 1179,
+    "activeInflectionAliasCount": 1402,
+    "standaloneRestoredCount": 160,
+    "suppressedDeletedCanonicalRuleCount": 151,
     "relationTypes": {
-      "form": 1409,
+      "form": 1402,
       "family": 0
     }
   },
-  "updatedAt": "2026-08-04T07:07:25.126Z"
+  "updatedAt": "2026-08-05T15:28:22.344Z"
 }

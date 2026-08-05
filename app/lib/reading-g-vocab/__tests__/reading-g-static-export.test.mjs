@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { buildParaphraseQuizQueue } from "../paraphrase-quiz.mjs";
+import { STATIC_RESPONSIVE_VERSION } from "../../static-export-responsive.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 
@@ -24,16 +25,29 @@ test("static export assets and data files exist", () => {
 test("static HTML references relative data paths", () => {
   const html = fs.readFileSync(path.join(root, "public/reading-g.html"), "utf8");
   assert.match(html, /reading-g\.js/);
+  assert.match(html, new RegExp(STATIC_RESPONSIVE_VERSION));
   assert.match(html, /静态便携版/);
   const js = fs.readFileSync(path.join(root, "public/assets/reading-g.js"), "utf8");
   assert.match(js, /\.\/data\/reading-g-vocab\.json/);
   assert.match(js, /\.\/data\/reading-g-paraphrases\.json/);
+  assert.match(js, /function versionedDataUrl\(url\)/);
+  assert.doesNotMatch(js, /DATA_URL \+ "\?v="/);
   assert.match(js, /paraphraseQuiz|同义/);
   assert.match(js, /questionBankActive/);
   assert.match(js, /questionBankAiCompleted/);
   assert.match(js, /questionBankPending/);
   assert.match(js, /if \(stage === "3"\) return !inStage1 && !inStage2;/);
   assert.match(js, /previousStudyPosition/);
+  assert.match(js, /POSITIONS_KEY = "ielts_reading_g_positions_v3"/);
+  assert.match(js, /function restoreStudyPosition\(/);
+  assert.match(js, /function scheduleAutoPlayAdvance\(/);
+  assert.match(html, /id="senseHint"/);
+  assert.match(js, /function getStaticContentQuality\(/);
+  assert.match(js, /type: "contentIncomplete"/);
+  assert.match(js, /已转入内容补全队列/);
+  assert.match(js, /资料完整度/);
+  assert.match(js, /document\.addEventListener\("visibilitychange"/);
+  assert.doesNotMatch(js, /window\.setInterval/);
   assert.doesNotMatch(js, /rebuildStudy\(\);\s*if \(next === "熟悉"\) go\(1\);/);
   // forbid root-absolute data paths that break under /beidanci/
   assert.doesNotMatch(js, /["']\/data\/reading-g-vocab\.json["']/);
@@ -61,6 +75,9 @@ test("satellite flashcards do not reserve an absent insight sidebar", () => {
   );
   const css = fs.readFileSync(path.join(root, "app/globals.css"), "utf8");
   assert.match(source, /const insightVisible = !isIelts538 && showInsight;/);
+  assert.match(source, /还有 \$\{supplementalSenses\.length\} 个常见义项/);
+  assert.match(source, /isContentCompletionQueue/);
+  assert.match(source, /资料完整度/);
   assert.match(source, /showInsight=\{insightVisible\}/);
   assert.match(source, /<footer className="bottom bottombar">/);
   assert.match(css, /\.page--word-flash \.word,[\s\S]*\.page--word-flash \.footer-grid \{\s*margin-inline: auto;/);
@@ -96,10 +113,45 @@ test("export-static route packs paraphrases", () => {
     path.join(root, "app/api/export-static/route.js"),
     "utf8"
   );
+  const responsive = fs.readFileSync(
+    path.join(root, "app/lib/static-export-responsive.mjs"),
+    "utf8"
+  );
   assert.match(route, /reading-g-paraphrases\.json/);
   assert.match(route, /reading-g-import-report\.json/);
   assert.match(route, /reading-g-retirements\.json/);
-  assert.match(route, /20260804_reading_g_autoplay_v18/);
+  assert.match(route, /20260805_master_g_audit_sync_v20/);
+  assert.match(responsive, /STATIC_RESPONSIVE_VERSION = "20260805_master_g_audit_sync_v20"/);
+});
+
+test("raw static pages and data loaders use the current release cache token", () => {
+  const staticPages = [
+    "public/spelling.html",
+    "public/basic.html",
+    "public/meaning.html",
+    "public/reading-g.html",
+    "public/reading-paraphrases.html",
+    "public/reading-words.html",
+    "public/ielts-538.html"
+  ];
+  for (const file of staticPages) {
+    const source = fs.readFileSync(path.join(root, file), "utf8");
+    const tokens = [...source.matchAll(/\?v=([A-Za-z0-9_.-]+)/g)].map((match) => match[1]);
+    assert.ok(tokens.length > 0, `${file} declares cache tokens`);
+    assert.ok(tokens.every((token) => token === STATIC_RESPONSIVE_VERSION), `${file} has only current cache tokens`);
+  }
+
+  const dataAssets = [
+    ["public/assets/basic.js", /DATA_VERSION = "([^"]+)"/],
+    ["public/assets/spelling.js", /STATIC_DATA_VERSION = "([^"]+)"/],
+    ["public/assets/meaning-static.js", /DATA_VERSION = "([^"]+)"/],
+    ["public/assets/reading-g.js", /DATA_VERSION = "([^"]+)"/],
+    ["public/assets/reading-words.js", /VERSION = "([^"]+)"/]
+  ];
+  for (const [file, pattern] of dataAssets) {
+    const source = fs.readFileSync(path.join(root, file), "utf8");
+    assert.equal(source.match(pattern)?.[1], STATIC_RESPONSIVE_VERSION, `${file} data cache version`);
+  }
 });
 
 test("static paraphrase quiz can initialize from real data", () => {

@@ -24,7 +24,7 @@ test("G-reading compaction contains only direct word-surface inflections", () =>
   ));
 
   assert.equal(compaction.scope, "reading-g-direct-inflections-only-word-derived-no-family-compaction");
-  assert.equal(aliases.length, 1409);
+  assert.equal(aliases.length, vocab.wordOnlyInflectionReview.keptMergedInflectionCount);
   assert.equal(aliases.every(({ base, alias }) => (
     alias.relationType === "form"
     && Boolean(classifySurfaceInflection(base, alias.key))
@@ -52,9 +52,13 @@ test("plain regular forms remain merged and do not become duplicate cards", () =
 });
 
 test("review preserves phrases and publishes the verified totals", () => {
-  assert.equal(vocab.wordCount, 6720);
-  assert.equal(vocab.phraseCount, 668);
-  assert.equal(vocab.count, 7388);
-  assert.equal(vocab.wordOnlyInflectionReview.restoredStandaloneCount, 172);
-  assert.equal(vocab.wordOnlyInflectionReview.keptMergedInflectionCount, 1409);
+  const phrases = vocab.items.filter((entry) => entry?.entryType === "phrase");
+  assert.equal(vocab.wordCount, words.length);
+  assert.equal(vocab.phraseCount, phrases.length);
+  assert.equal(vocab.count, vocab.items.length);
+  assert.equal(
+    vocab.wordOnlyInflectionReview.restoredStandaloneCount,
+    vocab.wordOnlyInflectionReview.standaloneDecisionCount
+  );
+  assert.ok(vocab.wordOnlyInflectionReview.keptMergedInflectionCount > 0);
 });

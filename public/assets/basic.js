@@ -5,7 +5,7 @@
   var STATUS_KEY = "ielts_basic_flash_status_v1";
   var SESSION_KEY = "ielts_basic_flash_session_v1";
   var DATA_URL = "./data/basic-words.json";
-  var DATA_VERSION = "20260714_d28_load_performance_v1";
+  var DATA_VERSION = "20260805_master_g_audit_sync_v20";
 
   var words = [];
   var filter = { type: "all", value: "" };

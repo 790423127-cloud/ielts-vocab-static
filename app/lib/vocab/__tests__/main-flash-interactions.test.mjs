@@ -58,10 +58,14 @@ test("root layout mounts mobile swipe support and range selections close their m
   const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
   const layoutSource = fs.readFileSync(path.join(appRoot, "layout.jsx"), "utf8");
   const controllerSource = fs.readFileSync(path.join(appRoot, "components/MobileWordCardSwipeController.jsx"), "utf8");
+  const wordFlashcardSource = fs.readFileSync(path.join(appRoot, "components/WordFlashcardView.jsx"), "utf8");
+  const satelliteSource = fs.readFileSync(path.join(appRoot, "components/SatelliteLexiconFlashcard.jsx"), "utf8");
 
   assert.match(layoutSource, /<MobileWordCardSwipeController \/>/);
   assert.match(controllerSource, /touch-action: pan-y/);
-  assert.match(controllerSource, /new KeyboardEvent\("keydown"/);
+  assert.match(controllerSource, /new CustomEvent\(WORD_CARD_SWIPE_EVENT/);
+  assert.match(wordFlashcardSource, /window\.addEventListener\(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe\)/);
+  assert.match(satelliteSource, /window\.addEventListener\(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe\)/);
   assert.match(controllerSource, /\.word-study-menu \.entry-btn/);
   assert.match(controllerSource, /menu\.open = false/);
 });

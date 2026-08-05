@@ -4,6 +4,7 @@
   "use strict";
 
   var DATA_URL = "./data/meaning-6000.json";
+  var DATA_VERSION = "20260805_master_g_audit_sync_v20";
   var PROGRESS_KEY = "ielts_meaning_static_progress_v1";
   var RECENT_KEY = "ielts_meaning_static_recent_v1";
   var AUTO_NEXT_MS = 450;
@@ -432,7 +433,7 @@
   setLoading();
 
   // Stream-friendly fetch with progress when Content-Length is available
-  fetch(DATA_URL + "?v=20260712_d15_audit_fix_v1", { cache: "default" })
+  fetch(DATA_URL + "?v=" + DATA_VERSION, { cache: "default" })
     .then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       var total = Number(r.headers.get("Content-Length") || 0);

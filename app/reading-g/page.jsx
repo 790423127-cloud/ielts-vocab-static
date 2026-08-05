@@ -14,6 +14,7 @@ import {
 } from "../lib/reading-g-vocab/load-reading-g.mjs";
 import { migrateReadingGProgress } from "../lib/reading-g-vocab/migration.mjs";
 import {
+  getReadingGCompleteness,
   isReadingGContentComplete,
   isReadingGContentIncomplete
 } from "../lib/reading-g-vocab/content-completeness.mjs";
@@ -385,7 +386,7 @@ export default function ReadingGVocabPage() {
     }
     if (!deletedIdsRef.current.size) return list;
     return list.filter((row) => row?.entry?.id && !deletedIdsRef.current.has(row.entry.id));
-  }, [items, filter, statusMap, verifiedParas, isQuizMode, learnMode, studyQueueOverride]);
+  }, [items, filter, statusMap, verifiedParas, isQuizMode, learnMode]);
   const wordOrdering = useOrderedStudyRows({
     orderKey: `reading-g:${filterKey(filter)}:${learnMode}`,
     rows: baseStudyList,
@@ -479,6 +480,10 @@ export default function ReadingGVocabPage() {
       return all.includes(nk);
     });
   }, [item?.word, verifiedParas, isQuizMode]);
+  const contentQuality = useMemo(
+    () => getReadingGCompleteness(item, { relatedSynonymCount: relatedParas.length }),
+    [item, relatedParas]
+  );
 
   const questionBankCompleteCount = useMemo(
     () => items.filter((entry) => (
@@ -1839,14 +1844,14 @@ export default function ReadingGVocabPage() {
             className="top-pill spelling-entry-link"
             onClick={() => setLibraryFilter({ type: "contentIncomplete", value: "" })}
           >
-            待补词 {incompleteContentEntries.length}
+            内容补全队列 {incompleteContentEntries.length}
           </button>
           <details className="menu reading-g-ai-menu">
             <summary className="top-pill">AI补全待补词</summary>
             <div className="menu-panel wide reading-g-ai-panel">
               <h2 className="panel-title">G类待补词专用 AI</h2>
               <p className="panel-desc">
-                页面“待补词”按实际字段缺失统计 {incompleteContentEntries.length} 个；其中本专用 AI 仅处理“全题库·待补资料” {pendingAiEntries.length} 个。已由 AI 补全 {questionBankAiCompletedCount} 个，不会修改原有词、总词库或学习进度。
+                内容补全队列按核心教学字段、释义过短和未拆分多词性统计 {incompleteContentEntries.length} 个；这些词不会进入普通刷词。其中本专用 AI 仅处理“全题库·待补资料” {pendingAiEntries.length} 个。已由 AI 补全 {questionBankAiCompletedCount} 个，不会修改原有词、总词库或学习进度。
               </p>
               <p className="ai-warning">
                 每批最多10词、1次请求、自动重试0次。缓存命中不调用付费模型；未命中会调用 DeepSeek，开始前还会再次确认。
@@ -1897,6 +1902,7 @@ export default function ReadingGVocabPage() {
       relatedParas={relatedParas}
       paraStatusMap={paraStatusMap}
       onParaphraseMaster={markParaphraseMastered}
+      contentQuality={contentQuality}
       quizMode={isQuizMode}
       quizQuestion={quizQuestion}
       quizRevealed={quizRevealed}

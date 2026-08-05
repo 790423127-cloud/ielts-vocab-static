@@ -1,8 +1,8 @@
 {
-  "version": "v22-13353-quality-queues-zero-20260730",
-  "generatedAt": "2026-08-02T14:46:34.968Z",
-  "previousRef": "7a958e514a608c55c5d9a7a918af9bb42741fa59",
-  "count": 108,
+  "version": "v23-13374-audit-sync-20260805",
+  "generatedAt": "2026-08-05T12:00:00.000Z",
+  "previousRef": "HEAD",
+  "count": 109,
   "entries": [
     {
       "id": "word_12f29832aa4b",
@@ -549,6 +549,11 @@
       "id": "reading-768c40b6-fe28-48b3-9d61-ba95d23f01f3",
       "word": "ncestors",
       "reason": "reading-headword-correction-to-ancestors"
+    },
+    {
+      "id": "reading-coach-word-52e4467b11e646e0b0ea5a99119e1e8c",
+      "word": "suggests t",
+      "reason": "user-curated-removal"
     }
   ]
 }

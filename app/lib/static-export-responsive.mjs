@@ -1,6 +1,6 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260730_mobile_sync_cursor_v11";
+export const STATIC_RESPONSIVE_VERSION = "20260805_master_g_audit_sync_v20";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
 export const STATIC_SWIPE_FIX_MARKER = "D2.9 static 538 touch-first swipe";
@@ -308,6 +308,13 @@ export function patchStaticServiceWorker(sw) {
   );
 }
 
+function patchStaticDataAssetVersion(js) {
+  return String(js || "").replace(
+    /\b((?:var|const)\s+(?:DATA_VERSION|STATIC_DATA_VERSION|VERSION)\s*=\s*)"[^"]+";/g,
+    `$1"${STATIC_RESPONSIVE_VERSION}";`
+  );
+}
+
 const CRC_TABLE = (() => {
   const table = new Uint32Array(256);
   for (let n = 0; n < 256; n += 1) {
@@ -409,6 +416,9 @@ function patchEntry(entry) {
   const name = entry.name;
   if (name === "assets/style.css") return { ...entry, data: Buffer.from(patchStaticCss(entry.data.toString("utf8")), "utf8") };
   if (name === "assets/app.js") return { ...entry, data: Buffer.from(patchStaticAppJs(entry.data.toString("utf8")), "utf8") };
+  if (["assets/basic.js", "assets/spelling.js", "assets/meaning-static.js", "assets/reading-g.js", "assets/reading-words.js"].includes(name)) {
+    return { ...entry, data: Buffer.from(patchStaticDataAssetVersion(entry.data.toString("utf8")), "utf8") };
+  }
   if (name === "sw.js") return { ...entry, data: Buffer.from(patchStaticServiceWorker(entry.data.toString("utf8")), "utf8") };
   if (/\.html$/i.test(name)) return { ...entry, data: Buffer.from(patchStaticHtml(entry.data.toString("utf8")), "utf8") };
   return entry;

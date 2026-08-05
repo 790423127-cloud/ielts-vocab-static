@@ -1,5 +1,6 @@
 export const WORD_CARD_SWIPE_THRESHOLD = 48;
 export const WORD_CARD_SWIPE_DOMINANCE = 1.2;
+export const WORD_CARD_SWIPE_EVENT = "ielts:word-card-swipe";
 
 export function resolveWordCardSwipe({
   startX,

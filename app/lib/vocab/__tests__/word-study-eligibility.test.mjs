@@ -129,6 +129,17 @@ test("searching conducted redirects to conduct", () => {
   assert.equal(result.redirected, true);
 });
 
+test("legacy malformed headword aliases redirect to the surviving base card", () => {
+  const suggest = {
+    word: "suggest",
+    legacyHeadwords: ["suggests t"]
+  };
+  const target = resolveWordSearchTarget([suggest], "suggests t");
+  assert.equal(target?.source, suggest);
+  assert.equal(target?.target, suggest);
+  assert.equal(target?.redirected, false);
+});
+
 test("searching carried redirects to carry", () => {
   const result = resolveWordSearchTarget(words, "carried");
   assert.equal(result.source.word, "carried");

@@ -59,6 +59,7 @@ export function normalizeReadingGItem(entry, index = 0) {
       String(entry.primaryPos || entry.pos || (entryType === "phrase" ? "phrase" : "")).trim()
     ),
     primaryPos: String(entry.primaryPos || entry.pos || "").trim(),
+    rawPos: String(entry.primaryPos || entry.pos || "").trim(),
     primaryMeaningZh,
     meaning: primaryMeaningZh,
     meaningZh: primaryMeaningZh,
@@ -72,6 +73,10 @@ export function normalizeReadingGItem(entry, index = 0) {
       : [],
     forms: Array.isArray(entry.forms) ? entry.forms : [],
     wordFamily: Array.isArray(entry.wordFamily) ? entry.wordFamily : [],
+    synonyms: Array.isArray(entry.synonyms) ? entry.synonyms : [],
+    formsReviewed: entry.formsReviewed === true,
+    wordFamilyReviewed: entry.wordFamilyReviewed === true,
+    synonymsReviewed: entry.synonymsReviewed === true,
     mergedAliases: Array.isArray(entry.mergedAliases) ? entry.mergedAliases : [],
     mergedEntries: Array.isArray(entry.mergedEntries) ? entry.mergedEntries : [],
     ieltsUse: Array.isArray(entry.ieltsUse)

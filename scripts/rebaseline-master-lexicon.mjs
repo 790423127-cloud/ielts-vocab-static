@@ -116,7 +116,7 @@ function mergeRetirementEntries(existingEntries, addedEntries) {
   return merged;
 }
 
-function buildMorphologyAudit(words, retirementEntries, previousAudit, generatedAt) {
+function buildMorphologyAudit(words, retirementEntries, previousAudit, generatedAt, additionalDanglingFormsRemoved = 0) {
   const inflectedReferences = words.filter(
     (entry) => entry?.entryType === "inflected-form" && entry?.studyMode === "reference"
   ).length;
@@ -140,7 +140,7 @@ function buildMorphologyAudit(words, retirementEntries, previousAudit, generated
     meaningZhRepaired: Math.max(0, Number(previousAudit?.meaningZhRepaired) || 0),
     referenceLinksRepaired: Math.max(0, Number(previousAudit?.referenceLinksRepaired) || 0),
     wrongOwnerIdsRemoved: Math.max(0, Number(previousAudit?.wrongOwnerIdsRemoved) || 0),
-    danglingFormsRemoved: Math.max(0, Number(previousAudit?.danglingFormsRemoved) || 0)
+    danglingFormsRemoved: Math.max(0, Number(previousAudit?.danglingFormsRemoved) || 0) + additionalDanglingFormsRemoved
   };
 }
 
@@ -150,7 +150,13 @@ function atomicWrite(filePath, content) {
   fs.renameSync(tempPath, filePath);
 }
 
-function buildPlan({ version, generatedAt, previousRef, allowAdditions = false }) {
+function buildPlan({
+  version,
+  generatedAt,
+  previousRef,
+  allowAdditions = false,
+  additionalDanglingFormsRemoved = 0
+}) {
   const publicFile = readJson(PUBLIC_PATH);
   const cacheFile = readJson(CACHE_PATH);
   const meaningFile = readJson(MEANING_PATH);
@@ -276,7 +282,8 @@ function buildPlan({ version, generatedAt, previousRef, allowAdditions = false }
     finalWords,
     retirementEntries,
     previousPayload?.morphologyAudit || publicFile.data?.morphologyAudit,
-    generatedAt
+    generatedAt,
+    additionalDanglingFormsRemoved
   );
   const wordsPayload = {
     ...publicFile.data,
@@ -433,12 +440,22 @@ const previousRef = readArg("--previous-ref");
 const apply = process.argv.includes("--apply");
 const allowAdditions = process.argv.includes("--allow-additions");
 const reportPathArg = readArg("--report");
+const additionalDanglingFormsRemoved = Number.parseInt(readArg("--additional-dangling-forms-removed") || "0", 10);
 
 if (!version || !generatedAt || !previousRef) {
   throw new Error("请提供 --version <新版本>、--generated-at <ISO 时间> 和 --previous-ref <删除前 Git 版本>。");
 }
+if (!Number.isInteger(additionalDanglingFormsRemoved) || additionalDanglingFormsRemoved < 0) {
+  throw new Error("--additional-dangling-forms-removed 必须是非负整数。");
+}
 
-const plan = buildPlan({ version, generatedAt, previousRef, allowAdditions });
+const plan = buildPlan({
+  version,
+  generatedAt,
+  previousRef,
+  allowAdditions,
+  additionalDanglingFormsRemoved
+});
 const reportContent = `${JSON.stringify(plan.report, null, 2)}\n`;
 
 if (apply) {

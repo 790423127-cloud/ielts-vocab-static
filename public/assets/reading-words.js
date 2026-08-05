@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const VERSION = "20260802_reading_headword_fix_v7";
+  const VERSION = "20260805_master_g_audit_sync_v20";
   const READING_KEY = "ielts-personal-reading-words-v1";
   const MAIN_SUPPLEMENT_KEY = "static_personal_reading_main_v1";
   const TRANSFER_TYPE = "ielts-reading-words-transfer";

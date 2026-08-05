@@ -431,14 +431,24 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
     filter = { type: "stage1", value: "" };
   }
 
-  if (filter.type === "everything") return true;
-
   if (filter.type === "contentIncomplete") {
     return isReadingGContentIncomplete(item);
   }
   if (filter.type === "questionBankComplete") {
     return item.primaryLayer === "questionBankActive" && isReadingGContentComplete(item);
   }
+
+  const isExplicitCompletionQueue =
+    filter.type === "layer" && filter.value === "questionBankPending";
+  // Keep incomplete word cards out of every normal learning range. They stay
+  // accessible through the dedicated completion queue (or its legacy pending
+  // layer), where the UI explains what needs to be supplied instead of
+  // pretending that an empty field is study content.
+  if (isReadingGContentIncomplete(item) && !isExplicitCompletionQueue) {
+    return false;
+  }
+
+  if (filter.type === "everything") return true;
 
   if (filter.type === "status") {
     if (filter.value === "不熟") return status === RG_STATUS.UNFAMILIAR;

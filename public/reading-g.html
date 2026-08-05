@@ -7,7 +7,7 @@
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23225f52'/%3E%3Cpath d='M9 8h14v3H12v4h9v3h-9v4h11v3H9z' fill='white'/%3E%3C/svg%3E" />
   <title>G类阅读提升 · 静态便携版</title>
-  <link rel="stylesheet" href="./assets/style.css?v=20260726_ielts538_v2" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260805_master_g_audit_sync_v20" />
   <style>
     .hidden{display:none!important}
     .module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px;align-items:center}
@@ -29,6 +29,7 @@
     .para-option{display:block;width:100%;text-align:left;margin-bottom:8px;min-height:42px}.para-option.correct{background:#e5f2ed;border-color:#225f52}.para-option.wrong,.topic-chip.danger{background:#fdf0ed;border-color:#c45c4a;color:#953d2f}
     .para-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;padding:14px;border:1px solid #ece3d8;border-radius:8px;background:#faf8f5}.para-summary span{display:flex;justify-content:space-between;gap:12px}
     .expression-note{font-size:12px;color:#756d63;line-height:1.5;margin:4px 0 0}
+    .sense-hint{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px;font-size:12px;color:#587269}.sense-hint button{border:1px solid #c9ddd5;border-radius:999px;padding:5px 10px;background:#edf6f2;color:#246454;font-weight:800;cursor:pointer}.sense-hint .sense-list{width:100%;padding:9px 11px;border:1px solid #e5eae7;border-radius:8px;background:#fbfcfb;line-height:1.55;color:#405265}
     .reading-controls-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 0;padding:9px 11px;border:1px solid #dce3df;border-radius:8px;background:#fff}
     .reading-controls-summary{min-width:0;color:#5f6f68;font-size:12px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .reading-controls-summary strong{color:#225f52}
@@ -117,6 +118,7 @@
           <div id="example" class="example-en">读取分层词库并恢复学习位置</div>
         </div>
         <div id="exampleCn" class="example-cn"></div>
+        <div id="senseHint" class="sense-hint hidden"></div>
       </div>
     </section>
 
@@ -132,7 +134,7 @@
     </footer>
   </main>
   <div id="toast" class="toast"></div>
-  <script src="./assets/study-meaning-visibility.js?v=20260730_word_order_meaning_visibility_v1"></script>
-  <script src="./assets/reading-g.js?v=20260804-reading-g-autoplay-v1"></script>
+  <script src="./assets/study-meaning-visibility.js?v=20260805_master_g_audit_sync_v20"></script>
+  <script src="./assets/reading-g.js?v=20260805_master_g_audit_sync_v20"></script>
 </body>
 </html>

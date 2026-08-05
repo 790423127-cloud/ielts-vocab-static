@@ -167,6 +167,22 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
       data: Buffer.from(STATIC_FILTER_SOURCE)
     },
     {
+      name: "assets/basic.js",
+      data: Buffer.from('var DATA_VERSION = "old";')
+    },
+    {
+      name: "assets/spelling.js",
+      data: Buffer.from('const STATIC_DATA_VERSION = "old";')
+    },
+    {
+      name: "assets/reading-g.js",
+      data: Buffer.from('var DATA_VERSION = "old";')
+    },
+    {
+      name: "assets/meaning-static.js",
+      data: Buffer.from('var DATA_VERSION = "old";')
+    },
+    {
       name: "index.html",
       data: Buffer.from('<!doctype html><html><head><link rel="stylesheet" href="./assets/style.css?v=old" /></head><body><main><section id="swipeArea" class="hero"></section><section class="blocks"></section><footer class="bottom"></footer></main></body></html>')
     },
@@ -180,7 +196,7 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
     },
     {
       name: "assets/reading-words.js",
-      data: Buffer.from("function deleteCurrentReadingWord(){}function shouldHandleDeleteShortcut(){}")
+      data: Buffer.from('const VERSION = "old";function deleteCurrentReadingWord(){}function shouldHandleDeleteShortcut(){}')
     },
     {
       name: "assets/reading-words.css",
@@ -206,6 +222,11 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));
   assert.match(entries.get("assets/app.js"), /touchstart/);
   assert.match(entries.get("assets/app.js"), /touchend/);
+  assert.match(entries.get("assets/basic.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/spelling.js"), new RegExp(`STATIC_DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/reading-g.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/meaning-static.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/reading-words.js"), new RegExp(`VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("build-info.json"), new RegExp(STATIC_SWIPE_ENGINE));
   assert.match(entries.get("build-info.json"), /ielts-538/);
   assert.match(entries.get("index.html"), new RegExp(`v=${STATIC_RESPONSIVE_VERSION}`));

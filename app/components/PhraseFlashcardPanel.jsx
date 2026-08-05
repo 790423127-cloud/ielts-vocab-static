@@ -896,7 +896,7 @@ export default function PhraseFlashcardPanel() {
       />
 
       <section className="main phrase-main flash-training-main">
-        <div className="center phrase-center flash-training-card">
+          <div className="center phrase-center flash-training-card">
           <div className="phrase-type-badge">词组</div>
 
           <div className="flash-training-toolbar">

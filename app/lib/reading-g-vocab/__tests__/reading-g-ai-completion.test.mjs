@@ -8,6 +8,7 @@ import {
   isReadingGPendingAiEntry
 } from "../ai-completion.mjs";
 import { normalizeReadingGItem } from "../load-reading-g.mjs";
+import { isReadingGContentIncomplete } from "../content-completeness.mjs";
 import { itemMatchesPathStage } from "../stages.mjs";
 import { buildRgStudyList } from "../storage.mjs";
 import {
@@ -82,8 +83,12 @@ test("the visible '仅单词' entry matches the current post-deletion dataset", 
   const vocab = JSON.parse(fs.readFileSync(path.join(root, "public/data/reading-g-vocab.json"), "utf8"));
   const items = vocab.items.map((entry, index) => normalizeReadingGItem(entry, index)).filter(Boolean);
   const visibleWords = buildRgStudyList(items, { type: "entryType", value: "word" }, {}, "meaning");
+  const expectedWords = items.filter((entry) => (
+    entry.entryType === "word" && !isReadingGContentIncomplete(entry)
+  ));
 
-  assert.equal(visibleWords.length, vocab.wordCount);
+  assert.equal(visibleWords.length, expectedWords.length);
+  assert.ok(visibleWords.length < vocab.wordCount);
 });
 
 test("D/Delete shortcut removes only the selected G entry outside editors", () => {
@@ -214,7 +219,11 @@ test("G-reading navigation hides unrelated shortcuts and exposes the scoped AI a
   assert.match(satellite, /!isReadingG \|\| quizMode/);
   assert.match(satellite, /onSpeakWordRef\.current\?\.\(\)/);
   assert.match(satellite, /onNextRef\.current\?\.\(\)/);
+  assert.match(satellite, /await onSpeakWordRef\.current\?\.\(\)/);
+  assert.match(satellite, /document\.addEventListener\("visibilitychange"/);
+  assert.doesNotMatch(satellite, /window\.setInterval/);
   assert.match(staticPage, /id="autoPlayBtn"/);
   assert.match(staticScript, /function startAutoPlay\(\)/);
+  assert.match(staticScript, /function scheduleAutoPlayAdvance\(\)/);
   assert.match(staticScript, /speak\(currentItem\(\) && currentItem\(\)\.word\)/);
 });

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { WORD_STUDY_ORDER_SNAPSHOT_VERSION } from "../../app/lib/vocab/word-study-ordering.mjs";
 
 async function waitForStudyWord(page) {
   const word = page.locator(".word-flash-shell .word");
@@ -31,12 +32,12 @@ test("home order controls keep horizontal arrows as word navigation and resume a
     return {
       version: snapshot?.version,
       indexCount: snapshot?.indices?.length,
-      hasLegacyKeys: Array.isArray(snapshot?.keys)
+      keyCount: snapshot?.keys?.length
     };
   });
-  expect(compactSnapshot.version).toBe(2);
+  expect(compactSnapshot.version).toBe(WORD_STUDY_ORDER_SNAPSHOT_VERSION);
   expect(compactSnapshot.indexCount).toBeGreaterThan(10_000);
-  expect(compactSnapshot.hasLegacyKeys).toBe(false);
+  expect(compactSnapshot.keyCount).toBe(compactSnapshot.indexCount);
 
   await page.reload();
   await waitForStudyWord(page);
@@ -136,6 +137,6 @@ test("deleting the third word in a fixed difficulty queue keeps position three",
     );
     return stored?.all?.snapshots?.["association|easy-to-hard"] || null;
   });
-  expect(activeSnapshot?.version).toBe(2);
+  expect(activeSnapshot?.version).toBe(WORD_STUDY_ORDER_SNAPSHOT_VERSION);
   expect(activeSnapshot?.indices?.length).toBeGreaterThan(1_000);
 });

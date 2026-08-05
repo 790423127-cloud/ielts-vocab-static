@@ -252,6 +252,50 @@
   font-weight: 750;
 }
 
+.rgSensesToggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid #c9ddd5;
+  border-radius: 999px;
+  background: #edf6f2;
+  color: #246454;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.rgSensesToggle:hover {
+  border-color: #2f7b67;
+  background: #e2f1eb;
+}
+
+.rgContentQuality {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border: 1px solid #d7e5df;
+  border-radius: 999px;
+  background: #f4faf7;
+  color: #55746a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rgContentQuality strong {
+  color: #1f6b58;
+  font-size: 12px;
+}
+
+.rgContentQuality em {
+  color: #7a6650;
+  font-style: normal;
+}
+
 .rgSensesPanel {
   width: 100%;
   max-width: none;

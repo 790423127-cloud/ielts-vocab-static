@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { resolveWordCardSwipe } from "../lib/vocab/word-flashcard-swipe.mjs";
+import {
+  resolveWordCardSwipe,
+  WORD_CARD_SWIPE_EVENT
+} from "../lib/vocab/word-flashcard-swipe.mjs";
 
 const INTERACTIVE_SELECTOR = "button, a, input, select, textarea, summary, details, [contenteditable='true']";
 
@@ -18,7 +21,8 @@ export default function MobileWordCardSwipeController() {
       swipeStartRef.current = {
         pointerId: event.pointerId,
         startX: event.clientX,
-        startY: event.clientY
+        startY: event.clientY,
+        card
       };
     }
 
@@ -35,10 +39,8 @@ export default function MobileWordCardSwipeController() {
       });
       if (!direction) return;
 
-      window.dispatchEvent(new KeyboardEvent("keydown", {
-        key: direction === "next" ? "ArrowRight" : "ArrowLeft",
-        code: direction === "next" ? "ArrowRight" : "ArrowLeft",
-        bubbles: true
+      window.dispatchEvent(new CustomEvent(WORD_CARD_SWIPE_EVENT, {
+        detail: { card: start.card, direction }
       }));
     }
 

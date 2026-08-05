@@ -135,6 +135,12 @@ export function buildEligibilityWordMap(words = []) {
     const key = normalizeEligibilityWordKey(word?.word);
     if (key && !map.has(key)) map.set(key, word);
   }
+  for (const word of Array.isArray(words) ? words : []) {
+    for (const alias of Array.isArray(word?.legacyHeadwords) ? word.legacyHeadwords : []) {
+      const key = normalizeEligibilityWordKey(alias);
+      if (key && !map.has(key)) map.set(key, word);
+    }
+  }
   return map;
 }
 

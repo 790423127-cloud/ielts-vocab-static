@@ -92,6 +92,11 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
     "stored reading words must load only after synonym variants are initialized"
   );
   assert.match(entries.get("assets/reading-words.css"), /repeat\(6,minmax\(0,1fr\)\)/);
+  assert.match(entries.get("assets/basic.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/spelling.js"), new RegExp(`STATIC_DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/reading-g.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/meaning-static.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/reading-words.js"), new RegExp(`VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   const tidyAudit = JSON.parse(entries.get("data/lexicon-tidy-audit.json"));
   assert.equal(tidyAudit.version, 1);
   assert.ok(Object.keys(tidyAudit.records || {}).length > 0);

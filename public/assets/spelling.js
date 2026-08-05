@@ -1328,7 +1328,7 @@
     window.history.replaceState(null, "", url);
   }
 
-  const STATIC_DATA_VERSION = "20260714_d28_load_performance_v1";
+  const STATIC_DATA_VERSION = "20260805_master_g_audit_sync_v20";
 
   function versionedDataPath(requestPath) {
     return requestPath + (requestPath.includes("?") ? "&" : "?") + "v=" + STATIC_DATA_VERSION;

@@ -200,7 +200,7 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
     assert.match(source, /spelling\.html\?source=error_bank/);
     assert.match(source, /spelling\.html\?source=srs_review/);
     assert.doesNotMatch(source, /href="#"/);
-    assert.match(source, /20260726_ielts538_v2/);
+    assert.match(source, /20260805_master_g_audit_sync_v20/);
   }
 
   assert.match(spellingScript, /const query = new URLSearchParams\(window\.location\.search\)/);
@@ -211,7 +211,7 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
   assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
   assert.doesNotMatch(spellingSource, /href="\/spelling-(?:words|phrases)"/);
-  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260804_reading_g_autoplay_v18"/);
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260805_master_g_audit_sync_v20"/);
   assert.match(exportRoute, /href="\.\/reading-words\.html">阅读生词本<\/a>/);
   assert.match(exportRoute, /wordId: stableId/);
   assert.match(exportRoute, /otherMeanings: Array\.isArray\(item\?\.otherMeanings\)/);

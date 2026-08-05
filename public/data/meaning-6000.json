@@ -1,10 +1,10 @@
 {
   "version": "meaning-6000-v6-user-curated-removal",
-  "generatedAt": "2026-07-30T13:15:00.000Z",
+  "generatedAt": "2026-08-05T12:00:00.000Z",
   "count": 6000,
-  "sourceLexiconVersion": "v22-13353-quality-queues-zero-20260730",
-  "sourceLexiconCount": 13353,
-  "sourceLexiconSha256": "d8f1a3d0457b49ae88028ec45f5c084fd6ae7d16156c2f79cb9c85182ddddfdb",
+  "sourceLexiconVersion": "v23-13374-audit-sync-20260805",
+  "sourceLexiconCount": 13374,
+  "sourceLexiconSha256": "92ac972b826962681180011c09bf89b069e4554ac12943bcc05aaa663eeea3c5",
   "selectionPolicy": "ielts-gt-quality-frequency-v4",
   "items": [
     {
@@ -259552,45 +259552,6 @@
       "legacy4500": true
     },
     {
-      "wordId": "word_excel_3f79bb7b435b",
-      "word": "e",
-      "quizMeaningZh": "英语字母表的第五个字母",
-      "meaningZh": "英语字母表的第五个字母",
-      "meaningDetailedZh": "e: 英语字母表的第五个字母",
-      "meaningSource": "master-lexicon",
-      "posFamily": "noun",
-      "difficulty": "基础高频",
-      "selectionScore": 106.2,
-      "zipfFrequency": 5.28,
-      "scoreBreakdown": {
-        "zipf": 5.28,
-        "priority": 1,
-        "gBonus": 4,
-        "evidence": 5,
-        "collocation": 0,
-        "difficulty": 13,
-        "source": -2,
-        "rarePenalty": 0,
-        "longPenalty": 0,
-        "legacyBonus": 0,
-        "curatedSenseBonus": 0,
-        "posBalanceBonus": 0
-      },
-      "tags": [
-        "reading"
-      ],
-      "topics": [
-        "c7~8"
-      ],
-      "sourceEvidence": [
-        "readingPriority",
-        "excelSourceTags",
-        "ieltsUse",
-        "topics"
-      ],
-      "legacy4500": false
-    },
-    {
       "wordId": "word_385fa9cc6338",
       "word": "continuing",
       "quizMeaningZh": "持续的",
@@ -268941,45 +268902,6 @@
         "ieltsUse",
         "topics",
         "collocations"
-      ],
-      "legacy4500": false
-    },
-    {
-      "wordId": "word_excel_1b16b1df538b",
-      "word": "n",
-      "quizMeaningZh": "氮",
-      "meaningZh": "氮",
-      "meaningDetailedZh": "n: 氮",
-      "meaningSource": "master-lexicon",
-      "posFamily": "noun",
-      "difficulty": "基础高频",
-      "selectionScore": 104.25,
-      "zipfFrequency": 5.15,
-      "scoreBreakdown": {
-        "zipf": 5.15,
-        "priority": 1,
-        "gBonus": 4,
-        "evidence": 5,
-        "collocation": 0,
-        "difficulty": 13,
-        "source": -2,
-        "rarePenalty": 0,
-        "longPenalty": 0,
-        "legacyBonus": 0,
-        "curatedSenseBonus": 0,
-        "posBalanceBonus": 0
-      },
-      "tags": [
-        "reading"
-      ],
-      "topics": [
-        "c7~8"
-      ],
-      "sourceEvidence": [
-        "readingPriority",
-        "excelSourceTags",
-        "ieltsUse",
-        "topics"
       ],
       "legacy4500": false
     },
@@ -281900,6 +281822,87 @@
         "list75",
         "G类完整学习计划",
         "G类完整学习计划·阶段1"
+      ],
+      "sourceEvidence": [
+        "readingPriority",
+        "excelSourceTags",
+        "ieltsUse",
+        "topics"
+      ]
+    },
+    {
+      "wordId": "word_excel_3d67e12373d9",
+      "word": "salinity",
+      "quizMeaningZh": "盐分；含盐量",
+      "meaningZh": "盐分；含盐量",
+      "meaningDetailedZh": "盐分；含盐量",
+      "meaningSource": "master-lexicon-rebaseline",
+      "posFamily": "noun",
+      "difficulty": "基础高频",
+      "selectionScore": 49.2,
+      "scoreBreakdown": {
+        "ieltsExamWeight": 15,
+        "listening": 5,
+        "reading": 5,
+        "writing": 0,
+        "speaking": 0,
+        "comprehensionImportance": 65,
+        "contextFrequency": 79,
+        "coverageValue": 79,
+        "noisePenalty": 0
+      },
+      "tags": [
+        "listening",
+        "reading"
+      ],
+      "topics": [
+        "出现1次的答案词：听力目标分7分及以上重点掌握",
+        "答案词1次⑦",
+        "阅读",
+        "list63",
+        "list134",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段1"
+      ],
+      "sourceEvidence": [
+        "listeningPriority",
+        "readingPriority",
+        "excelSourceTags",
+        "ieltsUse",
+        "topics"
+      ]
+    },
+    {
+      "wordId": "word_9d248136bfbe",
+      "word": "commence",
+      "quizMeaningZh": "开始，着手",
+      "meaningZh": "开始，着手",
+      "meaningDetailedZh": "开始，着手",
+      "meaningSource": "master-lexicon-rebaseline",
+      "posFamily": "verb",
+      "difficulty": "低频认识即可",
+      "selectionScore": 49.1,
+      "scoreBreakdown": {
+        "ieltsExamWeight": 8.75,
+        "listening": 0,
+        "reading": 5,
+        "writing": 0,
+        "speaking": 0,
+        "comprehensionImportance": 85,
+        "contextFrequency": 67,
+        "coverageValue": 67,
+        "noisePenalty": 0
+      },
+      "tags": [
+        "reading"
+      ],
+      "topics": [
+        "阅读",
+        "同义替换",
+        "剑17 Test 1 下（已修订）",
+        "c1~2",
+        "G类完整学习计划",
+        "G类完整学习计划·阶段2"
       ],
       "sourceEvidence": [
         "readingPriority",

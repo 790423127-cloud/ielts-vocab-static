@@ -13,6 +13,7 @@ import WordStudyOverview from "./WordStudyOverview";
 import WordStudyProgress from "./WordStudyProgress";
 import WordStudyWorkspace from "./WordStudyWorkspace";
 import { getWordStudyProgressLabel } from "../lib/vocab/word-study-overview.mjs";
+import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
 
 function getRelatedWords(item, displayFamily, activeWordPool) {
   const found = new Map();
@@ -47,6 +48,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
   const pendingSearchRef = useRef("");
   const initialLibraryIntentHandledRef = useRef(false);
   const nextWordRef = useRef(() => {});
+  const wordStudyCardRef = useRef(null);
 
   const {
     item,
@@ -194,6 +196,17 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
 
     return () => window.clearInterval(timer);
   }, [autoScrollActive, autoScrollSeconds, canAutoScroll]);
+
+  useEffect(() => {
+    function handleWordCardSwipe(event) {
+      if (event.detail?.card !== wordStudyCardRef.current || isStudyEmpty) return;
+      if (event.detail.direction === "next") nextWord();
+      if (event.detail.direction === "previous") prevWord();
+    }
+
+    window.addEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+    return () => window.removeEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+  }, [isStudyEmpty, nextWord, prevWord]);
 
   // Keyboard: A = toggle auto-scroll, Esc = pause, [ / ] = slower / faster.
   // Uses event.code (physical key) so IME / layout variants still work.
@@ -568,7 +581,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
             )}
           />
 
-          <article className="word-study-card">
+          <article ref={wordStudyCardRef} className="word-study-card">
             <div className="word-canvas-tools">
               <span>{studyRangeDetail || "刷词 · 当前项目"}</span>
               <div>

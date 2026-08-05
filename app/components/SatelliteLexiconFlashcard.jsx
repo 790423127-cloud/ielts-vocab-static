@@ -22,6 +22,7 @@ import { getFormChineseType } from "../lib/vocab/page-word-helpers.mjs";
 import StudyMeaningToggle from "./StudyMeaningToggle";
 import WordStudyOrderControls from "./WordStudyOrderControls";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
+import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
 import rgStyles from "../reading-g/reading-g.module.css";
 
 const AUTO_PLAY_SPEEDS = [2, 4, 6, 10];
@@ -181,6 +182,7 @@ export default function SatelliteLexiconFlashcard({
   relatedParas = [],
   paraStatusMap = {},
   onParaphraseMaster,
+  contentQuality = null,
   /** paraphrase MCQ mode */
   quizMode = false,
   quizQuestion = null,
@@ -209,11 +211,12 @@ export default function SatelliteLexiconFlashcard({
   const [showRelatedMeanings, setShowRelatedMeanings] = useState(true);
   const [autoPlayActive, setAutoPlayActive] = useState(false);
   const [autoPlaySeconds, setAutoPlaySeconds] = useState(6);
+  const [showSupplementalSenses, setShowSupplementalSenses] = useState(false);
   const [paraphraseSelection, setParaphraseSelection] = useState({
     itemKey: "",
     replacement: ""
   });
-  const swipeStartRef = useRef(null);
+  const wordStudyCardRef = useRef(null);
   const autoPlayActiveRef = useRef(false);
   const canAutoPlayRef = useRef(false);
   const onNextRef = useRef(onNext);
@@ -231,6 +234,10 @@ export default function SatelliteLexiconFlashcard({
   const speakSmall = onSpeakSmall || (() => {});
   const senses = Array.isArray(item?.senses) ? item.senses : [];
   const supplementalSenses = senses.slice(1);
+  const isContentCompletionQueue = isReadingG && Boolean(contentQuality?.isLearningBlocked);
+  const contentScoreLabel = contentQuality
+    ? `${contentQuality.completedCount}/${contentQuality.totalCount} · ${contentQuality.percent}%`
+    : "";
   const overviewStudyWords = overviewWords.length
     ? overviewWords
     : libraryRows.map((row) => row.entry).filter(Boolean);
@@ -377,9 +384,18 @@ export default function SatelliteLexiconFlashcard({
   onNextRef.current = onNext;
   onSpeakWordRef.current = onSpeakWord;
 
+  const stopAutoPlay = useCallback(() => {
+    autoPlayActiveRef.current = false;
+    setAutoPlayActive(false);
+  }, []);
+
   const toggleAutoPlay = useCallback(() => {
     if (!canAutoPlayRef.current) return false;
-    setAutoPlayActive((active) => !active);
+    setAutoPlayActive((active) => {
+      const nextActive = !active;
+      autoPlayActiveRef.current = nextActive;
+      return nextActive;
+    });
     return true;
   }, []);
 
@@ -394,40 +410,86 @@ export default function SatelliteLexiconFlashcard({
 
   useEffect(() => {
     if (canAutoPlay || !autoPlayActive) return;
-    setAutoPlayActive(false);
-  }, [autoPlayActive, canAutoPlay]);
+    stopAutoPlay();
+  }, [autoPlayActive, canAutoPlay, stopAutoPlay]);
+
+  useEffect(() => {
+    setShowSupplementalSenses(false);
+  }, [item?.id]);
 
   useEffect(() => {
     if (!autoPlayActive || !canAutoPlay) return undefined;
-    const timer = window.setInterval(() => {
+    let speakTimer = null;
+    let advanceTimer = null;
+    let cancelled = false;
+
+    const shouldPause = () => {
       const activeElement = document.activeElement;
       const tagName = activeElement?.tagName?.toLowerCase();
-      if (
+      return (
         document.hidden ||
         document.querySelector("details.menu[open]") ||
         tagName === "input" ||
         tagName === "textarea" ||
         activeElement?.isContentEditable
-      ) return;
+      );
+    };
 
-      onNextRef.current?.();
-      window.requestAnimationFrame(() => {
-        document.querySelector(".word-study-progress")?.scrollIntoView({ block: "start", behavior: "smooth" });
-      });
-    }, autoPlaySeconds * 1000);
+    const runStep = async () => {
+      if (cancelled || !autoPlayActiveRef.current || shouldPause()) {
+        if (!cancelled && shouldPause()) stopAutoPlay();
+        return;
+      }
 
-    return () => window.clearInterval(timer);
-  }, [autoPlayActive, autoPlaySeconds, canAutoPlay]);
+      try {
+        await onSpeakWordRef.current?.();
+      } catch {}
+
+      if (cancelled || !autoPlayActiveRef.current || shouldPause()) {
+        if (!cancelled && shouldPause()) stopAutoPlay();
+        return;
+      }
+
+      advanceTimer = window.setTimeout(() => {
+        if (cancelled || !autoPlayActiveRef.current || shouldPause()) {
+          if (!cancelled && shouldPause()) stopAutoPlay();
+          return;
+        }
+        onNextRef.current?.();
+        window.requestAnimationFrame(() => {
+          document.querySelector(".word-study-progress")?.scrollIntoView({ block: "start", behavior: "smooth" });
+        });
+      }, autoPlaySeconds * 1000);
+    };
+
+    speakTimer = window.setTimeout(runStep, 220);
+
+    return () => {
+      cancelled = true;
+      if (speakTimer) window.clearTimeout(speakTimer);
+      if (advanceTimer) window.clearTimeout(advanceTimer);
+    };
+  }, [autoPlayActive, autoPlaySeconds, canAutoPlay, item?.id, item?.word, stopAutoPlay]);
 
   useEffect(() => {
-    if (!autoPlayActive || !canAutoPlay) return undefined;
-    const timer = window.setTimeout(() => {
-      if (!document.hidden && !document.querySelector("details.menu[open]")) {
-        onSpeakWordRef.current?.();
-      }
-    }, 220);
-    return () => window.clearTimeout(timer);
-  }, [autoPlayActive, canAutoPlay, item?.id, item?.word]);
+    function handleWordCardSwipe(event) {
+      if (event.detail?.card !== wordStudyCardRef.current || isStudyEmpty) return;
+      if (event.detail.direction === "next") onNext?.();
+      if (event.detail.direction === "previous") onPrev?.();
+    }
+
+    window.addEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+    return () => window.removeEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+  }, [isStudyEmpty, onNext, onPrev]);
+
+  useEffect(() => {
+    if (!autoPlayActive) return undefined;
+    const onVisibilityChange = () => {
+      if (document.hidden) stopAutoPlay();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, [autoPlayActive, stopAutoPlay]);
 
   useEffect(() => {
     function isTextEntryTarget(target) {
@@ -500,37 +562,6 @@ export default function SatelliteLexiconFlashcard({
     return () => window.removeEventListener("keydown", handleKeyDown, true);
   }, [cycleAutoPlaySpeed, isReadingG, quizMode, toggleAutoPlay]);
 
-  const handleSwipeStart = (event) => {
-    if (!isIelts538 || event.touches.length !== 1) return;
-    if (event.target.closest("button, a, input, select, textarea, [role='button']")) {
-      swipeStartRef.current = null;
-      return;
-    }
-    const touch = event.touches[0];
-    swipeStartRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      at: Date.now()
-    };
-  };
-  const handleSwipeEnd = (event) => {
-    const start = swipeStartRef.current;
-    swipeStartRef.current = null;
-    if (!isIelts538 || !start || event.changedTouches.length !== 1) return;
-    const touch = event.changedTouches[0];
-    const deltaX = touch.clientX - start.x;
-    const deltaY = touch.clientY - start.y;
-    if (
-      Date.now() - start.at > 900 ||
-      Math.abs(deltaX) < 56 ||
-      Math.abs(deltaX) <= Math.abs(deltaY) * 1.35
-    ) {
-      return;
-    }
-    event.preventDefault();
-    if (deltaX < 0) onNext?.();
-    else onPrev?.();
-  };
   const selectFilter = (nextFilter) => {
     onFilter(nextFilter);
     document.querySelectorAll("details.menu[open]").forEach((menu) => {
@@ -951,14 +982,7 @@ export default function SatelliteLexiconFlashcard({
           )}
         />
 
-        <article
-          className="word-study-card"
-          onTouchStart={handleSwipeStart}
-          onTouchEnd={handleSwipeEnd}
-          onTouchCancel={() => {
-            swipeStartRef.current = null;
-          }}
-        >
+        <article ref={wordStudyCardRef} className="word-study-card">
           <div className="word-canvas-tools">
             <span>{rangeDetail || `${modeLabel} · ${rangeMeta}`}</span>
             <div>
@@ -994,7 +1018,8 @@ export default function SatelliteLexiconFlashcard({
                 <button
                   className="hero-sound-btn"
                   type="button"
-                  onClick={onSpeakExample}
+                  onClick={isContentCompletionQueue ? undefined : onSpeakExample}
+                  disabled={isContentCompletionQueue}
                   title="播放例句发音 (空格)"
                   aria-label="播放例句发音，快捷键空格"
                 >
@@ -1009,18 +1034,27 @@ export default function SatelliteLexiconFlashcard({
               </div>
               <div
                 className="example-clickable"
-                onClick={onSpeakExample}
+                onClick={isContentCompletionQueue ? undefined : onSpeakExample}
                 role="button"
-                tabIndex={0}
+                tabIndex={isContentCompletionQueue ? -1 : 0}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
+                  if (!isContentCompletionQueue && (event.key === "Enter" || event.key === " ")) {
                     event.preventDefault();
                     onSpeakExample();
                   }
                 }}
               >
-                <div className="example">{fallback(item?.example, "暂无例句")}</div>
-                <div className="example-cn">{fallback(item?.exampleCn, "暂无例句中文")}</div>
+                {isContentCompletionQueue ? (
+                  <>
+                    <div className="example">已转入内容补全队列，补全后才会进入普通刷词。</div>
+                    <div className="example-cn">待补：{contentQuality.issueLabels.join("、")}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="example">{fallback(item?.example, "暂无例句")}</div>
+                    <div className="example-cn">{fallback(item?.exampleCn, "暂无例句中文")}</div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -1207,6 +1241,13 @@ export default function SatelliteLexiconFlashcard({
                         )}
                       </span>
                     </div>
+                    {isReadingG && contentQuality?.isScored ? (
+                      <div className={rgStyles.rgContentQuality} aria-label={`资料完整度 ${contentScoreLabel}`}>
+                        <span>资料完整度</span>
+                        <strong>{contentQuality.completedCount}/{contentQuality.totalCount}</strong>
+                        <em>{contentQuality.percent}%</em>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
 
@@ -1214,7 +1255,18 @@ export default function SatelliteLexiconFlashcard({
                   <div className="meaning-primary">{fallback(item?.meaning, "等待释义")}</div>
                   {isReadingG && supplementalSenses.length ? (
                     <div className={rgStyles.rgSensesWrap}>
+                      <button
+                        type="button"
+                        className={rgStyles.rgSensesToggle}
+                        aria-expanded={showSupplementalSenses}
+                        onClick={() => setShowSupplementalSenses((current) => !current)}
+                      >
+                        {showSupplementalSenses
+                          ? "收起其他义项"
+                          : `还有 ${supplementalSenses.length} 个常见义项`}
+                      </button>
                       <div className={rgStyles.rgSensesLabel}>补充义项 · {supplementalSenses.length}</div>
+                      {showSupplementalSenses ? (
                       <div
                         className={rgStyles.rgSensesPanel}
                         aria-label={`${supplementalSenses.length} 个补充义项`}
@@ -1248,6 +1300,7 @@ export default function SatelliteLexiconFlashcard({
                           );
                         })}
                       </div>
+                      ) : null}
                     </div>
                   ) : null}
                   {isIelts538 && selectedRelatedWord ? (

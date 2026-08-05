@@ -1,7 +1,7 @@
 // Auto-generated Meaning Mode example index.
 // Source: .static-export-cache/words.json (READ-ONLY, never modified)
 // Matched against: public/data/meaning-6000.json (READ-ONLY, never modified)
-// Generated: 2026-07-30T11:00:44.586Z
+// Generated: 2026-08-05T15:34:47.001Z
 // Stats: 6000/6000 matched (100.0% coverage)
 // DO NOT EDIT MANUALLY — regenerate with: node app/lib/meaning-mode/build-example-index.mjs
 
@@ -43526,14 +43526,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "sourceField": "example",
     "matchType": "wordId"
   },
-  "word_excel_3f79bb7b435b": {
-    "sourceWordId": "word_excel_3f79bb7b435b",
-    "word": "e",
-    "example": "The letter e is the most common letter in English.",
-    "exampleCn": "字母e是英语中最常见的字母。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
   "word_385fa9cc6338": {
     "sourceWordId": "word_385fa9cc6338",
     "word": "continuing",
@@ -45379,14 +45371,6 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "replay",
     "example": "The referee decided to replay the final due to a controversial call.",
     "exampleCn": "由于争议判罚，裁判决定重赛决赛。",
-    "sourceField": "example",
-    "matchType": "wordId"
-  },
-  "word_excel_1b16b1df538b": {
-    "sourceWordId": "word_excel_1b16b1df538b",
-    "word": "n",
-    "example": "Nitrogen is a gas, and its symbol.",
-    "exampleCn": "氮是一种气体，它的符号是n。",
     "sourceField": "example",
     "matchType": "wordId"
   },
@@ -48003,6 +47987,22 @@ export const MEANING_EXAMPLE_INDEX = {
     "word": "grown",
     "example": "A grown man should take responsibility for his actions.",
     "exampleCn": "一个成年人应该为自己的行为负责。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_excel_3d67e12373d9": {
+    "sourceWordId": "word_excel_3d67e12373d9",
+    "word": "salinity",
+    "example": "The salinity of the sea water is too high for most fish.",
+    "exampleCn": "海水的盐分对大多数鱼来说太高了。",
+    "sourceField": "example",
+    "matchType": "wordId"
+  },
+  "word_9d248136bfbe": {
+    "sourceWordId": "word_9d248136bfbe",
+    "word": "commence",
+    "example": "The meeting will commence at 9.",
+    "exampleCn": "会议将在上午9点开始。",
     "sourceField": "example",
     "matchType": "wordId"
   }

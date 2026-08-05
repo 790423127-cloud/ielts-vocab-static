@@ -272,7 +272,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260804_reading_g_autoplay_v18";
+const STATIC_EXPORT_VERSION = "20260805_master_g_audit_sync_v20";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">

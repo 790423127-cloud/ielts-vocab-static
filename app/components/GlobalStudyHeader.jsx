@@ -95,7 +95,7 @@ const ROUTE_DATA_PREFETCH = {
   "/meaning-en": ["/data/meaning-6000.json"],
   "/basic": ["/data/basic-words.json"],
   "/ielts-538": ["/data/ielts-538-words.json"],
-  "/reading-g": ["/data/reading-g-vocab.json?v=20260804-grok-excel-part1-2-missing-v1", "/data/reading-g-paraphrases.json"],
+  "/reading-g": ["/data/reading-g-vocab.json?v=20260804-grok-excel-part1-2-missing-v1", "/data/reading-g-paraphrases.json", "/data/reading-g-question-evidence.json"],
   "/reading-paraphrases": ["/data/listening-reading-paraphrases.json"],
   "/expressions": ["/data/speaking-writing-phrases-700.json"]
 };

@@ -1,4 +1,7 @@
-import { filterDistinctSynonymTerms } from "./synonym-equivalence.mjs";
+import {
+  filterDistinctSynonymTerms,
+  synonymEquivalenceKey
+} from "./synonym-equivalence.mjs";
 
 export const AI_CONTENT_PROFILE_VERSION = "main-meaning-detailed-senses-v3";
 export const AI_COLLOCATION_LIMIT = 4;
@@ -130,6 +133,34 @@ export function normalizeAiSynonyms(value, headword = "") {
   return filterDistinctSynonymTerms(value, headword, { max: 4 });
 }
 
+export function normalizeAiSynonymDetails(value, synonyms = [], headword = "") {
+  const words = normalizeAiSynonyms(synonyms, headword);
+  const detailByWord = new Map();
+  for (const item of Array.isArray(value) ? value : []) {
+    const word = text(item?.word || item?.replacement);
+    const meaningZh = text(item?.meaningZh || item?.meaning_zh || item?.meaning || item?.chinese);
+    const detailKey = synonymEquivalenceKey(word);
+    if (!word || !meaningZh || !detailKey || detailByWord.has(detailKey)) continue;
+    detailByWord.set(detailKey, {
+      word,
+      pos: text(item?.pos || item?.part_of_speech || item?.partOfSpeech),
+      meaningZh
+    });
+  }
+  return words
+    .map((word) => {
+      const detail = detailByWord.get(synonymEquivalenceKey(word));
+      return detail ? { ...detail, word } : null;
+    })
+    .filter(Boolean);
+}
+
+export function hasCompleteAiSynonymDetails(entry = {}) {
+  const synonyms = normalizeAiSynonyms(entry?.synonyms, entry?.word);
+  if (!synonyms.length) return true;
+  return normalizeAiSynonymDetails(entry?.synonymDetails, synonyms, entry?.word).length === synonyms.length;
+}
+
 export function normalizeAiPhraseItems(value, { max = AI_COLLOCATION_LIMIT, requireChinese = false } = {}) {
   if (!Array.isArray(value)) return [];
   const seen = new Set();
@@ -175,9 +206,11 @@ export function sanitizeAiWordCollocations(word = {}) {
 }
 
 export function withAiClientCollocationPayload(entry = {}) {
+  const synonyms = normalizeAiSynonyms(entry.synonyms, entry.word);
   return {
     ...entry,
-    synonyms: normalizeAiSynonyms(entry.synonyms, entry.word),
+    synonyms,
+    synonymDetails: normalizeAiSynonymDetails(entry.synonymDetails, synonyms, entry.word),
     [AI_COLLOCATION_TRANSPORT_FIELDS.common]: normalizeAiPhraseItems(entry.collocations),
     [AI_COLLOCATION_TRANSPORT_FIELDS.phrase]: normalizeAiPhraseItems(entry.phraseCollocations)
   };
@@ -277,6 +310,7 @@ export function normalizeAiWordFamily(value, headword = "") {
 export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
   const word = text(entry.word || fallbackWord);
   const meaning = text(entry.chinese_meaning || entry.meaning);
+  const synonyms = normalizeAiSynonyms(entry.synonyms, word);
   return {
     word,
     phonetic: text(entry.phonetic),
@@ -289,7 +323,12 @@ export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
     exampleCn: text(entry.example_chinese || entry.exampleCn),
     forms: normalizeAiForms(entry.forms, word),
     wordFamily: normalizeAiWordFamily(entry.word_family || entry.wordFamily, word),
-    synonyms: normalizeAiSynonyms(entry.synonyms, word),
+    synonyms,
+    synonymDetails: normalizeAiSynonymDetails(
+      entry.synonym_details || entry.synonymDetails,
+      synonyms,
+      word
+    ),
     collocations: normalizeAiPhraseItems(entry.common_collocations || entry.collocations || entry.commonCollocations, {
       max: AI_COLLOCATION_LIMIT,
       requireChinese: true

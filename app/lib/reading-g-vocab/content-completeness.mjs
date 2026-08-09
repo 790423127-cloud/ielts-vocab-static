@@ -18,7 +18,7 @@ export const READING_G_CONTENT_ISSUE_LABEL = Object.freeze({
   [READING_G_CONTENT_ISSUE.MEANING]: "释义",
   [READING_G_CONTENT_ISSUE.MEANING_TOO_SHORT]: "释义过短",
   [READING_G_CONTENT_ISSUE.MULTI_POS_NEEDS_SPLIT]: "多词性义项",
-  [READING_G_CONTENT_ISSUE.DEFINITION]: "英文释义",
+  [READING_G_CONTENT_ISSUE.DEFINITION]: "释义说明",
   [READING_G_CONTENT_ISSUE.EXAMPLE]: "英文例句",
   [READING_G_CONTENT_ISSUE.EXAMPLE_ZH]: "例句翻译"
 });
@@ -130,7 +130,11 @@ export function isReadingGMeaningTooShort(entry) {
   if (!meaning) return false;
 
   const chineseCharacters = (meaning.match(/[\u3400-\u9fff]/gu) || []).length;
-  if (chineseCharacters >= 2) return false;
+  // A single Chinese character can be a complete, exact gloss (for example
+  // “熊”, “桥”, “水” or “写”). Length alone must not turn those cards into
+  // fake completion work; the placeholder and missing-content checks above
+  // still reject genuinely unusable values.
+  if (chineseCharacters >= 1) return false;
 
   const entryPos = unique([
     ...entryPosValues(entry).flatMap(posTokens)

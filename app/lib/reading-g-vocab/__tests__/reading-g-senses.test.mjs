@@ -59,9 +59,10 @@ test("same-part-of-speech senses do not repeat a contained meaning", () => {
   assert.deepEqual(duplicates, []);
 });
 
-test("flashcard keeps only supplemental senses in the compact fixed panel", () => {
+test("flashcard appends supplemental senses to the primary meaning without a separate card", () => {
   const source = fs.readFileSync(path.join(root, "app/components/SatelliteLexiconFlashcard.jsx"), "utf8");
-  assert.match(source, /const supplementalSenses = senses\.slice\(1\)/);
-  assert.match(source, /补充义项/);
-  assert.doesNotMatch(source, /完整义项/);
+  assert.match(source, /const supplementalSenses = itemDisplay\.supplementalSenses/);
+  assert.match(source, /<InlineStudyMeaning/);
+  assert.match(source, /supplementalSenses=\{supplementalSenses\}/);
+  assert.doesNotMatch(source, /补充义项|其他释义|showSupplementalSenses|熟词生义/);
 });

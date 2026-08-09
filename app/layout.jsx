@@ -32,7 +32,14 @@ const browserCompatibilityBootstrapScript = `
     if (isFinite(value)) {
       value = Math.min(1.6, Math.max(0.8, value));
       document.documentElement.dataset.fontScale = String(value);
+      document.documentElement.dataset.fontScaleLevel =
+        value >= 1.45 ? "xlarge" : value >= 1.25 ? "large" : value <= 0.9 ? "small" : "normal";
+      document.documentElement.dataset.adaptiveShell =
+        window.innerWidth > 900 && window.innerWidth / value <= 900 ? "compact" : window.innerWidth <= 900 ? "native" : "desktop";
       document.documentElement.style.setProperty("--font-scale", String(value));
+    } else {
+      document.documentElement.dataset.fontScaleLevel = "normal";
+      document.documentElement.dataset.adaptiveShell = window.innerWidth <= 900 ? "native" : "desktop";
     }
 
     document.documentElement.dataset.studyMeaningsHidden =

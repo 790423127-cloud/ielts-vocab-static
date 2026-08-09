@@ -3,14 +3,17 @@
 
   var DATA_URL = "./data/ielts-538-words.json";
   var STATUS_KEY = "ielts_538_flash_status_v1";
-  var SESSION_KEY = "ielts_538_static_session_v1";
+  var SESSION_KEY = "ielts_538_flash_session_v1";
+  var LEGACY_SESSION_KEY = "ielts_538_static_session_v1";
+  var POSITIONS_KEY = "ielts_538_flash_positions_v1";
   var DELETED_KEY = "ielts_538_static_deleted_v1";
   var words = [];
   var study = [];
   var statusMap = readJson(STATUS_KEY, {});
   var deletedMap = readJson(DELETED_KEY, {});
-  var session = readJson(SESSION_KEY, {});
-  var filter = session.filter || "all";
+  var session = readJson(SESSION_KEY, null) || readJson(LEGACY_SESSION_KEY, {});
+  var positions = readJson(POSITIONS_KEY, {});
+  var filter = staticFilter(session.filter);
   var index = Number(session.index) || 0;
   var selectedById = {};
   var showMeanings = true;
@@ -23,7 +26,6 @@
     "phonetic", "pos", "meaning", "paraphrase", "relatedGrid", "meaningToggle",
     "studyCard", "prevBtn", "knownBtn", "unknownBtn", "nextBtn", "toast"
   ].forEach(function (id) { els[id] = document.getElementById(id); });
-  var swipeStart = null;
 
   function readJson(key, fallback) {
     try {
@@ -106,6 +108,42 @@
     return String(item && (item.wordId || item.id || item.word) || "");
   }
 
+  function staticFilter(value) {
+    if (typeof value === "string") return value;
+    if (!value || typeof value !== "object") return "all";
+    if (value.type === "everything") return "everything";
+    if (value.type === "status" && value.value === "不熟") return "unfamiliar";
+    if (value.type === "status" && value.value === "收藏") return "favorite";
+    return "all";
+  }
+
+  function sharedFilter(value) {
+    if (value === "everything") return { type: "everything", value: "" };
+    if (value === "unfamiliar") return { type: "status", value: "不熟" };
+    if (value === "favorite") return { type: "status", value: "收藏" };
+    return { type: "all", value: "" };
+  }
+
+  function filterKey(value) {
+    var shared = sharedFilter(value);
+    return shared.type === "status" ? "status:" + shared.value : shared.type;
+  }
+
+  function rememberSession() {
+    var item = current();
+    var key = item ? wordId(item) : "";
+    if (key) {
+      positions[filterKey(filter)] = key;
+      writeJson(POSITIONS_KEY, positions);
+    }
+    writeJson(SESSION_KEY, {
+      index: index,
+      wordKey: key,
+      filter: sharedFilter(filter),
+      savedAt: new Date().toISOString()
+    });
+  }
+
   function statusOf(item) {
     var value = statusMap[wordId(item)];
     if (typeof value === "string") return { status: value, favorite: false };
@@ -150,7 +188,20 @@
     }
     if (!study.length) index = 0;
     else index = Math.max(0, Math.min(index, study.length - 1));
-    writeJson(SESSION_KEY, { index: index, filter: filter });
+    rememberSession();
+  }
+
+  function applyMergedCloudProgress() {
+    statusMap = readJson(STATUS_KEY, {});
+    deletedMap = readJson(DELETED_KEY, {});
+    positions = readJson(POSITIONS_KEY, {});
+    session = readJson(SESSION_KEY, null) || readJson(LEGACY_SESSION_KEY, {});
+    filter = staticFilter(session.filter);
+    index = Number(session.index) || 0;
+    if (!words.length) return;
+    var savedKey = session.wordKey || positions[filterKey(filter)] || "";
+    rebuildStudy(savedKey);
+    render();
   }
 
   function current() {
@@ -315,7 +366,7 @@
     els.unknownBtn.classList.toggle("active", state.status === "不熟");
     renderParaphrase(item, selected);
     renderRelated(item, related, selected);
-    writeJson(SESSION_KEY, { index: index, filter: filter });
+    rememberSession();
   }
 
   function move(offset) {
@@ -327,12 +378,23 @@
   function mark(status) {
     var item = current();
     if (!item) return;
+    var previousStudy = study.slice();
+    var previousIndex = index;
     var currentState = statusOf(item);
-    patchStatus(item, { status: currentState.status === status ? "" : status });
+    var nextStatus = status === "不熟" && currentState.status === status ? "" : status;
+    patchStatus(item, { status: nextStatus });
     var id = wordId(item);
     rebuildStudy(id);
-    if (!study.some(function (entry) { return wordId(entry) === id; })) {
-      index = Math.min(index, Math.max(0, study.length - 1));
+    var shouldAdvance = true;
+    if (shouldAdvance && study.length) {
+      for (var offset = 1; offset <= previousStudy.length; offset += 1) {
+        var candidateId = wordId(previousStudy[(previousIndex + offset) % previousStudy.length]);
+        var nextIndex = study.findIndex(function (entry) { return wordId(entry) === candidateId; });
+        if (nextIndex >= 0) {
+          index = nextIndex;
+          break;
+        }
+      }
     }
     render();
   }
@@ -414,42 +476,14 @@
     }
   };
 
-  els.studyCard.addEventListener("touchstart", function (event) {
-    if (event.touches.length !== 1) return;
-    if (event.target.closest("button, a, input, select, textarea, [role='button']")) {
-      swipeStart = null;
-      return;
-    }
-    var touch = event.touches[0];
-    swipeStart = { x: touch.clientX, y: touch.clientY, at: Date.now() };
-  }, { passive: true });
-  els.studyCard.addEventListener("touchend", function (event) {
-    var start = swipeStart;
-    swipeStart = null;
-    if (!start || event.changedTouches.length !== 1) return;
-    var touch = event.changedTouches[0];
-    var deltaX = touch.clientX - start.x;
-    var deltaY = touch.clientY - start.y;
-    if (
-      Date.now() - start.at > 900 ||
-      Math.abs(deltaX) < 56 ||
-      Math.abs(deltaX) <= Math.abs(deltaY) * 1.35
-    ) {
-      return;
-    }
-    event.preventDefault();
-    move(deltaX < 0 ? 1 : -1);
-  }, { passive: false });
-  els.studyCard.addEventListener("touchcancel", function () {
-    swipeStart = null;
-  });
-
   window.addEventListener("keydown", function (event) {
     if (/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement && document.activeElement.tagName)) return;
     if (event.key === "ArrowRight" || event.key === "ArrowDown") move(1);
     else if (event.key === "ArrowLeft" || event.key === "ArrowUp") move(-1);
     else if (event.key === "Tab") { event.preventDefault(); var item = current(); if (item) speak(item.word); }
     else if (event.key === " ") { event.preventDefault(); var currentItem = current(); if (currentItem) speak(currentItem.example); }
+    else if (event.key === "1") { event.preventDefault(); mark("熟悉"); }
+    else if (event.key === "3") { event.preventDefault(); mark("不熟"); }
   });
 
   fetch(DATA_URL, { cache: "no-store" })
@@ -464,7 +498,8 @@
       if (Number(data.count) !== words.length) {
         throw new Error("词库声明数量与实际数量不一致");
       }
-      rebuildStudy();
+      var savedKey = session.wordKey || positions[filterKey(filter)] || "";
+      rebuildStudy(savedKey);
       render();
     })
     .catch(function (error) {
@@ -472,4 +507,9 @@
       els.meaning.textContent = error.message || String(error);
       toast("538考点词库加载失败");
     });
+  if (window.StaticCloudSync) {
+    window.StaticCloudSync.register("ielts-538", [STATUS_KEY, SESSION_KEY, POSITIONS_KEY, DELETED_KEY], {
+      onMerged: applyMergedCloudProgress
+    });
+  }
 })();

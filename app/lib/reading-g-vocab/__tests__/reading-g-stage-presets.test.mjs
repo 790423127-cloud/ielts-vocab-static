@@ -81,17 +81,71 @@ test("stage route partitions the whole dataset without overlap", () => {
   assert.equal(u.stage1 + u.stage2 + u.stage3 + u.stage4, items.length);
 });
 
-test("an overlapping item is assigned to its earliest route stage", () => {
-  const item = {
-    word: "overlap",
+test("reading stages use reading difficulty and article evidence instead of source order", () => {
+  const base = {
     entryType: "word",
     studyMode: "active",
-    normalizedKey: "overlap",
+    normalizedKey: "stage-test",
+    layers: []
+  };
+  const readingCore = {
+    ...base,
+    word: "core",
+    difficulty: "中级核心",
+    layers: ["priority1500", "questionBankActive"]
+  };
+  const coverage = {
+    ...base,
+    word: "coverage",
+    difficulty: "中级核心",
+    layers: ["tierB1200"]
+  };
+  const articleTarget = {
+    ...base,
+    word: "target",
+    difficulty: "中级核心",
+    layers: ["questionBankActive"]
+  };
+  const advanced = {
+    ...base,
+    word: "advanced",
+    difficulty: "高级加分",
+    layers: ["priority1500"]
+  };
+  const basic = {
+    ...base,
+    word: "basic",
+    difficulty: "基础高频",
+    layers: ["questionBankActive"]
+  };
+  const reference = {
+    ...base,
+    word: "reference",
+    difficulty: "中级核心",
+    studyMode: "reference",
+    layers: ["priority1500"]
+  };
+
+  assert.equal(itemMatchesPathStage(readingCore, "1"), true);
+  assert.equal(itemMatchesPathStage(coverage, "2"), true);
+  assert.equal(itemMatchesPathStage(articleTarget, "3"), true);
+  assert.equal(itemMatchesPathStage(advanced, "3"), true);
+  assert.equal(itemMatchesPathStage(basic, "1"), true);
+  assert.equal(itemMatchesPathStage(reference, "4"), true);
+});
+
+test("a reading core layer does not override advanced difficulty", () => {
+  const item = {
+    word: "advanced-overlap",
+    entryType: "word",
+    studyMode: "active",
+    normalizedKey: "advanced-overlap",
+    difficulty: "高级加分",
     layers: ["priority1500", "tierB1200", "tierC800", "questionBankActive"]
   };
 
-  assert.equal(itemMatchesPathStage(item, "1"), true);
+  assert.equal(itemMatchesPathStage(item, "1"), false);
   assert.equal(itemMatchesPathStage(item, "2"), false);
-  assert.equal(itemMatchesPathStage(item, "3"), false);
+  assert.equal(itemMatchesPathStage(item, "3"), true);
   assert.equal(itemMatchesPathStage(item, "4"), false);
 });

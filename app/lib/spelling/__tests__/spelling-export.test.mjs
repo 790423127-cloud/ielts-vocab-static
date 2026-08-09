@@ -14,6 +14,7 @@ import {
   buildEnglishTxtLines,
   compactSpellingExportEntry
 } from "../spelling-export.mjs";
+import { STATIC_RESPONSIVE_VERSION } from "../../static-export-responsive.mjs";
 
 test("compactSpellingExportEntry keeps spelling-facing fields", () => {
   const row = compactSpellingExportEntry({
@@ -193,15 +194,20 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   const sources = staticFiles.map((name) => fs.readFileSync(path.join(root, "public", name), "utf8"));
   const spellingSource = sources[3];
   const spellingScript = fs.readFileSync(path.join(root, "public/assets/spelling.js"), "utf8");
+  const navigationScript = fs.readFileSync(path.join(root, "public/assets/static-navigation.js"), "utf8");
   const exportRoute = fs.readFileSync(path.join(root, "app/api/export-static/route.js"), "utf8");
 
   for (const source of sources) {
-    assert.match(source, /reading-g\.html/);
-    assert.match(source, /spelling\.html\?source=error_bank/);
-    assert.match(source, /spelling\.html\?source=srs_review/);
+    assert.match(source, /data-static-primary-nav/);
+    assert.match(source, /data-static-sidebar/);
+    assert.match(source, /assets\/static-navigation\.js/);
     assert.doesNotMatch(source, /href="#"/);
-    assert.match(source, /20260805_master_g_audit_sync_v20/);
+    assert.match(source, new RegExp(STATIC_RESPONSIVE_VERSION));
   }
+
+  assert.match(navigationScript, /reading-g\.html/);
+  assert.match(navigationScript, /spelling\.html\?source=error_bank/);
+  assert.match(navigationScript, /spelling\.html\?source=srs_review/);
 
   assert.match(spellingScript, /const query = new URLSearchParams\(window\.location\.search\)/);
   assert.match(spellingScript, /query\.get\("source"\)/);
@@ -211,7 +217,10 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
   assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
   assert.doesNotMatch(spellingSource, /href="\/spelling-(?:words|phrases)"/);
-  assert.match(exportRoute, /STATIC_EXPORT_VERSION = "20260805_master_g_audit_sync_v20"/);
+  assert.match(
+    exportRoute,
+    new RegExp(`STATIC_EXPORT_VERSION = "${STATIC_RESPONSIVE_VERSION}"`)
+  );
   assert.match(exportRoute, /href="\.\/reading-words\.html">阅读生词本<\/a>/);
   assert.match(exportRoute, /wordId: stableId/);
   assert.match(exportRoute, /otherMeanings: Array\.isArray\(item\?\.otherMeanings\)/);

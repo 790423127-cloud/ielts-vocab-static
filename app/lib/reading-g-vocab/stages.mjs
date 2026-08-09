@@ -1,6 +1,9 @@
 /**
- * Stage 1–4 study presets for G reading (filter builders).
- * phrases400 stays one layer; phraseStudyStage 1|2 splits queue only.
+ * Reading-only stage presets for G reading.
+ *
+ * Stages describe how a reader encounters vocabulary in an article. They do
+ * not use listening, speaking, or writing labels, and never remove a word
+ * from the route: every G-reading entry belongs to exactly one stage.
  */
 import { normalizeReadingGKey } from "./normalize.mjs";
 
@@ -8,19 +11,19 @@ export const STAGE_PRESETS = {
   stage1: {
     id: "stage1",
     title: "阶段1：基础保分",
-    desc: "priority1500 + answerCore250 + logic120 + 词组前200",
+    desc: "基础高频词 + 阅读必懂逻辑与核心词",
     filter: { type: "pathStage", value: "1" }
   },
   stage2: {
     id: "stage2",
     title: "阶段2：扩大覆盖",
-    desc: "阶段1之外的 tierB1200 + 词组后200（同义300另计）",
+    desc: "常见中级阅读词 + 常用阅读词组",
     filter: { type: "pathStage", value: "2" }
   },
   stage3: {
     id: "stage3",
-    title: "阶段3：同义与Section3强化",
-    desc: "前两阶段之外的全部 active 词条",
+    title: "阶段3：文章强化",
+    desc: "文章定位词 + 进阶、低频与主题词",
     filter: { type: "pathStage", value: "3" }
   },
   stage4: {
@@ -31,57 +34,93 @@ export const STAGE_PRESETS = {
   }
 };
 
-export const STAGE1_WORD_LAYERS = ["priority1500", "answerCore250", "logic120"];
-export const STAGE2_WORD_LAYERS = ["tierB1200"];
-export const STAGE3_LAYERS = [
-  "paraCore600",
+const READING_CORE_LAYERS = new Set(["priority1500", "answerCore250", "logic120"]);
+const ARTICLE_REINFORCEMENT_LAYERS = new Set([
   "tierC800",
   "paraExt500",
   "questionBankActive",
   "questionBankAiCompleted"
-];
+]);
 
-function matchesStage1Content(item, layers) {
-  if (STAGE1_WORD_LAYERS.some((layer) => layers.includes(layer))) return true;
-  return layers.includes("phrases400") && Number(item.phraseStudyStage) === 1;
+const DIFFICULTY = Object.freeze({
+  BASIC: "基础高频",
+  CORE: "中级核心",
+  ADVANCED: "高级加分",
+  EXTENSION: "阅读扩展",
+  LOW_FREQUENCY: "低频认识即可"
+});
+
+function hasAnyLayer(layers, candidates) {
+  return [...candidates].some((layer) => layers.includes(layer));
 }
 
-function matchesStage2Content(item, layers) {
-  if (STAGE2_WORD_LAYERS.some((layer) => layers.includes(layer))) return true;
-  return layers.includes("phrases400") && Number(item.phraseStudyStage) === 2;
+function isArticleReinforcement(layers) {
+  return hasAnyLayer(layers, ARTICLE_REINFORCEMENT_LAYERS);
 }
 
 /**
- * Whether item belongs to a path stage (vocab items only; paraphrases separate).
+ * Explain the route assignment so the UI and future audits can show why an
+ * entry is in a stage without relying on its importing source order.
+ */
+export function getReadingGPathStage(item) {
+  if (!item) return { stage: null, reason: "missing" };
+
+  const layers = Array.isArray(item.layers) ? item.layers : [];
+  const difficulty = String(item.difficulty || "").trim();
+
+  if (item.studyMode === "reference") {
+    return { stage: "4", reason: "reference" };
+  }
+
+  // Every basic reading word remains visible in the route. It is not skipped,
+  // hidden, or treated as already familiar.
+  if (difficulty === DIFFICULTY.BASIC) {
+    return { stage: "1", reason: "basic-reading" };
+  }
+
+  if (item.entryType === "phrase" || /\s/.test(item.word || "")) {
+    if (
+      layers.includes("logic120") ||
+      (layers.includes("phrases400") && Number(item.phraseStudyStage) === 1)
+    ) {
+      return { stage: "1", reason: "reading-foundation-phrase" };
+    }
+    if (layers.includes("phrases400") && Number(item.phraseStudyStage) === 2) {
+      return { stage: "2", reason: "reading-coverage-phrase" };
+    }
+    return isArticleReinforcement(layers)
+      ? { stage: "3", reason: "article-phrase" }
+      : { stage: "2", reason: "reading-phrase" };
+  }
+
+  if (
+    difficulty === DIFFICULTY.ADVANCED ||
+    difficulty === DIFFICULTY.EXTENSION ||
+    difficulty === DIFFICULTY.LOW_FREQUENCY
+  ) {
+    return { stage: "3", reason: "article-extension" };
+  }
+
+  if (difficulty === DIFFICULTY.CORE) {
+    if (hasAnyLayer(layers, READING_CORE_LAYERS)) {
+      return { stage: "1", reason: "reading-core" };
+    }
+    if (isArticleReinforcement(layers)) {
+      return { stage: "3", reason: "article-target" };
+    }
+    return { stage: "2", reason: "reading-coverage" };
+  }
+
+  // Unknown or legacy difficulty labels stay in the visible coverage stage;
+  // they are never silently skipped.
+  return { stage: "2", reason: "reading-coverage" };
+}
+
+/**
+ * Whether an item belongs to a reading-only path stage.
  */
 export function itemMatchesPathStage(item, stageValue) {
-  if (!item) return false;
-  const layers = Array.isArray(item.layers) ? item.layers : [];
-  const stage = String(stageValue || "");
-
-  // The route is a partition, not four independent layer filters. A word is
-  // assigned once, to the earliest stage that introduces it.
-  if (stage === "4") return item.studyMode === "reference";
-  if (item.studyMode !== "active") return false;
-
-  const inStage1 = matchesStage1Content(item, layers);
-  const inStage2 = !inStage1 && matchesStage2Content(item, layers);
-
-  if (stage === "1") {
-    return inStage1;
-  }
-
-  if (stage === "2") {
-    return inStage2;
-  }
-
-  if (stage === "3") {
-    // Stage 3 is the final active stage, so it owns every active entry not
-    // already introduced by stages 1 or 2 (including compacted family heads).
-    return !inStage1 && !inStage2;
-  }
-
-  return false;
+  return getReadingGPathStage(item).stage === String(stageValue || "");
 }
 
 /**

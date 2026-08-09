@@ -6,12 +6,14 @@
   <meta name="theme-color" content="#f4f6f5" />
   <title>阅读生词本 · IELTS Vocab 静态版</title>
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
-  <link rel="stylesheet" href="./assets/reading-words.css?v=20260805_master_g_audit_sync_v20" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
+  <link rel="stylesheet" href="./assets/reading-words.css?v=20260809_reading_keyboard_v49" />
+  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
 </head>
-<body>
+<body class="static-unified-reading-page" data-static-page="reading-words">
   <header class="reading-header">
     <a class="brand" href="./index.html"><i aria-hidden="true"></i>IELTS VOCAB</a>
-    <nav aria-label="静态学习导航">
+    <nav data-static-primary-nav aria-label="全站学习入口">
       <a href="./index.html">刷词</a>
       <a href="./meaning.html">选义</a>
       <a href="./spelling.html">拼写</a>
@@ -19,7 +21,9 @@
     </nav>
   </header>
 
-  <main class="reading-app">
+  <aside class="static-shell-sidebar" data-static-sidebar aria-label="全站学习导航"></aside>
+
+  <main class="reading-app static-unified-content">
     <section class="reading-title">
       <div>
         <p>个人独立词库 · 仅存本机</p>
@@ -42,6 +46,25 @@
       <button id="exportBtn" type="button">跨设备导出</button>
       <label class="file-button">跨设备导入<input id="importInput" type="file" accept=".json,.csv,.tsv,.txt,application/json" /></label>
       <button id="aiInfoBtn" class="primary" type="button">AI 工具</button>
+    </section>
+
+    <section class="reading-progress" aria-label="阅读生词学习进度">
+      <div class="reading-progress-label"><span>学习进度</span><strong id="progressScope">全部阅读生词</strong></div>
+      <div class="reading-progress-track">
+        <span id="progressFill" aria-hidden="true"></span>
+        <input id="progressSeek" type="range" min="1" max="1" value="1" step="1" aria-label="拖动跳转到阅读生词位置" />
+      </div>
+      <div class="reading-progress-count">
+        <button id="progressJumpToggle" type="button" aria-label="精确跳转阅读生词位置" aria-expanded="false"><strong id="progressPosition">0 / 0</strong></button>
+        <output id="progressPreview">0%</output>
+      </div>
+      <form id="progressJumpForm" class="reading-progress-jump hidden">
+        <label for="progressJumpInput">跳转到第</label>
+        <input id="progressJumpInput" type="number" min="1" max="1" value="1" step="1" inputmode="numeric" />
+        <span id="progressJumpTotal">/ 0</span>
+        <button type="submit">跳转</button>
+        <button id="progressJumpCancel" type="button" aria-label="取消位置跳转">×</button>
+      </form>
     </section>
 
     <section id="singlePanel" class="editor hidden" aria-label="单个添加单词">
@@ -72,7 +95,7 @@
     </section>
 
     <section class="reading-workspace">
-      <article id="studyCard" class="study-card" aria-label="阅读生词详情">
+      <article id="studyCard" class="study-card" aria-label="阅读生词详情" data-static-swipe-card>
         <div id="emptyState" class="empty-state">
           <strong>还没有阅读生词</strong>
           <span>可单个添加，也可直接粘贴表格批量导入。</span>
@@ -86,7 +109,7 @@
             <button id="exampleSoundBtn" type="button" aria-label="播放例句，快捷键空格" title="播放例句（空格）">🔊</button>
             <div><p id="exampleText"></p><span id="exampleCnText"></span></div>
           </div>
-          <button id="wordSoundBtn" class="word" type="button" title="播放单词发音（Tab）"></button>
+          <button id="wordSoundBtn" class="word" type="button" title="播放单词发音（Tab）" data-static-swipe-handle></button>
           <div class="word-meta study-answer-content"><span id="phoneticText"></span><b id="posText"></b></div>
           <h2 id="meaningText" class="study-answer-content"></h2>
           <div class="detail-grid study-answer-content">
@@ -94,7 +117,7 @@
             <section><h3>词族</h3><div id="familyList"></div></section>
             <section><h3>同义替换</h3><div id="synonymList"></div></section>
           </div>
-          <footer class="study-actions" aria-label="学习操作">
+          <footer class="study-actions" aria-label="学习操作" data-static-swipe-ignore>
             <button id="prevBtn" type="button" title="上一个（快捷键：←）">← 上一个</button>
             <button id="knownBtn" type="button" title="快捷键：1">认识</button>
             <button id="blurryBtn" type="button" title="快捷键：2">模糊</button>
@@ -112,7 +135,8 @@
     </section>
   </main>
   <div id="toast" class="toast" role="status"></div>
-  <script src="./assets/study-meaning-visibility.js?v=20260805_master_g_audit_sync_v20"></script>
-  <script src="./assets/reading-words.js?v=20260805_master_g_audit_sync_v20"></script>
+  <script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/study-meaning-visibility.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/reading-words.js?v=20260809_reading_keyboard_v49"></script>
 </body>
 </html>

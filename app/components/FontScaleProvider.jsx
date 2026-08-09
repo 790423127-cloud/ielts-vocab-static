@@ -21,11 +21,17 @@ export default function FontScaleProvider() {
       if (typeof scale === "number") applyFontScale(scale);
     }
 
+    function handleResize() {
+      applyFontScale(readStoredFontScale());
+    }
+
     window.addEventListener("storage", handleStorage);
     window.addEventListener(FONT_SCALE_CHANGE_EVENT, handleCustom);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => {
       window.removeEventListener("storage", handleStorage);
       window.removeEventListener(FONT_SCALE_CHANGE_EVENT, handleCustom);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 

@@ -28,14 +28,14 @@ for (const viewport of laptopViewports) {
         return rect ? { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left } : null;
       };
       const app = document.querySelector(".app");
-      const controls = document.querySelector("#readingControls");
+      const controls = document.querySelector("#readingTopbar");
 
       return {
         viewportHeight: window.innerHeight,
         word: box("#word"),
         dock: box(".bottom"),
-        controlsHead: box(".reading-controls-head"),
-        controlsCollapsed: controls?.classList.contains("is-collapsed"),
+        toolsToggle: box("#topToolsToggle"),
+        controlsCollapsed: controls?.classList.contains("is-tools-collapsed"),
         appOverflow: app ? getComputedStyle(app).overflow : null
       };
     });
@@ -49,7 +49,8 @@ for (const viewport of laptopViewports) {
 
     if (viewport.height <= 900) {
       expect(layout.controlsCollapsed).toBe(true);
-      expect(layout.controlsHead.bottom - layout.controlsHead.top).toBeGreaterThan(0);
+      expect(layout.toolsToggle).not.toBeNull();
+      expect(layout.toolsToggle.bottom - layout.toolsToggle.top).toBeGreaterThan(0);
     }
   });
 }

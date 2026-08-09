@@ -1,10 +1,12 @@
 import {
   DATASET_VERSION,
   READING_G_DATA_URL,
+  READING_G_QUESTION_EVIDENCE_URL,
   READING_G_VOCAB_CACHE_KEY,
   READING_G_PARAPHRASES_URL
 } from "./keys.mjs";
 import { normalizeReadingGKey } from "./normalize.mjs";
+import { normalizeReadingGQuestionEvidence } from "./question-evidence.mjs";
 import { displayCategoryName } from "./stages.mjs";
 import {
   cleanExampleCnField,
@@ -74,9 +76,12 @@ export function normalizeReadingGItem(entry, index = 0) {
     forms: Array.isArray(entry.forms) ? entry.forms : [],
     wordFamily: Array.isArray(entry.wordFamily) ? entry.wordFamily : [],
     synonyms: Array.isArray(entry.synonyms) ? entry.synonyms : [],
+    synonymDetails: Array.isArray(entry.synonymDetails) ? entry.synonymDetails : [],
     formsReviewed: entry.formsReviewed === true,
     wordFamilyReviewed: entry.wordFamilyReviewed === true,
     synonymsReviewed: entry.synonymsReviewed === true,
+    synonymsReviewSource: String(entry.synonymsReviewSource || "").trim(),
+    synonymsReviewedAt: String(entry.synonymsReviewedAt || "").trim(),
     mergedAliases: Array.isArray(entry.mergedAliases) ? entry.mergedAliases : [],
     mergedEntries: Array.isArray(entry.mergedEntries) ? entry.mergedEntries : [],
     ieltsUse: Array.isArray(entry.ieltsUse)
@@ -202,6 +207,27 @@ export async function loadReadingGParaphrases(fetchImpl = fetch) {
         policy: data?.policy || {},
         groups
       };
+    },
+    { useMemory }
+  );
+}
+
+export async function loadReadingGQuestionEvidence(fetchImpl = fetch) {
+  const useMemory = fetchImpl === fetch;
+  return loadSessionValue(
+    "reading-g-question-evidence:normalized",
+    async () => {
+      let data;
+      if (useMemory) {
+        data = await loadSessionJson(READING_G_QUESTION_EVIDENCE_URL, fetchImpl, { cache: "force-cache" });
+      } else {
+        const response = await fetchImpl(READING_G_QUESTION_EVIDENCE_URL, { cache: "force-cache" });
+        if (!response.ok) {
+          throw new Error(`G类阅读真题证据加载失败：HTTP ${response.status}`);
+        }
+        data = await response.json();
+      }
+      return normalizeReadingGQuestionEvidence(data);
     },
     { useMemory }
   );

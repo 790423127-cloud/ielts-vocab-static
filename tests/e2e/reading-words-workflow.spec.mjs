@@ -1,5 +1,17 @@
 import { expect, test } from "@playwright/test";
 
+async function stubStaticReadingPublish(page) {
+  await page.route("**/api/reading-words/publish-static", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ ok: true, wordCount: 0 })
+  }));
+}
+
+test.beforeEach(async ({ page }) => {
+  await stubStaticReadingPublish(page);
+});
+
 async function installReadingShortcutFixture(page) {
   await page.addInitScript(() => {
     const now = new Date().toISOString();
@@ -186,6 +198,7 @@ test("reading words reuse main data, count repeated imports, and migrate to anot
   expect(transferPath).toBeTruthy();
   const secondDevice = await browser.newContext();
   const secondPage = await secondDevice.newPage();
+  await stubStaticReadingPublish(secondPage);
   await secondPage.route("**/api/export-cache", (route) => route.fulfill({
     status: 200,
     contentType: "application/json",
@@ -218,7 +231,10 @@ test("reading words share flashcard audio and status keyboard shortcuts in Next 
     await expect(page.getByText("keyboardreadingterm", { exact: true }).first()).toBeVisible({
       timeout: 45_000
     });
-    await page.evaluate(() => document.activeElement?.blur());
+    // Reproduce normal study use: a toolbar selector or progress slider often
+    // retains focus. Tab/Space must still play audio instead of being taken
+    // over by that control.
+    await page.locator('select, input[type="range"]').first().focus();
 
     await page.keyboard.press("Tab");
     await page.keyboard.press("Space");
@@ -228,7 +244,11 @@ test("reading words share flashcard audio and status keyboard shortcuts in Next 
     ]);
 
     await page.keyboard.press("Digit3");
-    await expect(page.getByRole("button", { name: "不熟" })).toHaveClass(/active|is-selected/);
+    await expect.poll(() => page.evaluate(() => {
+      const payload = JSON.parse(localStorage.getItem("ielts-personal-reading-words-v1") || "null");
+      const words = Array.isArray(payload) ? payload : payload?.words || [];
+      return words.find((word) => word?.word === "keyboardreadingterm")?.status || "";
+    })).toBe("不熟");
   }
 });
 

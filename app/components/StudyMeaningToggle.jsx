@@ -13,7 +13,7 @@ export default function StudyMeaningToggle({
     <button
       type="button"
       className={className}
-      aria-pressed={hidden}
+      data-state={hidden ? "hidden" : "visible"}
       onClick={toggle}
       title={hidden ? "显示当前学习内容的释义和提示" : "只看单词，隐藏释义和提示"}
       data-testid="study-meaning-toggle"

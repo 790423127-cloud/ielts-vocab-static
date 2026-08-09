@@ -2,12 +2,13 @@
 
 import { Volume2 } from "lucide-react";
 import { getPosDisplay } from "../lib/vocab/page-word-helpers.mjs";
-import { normalizeOtherMeanings } from "../lib/vocab/admin-ai-content-profile.mjs";
 import {
   formatHeadwordForDisplay,
   formatHeadwordForSpeech
 } from "../lib/vocab/headword-format.mjs";
 import { getMeaningDisplay } from "../lib/vocab/meaning-display.mjs";
+import { getStudyEntryDisplay } from "../lib/vocab/study-entry-display.mjs";
+import InlineStudyMeaning from "./InlineStudyMeaning.jsx";
 
 function highlightTargetWords(sentence, words) {
   if (!sentence) return sentence;
@@ -37,15 +38,17 @@ export default function WordStudyContent({
   speakExample,
   speakWord
 }) {
+  const display = getStudyEntryDisplay(item);
   const highlightedWords = [item.word, ...displayForms.map((form) => form.word)];
   const displayHeadword = formatHeadwordForDisplay(item.word) || "—";
   const spokenHeadword = formatHeadwordForSpeech(item.word) || "当前单词";
   const headwordClassName = [
     "word",
+    displayHeadword.length > 9 ? "word--wide" : "",
     displayHeadword.length > 18 ? "word--long" : "",
     displayHeadword.includes("/") ? "word--alternatives" : ""
   ].filter(Boolean).join(" ");
-  const otherMeanings = normalizeOtherMeanings(item.otherMeanings, item.meaning);
+  const otherMeanings = display.supplementalSenses;
   const mainMeaningDetail = getMeaningDisplay(item).detail;
 
   return (
@@ -73,9 +76,9 @@ export default function WordStudyContent({
           }}
         >
           <div className="example">
-            {highlightTargetWords(fallback(item.example, "等待补充雅思例句"), highlightedWords)}
+            {highlightTargetWords(fallback(display.example, "等待补充雅思例句"), highlightedWords)}
           </div>
-          <div className="example-cn">{fallback(item.exampleCn, "等待补充例句中文翻译")}</div>
+          <div className="example-cn">{fallback(display.exampleCn, "等待补充例句中文翻译")}</div>
         </div>
       </section>
 
@@ -90,7 +93,7 @@ export default function WordStudyContent({
           <span className={headwordClassName}><HeadwordText value={displayHeadword} /></span>
         </button>
         <div className="word-sub study-answer-content">
-          <span className="phonetic">{fallback(item.phonetic || audioInfo.phonetic, "等待音标")}</span>
+          <span className="phonetic">{fallback(display.phonetic || audioInfo.phonetic, "等待音标")}</span>
           <button
             className="word-pronunciation-button"
             type="button"
@@ -100,39 +103,23 @@ export default function WordStudyContent({
           >
             <Volume2 aria-hidden="true" />
           </button>
-          <span className="pos">{getPosDisplay(item.pos)}</span>
+          <span className="pos">{getPosDisplay(display.pos)}</span>
         </div>
       </section>
 
       <div className="meaning-block study-answer-content">
-        <div className="meaning-primary">{fallback(item.meaning, "等待补充中文主释义")}</div>
+        <InlineStudyMeaning
+          primaryMeaning={fallback(display.meaning, "等待补充中文主释义")}
+          primaryPos={display.pos}
+          supplementalSenses={otherMeanings}
+        />
+        {display.needsSenseSplit ? (
+          <div className="meaning-detail" role="status">
+            <strong>资料提示：</strong>该词含多个词性，现有释义尚未按词性拆分。
+          </div>
+        ) : null}
         {mainMeaningDetail ? (
           <div className="meaning-detail"><strong>主释义详解：</strong>{mainMeaningDetail}</div>
-        ) : null}
-        {otherMeanings.length ? (
-          <details className="meaning-other">
-            <summary>
-              <strong>其他释义 {otherMeanings.length}</strong>
-              <span>{otherMeanings.map((sense) => sense.meaningZh).join("；")}</span>
-            </summary>
-            <div className="meaning-other-list">
-              {otherMeanings.map((sense, senseIndex) => (
-                <article className="meaning-other-item" key={`${sense.meaningZh}-${senseIndex}`}>
-                  <div className="meaning-other-heading">
-                    {sense.pos ? <span className="meaning-other-pos">{getPosDisplay(sense.pos)}</span> : null}
-                    <strong>{sense.meaningZh}</strong>
-                  </div>
-                  {sense.definitionEn ? <p>{sense.definitionEn}</p> : null}
-                  {sense.example ? (
-                    <div className="meaning-other-example">
-                      <span>{sense.example}</span>
-                      {sense.exampleCn ? <span>{sense.exampleCn}</span> : null}
-                    </div>
-                  ) : null}
-                </article>
-              ))}
-            </div>
-          </details>
         ) : null}
       </div>
     </div>

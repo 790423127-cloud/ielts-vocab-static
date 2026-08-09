@@ -7,7 +7,7 @@
   <title>538考点 · IELTS Vocab</title>
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
   <link rel="icon" href="data:," />
-  <link rel="stylesheet" href="./assets/style.css?v=20260805_master_g_audit_sync_v20" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
   <style>
     :root{--s-green:#075f50;--s-deep:#123b33;--s-soft:#edf7f3;--s-line:#dce7e2;--s-muted:#687b74;--s-warn:#9a5a00}
     .hidden{display:none!important}
@@ -47,16 +47,17 @@
     @media(max-width:700px){.study538-related-grid{grid-template-columns:1fr}}
     @media(max-width:560px){.study538-progress{grid-template-columns:1fr auto}.study538-progress-track{grid-column:1/-1;grid-row:2}.study538-word h1{font-size:clamp(52px,17vw,76px)}.study538-bottom{grid-template-columns:auto 1fr auto}.study538-status{justify-content:center}.study538-status .top-btn{padding-inline:10px}}
   </style>
+  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
 </head>
-<body>
+<body data-static-page="ielts-538">
   <header class="static-brand-bar">
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>538考点</strong><span>376词 · 静态版</span></div>
-    <nav class="static-brand-nav" aria-label="主要学习模式">
+    <nav class="static-brand-nav" data-static-primary-nav aria-label="主要学习模式">
       <a href="./index.html">主词库</a><a href="./reading-g.html">G类阅读</a><a href="./spelling.html">拼写</a>
     </nav>
   </header>
-  <aside class="static-shell-sidebar" aria-label="学习导航">
+  <aside class="static-shell-sidebar" data-static-sidebar aria-label="全站学习导航">
     <nav><a href="./index.html">刷单词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav>
     <div class="static-shell-divider"></div>
     <span class="static-shell-label">专项学习</span>
@@ -85,7 +86,7 @@
       <span id="progressCount">0 / 0</span>
     </section>
 
-    <article id="studyCard" class="study538-card">
+    <article id="studyCard" class="study538-card" data-static-swipe-card>
       <div class="study538-meta"><span id="positionMeta">正在读取词库</span><button id="favoriteBtn" class="study538-sound" type="button" aria-label="收藏">☆</button></div>
       <section class="study538-example study-answer-content">
         <div class="study538-example-head"><button id="exampleSoundBtn" class="study538-sound" type="button">🔊</button><span>仿雅思 G 类文章句</span></div>
@@ -108,11 +109,14 @@
 
   <footer class="study538-bottom">
     <button id="prevBtn" class="top-btn" type="button">上一个</button>
-    <div class="study538-status"><button id="knownBtn" class="top-btn" type="button">熟悉</button><button id="unknownBtn" class="top-btn" type="button">不熟</button></div>
+    <div class="study538-status"><button id="knownBtn" class="top-btn" type="button" title="快捷键：1">认识</button><button id="unknownBtn" class="top-btn" type="button" title="快捷键：3">不熟</button></div>
     <button id="nextBtn" class="top-btn" type="button">下一个</button>
   </footer>
   <div id="toast" class="study538-toast" role="status"></div>
-  <script src="./assets/study-meaning-visibility.js?v=20260805_master_g_audit_sync_v20"></script>
-  <script src="./assets/ielts-538.js?v=20260805_master_g_audit_sync_v20"></script>
+<script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./sync-config.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/static-cloud-sync.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/study-meaning-visibility.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/ielts-538.js?v=20260809_reading_keyboard_v49"></script>
 </body>
 </html>

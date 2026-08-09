@@ -1,10 +1,10 @@
 {
   "version": "meaning-6000-v6-user-curated-removal",
-  "generatedAt": "2026-08-05T12:00:00.000Z",
+  "generatedAt": "2026-08-06T02:30:00.000Z",
   "count": 6000,
-  "sourceLexiconVersion": "v23-13374-audit-sync-20260805",
+  "sourceLexiconVersion": "v24-13374-content-unification-20260806",
   "sourceLexiconCount": 13374,
-  "sourceLexiconSha256": "92ac972b826962681180011c09bf89b069e4554ac12943bcc05aaa663eeea3c5",
+  "sourceLexiconSha256": "70cd1cb71f01b33f93de8e917e2c2f547ecd007448d5bb882ba54088d19e1365",
   "selectionPolicy": "ielts-gt-quality-frequency-v4",
   "items": [
     {
@@ -162041,9 +162041,9 @@
     {
       "wordId": "word_ab706c084103",
       "word": "publishing",
-      "quizMeaningZh": "出版",
-      "meaningZh": "出版",
-      "meaningDetailedZh": "出版；发行",
+      "quizMeaningZh": "出版；出版业",
+      "meaningZh": "出版；出版业",
+      "meaningDetailedZh": "出版；出版业",
       "meaningSource": "curated-quiz-sense",
       "posFamily": "noun",
       "difficulty": "中级核心",

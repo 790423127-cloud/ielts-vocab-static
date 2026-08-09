@@ -6,6 +6,8 @@ import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 import { getReadingGContentIssues } from "../content-completeness.mjs";
 import { normalizeReadingGItem } from "../load-reading-g.mjs";
+import { itemMatchesPathStage } from "../stages.mjs";
+import { getReadingGSynonymStatus } from "../synonym-relations.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 
@@ -13,7 +15,7 @@ function loadStaticQualityHelpers() {
   let source = fs.readFileSync(path.join(root, "public/assets/reading-g.js"), "utf8");
   source = source.replace(
     /\n\s*boot\(\);\s*\n\}\)\(\);\s*$/,
-    "\n  globalThis.__readingGQuality = { normalizeEntry: normalizeEntry, getStaticContentIssues: getStaticContentIssues };\n})();\n"
+    "\n  globalThis.__readingGQuality = { normalizeEntry: normalizeEntry, getStaticContentIssues: getStaticContentIssues, matchStage: matchStage, getStaticSynonymStatus: getStaticSynonymStatus, isStaticSynonymSupportedEntry: isStaticSynonymSupportedEntry };\n})();\n"
   );
   assert.match(source, /__readingGQuality/);
 
@@ -62,4 +64,49 @@ test("dynamic and static G-reading completion queues classify every word identic
   }
 
   assert.deepEqual(staticItems, dynamic);
+});
+
+test("dynamic and static G-reading stages assign every entry identically", () => {
+  const vocab = JSON.parse(
+    fs.readFileSync(path.join(root, "public/data/reading-g-vocab.json"), "utf8")
+  );
+  const staticHelpers = loadStaticQualityHelpers();
+
+  for (let index = 0; index < vocab.items.length; index += 1) {
+    const dynamicItem = normalizeReadingGItem(vocab.items[index], index);
+    const staticItem = staticHelpers.normalizeEntry(vocab.items[index], index);
+    const dynamicStages = ["1", "2", "3", "4"].filter((stage) =>
+      itemMatchesPathStage(dynamicItem, stage)
+    );
+    const staticStages = ["1", "2", "3", "4"].filter((stage) =>
+      staticHelpers.matchStage(staticItem, stage)
+    );
+
+    assert.deepEqual(
+      staticStages,
+      dynamicStages,
+      `stage mismatch for ${dynamicItem.word} (${dynamicItem.id})`
+    );
+  }
+});
+
+test("dynamic and static G-reading synonym statuses agree for every entry", () => {
+  const vocab = JSON.parse(
+    fs.readFileSync(path.join(root, "public/data/reading-g-vocab.json"), "utf8")
+  );
+  const staticHelpers = loadStaticQualityHelpers();
+  for (let index = 0; index < vocab.items.length; index += 1) {
+    const dynamicItem = normalizeReadingGItem(vocab.items[index], index);
+    const staticItem = staticHelpers.normalizeEntry(vocab.items[index], index);
+    assert.deepEqual(
+      JSON.parse(JSON.stringify(staticHelpers.getStaticSynonymStatus(staticItem))),
+      getReadingGSynonymStatus(dynamicItem),
+      `synonym status mismatch for ${dynamicItem.word} (${dynamicItem.id})`
+    );
+    assert.equal(
+      staticHelpers.isStaticSynonymSupportedEntry(staticItem),
+      ["word", "phrase"].includes(dynamicItem.entryType),
+      `synonym queue support mismatch for ${dynamicItem.word} (${dynamicItem.id})`
+    );
+  }
 });

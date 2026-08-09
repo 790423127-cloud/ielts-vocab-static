@@ -3,6 +3,13 @@ import {
   normalizeAiGeneratedEntry
 } from "../vocab/admin-ai-content-profile.mjs";
 import { normalizeReadingGKey } from "./normalize.mjs";
+import {
+  getReadingGCompleteness,
+  getReadingGContentIssues,
+  READING_G_CONTENT_ISSUE,
+  isReadingGContentIncomplete,
+  isReadingGPlaceholderContent
+} from "./content-completeness.mjs";
 
 export const READING_G_AI_COMPLETION_SOURCE = "public/data/reading-g-ai-completions.json";
 export const QUESTION_BANK_AI_LAYER_ID = "questionBankAiCompleted";
@@ -24,6 +31,19 @@ function unique(values) {
   return [...new Set(values.map(text).filter(Boolean))];
 }
 
+function mergeSenseRows(existingValues, generatedValues) {
+  const rows = new Map();
+  for (const value of [...list(existingValues), ...list(generatedValues)]) {
+    const key = `${text(value?.pos).toLowerCase()}::${text(value?.meaningZh || value?.meaning).toLowerCase()}`;
+    if (key === "::") continue;
+    const previous = rows.get(key);
+    rows.set(key, previous && typeof previous === "object" && typeof value === "object"
+      ? { ...previous, ...value }
+      : value);
+  }
+  return [...rows.values()];
+}
+
 export function isReadingGPendingAiEntry(entry) {
   return Boolean(
     entry &&
@@ -32,6 +52,22 @@ export function isReadingGPendingAiEntry(entry) {
     entry.studyMode === "reference" &&
     list(entry.qualityFlags).includes(PENDING_FLAG)
   );
+}
+
+export function isReadingGAiCompletionCandidate(entry) {
+  if (!entry || (entry.entryType || "word") !== "word") return false;
+  const fields = getReadingGCompleteness(entry).fields;
+  const issues = getReadingGContentIssues(entry);
+  return !fields.meaning
+    || !fields.phonetic
+    || !fields.example
+    || !fields.wordFamily
+    || issues.includes(READING_G_CONTENT_ISSUE.POS);
+}
+
+function keepExistingTeachingValue(existingValue, generatedValue) {
+  const existing = text(existingValue);
+  return existing && !isReadingGPlaceholderContent(existing) ? existing : text(generatedValue);
 }
 
 function buildSenses(entryId, normalized) {
@@ -71,10 +107,11 @@ function buildSenses(entryId, normalized) {
 }
 
 export function buildReadingGAiCompletedEntry(pendingEntry, profile, options = {}) {
-  if (!isReadingGPendingAiEntry(pendingEntry)) {
-    throw new Error("只允许补全“全题库待补资料”中的单词");
+  if (!isReadingGAiCompletionCandidate(pendingEntry)) {
+    throw new Error("只允许补全音标、释义或例句缺失的G类单词");
   }
 
+  const wasExplicitPending = isReadingGPendingAiEntry(pendingEntry);
   const word = text(pendingEntry.word);
   const normalized = normalizeAiGeneratedEntry(profile, word);
   if (normalizeReadingGKey(normalized.word) !== normalizeReadingGKey(word)) {
@@ -86,51 +123,64 @@ export function buildReadingGAiCompletedEntry(pendingEntry, profile, options = {
 
   const aiSource = options.aiSource === "ai-cache" ? "ai-cache" : "deepseek";
   const generatedAt = text(options.generatedAt || normalized.generatedAt || new Date().toISOString());
+  const generatedSenses = buildSenses(pendingEntry.id, normalized);
+  const primaryMeaningZh = keepExistingTeachingValue(
+    pendingEntry.primaryMeaningZh || pendingEntry.meaningZh || pendingEntry.meaning,
+    normalized.meaning
+  );
+  const exampleCn = keepExistingTeachingValue(
+    pendingEntry.exampleCn || pendingEntry.exampleZh,
+    normalized.exampleCn
+  );
   const qualityFlags = unique([
     ...list(pendingEntry.qualityFlags).filter((flag) => flag !== PENDING_FLAG && flag !== PLACEHOLDER_FLAG),
-    "master_lexicon_absent",
-    "reading_g_ai_completed"
+    ...(wasExplicitPending ? ["master_lexicon_absent"] : []),
+    "reading_g_ai_completed",
+    ...(wasExplicitPending ? [] : ["reading_g_ai_enhanced"])
   ]);
 
-  return {
+  const completed = {
     ...pendingEntry,
     word,
     normalizedKey: normalizeReadingGKey(word),
-    phonetic: normalized.phonetic,
-    primaryPos: normalized.pos,
-    primaryMeaningZh: normalized.meaning,
-    meaning: normalized.meaning,
-    meaningZh: normalized.meaning,
-    definition: normalized.definition,
-    example: normalized.example,
-    exampleCn: normalized.exampleCn,
-    senses: buildSenses(pendingEntry.id, normalized),
-    collocations: normalized.collocations,
-    phraseCollocations: normalized.phraseCollocations,
-    forms: normalized.forms,
-    wordFamily: normalized.wordFamily,
-    topics: unique([...list(normalized.topics), "G类阅读", "全题库补充3109", "AI已补全"]),
-    ieltsUse: unique([...list(normalized.ieltsUse), "Reading"]),
-    difficulty: normalized.difficulty,
-    category: "IELTS G类 · 全题库AI补全",
-    domain: "全题库阅读",
-    layers: [QUESTION_BANK_AI_LAYER_ID],
-    primaryLayer: QUESTION_BANK_AI_LAYER_ID,
-    layerRank: QUESTION_BANK_AI_LAYER_RANK,
-    studyMode: "active",
+    phonetic: keepExistingTeachingValue(pendingEntry.phonetic, normalized.phonetic),
+    primaryPos: keepExistingTeachingValue(pendingEntry.primaryPos || pendingEntry.pos, normalized.pos),
+    primaryMeaningZh,
+    meaning: keepExistingTeachingValue(pendingEntry.meaning, primaryMeaningZh),
+    meaningZh: keepExistingTeachingValue(pendingEntry.meaningZh, primaryMeaningZh),
+    definition: keepExistingTeachingValue(pendingEntry.definition, normalized.definition),
+    example: keepExistingTeachingValue(pendingEntry.example, normalized.example),
+    exampleCn,
+    exampleZh: keepExistingTeachingValue(pendingEntry.exampleZh, exampleCn),
+    senses: mergeSenseRows(pendingEntry.senses, generatedSenses),
+    wordFamily: list(pendingEntry.wordFamily).length
+      ? pendingEntry.wordFamily
+      : list(normalized.wordFamily),
+    wordFamilyReviewed: true,
+    difficulty: keepExistingTeachingValue(pendingEntry.difficulty, normalized.difficulty),
+    category: wasExplicitPending ? "IELTS G类 · 全题库AI补全" : pendingEntry.category,
+    domain: wasExplicitPending ? "全题库阅读" : pendingEntry.domain,
+    layers: wasExplicitPending ? [QUESTION_BANK_AI_LAYER_ID] : list(pendingEntry.layers),
+    primaryLayer: wasExplicitPending ? QUESTION_BANK_AI_LAYER_ID : pendingEntry.primaryLayer,
+    layerRank: wasExplicitPending ? QUESTION_BANK_AI_LAYER_RANK : pendingEntry.layerRank,
+    studyMode: wasExplicitPending ? "active" : pendingEntry.studyMode,
     sourceFiles: unique([
       ...list(pendingEntry.sourceFiles),
       READING_G_AI_COMPLETION_SOURCE
     ]),
     qualityFlags,
-    alternateMeanings: list(normalized.synonyms),
-    pos: normalized.pos,
-    meaningDetailZh: normalized.meaningDetailZh,
-    otherMeanings: normalized.otherMeanings,
-    phoneticSource: aiSource,
+    alternateMeanings: list(pendingEntry.alternateMeanings),
+    pos: keepExistingTeachingValue(pendingEntry.pos || pendingEntry.primaryPos, normalized.pos),
+    meaningDetailZh: keepExistingTeachingValue(pendingEntry.meaningDetailZh, normalized.meaningDetailZh),
+    otherMeanings: list(pendingEntry.otherMeanings).length ? pendingEntry.otherMeanings : normalized.otherMeanings,
+    phoneticSource: pendingEntry.phoneticSource || aiSource,
     aiGenerated: true,
     aiContentProfile: normalized.aiContentProfile,
     aiCompletionSource: aiSource,
     aiCompletedAt: generatedAt
   };
+  if (isReadingGContentIncomplete(completed)) {
+    throw new Error(`AI返回资料仍未通过G类完整性校验：${word}`);
+  }
+  return completed;
 }

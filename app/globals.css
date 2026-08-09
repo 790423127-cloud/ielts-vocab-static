@@ -13,6 +13,25 @@
   --meaning-weight: 850;
   --meaning-line-height: 1.45;
   --meaning-color: #1c3344;
+  /*
+   * 全系统「关系区」统一字号：变形 / 词族 / 同义替换 / 搭配 / 538 关联表达
+   * 必须写成 calc(clamp(...) * var(--font-scale))，与 .word / .meaning-primary 相同，
+   * 才能随顶栏「字号 A+/A-」同步放大。勿把 clamp 塞进自定义属性再相乘（部分环境下不随 scale 变化）。
+   */
+  --relation-en-size: clamp(13px, 1.15vw, 15px);
+  --relation-en-weight: 750;
+  --relation-en-line-height: 1.3;
+  --relation-en-color: #16362e;
+  --relation-zh-size: clamp(11px, 1vw, 13px);
+  --relation-zh-weight: 650;
+  --relation-zh-line-height: 1.4;
+  --relation-zh-color: #52645e;
+  --relation-title-size: clamp(12px, 1vw, 13px);
+  --relation-title-weight: 750;
+  /* 供任意选择器复用：已含 font-scale 乘法 */
+  --relation-en-font: calc(var(--relation-en-size) * var(--font-scale, 1));
+  --relation-zh-font: calc(var(--relation-zh-size) * var(--font-scale, 1));
+  --relation-title-font: calc(var(--relation-title-size) * var(--font-scale, 1));
   --bg: #f4f6f5;
   --text: #213a4d;
   --muted: #75827d;
@@ -36,7 +55,14 @@ html,
 body {
   margin: 0;
   min-height: 100vh;
+  min-width: 0;
   width: 100%;
+}
+
+html {
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -45,6 +71,7 @@ body {
     "Microsoft YaHei", Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
+  overflow-x: clip;
 }
 
 button,
@@ -185,7 +212,11 @@ button {
   top: 38px;
   width: 320px;
   max-height: min(70vh, 620px);
-  overflow: auto;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  white-space: normal;
   background: rgba(255, 253, 249, .98);
   border: 1px solid #eadfce;
   border-radius: 20px;
@@ -629,86 +660,47 @@ input[type="file"] {
   margin: 0 auto;
 }
 
+.meaning-inline-supplemental {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+.meaning-inline-sense,
+.meaning-inline-separator {
+  display: inline;
+}
+
+.meaning-inline-separator {
+  margin-right: 0.18em;
+  color: inherit;
+  font-weight: inherit;
+}
+
+.meaning-inline-pos {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.38em;
+  padding: 0.1em 0.42em;
+  border-radius: 0.32em;
+  background: #e8f3ef;
+  color: #176b59;
+  font-size: 0.68em;
+  font-weight: 750;
+  line-height: 1.35;
+  vertical-align: 0.14em;
+  white-space: nowrap;
+}
+
 .meaning-detail {
   margin: 8px auto 0;
   max-width: 760px;
   color: #526579;
   font-size: calc(15px * var(--font-scale));
   line-height: 1.55;
-}
-
-.meaning-other {
-  width: min(760px, 100%);
-  margin: 10px auto 0;
-  border: 1px solid #d9e4df;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.76);
-  color: #33475b;
-  text-align: left;
-}
-
-.meaning-other > summary {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 9px 12px;
-  cursor: pointer;
-  list-style-position: inside;
-}
-
-.meaning-other > summary strong {
-  flex: none;
-  color: #176b59;
-}
-
-.meaning-other > summary span {
-  min-width: 0;
-  overflow: hidden;
-  color: #526579;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.meaning-other-list {
-  display: grid;
-  gap: 0;
-  border-top: 1px solid #e4ebe8;
-}
-
-.meaning-other-item {
-  padding: 10px 12px;
-}
-
-.meaning-other-item + .meaning-other-item {
-  border-top: 1px solid #e8eeeb;
-}
-
-.meaning-other-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.meaning-other-pos {
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: #e8f3ef;
-  color: #176b59;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.meaning-other-item p,
-.meaning-other-example {
-  margin: 5px 0 0;
-  font-size: calc(14px * var(--font-scale));
-  line-height: 1.5;
-}
-
-.meaning-other-example {
-  display: grid;
-  gap: 2px;
-  color: #5e6f80;
 }
 
 .basic-line {
@@ -2527,7 +2519,8 @@ body:has(.spelling-page-shell) .font-scale-dock {
 }
 
 .block-title {
-  font-size: calc(10.8px * var(--font-scale));
+  font-size: calc(clamp(12px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-title-weight);
   color: #8d98a3;
   text-align: center;
   margin-bottom: 8px;
@@ -2549,20 +2542,22 @@ body:has(.spelling-page-shell) .font-scale-dock {
   padding-bottom: 0;
 }
 
+/* 全系统统一：变形/词族/替换/搭配列表中的英文与中文 */
 .en {
-  font-size: calc(13.5px * var(--font-scale));
-  font-weight: 600;
-  color: #26384b;
-  line-height: 1.22;
+  font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
+  font-weight: var(--relation-en-weight);
+  color: var(--relation-en-color);
+  line-height: var(--relation-en-line-height);
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
 .zh {
   margin-top: 1px;
-  font-size: calc(11px * var(--font-scale));
-  color: #8b949e;
-  line-height: 1.28;
+  font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-zh-weight);
+  color: var(--relation-zh-color);
+  line-height: var(--relation-zh-line-height);
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -2775,11 +2770,17 @@ body:has(.spelling-page-shell) .font-scale-dock {
 }
 
 .footer-grid .en {
-  font-size: calc(13px * var(--font-scale));
+  font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
+  font-weight: var(--relation-en-weight);
+  line-height: var(--relation-en-line-height);
+  color: var(--relation-en-color);
 }
 
 .footer-grid .zh {
-  font-size: calc(10.5px * var(--font-scale));
+  font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-zh-weight);
+  line-height: var(--relation-zh-line-height);
+  color: var(--relation-zh-color);
 }
 
 .actions {
@@ -2870,19 +2871,32 @@ body:has(.spelling-page-shell) .font-scale-dock {
   }
 
   .page--word-flash .example-box {
-    width: min(820px, 100%);
+    width: 100%;
+    max-width: none;
   }
 
-  .page--word-flash .footer-grid .block-title {
-    font-size: calc(12px * var(--font-scale));
+  .page--word-flash .footer-grid .block-title,
+  .page--word-flash .g-reading-relation-grid .block-title {
+    font-size: calc(clamp(12px, 1vw, 13px) * var(--font-scale, 1));
   }
 
+  /* 响应式也不压小关系区字号，全系统统一用变量 */
   .page--word-flash .footer-grid .en,
+  .page--word-flash .g-reading-relation-grid .en,
+  .page--word-flash .ielts-538-related-choice .en {
+    font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
+  }
+
   .page--word-flash .status {
     font-size: calc(14px * var(--font-scale));
   }
 
   .page--word-flash .footer-grid .zh,
+  .page--word-flash .g-reading-relation-grid .zh,
+  .page--word-flash .ielts-538-related-choice .zh {
+    font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+  }
+
   .page--word-flash .word-shortcut-line {
     font-size: calc(12px * var(--font-scale));
   }
@@ -4777,7 +4791,8 @@ body:has(.spelling-page-shell) .font-scale-dock {
 }
 
 .page--word-flash .example-box {
-  width: min(940px, 100%);
+  width: 100%;
+  max-width: none;
   padding: 0;
   border: 0;
   background: transparent;
@@ -4854,15 +4869,140 @@ body:has(.spelling-page-shell) .font-scale-dock {
 }
 
 .page--word-flash .footer-grid .block-title {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: var(--light);
-  font-size: calc(10px * var(--font-scale));
-  font-weight: 750;
+  font-size: calc(clamp(12px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-title-weight);
 }
 
 .page--word-flash .footer-grid .item {
-  padding: 6px 0;
+  padding: 10px 0;
   border-top: 1px solid #edf0ee;
+}
+
+/* 变形 / 词族 / 同义替换 / 搭配：全系统统一变量 */
+.page--word-flash .footer-grid .en {
+  font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
+  font-weight: var(--relation-en-weight);
+  line-height: var(--relation-en-line-height);
+  color: var(--relation-en-color);
+}
+
+.page--word-flash .footer-grid .zh {
+  font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-zh-weight);
+  line-height: var(--relation-zh-line-height);
+  color: var(--relation-zh-color);
+}
+
+.page--word-flash .footer-grid.g-reading-relation-grid {
+  width: min(1440px, 100%);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}
+
+.page--word-flash .g-reading-relation-grid .block {
+  height: auto;
+}
+
+.page--word-flash .g-reading-relation-grid .block-title {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #edf0ee;
+  color: var(--study-green);
+  text-align: left;
+  font-size: calc(clamp(12px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-title-weight);
+}
+
+.page--word-flash .g-reading-relation-grid .list {
+  gap: 0;
+  max-height: none;
+  overflow: visible;
+}
+
+.page--word-flash .g-reading-relation-grid .item,
+.page--word-flash .g-reading-relation-grid .item.with-sound {
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 10px;
+  min-height: 48px;
+  height: auto;
+  padding: 10px 0;
+  overflow: visible;
+  align-items: center;
+}
+
+.page--word-flash .g-reading-relation-grid .mini-sound {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  font-size: 16px;
+}
+
+.page--word-flash .g-reading-relation-grid .pair-text {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+  height: auto;
+  overflow: visible;
+}
+
+.page--word-flash .g-reading-relation-grid .en {
+  flex: 0 0 auto;
+  font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
+  font-weight: var(--relation-en-weight);
+  line-height: var(--relation-en-line-height);
+  color: var(--relation-en-color);
+}
+
+.page--word-flash .g-reading-relation-grid .zh {
+  flex: 1 1 160px;
+  min-width: 0;
+  margin-top: 0;
+  overflow: visible;
+  color: var(--relation-zh-color);
+  font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-zh-weight);
+  line-height: var(--relation-zh-line-height);
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+@media (max-width: 1100px) {
+  .page--word-flash .footer-grid.g-reading-relation-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .page--word-flash .footer-grid.g-reading-relation-grid {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .page--word-flash .g-reading-relation-grid .block {
+    height: fit-content;
+    align-self: start;
+  }
+
+  .page--word-flash .g-reading-relation-grid .list {
+    grid-auto-rows: max-content;
+    align-content: start;
+  }
+
+  .page--word-flash .g-reading-relation-grid .pair-text {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .page--word-flash .g-reading-relation-grid .zh {
+    flex: 0 1 auto;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
 }
 
 .page--word-flash .footer-grid.ielts-538-related-grid {
@@ -4958,17 +5098,18 @@ body:has(.spelling-page-shell) .font-scale-dock {
   align-items: center;
   gap: 6px;
   min-width: 0;
-  color: var(--ink);
-  font-size: clamp(22px, 1.5vw, 30px);
-  font-weight: 800;
-  line-height: 1.2;
+  color: var(--relation-en-color);
+  font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
+  font-weight: var(--relation-en-weight);
+  line-height: var(--relation-en-line-height);
   overflow-wrap: anywhere;
 }
 
 .page--word-flash .ielts-538-related-choice .zh {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.4;
+  color: var(--relation-zh-color);
+  font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+  font-weight: var(--relation-zh-weight);
+  line-height: var(--relation-zh-line-height);
 }
 
 .ielts-538-related-definition,
@@ -5692,9 +5833,11 @@ html[data-nav-pending="1"] {
 }
 
 .page--word-flash .example-box {
-  width: min(820px, 100%);
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: clamp(12px, 2vh, 24px) 0 18px;
+  padding: clamp(10px, 1.6vh, 20px) 44px 16px;
+  box-sizing: border-box;
 }
 
 .page--word-flash .hero-sound-btn {
@@ -5709,14 +5852,16 @@ html[data-nav-pending="1"] {
 .page--word-flash .example {
   color: #263b48;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: calc(clamp(24px, 2.3vw, 34px) * var(--font-scale));
+  font-size: calc(clamp(20px, 1.75vw, 28px) * var(--font-scale));
   font-weight: 500;
+  line-height: 1.42;
 }
 
 .page--word-flash .example-cn {
-  margin-top: 7px;
+  margin-top: 6px;
   color: var(--muted);
-  font-size: calc(clamp(15px, 1.3vw, 18px) * var(--font-scale));
+  font-size: calc(clamp(13px, 1vw, 16px) * var(--font-scale));
+  line-height: 1.45;
 }
 
 .page--word-flash .example-box::after {
@@ -5818,9 +5963,26 @@ html[data-nav-pending="1"] {
 
 .word-dictionary-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 1px;
   background: var(--line);
+}
+
+/* 阅读生词：与主词库同一行组件，三栏 变形/词族/同义 */
+.word-dictionary-grid--reading {
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}
+
+@media (max-width: 1100px) {
+  .word-dictionary-grid--reading {
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .word-dictionary-grid--reading {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .word-dictionary-module {
@@ -6389,11 +6551,12 @@ html[data-nav-pending="1"] {
   }
 
   .page--word-flash .example-box {
-    width: min(1000px, 100%);
+    width: 100%;
+    max-width: none;
   }
 
   .page--word-flash .example {
-    font-size: calc(clamp(32px, 2vw, 42px) * var(--font-scale));
+    font-size: calc(clamp(24px, 1.8vw, 32px) * var(--font-scale));
   }
 
   .page--word-flash .example-cn {
@@ -6795,7 +6958,7 @@ html[data-nav-pending="1"] {
   }
 
   .page--word-flash .word-dictionary-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   }
 
   .page--word-flash .word-dictionary-module h3 {
@@ -6810,7 +6973,7 @@ html[data-nav-pending="1"] {
 
   .page--word-flash .word-dictionary-module .word-dictionary-row {
     min-height: 31px;
-    grid-template-columns: 64px minmax(76px, .8fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(108px, max-content) minmax(76px, .8fr) minmax(0, 1.2fr);
     gap: 6px;
   }
 
@@ -7429,6 +7592,12 @@ body > main {
   gap: 5px;
 }
 
+.page--word-flash .top-actions > *,
+.page--word-flash .top-pill {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .auto-scroll-control.is-hotkey-hit {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -7612,7 +7781,8 @@ body > main {
 
 .word-study-content {
   flex: 0 0 auto;
-  width: min(920px, 100%);
+  /* 给例句更宽行长；160% 字号时仍能每行多词，而不是挤在 720px 里三词就断 */
+  width: min(1100px, 100%);
   margin: clamp(8px, 1.8vh, 24px) auto 0;
 }
 
@@ -7734,13 +7904,16 @@ body > main {
 
 .page--word-flash .example-box {
   position: relative;
-  width: min(720px, 94%);
+  /* 占满 word-study-content，勿再锁死 720px（160% 时约三词就换行） */
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 6px 38px 14px;
+  padding: 8px 44px 16px;
+  box-sizing: border-box;
 }
 
 .page--word-flash .example-box::after {
-  width: min(570px, 88%);
+  width: min(720px, 92%);
   margin-top: 14px;
   background: var(--study-border);
 }
@@ -7759,12 +7932,21 @@ body > main {
   color: var(--study-green);
 }
 
+.page--word-flash .example-clickable {
+  /* 优先按空格断行，避免 anywhere 把英文句切得更碎 */
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: manual;
+  text-align: center;
+}
+
 .page--word-flash .example {
   color: var(--study-green-deep);
   font-family: Georgia, "Times New Roman", "Noto Serif", serif;
-  font-size: calc(clamp(20px, 2vw, 29px) * var(--font-scale));
+  /* 字号仍随 A+/A-；行宽已加大，160% 时每行可容纳更多词 */
+  font-size: calc(clamp(20px, 1.75vw, 28px) * var(--font-scale));
   font-weight: 500;
-  line-height: 1.35;
+  line-height: 1.42;
 }
 
 .page--word-flash .example strong {
@@ -7773,9 +7955,11 @@ body > main {
 }
 
 .page--word-flash .example-cn {
-  margin-top: 5px;
+  margin-top: 6px;
   color: var(--study-text);
-  font-size: calc(clamp(13px, 1vw, 15px) * var(--font-scale));
+  font-size: calc(clamp(13px, 1vw, 16px) * var(--font-scale));
+  line-height: 1.45;
+  text-align: center;
 }
 
 .page--word-flash .word-hero {
@@ -7793,6 +7977,14 @@ body > main {
   border: 0;
   background: transparent;
   cursor: pointer;
+  outline: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page--word-flash .word-clickable:focus-visible {
+  border-radius: 6px;
+  outline: 2px solid var(--study-green);
+  outline-offset: 6px;
 }
 
 .page--word-flash .word {
@@ -7937,14 +8129,14 @@ body > main {
 
 .word-dictionary-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 8px;
   background: transparent;
 }
 
 @media (min-width: 1600px) {
   .word-dictionary-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   }
 }
 
@@ -7978,7 +8170,7 @@ body > main {
 
 .word-dictionary-module .word-dictionary-row {
   min-height: 36px;
-  grid-template-columns: 78px minmax(100px, .82fr) minmax(0, 1.18fr);
+  grid-template-columns: minmax(108px, max-content) minmax(100px, .82fr) minmax(0, 1.18fr);
   gap: 10px;
   border-color: color-mix(in srgb, var(--study-border) 70%, transparent);
 }
@@ -7992,6 +8184,13 @@ body > main {
   line-height: 1.45;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.word-dictionary-row > span {
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .word-dictionary-row button {
@@ -8596,6 +8795,12 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
     font-size: calc(clamp(64px, 21vw, 86px) * var(--font-scale));
   }
 
+  .page--word-flash .word.word--wide:not(.word--long):not(.word--alternatives) {
+    font-size: calc(clamp(42px, 13vw, 56px) * var(--font-scale));
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
   .word-dictionary-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -8793,21 +8998,6 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
 }
 
 @media (min-width: 901px) {
-  .ielts-538-study .word-study-card {
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--study-green) 35%, transparent) transparent;
-  }
-
-  .ielts-538-study .word-study-card::-webkit-scrollbar {
-    width: 7px;
-    display: block;
-  }
-
-  .ielts-538-study .word-study-card::-webkit-scrollbar-thumb {
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--study-green) 35%, transparent);
-  }
-
   .ielts-538-study--dense .word-study-content {
     margin-top: 6px;
   }
@@ -8903,17 +9093,20 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
   }
 
   .ielts-538-study--dense .ielts-538-related-choice .en {
-    font-size: clamp(22px, 1.45vw, 28px);
+    font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
   }
 
   .ielts-538-study--dense .ielts-538-related-choice .zh {
     padding-right: 0;
   }
 
-  .ielts-538-study--dense .ielts-538-related-choice .zh,
+  .ielts-538-study--dense .ielts-538-related-choice .zh {
+    font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+  }
+
   .ielts-538-study--dense .ielts-538-related-definition,
   .ielts-538-study--dense .ielts-538-related-context {
-    font-size: 12px;
+    font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
   }
 
   .ielts-538-study--dense .ielts-538-related-heading {
@@ -9124,5 +9317,440 @@ html[data-study-theme="dark"] .page--word-flash .status.unknown {
 @media (max-width: 720px) {
   .tidy-review-actions .actions {
     min-width: 0;
+  }
+}
+
+/* System-wide adaptive shell -------------------------------------------------
+ * Font enlargement changes the effective amount of usable space. The former
+ * layout only watched the physical viewport width, so a 1024px window at 140%
+ * was still forced into the desktop sidebar and fixed-height study canvas.
+ * FontScaleProvider marks that case as an adaptive compact shell.
+ */
+body > main,
+body > main > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+body > main :where(img, video, canvas) {
+  max-width: 100%;
+}
+
+@media (max-width: 900px) {
+  .page--word-flash .topbar .top-actions {
+    width: max-content;
+    max-width: none;
+    flex-wrap: nowrap;
+  }
+}
+
+@media (min-width: 901px) {
+  html[data-adaptive-shell="compact"] {
+    --study-header-height: 104px;
+    --study-sidebar-width: 0px;
+    --study-insight-width: 0px;
+  }
+
+  html[data-adaptive-shell="compact"] body {
+    padding-bottom: 60px;
+  }
+
+  html[data-adaptive-shell="compact"] body > main {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  html[data-adaptive-shell="compact"] .study-brand-header {
+    height: var(--study-header-height);
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 52px 52px;
+    gap: 0;
+    padding-inline: 12px;
+  }
+
+  html[data-adaptive-shell="compact"] .study-brand-mark {
+    grid-column: 1;
+    grid-row: 1;
+    width: auto;
+    padding-inline: 10px;
+    border-right: 0;
+  }
+
+  html[data-adaptive-shell="compact"] .study-session-context,
+  html[data-adaptive-shell="compact"] .study-shell-sidebar {
+    display: none;
+  }
+
+  html[data-adaptive-shell="compact"] .study-global-search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    margin: 0;
+  }
+
+  html[data-adaptive-shell="compact"] .study-header-tools {
+    grid-column: 2;
+    grid-row: 1;
+    padding-right: 0;
+    border-left: 0;
+  }
+
+  html[data-adaptive-shell="compact"] .study-mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1500;
+    height: 60px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 4px 6px;
+    border-top: 1px solid var(--study-border);
+    background: var(--study-card);
+  }
+
+  html[data-adaptive-shell="compact"] .study-mobile-nav .study-shell-nav-item {
+    min-height: 50px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 0;
+    font-size: 9px;
+    text-align: center;
+  }
+
+  html[data-adaptive-shell="compact"] .study-mobile-nav .study-shell-nav-item.is-active::before {
+    display: none;
+  }
+
+  html[data-adaptive-shell="compact"] .study-mobile-more {
+    min-width: 0;
+  }
+
+  html[data-adaptive-shell="compact"] .study-mobile-more > summary {
+    list-style: none;
+  }
+
+  html[data-adaptive-shell="compact"] .study-mobile-more-menu {
+    position: fixed;
+    right: 8px;
+    bottom: 66px;
+    width: min(260px, calc(100vw - 16px));
+    display: grid;
+    gap: 2px;
+    padding: 8px;
+    border: 1px solid var(--study-border);
+    border-radius: 10px;
+    background: var(--study-card);
+    box-shadow: 0 10px 26px rgba(22, 50, 44, .12);
+  }
+
+  html[data-adaptive-shell="compact"] .study-mobile-more-menu .study-shell-nav-item {
+    min-height: 38px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 0 10px;
+    font-size: calc(11px * var(--font-scale));
+  }
+
+  html[data-adaptive-shell="compact"] .page--word-flash,
+  html[data-adaptive-shell="compact"] .page--flash-training,
+  html[data-adaptive-shell="compact"] .spelling-page-shell {
+    height: auto;
+    min-height: calc(100dvh - var(--study-header-height) - 60px);
+    overflow: visible;
+  }
+
+  html[data-adaptive-shell="compact"] .page--word-flash .word-flash-shell,
+  html[data-adaptive-shell="compact"] .page--word-flash .word-flash-shell.is-insight-collapsed {
+    height: auto;
+  }
+
+  html[data-adaptive-shell="compact"] .word-study-layout {
+    height: auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: visible;
+    padding: 10px;
+  }
+
+  html[data-adaptive-shell="compact"] .word-study-layout > .word-insight-panel {
+    display: none;
+  }
+
+  html[data-adaptive-shell="compact"] .word-study-column {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  html[data-adaptive-shell="compact"] .word-study-card {
+    overflow: visible;
+  }
+
+  html[data-adaptive-shell="compact"] .word-study-progress {
+    grid-template-columns: auto minmax(70px, 1fr) auto;
+  }
+
+  html[data-adaptive-shell="compact"] .word-study-progress__actions {
+    grid-column: 1 / -1;
+  }
+
+  html[data-adaptive-shell="compact"] .page--word-flash .topbar {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  html[data-adaptive-shell="compact"] .page--word-flash .topbar .top-actions {
+    width: max-content;
+    max-width: none;
+    flex-wrap: nowrap;
+  }
+
+  html[data-adaptive-shell="compact"] .spelling-page-layout,
+  html[data-adaptive-shell="compact"] .flash-training-page,
+  html[data-adaptive-shell="compact"] .flash-training-page .flash-training-main {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+}
+
+/* 538 uses the same fixed study canvas as the main flashcard page, but its
+ * example, paraphrase and related-word material must be arranged side by side
+ * instead of creating a second scrollable document inside the card. */
+@media (min-width: 901px) {
+  .ielts-538-study,
+  html[data-adaptive-shell="compact"] .ielts-538-study {
+    height: calc(100dvh - var(--study-header-height));
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  html[data-adaptive-shell="compact"] .ielts-538-study {
+    height: calc(100dvh - var(--study-header-height) - 60px);
+  }
+
+  .ielts-538-study .word-study-layout,
+  html[data-adaptive-shell="compact"] .ielts-538-study .word-study-layout {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .ielts-538-study .word-study-column,
+  html[data-adaptive-shell="compact"] .ielts-538-study .word-study-column {
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .ielts-538-study .word-study-card,
+  html[data-adaptive-shell="compact"] .ielts-538-study .word-study-card {
+    min-height: 0;
+    overflow: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .ielts-538-study .word-study-card::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  .ielts-538-study .word-study-card > .main {
+    min-height: 0;
+    flex: 1 1 auto;
+    display: block;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .ielts-538-study .word-study-content {
+    width: min(1120px, 100%);
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr);
+    grid-template-rows: minmax(0, .82fr) minmax(0, 1.18fr);
+    align-items: center;
+    gap: 6px 14px;
+    margin: 0 auto;
+  }
+
+  .ielts-538-study .word-study-content > .example-box {
+    width: 100%;
+    align-self: center;
+    grid-column: 1;
+    grid-row: 1;
+    padding: 2px 32px 6px;
+  }
+
+  .ielts-538-study .word-study-content > .example-box::after {
+    margin-top: 5px;
+  }
+
+  .ielts-538-study .word-study-content > .example-box .example {
+    font-size: calc(12px + (7.5px * var(--font-scale)));
+    line-height: 1.25;
+  }
+
+  .ielts-538-study .word-study-content > .example-box .example-cn {
+    margin-top: 3px;
+    font-size: calc(9px + (4px * var(--font-scale)));
+    line-height: 1.35;
+  }
+
+  .ielts-538-study .word-study-content > .word-hero {
+    align-self: center;
+    grid-column: 2;
+    grid-row: 1;
+    gap: 3px;
+    padding: 0;
+  }
+
+  .ielts-538-study .word-study-content > .word-hero .word {
+    margin-bottom: 0;
+    font-size: calc(clamp(54px, 4.4vw, 72px) * var(--font-scale));
+    line-height: .96;
+  }
+
+  .ielts-538-study .word-study-content > .word-hero .word-sub {
+    gap: 6px;
+    font-size: calc(11px * var(--font-scale));
+  }
+
+  .ielts-538-study .word-study-content > .meaning-block {
+    min-height: 0;
+    align-self: stretch;
+    grid-column: 1;
+    grid-row: 2;
+    display: grid;
+    align-content: center;
+    gap: 4px;
+    margin: 0;
+  }
+
+  .ielts-538-study .word-study-content > .meaning-block .meaning-primary {
+    font-size: calc(clamp(16px, 1.2vw, 20px) * var(--font-scale));
+    line-height: 1.25;
+  }
+
+  .ielts-538-study .ielts-538-paraphrase {
+    gap: 4px;
+    padding: 6px 9px;
+  }
+
+  .ielts-538-study .ielts-538-paraphrase__replacement {
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    gap: 5px;
+  }
+
+  .ielts-538-study .ielts-538-paraphrase__replacement > span,
+  .ielts-538-study .ielts-538-paraphrase__sentence > span {
+    font-size: calc(9.5px * var(--font-scale));
+  }
+
+  .ielts-538-study .ielts-538-paraphrase__replacement strong {
+    font-size: calc(12px * var(--font-scale));
+  }
+
+  .ielts-538-study .ielts-538-paraphrase__sentence {
+    gap: 5px;
+  }
+
+  .ielts-538-study .ielts-538-paraphrase__sentence p {
+    font-size: calc(11px * var(--font-scale));
+    line-height: 1.35;
+  }
+
+  .ielts-538-study .ielts-538-paraphrase__meaning {
+    font-size: calc(10px * var(--font-scale));
+    line-height: 1.35;
+  }
+
+  .ielts-538-study .ielts-538-paraphrase__note {
+    padding-top: 4px;
+    font-size: calc(9px * var(--font-scale));
+    line-height: 1.3;
+  }
+
+  .ielts-538-study .ielts-538-related-wrap {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    align-self: stretch;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .ielts-538-study .ielts-538-related-grid {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .ielts-538-study .footer-grid.ielts-538-related-grid > .block {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px 8px;
+  }
+
+  .ielts-538-study .ielts-538-related-heading {
+    min-height: 20px;
+    margin-bottom: 3px;
+  }
+
+  .ielts-538-study .ielts-538-related-list,
+  .ielts-538-study--dense .ielts-538-related-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    align-content: center;
+  }
+
+  .ielts-538-study .footer-grid .ielts-538-related-list .item,
+  .ielts-538-study--dense .footer-grid .ielts-538-related-list .item {
+    min-height: 0;
+    padding: 5px 7px;
+  }
+
+  .ielts-538-study .footer-grid .ielts-538-related-list .item > .mini-sound,
+  .ielts-538-study--dense .footer-grid .ielts-538-related-list .item > .mini-sound {
+    right: 5px;
+    bottom: 5px;
+  }
+
+  .ielts-538-study .ielts-538-related-choice,
+  .ielts-538-study--dense .ielts-538-related-choice {
+    gap: 2px;
+    padding: 1px 28px 1px 0;
+  }
+
+  .ielts-538-study .ielts-538-related-choice .en,
+  .ielts-538-study--dense .ielts-538-related-choice .en {
+    gap: 4px;
+    font-size: calc(clamp(13px, 1.15vw, 15px) * var(--font-scale, 1));
+    line-height: var(--relation-en-line-height);
+  }
+
+  .ielts-538-study .ielts-538-related-choice .zh,
+  .ielts-538-study--dense .ielts-538-related-choice .zh,
+  .ielts-538-study .ielts-538-related-definition,
+  .ielts-538-study .ielts-538-related-context {
+    font-size: calc(clamp(11px, 1vw, 13px) * var(--font-scale, 1));
+    line-height: var(--relation-zh-line-height);
+  }
+}
+
+@media (min-width: 901px) and (max-height: 920px) {
+  .ielts-538-study .ielts-538-paraphrase__note {
+    display: none;
   }
 }

@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#f4f7f5" />
   <title>阅读同义替换记录本 · IELTS Vocab</title>
-  <link rel="stylesheet" href="./assets/reading-paraphrases.css?v=20260805_master_g_audit_sync_v20" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
+  <link rel="stylesheet" href="./assets/reading-paraphrases.css?v=20260809_reading_keyboard_v49" />
+  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
 </head>
-<body>
+<body class="static-unified-paraphrase-page" data-static-page="reading-paraphrases">
   <header class="rp-header">
     <a class="rp-brand" href="./index.html">IELTS VOCAB</a>
-    <nav><a href="./index.html">刷词</a><a href="./reading-g.html">G类阅读</a><a class="active" href="./reading-paraphrases.html">阅读同义替换</a></nav>
+    <nav data-static-primary-nav aria-label="全站学习入口"></nav>
   </header>
-  <main class="rp-page">
+  <aside class="static-shell-sidebar" data-static-sidebar aria-label="全站学习导航"></aside>
+  <main class="rp-page static-unified-content">
     <section class="rp-title">
       <div><p>READING PARAPHRASE NOTEBOOK</p><h1>阅读同义替换记录本</h1><span>导入阅读网站的错题替换关系，独立记录认识、模糊和不熟。</span></div>
       <div class="rp-title-actions">
@@ -36,7 +39,7 @@
     </section>
 
     <section id="studyArea" class="hidden">
-      <article class="rp-card">
+      <article id="studyCard" class="rp-card" data-static-swipe-card>
         <div class="rp-meta"><span id="directionLabel"></span><b id="statusLabel">未学习</b></div>
         <div class="rp-prompt"><span id="promptLabel">题目表达</span><h2 id="promptText"></h2></div>
         <button id="revealBtn" class="rp-reveal" type="button">显示答案</button>
@@ -49,7 +52,7 @@
       <section class="rp-progress"><label for="positionRange">拖动或点击回到指定位置</label><input id="positionRange" type="range" min="1" max="1" value="1" /></section>
       <footer class="rp-actions">
         <button id="prevBtn" type="button">← 上一个 <kbd>←</kbd></button>
-        <div><button id="knownBtn" class="known" type="button">认识</button><button id="fuzzyBtn" class="fuzzy" type="button">模糊</button><button id="unfamiliarBtn" class="unfamiliar" type="button">不熟</button></div>
+        <div><button id="knownBtn" class="known" type="button" title="快捷键：1">认识</button><button id="fuzzyBtn" class="fuzzy" type="button" title="快捷键：2">模糊</button><button id="unfamiliarBtn" class="unfamiliar" type="button" title="快捷键：3">不熟</button></div>
         <button id="nextBtn" type="button">下一个 <kbd>→</kbd> →</button>
         <button id="deleteBtn" class="delete" type="button">删除</button>
       </footer>
@@ -63,7 +66,8 @@
       <span id="syncStatus">未连接</span>
     </section>
   </main>
-  <script src="./sync-config.js?v=20260805_master_g_audit_sync_v20"></script>
-  <script src="./assets/reading-paraphrases.js?v=20260805_master_g_audit_sync_v20"></script>
+  <script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./sync-config.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/reading-paraphrases.js?v=20260809_reading_keyboard_v49"></script>
 </body>
 </html>

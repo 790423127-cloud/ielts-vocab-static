@@ -11,7 +11,8 @@
     document.querySelectorAll("[data-study-meaning-toggle]").forEach(function (button) {
       var hidden = isHidden();
       button.textContent = hidden ? "显示释义" : "隐藏释义";
-      button.setAttribute("aria-pressed", String(hidden));
+      button.removeAttribute("aria-pressed");
+      button.dataset.state = hidden ? "hidden" : "visible";
       button.title = hidden ? "显示当前学习内容的释义和提示" : "只看单词，隐藏释义和提示";
     });
   }

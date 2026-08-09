@@ -197,8 +197,12 @@ test("word flashcard keyboard shortcuts are scoped to word mode only", () => {
   assert.match(speechHookSource, /播放例句 \$\{formatSpeechSourceLabel\(result\)\}/);
 
   const phrasePanelSource = fs.readFileSync(path.join(root, "app/components/PhraseFlashcardPanel.jsx"), "utf8");
-  assert.match(phrasePanelSource, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakPhrase/);
-  assert.match(phrasePanelSource, /if \(event\.repeat\) return;\s*event\.preventDefault\(\);\s*speakExample/);
+  assert.match(phrasePanelSource, /getStudyKeyboardAction\(event\)/);
+  assert.match(phrasePanelSource, /action === "word-audio"\) speakPhrase/);
+  assert.match(phrasePanelSource, /action === "example-audio"\) speakExample/);
+  assert.match(phrasePanelSource, /action === "known"\) markStatus\(PHRASE_STUDY_STATUS\.FAMILIAR\)/);
+  assert.match(phrasePanelSource, /action === "unknown"\) markStatus\(PHRASE_STUDY_STATUS\.UNFAMILIAR\)/);
+  assert.doesNotMatch(phrasePanelSource, /event\.key === "0"/);
   assert.match(phrasePanelSource, /shouldIgnoreDuplicateSpeech\(text, "phrase"\)/);
   assert.match(phrasePanelSource, /shouldIgnoreDuplicateSpeech\(text, "sentence"\)/);
   assert.match(phrasePanelSource, /const warmSpeechAudio = useCallback/);

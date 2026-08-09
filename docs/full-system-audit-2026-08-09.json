@@ -1,0 +1,456 @@
+{
+  "auditPlan": "IELTS-词汇网站-系统审计.md",
+  "mode": "read-only",
+  "generatedAt": "2026-08-08T17:22:07.312Z",
+  "gitHeadHint": "see workspace",
+  "structure": {
+    "nextPages": [
+      "/",
+      "/basic",
+      "/expressions",
+      "/ielts-538",
+      "/meaning",
+      "/meaning-en",
+      "/reading-g",
+      "/reading-paraphrases",
+      "/reading-sync",
+      "/reading-words",
+      "/spelling",
+      "/spelling-phrases",
+      "/spelling-words"
+    ],
+    "pageCount": 13,
+    "apiRoutes": [
+      "/api/audio-batch",
+      "/api/audio-cache",
+      "/api/audio-clean-orphans",
+      "/api/audio-dedupe",
+      "/api/audio-file",
+      "/api/catalog-meta",
+      "/api/categorize-words",
+      "/api/clean-words",
+      "/api/dedupe-words",
+      "/api/edge-tts",
+      "/api/export-cache",
+      "/api/export-static",
+      "/api/generate-word",
+      "/api/generate-words",
+      "/api/pronunciation",
+      "/api/reading-g/complete-pending",
+      "/api/reading-g/complete-synonyms",
+      "/api/reading-g/delete-entry",
+      "/api/reading-words/publish-static",
+      "/api/recover-remote",
+      "/api/recover-words",
+      "/api/repair-word-symbol",
+      "/api/vocab-data",
+      "/api/vocab-meta"
+    ],
+    "apiCount": 24
+  },
+  "datasets": {
+    "master": {
+      "path": "public/data/words.json",
+      "bytes": 37680031,
+      "sha256": "1ef9cb801995f4b990437df3b50af4d030d5e946a660113e44416ac906e4d782",
+      "countField": 13433,
+      "audit": {
+        "physicalCount": 13433,
+        "uniqueIds": 13433,
+        "uniqueHeads": 13433,
+        "brushableApprox": 12033,
+        "issueCounts": {
+          "missingId": 0,
+          "dupId": 0,
+          "dupWordId": 0,
+          "dupHead": 0,
+          "emptyWord": 0,
+          "missingMeaning": 20,
+          "missingPos": 20,
+          "missingDifficulty": 21,
+          "missingExample": 20,
+          "phraseLikeInWord": 5,
+          "suspiciousTruncation": 1
+        },
+        "samples": {
+          "missingId": [],
+          "dupId": [],
+          "dupWordId": [],
+          "dupHead": [],
+          "emptyWord": [],
+          "missingMeaning": [
+            {
+              "word": "emselves in difficult circumstan",
+              "id": "reading-coach-word-de2ac02175e4409c86f7a4f24fe98d29"
+            },
+            {
+              "word": "seniority",
+              "id": "reading-coach-word-9287747dced5421480d2c3b839c31eac"
+            },
+            {
+              "word": "dependants",
+              "id": "reading-coach-word-b0880e145e244938a505d48b5d33a6bf"
+            },
+            {
+              "word": "rucksacks",
+              "id": "reading-coach-word-b8f339e5b02342dbb4aabbfc7066b48a"
+            },
+            {
+              "word": "polycarbonate",
+              "id": "reading-coach-word-b332ee97272645c89c38b4d237f34349"
+            },
+            {
+              "word": "indulgent",
+              "id": "reading-coach-word-ff882c3ad7854b6b97893fdff24c8ecc"
+            },
+            {
+              "word": "investing",
+              "id": "reading-coach-word-f2371b7d79c848279e4e8322d52a4d9d"
+            },
+            {
+              "word": "Trimmed",
+              "id": "reading-coach-word-4d7599ffcc9c4565baa798cd9a9bf337"
+            }
+          ],
+          "missingPos": [
+            {
+              "word": "emselves in difficult circumstan",
+              "id": "reading-coach-word-de2ac02175e4409c86f7a4f24fe98d29"
+            },
+            {
+              "word": "seniority",
+              "id": "reading-coach-word-9287747dced5421480d2c3b839c31eac"
+            },
+            {
+              "word": "dependants",
+              "id": "reading-coach-word-b0880e145e244938a505d48b5d33a6bf"
+            },
+            {
+              "word": "rucksacks",
+              "id": "reading-coach-word-b8f339e5b02342dbb4aabbfc7066b48a"
+            },
+            {
+              "word": "polycarbonate",
+              "id": "reading-coach-word-b332ee97272645c89c38b4d237f34349"
+            },
+            {
+              "word": "indulgent",
+              "id": "reading-coach-word-ff882c3ad7854b6b97893fdff24c8ecc"
+            },
+            {
+              "word": "investing",
+              "id": "reading-coach-word-f2371b7d79c848279e4e8322d52a4d9d"
+            },
+            {
+              "word": "Trimmed",
+              "id": "reading-coach-word-4d7599ffcc9c4565baa798cd9a9bf337"
+            }
+          ],
+          "missingDifficulty": [
+            {
+              "word": "suggests t",
+              "id": "reading-coach-word-52e4467b11e646e0b0ea5a99119e1e8c"
+            },
+            {
+              "word": "emselves in difficult circumstan",
+              "id": "reading-coach-word-de2ac02175e4409c86f7a4f24fe98d29"
+            },
+            {
+              "word": "seniority",
+              "id": "reading-coach-word-9287747dced5421480d2c3b839c31eac"
+            },
+            {
+              "word": "dependants",
+              "id": "reading-coach-word-b0880e145e244938a505d48b5d33a6bf"
+            },
+            {
+              "word": "rucksacks",
+              "id": "reading-coach-word-b8f339e5b02342dbb4aabbfc7066b48a"
+            },
+            {
+              "word": "polycarbonate",
+              "id": "reading-coach-word-b332ee97272645c89c38b4d237f34349"
+            },
+            {
+              "word": "indulgent",
+              "id": "reading-coach-word-ff882c3ad7854b6b97893fdff24c8ecc"
+            },
+            {
+              "word": "investing",
+              "id": "reading-coach-word-f2371b7d79c848279e4e8322d52a4d9d"
+            }
+          ],
+          "missingExample": [
+            {
+              "word": "emselves in difficult circumstan",
+              "id": "reading-coach-word-de2ac02175e4409c86f7a4f24fe98d29"
+            },
+            {
+              "word": "seniority",
+              "id": "reading-coach-word-9287747dced5421480d2c3b839c31eac"
+            },
+            {
+              "word": "dependants",
+              "id": "reading-coach-word-b0880e145e244938a505d48b5d33a6bf"
+            },
+            {
+              "word": "rucksacks",
+              "id": "reading-coach-word-b8f339e5b02342dbb4aabbfc7066b48a"
+            },
+            {
+              "word": "polycarbonate",
+              "id": "reading-coach-word-b332ee97272645c89c38b4d237f34349"
+            },
+            {
+              "word": "indulgent",
+              "id": "reading-coach-word-ff882c3ad7854b6b97893fdff24c8ecc"
+            },
+            {
+              "word": "investing",
+              "id": "reading-coach-word-f2371b7d79c848279e4e8322d52a4d9d"
+            },
+            {
+              "word": "Trimmed",
+              "id": "reading-coach-word-4d7599ffcc9c4565baa798cd9a9bf337"
+            }
+          ],
+          "phraseLikeInWord": [
+            {
+              "word": "suggests t",
+              "id": "reading-coach-word-52e4467b11e646e0b0ea5a99119e1e8c"
+            },
+            {
+              "word": "nominated beneficiary",
+              "id": "reading-coach-word-74590c142663454181306e3f0fd57ea6"
+            },
+            {
+              "word": "emselves in difficult circumstan",
+              "id": "reading-coach-word-de2ac02175e4409c86f7a4f24fe98d29"
+            },
+            {
+              "word": "primarily intended",
+              "id": "reading-coach-word-02929f528e1b42769748091c4e286ab0"
+            },
+            {
+              "word": "appraisal comment",
+              "id": "reading-coach-word-45c438dd895c4d7e8bbf7ecb5bad483e"
+            }
+          ],
+          "suspiciousTruncation": [
+            {
+              "word": "suggests t",
+              "id": "reading-coach-word-52e4467b11e646e0b0ea5a99119e1e8c",
+              "meaning": "建议"
+            }
+          ]
+        }
+      }
+    },
+    "staticCacheMaster": {
+      "path": ".static-export-cache/words.json",
+      "bytes": 37680031,
+      "sha256": "1ef9cb801995f4b990437df3b50af4d030d5e946a660113e44416ac906e4d782",
+      "parity": {
+        "publicBytes": 37680031,
+        "cacheBytes": 37680031,
+        "sameHash": true,
+        "publicSha": "1ef9cb801995f4b990437df3b50af4d030d5e946a660113e44416ac906e4d782",
+        "cacheSha": "1ef9cb801995f4b990437df3b50af4d030d5e946a660113e44416ac906e4d782"
+      }
+    },
+    "phrases": {
+      "path": "public/data/phrases.json",
+      "bytes": 5468545,
+      "count": 3011
+    },
+    "basic": {
+      "path": "public/data/basic-words.json",
+      "bytes": 834065,
+      "count": 1500
+    },
+    "readingG": {
+      "path": "public/data/reading-g-vocab.json",
+      "bytes": 19327984,
+      "sha256": "3ad51aba687e39afaad2dcf9b2077f15d929b85fafeeea92cb30733cbb5a0072",
+      "audit": {
+        "meta": {
+          "count": 7302,
+          "wordCount": 6629,
+          "phraseCount": 673,
+          "activeCount": 6837,
+          "referenceCount": 465
+        },
+        "items": 7302,
+        "words": 6629,
+        "phrases": 673,
+        "activeWords": 6198,
+        "refWords": 431,
+        "uniqueIds": 7302,
+        "dupIds": 0,
+        "missingId": 0,
+        "formRows": 3425,
+        "familyRows": 3166,
+        "missingMeaning": 0,
+        "missingExample": 0,
+        "standaloneAlsoForm": 469,
+        "sampleDupIds": []
+      }
+    },
+    "meaning6000": {
+      "path": "public/data/meaning-6000.json",
+      "bytes": 6836635,
+      "audit": {
+        "count": 6000,
+        "danglingFromMaster": 0,
+        "sampleDangling": []
+      }
+    },
+    "ielts538": {
+      "path": "public/data/ielts-538-words.json",
+      "bytes": 862585,
+      "count": 376
+    },
+    "readingGParaphrases": {
+      "path": "public/data/reading-g-paraphrases.json",
+      "bytes": 199500,
+      "groups": 300
+    }
+  },
+  "qualitySuspects": [
+    {
+      "word": "suggests t",
+      "id": "reading-coach-word-52e4467b11e646e0b0ea5a99119e1e8c",
+      "pos": "verb",
+      "meaning": "建议",
+      "difficulty": "",
+      "example": true
+    },
+    {
+      "word": "excluding",
+      "id": "reading-coach-word-778b532ee6e04e42b8e192c5758f82d6",
+      "pos": "preposition",
+      "meaning": "不包括",
+      "difficulty": "中级核心",
+      "example": true
+    },
+    {
+      "word": "immune system",
+      "id": "reading-85724d05-2084-4a48-9645-3e53ffce2a82",
+      "pos": "noun",
+      "meaning": "免疫系统",
+      "difficulty": "基础高频",
+      "example": true
+    },
+    {
+      "word": "e",
+      "missingFromMaster": true
+    },
+    {
+      "word": "n",
+      "missingFromMaster": true
+    }
+  ],
+  "apiWriteGuards": {
+    "routeFiles": 24,
+    "writeishCount": 18,
+    "missingGuard": [],
+    "writeish": [
+      "app/api/audio-batch/route.js",
+      "app/api/audio-cache/route.js",
+      "app/api/audio-clean-orphans/route.js",
+      "app/api/audio-dedupe/route.js",
+      "app/api/categorize-words/route.js",
+      "app/api/clean-words/route.js",
+      "app/api/dedupe-words/route.js",
+      "app/api/edge-tts/route.js",
+      "app/api/export-cache/route.js",
+      "app/api/export-static/route.js",
+      "app/api/generate-word/route.js",
+      "app/api/generate-words/route.js",
+      "app/api/reading-g/complete-pending/route.js",
+      "app/api/reading-g/complete-synonyms/route.js",
+      "app/api/reading-g/delete-entry/route.js",
+      "app/api/reading-words/publish-static/route.js",
+      "app/api/recover-remote/route.js",
+      "app/api/repair-word-symbol/route.js"
+    ]
+  },
+  "keyboard": [
+    {
+      "file": "app/page.jsx",
+      "hasKeydown": true,
+      "hasDeleteShortcut": true,
+      "guardsInput": true,
+      "ignoresRepeat": false
+    },
+    {
+      "file": "app/reading-g/page.jsx",
+      "hasKeydown": true,
+      "hasDeleteShortcut": true,
+      "guardsInput": true,
+      "ignoresRepeat": false
+    },
+    {
+      "file": "app/basic/page.jsx",
+      "hasKeydown": true,
+      "hasDeleteShortcut": true,
+      "guardsInput": true,
+      "ignoresRepeat": false
+    },
+    {
+      "file": "app/hooks/useWordFlashNavigation.js",
+      "hasKeydown": true,
+      "hasDeleteShortcut": true,
+      "guardsInput": true,
+      "ignoresRepeat": true
+    },
+    {
+      "file": "app/lib/vocab/study-keyboard-shortcuts.mjs",
+      "hasKeydown": false,
+      "hasDeleteShortcut": true,
+      "guardsInput": true,
+      "ignoresRepeat": true
+    },
+    {
+      "file": "public/assets/reading-g.js",
+      "hasKeydown": true,
+      "hasDeleteShortcut": false,
+      "guardsInput": true,
+      "ignoresRepeat": false
+    },
+    {
+      "file": "public/assets/spelling.js",
+      "hasKeydown": true,
+      "hasDeleteShortcut": false,
+      "guardsInput": true,
+      "ignoresRepeat": false
+    }
+  ],
+  "staticSurface": {
+    "html": [
+      "basic.html",
+      "ielts-538.html",
+      "meaning.html",
+      "reading-g.html",
+      "reading-paraphrases.html",
+      "reading-words.html",
+      "spelling.html"
+    ],
+    "assetsCount": 14,
+    "wordsParity": {
+      "publicBytes": 37680031,
+      "cacheBytes": 37680031,
+      "sameHash": true,
+      "publicSha": "1ef9cb801995f4b990437df3b50af4d030d5e946a660113e44416ac906e4d782",
+      "cacheSha": "1ef9cb801995f4b990437df3b50af4d030d5e946a660113e44416ac906e4d782"
+    }
+  },
+  "tmpArtifacts": [
+    {
+      "name": "reading-g-vocab.json.tmp-25816-1785990170518",
+      "bytes": 24724001,
+      "mtime": "2026-08-06T04:22:50.662Z"
+    }
+  ],
+  "openWorkingTreeNote": "Workspace has many uncommitted changes (reading-g expansion, fonts, static assets). Audit is snapshot of current files, not a clean main."
+}

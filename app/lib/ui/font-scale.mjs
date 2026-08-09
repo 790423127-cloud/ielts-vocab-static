@@ -6,6 +6,20 @@ export const FONT_SCALE_MAX = 1.6;
 export const FONT_SCALE_STEP = 0.05;
 export const FONT_SCALE_DEFAULT = 1;
 
+export function resolveFontScaleLevel(scale) {
+  const next = clampFontScale(scale);
+  if (next >= 1.45) return "xlarge";
+  if (next >= 1.25) return "large";
+  if (next <= 0.9) return "small";
+  return "normal";
+}
+
+export function resolveAdaptiveShell(viewportWidth, scale) {
+  const width = Number(viewportWidth);
+  if (!Number.isFinite(width) || width <= 900) return "native";
+  return width / clampFontScale(scale) <= 900 ? "compact" : "desktop";
+}
+
 export function clampFontScale(value) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return FONT_SCALE_DEFAULT;
@@ -44,7 +58,14 @@ export function applyFontScale(scale) {
   const next = clampFontScale(scale);
   const root = document.documentElement;
   root.dataset.fontScale = String(next);
+  root.dataset.fontScaleLevel = resolveFontScaleLevel(next);
+  root.dataset.adaptiveShell = resolveAdaptiveShell(globalThis.innerWidth, next);
+  // Must set on documentElement so all calc(... * var(--font-scale)) update live.
   root.style.setProperty("--font-scale", String(next));
+  // Also mirror on body for any descendant that inherits custom props oddly.
+  if (document.body) {
+    document.body.style.setProperty("--font-scale", String(next));
+  }
   return next;
 }
 

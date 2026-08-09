@@ -112,7 +112,9 @@ test("any single unreviewed empty relation keeps the word in the AI queue", () =
 
   for (const field of ["forms", "wordFamily", "synonyms"]) {
     const word = normalizeReadingWord({ ...base, [field]: [] });
-    assert.deepEqual(getReadingWordMissingFields(word), [field]);
+    const missing = getReadingWordMissingFields(word);
+    assert.equal(missing.includes(field), true);
+    assert.equal(missing.includes("synonymDetails"), field !== "synonyms");
     assert.equal(needsReadingAiProcessing(word, completeMain), true);
   }
 });
@@ -169,7 +171,7 @@ test("successful AI review marks empty relation sections so they are not process
   assert.equal(needsReadingAiProcessing(reviewedWord, reviewedMain), false);
 });
 
-test("existing relation data counts as complete before review markers are added", () => {
+test("existing relation words still require their Chinese synonym meanings", () => {
   const word = normalizeReadingWord({
     word: "brochure",
     pos: "noun",
@@ -182,16 +184,16 @@ test("existing relation data counts as complete before review markers are added"
     synonyms: ["leaflet"]
   });
 
-  assert.deepEqual(getReadingWordMissingFields(word), []);
+  assert.deepEqual(getReadingWordMissingFields(word), ["synonymDetails"]);
 });
 
-test("reviewed empty reading relations are shown with explicit labels", () => {
-  assert.match(readingWordsSource, /已审核 · 无变形/);
-  assert.match(readingWordsSource, /已审核 · 无词族/);
-  assert.match(readingWordsSource, /已审核 · 无可替换/);
-  assert.match(readingWordsSource, /待 AI 检查变形/);
-  assert.match(readingWordsSource, /待 AI 检查词族/);
-  assert.match(readingWordsSource, /待 AI 检查同义替换/);
+test("empty reading relation cards do not render placeholder labels", () => {
+  assert.doesNotMatch(readingWordsSource, /已审核 · 无变形/);
+  assert.doesNotMatch(readingWordsSource, /已审核 · 无词族/);
+  assert.doesNotMatch(readingWordsSource, /已审核 · 无可替换/);
+  assert.doesNotMatch(readingWordsSource, /待 AI 检查变形/);
+  assert.doesNotMatch(readingWordsSource, /待 AI 检查词族/);
+  assert.doesNotMatch(readingWordsSource, /待 AI 检查同义替换/);
 });
 
 

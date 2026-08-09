@@ -1328,7 +1328,7 @@
     window.history.replaceState(null, "", url);
   }
 
-  const STATIC_DATA_VERSION = "20260805_master_g_audit_sync_v20";
+  const STATIC_DATA_VERSION = "20260809_reading_keyboard_v49";
 
   function versionedDataPath(requestPath) {
     return requestPath + (requestPath.includes("?") ? "&" : "?") + "v=" + STATIC_DATA_VERSION;
@@ -1441,6 +1441,14 @@
     } catch (e) {
       $("question").textContent = "词库加载失败：" + e.message;
     }
+  }
+
+  function applyMergedCloudProgress() {
+    state = readState();
+    errorBank = readErrorBank();
+    personalWrongRecords = readPersonalWrong();
+    if (!wordPayload && !phrasePayload) return;
+    load();
   }
 
   $("form").addEventListener("submit", function (e) {
@@ -1854,4 +1862,15 @@
   });
 
   load();
+  if (window.StaticCloudSync) {
+    window.StaticCloudSync.register("spelling", [
+      STORE,
+      ERROR_BANK_KEY,
+      PERSONAL_WRONG_KEY,
+      PREFS_KEY,
+      POSITION_KEY
+    ], {
+      onMerged: applyMergedCloudProgress
+    });
+  }
 })();

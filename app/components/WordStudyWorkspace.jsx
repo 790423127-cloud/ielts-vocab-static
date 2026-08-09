@@ -9,12 +9,16 @@ export default function WordStudyWorkspace({
   showInsight = true,
   children,
   overview = null,
-  className = ""
+  className = "",
+  studyColumnClassName = ""
 }) {
   return (
     <div className={`word-flash-shell${showInsight ? "" : " is-insight-collapsed"}${className ? ` ${className}` : ""}`}>
       <div className="word-study-layout">
-        <section className="word-study-column" aria-label="单词学习区">
+        <section
+          className={`word-study-column${studyColumnClassName ? ` ${studyColumnClassName}` : ""}`}
+          aria-label="单词学习区"
+        >
           {children}
         </section>
         {showInsight ? overview : null}

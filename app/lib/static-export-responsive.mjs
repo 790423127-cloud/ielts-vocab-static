@@ -1,9 +1,11 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260805_master_g_audit_sync_v20";
+export const STATIC_RESPONSIVE_VERSION = "20260809_reading_keyboard_v49";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
+export const STATIC_FONT_ZOOM_MARKER = "D2.11 font-aware static shell";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
 export const STATIC_SWIPE_FIX_MARKER = "D2.9 static 538 touch-first swipe";
+export const STATIC_HOME_WORKSPACE_MARKER = "D2.10 static desktop home viewport workspace";
 export const STATIC_SWIPE_ENGINE = "touch-538-v4";
 export const STATIC_SWIPE_MIN_DISTANCE = 56;
 export const STATIC_SWIPE_MAX_DURATION_MS = 900;
@@ -67,6 +69,42 @@ const MOBILE_ENTRY_CSS = `
   .top-select{max-width:100%;min-width:0}
   .top-actions .order-select{width:min(132px,100%);min-width:0;max-width:132px;justify-self:start}
   .top-actions .relation-order-select{width:min(132px,100%);min-width:0;max-width:132px;justify-self:start}
+}
+`;
+
+const DESKTOP_HOME_WORKSPACE_CSS = `
+
+/* ${STATIC_HOME_WORKSPACE_MARKER}
+ * Keep the static homepage itself inside the viewport. Long word details scroll
+ * inside the study card while the learning actions remain visible.
+ */
+@media (min-width:901px){
+  html:has(body[data-static-page="home"]){height:100%;overflow:hidden}
+  body[data-static-page="home"]{height:100svh;overflow:hidden}
+  body[data-static-page="home"] .app{height:calc(100svh - var(--workspace-header));min-height:0;overflow:hidden}
+  body[data-static-page="home"] .top,
+  body[data-static-page="home"] .bottom{flex:0 0 auto}
+  body[data-static-page="home"] .static-study-card{overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:none}
+  body[data-static-page="home"] .static-study-card::-webkit-scrollbar{width:0;height:0}
+}
+`;
+
+const STATIC_FONT_ZOOM_CSS = `
+
+/* ${STATIC_FONT_ZOOM_MARKER}
+ * Browser zoom reduces the CSS viewport. Drop the fixed sidebar before the
+ * content becomes cramped, and keep utility rows horizontally scrollable.
+ */
+@media (min-width:901px) and (max-width:1100px){
+  :root{--workspace-sidebar:0px}
+  .static-shell-sidebar{display:none}
+  .app{width:100%;margin-left:0}
+  .static-brand-bar{grid-template-columns:minmax(150px,.6fr) minmax(0,1fr);padding-inline:18px}
+  .static-brand-nav{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain}
+  .top-actions{max-width:100%;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain}
+}
+@media (max-width:900px){
+  .top-actions{max-width:100%;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain}
 }
 `;
 
@@ -201,12 +239,16 @@ export function patchStaticCss(css) {
   if (next.includes(LOCKED_DESKTOP_RULE)) next = next.replace(LOCKED_DESKTOP_RULE, UNLOCKED_DESKTOP_RULE);
   if (!next.includes(STATIC_RESPONSIVE_MARKER)) next += LAPTOP_HEIGHT_CSS;
   if (!next.includes(STATIC_FILTER_FIX_MARKER)) next += MOBILE_ENTRY_CSS;
+  if (!next.includes(STATIC_HOME_WORKSPACE_MARKER)) next += DESKTOP_HOME_WORKSPACE_CSS;
+  if (!next.includes(STATIC_FONT_ZOOM_MARKER)) next += STATIC_FONT_ZOOM_CSS;
   return next;
 }
 
 export function patchLegacyStaticCss(css) {
   let next = String(css || "");
   if (!next.includes(STATIC_RESPONSIVE_MARKER)) next += LEGACY_LAPTOP_CSS;
+  if (!next.includes(STATIC_HOME_WORKSPACE_MARKER)) next += DESKTOP_HOME_WORKSPACE_CSS;
+  if (!next.includes(STATIC_FONT_ZOOM_MARKER)) next += STATIC_FONT_ZOOM_CSS;
   return next;
 }
 

@@ -22,6 +22,7 @@ import {
   READING_G_AI_COMPLETION_SOURCE,
   buildReadingGAiCompletedEntry
 } from "../app/lib/reading-g-vocab/ai-completion.mjs";
+import { isReadingGContentIncomplete } from "../app/lib/reading-g-vocab/content-completeness.mjs";
 import {
   READING_G_RETIREMENTS_SOURCE,
   applyReadingGRetirements
@@ -107,32 +108,63 @@ function uniqueText(values) {
 }
 
 function preserveCompactedHistory(existing, refreshed) {
+  const preserveLocalCompletion = asArray(existing?.qualityFlags).includes("local_content_sources_merged");
+  const locallyCompleted = preserveLocalCompletion
+    ? {
+        ...refreshed,
+        phonetic: existing.phonetic,
+        primaryPos: existing.primaryPos,
+        pos: existing.pos,
+        rawPos: existing.rawPos,
+        primaryMeaningZh: existing.primaryMeaningZh,
+        meaningZh: existing.meaningZh,
+        meaning: existing.meaning,
+        definition: existing.definition,
+        example: existing.example,
+        exampleCn: existing.exampleCn,
+        exampleZh: existing.exampleZh,
+        phoneticSource: existing.phoneticSource
+      }
+    : refreshed;
   const mergedAliases = asArray(existing?.mergedAliases);
   const mergedEntries = asArray(existing?.mergedEntries);
-  if (!mergedAliases.length && !mergedEntries.length) return refreshed;
+  if (!mergedAliases.length && !mergedEntries.length) {
+    if (!preserveLocalCompletion) return refreshed;
+    return {
+      ...locallyCompleted,
+      sourceFiles: uniqueText([
+        ...asArray(locallyCompleted?.sourceFiles),
+        ...asArray(existing?.sourceFiles)
+      ]),
+      qualityFlags: uniqueText([
+        ...asArray(locallyCompleted?.qualityFlags),
+        ...asArray(existing?.qualityFlags)
+      ])
+    };
+  }
   return {
-    ...refreshed,
-    id: text(existing?.id) || refreshed.id,
-    forms: uniqueRelations([...asArray(refreshed?.forms), ...asArray(existing?.forms)]),
+    ...locallyCompleted,
+    id: text(existing?.id) || locallyCompleted.id,
+    forms: uniqueRelations([...asArray(locallyCompleted?.forms), ...asArray(existing?.forms)]),
     wordFamily: uniqueRelations([
-      ...asArray(refreshed?.wordFamily),
+      ...asArray(locallyCompleted?.wordFamily),
       ...asArray(existing?.wordFamily)
     ]),
     mergedAliases: clone(mergedAliases),
     mergedEntries: clone(mergedEntries),
-    layers: uniqueText([...asArray(refreshed?.layers), ...asArray(existing?.layers)]),
-    topics: uniqueText([...asArray(refreshed?.topics), ...asArray(existing?.topics)]),
+    layers: uniqueText([...asArray(locallyCompleted?.layers), ...asArray(existing?.layers)]),
+    topics: uniqueText([...asArray(locallyCompleted?.topics), ...asArray(existing?.topics)]),
     sourceFiles: uniqueText([
-      ...asArray(refreshed?.sourceFiles),
+      ...asArray(locallyCompleted?.sourceFiles),
       ...asArray(existing?.sourceFiles)
     ]),
     qualityFlags: uniqueText([
-      ...asArray(refreshed?.qualityFlags),
+      ...asArray(locallyCompleted?.qualityFlags),
       ...asArray(existing?.qualityFlags)
     ]),
-    studyMode: existing?.studyMode === "active" ? "active" : refreshed.studyMode,
+    studyMode: existing?.studyMode === "active" ? "active" : locallyCompleted.studyMode,
     layerRank: Math.min(
-      Number(refreshed?.layerRank) || 99,
+      Number(locallyCompleted?.layerRank) || 99,
       Number(existing?.layerRank) || 99
     )
   };
@@ -151,13 +183,13 @@ function isExternalSupplementItem(item) {
   );
 }
 
-function restoreExternalSupplementItems(items, protectedItems) {
+function restoreExternalSupplementItems(items, protectedItems, retiredKeys = new Set()) {
   const restored = [...items];
   const existing = new Set(restored.map(readingGMergeKey));
   let restoredCount = 0;
   for (const item of protectedItems) {
     const key = readingGMergeKey(item);
-    if (key.endsWith("::") || existing.has(key)) continue;
+    if (key.endsWith("::") || retiredKeys.has(key) || existing.has(key)) continue;
     restored.push(clone(item));
     existing.add(key);
     restoredCount += 1;
@@ -488,6 +520,16 @@ export function applyReadingGQuestionBankExpansion({
     let next;
     if (masterEntry) {
       next = buildMasterBackedEntry(word, masterEntry);
+      if (completionRecord && isReadingGContentIncomplete(next)) {
+        next = buildReadingGAiCompletedEntry(
+          next,
+          completionRecord.profile || completionRecord,
+          {
+            aiSource: completionRecord.source,
+            generatedAt: completionRecord.completedAt
+          }
+        );
+      }
     } else if (completionRecord) {
       next = buildReadingGAiCompletedEntry(
         pendingEntry,
@@ -545,7 +587,8 @@ export function applyReadingGQuestionBankExpansion({
   );
   const restoredSupplementResult = restoreExternalSupplementItems(
     relationMeaningResult.items,
-    protectedExternalSupplementItems
+    protectedExternalSupplementItems,
+    retirementResult.retiredKeys
   );
   // External supplements are restored verbatim so their teaching data is not
   // lost, but a restored item may itself be an explicitly compacted alias.

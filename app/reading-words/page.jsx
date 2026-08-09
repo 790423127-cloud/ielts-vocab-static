@@ -14,11 +14,13 @@ import {
   Star,
   Trash2,
   Upload,
-  Volume2,
   X
 } from "lucide-react";
 import WordStudyActions from "../components/WordStudyActions.jsx";
 import WordStudyContent from "../components/WordStudyContent.jsx";
+import WordDetailGrid from "../components/WordDetailGrid.jsx";
+import WordStudyProgress from "../components/WordStudyProgress.jsx";
+import WordStudyWorkspace from "../components/WordStudyWorkspace.jsx";
 import StudyMeaningToggle from "../components/StudyMeaningToggle.jsx";
 import WordStudyOrderControls from "../components/WordStudyOrderControls.jsx";
 import { useOrderedStudyRows } from "../hooks/useOrderedStudyRows.js";
@@ -47,9 +49,16 @@ import {
   parseReadingWordsTable,
   readReadingWords,
   readReadingWordsRollback,
+  readReadingWordsSession,
   writeReadingWords,
+  writeReadingWordsSession,
   writeReadingWordsWithBackup
 } from "../lib/reading-words/storage.mjs";
+import {
+  applyReadingSynonymDetailPatches,
+  enrichReadingWordsSynonymDetails,
+  normalizeReadingSynonymDetails
+} from "../lib/reading-words/synonym-details.mjs";
 import {
   removeReadingWordEntry,
   shouldHandleReadingWordDeleteShortcut
@@ -67,6 +76,7 @@ import {
   formalLexiconWords
 } from "../lib/vocab/lexicon-delete-intent.mjs";
 import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
+import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
 import styles from "./reading-words.module.css";
 
 const EMPTY_DRAFT = {
@@ -88,7 +98,8 @@ const MISSING_FIELD_LABELS = {
   exampleCn: "例句翻译",
   forms: "变形",
   wordFamily: "词族",
-  synonyms: "同义替换"
+  synonyms: "同义替换",
+  synonymDetails: "同义替换释义"
 };
 
 function speak(text) {
@@ -143,19 +154,37 @@ async function loadFormalMainLexicon() {
   };
 }
 
-function DetailList({ title, items, emptyText, renderItem }) {
-  return (
-    <section className={styles.detailSection}>
-      <h3>{title}</h3>
-      {items.length ? (
-        <div className={styles.detailList}>
-          {items.map((item, index) => renderItem(item, index))}
-        </div>
-      ) : (
-        <p className={styles.emptyDetail}>{emptyText}</p>
-      )}
-    </section>
-  );
+async function restorePublishedReadingWords(localWords) {
+  if (Array.isArray(localWords) && localWords.length) return localWords;
+
+  try {
+    const response = await fetch("/data/personal-reading-words.json", { cache: "no-store" });
+    if (!response.ok) return localWords;
+    const payload = await response.json();
+    const transfer = payload?.transfer;
+    if (
+      transfer?.type !== "ielts-reading-words-transfer" ||
+      Number(transfer?.version) !== 1 ||
+      !Array.isArray(transfer?.readingWords) ||
+      !Array.isArray(transfer?.linkedMainEntries)
+    ) {
+      return localWords;
+    }
+    return transfer.readingWords
+      .map((word) => normalizeReadingWord(word))
+      .filter((word) => word.word);
+  } catch {
+    return localWords;
+  }
+}
+
+async function readJsonResponse(response, fallbackMessage) {
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(fallbackMessage);
+  }
 }
 
 export default function ReadingWordsPage() {
@@ -172,6 +201,10 @@ export default function ReadingWordsPage() {
   const [batchText, setBatchText] = useState("");
   const [notice, setNotice] = useState("");
   const [storageError, setStorageError] = useState("");
+  const [staticPublishState, setStaticPublishState] = useState({
+    status: "waiting",
+    message: "静态发布包：等待主词库就绪"
+  });
   const [mainLexiconStatus, setMainLexiconStatus] = useState({
     status: "loading",
     count: 0,
@@ -192,19 +225,29 @@ export default function ReadingWordsPage() {
   const aiConfirmRef = useRef(null);
   const mainLexiconRef = useRef({ words: [], meta: {}, index: new Map() });
   const mainMutationInFlightRef = useRef(false);
+  const selectedWordRef = useRef(null);
+  const staticPublishSignatureRef = useRef("");
 
   useEffect(() => {
-    const savedWords = readReadingWords();
-    setWords(savedWords);
-    setSelectedId(savedWords[0]?.id || "");
-    setReady(true);
-
     let cancelled = false;
-    Promise.all([
-      loadActiveWordsForSync(),
-      loadWordsImportBackupFromIndexedDB(),
-      loadFormalMainLexicon()
-    ]).then(async ([loaded, backup, formal]) => {
+    Promise.resolve().then(async () => {
+      const savedWords = await restorePublishedReadingWords(readReadingWords());
+      const savedSession = readReadingWordsSession();
+      if (cancelled) return;
+      setWords(savedWords);
+      setSelectedId(savedWords.some((word) => word.id === savedSession.selectedId)
+        ? savedSession.selectedId
+        : savedWords[0]?.id || "");
+      setSearch(savedSession.search);
+      setOnlyIncomplete(savedSession.onlyIncomplete);
+      setOnlyFrequent(savedSession.onlyFrequent);
+      setReady(true);
+
+      const [loaded, backup, formal] = await Promise.all([
+        loadActiveWordsForSync(),
+        loadWordsImportBackupFromIndexedDB(),
+        loadFormalMainLexicon()
+      ]);
       if (cancelled) return;
       const activeMainWords = Array.isArray(loaded?.words) ? loaded.words : [];
       const formalMainWords = Array.isArray(formal?.words) ? formal.words : [];
@@ -285,6 +328,9 @@ export default function ReadingWordsPage() {
       }
 
       if (cancelled) return;
+      nextReadingWords = enrichReadingWordsSynonymDetails(nextReadingWords, {
+        mainWords: nextMainWords
+      }).words;
       const mainIndex = buildMainWordIndex(nextMainWords);
       mainLexiconRef.current = {
         words: nextMainWords,
@@ -324,8 +370,82 @@ export default function ReadingWordsPage() {
   }, [ready, words]);
 
   useEffect(() => {
+    if (!ready) return;
+    writeReadingWordsSession({ selectedId, search, onlyIncomplete, onlyFrequent });
+  }, [onlyFrequent, onlyIncomplete, ready, search, selectedId]);
+
+  useEffect(() => {
+    if (!ready || mainLexiconStatus.status !== "ready" || mainWriteBusy) return undefined;
+
+    const transfer = buildReadingWordsTransferPackage(
+      words,
+      mainLexiconRef.current.words,
+      mainLexiconRef.current.meta
+    );
+    const signature = JSON.stringify({
+      readingWords: transfer.readingWords,
+      linkedMainEntries: transfer.linkedMainEntries,
+      sourceMainMeta: transfer.sourceMainMeta
+    });
+    if (staticPublishSignatureRef.current === signature) return undefined;
+
+    let active = true;
+    const controller = new AbortController();
+    setStaticPublishState({
+      status: "saving",
+      message: "静态发布包：正在写入"
+    });
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch("/api/reading-words/publish-static", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            transfer,
+            sourceUpdatedAt: new Date().toISOString()
+          }),
+          signal: controller.signal
+        });
+        const result = await readJsonResponse(
+          response,
+          "服务器返回格式异常，请刷新页面后重试。"
+        );
+        if (!response.ok || !result?.ok) {
+          throw new Error(result?.error || "静态发布包写入失败");
+        }
+        if (!active) return;
+        staticPublishSignatureRef.current = signature;
+        if (Array.isArray(result.synonymDetails) && result.synonymDetails.length) {
+          setWords((currentWords) => {
+            const patched = applyReadingSynonymDetailPatches(currentWords, result.synonymDetails);
+            return patched.changed ? patched.words : currentWords;
+          });
+        }
+        setStaticPublishState({
+          status: "saved",
+          message: `静态发布包：已更新 · ${result.wordCount || 0} 词`
+        });
+      } catch (error) {
+        if (!active || error?.name === "AbortError") return;
+        setStaticPublishState({
+          status: "error",
+          message: `静态发布包写入失败：${error?.message || error}`
+        });
+      }
+    }, 700);
+
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+      controller.abort();
+    };
+  }, [mainLexiconStatus.status, mainWriteBusy, ready, words]);
+
+  useEffect(() => {
     if (!notice) return;
-    const timer = window.setTimeout(() => setNotice(""), 3200);
+    // AI 结果文案较长，多留一会儿；普通提示仍约 3 秒
+    const ms = notice.includes("补全") || notice.includes("AI") ? 12000 : 3200;
+    const timer = window.setTimeout(() => setNotice(""), ms);
     return () => window.clearTimeout(timer);
   }, [notice]);
 
@@ -345,20 +465,6 @@ export default function ReadingWordsPage() {
       return needsReadingAiProcessing(word, mainEntry, mainWords);
     });
   }, [words]);
-  const mainEntryMissingWords = useMemo(() => {
-    const mainIndex = mainLexiconRef.current.index;
-    return words.filter(
-      (word) => !mainIndex.get(normalizeReadingWordKey(word.word))?.entry
-    );
-  }, [words]);
-  const mainClassificationPending = useMemo(() => {
-    const mainIndex = mainLexiconRef.current.index;
-    return words.filter((word) => {
-      const mainEntry = mainIndex.get(normalizeReadingWordKey(word.word))?.entry;
-      return Boolean(mainEntry) && isMainEntryClassificationIncomplete(mainEntry);
-    });
-  }, [words]);
-
   const readingOrderPool = useMemo(() => {
     const mainAvailable = mainLexiconStatus.status === "ready" && mainLexiconStatus.count > 0;
     const mainIndex = mainLexiconRef.current.index;
@@ -366,9 +472,12 @@ export default function ReadingWordsPage() {
       const mainEntry = mainAvailable
         ? mainIndex.get(normalizeReadingWordKey(word.word))?.entry
         : null;
+      // 勿 {...main, ...word}：生词本空 example 会盖住主词库例句
+      const merged = mainEntry
+        ? applyMainEntryToReadingWord(word, mainEntry)
+        : word;
       return {
-        ...(mainEntry || {}),
-        ...word,
+        ...merged,
         difficulty: mainEntry?.difficulty || word.difficulty || ""
       };
     });
@@ -409,20 +518,63 @@ export default function ReadingWordsPage() {
   }, [wordOrdering, words]);
 
   useEffect(() => {
-    if (!visibleWords.length) return;
+    if (!visibleWords.length) {
+      // 筛选导致列表为空时，不要卡在「无选中」：若全库还有词，用全库首词占位
+      // （例如 AI 补全后「仅待补全」列表瞬间清空）
+      return;
+    }
     if (!visibleWords.some((word) => word.id === selectedId)) {
       setSelectedId(visibleWords[0].id);
     }
   }, [selectedId, visibleWords]);
 
-  const selectedWord = visibleWords.find((word) => word.id === selectedId) || visibleWords[0] || null;
+  // 展示用：优先当前筛选列表；列表为空时回退到全库，避免补全后卡片整页空白
+  const selectedWord = (
+    visibleWords.find((word) => word.id === selectedId)
+    || visibleWords[0]
+    || words.find((word) => word.id === selectedId)
+    || words[0]
+    || null
+  );
+  selectedWordRef.current = selectedWord;
   const selectedIndex = selectedWord
     ? visibleWords.findIndex((word) => word.id === selectedWord.id)
     : -1;
-  const missingFields = selectedWord ? getReadingWordMissingFields(selectedWord) : [];
+  const studyPosition = selectedIndex >= 0 ? selectedIndex + 1 : (selectedWord ? 1 : 0);
   const selectedMainEntry = selectedWord
     ? mainLexiconRef.current.index.get(normalizeReadingWordKey(selectedWord.word))?.entry
     : null;
+  // 展示层：用主词库补全空的例句/释义/变形等（与参考图 A 一致）
+  const selectedStudyWord = useMemo(() => {
+    if (!selectedWord) return null;
+    return selectedMainEntry
+      ? applyMainEntryToReadingWord(selectedWord, selectedMainEntry)
+      : selectedWord;
+  }, [selectedMainEntry, selectedWord]);
+  const selectedSynonymItems = useMemo(() => {
+    const synonyms = Array.isArray(selectedStudyWord?.synonyms) ? selectedStudyWord.synonyms : [];
+    const synonymDetails = normalizeReadingSynonymDetails(
+      selectedStudyWord?.synonymDetails,
+      synonyms,
+      selectedStudyWord?.word
+    );
+    const detailByWord = new Map(
+      synonymDetails.map((detail) => [normalizeReadingWordKey(detail.word), detail])
+    );
+    return synonyms
+      .map((synonym) => {
+        const synonymWord = typeof synonym === "string"
+          ? synonym
+          : synonym?.word || synonym?.replacement || "";
+        const linkedMainEntry = mainLexiconRef.current.index.get(
+          normalizeReadingWordKey(synonymWord)
+        )?.entry;
+        const detail = detailByWord.get(normalizeReadingWordKey(synonymWord));
+        return buildReadingSynonymDisplay(detail || synonym, linkedMainEntry);
+      })
+      .filter((synonym) => synonym.word);
+  }, [selectedStudyWord]);
+  const missingFields = selectedStudyWord ? getReadingWordMissingFields(selectedStudyWord) : [];
   const selectedMainStatus = selectedWord && !selectedMainEntry
     ? "主词库未收录"
     : selectedMainEntry && isMainEntryClassificationIncomplete(selectedMainEntry)
@@ -448,13 +600,26 @@ export default function ReadingWordsPage() {
   }, [selectedIndex, visibleWords]);
 
   const patchSelectedWord = useCallback((patch) => {
-    if (!selectedWord) return;
-    setWords((currentWords) => currentWords.map((word) => (
-      word.id === selectedWord.id
-        ? { ...word, ...patch, updatedAt: new Date().toISOString() }
-        : word
-    )));
-  }, [selectedWord]);
+    const target = selectedWordRef.current;
+    if (!target) return;
+    setWords((currentWords) => currentWords.map((word) => {
+      if (word.id !== target.id) return word;
+      const resolvedPatch = typeof patch === "function" ? patch(word) : patch;
+      const nextWord = { ...word, ...resolvedPatch, updatedAt: new Date().toISOString() };
+      selectedWordRef.current = nextWord;
+      return nextWord;
+    }));
+  }, []);
+
+  const markSelectedStatus = useCallback((status) => {
+    const target = selectedWordRef.current;
+    if (!target) return;
+    patchSelectedWord((word) => ({
+      status: word.status === status ? "" : status,
+      lastReviewedAt: new Date().toISOString()
+    }));
+    moveSelection(1);
+  }, [moveSelection, patchSelectedWord]);
 
   useEffect(() => {
     function handleReadingWordNavigation(event) {
@@ -466,18 +631,27 @@ export default function ReadingWordsPage() {
       }
 
       event.preventDefault();
-      if (action === "word-audio") speak(selectedWord.word);
-      else if (action === "example-audio") speak(selectedWord.example);
+      if (action === "word-audio") speak(selectedStudyWord?.word || selectedWord.word);
+      else if (action === "example-audio") speak(selectedStudyWord?.example || selectedWord.example);
       else if (action === "previous") moveSelection(-1);
       else if (action === "next") moveSelection(1);
-      else if (action === "known") patchSelectedWord({ status: selectedWord.status === "熟悉" ? "" : "熟悉" });
-      else if (action === "blurry") patchSelectedWord({ status: selectedWord.status === "模糊" ? "" : "模糊" });
-      else if (action === "unknown") patchSelectedWord({ status: selectedWord.status === "不熟" ? "" : "不熟" });
+      else if (action === "known") markSelectedStatus("熟悉");
+      else if (action === "blurry") markSelectedStatus("模糊");
+      else if (action === "unknown") markSelectedStatus("不熟");
     }
 
     window.addEventListener("keydown", handleReadingWordNavigation, true);
     return () => window.removeEventListener("keydown", handleReadingWordNavigation, true);
-  }, [moveSelection, patchSelectedWord, selectedWord, visibleWords.length]);
+  }, [markSelectedStatus, moveSelection, selectedStudyWord, selectedWord, visibleWords.length]);
+
+  useEffect(() => {
+    function handleWordCardSwipe(event) {
+      if (!selectedWord || visibleWords.length < 2) return;
+      moveSelection(event.detail?.direction === "previous" ? -1 : 1);
+    }
+    window.addEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+    return () => window.removeEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+  }, [moveSelection, selectedWord, visibleWords.length]);
 
   const deleteSelectedWord = useCallback(() => {
     if (!selectedWord || aiRunning || mainWriteBusy) return;
@@ -806,12 +980,25 @@ export default function ReadingWordsPage() {
   const stopAiRun = () => {
     aiControlRef.current.stopped = true;
     aiControlRef.current.controller?.abort();
+    const message = "已停止；停止后收到的结果不会写入阅读生词本。";
     setAiRun((current) => ({
       ...current,
       status: "stopped",
-      message: "已停止；停止后收到的结果不会写入阅读生词本。"
+      message
     }));
+    setNotice(message);
   };
+
+  /** 补全结束后保证结果可见：提示条 + 打开 AI 面板 + 必要时关掉「仅待补全」 */
+  const finalizeAiRunUi = useCallback((nextRun) => {
+    setAiRun(nextRun);
+    if (nextRun?.message) setNotice(nextRun.message);
+    setAiOpen(true);
+    // 待补全筛开着时，补全成功的词会立刻从列表消失，卡片变空——自动切回全部以便查看结果
+    if (nextRun?.status === "done" && Number(nextRun.filled) > 0) {
+      setOnlyIncomplete(false);
+    }
+  }, []);
 
   const runAiCompletion = async () => {
     if (aiRunning) return;
@@ -870,23 +1057,38 @@ export default function ReadingWordsPage() {
 
     const failureNotes = [];
 
+    function describeAiFetchError(error) {
+      const raw = String(error?.message || error || "");
+      // Browser TypeError when local Next server is down / wrong host / offline.
+      if (/failed to fetch|networkerror|load failed|network request failed/i.test(raw)) {
+        return "无法连接本地词库服务（Failed to fetch）。请确认已打开 http://127.0.0.1:3000，可在项目目录运行 restart-vocab-service.ps1 重启后再试。";
+      }
+      return raw || "AI 请求失败";
+    }
+
     async function requestProfiles(items, { force = true, maxSplitDepth = 2 } = {}) {
       // items: [{ id, requestWord }] — requestWord may already be canonically corrected.
-      const response = await fetch("/api/generate-words", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            inputId: item.id,
-            word: item.requestWord || item.word
-          })),
-          force,
-          maxSplitDepth,
-          // Reading notebook only needs core sense + classification, not full collocation packs.
-          profileQuality: "reading"
-        })
-      });
+      let response;
+      try {
+        response = await fetch("/api/generate-words", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            items: items.map((item) => ({
+              inputId: item.id,
+              word: item.requestWord || item.word,
+              requestedSynonyms: item.requestedSynonyms || []
+            })),
+            force,
+            maxSplitDepth,
+            // Reading notebook only needs core sense + classification, not full collocation packs.
+            profileQuality: "reading"
+          })
+        });
+      } catch (error) {
+        throw new Error(describeAiFetchError(error));
+      }
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
         throw new Error(payload?.detail || payload?.error || `HTTP ${response.status}`);
@@ -904,6 +1106,7 @@ export default function ReadingWordsPage() {
           id: word.id,
           originalWord: word.word,
           requestWord: suggestion.word || word.word,
+          requestedSynonyms: Array.isArray(word.synonyms) ? word.synonyms : [],
           corrected: Boolean(suggestion.corrected),
           mainEntry: suggestion.mainEntry || null
         };
@@ -923,14 +1126,15 @@ export default function ReadingWordsPage() {
         if (error?.name === "AbortError" || aiControlRef.current.stopped) break;
         processed += batch.length;
         failed += batch.length;
-        failureNotes.push(error?.message || "AI 请求失败");
+        const failMsg = describeAiFetchError(error);
+        failureNotes.push(failMsg);
         setAiRun({
           status: "running",
           processed,
           total: targets.length,
           filled,
           failed,
-          message: `本批失败：${error?.message || "AI 请求失败"}`
+          message: `本批失败：${failMsg}`
         });
         continue;
       }
@@ -1105,6 +1309,16 @@ export default function ReadingWordsPage() {
           );
           if (aiControlRef.current.stopped) {
             await saveWordsToIndexedDB(workingMainWords, mainLexiconRef.current.meta);
+            // 已写入阅读本的中间结果保留在 workingWords 时尽量回显
+            setWords(workingWords);
+            finalizeAiRunUi({
+              status: "stopped",
+              processed,
+              total: targets.length,
+              filled,
+              failed,
+              message: "已停止；本批主词库未发布，已尽量保留已写入的阅读生词。"
+            });
             return;
           }
           if (!writeReadingWordsWithBackup(workingWords, words)) {
@@ -1115,6 +1329,15 @@ export default function ReadingWordsPage() {
           await saveWordsToIndexedDB(nextMainWords, mainLexiconRef.current.meta);
           if (aiControlRef.current.stopped) {
             await saveWordsToIndexedDB(workingMainWords, mainLexiconRef.current.meta);
+            setWords(workingWords);
+            finalizeAiRunUi({
+              status: "stopped",
+              processed,
+              total: targets.length,
+              filled,
+              failed,
+              message: "已停止；本批主词库未发布，已尽量保留已写入的阅读生词。"
+            });
             return;
           }
           if (!writeReadingWords(workingWords)) {
@@ -1137,13 +1360,13 @@ export default function ReadingWordsPage() {
         updateMainLexiconMemory(nextMainWords, publishedMeta);
       } catch (error) {
         aiControlRef.current.controller = null;
-        setAiRun({
+        finalizeAiRunUi({
           status: "error",
           processed,
           total: targets.length,
           filled,
           failed: failed + batch.length,
-          message: `本批未写入且已停止：${error?.message || error}`
+          message: `本批未写入且已停止：${describeAiFetchError(error)}`
         });
         return;
       }
@@ -1154,6 +1377,12 @@ export default function ReadingWordsPage() {
       filled += batchFilled;
       failed += batchFailed;
       setWords(workingWords);
+      // 保持当前选中词仍能在全量列表中找到，避免补全后筛选导致卡片空白
+      if (workingWords.some((word) => word.id === selectedWordRef.current?.id)) {
+        setSelectedId(selectedWordRef.current.id);
+      } else if (workingWords[0]?.id) {
+        setSelectedId(workingWords[0].id);
+      }
       setAiRun({
         status: "running",
         processed,
@@ -1164,19 +1393,25 @@ export default function ReadingWordsPage() {
       });
     }
 
-    if (aiControlRef.current.stopped) return;
+    if (aiControlRef.current.stopped) {
+      aiControlRef.current.controller = null;
+      return;
+    }
     aiControlRef.current.controller = null;
-    const uniqueNotes = [...new Set(failureNotes)].slice(0, 6);
-    const noteText = uniqueNotes.length ? ` 原因：${uniqueNotes.join("；")}` : "";
-    setAiRun({
+    const uniqueNotes = [...new Set(failureNotes)].slice(0, 8);
+    const noteText = uniqueNotes.length ? ` 详情：${uniqueNotes.join("；")}` : "";
+    const doneMessage = failed
+      ? `补全结束：${filled} 个通过，${failed} 个仍待处理。${noteText}`
+      : `补全结束：${filled} 个重新校验通过。${noteText}`;
+    // 先写入 words，再收尾 UI（关掉「仅待补全」并弹出结果）
+    setWords((current) => (current === workingWords ? current : workingWords));
+    finalizeAiRunUi({
       status: "done",
       processed,
       total: targets.length,
       filled,
       failed,
-      message: failed
-        ? `补全结束：${filled} 个通过，${failed} 个仍待处理。${noteText}`
-        : `补全结束：${filled} 个重新校验通过。`
+      message: doneMessage
     });
   };
 
@@ -1188,90 +1423,84 @@ export default function ReadingWordsPage() {
     );
   }
 
-  return (
-    <main className={styles.page}>
-      <header className={styles.pageHeader}>
-        <div>
-          <div className={styles.titleLine}>
-            <BookOpenText aria-hidden="true" />
-            <h1>阅读生词本</h1>
-          </div>
-          <p>阅读生词独立学习；已有主词直接复用资料，新词写入正式主词库，并在 AI 扫描后按用途、主题和难度分类。</p>
-        </div>
-        <div className={styles.headerStats} aria-label="阅读生词统计">
-          <strong>{words.length}</strong>
-          <span>全部生词</span>
-          <strong>{highFrequencyWords.length}</strong>
-          <span>高频词</span>
-          <strong>{incompleteWords.length}</strong>
-          <span>待补全</span>
-        </div>
-      </header>
-
-      <div className={`${styles.syncBanner} ${mainLexiconStatus.status === "error" ? styles.syncError : ""}`} role="status">
-        <span>{mainLexiconStatus.message}</span>
-        {mainEntryMissingWords.length ? <em>主词库未收录 {mainEntryMissingWords.length} 个</em> : null}
-        {mainClassificationPending.length ? <em>主词库待分类 {mainClassificationPending.length} 个</em> : null}
-      </div>
-
-      <section className={styles.toolbar} aria-label="阅读生词工具栏">
-        <label className={styles.searchBox}>
-          <Search aria-hidden="true" />
-          <input
-            type="search"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="搜索单词、释义或同义替换"
-          />
-        </label>
-        <button
-          type="button"
-          className={onlyIncomplete ? styles.activeTool : styles.secondaryButton}
-          onClick={() => setOnlyIncomplete((value) => !value)}
-          aria-pressed={onlyIncomplete}
-        >
-          <AlertTriangle aria-hidden="true" />待补全 {incompleteWords.length}
-        </button>
-        <button
-          type="button"
-          className={onlyFrequent ? styles.activeTool : styles.secondaryButton}
-          onClick={() => setOnlyFrequent((value) => !value)}
-          aria-pressed={onlyFrequent}
-        >
-          <Star aria-hidden="true" />高频词 {highFrequencyWords.length}
-        </button>
-        <WordStudyOrderControls
-          mode={wordOrdering.mode}
-          difficultyMode={wordOrdering.difficultyMode}
-          onModeChange={changeWordOrderMode}
-          onDifficultyModeChange={changeWordDifficultyMode}
-          difficultyAvailable={wordOrdering.difficultyAvailable}
-          difficultyProfile={wordOrdering.difficultyProfile}
+  const studyToolbar = (
+    <header className={`topbar ${styles.toolbar}`} aria-label="阅读生词工具栏">
+      <label className={styles.searchBox}>
+        <Search aria-hidden="true" />
+        <input
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="搜索单词、释义或同义替换"
         />
-        <StudyMeaningToggle className={styles.secondaryButton} />
-        <button type="button" className={styles.secondaryButton} onClick={() => setAddOpen((value) => !value)} disabled={actionsDisabled}>
-          <BookPlus aria-hidden="true" />单个添加
-        </button>
-        <button type="button" className={styles.secondaryButton} onClick={() => setBatchOpen((value) => !value)} disabled={actionsDisabled}>
-          <FileSpreadsheet aria-hidden="true" />表格批量添加
-        </button>
-        <button type="button" className={styles.secondaryButton} onClick={exportTransferPackage} disabled={!words.length || actionsDisabled}>
-          <Download aria-hidden="true" />跨设备导出
-        </button>
-        <label className={`${styles.secondaryButton} ${styles.portableImport}`} aria-disabled={actionsDisabled}>
-          <Upload aria-hidden="true" />跨设备导入
-          <input type="file" accept=".json,application/json" onChange={importTransferFile} disabled={actionsDisabled} />
-        </label>
-        <button type="button" className={styles.secondaryButton} onClick={exportBackup} disabled={!words.length || aiRunning || mainWriteBusy}>
-          <Download aria-hidden="true" />仅导出生词
-        </button>
-        <button type="button" className={styles.secondaryButton} onClick={restoreLastSyncBackup} disabled={!rollbackAvailable || aiRunning || mainWriteBusy}>
-          恢复上次同步
-        </button>
-        <button type="button" className={styles.aiButton} onClick={() => setAiOpen((value) => !value)}>
-          <Sparkles aria-hidden="true" />AI 工具
-        </button>
-      </section>
+      </label>
+      <button
+        type="button"
+        className={`${onlyIncomplete ? styles.activeTool : styles.secondaryButton} top-pill`}
+        onClick={() => setOnlyIncomplete((value) => !value)}
+        aria-pressed={onlyIncomplete}
+      >
+        <AlertTriangle aria-hidden="true" />待补全 {incompleteWords.length}
+      </button>
+      <button
+        type="button"
+        className={`${onlyFrequent ? styles.activeTool : styles.secondaryButton} top-pill`}
+        onClick={() => setOnlyFrequent((value) => !value)}
+        aria-pressed={onlyFrequent}
+      >
+        <Star aria-hidden="true" />高频词 {highFrequencyWords.length}
+      </button>
+      <WordStudyOrderControls
+        mode={wordOrdering.mode}
+        difficultyMode={wordOrdering.difficultyMode}
+        onModeChange={changeWordOrderMode}
+        onDifficultyModeChange={changeWordDifficultyMode}
+        difficultyAvailable={wordOrdering.difficultyAvailable}
+        difficultyProfile={wordOrdering.difficultyProfile}
+      />
+      <StudyMeaningToggle className={`top-pill ${styles.secondaryButton}`} />
+      <details className={styles.manageMenu}>
+        <summary className="top-pill">词库管理</summary>
+        <div>
+          <button type="button" className={styles.secondaryButton} onClick={() => setAddOpen((value) => !value)} disabled={actionsDisabled}>
+            <BookPlus aria-hidden="true" />单个添加
+          </button>
+          <button type="button" className={styles.secondaryButton} onClick={() => setBatchOpen((value) => !value)} disabled={actionsDisabled}>
+            <FileSpreadsheet aria-hidden="true" />表格批量添加
+          </button>
+          <button type="button" className={styles.secondaryButton} onClick={exportTransferPackage} disabled={!words.length || actionsDisabled}>
+            <Download aria-hidden="true" />跨设备导出
+          </button>
+          <label className={`${styles.secondaryButton} ${styles.portableImport}`} aria-disabled={actionsDisabled}>
+            <Upload aria-hidden="true" />跨设备导入
+            <input type="file" accept=".json,application/json" onChange={importTransferFile} disabled={actionsDisabled} />
+          </label>
+          <button type="button" className={styles.secondaryButton} onClick={exportBackup} disabled={!words.length || aiRunning || mainWriteBusy}>
+            <Download aria-hidden="true" />仅导出生词
+          </button>
+          <button type="button" className={styles.secondaryButton} onClick={restoreLastSyncBackup} disabled={!rollbackAvailable || aiRunning || mainWriteBusy}>
+            恢复上次同步
+          </button>
+        </div>
+      </details>
+      <button type="button" className={`${styles.aiButton} top-pill`} onClick={() => setAiOpen((value) => !value)}>
+        <Sparkles aria-hidden="true" />AI 工具
+      </button>
+    </header>
+  );
+
+  return (
+    <main className={`${styles.page} page--word-flash`}>
+      {mainLexiconStatus.status === "error" ? (
+        <div className={`${styles.syncBanner} ${styles.syncError}`} role="alert">
+          <span>{mainLexiconStatus.message}</span>
+        </div>
+      ) : null}
+      {staticPublishState.status === "error" ? (
+        <div className={`${styles.staticPublishBanner} ${styles.staticPublishError}`} role="alert">
+          {staticPublishState.message}
+        </div>
+      ) : null}
 
       {storageError ? <div className={styles.errorBanner}>{storageError}</div> : null}
 
@@ -1322,6 +1551,37 @@ export default function ReadingWordsPage() {
         </section>
       ) : null}
 
+      {/* 结果条始终可见（不依赖 AI 面板是否展开），避免「补全完了但界面上像没结果」 */}
+      {aiRun.message && ["done", "error", "stopped", "running", "confirm-required"].includes(aiRun.status) ? (
+        <div
+          className={`${styles.aiResultBanner}${
+            aiRun.status === "error" ? ` ${styles.aiResultError}` : ""
+          }${aiRun.status === "done" && aiRun.failed ? ` ${styles.aiResultWarn}` : ""}${
+            aiRun.status === "done" && !aiRun.failed ? ` ${styles.aiResultOk}` : ""
+          }`}
+          role="status"
+          aria-live="polite"
+        >
+          <strong>
+            {aiRun.status === "running"
+              ? "AI 补全进行中"
+              : aiRun.status === "error"
+                ? "AI 补全失败"
+                : aiRun.status === "stopped"
+                  ? "AI 补全已停止"
+                  : aiRun.status === "confirm-required"
+                    ? "需要确认"
+                    : "AI 补全结束"}
+          </strong>
+          <p>{aiRun.message}</p>
+          {aiRun.total ? (
+            <span>
+              进度 {aiRun.processed}/{aiRun.total} · 通过 {aiRun.filled} · 仍待处理 {aiRun.failed}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
       {aiOpen ? (
         <section className={styles.aiPanel} aria-label="阅读生词 AI 工具">
           <div className={styles.aiIntro}>
@@ -1348,8 +1608,11 @@ export default function ReadingWordsPage() {
           </label>
           {aiRun.total || aiRun.message ? (
             <div className={styles.aiProgress}>
-              <div><span style={{ width: `${aiRun.total ? (aiRun.processed / aiRun.total) * 100 : 0}%` }} /></div>
-              <p>{aiRun.message || "准备开始"} {aiRun.total ? `· 通过 ${aiRun.filled} · 仍待处理 ${aiRun.failed}` : ""}</p>
+              <div><span style={{ width: `${aiRun.total ? Math.min(100, (aiRun.processed / aiRun.total) * 100) : 0}%` }} /></div>
+              <p className={aiRun.status === "error" ? styles.aiProgressError : undefined}>
+                {aiRun.message || "准备开始"}
+                {aiRun.total ? ` · 通过 ${aiRun.filled} · 仍待处理 ${aiRun.failed}` : ""}
+              </p>
             </div>
           ) : null}
           <div className={styles.aiActions}>
@@ -1361,8 +1624,11 @@ export default function ReadingWordsPage() {
         </section>
       ) : null}
 
-      <div className={styles.workspace}>
-        <aside className={styles.wordList} aria-label="阅读生词列表">
+      <WordStudyWorkspace
+        className={styles.workspace}
+        studyColumnClassName={styles.studyColumn}
+        overview={(
+        <aside className={`word-insight-panel word-insight-panel--persistent ${styles.wordList}`} aria-label="阅读生词列表">
           <div className={styles.listHeading}>
             <strong>{onlyFrequent ? "高频阅读生词" : onlyIncomplete ? "待补全生词" : "全部阅读生词"}</strong>
             <span>{visibleWords.length} 个</span>
@@ -1407,131 +1673,117 @@ export default function ReadingWordsPage() {
             </div>
           )}
         </aside>
-
-        <article className={`page--word-flash ${styles.wordCard}`} aria-label="阅读生词详情">
+        )}
+      >
+        {selectedWord ? (
+          <WordStudyProgress
+            label="阅读进度"
+            title={onlyIncomplete ? "待补全生词" : onlyFrequent ? "高频阅读生词" : "全部阅读生词"}
+            current={studyPosition}
+            total={visibleWords.length}
+            percent={visibleWords.length ? (studyPosition / visibleWords.length) * 100 : 0}
+            onPositionCommit={(position) => {
+              const target = visibleWords[position - 1];
+              if (target) setSelectedId(target.id);
+            }}
+            getPositionPreview={(position) => visibleWords[position - 1]?.word || ""}
+            actions={studyToolbar}
+          />
+        ) : null}
+        {/* 与主词库刷词同一套 class：word-study-card + WordStudyContent + WordDetailGrid */}
+        <article className="word-study-card" aria-label="阅读生词详情" data-word-swipe-card>
           {selectedWord ? (
             <>
               <div className="word-canvas-tools">
                 <span>
                   阅读生词 · {selectedIndex + 1} / {visibleWords.length}
-                  {selectedWord.highFrequency || Number(selectedWord.importCount) >= 2 ? ` · 高频 ×${selectedWord.importCount}` : ""}
+                  {selectedWord.highFrequency || Number(selectedWord.importCount) >= 2
+                    ? ` · 高频 ×${selectedWord.importCount}`
+                    : ""}
                 </span>
-                <button
-                  type="button"
-                  className={`word-canvas-icon${selectedWord.favorite ? " is-active" : ""}`}
-                  onClick={() => patchSelectedWord({ favorite: !selectedWord.favorite })}
-                  aria-pressed={selectedWord.favorite}
-                  aria-label={selectedWord.favorite ? "取消收藏" : "收藏"}
-                >
-                  <Bookmark aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  className="word-canvas-icon"
-                  onClick={deleteSelectedWord}
-                  disabled={aiRunning || mainWriteBusy}
-                  aria-label="从阅读生词本删除"
-                  title="只从阅读生词本删除（D / Delete）"
-                  data-testid="reading-word-delete"
-                >
-                  <Trash2 aria-hidden="true" />
-                </button>
+                <div>
+                  <button
+                    type="button"
+                    className={`word-canvas-icon${selectedWord.favorite ? " is-active" : ""}`}
+                    onClick={() => patchSelectedWord((word) => ({ favorite: !word.favorite }))}
+                    aria-pressed={selectedWord.favorite}
+                    aria-label={selectedWord.favorite ? "取消收藏" : "收藏"}
+                    title="收藏"
+                  >
+                    <Bookmark aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="word-canvas-icon"
+                    onClick={deleteSelectedWord}
+                    disabled={aiRunning || mainWriteBusy}
+                    aria-label="从阅读生词本删除"
+                    title="只从阅读生词本删除（D / Delete）"
+                    data-testid="reading-word-delete"
+                  >
+                    <Trash2 aria-hidden="true" />
+                  </button>
+                </div>
               </div>
 
               {missingFields.length ? (
-                <div className={styles.missingBanner}>
+                <div className={styles.missingBanner} role="status">
                   <AlertTriangle aria-hidden="true" />
                   待补全：{missingFields.map((field) => MISSING_FIELD_LABELS[field]).join("、")}
                 </div>
               ) : null}
               {selectedMainStatus ? (
-                <div className={styles.missingBanner}>
+                <div className={styles.missingBanner} role="status">
                   <AlertTriangle aria-hidden="true" />
                   {selectedMainStatus}；AI 处理时会先建立正式主词条，再补充分类。
                 </div>
               ) : null}
 
               <WordStudyContent
-                item={selectedWord}
-                audioInfo={{ phonetic: selectedWord.phonetic }}
-                displayForms={(Array.isArray(selectedWord.forms) ? selectedWord.forms : []).map((form) => (
-                  typeof form === "string" ? { word: form } : form
-                ))}
+                item={selectedStudyWord || selectedWord}
+                audioInfo={{ phonetic: (selectedStudyWord || selectedWord).phonetic }}
+                displayForms={(Array.isArray((selectedStudyWord || selectedWord).forms)
+                  ? (selectedStudyWord || selectedWord).forms
+                  : []).map((form) => (typeof form === "string" ? { word: form } : form))}
                 fallback={(value, fallbackValue) => String(value || "").trim() || fallbackValue}
-                speakExample={() => speak(selectedWord.example)}
-                speakWord={() => speak(selectedWord.word)}
+                speakExample={() => speak((selectedStudyWord || selectedWord).example)}
+                speakWord={() => speak((selectedStudyWord || selectedWord).word)}
               />
 
-              <div className={`${styles.detailGrid} study-answer-content`}>
-                <DetailList
-                  title="变形"
-                  items={Array.isArray(selectedWord.forms) ? selectedWord.forms : []}
-                  emptyText={selectedWord.formsReviewed ? "已审核 · 无变形" : "待 AI 检查变形"}
-                  renderItem={(item, index) => (
-                    <div className={styles.detailItem} key={`${item?.word || item}-${index}`}>
-                      <strong>{item?.word || item}</strong><span>{item?.type || item?.note || ""}</span>
-                    </div>
-                  )}
-                />
-                <DetailList
-                  title="词族"
-                  items={Array.isArray(selectedWord.wordFamily) ? selectedWord.wordFamily : []}
-                  emptyText={selectedWord.wordFamilyReviewed ? "已审核 · 无词族" : "待 AI 检查词族"}
-                  renderItem={(item, index) => (
-                    <div className={styles.detailItem} key={`${item?.word || item}-${index}`}>
-                      <strong>{item?.word || item}</strong><span>{item?.meaning || item?.pos || ""}</span>
-                    </div>
-                  )}
-                />
-                <DetailList
-                  title="同义替换"
-                  items={Array.isArray(selectedWord.synonyms) ? selectedWord.synonyms : []}
-                  emptyText={selectedWord.synonymsReviewed ? "已审核 · 无可替换" : "待 AI 检查同义替换"}
-                  renderItem={(item, index) => {
-                    const synonymWord = typeof item === "string"
-                      ? item
-                      : item?.word || item?.replacement || "";
-                    const synonymMainEntry = mainLexiconRef.current.index.get(
-                      normalizeReadingWordKey(synonymWord)
-                    )?.entry;
-                    const synonym = buildReadingSynonymDisplay(item, synonymMainEntry);
-                    return (
-                      <button
-                        type="button"
-                        className={styles.synonymItem}
-                        key={`${synonym.word}-${index}`}
-                        onClick={() => speak(synonym.word)}
-                      >
-                        <Volume2 aria-hidden="true" />
-                        <strong className={styles.synonymWord}>{synonym.word}</strong>
-                        <span className={styles.synonymMeaning}>{synonym.meaning || "释义待补全"}</span>
-                      </button>
-                    );
-                  }}
-                />
-              </div>
-
-              <WordStudyActions
-                item={selectedWord}
-                isStudyEmpty={false}
-                isExternalIdictationItem={false}
-                prevWord={() => moveSelection(-1)}
-                nextWord={() => moveSelection(1)}
-                showDirectionArrows
-                markStatus={(status) => patchSelectedWord({
-                  status: selectedWord.status === status ? "" : status
-                })}
+              {/* 阅读生词只展示有资料的 变形 / 词族 / 同义替换，空卡由共享组件统一隐藏。 */}
+              <WordDetailGrid
+                item={selectedStudyWord || selectedWord}
+                variant="reading-words"
+                displayForms={(Array.isArray((selectedStudyWord || selectedWord).forms)
+                  ? (selectedStudyWord || selectedWord).forms
+                  : []).map((form) => (typeof form === "string" ? { word: form } : form))}
+                displayFamily={(Array.isArray((selectedStudyWord || selectedWord).wordFamily)
+                  ? (selectedStudyWord || selectedWord).wordFamily
+                  : []).map((family) => (typeof family === "string" ? { word: family } : family))}
+                synonymItems={selectedSynonymItems}
+                speakSmallText={(text) => speak(text)}
               />
             </>
           ) : (
             <div className={styles.cardEmpty}>
               <BookOpenText aria-hidden="true" />
               <strong>选择一个阅读生词查看详情</strong>
-              <span>详情中不会出现词组搭配和短语搭配。</span>
+              <span>学习区排列与例句显示与主词库刷词一致。</span>
             </div>
           )}
         </article>
-      </div>
+        {selectedWord ? (
+          <WordStudyActions
+            item={selectedWord}
+            isStudyEmpty={false}
+            isExternalIdictationItem={false}
+            prevWord={() => moveSelection(-1)}
+            nextWord={() => moveSelection(1)}
+            showDirectionArrows
+            markStatus={markSelectedStatus}
+          />
+        ) : null}
+      </WordStudyWorkspace>
 
       {notice ? <div className={styles.toast} role="status">{notice}</div> : null}
     </main>

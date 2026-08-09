@@ -22,6 +22,8 @@ import {
   parseReadingParaphraseImport,
   saveReadingParaphraseState
 } from "../lib/reading-paraphrases/storage.mjs";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
+import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
 import styles from "./reading-paraphrases.module.css";
 
 const DIRECTION_LABELS = {
@@ -71,6 +73,7 @@ export default function ReadingParaphrasesPage() {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const fileRef = useRef(null);
+  const liveStudyRef = useRef({ state, visibleItems: [], index: 0, filter: "all", cursorKey: "" });
 
   useEffect(() => {
     const loaded = loadReadingParaphraseState();
@@ -101,6 +104,7 @@ export default function ReadingParaphrasesPage() {
     : current?.sourcePhrase;
   const cursorKey = `${state.direction}:${filter}`;
   const savedCursorId = state.positions?.[cursorKey];
+  liveStudyRef.current = { state, visibleItems, index, filter, cursorKey };
 
   useEffect(() => {
     const nextIndex = savedCursorId
@@ -130,23 +134,33 @@ export default function ReadingParaphrasesPage() {
   }, [goToIndex, index]);
 
   useEffect(() => {
-    function handleHorizontalNavigation(event) {
-      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-
-      const target = event.target;
-      if (target instanceof HTMLElement && (
-        target.isContentEditable
-        || ["INPUT", "SELECT", "TEXTAREA"].includes(target.tagName)
-      )) return;
-
+    function handleStudyKeyboard(event) {
+      const action = getStudyKeyboardAction(event);
+      if (!action || !current) return;
+      if (!["previous", "next", "known", "blurry", "unknown", "example-audio"].includes(action)) return;
       event.preventDefault();
-      move(event.key === "ArrowLeft" ? -1 : 1);
+      if (action === "previous") move(-1);
+      else if (action === "next") move(1);
+      else if (action === "known") mark(READING_PARAPHRASE_STATUS.KNOWN);
+      else if (action === "blurry") mark(READING_PARAPHRASE_STATUS.FUZZY);
+      else if (action === "unknown") mark(READING_PARAPHRASE_STATUS.UNFAMILIAR);
+      else if (action === "example-audio" && state.direction !== READING_PARAPHRASE_DIRECTION.BROWSE) {
+        setRevealed((value) => !value);
+      }
     }
 
-    window.addEventListener("keydown", handleHorizontalNavigation);
-    return () => window.removeEventListener("keydown", handleHorizontalNavigation);
-  }, [move]);
+    window.addEventListener("keydown", handleStudyKeyboard);
+    return () => window.removeEventListener("keydown", handleStudyKeyboard);
+  }, [current, move, state.direction]);
+
+  useEffect(() => {
+    function handleWordCardSwipe(event) {
+      if (!current || visibleItems.length < 2) return;
+      move(event.detail?.direction === "previous" ? -1 : 1);
+    }
+    window.addEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+    return () => window.removeEventListener(WORD_CARD_SWIPE_EVENT, handleWordCardSwipe);
+  }, [current, move, visibleItems.length]);
 
   function setDirection(direction) {
     setState((existing) => ({ ...existing, direction, updatedAt: Date.now() }));
@@ -154,30 +168,42 @@ export default function ReadingParaphrasesPage() {
   }
 
   function mark(status) {
-    if (!current) return;
+    const live = liveStudyRef.current;
+    const activeState = live.state;
+    const activeItems = live.visibleItems;
+    const activeIndex = live.index;
+    const activeCurrent = activeItems[activeIndex] || null;
+    if (!activeCurrent) return;
     const now = Date.now();
-    const leavesCurrentRange = filter !== "all"
-      && (filter === "new" ? Boolean(status) : filter !== status);
+    const leavesCurrentRange = live.filter !== "all"
+      && (live.filter === "new" ? Boolean(status) : live.filter !== status);
     const nextVisibleItems = leavesCurrentRange
-      ? visibleItems.filter((item) => item.id !== current.id)
-      : visibleItems;
+      ? activeItems.filter((item) => item.id !== activeCurrent.id)
+      : activeItems;
     const nextIndex = nextVisibleItems.length
       ? Math.min(
-          leavesCurrentRange ? index : index + 1,
+          leavesCurrentRange ? activeIndex : activeIndex + 1,
           nextVisibleItems.length - 1
         )
       : 0;
     const nextItem = nextVisibleItems[nextIndex];
-    setState((existing) => ({
-      ...existing,
-      items: existing.items.map((item) => item.id === current.id
+    const nextState = {
+      ...activeState,
+      items: activeState.items.map((item) => item.id === activeCurrent.id
         ? { ...item, study: { status, updatedAt: now } }
         : item),
       positions: nextItem
-        ? { ...existing.positions, [cursorKey]: nextItem.id }
-        : existing.positions,
+        ? { ...activeState.positions, [live.cursorKey]: nextItem.id }
+        : activeState.positions,
       updatedAt: now
-    }));
+    };
+    liveStudyRef.current = {
+      ...live,
+      state: nextState,
+      visibleItems: nextVisibleItems,
+      index: nextIndex
+    };
+    setState(nextState);
     setIndex(nextIndex);
     setRevealed(false);
   }
@@ -285,7 +311,7 @@ export default function ReadingParaphrasesPage() {
         </section>
       ) : (
         <>
-          <section className={styles.card}>
+          <section className={`word-study-card ${styles.card}`} data-word-swipe-card>
             <div className={styles.cardMeta}>
               <span>{DIRECTION_LABELS[state.direction]}</span>
               <span className={styles.status}>{STATUS_LABELS[current.study?.status || ""]}</span>

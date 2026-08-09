@@ -12,6 +12,7 @@ import {
   IDICTATION_FREQUENCY_SOURCES
 } from "../../lib/spelling/idictation-frequency.generated.mjs";
 import { wordInternalDifficultyScore } from "../../lib/vocab/word-internal-difficulty.mjs";
+import { getStudyEntryDisplay } from "../../lib/vocab/study-entry-display.mjs";
 
 function normalizeWord(value) {
   return String(value || "")
@@ -122,6 +123,7 @@ function normalizePhraseItems(value) {
 
 function sanitizeWordItem(item) {
   const stableId = String(item?.wordId || item?.id || "").trim();
+  const display = getStudyEntryDisplay(item);
 
   return {
     id: String(item?.id || stableId).trim(),
@@ -133,12 +135,12 @@ function sanitizeWordItem(item) {
     baseWordId: String(item?.baseWordId || "").trim(),
     redirectToWord: String(item?.redirectToWord || "").trim(),
     relationType: String(item?.relationType || "").trim(),
-    phonetic: String(item?.phonetic || "").trim(),
-    pos: String(item?.pos || "").trim(),
-    meaning: String(item?.meaning || "").trim(),
-    definition: String(item?.definition || "").trim(),
-    example: String(item?.example || "").trim(),
-    exampleCn: String(item?.exampleCn || "").trim(),
+    phonetic: display.phonetic,
+    pos: display.pos,
+    meaning: display.meaning,
+    definition: display.definition,
+    example: display.example,
+    exampleCn: display.exampleCn,
     collocations: normalizePhraseItems(item?.collocations),
     phraseCollocations: normalizePhraseItems(item?.phraseCollocations),
     ieltsUse: Array.isArray(item?.ieltsUse) ? item.ieltsUse : [],
@@ -149,6 +151,10 @@ function sanitizeWordItem(item) {
     status: String(item?.status || "").trim(),
     favorite: Boolean(item?.favorite),
     otherMeanings: Array.isArray(item?.otherMeanings) ? item.otherMeanings : [],
+    supplementalMeanings: display.supplementalSenses.map((sense) => ({
+      pos: sense.pos,
+      meaning: sense.meaning
+    })),
     forms: Array.isArray(item?.forms) ? item.forms : [],
     wordFamily: Array.isArray(item?.wordFamily) ? item.wordFamily : []
   };
@@ -272,7 +278,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260805_master_g_audit_sync_v20";
+const STATIC_EXPORT_VERSION = "20260809_reading_keyboard_v49";
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -293,15 +299,15 @@ const STATIC_INDEX_HTML = `<!doctype html>
   <link rel="manifest" href="./manifest.webmanifest?v=${STATIC_EXPORT_VERSION}" />
   <link rel="stylesheet" href="./assets/style.css?v=${STATIC_EXPORT_VERSION}" />
 </head>
-<body>
+<body data-static-page="home">
   <header class="static-brand-bar">
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>主词库刷词</strong><span>专注学习</span></div>
-    <nav class="static-brand-nav" aria-label="主要学习模式">
+    <nav class="static-brand-nav" data-static-primary-nav aria-label="全站学习入口">
       <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a><a href="./ielts-538.html">538考点</a><a href="./reading-paraphrases.html">阅读同义替换</a><a href="./reading-words.html">阅读生词本</a>
     </nav>
   </header>
-  <aside class="static-shell-sidebar" aria-label="学习导航">
+  <aside class="static-shell-sidebar" data-static-sidebar aria-label="全站学习导航">
     <nav><a class="active" href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav>
     <div class="static-shell-divider"></div>
     <span class="static-shell-label">专项学习</span>
@@ -382,8 +388,8 @@ const STATIC_INDEX_HTML = `<!doctype html>
 
     <footer class="bottom">
       <div class="actions">
-        <button id="knownBtn" class="status known">熟悉 <span>0</span></button>
-        <button id="unknownBtn" class="status unknown">不熟 <span>0</span></button>
+        <button id="knownBtn" class="status known" title="快捷键：1">认识 <span>0</span></button>
+        <button id="unknownBtn" class="status unknown" title="快捷键：3">不熟 <span>0</span></button>
       </div>
       <div class="progress-row">
         <div class="progress">
@@ -484,11 +490,14 @@ const STATIC_INDEX_HTML = `<!doctype html>
 
     <div id="toast" class="toast"></div>
   </main>
+  <script src="./assets/static-navigation.js?v=${STATIC_EXPORT_VERSION}"></script>
   <script src="./sync-config.js?v=${STATIC_EXPORT_VERSION}"></script>
   <script src="./assets/app.js?v=${STATIC_EXPORT_VERSION}"></script>
 </body>
 </html>`;
 
+// Legacy embedded copy retained for source compatibility; the exported ZIP uses public/assets/style.css.
+// eslint-disable-next-line no-unused-vars
 const STATIC_STYLE_CSS = `:root{--bg:#f7f2e8;--card:rgba(255,255,255,.76);--ink:#16352f;--muted:rgba(22,53,47,.62);--green:#237567;--soft:#e7f7f2;--orange:#c2410c}*{box-sizing:border-box}html,body{overscroll-behavior-x:none}html[data-study-meanings-hidden="true"] .study-answer-content{display:none!important}body{margin:0;background:radial-gradient(circle at top,#fff8ed 0,#f7f2e8 48%,#efe7d8 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}button,select{font:inherit}.app{min-height:100svh;display:flex;flex-direction:column;padding:20px 22px 14px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:5}.top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.top-btn,.top-select{border:0;border-radius:999px;background:rgba(255,255,255,.72);color:var(--green);font-weight:900;padding:10px 14px;box-shadow:inset 0 0 0 1px rgba(35,117,103,.10);cursor:pointer}.top-select{max-width:min(58vw,360px)}.order-select{width:140px;min-width:140px;max-width:140px;flex:0 0 140px}.hero{text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 0;touch-action:pan-y;user-select:none}.star{border:0;background:transparent;color:#d29422;font-size:34px;line-height:1;cursor:pointer;margin-bottom:6px}.sound-main{border:0;width:42px;height:42px;border-radius:999px;background:rgba(231,247,242,.95);color:var(--green);font-size:18px;cursor:pointer;margin:4px 0 8px}.word{font-size:clamp(54px,9vw,112px);font-weight:950;letter-spacing:-.06em;line-height:.95;cursor:pointer;word-break:break-word;max-width:min(980px,96vw)}.basic-line{margin-top:14px;color:#1c3344;font-weight:900;font-size:clamp(20px,2.8vw,28px);line-height:1.4}.load-info{margin-top:7px;color:rgba(35,117,103,.45);font-size:12px;font-weight:850}.swipe-hint{margin-top:8px;font-size:12px;font-weight:850;color:rgba(35,117,103,.42)}.example-card{margin:20px auto 0;width:min(760px,calc(100vw - 48px));padding:18px 22px;border-radius:26px;background:var(--card);box-shadow:inset 0 0 0 1px rgba(35,117,103,.07)}.example-head{display:grid;grid-template-columns:34px 1fr;align-items:start;gap:10px;text-align:left}.example-sound{margin-top:1px}.example-en{font-size:clamp(18px,2.4vw,24px);font-weight:850}.example-cn{margin-top:8px;color:var(--muted);font-weight:700;text-align:left;padding-left:44px}.blocks{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:min(900px,calc(100vw - 44px));margin:0 auto 12px}.block{background:rgba(255,255,255,.62);border-radius:22px;padding:14px 16px;box-shadow:inset 0 0 0 1px rgba(35,117,103,.07)}.block-title{font-size:13px;font-weight:950;color:var(--muted);margin-bottom:8px}.list{display:grid;gap:8px}.item{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:center;text-align:left}.mini-sound{width:28px;height:28px;border:0;border-radius:999px;background:rgba(231,247,242,.95);color:var(--green);font-size:13px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(35,117,103,.12)}.en{font-weight:850}.zh{font-size:12px;color:var(--muted);font-weight:700;margin-top:2px}.forms-box{width:min(820px,calc(100vw - 48px));margin:14px auto 0;padding:18px 22px;border-radius:24px;background:rgba(255,255,255,.72);box-shadow:inset 0 0 0 1px rgba(33,94,81,.08)}.box-title{text-align:left;font-size:13px;font-weight:950;color:rgba(33,94,81,.72);margin-bottom:12px}.cards{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}.form-card{display:inline-flex;flex-direction:column;align-items:flex-start;gap:6px;width:min(100%,560px);min-width:min(390px,100%);padding:16px 18px;border-radius:22px;background:rgba(231,247,242,.92);color:#215e51;font-size:14px;line-height:1.42;box-shadow:inset 0 0 0 1px rgba(33,94,81,.10)}.card-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px}.form-card b{font-size:17px;font-weight:1000}.form-card em{font-style:normal;font-size:12px;font-weight:950;color:rgba(33,94,81,.82);padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.78)}.form-desc{font-size:14px;font-weight:760;color:rgba(33,94,81,.90);word-break:break-word}.form-card small{font-size:12px;font-weight:820;color:rgba(33,94,81,.66);word-break:break-word}.unfamiliar-alert{margin:6px auto 10px;padding:10px 14px;border-radius:999px;background:rgba(255,244,230,.96);color:#9a3412;font-weight:900;font-size:15px;box-shadow:inset 0 0 0 1px rgba(234,88,12,.12)}.hidden{display:none!important}.bottom{width:min(900px,calc(100vw - 44px));margin:0 auto}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.status{border:0;border-radius:999px;padding:15px 18px;font-weight:950;font-size:17px;cursor:pointer}.status span{opacity:.55;font-size:12px;margin-left:5px}.known{background:#e7f7f2;color:#237567}.unknown{background:#fff4e6;color:#c2410c}.active-unknown{box-shadow:inset 0 0 0 2px rgba(194,65,12,.24)}.progress-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:12px}.progress{height:10px;border-radius:999px;background:rgba(35,117,103,.12);overflow:hidden}.progress-fill{height:100%;border-radius:999px;background:#237567;transition:width .2s}.count{font-size:13px;font-weight:900;color:var(--muted)}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);opacity:0;background:rgba(22,53,47,.92);color:#fff;border-radius:999px;padding:10px 16px;font-weight:900;transition:.2s;pointer-events:none;z-index:20}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.sync-top{background:rgba(231,247,242,.92)}.sync-top.on{background:#237567;color:#fff}.sync-panel{position:fixed;inset:0;background:rgba(22,53,47,.28);z-index:30;display:flex;align-items:center;justify-content:center;padding:18px}.sync-card{width:min(520px,100%);max-height:calc(100svh - 36px);overflow:auto;border-radius:28px;background:#fffaf1;box-shadow:0 22px 70px rgba(22,53,47,.22);padding:20px;display:grid;gap:14px}.sync-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.sync-title{font-size:22px;font-weight:1000;color:var(--ink)}.sync-status{margin-top:4px;font-size:13px;font-weight:850;color:var(--muted)}.sync-close{border:0;background:rgba(35,117,103,.10);color:var(--green);font-size:24px;border-radius:999px;width:36px;height:36px;cursor:pointer}.sync-section{display:grid;gap:8px;padding:14px;border-radius:20px;background:rgba(255,255,255,.64);box-shadow:inset 0 0 0 1px rgba(35,117,103,.08)}.sync-label{font-size:13px;font-weight:950;color:var(--green)}.sync-input{width:100%;border:0;border-radius:15px;padding:12px 13px;background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(35,117,103,.12);outline:none}.sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sync-action{border:0;border-radius:15px;padding:12px 13px;background:#237567;color:#fff;font-weight:950;cursor:pointer}.sync-action.secondary{background:#e7f7f2;color:#237567}.sync-action.danger{background:#fff4e6;color:#c2410c}.sync-help{font-size:12px;line-height:1.45;color:var(--muted);font-weight:760}@media(max-width:760px){.sync-panel{padding:10px;align-items:flex-end}.sync-card{border-radius:24px;padding:16px}.sync-grid{grid-template-columns:1fr}}body.mobile-mode .app{padding:12px 12px 10px}body.mobile-mode .top{gap:8px;align-items:flex-start}body.mobile-mode .top-btn,body.mobile-mode .top-select{font-size:12px;padding:8px 10px}body.mobile-mode .hero{justify-content:flex-start;padding-top:10px}body.mobile-mode .word{font-size:clamp(48px,18vw,82px);letter-spacing:-.055em}body.mobile-mode .example-card,body.mobile-mode .forms-box,body.mobile-mode .bottom{width:100%}body.mobile-mode .blocks{grid-template-columns:1fr;width:100%;gap:10px}body.mobile-mode .bottom{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(to top,rgba(247,242,232,.98),rgba(247,242,232,.72),transparent);z-index:6}body.mobile-mode .form-card{width:100%;min-width:100%;padding:14px 15px;border-radius:18px}@media(max-width:760px){.app{padding:12px 12px 10px}.top{align-items:flex-start}.top-actions{gap:6px}.top-btn,.top-select{padding:8px 9px;font-size:12px}.top-select{max-width:58vw}.hero{justify-content:flex-start;padding-top:10px}.word{font-size:clamp(48px,18vw,82px);letter-spacing:-.055em}.basic-line{font-size:15px}.swipe-hint{display:block}.example-head{grid-template-columns:32px 1fr}.example-cn{padding-left:42px}.blocks{grid-template-columns:1fr;width:100%;gap:10px}.example-card,.forms-box,.bottom{width:100%}.form-card{width:100%;min-width:100%;padding:14px 15px;border-radius:18px}.bottom{position:sticky;bottom:0;padding:10px 0 4px;background:linear-gradient(to top,rgba(247,242,232,.98),rgba(247,242,232,.72),transparent);z-index:6}.actions{gap:9px}.status{padding:13px 14px}}
 
 .entry-panel{position:fixed;inset:0;background:rgba(22,53,47,.28);z-index:28;display:flex;align-items:center;justify-content:center;padding:18px}
@@ -1414,7 +1423,8 @@ function updateMeaningVisibilityButton(){
   if(!els.meaningVisibilityBtn)return;
   const hidden=meaningsHidden();
   els.meaningVisibilityBtn.textContent=hidden?"显示释义":"隐藏释义";
-  els.meaningVisibilityBtn.setAttribute("aria-pressed",String(hidden));
+  els.meaningVisibilityBtn.removeAttribute("aria-pressed");
+  els.meaningVisibilityBtn.dataset.state=hidden?"hidden":"visible";
 }
 
 function setMeaningsHidden(hidden){
@@ -1920,6 +1930,18 @@ function getDeviceId(){
 function posAtomCn(atom){const t=String(atom||"").trim().toLowerCase();if(!t)return"";if(/^(proper\\s*noun)$/.test(t))return"专有名词";if(/^(modal\\s*verb|modal)$/.test(t))return"情态动词";if(/^(noun|n\\.?)$/.test(t)||t.indexOf("noun")>=0)return"名词";if(/^(verb|v\\.?)$/.test(t)||t.indexOf("verb")>=0)return"动词";if(/^(adjective|adj\\.?)$/.test(t)||t.indexOf("adj")>=0)return"形容词";if(/^(adverb|adv\\.?)$/.test(t)||t.indexOf("adv")>=0)return"副词";if(/phrase|短语/.test(t))return"短语";if(/preposition|^prep/.test(t))return"介词";if(/conjunction|^conj/.test(t))return"连词";if(/pronoun|^pron/.test(t))return"代词";if(/number|numeral/.test(t))return"数词";return""}
 function posCn(pos=""){const raw=String(pos||"").trim();if(!raw)return"";const parts=raw.split(/\\s*[\\/,|&;·／、]\\s*/);const out=[];const seen={};for(let i=0;i<parts.length;i++){const c=posAtomCn(parts[i]);if(c&&!seen[c]){seen[c]=1;out.push(c)}}return out.join("/")||posAtomCn(raw)}
 function posDisplay(pos){if(!pos)return"词性";const c=posCn(pos);return c&&String(pos).indexOf(c)<0?pos+" "+c:pos}
+function posKey(pos){return String(pos||"").trim().toLowerCase().split(/\\s*[\\/,|&;·／、]\\s*/).map(function(atom){return atom.replace(/\\.$/,"")}).filter(Boolean).sort().join("|")}
+function inlineStudyMeaning(item){
+  const primary=String(item&&item.meaning||"等待释义").trim()||"等待释义";
+  const primaryKey=posKey(item&&item.pos);
+  const supplemental=Array.isArray(item&&item.supplementalMeanings)?item.supplementalMeanings:[];
+  return [primary].concat(supplemental.map(function(sense){
+    const meaning=String(sense&&sense.meaning||"").trim();
+    const sensePos=String(sense&&sense.pos||"").trim();
+    const posLabel=sensePos&&posKey(sensePos)!==primaryKey?posDisplay(sensePos)+" ":"";
+    return meaning?posLabel+meaning:"";
+  }).filter(Boolean)).join("；");
+}
 function formTypeCn(type=""){const t=String(type).toLowerCase();if(t.includes("irregular plural"))return"不规则复数";if(t.includes("plural"))return"复数形式";if(t.includes("past tense / past participle"))return"过去式 / 过去分词";if(t.includes("past tense"))return"过去式";if(t.includes("past participle"))return"过去分词";if(t.includes("present participle"))return"-ing 形式";return type||"变形"}
 function formHint(form){const cn=formTypeCn(form.type);if(cn==="复数形式")return"注意复数形式";if(cn==="不规则复数")return"注意不规则复数";if(cn==="过去式")return"注意过去式";if(cn==="过去分词")return"注意过去分词";if(cn==="过去式 / 过去分词")return"注意过去式 / 过去分词";if(cn==="-ing 形式")return"注意 -ing 形式";return form.note||""}
 
@@ -2369,6 +2391,7 @@ function render(){
   const l=list();
   const w=current();
   if(!w){
+    els.word.classList.remove("word--wide","word--long");
     els.word.textContent="完成";
     els.basic.textContent="当前范围没有待学习单词";
     els.loadInfo.textContent="可以切换分类或查看熟悉词库。";
@@ -2384,8 +2407,11 @@ function render(){
     return;
   }
 
-  els.word.textContent=w.word||"empty";
-  els.basic.textContent=(w.phonetic||"等待音标")+" · "+posDisplay(w.pos)+" · "+(w.meaning||"等待释义");
+  const renderedHeadword=String(w.word||"empty");
+  els.word.classList.toggle("word--wide",renderedHeadword.trim().length>9);
+  els.word.classList.toggle("word--long",renderedHeadword.trim().length>18);
+  els.word.textContent=renderedHeadword;
+  els.basic.textContent=(w.phonetic||"等待音标")+" · "+posDisplay(w.pos)+" · "+inlineStudyMeaning(w);
   els.loadInfo.textContent=cloudbaseReady?"本地已保存，云端会自动同步。":"本地已保存；连接云同步后电脑手机可同步。";
   if(els.entryStatus) els.entryStatus.textContent="当前入口："+filterLabel(filter)+" · "+l.length+" 个词";
   els.example.textContent=w.example||"等待例句";
@@ -2496,16 +2522,20 @@ function startHoldStep(dir){
 function mark(status){
   restoreFocusWord="";
   const beforeIndex=index;
+  const beforeList=list().slice();
+  const beforePosition=beforeList.findIndex(function(x){return x.originalIndex===beforeIndex});
   const w=current();
   if(!w)return;
   w.status=(status==="不熟"&&w.status==="不熟")?"":status;
   invalidateStudyListCache();
   rememberWord(w);
-  if(status==="熟悉"){
-    // 修复：即使当前入口是“全部单词”，熟悉词仍然可见，也要强制跳过当前词。
-    const l=list().filter(function(x){return x.originalIndex!==beforeIndex});
-    const next=l.find(function(x){return x.originalIndex>beforeIndex})||l[0];
-    if(next) index=next.originalIndex;
+  const nextList=list();
+  if(nextList.length){
+    for(let offset=1;offset<=beforeList.length;offset+=1){
+      const candidate=beforeList[(Math.max(0,beforePosition)+offset)%beforeList.length];
+      const next=nextList.find(function(x){return x.originalIndex===candidate.originalIndex});
+      if(next){index=next.originalIndex;break}
+    }
   }
   render();
   persistNow();
@@ -3217,8 +3247,8 @@ window.addEventListener("keydown",function(e){
   const code=e.code||"";
   if(isTyping||e.ctrlKey||e.metaKey||e.altKey)return;
   const isDelete=key==="Delete"||code==="Delete"||e.keyCode===46||e.which===46;
-  const isZero=key==="0"||code==="Digit0"||code==="Numpad0";
   const isOne=key==="1"||code==="Digit1"||code==="Numpad1";
+  const isThree=key==="3"||code==="Digit3"||code==="Numpad3";
   const isTab=key==="Tab"||code==="Tab"||e.keyCode===9||e.which===9;
   const isSpace=key===" "||key==="Spacebar"||code==="Space"||e.keyCode===32||e.which===32;
 
@@ -3237,8 +3267,8 @@ window.addEventListener("keydown",function(e){
   }
 
   if(isDelete&&!e.repeat){e.preventDefault();e.stopPropagation();deleteCurrentWord();return}
-  if(isZero&&!e.repeat){e.preventDefault();e.stopPropagation();mark("熟悉");return}
-  if(isOne&&!e.repeat){e.preventDefault();e.stopPropagation();mark("不熟");return}
+  if(isOne&&!e.repeat){e.preventDefault();e.stopPropagation();mark("熟悉");return}
+  if(isThree&&!e.repeat){e.preventDefault();e.stopPropagation();mark("不熟");return}
 
   if(key==="ArrowLeft"||code==="ArrowLeft"){
     e.preventDefault();
@@ -3338,6 +3368,8 @@ const SHELL=[
   "./reading-words.html",
   "./ielts-538.html",
   "./assets/style.css?v=${STATIC_EXPORT_VERSION}",
+  "./assets/static-navigation.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/static-cloud-sync.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/app.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/spelling.css?v=${STATIC_EXPORT_VERSION}",
   "./assets/spelling.js?v=${STATIC_EXPORT_VERSION}",
@@ -3352,12 +3384,14 @@ const SHELL=[
   "./assets/study-meaning-visibility.js?v=${STATIC_EXPORT_VERSION}",
   "./sync-config.js?v=${STATIC_EXPORT_VERSION}",
   "./data/words.json",
+  "./data/personal-reading-words.json",
   "./data/phrases.json",
   "./data/idictation-frequency.json",
   "./data/basic-words.json",
   "./data/lexicon-tidy-audit.json",
   "./data/reading-g-vocab.json",
   "./data/reading-g-paraphrases.json",
+  "./data/reading-g-question-evidence.json",
   "./data/reading-g-import-report.json",
   "./data/reading-g-retirements.json",
   "./data/ielts-538-words.json",
@@ -3400,7 +3434,7 @@ self.addEventListener("fetch",function(event){
     return;
   }
 
-  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/reading-g-retirements.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-paraphrases.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
+  if(url.pathname.endsWith("/index.html")||url.pathname.endsWith("/")||url.pathname.indexOf("/assets/")>=0||url.pathname.indexOf("/data/words.json")>=0||url.pathname.indexOf("/data/personal-reading-words.json")>=0||url.pathname.indexOf("/data/phrases.json")>=0||url.pathname.indexOf("/data/idictation-frequency.json")>=0||url.pathname.indexOf("/data/basic-words.json")>=0||url.pathname.indexOf("/data/lexicon-tidy-audit.json")>=0||url.pathname.indexOf("/data/meaning-6000.json")>=0||url.pathname.indexOf("/data/reading-g-vocab.json")>=0||url.pathname.indexOf("/data/reading-g-paraphrases.json")>=0||url.pathname.indexOf("/data/reading-g-question-evidence.json")>=0||url.pathname.indexOf("/data/reading-g-import-report.json")>=0||url.pathname.indexOf("/data/reading-g-retirements.json")>=0||url.pathname.indexOf("/data/ielts-538-words.json")>=0||url.pathname.endsWith("/spelling.html")||url.pathname.endsWith("/basic.html")||url.pathname.endsWith("/meaning.html")||url.pathname.endsWith("/reading-g.html")||url.pathname.endsWith("/reading-paraphrases.html")||url.pathname.endsWith("/reading-words.html")||url.pathname.endsWith("/ielts-538.html")||url.pathname.endsWith("/manifest.webmanifest")||url.pathname.endsWith("/sync-config.js")){
     event.respondWith(
       fetch(req).then(function(res){
         if(res&&res.ok) caches.open(CACHE_NAME).then(function(cache){cache.put(req,res.clone()).catch(function(){})});
@@ -3619,7 +3653,15 @@ function buildExport(words, audioIndex, options = {}) {
     },
     {
       name: "assets/style.css",
-      data: STATIC_STYLE_CSS
+      data: readFileSync(publicAssetPath("assets", "style.css"), "utf-8")
+    },
+    {
+      name: "assets/static-navigation.js",
+      data: readFileSync(publicAssetPath("assets", "static-navigation.js"), "utf-8")
+    },
+    {
+      name: "assets/static-cloud-sync.js",
+      data: readFileSync(publicAssetPath("assets", "static-cloud-sync.js"), "utf-8")
     },
     {
       name: "assets/app.js",
@@ -3640,6 +3682,23 @@ function buildExport(words, audioIndex, options = {}) {
     {
       name: "data/words.json",
       data: JSON.stringify(manifest)
+    },
+    {
+      name: "data/personal-reading-words.json",
+      data: JSON.stringify(
+        readJson(publicAssetPath("data", "personal-reading-words.json"), {
+          type: "ielts-reading-words-static-publish",
+          version: 1,
+          revision: "",
+          transfer: {
+            type: "ielts-reading-words-transfer",
+            version: 1,
+            readingWords: [],
+            linkedMainEntries: [],
+            sourceMainMeta: {}
+          }
+        })
+      )
     },
     {
       name: "data/phrases.json",
@@ -3674,6 +3733,16 @@ function buildExport(words, audioIndex, options = {}) {
           version: "reading-g-core-v3-paraphrases",
           count: 0,
           groups: []
+        })
+      )
+    },
+    {
+      name: "data/reading-g-question-evidence.json",
+      data: JSON.stringify(
+        readJson(publicAssetPath("data", "reading-g-question-evidence.json"), {
+          version: "reading-g-question-evidence-v1",
+          count: 0,
+          questions: []
         })
       )
     },
@@ -3753,6 +3822,7 @@ data/basic-words.json  零基础词库
 data/lexicon-tidy-audit.json  主词库整理复核记录
 data/reading-g-vocab.json  G类阅读提升词库
 data/reading-g-paraphrases.json  高可信同义关系
+data/reading-g-question-evidence.json  G类阅读真题题型与答案句证据
 data/reading-g-import-report.json  导入审计报告
 data/reading-g-retirements.json  G类词库删除记录（防止重建后重新出现）
 data/ielts-538-words.json 538考点词库与同义改写

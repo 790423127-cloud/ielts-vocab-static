@@ -3,7 +3,7 @@ function normalizeId(value) {
 }
 
 function entryId(entry = {}) {
-  return normalizeId(entry.id || entry.wordId);
+  return normalizeId(entry?.id || entry?.wordId);
 }
 
 // Reading-list deletion is isolated from the main lexicon and other learning stores.

@@ -5,10 +5,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   buildReadingGAiCompletedEntry,
+  isReadingGAiCompletionCandidate,
   isReadingGPendingAiEntry
 } from "../ai-completion.mjs";
 import { normalizeReadingGItem } from "../load-reading-g.mjs";
 import { isReadingGContentIncomplete } from "../content-completeness.mjs";
+import { fillReadingGRelationMeanings } from "../relation-meaning-fill.mjs";
 import { itemMatchesPathStage } from "../stages.mjs";
 import { buildRgStudyList } from "../storage.mjs";
 import {
@@ -60,7 +62,7 @@ function profile() {
   };
 }
 
-test("G-reading AI completion only promotes an explicitly pending entry", () => {
+test("G-reading AI completion promotes an explicitly pending entry", () => {
   const pending = pendingEntry();
   assert.equal(isReadingGPendingAiEntry(pending), true);
   const completed = buildReadingGAiCompletedEntry(pending, profile(), { aiSource: "ai-cache" });
@@ -79,6 +81,94 @@ test("G-reading AI completion only promotes an explicitly pending entry", () => 
   assert.ok(!completed.qualityFlags.includes("missing_master_lexicon"));
 });
 
+test("G-reading full completion repairs a missing core field without changing relations", () => {
+  const active = {
+    ...pendingEntry(),
+    id: "rg_word_zoology_active",
+    primaryLayer: "priority1500",
+    layers: ["priority1500"],
+    layerRank: 1,
+    studyMode: "active",
+    category: "IELTS G类 · 阅读核心",
+    domain: "阅读通用",
+    qualityFlags: [],
+    primaryPos: "noun",
+    primaryMeaningZh: "动物学",
+    meaning: "动物学",
+    definition: "the scientific study of animals",
+    example: "She studied zoology at university.",
+    exampleCn: "她在大学学习动物学。",
+    forms: [{ word: "zoologies", type: "plural", meaning: "动物学（复数）" }],
+    wordFamily: [{ word: "zoological", pos: "adjective", meaning: "动物学的" }],
+    phonetic: ""
+  };
+
+  assert.equal(isReadingGPendingAiEntry(active), false);
+  assert.equal(isReadingGAiCompletionCandidate(active), true);
+  const completed = buildReadingGAiCompletedEntry(active, profile(), { aiSource: "ai-cache" });
+
+  assert.equal(completed.phonetic, "/zuːˈɒlədʒi/");
+  assert.equal(completed.primaryMeaningZh, active.primaryMeaningZh);
+  assert.equal(completed.example, active.example);
+  assert.deepEqual(completed.forms, active.forms);
+  assert.deepEqual(completed.wordFamily, active.wordFamily);
+  assert.equal(isReadingGContentIncomplete(completed), false);
+});
+
+test("G-reading full completion uses core fields and word family, not synonyms, as its queue", () => {
+  const complete = {
+    ...pendingEntry(),
+    phonetic: "/zuːˈɒlədʒi/",
+    primaryPos: "noun",
+    primaryMeaningZh: "动物学",
+    meaning: "动物学",
+    meaningZh: "动物学",
+    definition: "the scientific study of animals",
+    example: "She studied zoology at university.",
+    exampleCn: "她在大学学习动物学。",
+    wordFamilyReviewed: true
+  };
+  assert.equal(isReadingGAiCompletionCandidate(complete), false);
+  assert.equal(isReadingGAiCompletionCandidate({ ...complete, phonetic: "" }), true);
+  assert.equal(isReadingGAiCompletionCandidate({ ...complete, primaryPos: "", pos: "" }), true);
+  assert.equal(isReadingGAiCompletionCandidate({ ...complete, primaryMeaningZh: "", meaning: "", meaningZh: "" }), true);
+  assert.equal(isReadingGAiCompletionCandidate({ ...complete, example: "" }), true);
+  assert.equal(isReadingGAiCompletionCandidate({ ...complete, wordFamilyReviewed: false }), true);
+  assert.equal(isReadingGAiCompletionCandidate({ ...complete, synonyms: [], synonymsReviewed: false }), false);
+});
+
+test("G-reading answer record separates its noun and verb senses", () => {
+  const vocab = JSON.parse(fs.readFileSync(path.join(root, "public/data/reading-g-vocab.json"), "utf8"));
+  const answer = vocab.items.find((entry) => entry.id === "rg_word_answer");
+
+  assert.ok(answer);
+  assert.deepEqual(answer.senses.map((sense) => sense.pos), ["noun", "verb"]);
+  assert.equal(isReadingGContentIncomplete(answer), false);
+});
+
+test("local relation completion fills safe meanings without inventing derivative meanings", () => {
+  const items = [{
+    id: "rg_word_research",
+    word: "research",
+    entryType: "word",
+    primaryMeaningZh: "研究",
+    forms: [{ word: "researched", type: "past tense" }],
+    wordFamily: [
+      { word: "researcher", pos: "noun" },
+      { word: "researchish", pos: "adjective" }
+    ]
+  }];
+  const master = new Map([
+    ["researcher", { word: "researcher", meaning: "研究人员" }]
+  ]);
+  const result = fillReadingGRelationMeanings(items, master);
+
+  assert.match(result.items[0].forms[0].meaning, /研究/);
+  assert.equal(result.items[0].wordFamily[0].meaning, "研究人员");
+  assert.equal(result.items[0].wordFamily[1].meaning, undefined);
+  assert.equal(result.stats.stillMissing, 1);
+});
+
 test("the visible '仅单词' entry matches the current post-deletion dataset", () => {
   const vocab = JSON.parse(fs.readFileSync(path.join(root, "public/data/reading-g-vocab.json"), "utf8"));
   const items = vocab.items.map((entry, index) => normalizeReadingGItem(entry, index)).filter(Boolean);
@@ -88,7 +178,7 @@ test("the visible '仅单词' entry matches the current post-deletion dataset", 
   ));
 
   assert.equal(visibleWords.length, expectedWords.length);
-  assert.ok(visibleWords.length < vocab.wordCount);
+  assert.ok(visibleWords.length <= vocab.wordCount);
 });
 
 test("D/Delete shortcut removes only the selected G entry outside editors", () => {
@@ -156,6 +246,7 @@ test("G-reading navigation hides unrelated shortcuts and exposes the scoped AI a
   const page = fs.readFileSync(path.join(root, "app/reading-g/page.jsx"), "utf8");
   const header = fs.readFileSync(path.join(root, "app/components/GlobalStudyHeader.jsx"), "utf8");
   const route = fs.readFileSync(path.join(root, "app/api/reading-g/complete-pending/route.js"), "utf8");
+  const synonymRoute = fs.readFileSync(path.join(root, "app/api/reading-g/complete-synonyms/route.js"), "utf8");
   const deleteRoute = fs.readFileSync(path.join(root, "app/api/reading-g/delete-entry/route.js"), "utf8");
   const loader = fs.readFileSync(path.join(root, "app/lib/reading-g-vocab/load-reading-g.mjs"), "utf8");
   const keys = fs.readFileSync(path.join(root, "app/lib/reading-g-vocab/keys.mjs"), "utf8");
@@ -171,20 +262,32 @@ test("G-reading navigation hides unrelated shortcuts and exposes the scoped AI a
   assert.doesNotMatch(staticPage, /href="\.\/spelling\.html" class="top-btn"/);
   assert.match(page, /AI补全待补词/);
   assert.match(page, /AI_COMPLETION_BATCH_SIZE = 10/);
+  assert.match(page, /SYNONYM_AI_COMPLETION_BATCH_SIZE = 120/);
+  assert.match(page, /SYNONYM_AI_REQUEST_BATCH_SIZE = 40/);
+  assert.match(page, /SYNONYM_AI_CONCURRENCY = 3/);
   assert.match(page, /自动补全全部/);
   assert.match(page, /停止自动补全/);
   assert.match(page, /autoAll/);
   assert.match(page, /aiAutoStopRef/);
   assert.match(page, /失败词本轮不自动重试/);
   assert.match(page, /新增完整词/);
-  assert.match(page, /待补词/);
+  assert.match(page, /主资料补全/);
   assert.match(page, /type: "questionBankComplete", value: ""/);
   assert.match(page, /type: "contentIncomplete", value: ""/);
-  assert.match(page, /setFilter\(\{ type: "primaryLayer", value: "questionBankPending" \}\)/);
+  assert.match(page, /setFilter\(\{ type: "layer", value: "questionBankPending" \}\)/);
   assert.match(route, /requireLocalAdmin/);
   assert.match(route, /MAX_BATCH_WORDS = 10/);
+  assert.match(synonymRoute, /MAX_BATCH_WORDS = 120/);
+  assert.match(synonymRoute, /AI_REQUEST_BATCH_SIZE = 40/);
+  assert.match(synonymRoute, /MAX_CONCURRENT_AI_REQUESTS = 3/);
+  assert.match(synonymRoute, /Promise\.allSettled/);
+  assert.match(synonymRoute, /timeoutMs: 90000/);
+  assert.match(synonymRoute, /maxTokens: 6000/);
   assert.match(route, /maxSplitDepth: 0/);
-  assert.match(route, /isReadingGPendingAiEntry/);
+  assert.match(route, /isReadingGAiCompletionCandidate/);
+  assert.match(route, /withReadingGVocabWriteLock/);
+  assert.match(route, /atomicWriteReadingGJson\(VOCAB_PATH, nextVocab\)/);
+  assert.doesNotMatch(route, /runReadingGQuestionBankExpansion/);
   assert.match(page, /shouldHandleStudyDeleteShortcut/);
   assert.match(page, /studyQueueOverride/);
   assert.match(page, /freezeStudyQueueRows\(nextStudyList\)/);

@@ -5,7 +5,7 @@
   const VOCAB_ID="reading-paraphrases-v1";
   const SDK_URL="https://static.cloudbase.net/cloudbase-js-sdk/2.12.1/cloudbase.full.js";
   const els={};
-  ["importInput","exportBtn","notice","error","directionSelect","filterSelect","positionText","sourceCount","syncOpenBtn","emptyState","studyArea","directionLabel","statusLabel","promptLabel","promptText","revealBtn","answerArea","answerLabel","answerText","translationBox","noteText","sources","positionRange","prevBtn","knownBtn","fuzzyBtn","unfamiliarBtn","nextBtn","deleteBtn","syncPanel","syncCloseBtn","syncCodeInput","syncConnectBtn","syncPullBtn","syncPushBtn","syncStatus"].forEach(function(id){els[id]=document.getElementById(id)});
+  ["importInput","exportBtn","notice","error","directionSelect","filterSelect","positionText","sourceCount","syncOpenBtn","emptyState","studyArea","studyCard","directionLabel","statusLabel","promptLabel","promptText","revealBtn","answerArea","answerLabel","answerText","translationBox","noteText","sources","positionRange","prevBtn","knownBtn","fuzzyBtn","unfamiliarBtn","nextBtn","deleteBtn","syncPanel","syncCloseBtn","syncCodeInput","syncConnectBtn","syncPullBtn","syncPushBtn","syncStatus"].forEach(function(id){els[id]=document.getElementById(id)});
   let state=readState(),visible=[],index=0,revealed=false,activeScope="",db=null,auth=null,syncHash="";
 
   function clean(value){return String(value==null?"":value).trim().replace(/\s+/g," ")}
@@ -34,14 +34,19 @@
   els.importInput.onchange=async function(){const file=this.files&&this.files[0];this.value="";if(!file)return;try{const incoming=parseImport(await file.text());if(!incoming.length)throw new Error("文件中没有可识别的同义替换记录");const result=mergeInto(state,incoming);activeScope="";revealed=false;render();save();show(els.notice,"导入完成：新增 "+result.added+" 组，合并更新 "+result.updated+" 组。")}catch(e){show(els.error,e.message||"导入失败")}}
   els.exportBtn.onclick=download;els.directionSelect.onchange=function(){state.direction=this.value;activeScope="";revealed=false;render();save()};els.filterSelect.onchange=function(){activeScope="";revealed=false;render()};els.revealBtn.onclick=function(){revealed=!revealed;render()};els.positionRange.oninput=function(){index=Number(this.value)-1;revealed=false;rememberPosition();save();render()};els.prevBtn.onclick=function(){step(-1)};els.nextBtn.onclick=function(){step(1)};els.knownBtn.onclick=function(){mark("known")};els.fuzzyBtn.onclick=function(){mark("fuzzy")};els.unfamiliarBtn.onclick=function(){mark("unfamiliar")};els.deleteBtn.onclick=function(){const item=visible[index];if(!item||!confirm("确定删除“"+item.questionPhrase+" = "+item.sourcePhrase+"”吗？"))return;state.items=state.items.filter(function(row){return row.id!==item.id});render();rememberPosition();save()};
   window.addEventListener("keydown",function(event){
-    if(event.key!=="ArrowLeft"&&event.key!=="ArrowRight")return;
     if(event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;
     const target=event.target;
     if(target&&(target.isContentEditable||["INPUT","SELECT","TEXTAREA"].includes(target.tagName)))return;
+    const action=event.key==="ArrowLeft"?"previous":event.key==="ArrowRight"?"next":event.key==="1"?"known":event.key==="2"?"fuzzy":event.key==="3"?"unfamiliar":event.key===" "||event.code==="Space"?"reveal":"";
+    if(!action||!visible[index])return;
     event.preventDefault();
-    step(event.key==="ArrowLeft"?-1:1);
+    if(action==="previous")step(-1);
+    else if(action==="next")step(1);
+    else if(action==="known")mark("known");
+    else if(action==="fuzzy")mark("fuzzy");
+    else if(action==="unfamiliar")mark("unfamiliar");
+    else if(action==="reveal"&&state.direction!=="browse"){revealed=!revealed;render()}
   });
-
   let cloudTimer=null;
   function setSyncStatus(message){els.syncStatus.textContent=message}
   function loadSdk(){return new Promise(function(resolve,reject){if(window.cloudbase||window.tcb)return resolve(window.cloudbase||window.tcb);const script=document.createElement("script");script.src=SDK_URL;script.onload=function(){resolve(window.cloudbase||window.tcb)};script.onerror=function(){reject(new Error("CloudBase SDK 加载失败"))};document.head.appendChild(script)})}

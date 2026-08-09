@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f4f6f5" />
   <title>零基础单词 · 静态版</title>
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
-  <link rel="stylesheet" href="./assets/style.css?v=20260805_master_g_audit_sync_v20" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
   <style>
     .hidden{display:none!important}
     .module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
@@ -16,20 +16,22 @@
     .topic-chip.active{border-color:#225f52;background:#225f52;color:#fff}
     .meta-pill{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:6px;background:#e5f2ed;color:#225f52;font-size:12px;font-weight:800}
   </style>
+  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
 </head>
-<body>
+<body class="basic-static" data-static-page="basic">
   <header class="static-brand-bar">
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>零基础词库</strong><span>独立进度</span></div>
-    <nav class="static-brand-nav" aria-label="主要学习模式">
+    <nav class="static-brand-nav" data-static-primary-nav aria-label="主要学习模式">
       <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a>
     </nav>
   </header>
-  <aside class="static-shell-sidebar" aria-label="学习导航"><nav><a href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a href="./meaning.html">选义</a></nav><div class="static-shell-divider"></div><span class="static-shell-label">专项学习</span><nav><a class="active" href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav></aside>
+  <aside class="static-shell-sidebar" data-static-sidebar aria-label="全站学习导航"></aside>
   <main class="app">
-    <header class="top">
+    <header id="basicTopbar" class="top basic-topbar">
       <button id="prevBtn" class="top-btn" type="button">上一个</button>
-      <div class="top-actions">
+      <button id="topToolsToggle" class="top-tools-toggle" type="button" aria-expanded="true" aria-controls="basicTopTools basicFilterPanel">工具与词库</button>
+      <div id="basicTopTools" class="top-actions">
         <a href="./index.html" class="top-btn">← 主词库</a>
         <a href="./meaning.html" class="top-btn">看词选意思</a>
         <a href="./spelling.html" class="top-btn">拼写训练</a>
@@ -37,15 +39,16 @@
         <button id="shuffleBtn" class="top-btn" type="button">随机</button>
         <button id="nextBtn" class="top-btn" type="button">下一个</button>
       </div>
+      <div id="basicFilterPanel" class="basic-filter-panel">
+        <div class="module-nav">
+          <span class="meta-pill" id="bankMeta">零基础单词</span>
+          <span class="meta-pill" id="statusSummary" aria-live="polite">学习状态加载中</span>
+        </div>
+        <div class="topic-bar" id="topicBar" aria-label="主题筛选"></div>
+      </div>
     </header>
 
-    <div class="module-nav">
-      <span class="meta-pill" id="bankMeta">零基础单词</span>
-    </div>
-
-    <div class="topic-bar" id="topicBar" aria-label="主题筛选"></div>
-
-    <section id="swipeArea" class="hero">
+    <section id="swipeArea" class="hero" data-static-swipe-card>
       <button id="favoriteBtn" class="star" title="收藏" type="button">☆</button>
       <div id="unfamiliarAlert" class="unfamiliar-alert hidden">已标记不熟，优先复习</div>
       <button id="wordSoundBtn" class="sound-main" title="播放单词" type="button">🔊</button>
@@ -64,8 +67,8 @@
 
     <footer class="bottom">
       <div class="actions">
-        <button id="knownBtn" class="status known" type="button">熟悉</button>
-        <button id="unknownBtn" class="status unknown" type="button">不熟</button>
+        <button id="knownBtn" class="status known" type="button" title="快捷键：1">认识</button>
+        <button id="unknownBtn" class="status unknown" type="button" title="快捷键：3">不熟</button>
       </div>
       <div class="progress-row">
         <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
@@ -74,7 +77,10 @@
     </footer>
   </main>
   <div id="toast" class="toast"></div>
-  <script src="./assets/study-meaning-visibility.js?v=20260805_master_g_audit_sync_v20"></script>
-  <script src="./assets/basic.js?v=20260805_master_g_audit_sync_v20"></script>
+<script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./sync-config.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/static-cloud-sync.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/study-meaning-visibility.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/basic.js?v=20260809_reading_keyboard_v49"></script>
 </body>
 </html>

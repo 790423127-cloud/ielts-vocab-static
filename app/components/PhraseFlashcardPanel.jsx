@@ -55,6 +55,8 @@ import {
   SPEECH_WARM_DELAYS_MS,
   SPEECH_WARM_OPTIONS
 } from "../lib/vocab-speech.mjs";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
+import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
 
 const PERSIST_DEBOUNCE_MS = 280;
 const FILTER_STATUS_OPTIONS = [
@@ -116,7 +118,9 @@ export default function PhraseFlashcardPanel() {
     index: 0,
     filter: { type: "all", value: "" },
     phrases: [],
-    studyPhrases: []
+    studyPhrases: [],
+    statusMap: {},
+    dailyCount: 0
   });
   const nextPhraseRef = useRef(() => {});
   const prevPhraseRef = useRef(() => {});
@@ -185,7 +189,9 @@ export default function PhraseFlashcardPanel() {
     index: effectiveIndex,
     filter,
     phrases,
-    studyPhrases
+    studyPhrases,
+    statusMap,
+    dailyCount
   };
 
   const persistPhraseSessionNow = useCallback((nextIndex = index, nextFilter = filter, nextPhrases = phrases) => {
@@ -610,100 +616,111 @@ export default function PhraseFlashcardPanel() {
     setToast("已随机跳转");
   }, [studyPhrases, markUserAdjusted, persistPhraseSessionNow]);
 
-  const bumpDailyCount = useCallback(() => {
-    const next = dailyCount + 1;
-    setDailyCount(next);
-    writeJsonStorage(PHRASE_FLASHCARD_DAILY_KEY, { date: todayKey(), count: next });
-  }, [dailyCount]);
-
   const markStatus = useCallback((status) => {
-    const entry = phrases[effectiveIndex];
+    const live = latestPhraseStateRef.current;
+    const entry = live.phrases[live.index];
     if (!entry) return;
     markUserAdjusted();
 
     const key = normalizePhraseKey(entry);
-    const current = getPhraseStatus(entry, statusMap);
+    const current = getPhraseStatus(entry, live.statusMap);
     let nextStatus = status;
     if (status === PHRASE_STUDY_STATUS.UNFAMILIAR && current.status === PHRASE_STUDY_STATUS.UNFAMILIAR) {
       nextStatus = "";
     }
 
-    setStatusMap((prev) => ({
-      ...prev,
+    const nextMap = {
+      ...live.statusMap,
       [key]: {
-        ...prev[key],
+        ...live.statusMap[key],
         status: nextStatus,
-        favorite: prev[key]?.favorite ?? current.favorite
+        favorite: live.statusMap[key]?.favorite ?? current.favorite
       }
-    }));
+    };
+    const nextDaily = nextStatus ? Number(live.dailyCount || 0) + 1 : Number(live.dailyCount || 0);
+    const nextStudyPhrases = buildPhraseStudyList(live.phrases, live.filter, nextMap);
+    const currentPosition = Math.max(
+      0,
+      live.studyPhrases.findIndex((row) => row.originalIndex === live.index)
+    );
+    let landingRow = null;
+    for (let offset = 1; offset <= live.studyPhrases.length; offset += 1) {
+      const candidate = live.studyPhrases[(currentPosition + offset) % live.studyPhrases.length];
+      landingRow = nextStudyPhrases.find((row) => row.originalIndex === candidate.originalIndex) || null;
+      if (landingRow) break;
+    }
+    landingRow ||= nextStudyPhrases[0] || null;
+    const nextIndex = Number.isInteger(landingRow?.originalIndex) ? landingRow.originalIndex : 0;
 
-    bumpDailyCount();
-    nextPhrase();
-  }, [phrases, effectiveIndex, statusMap, bumpDailyCount, nextPhrase, markUserAdjusted]);
+    latestPhraseStateRef.current = {
+      ...live,
+      index: nextIndex,
+      statusMap: nextMap,
+      studyPhrases: nextStudyPhrases,
+      dailyCount: nextDaily
+    };
+    setStatusMap(nextMap);
+    if (nextDaily !== live.dailyCount) {
+      setDailyCount(nextDaily);
+      writeJsonStorage(PHRASE_FLASHCARD_DAILY_KEY, { date: todayKey(), count: nextDaily });
+    }
+    setIndex(nextIndex);
+    if (landingRow) persistPhraseSessionNow(nextIndex, live.filter, live.phrases);
+    setToast(nextStatus === PHRASE_STUDY_STATUS.FAMILIAR
+      ? "已标记认识"
+      : nextStatus === PHRASE_STUDY_STATUS.UNFAMILIAR
+        ? "已标记不熟"
+        : "已取消不熟");
+  }, [markUserAdjusted, persistPhraseSessionNow]);
 
   const toggleFavorite = useCallback(() => {
-    const entry = phrases[effectiveIndex];
+    const live = latestPhraseStateRef.current;
+    const entry = live.phrases[live.index];
     if (!entry) return;
     markUserAdjusted();
 
     const key = normalizePhraseKey(entry);
-    const current = getPhraseStatus(entry, statusMap);
-    setStatusMap((prev) => ({
-      ...prev,
+    const current = getPhraseStatus(entry, live.statusMap);
+    const nextMap = {
+      ...live.statusMap,
       [key]: {
-        ...prev[key],
-        status: prev[key]?.status ?? current.status,
+        ...live.statusMap[key],
+        status: live.statusMap[key]?.status ?? current.status,
         favorite: !current.favorite
       }
-    }));
+    };
+    latestPhraseStateRef.current = { ...live, statusMap: nextMap };
+    setStatusMap(nextMap);
     setToast(!current.favorite ? "已收藏" : "已取消收藏");
-  }, [phrases, effectiveIndex, statusMap, markUserAdjusted]);
+  }, [markUserAdjusted]);
 
   useEffect(() => {
-    function isTypingTarget(target) {
-      const tag = target?.tagName?.toLowerCase();
-      return tag === "input" || tag === "textarea" || tag === "select" || target?.isContentEditable;
-    }
-
     function handleKeyDown(event) {
-      if (isTypingTarget(event.target)) return;
       if (loadState !== "ready" || isStudyEmpty) return;
-
-      if (event.key === "Tab") {
-        if (event.repeat) return;
-        event.preventDefault();
-        speakPhrase();
-        return;
-      }
-      if (event.key === " " || event.code === "Space") {
-        if (event.repeat) return;
-        event.preventDefault();
-        speakExample();
-        return;
-      }
-      if (event.key === "ArrowRight") {
-        if (event.repeat) return;
-        event.preventDefault();
-        nextPhraseRef.current();
-      }
-      if (event.key === "ArrowLeft") {
-        if (event.repeat) return;
-        event.preventDefault();
-        prevPhraseRef.current();
-      }
-      if (event.key === "0") {
-        event.preventDefault();
-        markStatus(PHRASE_STUDY_STATUS.FAMILIAR);
-      }
-      if (event.key === "1") {
-        event.preventDefault();
-        markStatus(PHRASE_STUDY_STATUS.UNFAMILIAR);
-      }
+      const action = getStudyKeyboardAction(event);
+      if (!action || action === "blurry") return;
+      event.preventDefault();
+      if (action === "word-audio") speakPhrase();
+      else if (action === "example-audio") speakExample();
+      else if (action === "next") nextPhraseRef.current();
+      else if (action === "previous") prevPhraseRef.current();
+      else if (action === "known") markStatus(PHRASE_STUDY_STATUS.FAMILIAR);
+      else if (action === "unknown") markStatus(PHRASE_STUDY_STATUS.UNFAMILIAR);
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [loadState, isStudyEmpty, speakPhrase, speakExample, markStatus]);
+
+  useEffect(() => {
+    function handlePhraseSwipe(event) {
+      if (loadState !== "ready" || latestPhraseStateRef.current.studyPhrases.length < 2) return;
+      if (event.detail?.direction === "previous") prevPhraseRef.current();
+      else nextPhraseRef.current();
+    }
+    window.addEventListener(WORD_CARD_SWIPE_EVENT, handlePhraseSwipe);
+    return () => window.removeEventListener(WORD_CARD_SWIPE_EVENT, handlePhraseSwipe);
+  }, [loadState]);
 
   const itemStatus = getPhraseStatus(item, statusMap);
 
@@ -896,7 +913,7 @@ export default function PhraseFlashcardPanel() {
       />
 
       <section className="main phrase-main flash-training-main">
-          <div className="center phrase-center flash-training-card">
+          <div className="center phrase-center flash-training-card" data-word-swipe-card>
           <div className="phrase-type-badge">词组</div>
 
           <div className="flash-training-toolbar">
@@ -997,16 +1014,16 @@ export default function PhraseFlashcardPanel() {
             type="button"
             disabled={isStudyEmpty}
             onClick={() => markStatus(PHRASE_STUDY_STATUS.FAMILIAR)}
-            title="快捷键：0"
+            title="快捷键：1"
           >
-            熟悉
+            认识
           </button>
           <button
             className={`status unknown ${itemStatus.status === PHRASE_STUDY_STATUS.UNFAMILIAR ? "active-unknown" : ""}`}
             type="button"
             disabled={isStudyEmpty}
             onClick={() => markStatus(PHRASE_STUDY_STATUS.UNFAMILIAR)}
-            title="快捷键：1"
+            title="快捷键：3"
           >
             {itemStatus.status === PHRASE_STUDY_STATUS.UNFAMILIAR ? "取消不熟" : "不熟"}
           </button>

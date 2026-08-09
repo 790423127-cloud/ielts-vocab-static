@@ -147,7 +147,82 @@
 
 .rgQuizWrap {
   width: 100%;
+  display: grid;
+  gap: 18px;
 }
+
+.rgEvidenceCard {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  border: 1px solid #dce8e3;
+  border-radius: 12px;
+  background: #fbfdfc;
+  color: #26384b;
+  overflow: hidden;
+}
+
+.rgEvidenceHead,
+.rgEvidenceMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+}
+
+.rgEvidenceHead {
+  padding: 10px 13px;
+  border-bottom: 1px solid #e4ece8;
+  color: #2f6b5d;
+  font-size: 13px;
+}
+
+.rgEvidenceHead span {
+  color: #6b7c8a;
+  font-size: 12px;
+}
+
+.rgEvidenceList {
+  display: grid;
+}
+
+.rgEvidenceItem {
+  display: grid;
+  gap: 5px;
+  padding: 12px 13px;
+}
+
+.rgEvidenceItem + .rgEvidenceItem {
+  border-top: 1px solid #e4ece8;
+}
+
+.rgEvidenceMeta {
+  color: #5c6e7d;
+  font-size: 12px;
+}
+
+.rgEvidenceMeta strong {
+  color: #1f6b58;
+}
+
+.rgEvidenceAnswer {
+  color: #26384b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.rgEvidenceSentence,
+.rgEvidencePending,
+.rgEvidenceEmpty {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.rgEvidenceSentence { color: #334155; }
+.rgEvidencePending { color: #9b6a28; }
+.rgEvidenceEmpty { padding: 12px 13px; color: #6b7c8a; }
 
 .rgLearningCard {
   width: min(680px, 100%);
@@ -237,41 +312,6 @@
   max-width: 640px;
 }
 
-.rgSensesWrap {
-  width: min(760px, 100%);
-  margin: 10px auto 0;
-  text-align: left;
-}
-
-.rgSensesLabel {
-  display: inline-flex;
-  align-items: center;
-  color: #587269;
-  padding: 0 2px;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-.rgSensesToggle {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 5px 10px;
-  border: 1px solid #c9ddd5;
-  border-radius: 999px;
-  background: #edf6f2;
-  color: #246454;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.rgSensesToggle:hover {
-  border-color: #2f7b67;
-  background: #e2f1eb;
-}
-
 .rgContentQuality {
   display: inline-flex;
   align-items: baseline;
@@ -294,73 +334,6 @@
 .rgContentQuality em {
   color: #7a6650;
   font-style: normal;
-}
-
-.rgSensesPanel {
-  width: 100%;
-  max-width: none;
-  margin-top: 5px;
-  padding: 0;
-  border-radius: 8px;
-  border: 1px solid #ece3d8;
-  background: rgba(255, 255, 255, 0.82);
-  display: grid;
-  gap: 0;
-  overflow: hidden;
-}
-
-.rgSenseRow {
-  display: grid;
-  grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
-  align-items: center;
-  gap: 16px;
-  padding: 9px 13px;
-  font-size: 13px;
-  line-height: 1.45;
-  color: #334155;
-}
-
-.rgSenseRow + .rgSenseRow {
-  border-top: 1px solid #edf0ee;
-}
-
-.rgSenseRow[data-has-example="false"] .rgSenseMeaning {
-  grid-column: 1 / -1;
-}
-
-.rgSenseMeaning {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.rgSenseExample {
-  min-width: 0;
-  padding-left: 16px;
-  border-left: 1px solid #e5eae7;
-  display: grid;
-  gap: 2px;
-}
-
-.rgSenseExampleEn {
-  color: #304257;
-  overflow-wrap: anywhere;
-}
-
-.rgSenseExampleZh {
-  color: #74808c;
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-
-.rgSenseTag {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 1px 8px;
-  border-radius: 999px;
-  background: #e5f2ed;
-  color: #2f6b5d;
-  font-size: 11px;
-  font-weight: 750;
 }
 
 .rgStatusBar {
@@ -578,21 +551,11 @@
     font-size: 12px;
   }
 
-  .rgSenseRow {
-    grid-template-columns: 1fr;
-    gap: 4px;
-    padding: 9px 11px;
-  }
-
-  .rgSenseExample {
-    padding-left: 0;
-    border-left: 0;
-  }
 }
 
 /* reading-g 正文仅两列搭配，避免第三格空位（需配合本地 class 使用） */
 .rgFooterGrid :global(.footer-grid) {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
 }
 
 @media (max-width: 900px) {

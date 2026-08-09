@@ -4,7 +4,7 @@
   "use strict";
 
   var DATA_URL = "./data/meaning-6000.json";
-  var DATA_VERSION = "20260805_master_g_audit_sync_v20";
+  var DATA_VERSION = "20260809_reading_keyboard_v49";
   var PROGRESS_KEY = "ielts_meaning_static_progress_v1";
   var RECENT_KEY = "ielts_meaning_static_recent_v1";
   var AUTO_NEXT_MS = 450;
@@ -73,6 +73,14 @@
         if (Array.isArray(arr)) recentIds = arr.slice(0, RECENT_LIMIT);
       }
     } catch (e) {}
+  }
+
+  function applyMergedCloudProgress() {
+    stats = { done: 0, correct: 0 };
+    recentIds = [];
+    loadProgress();
+    renderStats();
+    if (bank.length && stats.done > 0) nextQuestion();
   }
 
   function saveProgress() {
@@ -498,4 +506,9 @@
       if (els.startBtn) els.startBtn.classList.add("hidden");
       toast("词库加载失败，请检查网络后刷新");
     });
+  if (window.StaticCloudSync) {
+    window.StaticCloudSync.register("meaning", [PROGRESS_KEY, RECENT_KEY], {
+      onMerged: applyMergedCloudProgress
+    });
+  }
 })();

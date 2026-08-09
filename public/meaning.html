@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#f4f6f5" />
   <title>看词选意思 · 核心6000 · 静态版</title>
-  <link rel="stylesheet" href="./assets/style.css?v=20260805_master_g_audit_sync_v20" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
   <style>
     .hidden{display:none!important}
     .meaning-wrap{max-width:720px;margin:0 auto;padding:8px 4px 24px}
@@ -36,16 +36,17 @@
     @media(prefers-reduced-motion:reduce){.load-fill.is-active{width:52%;animation:none}}
     .hint{color:#8a96a3;font-size:12px;font-weight:600;line-height:1.4}
   </style>
+  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
 </head>
-<body>
+<body data-static-page="meaning">
   <header class="static-brand-bar">
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>看词选意思</strong><span>核心 6000</span></div>
-    <nav class="static-brand-nav" aria-label="主要学习模式">
+    <nav class="static-brand-nav" data-static-primary-nav aria-label="主要学习模式">
       <a class="active" href="./meaning.html">选义</a><a href="./spelling.html">拼写</a>
     </nav>
   </header>
-  <aside class="static-shell-sidebar" aria-label="学习导航"><nav><a href="./index.html">刷词</a><a href="./spelling.html">拼写</a><a class="active" href="./meaning.html">选义</a></nav><div class="static-shell-divider"></div><span class="static-shell-label">专项学习</span><nav><a href="./basic.html">零基础词库</a><a href="./reading-g.html">G类阅读提升</a><a href="./spelling.html?source=error_bank">错词本</a><a href="./spelling.html?source=srs_review">SRS 复习</a></nav></aside>
+  <aside class="static-shell-sidebar" data-static-sidebar aria-label="全站学习导航"></aside>
   <main class="app meaning-wrap">
     <div class="meaning-top">
       <div>
@@ -82,6 +83,9 @@
     </section>
   </main>
   <div id="toast" class="toast"></div>
-  <script src="./assets/meaning-static.js?v=20260805_master_g_audit_sync_v20"></script>
+<script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./sync-config.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/static-cloud-sync.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/meaning-static.js?v=20260809_reading_keyboard_v49"></script>
 </body>
 </html>

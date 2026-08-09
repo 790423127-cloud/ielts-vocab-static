@@ -9,11 +9,13 @@
   var PARA_SESSION_KEY = "ielts_reading_g_paraphrase_session_v1";
   var SESSION_KEY = "ielts_reading_g_session_v3";
   var POSITIONS_KEY = "ielts_reading_g_positions_v3";
-  var CONTROLS_COLLAPSED_KEY = "ielts_static_reading_g_controls_collapsed_v1_";
+  var TOP_TOOLS_KEY = "ielts_static_reading_g_tools_collapsed_v1";
+  var ORDER_PREFS_KEY = "ielts_static_reading_g_order_preferences_v1";
   var MIG_V4 = "ielts_reading_g_migration_v4";
   var DATA_URL = "./data/reading-g-vocab.json";
   var PARA_URL = "./data/reading-g-paraphrases.json";
-  var DATA_VERSION = "20260805_master_g_audit_sync_v20";
+  var QUESTION_EVIDENCE_URL = "./data/reading-g-question-evidence.json";
+  var DATA_VERSION = "20260809_reading_keyboard_v49";
   var SESSION_SIZES = { guided: 10, quick: 20, full: 80 };
 
   function versionedDataUrl(url) {
@@ -36,6 +38,9 @@
   var paraSession = null;
   var recallRevealed = false;
   var resumePending = false;
+  var wordOrderMode = "current";
+  var difficultyOrderMode = "default";
+  var randomOrderSeed = Date.now();
   var coverage = {
     version: 1,
     seenGroupIds: [],
@@ -54,6 +59,13 @@
     exampleCn: document.getElementById("exampleCn"),
     count: document.getElementById("count"),
     progressFill: document.getElementById("progressFill"),
+    progressSeek: document.getElementById("progressSeek"),
+    progressJumpBtn: document.getElementById("progressJumpBtn"),
+    progressJump: document.getElementById("progressJump"),
+    progressJumpInput: document.getElementById("progressJumpInput"),
+    progressJumpTotal: document.getElementById("progressJumpTotal"),
+    progressJumpCancel: document.getElementById("progressJumpCancel"),
+    progressPreview: document.getElementById("progressPreview"),
     favoriteBtn: document.getElementById("favoriteBtn"),
     unfamiliarAlert: document.getElementById("unfamiliarAlert"),
     bankMeta: document.getElementById("bankMeta"),
@@ -67,28 +79,21 @@
     quizExplain: document.getElementById("quizExplain"),
     swipeArea: document.getElementById("swipeArea"),
     exampleCard: document.querySelector(".example-card"),
-    senseHint: document.getElementById("senseHint"),
+    relationBlocks: document.getElementById("relationBlocks"),
+    readingTopbar: document.getElementById("readingTopbar"),
+    topToolsToggle: document.getElementById("topToolsToggle"),
+    readingEntryBtn: document.getElementById("readingEntryBtn"),
+    readingControlsClose: document.getElementById("readingControlsClose"),
+    wordOrderSelect: document.getElementById("wordOrderSelect"),
+    difficultyOrderSelect: document.getElementById("difficultyOrderSelect"),
+    entrySelect: document.getElementById("entrySelect"),
     readingControls: document.getElementById("readingControls"),
-    readingControlsToggle: document.getElementById("readingControlsToggle"),
     readingControlsSummary: document.getElementById("readingControlsSummary")
   };
 
-  var controlsViewport = "";
-  var controlsCollapsed = false;
   var autoPlayActive = false;
   var autoPlaySeconds = 6;
   var autoPlayTimer = null;
-  var expandedSenseEntryKey = "";
-
-  function controlsViewportKey() {
-    if (window.matchMedia("(max-width: 900px)").matches) return "mobile";
-    if (window.matchMedia("(max-height: 900px)").matches) return "compact-desktop";
-    return "desktop";
-  }
-
-  function controlsStorageKey(viewport) {
-    return CONTROLS_COLLAPSED_KEY + viewport;
-  }
 
   function filterSummaryLabel() {
     if (filter.type === "paraphraseQuiz") {
@@ -97,9 +102,14 @@
       return "引导学习 · 本轮10组";
     }
     if (filter.type === "learnMode") return filter.value === "phrase" ? "短语学习" : "词义学习";
-    if (filter.type === "pathStage") return "阶段" + (filter.value || "1");
+    if (filter.type === "pathStage") {
+      var stageLabels = { "1": "基础保分", "2": "扩大覆盖", "3": "文章强化", "4": "参考查阅" };
+      return "阶段" + (filter.value || "1") + "：" + (stageLabels[filter.value || "1"] || "阅读路线");
+    }
     if (filter.type === "status") return filter.value || "学习状态";
-    if (filter.type === "contentIncomplete") return "内容补全队列";
+    if (filter.type === "contentIncomplete") return "资料待修复";
+    if (filter.type === "synonymPending") return "同义替换待补全";
+    if (filter.type === "synonymReviewedNone") return "同义替换：已核查无结果";
     if (filter.type === "layer") {
       var layerLabels = {
         paraCore600: "表达识别核心",
@@ -121,34 +131,21 @@
       "<strong>当前范围</strong> · " + filterSummaryLabel() + " · " + total;
   }
 
-  function applyControlsState(collapsed, persist) {
-    controlsCollapsed = !!collapsed;
-    if (els.readingControls) {
-      els.readingControls.classList.toggle("is-collapsed", controlsCollapsed);
-    }
-    if (els.readingControlsToggle) {
-      els.readingControlsToggle.setAttribute("aria-expanded", String(!controlsCollapsed));
-      els.readingControlsToggle.textContent = controlsCollapsed ? "展开设置" : "收起设置";
-    }
-    if (persist && controlsViewport) {
-      try {
-        localStorage.setItem(controlsStorageKey(controlsViewport), controlsCollapsed ? "1" : "0");
-      } catch (e) {}
-    }
+  function setEntryPanelOpen(open) {
+    if (!els.readingControls) return;
+    els.readingControls.classList.toggle("hidden", !open);
+    if (els.readingEntryBtn) els.readingEntryBtn.setAttribute("aria-expanded", String(open));
   }
 
-  function syncControlsMode() {
-    var nextViewport = controlsViewportKey();
-    if (nextViewport === controlsViewport) return;
-    controlsViewport = nextViewport;
-    var saved = null;
-    try {
-      saved = localStorage.getItem(controlsStorageKey(controlsViewport));
-    } catch (e) {}
-    applyControlsState(
-      saved == null ? controlsViewport !== "desktop" : saved === "1",
-      false
-    );
+  function setTopToolsCollapsed(collapsed, persist) {
+    if (els.readingTopbar) els.readingTopbar.classList.toggle("is-tools-collapsed", !!collapsed);
+    if (els.topToolsToggle) {
+      els.topToolsToggle.setAttribute("aria-expanded", String(!collapsed));
+      els.topToolsToggle.textContent = "工具与词库";
+    }
+    if (persist) {
+      try { localStorage.setItem(TOP_TOOLS_KEY, collapsed ? "1" : "0"); } catch (e) {}
+    }
   }
 
   function toast(msg) {
@@ -190,6 +187,63 @@
     if (item.id) return String(item.id);
     var t = item.entryType === "phrase" || /\s/.test(item.word || "") ? "phrase" : "word";
     return t + "::" + (item.normalizedKey || nk(item.word));
+  }
+
+  function questionEvidenceKey(source) {
+    var book = String((source && source.book) || "").trim();
+    var test = String((source && source.test) || "").trim();
+    var part = String((source && source.part) || "").trim();
+    var question = Number(source && source.question);
+    if (!book || !test || !part || !Number.isInteger(question) || question < 1) return "";
+    return [book, test, part, question].join("|");
+  }
+
+  function enrichQuestionSources(rawGroups, evidence) {
+    var map = {};
+    (evidence && evidence.questions ? evidence.questions : []).forEach(function (entry) {
+      var key = questionEvidenceKey(entry);
+      if (key && !map[key]) map[key] = entry;
+    });
+    return (rawGroups || []).map(function (group) {
+      var seen = {};
+      var sources = (group.sources || []).map(function (source) {
+        var key = questionEvidenceKey(source);
+        var detail = key ? map[key] : null;
+        var answerSentence = String((detail && detail.answerSentence) || source.answerSentence || "").trim();
+        return Object.assign({}, source, {
+          key: key,
+          questionType: String((detail && detail.questionType) || "").trim(),
+          instructions: String((detail && detail.instructions) || "").trim(),
+          answer: String((detail && detail.answer) || "").trim(),
+          answerSentence: answerSentence,
+          answerSentenceStatus: (detail && detail.answerSentenceStatus) || (answerSentence ? "available" : "needs_location"),
+          evidenceStatus: detail ? "linked" : "unmapped"
+        });
+      }).filter(function (source) {
+        var sourceKey = source.key || [source.book || "", source.test || "", source.part || "", source.question || "", source.answerSentence || ""].join("|");
+        if (!sourceKey || seen[sourceKey]) return false;
+        seen[sourceKey] = true;
+        return true;
+      });
+      return Object.assign({}, group, { sources: sources });
+    });
+  }
+
+  function questionEvidenceHtml(group) {
+    var sources = group && Array.isArray(group.sources) ? group.sources : [];
+    if (!sources.length) {
+      return '<section class="para-evidence"><div class="para-evidence-head"><strong>原题证据</strong><span>未关联</span></div><p class="para-evidence-empty">当前是已审核同义关系，尚未关联具体题号。</p></section>';
+    }
+    return '<section class="para-evidence"><div class="para-evidence-head"><strong>原题答案句与题型</strong><span>' + sources.length + ' 条来源</span></div><div class="para-evidence-list">' + sources.map(function (source) {
+      var location = [source.book, source.test, source.part, source.question ? '第 ' + source.question + ' 题' : ''].filter(Boolean).join(' · ');
+      var type = source.questionType ? '题型：' + source.questionType : '题型：题源未映射';
+      var detail = source.answerSentenceStatus === 'needs_location'
+        ? '<p class="para-evidence-pending">原题已收录，答案句待人工定位。</p>'
+        : source.answerSentence
+          ? '<p class="para-evidence-sentence">' + esc(source.answerSentence) + '</p>'
+          : '<p class="para-evidence-pending">当前关系的旧来源未提供答案句。</p>';
+      return '<article class="para-evidence-item"><div class="para-evidence-meta"><span>' + esc(location) + '</span><strong>' + esc(type) + '</strong></div>' + (source.answer ? '<div class="para-evidence-answer">答案：' + esc(source.answer) + '</div>' : '') + detail + '</article>';
+    }).join('') + '</div></section>';
   }
 
   function filterKey(value) {
@@ -261,6 +315,31 @@
     return true;
   }
 
+  function applyMergedCloudProgress() {
+    statusMap = readStatusMap();
+    paraMap = loadJson(PARA_KEY, {}) || {};
+    paraReview = loadJson(REVIEW_KEY, { version: 1, groups: {}, updatedAt: 0 }) || { version: 1, groups: {}, updatedAt: 0 };
+    loadCoverage();
+    loadOrderPreferences();
+    if (!words.length) return;
+
+    var savedNavigation = loadJson(SESSION_KEY, null);
+    var savedParaSession = loadJson(PARA_SESSION_KEY, null);
+    var shouldResumeParaSession = savedNavigation
+      && savedNavigation.filter
+      && savedNavigation.filter.type === "paraphraseQuiz";
+    if (shouldResumeParaSession && savedParaSession && !savedParaSession.completed && Array.isArray(savedParaSession.currentSessionGroupIds) && savedParaSession.currentSessionGroupIds.length) {
+      filter = { type: "paraphraseQuiz", value: "", sessionMode: savedParaSession.mode === "wrongReview" ? "guided" : savedParaSession.mode };
+      hydrateQuizSession(savedParaSession);
+      resumePending = true;
+    } else if (!restoreSession()) {
+      rebuildStudy();
+      restoreStudyPosition(filter);
+    }
+    renderTopics();
+    render();
+  }
+
   function normalizeEntry(entry, i) {
     if (!entry || typeof entry !== "object") return null;
     var word = String(entry.word || "").trim();
@@ -279,22 +358,36 @@
       phonetic: String(entry.phonetic || "").trim(),
       pos: String(entry.primaryPos || entry.pos || (entryType === "phrase" ? "phrase" : "")).trim(),
       primaryPos: String(entry.primaryPos || entry.pos || "").trim(),
+      rawPos: String(entry.primaryPos || entry.pos || "").trim(),
+      primaryMeaningZh: meaning,
       meaning: meaning,
+      meaningZh: meaning,
       definition: String(entry.definition || meaning).trim(),
       example: String(entry.example || "").trim(),
       exampleCn: String(entry.exampleCn || entry.exampleZh || "").trim(),
+      exampleZh: String(entry.exampleZh || entry.exampleCn || "").trim(),
       layers: layers,
       primaryLayer: String(entry.primaryLayer || layers[0] || "").trim(),
       phraseStudyStage: Number(entry.phraseStudyStage) || 0,
       studyMode: entry.studyMode === "reference" ? "reference" : "active",
       senses: Array.isArray(entry.senses) ? entry.senses : [],
+      otherMeanings: Array.isArray(entry.otherMeanings) ? entry.otherMeanings : [],
+      meaningsZh: Array.isArray(entry.meaningsZh) ? entry.meaningsZh : [],
       forms: Array.isArray(entry.forms) ? entry.forms : [],
       wordFamily: Array.isArray(entry.wordFamily) ? entry.wordFamily : [],
       synonyms: Array.isArray(entry.synonyms) ? entry.synonyms : [],
+      synonymDetails: Array.isArray(entry.synonymDetails) ? entry.synonymDetails : [],
       formsReviewed: entry.formsReviewed === true,
       wordFamilyReviewed: entry.wordFamilyReviewed === true,
       synonymsReviewed: entry.synonymsReviewed === true,
-      difficulty: String(entry.difficulty || "").trim(),
+      synonymsReviewSource: String(entry.synonymsReviewSource || "").trim(),
+      difficulty: String(entry.difficulty || "中级核心").trim() || "中级核心",
+      studyDifficultyScore: entry.studyDifficultyScore !== null
+        && entry.studyDifficultyScore !== undefined
+        && String(entry.studyDifficultyScore).trim() !== ""
+        && Number.isFinite(Number(entry.studyDifficultyScore))
+        ? Number(entry.studyDifficultyScore)
+        : null,
       topics: Array.isArray(entry.topics) ? entry.topics : []
     };
   }
@@ -305,7 +398,7 @@
     meaning: "释义",
     meaningTooShort: "释义过短",
     multiPosNeedsSplit: "多词性义项",
-    definition: "英文释义",
+    definition: "释义说明",
     example: "英文例句",
     exampleZh: "例句翻译"
   };
@@ -321,6 +414,95 @@
 
   function contentList(value) {
     return Array.isArray(value) ? value : [];
+  }
+
+  var STATIC_SYNONYM_VARIANTS = [
+    ["encyclopaedia", "encyclopedia"], ["encyclopaedic", "encyclopedic"],
+    ["paediatric", "pediatric"], ["paediatrics", "pediatrics"],
+    ["aesthetic", "esthetic"], ["anaesthesia", "anesthesia"],
+    ["anaesthetic", "anesthetic"], ["archaeology", "archeology"],
+    ["foetus", "fetus"], ["haemoglobin", "hemoglobin"],
+    ["diarrhoea", "diarrhea"], ["manoeuvre", "maneuver"],
+    ["mediaeval", "medieval"], ["orthopaedic", "orthopedic"],
+    ["oesophagus", "esophagus"], ["colour", "color"],
+    ["favourite", "favorite"], ["honour", "honor"], ["labour", "labor"],
+    ["neighbour", "neighbor"], ["behaviour", "behavior"], ["centre", "center"],
+    ["metre", "meter"], ["theatre", "theater"], ["organise", "organize"],
+    ["organisation", "organization"], ["analyse", "analyze"], ["defence", "defense"],
+    ["licence", "license"], ["travelling", "traveling"], ["travelled", "traveled"],
+    ["traveller", "traveler"], ["catalogue", "catalog"], ["dialogue", "dialog"],
+    ["programme", "program"], ["grey", "gray"]
+  ];
+  var STATIC_SYNONYM_VARIANT_KEYS = {};
+  STATIC_SYNONYM_VARIANTS.forEach(function (group) {
+    group.forEach(function (word) { STATIC_SYNONYM_VARIANT_KEYS[word] = group[0]; });
+  });
+
+  function staticSynonymKey(value) {
+    var compact = contentText(value)
+      .toLowerCase()
+      .replace(/[’‘`]/g, "'")
+      .replace(/[^a-z0-9]+/g, "");
+    return STATIC_SYNONYM_VARIANT_KEYS[compact] || compact;
+  }
+
+  function normalizeStaticSynonyms(value, headword) {
+    var values = Array.isArray(value) ? value : String(value || "").split(/[,，;；|\n]+/);
+    var headwordKey = staticSynonymKey(headword);
+    var seen = {};
+    var result = [];
+    values.forEach(function (item) {
+      if (result.length >= 4) return;
+      var term = contentText(typeof item === "string" ? item : item && (item.word || item.replacement));
+      var key = staticSynonymKey(term);
+      if (!key || key === headwordKey || seen[key]) return;
+      seen[key] = true;
+      result.push(term);
+    });
+    return result;
+  }
+
+  function normalizeStaticSynonymDetails(value, headword, synonyms) {
+    var words = normalizeStaticSynonyms(synonyms, headword);
+    var detailsByWord = {};
+    contentList(value).forEach(function (detail) {
+      var word = contentText(typeof detail === "string" ? detail : detail && (detail.word || detail.replacement));
+      var key = staticSynonymKey(word);
+      if (key && !detailsByWord[key]) detailsByWord[key] = detail;
+    });
+    return words.map(function (word) {
+      var detail = detailsByWord[staticSynonymKey(word)] || {};
+      return {
+        word: word,
+        pos: contentText(detail.pos || detail.primaryPos),
+        meaningZh: contentText(detail.meaningZh || detail.primaryMeaningZh || detail.meaning)
+      };
+    });
+  }
+
+  function saveQuizNavigation() {
+    saveJson(SESSION_KEY, {
+      wordKey: "",
+      filter: filter,
+      index: index,
+      savedAt: new Date().toISOString()
+    });
+  }
+
+  function getStaticSynonymStatus(item) {
+    var words = normalizeStaticSynonyms(item && item.synonyms, item && item.word);
+    if (words.length) return {
+      state: "available",
+      words: words,
+      details: normalizeStaticSynonymDetails(item && item.synonymDetails, item && item.word, words),
+      source: contentText(item && item.synonymsReviewSource)
+    };
+    if (item && item.synonymsReviewed === true) return { state: "reviewed-none", words: [], details: [], source: contentText(item.synonymsReviewSource) };
+    return { state: "pending", words: [], details: [], source: "" };
+  }
+
+  function isStaticSynonymSupportedEntry(item) {
+    return Boolean(item && (item.entryType === "word" || item.entryType === "phrase"));
   }
 
   function contentUnique(values) {
@@ -346,6 +528,22 @@
     }));
   }
 
+  var STATIC_POS_ZH = {
+    noun: "名词", verb: "动词", adjective: "形容词", adverb: "副词",
+    preposition: "介词", conjunction: "连词", pronoun: "代词",
+    determiner: "限定词", article: "冠词", phrase: "短语"
+  };
+
+  function staticPosDisplay(value) {
+    var raw = contentText(value);
+    if (!raw || /[\u3400-\u9fff]/.test(raw)) return raw;
+    var tokens = contentPosTokens(raw);
+    if (/\bphrase\b/i.test(raw)) tokens.push("phrase");
+    tokens = contentUnique(tokens);
+    var chinese = tokens.map(function (token) { return STATIC_POS_ZH[token] || ""; }).filter(Boolean);
+    return chinese.length ? raw + " " + chinese.join("/") : raw;
+  }
+
   function hasUsablePos(values) {
     return values.some(function (value) {
       var normalized = contentText(value);
@@ -359,7 +557,7 @@
       .map(contentText)
       .find(function (value) { return value && !isPlaceholderContent(value); });
     if (!meaning) return false;
-    if ((meaning.match(/[\u3400-\u9fff]/g) || []).length >= 2) return false;
+    if ((meaning.match(/[\u3400-\u9fff]/g) || []).length >= 1) return false;
     var entryPos = contentUnique(contentPosTokens(item.primaryPos).concat(contentPosTokens(item.pos)));
     return !entryPos.length || !entryPos.every(function (pos) {
       return ["preposition", "conjunction", "article", "determiner", "pronoun", "interjection"].indexOf(pos) >= 0;
@@ -546,18 +744,33 @@
     var layers = item.layers || [];
     if (stage === "4") return item.studyMode === "reference";
     if (item.studyMode !== "active") return false;
-    var inStage1 =
+    var difficulty = String(item.difficulty || "").trim();
+    var isBasic = difficulty === "基础高频";
+    var isCore = difficulty === "中级核心";
+    var isArticleExtension =
+      difficulty === "高级加分" || difficulty === "阅读扩展" || difficulty === "低频认识即可";
+    var hasCoreLayer =
       layers.indexOf("priority1500") >= 0 ||
       layers.indexOf("answerCore250") >= 0 ||
-      layers.indexOf("logic120") >= 0 ||
-      (layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 1);
-    var inStage2 =
-      !inStage1 &&
-      (layers.indexOf("tierB1200") >= 0 ||
-        (layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 2));
-    if (stage === "1") return inStage1;
-    if (stage === "2") return inStage2;
-    if (stage === "3") return !inStage1 && !inStage2;
+      layers.indexOf("logic120") >= 0;
+    var hasArticleLayer =
+      layers.indexOf("tierC800") >= 0 ||
+      layers.indexOf("paraExt500") >= 0 ||
+      layers.indexOf("questionBankActive") >= 0 ||
+      layers.indexOf("questionBankAiCompleted") >= 0;
+    var isPhrase = item.entryType === "phrase" || /\s/.test(item.word || "");
+    var targetStage = "2";
+    if (isBasic) targetStage = "1";
+    else if (isPhrase) {
+      if (layers.indexOf("logic120") >= 0 || (layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 1)) targetStage = "1";
+      else if (layers.indexOf("phrases400") >= 0 && Number(item.phraseStudyStage) === 2) targetStage = "2";
+      else if (hasArticleLayer) targetStage = "3";
+    } else if (isArticleExtension) targetStage = "3";
+    else if (isCore && hasCoreLayer) targetStage = "1";
+    else if (isCore && hasArticleLayer) targetStage = "3";
+    if (stage === "1") return targetStage === "1";
+    if (stage === "2") return targetStage === "2";
+    if (stage === "3") return targetStage === "3";
     return false;
   }
 
@@ -569,6 +782,8 @@
     var layers = item.layers || [];
 
     if (filter.type === "contentIncomplete") return isStaticContentIncomplete(item);
+    if (filter.type === "synonymPending") return isStaticSynonymSupportedEntry(item) && getStaticSynonymStatus(item).state === "pending";
+    if (filter.type === "synonymReviewedNone") return isStaticSynonymSupportedEntry(item) && getStaticSynonymStatus(item).state === "reviewed-none";
 
     var isExplicitCompletionQueue =
       filter.type === "layer" && filter.value === "questionBankPending";
@@ -586,7 +801,9 @@
       filter.type !== "everything" &&
       filter.type !== "paraphrase" &&
       !(filter.type === "pathStage" && filter.value === "4") &&
-      filter.type !== "reference"
+      filter.type !== "reference" &&
+      filter.type !== "synonymPending" &&
+      filter.type !== "synonymReviewedNone"
     ) {
       return false;
     }
@@ -612,7 +829,189 @@
     for (var i = 0; i < words.length; i++) {
       if (matches(words[i])) study.push(i);
     }
+    study = orderStudyIndices(study);
     if (study.indexOf(index) < 0) index = study[0] != null ? study[0] : 0;
+  }
+
+  function resetStudyToStart() {
+    index = study[0] != null ? study[0] : 0;
+  }
+
+  function intrinsicDifficultyScore(item) {
+    var key = nk(item && item.word);
+    var letters = key.replace(/[^a-z]/g, "");
+    if (!letters) return 50;
+    var syllableMatches = letters.replace(/e$/, "").match(/[aeiouy]+/g) || [];
+    var syllables = Math.max(1, syllableMatches.length);
+    var tokens = key.split(/[\s-]+/).filter(Boolean).length;
+    var rare = (letters.match(/[jqxz]/g) || []).length;
+    var clusters = letters.match(/[bcdfghjklmnpqrstvwxyz]{3,}/g) || [];
+    var clusterLoad = clusters.reduce(function (sum, value) { return sum + Math.max(1, value.length - 2); }, 0);
+    var opaque = (letters.match(/(?:ough|augh|eigh|queue|sch|tch|dge|ph|rh|ps|mn|gn|kn|wr|eau)/g) || []).length;
+    var score = 6;
+    score += Math.max(0, Math.min(42, (letters.length - 2) * 4));
+    score += Math.max(0, Math.min(20, (syllables - 1) * 5));
+    score += Math.max(0, Math.min(14, (tokens - 1) * 7));
+    if (key.indexOf("-") >= 0) score += 3;
+    score += Math.max(0, Math.min(6, rare * 1.5));
+    score += Math.max(0, Math.min(8, clusterLoad * 2));
+    score += Math.max(0, Math.min(9, opaque * 3));
+    if (/(?:tion|sion|ation|isation|ization|ology|ologist|graphy|metry|phobia|cracy|ence|ance|ment|ness|ity|ative|ively|ically|ability|ibility)$/i.test(letters)) score += 4;
+    if (letters.length >= 9 && /^(?:anti|counter|dis|inter|micro|mis|multi|non|over|post|pre|re|sub|super|trans|un)/i.test(letters)) score += 3;
+    return Math.round(Math.max(0, Math.min(100, score)));
+  }
+
+  function difficultyScore(item) {
+    var raw = item && item.studyDifficultyScore;
+    var explicit = Number(raw);
+    return raw !== null && raw !== undefined && String(raw).trim() !== "" && Number.isFinite(explicit)
+      ? explicit
+      : intrinsicDifficultyScore(item);
+  }
+
+  function difficultyProfile(indices) {
+    var scores = indices.map(function (sourceIndex) { return difficultyScore(words[sourceIndex]); }).sort(function (a, b) { return a - b; });
+    if (scores.length < 6 || scores[0] === scores[scores.length - 1]) return null;
+    return {
+      easierMax: scores[Math.floor((scores.length - 1) * 0.3)],
+      harderMin: scores[Math.ceil((scores.length - 1) * 0.7)]
+    };
+  }
+
+  function difficultyTier(item, profile) {
+    if (!profile) return "standard";
+    var score = difficultyScore(item);
+    if (score <= profile.easierMax) return "easier";
+    if (score >= profile.harderMin) return "harder";
+    return "standard";
+  }
+
+  function relationWord(value) {
+    return nk(typeof value === "string" ? value : value && (value.word || value.term || value.text || value.key));
+  }
+
+  function familySortKey(item) {
+    var keys = [nk(item && item.word)];
+    (item && item.wordFamily || []).forEach(function (value) { var key = relationWord(value); if (key) keys.push(key); });
+    (item && item.forms || []).forEach(function (value) { var key = relationWord(value); if (key) keys.push(key); });
+    return keys.filter(Boolean).sort()[0] || nk(item && item.word);
+  }
+
+  function sceneSortKey(item) {
+    var topics = (item && item.topics || []).map(nk).filter(Boolean);
+    return (topics[0] || "未分类") + "\u0000" + nk(item && item.word);
+  }
+
+  function deterministicHash(value) {
+    var hash = 2166136261;
+    var text = String(value || "");
+    for (var position = 0; position < text.length; position++) {
+      hash ^= text.charCodeAt(position);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  function orderStudyIndices(indices) {
+    var source = indices.slice();
+    var profile = difficultyProfile(source);
+    var requestedTier = difficultyOrderMode === "easier-only"
+      ? "easier"
+      : difficultyOrderMode === "standard-only"
+        ? "standard"
+        : difficultyOrderMode === "harder-only"
+          ? "harder"
+          : "";
+    if (requestedTier && profile) {
+      var filtered = source.filter(function (sourceIndex) { return difficultyTier(words[sourceIndex], profile) === requestedTier; });
+      if (filtered.length) source = filtered;
+    }
+
+    source = source.map(function (sourceIndex, originalOrder) { return { sourceIndex: sourceIndex, originalOrder: originalOrder }; });
+    if (wordOrderMode === "random") {
+      source.sort(function (left, right) {
+        return deterministicHash(randomOrderSeed + ":" + entryKey(words[left.sourceIndex]))
+          - deterministicHash(randomOrderSeed + ":" + entryKey(words[right.sourceIndex]))
+          || left.originalOrder - right.originalOrder;
+      });
+    } else if (wordOrderMode === "family") {
+      source.sort(function (left, right) {
+        return familySortKey(words[left.sourceIndex]).localeCompare(familySortKey(words[right.sourceIndex]), "en")
+          || left.originalOrder - right.originalOrder;
+      });
+    } else if (wordOrderMode === "association") {
+      source.sort(function (left, right) {
+        return sceneSortKey(words[left.sourceIndex]).localeCompare(sceneSortKey(words[right.sourceIndex]), "zh-CN")
+          || left.originalOrder - right.originalOrder;
+      });
+    }
+
+    if (difficultyOrderMode === "easy-to-hard" || difficultyOrderMode === "hard-to-easy") {
+      var direction = difficultyOrderMode === "hard-to-easy" ? -1 : 1;
+      source.sort(function (left, right) {
+        return (difficultyScore(words[left.sourceIndex]) - difficultyScore(words[right.sourceIndex])) * direction;
+      });
+    }
+    return source.map(function (row) { return row.sourceIndex; });
+  }
+
+  function loadOrderPreferences() {
+    var saved = loadJson(ORDER_PREFS_KEY, {}) || {};
+    if (["current", "random", "family", "association"].indexOf(saved.order) >= 0) wordOrderMode = saved.order;
+    if (["default", "easy-to-hard", "hard-to-easy", "easier-only", "standard-only", "harder-only"].indexOf(saved.difficulty) >= 0) difficultyOrderMode = saved.difficulty;
+    if (Number.isFinite(Number(saved.seed))) randomOrderSeed = Number(saved.seed);
+  }
+
+  function saveOrderPreferences() {
+    saveJson(ORDER_PREFS_KEY, { order: wordOrderMode, difficulty: difficultyOrderMode, seed: randomOrderSeed });
+  }
+
+  function applyOrderPreference(nextOrder, nextDifficulty) {
+    if (isQuiz()) return;
+    if (nextOrder) {
+      wordOrderMode = nextOrder;
+      if (wordOrderMode === "random") randomOrderSeed = Date.now();
+    }
+    if (nextDifficulty) difficultyOrderMode = nextDifficulty;
+    saveOrderPreferences();
+    rebuildStudy();
+    resetStudyToStart();
+    saveSession();
+    renderTopics();
+    render();
+  }
+
+  function renderOrderControls() {
+    if (els.wordOrderSelect) {
+      els.wordOrderSelect.value = wordOrderMode;
+      els.wordOrderSelect.disabled = isQuiz();
+    }
+    if (!els.difficultyOrderSelect) return;
+    var rawIndices = [];
+    if (!isQuiz()) {
+      for (var sourceIndex = 0; sourceIndex < words.length; sourceIndex++) {
+        if (matches(words[sourceIndex])) rawIndices.push(sourceIndex);
+      }
+    }
+    var profile = difficultyProfile(rawIndices);
+    var counts = { easier: 0, standard: 0, harder: 0 };
+    rawIndices.forEach(function (sourceIndex) { counts[difficultyTier(words[sourceIndex], profile)] += 1; });
+    var labels = {
+      "default": "难度默认",
+      "easy-to-hard": "简单→困难",
+      "hard-to-easy": "困难→简单",
+      "easier-only": "只刷相对较易 · " + counts.easier,
+      "standard-only": "只刷常规 · " + counts.standard,
+      "harder-only": "只刷相对较难 · " + counts.harder
+    };
+    Array.from(els.difficultyOrderSelect.options).forEach(function (option) {
+      option.textContent = labels[option.value] || option.textContent;
+    });
+    els.difficultyOrderSelect.value = difficultyOrderMode;
+    els.difficultyOrderSelect.disabled = isQuiz() || !profile;
+    els.difficultyOrderSelect.title = profile
+      ? "按当前入口内部的相对难度排序或筛选"
+      : "当前入口词量太少或难度区分不足，暂时不能划分相对难度";
   }
 
   function eligibleGroups() {
@@ -1016,6 +1415,7 @@
     var g = groupById(q.groupId);
     var stage = paraSession.currentLearningStage;
     var html = "";
+    var evidenceHtml = questionEvidenceHtml(g);
     if (resumePending) {
       html = '<div class="para-stage">未完成的同义学习</div><h2>继续上次同义学习</h2><p>长期覆盖与旧掌握状态均已保留。</p><div class="para-actions"><button id="paraResume" class="topic-chip active">继续</button><button id="paraRestart" class="topic-chip">重新开始本轮</button></div>';
     } else if (stage === "summary") {
@@ -1036,7 +1436,7 @@
     } else {
       html = '<div class="para-stage">' + (stage === "feedback" ? "阶段 3 · 验证反馈" : "阶段 3 · 四选一验证") + '</div><div class="para-stem">' + esc(q.stem) + '</div><div id="quizOptions"></div><div id="quizExplain" class="hidden para-note"></div>';
     }
-    els.quizBox.innerHTML = html;
+    els.quizBox.innerHTML = evidenceHtml + html;
     els.quizOptions = document.getElementById("quizOptions");
     els.quizExplain = document.getElementById("quizExplain");
     if (els.quizOptions) q.options.forEach(function (opt, oi) {
@@ -1061,44 +1461,183 @@
     var backMeaning = document.getElementById("paraBackMeaning"); if (backMeaning) backMeaning.onclick = function () { setFilter({ type: "learnMode", value: "meaning" }); };
   }
 
-  function renderStaticSenseHint(item, isContentPending) {
-    if (!els.senseHint) return;
-    els.senseHint.replaceChildren();
-    if (isQuiz() || isContentPending) {
-      els.senseHint.classList.add("hidden");
-      return;
-    }
-    var supplemental = contentList(item && item.senses).slice(1).filter(function (sense) {
-      return contentText(sense && (sense.meaningZh || sense.meaning));
-    });
-    if (!supplemental.length) {
-      els.senseHint.classList.add("hidden");
-      return;
-    }
+  function staticMeaningKey(value) {
+    return contentText(value).normalize("NFKC").toLowerCase()
+      .replace(/[\s，,。；;：:、（）()\[\]【】“”"'·/\\-]+/g, "");
+  }
 
-    els.senseHint.classList.remove("hidden");
-    var key = entryKey(item);
-    var expanded = expandedSenseEntryKey === key;
-    var toggle = document.createElement("button");
-    toggle.type = "button";
-    toggle.setAttribute("aria-expanded", String(expanded));
-    toggle.textContent = expanded ? "收起其他义项" : "还有 " + supplemental.length + " 个常见义项";
-    toggle.onclick = function () {
-      expandedSenseEntryKey = expanded ? "" : key;
-      render();
+  function normalizeStaticSense(value) {
+    if (!value) return null;
+    if (typeof value === "string") return contentText(value) ? { pos: "", meaning: contentText(value) } : null;
+    var meaning = contentText(value.meaningZh || value.meaning_zh || value.gloss || value.meaning || value.chinese);
+    if (!meaning) return null;
+    return {
+      pos: contentText(value.pos || value.posFamily || value.partOfSpeech || value.part_of_speech),
+      meaning: meaning,
+      isPrimary: value.isPrimary === true,
+      readingCommon: value.readingCommon === true
     };
-    els.senseHint.appendChild(toggle);
+  }
 
-    if (expanded) {
-      var detail = document.createElement("div");
-      detail.className = "sense-list";
-      detail.textContent = supplemental.map(function (sense) {
-        var pos = contentText(sense.pos);
-        var meaning = contentText(sense.meaningZh || sense.meaning);
-        return (pos ? "[" + pos + "] " : "") + meaning;
-      }).join("；");
-      els.senseHint.appendChild(detail);
+  function staticSenseDisplay(item) {
+    var explicit = contentList(item && item.senses).map(normalizeStaticSense).filter(Boolean);
+    var preferred = explicit.findIndex(function (sense) { return sense.isPrimary; });
+    var reading = explicit.findIndex(function (sense) { return sense.readingCommon; });
+    var primaryIndex = preferred >= 0 ? preferred : reading >= 0 ? reading : 0;
+    return {
+      explicit: explicit,
+      primaryIndex: primaryIndex,
+      primary: explicit[primaryIndex] || null
+    };
+  }
+
+  function staticSupplementalSenses(item) {
+    var display = staticSenseDisplay(item);
+    var primaryMeaning = contentText(display.primary && display.primary.meaning)
+      || contentText(item && (item.primaryMeaningZh || item.meaningZh || item.meaning));
+    var seen = {};
+    primaryMeaning.split(/[；;，,、/]+/).map(staticMeaningKey).filter(Boolean).forEach(function (part) { seen[part] = true; });
+    var candidates = display.explicit.filter(function (_, index) { return index !== display.primaryIndex; })
+      .concat(contentList(item && item.otherMeanings).map(normalizeStaticSense).filter(Boolean))
+      .concat(contentList(item && item.meaningsZh).filter(function (sense) {
+        return !sense || !sense.confidence || String(sense.confidence).toLowerCase() === "high";
+      }).map(normalizeStaticSense).filter(Boolean));
+    return candidates.map(function (sense) {
+      var parts = contentText(sense.meaning).split(/[；;，,、/]+/).map(contentText).filter(Boolean).filter(function (part) {
+        var key = staticMeaningKey(part);
+        if (!key || seen[key]) return false;
+        seen[key] = true;
+        return true;
+      });
+      return parts.length ? Object.assign({}, sense, { meaning: parts.join("；") }) : null;
+    }).filter(Boolean);
+  }
+
+  function staticPosKey(value) {
+    return contentPosTokens(value).slice().sort().join("|");
+  }
+
+  function inlineStaticStudyMeaning(item) {
+    var display = staticSenseDisplay(item);
+    var primary = contentText(display.primary && display.primary.meaning)
+      || contentText(item && (item.primaryMeaningZh || item.meaningZh || item.meaning))
+      || "等待释义";
+    var primaryPos = staticPosKey(display.primary && display.primary.pos || item && (item.primaryPos || item.pos));
+    return [primary].concat(staticSupplementalSenses(item).map(function (sense) {
+      var pos = contentText(sense.pos);
+      var posLabel = pos && staticPosKey(pos) !== primaryPos ? staticPosDisplay(pos) + " " : "";
+      return posLabel + sense.meaning;
+    })).join("；");
+  }
+
+  function relationText(value) {
+    if (typeof value === "string") return value;
+    return contentText(value && (value.word || value.form || value.phrase || value.value));
+  }
+
+  function relationDetail(value, fields, fallback) {
+    if (typeof value === "string") return fallback || "";
+    for (var index = 0; index < fields.length; index += 1) {
+      var text = contentText(value && value[fields[index]]);
+      if (text) return text;
     }
+    return fallback || "";
+  }
+
+  function appendRelationRow(list, word, detail, speakable) {
+    var row = document.createElement("div");
+    row.className = "item";
+    if (speakable && word) {
+      var sound = document.createElement("button");
+      sound.type = "button";
+      sound.className = "mini-sound";
+      sound.title = "播放发音";
+      sound.textContent = "🔊";
+      sound.onclick = function () { speak(word); };
+      row.appendChild(sound);
+    } else {
+      var spacer = document.createElement("span");
+      spacer.setAttribute("aria-hidden", "true");
+      row.appendChild(spacer);
+    }
+    var pair = document.createElement("div");
+    pair.className = "pair-text";
+    if (word) {
+      var english = document.createElement("div");
+      english.className = "en relation-en";
+      english.textContent = word;
+      pair.appendChild(english);
+    }
+    var chinese = document.createElement("div");
+    chinese.className = "zh relation-zh";
+    chinese.textContent = detail;
+    pair.appendChild(chinese);
+    row.appendChild(pair);
+    list.appendChild(row);
+  }
+
+  function appendRelationBlock(title, rows) {
+    if (!rows.length) return false;
+    var block = document.createElement("div");
+    block.className = "block";
+    var heading = document.createElement("div");
+    heading.className = "block-title";
+    heading.textContent = title;
+    block.appendChild(heading);
+    var list = document.createElement("div");
+    list.className = "list";
+    rows.forEach(function (row) {
+      appendRelationRow(list, row.word, row.detail, true);
+    });
+    block.appendChild(list);
+    els.relationBlocks.appendChild(block);
+    return true;
+  }
+
+  function renderRelationBlocks(item) {
+    if (!els.relationBlocks) return;
+    els.relationBlocks.replaceChildren();
+    els.relationBlocks.classList.add("hidden");
+    if (isQuiz() || !item) return;
+    var forms = contentList(item.forms).map(function (value) {
+      return {
+        word: relationText(value),
+        detail: relationDetail(value, ["meaning", "note", "type"], "重要变形")
+      };
+    }).filter(function (row) { return row.word; });
+    var formKeys = {};
+    forms.forEach(function (row) { formKeys[row.word.toLowerCase()] = true; });
+    var family = contentList(item.wordFamily).map(function (value) {
+      var familyPos = typeof value === "object" && value ? staticPosDisplay(value.pos || value.primaryPos) : "";
+      var familyMeaning = relationDetail(value, ["meaningZh", "meaning", "relation"], "");
+      return {
+        word: relationText(value),
+        detail: [familyPos, familyMeaning].filter(Boolean).join(" · ") || "同词族词条"
+      };
+    }).filter(function (row) { return row.word && !formKeys[row.word.toLowerCase()]; });
+    var synonymStatus = getStaticSynonymStatus(item);
+    var sourceLabel = synonymStatus.source === "master-lexicon"
+      ? " · 主词库"
+      : synonymStatus.source === "ai-cache"
+        ? " · AI缓存"
+        : synonymStatus.source === "deepseek"
+          ? " · AI核查"
+          : "";
+    var synonymRows = synonymStatus.state === "available"
+      ? synonymStatus.words.map(function (word, index) {
+        var detail = synonymStatus.details[index] || {};
+        var values = [staticPosDisplay(detail.pos), detail.meaningZh].filter(Boolean);
+        return { word: word, detail: values.join(" · ") || "释义待补全" };
+      })
+      : [];
+    var renderedCount = 0;
+    if (appendRelationBlock("变形", forms)) renderedCount += 1;
+    if (appendRelationBlock("词族", family)) renderedCount += 1;
+    if (appendRelationBlock(
+      "同义替换" + sourceLabel,
+      synonymRows
+    )) renderedCount += 1;
+    els.relationBlocks.classList.toggle("hidden", renderedCount === 0);
   }
 
   function render() {
@@ -1122,9 +1661,9 @@
         : isContentPending
           ? "已进入内容补全队列 · 待补：" + contentQuality.issueLabels.join("、")
           : (item.phonetic ? item.phonetic + " · " : "") +
-            (item.pos || "") +
+            (staticPosDisplay(item.pos) || "词性待补") +
             " · " +
-            (item.meaning || "");
+            inlineStaticStudyMeaning(item);
     }
     if (els.example) {
       els.example.textContent = isQuiz()
@@ -1140,12 +1679,14 @@
           ? "待补：" + contentQuality.issueLabels.join("、")
           : item.exampleCn || "";
     }
-    if (els.loadInfo && !isQuiz() && contentQuality && contentQuality.isScored) {
-      els.loadInfo.textContent = "资料完整度 " + contentQuality.completedCount + "/" + contentQuality.totalCount + " · " + contentQuality.percent + "%";
+    if (els.loadInfo) {
+      els.loadInfo.textContent = !isQuiz() && filter.type === "contentIncomplete" && contentQuality && contentQuality.isScored
+        ? "资料完整度 " + contentQuality.completedCount + "/" + contentQuality.totalCount + " · " + contentQuality.percent + "%"
+        : "";
     }
     var exampleSoundBtn = document.getElementById("exampleSoundBtn");
     if (exampleSoundBtn) exampleSoundBtn.disabled = isContentPending || isQuiz();
-    renderStaticSenseHint(item, isContentPending);
+    renderRelationBlocks(item);
 
     var total = isQuiz() ? (paraSession ? paraSession.baseGroupCount : SESSION_SIZES[quizSessionMode]) : study.length;
     var pos = isQuiz() ? Math.min(quizPos + 1, total) : Math.max(1, study.indexOf(index) + 1);
@@ -1162,6 +1703,7 @@
     if (els.progressFill) {
       els.progressFill.style.width = total ? Math.max(1, (pos / total) * 100) + "%" : "0%";
     }
+    syncProgressControls(pos, total);
     if (els.favoriteBtn) {
       els.favoriteBtn.textContent = !isQuiz() && isFavorite(item) ? "★" : "☆";
     }
@@ -1169,7 +1711,7 @@
       if (st === "不熟") els.unfamiliarAlert.classList.remove("hidden");
       else els.unfamiliarAlert.classList.add("hidden");
     }
-    if (els.knownBtn) { els.knownBtn.textContent = "熟悉"; els.knownBtn.style.display = isQuiz() ? "none" : ""; }
+    if (els.knownBtn) { els.knownBtn.textContent = "认识"; els.knownBtn.style.display = isQuiz() ? "none" : ""; }
     if (els.unknownBtn) { els.unknownBtn.textContent = st === "不熟" ? "取消不熟" : "不熟"; els.unknownBtn.style.display = isQuiz() ? "none" : ""; }
 
     updateAutoPlayUi();
@@ -1191,6 +1733,70 @@
     if (autoPlayActive && !fromAutoPlay) runAutoPlayStep();
   }
 
+  function clampStudyPosition(value) {
+    var total = study.length;
+    var numeric = Math.round(Number(value));
+    if (!Number.isFinite(numeric)) numeric = 1;
+    return Math.max(1, Math.min(total, numeric));
+  }
+
+  function previewStudyPosition(value) {
+    if (isQuiz() || !study.length) return;
+    var position = clampStudyPosition(value);
+    var item = words[study[position - 1]];
+    if (els.progressFill) els.progressFill.style.width = Math.max(1, (position / study.length) * 100) + "%";
+    if (els.count) els.count.textContent = position + " / " + study.length;
+    if (els.progressPreview) {
+      els.progressPreview.textContent = item ? "第 " + position + " 个 · " + item.word : "第 " + position + " 个";
+      els.progressPreview.classList.remove("hidden");
+    }
+  }
+
+  function seekStudyPosition(value) {
+    if (isQuiz() || !study.length) return;
+    var position = clampStudyPosition(value);
+    index = study[position - 1];
+    if (els.progressJump) els.progressJump.classList.add("hidden");
+    saveSession();
+    render();
+  }
+
+  function toggleProgressJump() {
+    if (!els.progressJump || isQuiz() || study.length < 2) return;
+    var opening = els.progressJump.classList.contains("hidden");
+    els.progressJump.classList.toggle("hidden", !opening);
+    if (opening && els.progressJumpInput) {
+      var position = study.indexOf(index) + 1;
+      els.progressJumpInput.value = String(Math.max(1, position));
+      els.progressJumpInput.focus();
+      els.progressJumpInput.select();
+    }
+  }
+
+  function syncProgressControls(position, total) {
+    var canSeek = !isQuiz() && total > 1;
+    if (els.progressSeek) {
+      els.progressSeek.min = "1";
+      els.progressSeek.max = String(Math.max(1, total));
+      els.progressSeek.value = String(Math.max(1, position));
+      els.progressSeek.disabled = !canSeek;
+      els.progressSeek.classList.toggle("hidden", !canSeek);
+    }
+    if (els.progressJumpBtn) {
+      els.progressJumpBtn.disabled = !canSeek;
+      els.progressJumpBtn.setAttribute("aria-label", canSeek
+        ? "精确跳转位置，当前第 " + position + " / " + total + " 个词"
+        : "当前列表无法跳转");
+    }
+    if (els.progressJumpInput) {
+      els.progressJumpInput.min = "1";
+      els.progressJumpInput.max = String(Math.max(1, total));
+    }
+    if (els.progressJumpTotal) els.progressJumpTotal.textContent = "/ " + total;
+    if (!canSeek && els.progressJump) els.progressJump.classList.add("hidden");
+    if (els.progressPreview) els.progressPreview.classList.add("hidden");
+  }
+
   function setFilter(next) {
     if (!isQuiz()) saveSession();
     filter = next;
@@ -1200,6 +1806,7 @@
     if (filter.type === "paraphraseQuiz") {
       quizSessionMode = filter.sessionMode || "guided";
       rebuildQuiz(quizSessionMode);
+      saveQuizNavigation();
       toast(
         "同义替换训练 · 安全题库 " +
           eligibleGroups().length +
@@ -1209,7 +1816,7 @@
       );
     } else {
       rebuildStudy();
-      restoreStudyPosition(filter);
+      resetStudyToStart();
       saveSession();
     }
     renderTopics();
@@ -1217,41 +1824,81 @@
     if (autoPlayActive) runAutoPlayStep();
   }
 
+  function entryFilterKey(value) {
+    return filterKey(value) + (value && value.type === "paraphraseQuiz" ? ":" + (value.sessionMode || "guided") : "");
+  }
+
+  function learningEntryOptions() {
+    return [
+      { label: "阶段1：基础保分", desc: "核心、高频和答题主线", f: { type: "pathStage", value: "1" } },
+      { label: "阶段2：扩大覆盖", desc: "扩大常见阅读词汇覆盖", f: { type: "pathStage", value: "2" } },
+      { label: "阶段3：文章强化", desc: "文章与题库扩展词汇", f: { type: "pathStage", value: "3" } },
+      { label: "阶段4：参考查阅", desc: "低频词和参考词条", f: { type: "pathStage", value: "4" } },
+      { label: "全部待学", desc: "所有可学习 active 词条", f: { type: "active", value: "" } },
+      { label: "词义学习", desc: "单词释义、词性、词形和词族", f: { type: "learnMode", value: "meaning" } },
+      { label: "短语学习", desc: "固定搭配与短语训练", f: { type: "learnMode", value: "phrase" } },
+      { label: "不熟复习", desc: "只复习手动标记为不熟的内容", f: { type: "status", value: "不熟" } },
+      { label: "同义引导·10组", desc: "预览、回忆，再做四选一", f: { type: "paraphraseQuiz", value: "", sessionMode: "guided" } },
+      { label: "同义测验·20题", desc: "直接进行同义替换测验", f: { type: "paraphraseQuiz", value: "", sessionMode: "quick" } },
+      { label: "资料待修复", desc: "查看资料字段不完整的词条", f: { type: "contentIncomplete", value: "" } },
+      { label: "同义待补全", desc: "尚未核查安全同义替换", f: { type: "synonymPending", value: "" } },
+      { label: "已核查无替换", desc: "已核查但没有安全常见替换", f: { type: "synonymReviewedNone", value: "" } }
+    ];
+  }
+
+  function countForEntry(nextFilter) {
+    if (nextFilter.type === "paraphraseQuiz") return eligibleGroups().length + " 组安全题库";
+    var currentFilter = filter;
+    filter = nextFilter;
+    var count = words.filter(matches).length;
+    filter = currentFilter;
+    return count + " 个词条";
+  }
+
   function renderTopics() {
     if (!els.topicBar) return;
-    var chips = [
-      { label: "阶段1主线", f: { type: "pathStage", value: "1" } },
-      { label: "阶段2扩展", f: { type: "pathStage", value: "2" } },
-      { label: "阶段3真题", f: { type: "pathStage", value: "3" } },
-      { label: "阶段4查阅", f: { type: "pathStage", value: "4" } },
-      { label: "全部待学", f: { type: "active", value: "" } },
-      { label: "内容待补 " + words.filter(isStaticContentIncomplete).length, f: { type: "contentIncomplete", value: "" } },
-      { label: "词义", f: { type: "learnMode", value: "meaning" } },
-      { label: "短语", f: { type: "learnMode", value: "phrase" } },
-      { label: "同义10组", f: { type: "paraphraseQuiz", value: "", sessionMode: "guided" } },
-      { label: "测验20题", f: { type: "paraphraseQuiz", value: "", sessionMode: "quick" } },
-      { label: "不熟", f: { type: "status", value: "不熟" } }
-    ];
-    els.topicBar.innerHTML = "";
-    chips.forEach(function (c) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className =
-        "topic-chip" +
-        (filter.type === c.f.type &&
-        String(filter.value || "") === String(c.f.value || "") &&
-        (c.f.type !== "paraphraseQuiz" ||
-          (filter.sessionMode || "guided") === (c.f.sessionMode || "guided"))
-          ? " active"
-          : "");
-      b.textContent = c.label;
-      b.onclick = function () {
-        setFilter(c.f);
-        if (controlsViewport === "mobile") applyControlsState(true, true);
+    var entries = learningEntryOptions();
+    var currentKey = entryFilterKey(filter);
+    els.topicBar.replaceChildren();
+    entries.forEach(function (entry) {
+      var key = entryFilterKey(entry.f);
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "entry-btn" + (key === currentKey ? " active" : "");
+      var title = document.createElement("span");
+      title.className = "entry-title";
+      title.textContent = entry.label;
+      var desc = document.createElement("span");
+      desc.className = "entry-desc";
+      desc.textContent = entry.desc;
+      var meta = document.createElement("span");
+      meta.className = "entry-meta";
+      meta.textContent = countForEntry(entry.f);
+      button.append(title, desc, meta);
+      button.onclick = function () {
+        setEntryPanelOpen(false);
+        setFilter(entry.f);
       };
-      els.topicBar.appendChild(b);
+      els.topicBar.appendChild(button);
     });
+    if (els.entrySelect) {
+      els.entrySelect.replaceChildren();
+      entries.forEach(function (entry) {
+        var option = document.createElement("option");
+        option.value = entryFilterKey(entry.f);
+        option.textContent = entry.label + " · " + countForEntry(entry.f);
+        els.entrySelect.appendChild(option);
+      });
+      if (Array.from(els.entrySelect.options).some(function (option) { return option.value === currentKey; })) {
+        els.entrySelect.value = currentKey;
+      }
+      els.entrySelect.onchange = function () {
+        var selected = entries.find(function (entry) { return entryFilterKey(entry.f) === els.entrySelect.value; });
+        if (selected) setFilter(selected.f);
+      };
+    }
     updateControlsSummary();
+    renderOrderControls();
   }
 
   function mark(kind) {
@@ -1263,17 +1910,27 @@
     if (!item) return;
     var previousStudy = study.slice();
     var previousStudyPosition = previousStudy.indexOf(index);
+    var currentIndex = index;
     var cur = getUiStatus(item);
     var next = kind;
     if (kind === "不熟" && cur === "不熟") next = "";
     patchStatus(item, { status: next });
     toast(next === "熟悉" ? "已熟悉" : next === "不熟" ? "已不熟" : "已取消");
     rebuildStudy();
-    if (next === "熟悉" && study.length) {
-      var landingPosition = previousStudyPosition >= 0
-        ? Math.min(previousStudyPosition, study.length - 1)
-        : study.indexOf(index);
-      index = study[Math.max(0, landingPosition)];
+    if (study.length) {
+      var landed = false;
+      for (var offset = 1; offset <= previousStudy.length; offset += 1) {
+        var candidate = previousStudy[(Math.max(0, previousStudyPosition) + offset) % previousStudy.length];
+        if (study.indexOf(candidate) >= 0) {
+          index = candidate;
+          landed = true;
+          break;
+        }
+      }
+      if (!landed) {
+        var currentPosition = study.indexOf(currentIndex);
+        index = study[currentPosition >= 0 ? (currentPosition + 1) % study.length : 0];
+      }
     }
     saveSession();
     render();
@@ -1410,6 +2067,7 @@
 
   function bind() {
     var prev = document.getElementById("prevBtn");
+    var prevTop = document.getElementById("prevTopBtn");
     var next = document.getElementById("nextBtn");
     var shuffle = document.getElementById("shuffleBtn");
     var autoPlay = document.getElementById("autoPlayBtn");
@@ -1417,6 +2075,7 @@
     var wordSound = document.getElementById("wordSoundBtn");
     var exampleSound = document.getElementById("exampleSoundBtn");
     if (prev) prev.onclick = function () { go(-1); };
+    if (prevTop) prevTop.onclick = function () { go(-1); };
     if (next) next.onclick = function () { go(1); };
     if (autoPlay) autoPlay.onclick = toggleAutoPlay;
     if (autoPlaySpeed)
@@ -1470,14 +2129,54 @@
         speak(item && item.example);
       };
 
-    if (els.readingControlsToggle && !bind._controlsBound) {
+    if (!bind._controlsBound) {
       bind._controlsBound = true;
-      els.readingControlsToggle.addEventListener("click", function () {
-        applyControlsState(!controlsCollapsed, true);
+      var savedTools = null;
+      try { savedTools = localStorage.getItem(TOP_TOOLS_KEY); } catch (e) {}
+      setTopToolsCollapsed(
+        window.innerHeight <= 900 || savedTools === "1",
+        false
+      );
+      if (els.topToolsToggle) els.topToolsToggle.addEventListener("click", function () {
+        var collapsed = !els.readingTopbar.classList.contains("is-tools-collapsed");
+        setTopToolsCollapsed(collapsed, true);
       });
-      window.addEventListener("resize", syncControlsMode);
+      if (els.readingEntryBtn) els.readingEntryBtn.addEventListener("click", function () { setEntryPanelOpen(true); });
+      if (els.readingControlsClose) els.readingControlsClose.addEventListener("click", function () { setEntryPanelOpen(false); });
+      if (els.readingControls) els.readingControls.addEventListener("click", function (event) {
+        if (event.target === els.readingControls) setEntryPanelOpen(false);
+      });
+      if (els.wordOrderSelect) els.wordOrderSelect.addEventListener("change", function () {
+        applyOrderPreference(els.wordOrderSelect.value, "");
+      });
+      if (els.difficultyOrderSelect) els.difficultyOrderSelect.addEventListener("change", function () {
+        applyOrderPreference("", els.difficultyOrderSelect.value);
+      });
+      if (els.progressSeek) {
+        els.progressSeek.addEventListener("input", function () {
+          previewStudyPosition(els.progressSeek.value);
+        });
+        els.progressSeek.addEventListener("change", function () {
+          seekStudyPosition(els.progressSeek.value);
+        });
+        els.progressSeek.addEventListener("pointercancel", function () {
+          render();
+        });
+        els.progressSeek.addEventListener("keyup", function (event) {
+          if (["ArrowLeft", "ArrowRight", "Home", "End", "PageUp", "PageDown"].includes(event.key)) {
+            seekStudyPosition(els.progressSeek.value);
+          }
+        });
+      }
+      if (els.progressJumpBtn) els.progressJumpBtn.addEventListener("click", toggleProgressJump);
+      if (els.progressJump) els.progressJump.addEventListener("submit", function (event) {
+        event.preventDefault();
+        seekStudyPosition(els.progressJumpInput && els.progressJumpInput.value);
+      });
+      if (els.progressJumpCancel) els.progressJumpCancel.addEventListener("click", function () {
+        if (els.progressJump) els.progressJump.classList.add("hidden");
+      });
     }
-    syncControlsMode();
 
     if (!bind._lifecycleBound) {
       bind._lifecycleBound = true;
@@ -1494,6 +2193,11 @@
     if (!bind._keysBound) {
       bind._keysBound = true;
       window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && els.readingControls && !els.readingControls.classList.contains("hidden")) {
+          e.preventDefault();
+          setEntryPanelOpen(false);
+          return;
+        }
         var tag = (document.activeElement && document.activeElement.tagName || "").toLowerCase();
         if (tag === "input" || tag === "textarea" || tag === "select") return;
 
@@ -1545,12 +2249,12 @@
             if (c2) speak(c2.example);
             return;
           }
-          if (e.key === "0" || e.key === "2") {
+          if (e.key === "1") {
             e.preventDefault();
             if (els.knownBtn) els.knownBtn.click();
             return;
           }
-          if (e.key === "1") {
+          if (e.key === "3") {
             e.preventDefault();
             if (els.unknownBtn) els.unknownBtn.click();
             return;
@@ -1572,7 +2276,7 @@
   function boot() {
     if (els.loadInfo) {
       els.loadInfo.textContent =
-        "静态便携版 · data/reading-g-vocab.json + paraphrases · 进度本机 · 与正式站核心能力对齐";
+        "静态便携版 · 词库、同义关系与真题证据独立加载 · 进度本机 · 与正式站核心能力对齐";
     }
     Promise.all([
       fetch(versionedDataUrl(DATA_URL), { cache: "default" }).then(function (r) {
@@ -1582,26 +2286,36 @@
       fetch(versionedDataUrl(PARA_URL), { cache: "default" }).then(function (r) {
         if (!r.ok) throw new Error("paraphrases " + r.status);
         return r.json();
+      }),
+      fetch(versionedDataUrl(QUESTION_EVIDENCE_URL), { cache: "default" }).then(function (r) {
+        if (!r.ok) throw new Error("question evidence " + r.status);
+        return r.json();
       })
     ])
       .then(function (pair) {
         var data = pair[0];
         var para = pair[1];
+        var questionEvidence = pair[2];
         words = (data.items || data.words || [])
           .map(normalizeEntry)
           .filter(Boolean);
-        groups = para.groups || [];
+        groups = enrichQuestionSources(para.groups || [], questionEvidence);
         statusMap = readStatusMap();
         paraMap = loadJson(PARA_KEY, {}) || {};
         paraReview = loadJson(REVIEW_KEY, { version: 1, groups: {}, updatedAt: 0 }) || { version: 1, groups: {}, updatedAt: 0 };
         migrateV4Once();
+        loadOrderPreferences();
+        var savedNavigation = loadJson(SESSION_KEY, null);
         if (!restoreSession()) {
           rebuildStudy();
           restoreStudyPosition(filter);
         }
         loadCoverage();
         var savedParaSession = loadJson(PARA_SESSION_KEY, null);
-        if (savedParaSession && !savedParaSession.completed && Array.isArray(savedParaSession.currentSessionGroupIds) && savedParaSession.currentSessionGroupIds.length) {
+        var shouldResumeParaSession = savedNavigation
+          && savedNavigation.filter
+          && savedNavigation.filter.type === "paraphraseQuiz";
+        if (shouldResumeParaSession && savedParaSession && !savedParaSession.completed && Array.isArray(savedParaSession.currentSessionGroupIds) && savedParaSession.currentSessionGroupIds.length) {
           filter = { type: "paraphraseQuiz", value: "", sessionMode: savedParaSession.mode === "wrongReview" ? "guided" : savedParaSession.mode };
           hydrateQuizSession(savedParaSession);
           resumePending = true;
@@ -1612,7 +2326,9 @@
             words.length +
             " 词 · 安全同义题库 " +
             eligibleGroups().length +
-            " 组";
+            " 组 · 真题证据 " +
+            Number(questionEvidence.count || 0).toLocaleString() +
+            " 题";
         }
         renderTopics();
         bind();
@@ -1626,4 +2342,18 @@
   }
 
   boot();
+  if (window.StaticCloudSync) {
+    window.StaticCloudSync.register("reading-g", [
+      STATUS_KEY,
+      PARA_KEY,
+      COVERAGE_KEY,
+      REVIEW_KEY,
+      PARA_SESSION_KEY,
+      SESSION_KEY,
+      POSITIONS_KEY,
+      ORDER_PREFS_KEY
+    ], {
+      onMerged: applyMergedCloudProgress
+    });
+  }
 })();

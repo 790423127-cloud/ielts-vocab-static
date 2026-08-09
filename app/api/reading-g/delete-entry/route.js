@@ -8,34 +8,23 @@ import {
   getReadingGRetirementKey,
   normalizeReadingGRetirements
 } from "../../../lib/reading-g-vocab/retirements.mjs";
+import {
+  atomicWriteReadingGJson,
+  withReadingGVocabWriteLock
+} from "../../../lib/reading-g-vocab/write-lock.server.mjs";
 
 const PROJECT_ROOT = process.cwd();
 const VOCAB_PATH = path.join(PROJECT_ROOT, "public", "data", "reading-g-vocab.json");
 const RETIREMENTS_PATH = path.join(PROJECT_ROOT, READING_G_RETIREMENTS_SOURCE);
 const BACKUP_DIR = path.join(PROJECT_ROOT, "backups", "reading-g-delete");
 
-let writeQueue = Promise.resolve();
-
 function readJson(filePath, fallback = null) {
   if (!fs.existsSync(filePath)) return fallback;
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
-/** Compact JSON write — pretty-print was ~40ms+ on a 16MB file per delete. */
-function atomicWriteJson(filePath, value) {
-  const tempPath = `${filePath}.tmp-${process.pid}-${Date.now()}`;
-  fs.writeFileSync(tempPath, `${JSON.stringify(value)}\n`, "utf8");
-  fs.renameSync(tempPath, filePath);
-}
-
 function timestampForFile() {
   return new Date().toISOString().replace(/[:.]/g, "-");
-}
-
-async function serializeWrite(task) {
-  const run = writeQueue.then(task, task);
-  writeQueue = run.catch(() => {});
-  return run;
 }
 
 function recomputeVocabTotals(items) {
@@ -151,7 +140,7 @@ function deleteReadingGEntries(entryIds) {
     `reading-g-delete-batch-${timestampForFile()}-${removed.length}.json`
   );
   // Small backup: only removed rows, not the entire prior lexicon.
-  atomicWriteJson(backupPath, {
+  atomicWriteReadingGJson(backupPath, {
     version: "reading-g-delete-batch-backup-v1",
     deletedAt,
     removed: removed.map((entry) => ({
@@ -180,8 +169,8 @@ function deleteReadingGEntries(entryIds) {
   }
 
   try {
-    atomicWriteJson(RETIREMENTS_PATH, nextRetirements);
-    atomicWriteJson(VOCAB_PATH, nextVocab);
+    atomicWriteReadingGJson(RETIREMENTS_PATH, nextRetirements);
+    atomicWriteReadingGJson(VOCAB_PATH, nextVocab, { pretty: false });
     const remainingIds = new Set(nextVocab.items.map((item) => item.id));
     if (removed.some((entry) => remainingIds.has(entry.id))) {
       throw new Error("G类词条批量删除校验失败，已回退");
@@ -206,8 +195,8 @@ function deleteReadingGEntries(entryIds) {
       batched: true
     };
   } catch (error) {
-    atomicWriteJson(RETIREMENTS_PATH, originalRetirements);
-    atomicWriteJson(VOCAB_PATH, vocab);
+    atomicWriteReadingGJson(RETIREMENTS_PATH, originalRetirements);
+    atomicWriteReadingGJson(VOCAB_PATH, vocab, { pretty: false });
     throw error;
   }
 }
@@ -222,7 +211,7 @@ export async function POST(req) {
     if (!entryIds.length) {
       return Response.json({ ok: false, error: "entryId or entryIds is required" }, { status: 400 });
     }
-    const result = await serializeWrite(() => deleteReadingGEntries(entryIds));
+    const result = await withReadingGVocabWriteLock(() => deleteReadingGEntries(entryIds));
     return Response.json(result);
   } catch (error) {
     return Response.json({

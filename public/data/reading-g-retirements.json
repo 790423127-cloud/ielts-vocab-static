@@ -1,1 +1,4284 @@
-{"version":"reading-g-retirements-v1","updatedAt":"2026-08-05T16:35:40.118Z","count":546,"entries":[{"key":"word::send","id":"rg_word_send","word":"send","entryType":"word","deletedAt":"2026-08-03T15:25:39.187Z"},{"key":"word::bring","id":"rg_word_bring","word":"bring","entryType":"word","deletedAt":"2026-08-03T15:25:53.248Z"},{"key":"word::mark","id":"rg_word_mark","word":"mark","entryType":"word","deletedAt":"2026-08-03T15:41:35.144Z"},{"key":"word::show","id":"rg_word_show","word":"show","entryType":"word","deletedAt":"2026-08-03T15:41:37.754Z"},{"key":"word::hold","id":"rg_word_hold","word":"hold","entryType":"word","deletedAt":"2026-08-03T15:41:39.722Z"},{"key":"word::carry","id":"rg_word_carry","word":"carry","entryType":"word","deletedAt":"2026-08-03T15:41:41.643Z"},{"key":"word::held","id":"rg_word_held","word":"held","entryType":"word","deletedAt":"2026-08-03T15:41:43.760Z"},{"key":"word::deal","id":"rg_word_deal","word":"deal","entryType":"word","deletedAt":"2026-08-03T15:41:46.738Z"},{"key":"word::turn","id":"rg_word_turn","word":"turn","entryType":"word","deletedAt":"2026-08-03T15:42:43.531Z"},{"key":"word::both","id":"rg_word_both","word":"both","entryType":"word","deletedAt":"2026-08-03T15:48:10.873Z"},{"key":"word::staff","id":"rg_word_staff","word":"staff","entryType":"word","deletedAt":"2026-08-03T15:48:14.188Z"},{"key":"word::try","id":"rg_word_try","word":"try","entryType":"word","deletedAt":"2026-08-03T15:48:16.418Z"},{"key":"word::time","id":"rg_word_time","word":"time","entryType":"word","deletedAt":"2026-08-03T15:48:17.726Z"},{"key":"word::kind","id":"rg_word_kind","word":"kind","entryType":"word","deletedAt":"2026-08-03T15:48:18.717Z"},{"key":"word::save","id":"rg_word_save","word":"save","entryType":"word","deletedAt":"2026-08-03T15:48:19.827Z"},{"key":"word::idea","id":"rg_word_idea","word":"idea","entryType":"word","deletedAt":"2026-08-03T15:48:21.203Z"},{"key":"word::person","id":"rg_word_person","word":"person","entryType":"word","deletedAt":"2026-08-03T15:48:22.431Z"},{"key":"word::build","id":"rg_word_build","word":"build","entryType":"word","deletedAt":"2026-08-03T15:48:24.443Z"},{"key":"word::learn","id":"rg_word_learn","word":"learn","entryType":"word","deletedAt":"2026-08-03T15:48:28.312Z"},{"key":"word::quick","id":"rg_word_quick","word":"quick","entryType":"word","deletedAt":"2026-08-03T15:48:29.628Z"},{"key":"word::yet","id":"rg_word_yet","word":"yet","entryType":"word","deletedAt":"2026-08-03T15:48:33.938Z"},{"key":"word::hand","id":"rg_word_hand","word":"hand","entryType":"word","deletedAt":"2026-08-03T15:48:36.308Z"},{"key":"word::move","id":"rg_word_move","word":"move","entryType":"word","deletedAt":"2026-08-03T15:48:39.428Z"},{"key":"word::soon","id":"rg_word_soon","word":"soon","entryType":"word","deletedAt":"2026-08-03T15:48:40.560Z"},{"key":"word::set","id":"rg_word_set","word":"set","entryType":"word","deletedAt":"2026-08-03T15:48:41.683Z"},{"key":"word::happen","id":"rg_word_happen","word":"happen","entryType":"word","deletedAt":"2026-08-03T15:48:47.933Z"},{"key":"word::help","id":"rg_word_help","word":"help","entryType":"word","deletedAt":"2026-08-03T15:48:49.886Z"},{"key":"word::high","id":"rg_word_high","word":"high","entryType":"word","deletedAt":"2026-08-03T15:48:53.602Z"},{"key":"word::work","id":"rg_word_work","word":"work","entryType":"word","deletedAt":"2026-08-03T15:48:54.659Z"},{"key":"word::add","id":"rg_word_add","word":"add","entryType":"word","deletedAt":"2026-08-03T15:48:55.856Z"},{"key":"word::watch","id":"rg_word_watch","word":"watch","entryType":"word","deletedAt":"2026-08-03T15:48:57.526Z"},{"key":"word::adding","id":"rg_word_adding","word":"adding","entryType":"word","deletedAt":"2026-08-03T15:49:03.265Z"},{"key":"word::adds","id":"rg_word_adds","word":"adds","entryType":"word","deletedAt":"2026-08-03T15:49:04.297Z"},{"key":"word::ads","id":"rg_word_ads","word":"ads","entryType":"word","deletedAt":"2026-08-03T15:49:08.088Z"},{"key":"word::s","id":"rg_word_s","word":"s","entryType":"word","deletedAt":"2026-08-03T15:49:22.757Z"},{"key":"word::e","id":"rg_word_e","word":"e","entryType":"word","deletedAt":"2026-08-03T15:49:25.147Z"},{"key":"word::n","id":"rg_word_n","word":"n","entryType":"word","deletedAt":"2026-08-03T15:49:26.722Z"},{"key":"word::okay","id":"rg_word_okay","word":"okay","entryType":"word","deletedAt":"2026-08-03T15:49:28.157Z"},{"key":"word::does","id":"rg_word_does","word":"does","entryType":"word","deletedAt":"2026-08-03T15:49:31.108Z"},{"key":"word::midnight","id":"rg_word_midnight","word":"midnight","entryType":"word","deletedAt":"2026-08-03T15:49:33.693Z"},{"key":"word::thanks","id":"rg_word_thanks","word":"thanks","entryType":"word","deletedAt":"2026-08-03T15:49:36.479Z"},{"key":"word::wine","id":"rg_word_wine","word":"wine","entryType":"word","deletedAt":"2026-08-03T15:49:39.819Z"},{"key":"word::b","id":"rg_word_b","word":"b","entryType":"word","deletedAt":"2026-08-03T15:49:40.954Z"},{"key":"word::c","id":"rg_word_c","word":"c","entryType":"word","deletedAt":"2026-08-03T15:49:43.797Z"},{"key":"word::d","id":"rg_word_d","word":"d","entryType":"word","deletedAt":"2026-08-03T15:49:46.419Z"},{"key":"word::f","id":"rg_word_f","word":"f","entryType":"word","deletedAt":"2026-08-03T15:49:47.526Z"},{"key":"word::g","id":"rg_word_g","word":"g","entryType":"word","deletedAt":"2026-08-03T15:49:48.948Z"},{"key":"word::h","id":"rg_word_h","word":"h","entryType":"word","deletedAt":"2026-08-03T15:49:51.430Z"},{"key":"word::aren't","id":"rg_word_aren_t","word":"aren't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::asked","id":"rg_word_asked","word":"asked","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::asks","id":"rg_word_asks","word":"asks","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::begins","id":"rg_word_begins","word":"begins","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::being","id":"rg_word_being","word":"being","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::beings","id":"rg_word_beings","word":"beings","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::believes","id":"rg_word_believes","word":"believes","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::bringing","id":"rg_word_bringing","word":"bringing","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::buys","id":"rg_word_buys","word":"buys","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::calls","id":"rg_word_calls","word":"calls","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::can't","id":"rg_word_can_t","word":"can't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::cm","id":"rg_word_cm","word":"cm","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::com","id":"rg_word_com","word":"com","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::considers","id":"rg_word_considers","word":"considers","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::continues","id":"rg_word_continues","word":"continues","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::couldn't","id":"rg_word_couldn_t","word":"couldn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::created","id":"rg_word_created","word":"created","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::cuts","id":"rg_word_cuts","word":"cuts","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::deals","id":"rg_word_deals","word":"deals","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::didn't","id":"rg_word_didn_t","word":"didn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::doesn","id":"rg_word_doesn","word":"doesn","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::doesn't","id":"rg_word_doesn_t","word":"doesn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::don","id":"rg_word_don","word":"don","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::don't","id":"rg_word_don_t","word":"don't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::etc","id":"rg_word_etc","word":"etc","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::falls","id":"rg_word_falls","word":"falls","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::feels","id":"rg_word_feels","word":"feels","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::finds","id":"rg_word_finds","word":"finds","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::gets","id":"rg_word_gets","word":"gets","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::goes","id":"rg_word_goes","word":"goes","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::grows","id":"rg_word_grows","word":"grows","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::hasn't","id":"rg_word_hasn_t","word":"hasn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::helped","id":"rg_word_helped","word":"helped","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::helps","id":"rg_word_helps","word":"helps","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::holds","id":"rg_word_holds","word":"holds","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::i'd","id":"rg_word_i_d","word":"i'd","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::i'm","id":"rg_word_i_m","word":"i'm","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::i've","id":"rg_word_i_ve","word":"i've","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::included","id":"rg_word_included","word":"included","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::includes","id":"rg_word_includes","word":"includes","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::isn","id":"rg_word_isn","word":"isn","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::isn't","id":"rg_word_isn_t","word":"isn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::j","id":"rg_word_j","word":"j","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::k","id":"rg_word_k","word":"k","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::keeps","id":"rg_word_keeps","word":"keeps","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::l","id":"rg_word_l","word":"l","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::leads","id":"rg_word_leads","word":"leads","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::lets","id":"rg_word_lets","word":"lets","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::ll","id":"rg_word_ll","word":"ll","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::m","id":"rg_word_m","word":"m","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::makes","id":"rg_word_makes","word":"makes","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::meets","id":"rg_word_meets","word":"meets","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::moves","id":"rg_word_moves","word":"moves","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::needn","id":"rg_word_needn","word":"needn","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::needn't","id":"rg_word_needn_t","word":"needn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::needs","id":"rg_word_needs","word":"needs","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::o","id":"rg_word_o","word":"o","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::offers","id":"rg_word_offers","word":"offers","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::opens","id":"rg_word_opens","word":"opens","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::org","id":"rg_word_org","word":"org","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::p","id":"rg_word_p","word":"p","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::passes","id":"rg_word_passes","word":"passes","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::pays","id":"rg_word_pays","word":"pays","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::provides","id":"rg_word_provides","word":"provides","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::q","id":"rg_word_q","word":"q","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::raises","id":"rg_word_raises","word":"raises","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::remembers","id":"rg_word_remembers","word":"remembers","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::reports","id":"rg_word_reports","word":"reports","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::requires","id":"rg_word_requires","word":"requires","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::runs","id":"rg_word_runs","word":"runs","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::says","id":"rg_word_says","word":"says","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::seeming","id":"rg_word_seeming","word":"seeming","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::sees","id":"rg_word_sees","word":"sees","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::sending","id":"rg_word_sending","word":"sending","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::serves","id":"rg_word_serves","word":"serves","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::sets","id":"rg_word_sets","word":"sets","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::shouldn","id":"rg_word_shouldn","word":"shouldn","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::shouldn't","id":"rg_word_shouldn_t","word":"shouldn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::shows","id":"rg_word_shows","word":"shows","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::sits","id":"rg_word_sits","word":"sits","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::staffed","id":"rg_word_staffed","word":"staffed","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::starts","id":"rg_word_starts","word":"starts","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::stays","id":"rg_word_stays","word":"stays","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::t","id":"rg_word_t","word":"t","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::talks","id":"rg_word_talks","word":"talks","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::tells","id":"rg_word_tells","word":"tells","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::that'll","id":"rg_word_that_ll","word":"that'll","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::they'll","id":"rg_word_they_ll","word":"they'll","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::they're","id":"rg_word_they_re","word":"they're","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::they've","id":"rg_word_they_ve","word":"they've","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::thinks","id":"rg_word_thinks","word":"thinks","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::turns","id":"rg_word_turns","word":"turns","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::u","id":"rg_word_u","word":"u","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::understands","id":"rg_word_understands","word":"understands","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::uses","id":"rg_word_uses","word":"uses","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::ve","id":"rg_word_ve","word":"ve","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::w","id":"rg_word_w","word":"w","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::walks","id":"rg_word_walks","word":"walks","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::wasn't","id":"rg_word_wasn_t","word":"wasn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::watched","id":"rg_word_watched","word":"watched","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::watches","id":"rg_word_watches","word":"watches","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::we'd","id":"rg_word_we_d","word":"we'd","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::we'll","id":"rg_word_we_ll","word":"we'll","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::we're","id":"rg_word_we_re","word":"we're","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::we've","id":"rg_word_we_ve","word":"we've","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::weren't","id":"rg_word_weren_t","word":"weren't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::won't","id":"rg_word_won_t","word":"won't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::worked","id":"rg_word_worked","word":"worked","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::world-class","id":"rg_word_world_class","word":"world-class","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::world-record","id":"rg_word_world_record","word":"world-record","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::wouldn","id":"rg_word_wouldn","word":"wouldn","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::wouldn't","id":"rg_word_wouldn_t","word":"wouldn't","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::www","id":"rg_word_www","word":"www","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::x","id":"rg_word_x","word":"x","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::year-old","id":"rg_word_year_old","word":"year-old","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::year-olds","id":"rg_word_year_olds","word":"year-olds","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::you'd","id":"rg_word_you_d","word":"you'd","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::you'll","id":"rg_word_you_ll","word":"you'll","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::you're","id":"rg_word_you_re","word":"you're","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::you've","id":"rg_word_you_ve","word":"you've","entryType":"word","deletedAt":"2026-08-03T15:54:05.381Z"},{"key":"word::two","id":"rg_word_two","word":"two","entryType":"word","deletedAt":"2026-08-03T16:45:03.439Z"},{"key":"word::guess","id":"rg_word_guess","word":"guess","entryType":"word","deletedAt":"2026-08-03T16:45:29.611Z"},{"key":"word::own","id":"rg_word_own","word":"own","entryType":"word","deletedAt":"2026-08-03T16:48:26.707Z"},{"key":"word::rest","id":"rg_word_rest","word":"rest","entryType":"word","deletedAt":"2026-08-03T16:48:42.623Z"},{"key":"word::near","id":"rg_word_near","word":"near","entryType":"word","deletedAt":"2026-08-03T16:48:46.974Z"},{"key":"word::type","id":"rg_word_type","word":"type","entryType":"word","deletedAt":"2026-08-03T16:49:00.749Z"},{"key":"word::young","id":"rg_word_young","word":"young","entryType":"word","deletedAt":"2026-08-03T16:49:01.933Z"},{"key":"word::due","id":"rg_word_due","word":"due","entryType":"word","deletedAt":"2026-08-03T16:49:03.678Z"},{"key":"word::look","id":"rg_word_look","word":"look","entryType":"word","deletedAt":"2026-08-03T16:49:04.891Z"},{"key":"word::make","id":"rg_word_make","word":"make","entryType":"word","deletedAt":"2026-08-03T16:49:07.416Z"},{"key":"word::until","id":"rg_word_until","word":"until","entryType":"word","deletedAt":"2026-08-03T16:49:09.157Z"},{"key":"word::or","id":"rg_word_or","word":"or","entryType":"word","deletedAt":"2026-08-03T16:49:18.797Z"},{"key":"word::half","id":"rg_word_half","word":"half","entryType":"word","deletedAt":"2026-08-03T16:49:20.319Z"},{"key":"word::huge","id":"rg_word_huge","word":"huge","entryType":"word","deletedAt":"2026-08-03T16:49:23.984Z"},{"key":"word::tell","id":"rg_word_tell","word":"tell","entryType":"word","deletedAt":"2026-08-03T16:49:25.659Z"},{"key":"word::bee","id":"rg_word_bee","word":"bee","entryType":"word","deletedAt":"2026-08-03T16:51:32.865Z"},{"key":"word::apps","id":"rg_word_apps","word":"apps","entryType":"word","deletedAt":"2026-08-03T16:51:48.757Z"},{"key":"word::id","id":"rg_word_id","word":"id","entryType":"word","deletedAt":"2026-08-03T16:51:57.213Z"},{"key":"word::kph","id":"rg_word_kph","word":"kph","entryType":"word","deletedAt":"2026-08-03T16:51:58.748Z"},{"key":"word::bays","id":"rg_word_bays","word":"bays","entryType":"word","deletedAt":"2026-08-03T16:52:00.310Z"},{"key":"word::beds","id":"rg_word_beds","word":"beds","entryType":"word","deletedAt":"2026-08-03T16:52:04.418Z"},{"key":"word::cats","id":"rg_word_cats","word":"cats","entryType":"word","deletedAt":"2026-08-03T16:52:06.598Z"},{"key":"word::cows","id":"rg_word_cows","word":"cows","entryType":"word","deletedAt":"2026-08-03T16:52:11.481Z"},{"key":"word::cups","id":"rg_word_cups","word":"cups","entryType":"word","deletedAt":"2026-08-03T16:52:15.623Z"},{"key":"word::dogs","id":"rg_word_dogs","word":"dogs","entryType":"word","deletedAt":"2026-08-03T16:52:19.844Z"},{"key":"word::fans","id":"rg_word_fans","word":"fans","entryType":"word","deletedAt":"2026-08-03T16:52:24.022Z"},{"key":"word::care","id":"rg_word_care","word":"care","entryType":"word","deletedAt":"2026-08-03T17:13:19.068Z"},{"key":"word::hope","id":"rg_word_hope","word":"hope","entryType":"word","deletedAt":"2026-08-03T17:13:22.653Z"},{"key":"word::mind","id":"rg_word_mind","word":"mind","entryType":"word","deletedAt":"2026-08-03T17:13:27.540Z"},{"key":"word::past","id":"rg_word_past","word":"past","entryType":"word","deletedAt":"2026-08-03T17:13:29.810Z"},{"key":"word::talk","id":"rg_word_talk","word":"talk","entryType":"word","deletedAt":"2026-08-03T17:13:31.241Z"},{"key":"word::books","id":"rg_word_books","word":"books","entryType":"word","deletedAt":"2026-08-03T17:49:02.707Z"},{"key":"word::bowls","id":"rg_word_bowls","word":"bowls","entryType":"word","deletedAt":"2026-08-03T17:49:04.384Z"},{"key":"word::socks","id":"rg_word_socks","word":"socks","entryType":"word","deletedAt":"2026-08-03T18:14:22.221Z"},{"key":"word::owns","id":"rg_word_owns","word":"owns","entryType":"word","deletedAt":"2026-08-03T18:14:27.312Z"},{"key":"word::tens","id":"rg_word_tens","word":"tens","entryType":"word","deletedAt":"2026-08-03T18:14:28.614Z"},{"key":"word::chips","id":"rg_word_chips","word":"chips","entryType":"word","deletedAt":"2026-08-03T18:14:31.164Z"},{"key":"word::downs","id":"rg_word_downs","word":"downs","entryType":"word","deletedAt":"2026-08-03T18:14:32.887Z"},{"key":"word::kinds","id":"rg_word_kinds","word":"kinds","entryType":"word","deletedAt":"2026-08-03T18:14:36.352Z"},{"key":"word::if","id":"rg_word_if","word":"if","entryType":"word","deletedAt":"2026-08-03T18:15:28.214Z"},{"key":"word::app","id":"rg_word_app","word":"app","entryType":"word","deletedAt":"2026-08-03T18:15:29.511Z"},{"key":"word::hot","id":"rg_word_hot","word":"hot","entryType":"word","deletedAt":"2026-08-03T18:15:31.351Z"},{"key":"word::man","id":"rg_word_man","word":"man","entryType":"word","deletedAt":"2026-08-03T18:15:35.871Z"},{"key":"word::sun","id":"rg_word_sun","word":"sun","entryType":"word","deletedAt":"2026-08-03T18:15:40.123Z"},{"key":"word::boy","id":"rg_word_boy","word":"boy","entryType":"word","deletedAt":"2026-08-03T18:16:20.991Z"},{"key":"word::cat","id":"rg_word_cat","word":"cat","entryType":"word","deletedAt":"2026-08-03T18:16:24.485Z"},{"key":"word::deer","id":"rg_word_deer","word":"deer","entryType":"word","deletedAt":"2026-08-03T18:16:28.332Z"},{"key":"word::let","id":"rg_word_let","word":"let","entryType":"word","deletedAt":"2026-08-03T18:16:32.110Z"},{"key":"word::say","id":"rg_word_say","word":"say","entryType":"word","deletedAt":"2026-08-03T18:16:34.570Z"},{"key":"word::cup","id":"rg_word_cup","word":"cup","entryType":"word","deletedAt":"2026-08-03T18:16:40.538Z"},{"key":"word::face","id":"rg_word_face","word":"face","entryType":"word","deletedAt":"2026-08-03T18:16:42.160Z"},{"key":"word::nice","id":"rg_word_nice","word":"nice","entryType":"word","deletedAt":"2026-08-03T18:17:04.117Z"},{"key":"word::drink","id":"rg_word_drink","word":"drink","entryType":"word","deletedAt":"2026-08-03T18:17:05.985Z"},{"key":"word::lot","id":"rg_word_lot","word":"lot","entryType":"word","deletedAt":"2026-08-03T18:17:07.705Z"},{"key":"word::date","id":"rg_word_date","word":"date","entryType":"word","deletedAt":"2026-08-03T18:17:13.311Z"},{"key":"word::lose","id":"rg_word_lose","word":"lose","entryType":"word","deletedAt":"2026-08-03T18:17:15.527Z"},{"key":"word::brings","id":"rg_word_brings","word":"brings","entryType":"word","deletedAt":"2026-08-03T18:17:17.312Z"},{"key":"word::because","id":"rg_word_because","word":"because","entryType":"word","deletedAt":"2026-08-03T18:17:20.563Z"},{"key":"word::people","id":"rg_word_people","word":"people","entryType":"word","deletedAt":"2026-08-03T18:17:26.214Z"},{"key":"word::future","id":"rg_word_future","word":"future","entryType":"word","deletedAt":"2026-08-03T18:17:28.701Z"},{"key":"word::eat","id":"rg_word_eat","word":"eat","entryType":"word","deletedAt":"2026-08-03T18:17:31.268Z"},{"key":"word::kid","id":"rg_word_kid","word":"kid","entryType":"word","deletedAt":"2026-08-03T18:17:32.658Z"},{"key":"word::win","id":"rg_word_win","word":"win","entryType":"word","deletedAt":"2026-08-03T18:17:34.880Z"},{"key":"word::go","id":"rg_word_go","word":"go","entryType":"word","deletedAt":"2026-08-03T18:17:37.315Z"},{"key":"word::wind","id":"rg_word_wind","word":"wind","entryType":"word","deletedAt":"2026-08-03T18:17:42.072Z"},{"key":"word::march","id":"rg_word_march","word":"march","entryType":"word","deletedAt":"2026-08-03T18:17:51.364Z"},{"key":"word::pen","id":"rg_word_pen","word":"pen","entryType":"word","deletedAt":"2026-08-03T18:18:00.288Z"},{"key":"word::sixth","id":"rg_word_sixth","word":"sixth","entryType":"word","deletedAt":"2026-08-03T18:18:03.396Z"},{"key":"word::give","id":"rg_word_give","word":"give","entryType":"word","deletedAt":"2026-08-03T18:18:06.704Z"},{"key":"word::know","id":"rg_word_know","word":"know","entryType":"word","deletedAt":"2026-08-03T18:18:10.911Z"},{"key":"word::real","id":"rg_word_real","word":"real","entryType":"word","deletedAt":"2026-08-03T18:18:23.851Z"},{"key":"word::once","id":"rg_word_once","word":"once","entryType":"word","deletedAt":"2026-08-03T18:18:36.267Z"},{"key":"word::south","id":"rg_word_south","word":"south","entryType":"word","deletedAt":"2026-08-03T18:18:42.938Z"},{"key":"word::spend","id":"rg_word_spend","word":"spend","entryType":"word","deletedAt":"2026-08-03T18:18:44.935Z"},{"key":"word::fifth","id":"rg_word_fifth","word":"fifth","entryType":"word","deletedAt":"2026-08-03T18:18:48.009Z"},{"key":"word::long","id":"rg_word_long","word":"long","entryType":"word","deletedAt":"2026-08-03T18:18:53.680Z"},{"key":"word::today","id":"rg_word_today","word":"today","entryType":"word","deletedAt":"2026-08-03T18:19:07.111Z"},{"key":"word::power","id":"rg_word_power","word":"power","entryType":"word","deletedAt":"2026-08-03T18:19:11.689Z"},{"key":"word::may","id":"rg_word_may","word":"may","entryType":"word","deletedAt":"2026-08-03T18:19:13.900Z"},{"key":"word::why","id":"rg_word_why","word":"why","entryType":"word","deletedAt":"2026-08-03T18:19:17.116Z"},{"key":"word::see","id":"rg_word_see","word":"see","entryType":"word","deletedAt":"2026-08-03T18:19:29.790Z"},{"key":"word::cause","id":"rg_word_cause","word":"cause","entryType":"word","deletedAt":"2026-08-03T18:19:31.539Z"},{"key":"word::come","id":"rg_word_come","word":"come","entryType":"word","deletedAt":"2026-08-03T18:19:33.544Z"},{"key":"word::but","id":"rg_word_but","word":"but","entryType":"word","deletedAt":"2026-08-03T18:19:37.037Z"},{"key":"word::last","id":"rg_word_last","word":"last","entryType":"word","deletedAt":"2026-08-03T18:19:40.091Z"},{"key":"word::less","id":"rg_word_less","word":"less","entryType":"word","deletedAt":"2026-08-03T18:19:41.963Z"},{"key":"word::kill","id":"rg_word_kill","word":"kill","entryType":"word","deletedAt":"2026-08-03T18:19:44.337Z"},{"key":"word::bag","id":"rg_word_bag","word":"bag","entryType":"word","deletedAt":"2026-08-03T18:19:45.888Z"},{"key":"word::cv","id":"rg_word_cv","word":"cv","entryType":"word","deletedAt":"2026-08-03T18:41:17.208Z"},{"key":"word::re","id":"rg_word_re","word":"re","entryType":"word","deletedAt":"2026-08-03T18:41:20.319Z"},{"key":"word::ii","id":"rg_word_ii","word":"ii","entryType":"word","deletedAt":"2026-08-03T18:41:23.178Z"},{"key":"word::eighteenth-century","id":"rg_word_eighteenth_century","word":"eighteenth-century","entryType":"word","deletedAt":"2026-08-03T18:46:57.416Z"},{"key":"word::by","id":"rg_word_by","word":"by","entryType":"word","deletedAt":"2026-08-03T18:47:02.702Z"},{"key":"word::car","id":"rg_word_car","word":"car","entryType":"word","deletedAt":"2026-08-03T18:47:05.497Z"},{"key":"word::end","id":"rg_word_end","word":"end","entryType":"word","deletedAt":"2026-08-03T18:47:08.766Z"},{"key":"word::get","id":"rg_word_get","word":"get","entryType":"word","deletedAt":"2026-08-03T18:47:24.707Z"},{"key":"word::one","id":"rg_word_one","word":"one","entryType":"word","deletedAt":"2026-08-03T18:47:38.834Z"},{"key":"word::hit","id":"rg_word_hit","word":"hit","entryType":"word","deletedAt":"2026-08-03T18:47:43.953Z"},{"key":"word::pay","id":"rg_word_pay","word":"pay","entryType":"word","deletedAt":"2026-08-03T18:47:47.591Z"},{"key":"word::sit","id":"rg_word_sit","word":"sit","entryType":"word","deletedAt":"2026-08-03T18:47:51.536Z"},{"key":"word::use","id":"rg_word_use","word":"use","entryType":"word","deletedAt":"2026-08-03T18:47:54.862Z"},{"key":"word::way","id":"rg_word_way","word":"way","entryType":"word","deletedAt":"2026-08-03T18:47:57.420Z"},{"key":"word::guy","id":"rg_word_guy","word":"guy","entryType":"word","deletedAt":"2026-08-03T18:47:58.616Z"},{"key":"word::map","id":"rg_word_map","word":"map","entryType":"word","deletedAt":"2026-08-03T18:48:01.309Z"},{"key":"word::top","id":"rg_word_top","word":"top","entryType":"word","deletedAt":"2026-08-03T18:48:03.330Z"},{"key":"word::pie","id":"rg_word_pie","word":"pie","entryType":"word","deletedAt":"2026-08-03T18:48:05.438Z"},{"key":"word::rat","id":"rg_word_rat","word":"rat","entryType":"word","deletedAt":"2026-08-03T18:48:07.317Z"},{"key":"word::won","id":"rg_word_won","word":"won","entryType":"word","deletedAt":"2026-08-03T18:48:18.616Z"},{"key":"word::few","id":"rg_word_few","word":"few","entryType":"word","deletedAt":"2026-08-03T18:48:21.126Z"},{"key":"word::now","id":"rg_word_now","word":"now","entryType":"word","deletedAt":"2026-08-03T18:48:22.439Z"},{"key":"word::via","id":"rg_word_via","word":"via","entryType":"word","deletedAt":"2026-08-03T18:48:24.841Z"},{"key":"word::age","id":"rg_word_age","word":"age","entryType":"word","deletedAt":"2026-08-03T18:48:26.720Z"},{"key":"word::arm","id":"rg_word_arm","word":"arm","entryType":"word","deletedAt":"2026-08-03T18:48:28.395Z"},{"key":"word::ask","id":"rg_word_ask","word":"ask","entryType":"word","deletedAt":"2026-08-03T18:48:30.000Z"},{"key":"word::bar","id":"rg_word_bar","word":"bar","entryType":"word","deletedAt":"2026-08-03T18:49:10.169Z"},{"key":"word::day","id":"rg_word_day","word":"day","entryType":"word","deletedAt":"2026-08-03T18:49:16.590Z"},{"key":"word::egg","id":"rg_word_egg","word":"egg","entryType":"word","deletedAt":"2026-08-03T18:49:18.562Z"},{"key":"word::fee","id":"rg_word_fee","word":"fee","entryType":"word","deletedAt":"2026-08-03T18:49:19.961Z"},{"key":"word::hat","id":"rg_word_hat","word":"hat","entryType":"word","deletedAt":"2026-08-03T18:49:21.691Z"},{"key":"word::ice","id":"rg_word_ice","word":"ice","entryType":"word","deletedAt":"2026-08-03T18:49:23.275Z"},{"key":"word::so","id":"rg_word_so","word":"so","entryType":"word","deletedAt":"2026-08-03T18:52:25.514Z"},{"key":"word::key","id":"rg_word_key","word":"key","entryType":"word","deletedAt":"2026-08-03T18:52:29.245Z"},{"key":"word::sea","id":"rg_word_sea","word":"sea","entryType":"word","deletedAt":"2026-08-03T18:52:31.959Z"},{"key":"word::war","id":"rg_word_war","word":"war","entryType":"word","deletedAt":"2026-08-03T18:52:33.409Z"},{"key":"word::wet","id":"rg_word_wet","word":"wet","entryType":"word","deletedAt":"2026-08-03T18:52:37.193Z"},{"key":"word::oil","id":"rg_word_oil","word":"oil","entryType":"word","deletedAt":"2026-08-03T18:52:39.648Z"},{"key":"word::pro","id":"rg_word_pro","word":"pro","entryType":"word","deletedAt":"2026-08-04T05:50:10.304Z"},{"key":"word::bin","id":"rg_word_bin","word":"bin","entryType":"word","deletedAt":"2026-08-03T19:02:34.363Z"},{"key":"word::lip","id":"rg_word_lip","word":"lip","entryType":"word","deletedAt":"2026-08-03T19:02:38.193Z"},{"key":"word::van","id":"rg_word_van","word":"van","entryType":"word","deletedAt":"2026-08-03T19:02:41.821Z"},{"key":"word::art","id":"rg_word_art","word":"art","entryType":"word","deletedAt":"2026-08-03T19:02:57.013Z"},{"key":"word::new","id":"rg_word_new","word":"new","entryType":"word","deletedAt":"2026-08-03T19:03:12.885Z"},{"key":"word::dna","id":"rg_word_dna","word":"DNA","entryType":"word","deletedAt":"2026-08-03T19:03:17.023Z"},{"key":"word::bed","id":"rg_word_bed","word":"bed","entryType":"word","deletedAt":"2026-08-03T19:08:21.108Z"},{"key":"word::big","id":"rg_word_big","word":"big","entryType":"word","deletedAt":"2026-08-03T19:08:23.056Z"},{"key":"word::bus","id":"rg_word_bus","word":"bus","entryType":"word","deletedAt":"2026-08-03T19:13:25.913Z"},{"key":"word::buy","id":"rg_word_buy","word":"buy","entryType":"word","deletedAt":"2026-08-03T19:13:28.334Z"},{"key":"word::dog","id":"rg_word_dog","word":"dog","entryType":"word","deletedAt":"2026-08-03T19:13:29.625Z"},{"key":"word::eye","id":"rg_word_eye","word":"eye","entryType":"word","deletedAt":"2026-08-03T19:13:31.310Z"},{"key":"word::low","id":"rg_word_low","word":"low","entryType":"word","deletedAt":"2026-08-03T19:13:32.649Z"},{"key":"word::old","id":"rg_word_old","word":"old","entryType":"word","deletedAt":"2026-08-03T19:13:34.563Z"},{"key":"word::pop","id":"rg_word_pop","word":"pop","entryType":"word","deletedAt":"2026-08-03T19:13:36.184Z"},{"key":"word::red","id":"rg_word_red","word":"red","entryType":"word","deletedAt":"2026-08-03T19:13:37.858Z"},{"key":"word::run","id":"rg_word_run","word":"run","entryType":"word","deletedAt":"2026-08-03T19:13:39.383Z"},{"key":"word::tea","id":"rg_word_tea","word":"tea","entryType":"word","deletedAt":"2026-08-03T19:13:40.636Z"},{"key":"word::tip","id":"rg_word_tip","word":"tip","entryType":"word","deletedAt":"2026-08-03T19:13:42.133Z"},{"key":"word::toy","id":"rg_word_toy","word":"toy","entryType":"word","deletedAt":"2026-08-03T19:13:43.405Z"},{"key":"word::fan","id":"rg_word_fan","word":"fan","entryType":"word","deletedAt":"2026-08-03T19:18:08.634Z"},{"key":"word::flu","id":"rg_word_flu","word":"flu","entryType":"word","deletedAt":"2026-08-03T19:18:10.288Z"},{"key":"word::air","id":"rg_word_air","word":"air","entryType":"word","deletedAt":"2026-08-03T19:23:41.529Z"},{"key":"word::fun","id":"rg_word_fun","word":"fun","entryType":"word","deletedAt":"2026-08-03T19:23:43.861Z"},{"key":"word::lad","id":"rg_word_lad","word":"lad","entryType":"word","deletedAt":"2026-08-03T19:23:53.218Z"},{"key":"word::vet","id":"rg_word_vet","word":"vet","entryType":"word","deletedAt":"2026-08-03T19:23:57.113Z"},{"key":"word::mix","id":"rg_word_mix","word":"mix","entryType":"word","deletedAt":"2026-08-03T19:23:58.820Z"},{"key":"word::job","id":"rg_word_job","word":"job","entryType":"word","deletedAt":"2026-08-03T19:24:05.852Z"},{"key":"word::pass","id":"rg_word_pass","word":"pass","entryType":"word","deletedAt":"2026-08-03T19:24:12.134Z"},{"key":"word::bad","id":"rg_word_bad","word":"bad","entryType":"word","deletedAt":"2026-08-03T19:31:27.770Z"},{"key":"word::net","id":"rg_word_net","word":"net","entryType":"word","deletedAt":"2026-08-03T19:31:30.242Z"},{"key":"word::pan","id":"rg_word_pan","word":"pan","entryType":"word","deletedAt":"2026-08-03T19:31:39.822Z"},{"key":"word::pet","id":"rg_word_pet","word":"pet","entryType":"word","deletedAt":"2026-08-03T19:31:41.208Z"},{"key":"word::tap","id":"rg_word_tap","word":"tap","entryType":"word","deletedAt":"2026-08-03T19:31:44.370Z"},{"key":"word::web","id":"rg_word_web","word":"web","entryType":"word","deletedAt":"2026-08-03T19:31:46.170Z"},{"key":"word::dug","id":"rg_word_dug","word":"dug","entryType":"word","deletedAt":"2026-08-03T19:38:35.894Z"},{"key":"word::fog","id":"rg_word_fog","word":"fog","entryType":"word","deletedAt":"2026-08-03T19:38:38.784Z"},{"key":"word::odd","id":"rg_word_odd","word":"odd","entryType":"word","deletedAt":"2026-08-03T19:38:41.073Z"},{"key":"word::gap","id":"rg_word_gap","word":"gap","entryType":"word","deletedAt":"2026-08-03T19:38:43.210Z"},{"key":"word::sat","id":"rg_word_sat","word":"sat","entryType":"word","deletedAt":"2026-08-03T19:38:50.140Z"},{"key":"word::lab","id":"rg_word_lab","word":"lab","entryType":"word","deletedAt":"2026-08-03T19:38:52.048Z"},{"key":"word::mud","id":"rg_word_mud","word":"mud","entryType":"word","deletedAt":"2026-08-03T19:38:54.349Z"},{"key":"word::leg","id":"rg_word_leg","word":"leg","entryType":"word","deletedAt":"2026-08-03T19:39:01.842Z"},{"key":"word::log","id":"rg_word_log","word":"log","entryType":"word","deletedAt":"2026-08-03T19:39:03.848Z"},{"key":"word::tag","id":"rg_word_tag","word":"tag","entryType":"word","deletedAt":"2026-08-03T19:39:06.062Z"},{"key":"word::dig","id":"rg_word_dig","word":"dig","entryType":"word","deletedAt":"2026-08-03T19:39:07.624Z"},{"key":"word::ham","id":"rg_word_ham","word":"ham","entryType":"word","deletedAt":"2026-08-03T19:39:09.379Z"},{"key":"word::son","id":"rg_word_son","word":"son","entryType":"word","deletedAt":"2026-08-03T19:39:11.033Z"},{"key":"word::ban","id":"rg_word_ban","word":"ban","entryType":"word","deletedAt":"2026-08-03T19:39:13.215Z"},{"key":"word::gas","id":"rg_word_gas","word":"gas","entryType":"word","deletedAt":"2026-08-03T19:39:21.960Z"},{"key":"word::kit","id":"rg_word_kit","word":"kit","entryType":"word","deletedAt":"2026-08-03T19:39:26.633Z"},{"key":"word::mid","id":"rg_word_mid","word":"mid","entryType":"word","deletedAt":"2026-08-03T19:39:30.296Z"},{"key":"word::opt","id":"rg_word_opt","word":"opt","entryType":"word","deletedAt":"2026-08-04T06:07:32.225Z"},{"key":"word::pod","id":"rg_word_pod","word":"pod","entryType":"word","deletedAt":"2026-08-03T19:40:08.145Z"},{"key":"word::gym","id":"rg_word_gym","word":"gym","entryType":"word","deletedAt":"2026-08-03T19:40:17.434Z"},{"key":"word::sky","id":"rg_word_sky","word":"sky","entryType":"word","deletedAt":"2026-08-03T19:40:18.875Z"},{"key":"word::sex","id":"rg_word_sex","word":"sex","entryType":"word","deletedAt":"2026-08-03T19:40:20.877Z"},{"key":"word::dry","id":"rg_word_dry","word":"dry","entryType":"word","deletedAt":"2026-08-03T19:40:26.775Z"},{"key":"word::fly","id":"rg_word_fly","word":"fly","entryType":"word","deletedAt":"2026-08-03T19:40:29.375Z"},{"key":"word::fox","id":"rg_word_fox","word":"fox","entryType":"word","deletedAt":"2026-08-03T19:40:30.937Z"},{"key":"word::joy","id":"rg_word_joy","word":"joy","entryType":"word","deletedAt":"2026-08-03T19:40:32.467Z"},{"key":"word::tax","id":"rg_word_tax","word":"tax","entryType":"word","deletedAt":"2026-08-03T19:40:33.970Z"},{"key":"word::shy","id":"rg_word_shy","word":"shy","entryType":"word","deletedAt":"2026-08-03T19:40:43.116Z"},{"key":"word::jet","id":"rg_word_jet","word":"jet","entryType":"word","deletedAt":"2026-08-03T19:40:47.730Z"},{"key":"word::summer","id":"rg_word_summer","word":"summer","entryType":"word","deletedAt":"2026-08-03T19:41:34.260Z"},{"key":"word::food","id":"rg_word_food","word":"food","entryType":"word","deletedAt":"2026-08-03T19:42:54.057Z"},{"key":"word::free","id":"rg_word_free","word":"free","entryType":"word","deletedAt":"2026-08-03T19:42:56.244Z"},{"key":"word::love","id":"rg_word_love","word":"love","entryType":"word","deletedAt":"2026-08-03T19:56:54.010Z"},{"key":"word::main","id":"rg_word_main","word":"main","entryType":"word","deletedAt":"2026-08-03T19:56:57.198Z"},{"key":"word::need","id":"rg_word_need","word":"need","entryType":"word","deletedAt":"2026-08-03T19:57:00.490Z"},{"key":"word::park","id":"rg_word_park","word":"park","entryType":"word","deletedAt":"2026-08-03T19:57:03.391Z"},{"key":"word::pick","id":"rg_word_pick","word":"pick","entryType":"word","deletedAt":"2026-08-03T19:57:05.648Z"},{"key":"word::plan","id":"rg_word_plan","word":"plan","entryType":"word","deletedAt":"2026-08-03T19:57:07.930Z"},{"key":"word::poor","id":"rg_word_poor","word":"poor","entryType":"word","deletedAt":"2026-08-03T19:57:10.517Z"},{"key":"word::push","id":"rg_word_push","word":"push","entryType":"word","deletedAt":"2026-08-03T19:57:14.719Z"},{"key":"word::home","id":"rg_word_home","word":"home","entryType":"word","deletedAt":"2026-08-03T20:15:01.084Z"},{"key":"word::room","id":"rg_word_room","word":"room","entryType":"word","deletedAt":"2026-08-04T01:04:12.129Z"},{"key":"word::road","id":"rg_word_road","word":"road","entryType":"word","deletedAt":"2026-08-04T01:04:14.356Z"},{"key":"word::role","id":"rg_word_role","word":"role","entryType":"word","deletedAt":"2026-08-04T01:04:23.080Z"},{"key":"word::sale","id":"rg_word_sale","word":"sale","entryType":"word","deletedAt":"2026-08-04T01:04:32.631Z"},{"key":"word::slow","id":"rg_word_slow","word":"slow","entryType":"word","deletedAt":"2026-08-04T01:04:35.994Z"},{"key":"word::soft","id":"rg_word_soft","word":"soft","entryType":"word","deletedAt":"2026-08-04T01:04:38.199Z"},{"key":"word::take","id":"rg_word_take","word":"take","entryType":"word","deletedAt":"2026-08-04T01:04:43.843Z"},{"key":"word::town","id":"rg_word_town","word":"town","entryType":"word","deletedAt":"2026-08-04T01:04:47.358Z"},{"key":"word::walk","id":"rg_word_walk","word":"walk","entryType":"word","deletedAt":"2026-08-04T01:04:49.281Z"},{"key":"word::walker","id":"rg_word_walker","word":"walker","entryType":"word","deletedAt":"2026-08-04T01:04:51.810Z"},{"key":"word::want","id":"rg_word_want","word":"want","entryType":"word","deletedAt":"2026-08-04T01:04:53.946Z"},{"key":"word::warm","id":"rg_word_warm","word":"warm","entryType":"word","deletedAt":"2026-08-04T01:04:55.729Z"},{"key":"word::weak","id":"rg_word_weak","word":"weak","entryType":"word","deletedAt":"2026-08-04T01:04:57.604Z"},{"key":"word::wear","id":"rg_word_wear","word":"wear","entryType":"word","deletedAt":"2026-08-04T01:04:59.909Z"},{"key":"word::west","id":"rg_word_west","word":"west","entryType":"word","deletedAt":"2026-08-04T01:05:01.476Z"},{"key":"word::wild","id":"rg_word_wild","word":"wild","entryType":"word","deletedAt":"2026-08-04T01:05:03.335Z"},{"key":"word::wish","id":"rg_word_wish","word":"wish","entryType":"word","deletedAt":"2026-08-04T01:05:05.225Z"},{"key":"word::word","id":"rg_word_word","word":"word","entryType":"word","deletedAt":"2026-08-04T01:05:06.944Z"},{"key":"word::year","id":"rg_word_year","word":"year","entryType":"word","deletedAt":"2026-08-04T01:05:08.020Z"},{"key":"word::cent","id":"rg_word_cent","word":"cent","entryType":"word","deletedAt":"2026-08-04T01:05:19.285Z"},{"key":"word::hide","id":"rg_word_hide","word":"hide","entryType":"word","deletedAt":"2026-08-04T01:05:31.949Z"},{"key":"word::born","id":"rg_word_born","word":"born","entryType":"word","deletedAt":"2026-08-04T01:05:35.986Z"},{"key":"word::meat","id":"rg_word_meat","word":"meat","entryType":"word","deletedAt":"2026-08-04T01:05:40.043Z"},{"key":"word::base","id":"rg_word_base","word":"base","entryType":"word","deletedAt":"2026-08-04T01:05:48.297Z"},{"key":"word::drop","id":"rg_word_drop","word":"drop","entryType":"word","deletedAt":"2026-08-04T01:06:00.647Z"},{"key":"word::book","id":"rg_word_book","word":"book","entryType":"word","deletedAt":"2026-08-04T01:06:04.544Z"},{"key":"word::bike","id":"rg_word_bike","word":"bike","entryType":"word","deletedAt":"2026-08-04T01:06:12.576Z"},{"key":"word::boss","id":"rg_word_boss","word":"boss","entryType":"word","deletedAt":"2026-08-04T01:06:15.548Z"},{"key":"word::card","id":"rg_word_card","word":"card","entryType":"word","deletedAt":"2026-08-04T01:06:23.636Z"},{"key":"word::cash","id":"rg_word_cash","word":"cash","entryType":"word","deletedAt":"2026-08-04T01:06:25.238Z"},{"key":"word::club","id":"rg_word_club","word":"club","entryType":"word","deletedAt":"2026-08-04T01:06:26.985Z"},{"key":"word::fail","id":"rg_word_fail","word":"fail","entryType":"word","deletedAt":"2026-08-04T01:06:28.831Z"},{"key":"word::film","id":"rg_word_film","word":"film","entryType":"word","deletedAt":"2026-08-04T01:06:30.793Z"},{"key":"word::fish","id":"rg_word_fish","word":"fish","entryType":"word","deletedAt":"2026-08-04T01:06:32.091Z"},{"key":"word::gold","id":"rg_word_gold","word":"gold","entryType":"word","deletedAt":"2026-08-04T01:06:36.352Z"},{"key":"word::hour","id":"rg_word_hour","word":"hour","entryType":"word","deletedAt":"2026-08-04T01:15:41.813Z"},{"key":"word::lake","id":"rg_word_lake","word":"lake","entryType":"word","deletedAt":"2026-08-04T01:15:43.344Z"},{"key":"word::lift","id":"rg_word_lift","word":"lift","entryType":"word","deletedAt":"2026-08-04T01:15:48.057Z"},{"key":"word::like","id":"rg_word_like","word":"like","entryType":"word","deletedAt":"2026-08-04T01:15:49.609Z"},{"key":"word::line","id":"rg_word_line","word":"line","entryType":"word","deletedAt":"2026-08-04T01:15:51.301Z"},{"key":"word::lock","id":"rg_word_lock","word":"lock","entryType":"word","deletedAt":"2026-08-04T01:15:52.446Z"},{"key":"word::mean","id":"rg_word_mean","word":"mean","entryType":"word","deletedAt":"2026-08-04T01:16:00.733Z"},{"key":"word::meet","id":"rg_word_meet","word":"meet","entryType":"word","deletedAt":"2026-08-04T01:16:03.032Z"},{"key":"word::burrell","id":"rg_word_burrell","word":"burrell","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::cameron","id":"rg_word_cameron","word":"cameron","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::canterbury","id":"rg_word_canterbury","word":"canterbury","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::ellington","id":"rg_word_ellington","word":"ellington","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::ferrando","id":"rg_word_ferrando","word":"ferrando","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::frederick","id":"rg_word_frederick","word":"frederick","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::grafton","id":"rg_word_grafton","word":"grafton","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::heyerdahl","id":"rg_word_heyerdahl","word":"heyerdahl","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::honeyball","id":"rg_word_honeyball","word":"honeyball","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::knitted","id":"rg_word_knitted","word":"knitted","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::mins","id":"rg_word_mins","word":"mins","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::mohamed","id":"rg_word_mohamed","word":"mohamed","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::mychoice","id":"rg_word_mychoice","word":"mychoice","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::pre-gold","id":"rg_word_pre_gold","word":"pre-gold","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::pre-pitched","id":"rg_word_pre_pitched","word":"pre-pitched","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::rail-appointed","id":"rg_word_rail_appointed","word":"rail-appointed","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::shaped","id":"rg_word_shaped","word":"shaped","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::simmons","id":"rg_word_simmons","word":"simmons","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::spoon-billed","id":"rg_word_spoon_billed","word":"spoon-billed","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::super-snifter","id":"rg_word_super_snifter","word":"super-snifter","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::tongtianlong","id":"rg_word_tongtianlong","word":"tongtianlong","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::vandenbulcke","id":"rg_word_vandenbulcke","word":"vandenbulcke","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::billed","id":"rg_word_billed","word":"billed","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::weldown","id":"rg_word_weldown","word":"weldown","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::wollongbar","id":"rg_word_wollongbar","word":"wollongbar","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::zealanders","id":"rg_word_zealanders","word":"zealanders","entryType":"word","deletedAt":"2026-08-04T01:16:23.931Z"},{"key":"word::pool","id":"rg_word_pool","word":"pool","entryType":"word","deletedAt":"2026-08-04T01:16:24.217Z"},{"key":"word::read","id":"rg_word_read","word":"read","entryType":"word","deletedAt":"2026-08-04T01:16:30.058Z"},{"key":"word::reader","id":"rg_word_reader","word":"reader","entryType":"word","deletedAt":"2026-08-04T01:16:32.768Z"},{"key":"word::shop","id":"rg_word_shop","word":"shop","entryType":"word","deletedAt":"2026-08-04T01:16:47.250Z"},{"key":"word::skin","id":"rg_word_skin","word":"skin","entryType":"word","deletedAt":"2026-08-04T01:16:48.362Z"},{"key":"word::star","id":"rg_word_star","word":"star","entryType":"word","deletedAt":"2026-08-04T01:16:51.815Z"},{"key":"word::team","id":"rg_word_team","word":"team","entryType":"word","deletedAt":"2026-08-04T01:17:10.117Z"},{"key":"word::tree","id":"rg_word_tree","word":"tree","entryType":"word","deletedAt":"2026-08-04T01:17:12.414Z"},{"key":"word::wall","id":"rg_word_wall","word":"wall","entryType":"word","deletedAt":"2026-08-04T01:17:13.953Z"},{"key":"word::wash","id":"rg_word_wash","word":"wash","entryType":"word","deletedAt":"2026-08-04T01:17:15.061Z"},{"key":"word::week","id":"rg_word_week","word":"week","entryType":"word","deletedAt":"2026-08-04T01:17:22.487Z"},{"key":"word::york","id":"rg_word_york","word":"york","entryType":"word","deletedAt":"2026-08-04T01:17:23.297Z"},{"key":"word::cook","id":"rg_word_cook","word":"cook","entryType":"word","deletedAt":"2026-08-04T01:17:51.733Z"},{"key":"word::cooker","id":"rg_word_cooker","word":"cooker","entryType":"word","deletedAt":"2026-08-04T01:17:54.695Z"},{"key":"word::lion","id":"rg_word_lion","word":"lion","entryType":"word","deletedAt":"2026-08-04T01:18:54.886Z"},{"key":"word::moon","id":"rg_word_moon","word":"moon","entryType":"word","deletedAt":"2026-08-04T01:18:57.033Z"},{"key":"word::rice","id":"rg_word_rice","word":"rice","entryType":"word","deletedAt":"2026-08-04T01:18:58.469Z"},{"key":"word::sing","id":"rg_word_sing","word":"sing","entryType":"word","deletedAt":"2026-08-04T01:19:15.849Z"},{"key":"word::singer","id":"rg_word_singer","word":"singer","entryType":"word","deletedAt":"2026-08-04T01:19:16.958Z"},{"key":"word::song","id":"rg_word_song","word":"song","entryType":"word","deletedAt":"2026-08-04T01:19:18.261Z"},{"key":"word::swim","id":"rg_word_swim","word":"swim","entryType":"word","deletedAt":"2026-08-04T01:19:19.169Z"},{"key":"word::swimmer","id":"rg_word_swimmer","word":"swimmer","entryType":"word","deletedAt":"2026-08-04T01:19:19.846Z"},{"key":"word::wake","id":"rg_word_wake","word":"wake","entryType":"word","deletedAt":"2026-08-04T01:19:21.146Z"},{"key":"word::wave","id":"rg_word_wave","word":"wave","entryType":"word","deletedAt":"2026-08-04T01:19:22.189Z"},{"key":"word::wife","id":"rg_word_wife","word":"wife","entryType":"word","deletedAt":"2026-08-04T01:19:23.189Z"},{"key":"word::ears","id":"rg_word_ears","word":"ears","entryType":"word","deletedAt":"2026-08-04T01:19:28.120Z"},{"key":"word::snow","id":"rg_word_snow","word":"snow","entryType":"word","deletedAt":"2026-08-04T01:19:31.235Z"},{"key":"word::warn","id":"rg_word_warn","word":"warn","entryType":"word","deletedAt":"2026-08-04T01:19:32.497Z"},{"key":"word::risk","id":"rg_word_risk","word":"risk","entryType":"word","deletedAt":"2026-08-04T01:19:41.837Z"},{"key":"word::died","id":"rg_word_died","word":"died","entryType":"word","deletedAt":"2026-08-04T01:19:55.336Z"},{"key":"word::golf","id":"rg_word_golf","word":"golf","entryType":"word","deletedAt":"2026-08-04T01:19:56.012Z"},{"key":"word::drug","id":"rg_word_drug","word":"drug","entryType":"word","deletedAt":"2026-08-04T01:19:58.645Z"},{"key":"word::some","id":"rg_word_some","word":"some","entryType":"word","deletedAt":"2026-08-04T01:20:02.755Z"},{"key":"word::wolf","id":"rg_word_wolf","word":"wolf","entryType":"word","deletedAt":"2026-08-04T01:32:05.020Z"},{"key":"word::bird","id":"rg_word_bird","word":"bird","entryType":"word","deletedAt":"2026-08-04T01:32:07.649Z"},{"key":"word::blue","id":"rg_word_blue","word":"blue","entryType":"word","deletedAt":"2026-08-04T01:32:10.333Z"},{"key":"word::boat","id":"rg_word_boat","word":"boat","entryType":"word","deletedAt":"2026-08-04T01:32:11.858Z"},{"key":"word::call","id":"rg_word_call","word":"call","entryType":"word","deletedAt":"2026-08-04T01:32:12.846Z"},{"key":"word::caller","id":"rg_word_caller","word":"caller","entryType":"word","deletedAt":"2026-08-04T01:32:15.558Z"},{"key":"word::cost","id":"rg_word_cost","word":"cost","entryType":"word","deletedAt":"2026-08-04T01:32:21.337Z"},{"key":"word::door","id":"rg_word_door","word":"door","entryType":"word","deletedAt":"2026-08-04T01:32:22.544Z"},{"key":"word::east","id":"rg_word_east","word":"east","entryType":"word","deletedAt":"2026-08-04T01:32:23.776Z"},{"key":"word::fast","id":"rg_word_fast","word":"fast","entryType":"word","deletedAt":"2026-08-04T01:32:25.619Z"},{"key":"word::foot","id":"rg_word_foot","word":"foot","entryType":"word","deletedAt":"2026-08-04T01:32:27.078Z"},{"key":"word::keep","id":"rg_word_keep","word":"keep","entryType":"word","deletedAt":"2026-08-04T01:32:33.513Z"},{"key":"word::meal","id":"rg_word_meal","word":"meal","entryType":"word","deletedAt":"2026-08-04T01:32:35.186Z"},{"key":"word::mile","id":"rg_word_mile","word":"mile","entryType":"word","deletedAt":"2026-08-04T01:32:36.247Z"},{"key":"word::miss","id":"rg_word_miss","word":"miss","entryType":"word","deletedAt":"2026-08-04T01:32:37.128Z"},{"key":"word::name","id":"rg_word_name","word":"name","entryType":"word","deletedAt":"2026-08-04T01:32:38.494Z"},{"key":"word::rain","id":"rg_word_rain","word":"rain","entryType":"word","deletedAt":"2026-08-04T01:32:59.377Z"},{"key":"word::tool","id":"rg_word_tool","word":"tool","entryType":"word","deletedAt":"2026-08-04T01:33:08.738Z"},{"key":"word::wait","id":"rg_word_wait","word":"wait","entryType":"word","deletedAt":"2026-08-04T01:33:10.314Z"},{"key":"word::chat","id":"rg_word_chat","word":"chat","entryType":"word","deletedAt":"2026-08-04T01:33:13.307Z"},{"key":"word::luck","id":"rg_word_luck","word":"luck","entryType":"word","deletedAt":"2026-08-04T01:33:20.767Z"},{"key":"word::mail","id":"rg_word_mail","word":"mail","entryType":"word","deletedAt":"2026-08-04T01:33:22.102Z"},{"key":"word::milk","id":"rg_word_milk","word":"milk","entryType":"word","deletedAt":"2026-08-04T01:33:23.210Z"},{"key":"word::page","id":"rg_word_page","word":"page","entryType":"word","deletedAt":"2026-08-04T01:33:25.133Z"},{"key":"word::pink","id":"rg_word_pink","word":"pink","entryType":"word","deletedAt":"2026-08-04T01:33:26.022Z"},{"key":"word::left","id":"rg_word_left","word":"left","entryType":"word","deletedAt":"2026-08-04T01:33:52.764Z"},{"key":"word::fake","id":"rg_word_fake","word":"fake","entryType":"word","deletedAt":"2026-08-04T01:34:19.610Z"},{"key":"word::rank","id":"rg_word_rank","word":"rank","entryType":"word","deletedAt":"2026-08-04T01:34:21.956Z"},{"key":"word::cafe","id":"rg_word_cafe","word":"cafe","entryType":"word","deletedAt":"2026-08-04T01:34:37.093Z"},{"key":"word::cold","id":"rg_word_cold","word":"cold","entryType":"word","deletedAt":"2026-08-04T01:34:39.836Z"},{"key":"word::desk","id":"rg_word_desk","word":"desk","entryType":"word","deletedAt":"2026-08-04T01:34:40.839Z"},{"key":"word::feel","id":"rg_word_feel","word":"feel","entryType":"word","deletedAt":"2026-08-04T01:34:45.726Z"},{"key":"word::hair","id":"rg_word_hair","word":"hair","entryType":"word","deletedAt":"2026-08-04T01:34:47.100Z"},{"key":"word::stay","id":"rg_word_stay","word":"stay","entryType":"word","deletedAt":"2026-08-04T01:34:51.374Z"},{"key":"word::step","id":"rg_word_step","word":"step","entryType":"word","deletedAt":"2026-08-04T01:34:53.232Z"},{"key":"word::frog","id":"rg_word_frog","word":"frog","entryType":"word","deletedAt":"2026-08-04T01:35:05.888Z"},{"key":"word::mate","id":"rg_word_mate","word":"mate","entryType":"word","deletedAt":"2026-08-04T01:35:16.365Z"},{"key":"word::till","id":"rg_word_till","word":"till","entryType":"word","deletedAt":"2026-08-04T01:35:22.708Z"},{"key":"word::ball","id":"rg_word_ball","word":"ball","entryType":"word","deletedAt":"2026-08-04T01:35:26.449Z"},{"key":"word::bath","id":"rg_word_bath","word":"bath","entryType":"word","deletedAt":"2026-08-04T01:35:27.571Z"},{"key":"word::chef","id":"rg_word_chef","word":"chef","entryType":"word","deletedAt":"2026-08-04T01:35:31.895Z"},{"key":"word::shoe","id":"rg_word_shoe","word":"shoe","entryType":"word","deletedAt":"2026-08-04T01:36:17.209Z"},{"key":"word::thai","id":"rg_word_thai","word":"thai","entryType":"word","deletedAt":"2026-08-04T01:36:55.272Z"},{"key":"word::twin","id":"rg_word_twin","word":"twin","entryType":"word","deletedAt":"2026-08-04T01:36:56.973Z"},{"key":"word::sent","id":"rg_word_sent","word":"sent","entryType":"word","deletedAt":"2026-08-04T01:36:59.856Z"},{"key":"word::didn","id":"rg_word_didn","word":"didn","entryType":"word","deletedAt":"2026-08-04T01:53:46.896Z"},{"key":"word::john","id":"rg_word_john","word":"john","entryType":"word","deletedAt":"2026-08-04T01:56:52.997Z"},{"key":"word::speak","id":"rg_word_speak","word":"speak","entryType":"word","deletedAt":"2026-08-04T01:57:02.677Z"},{"key":"word::fruit","id":"rg_word_fruit","word":"fruit","entryType":"word","deletedAt":"2026-08-04T01:57:25.630Z"},{"key":"word::share","id":"rg_word_share","word":"share","entryType":"word","deletedAt":"2026-08-04T01:57:36.457Z"},{"key":"word::child","id":"rg_word_child","word":"child","entryType":"word","deletedAt":"2026-08-04T01:58:09.121Z"},{"key":"word::blood","id":"rg_word_blood","word":"blood","entryType":"word","deletedAt":"2026-08-04T01:59:04.808Z"},{"key":"word::twice","id":"rg_word_twice","word":"twice","entryType":"word","deletedAt":"2026-08-04T01:59:08.071Z"},{"key":"word::metre","id":"rg_word_metre","word":"metre","entryType":"word","deletedAt":"2026-08-04T03:48:07.468Z"},{"key":"word::caf","id":"rg_word_caf","word":"caf","entryType":"word","deletedAt":"2026-08-04T05:50:01.369Z"},{"key":"word::non","id":"rg_word_non","word":"non","entryType":"word","deletedAt":"2026-08-04T05:50:01.886Z"},{"key":"word::los","id":"rg_word_los","word":"los","entryType":"word","deletedAt":"2026-08-04T05:50:03.389Z"},{"key":"word::nil","id":"rg_word_nil","word":"nil","entryType":"word","deletedAt":"2026-08-04T05:50:04.308Z"},{"key":"word::opted","id":"rg_word_opted","word":"opted","entryType":"word","deletedAt":"2026-08-04T06:07:35.925Z"},{"key":"word::roles","id":"rg_word_roles","word":"roles","entryType":"word","deletedAt":"2026-08-04T06:08:58.254Z"},{"key":"word::fines","id":"rg_word_fines","word":"fines","entryType":"word","deletedAt":"2026-08-04T07:35:08.331Z"},{"key":"word::game","id":"rg_word_game","word":"game","entryType":"word","deletedAt":"2026-08-04T07:35:09.596Z"},{"key":"word::plus","id":"rg_word_plus","word":"plus","entryType":"word","deletedAt":"2026-08-04T07:37:08.229Z"},{"key":"word::seat","id":"rg_word_seat","word":"seat","entryType":"word","deletedAt":"2026-08-04T07:37:13.715Z"},{"key":"word::ago","id":"rg_word_ago","word":"ago","entryType":"word","deletedAt":"2026-08-04T07:38:41.072Z"},{"key":"word::news","id":"rg_word_news","word":"news","entryType":"word","deletedAt":"2026-08-04T07:38:42.745Z"},{"key":"word::size","id":"rg_word_size","word":"size","entryType":"word","deletedAt":"2026-08-04T07:38:47.229Z"},{"key":"word::check","id":"rg_word_check","word":"check","entryType":"word","deletedAt":"2026-08-04T09:17:01.636Z"},{"key":"word::thing","id":"rg_word_thing","word":"thing","entryType":"word","deletedAt":"2026-08-04T09:18:42.874Z"},{"key":"word::question-and-answer","id":"rg_word_question_and_answer","word":"question-and-answer","entryType":"word","deletedAt":"2026-08-05T12:46:13.310Z"},{"key":"word::friends-and-family","id":"rg_word_friends_and_family","word":"friends-and-family","entryType":"word","deletedAt":"2026-08-05T12:46:15.447Z"},{"key":"word::pre-presentation","id":"rg_word_pre_presentation","word":"pre-presentation","entryType":"word","deletedAt":"2026-08-05T12:46:59.813Z"},{"key":"word::chinese-styled","id":"rg_word_chinese_styled","word":"chinese-styled","entryType":"word","deletedAt":"2026-08-05T16:35:40.118Z"}]}
+{
+  "version": "reading-g-retirements-v1",
+  "updatedAt": "2026-08-06T06:59:48.787Z",
+  "count": 611,
+  "entries": [
+    {
+      "key": "word::send",
+      "id": "rg_word_send",
+      "word": "send",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:25:39.187Z"
+    },
+    {
+      "key": "word::bring",
+      "id": "rg_word_bring",
+      "word": "bring",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:25:53.248Z"
+    },
+    {
+      "key": "word::mark",
+      "id": "rg_word_mark",
+      "word": "mark",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:41:35.144Z"
+    },
+    {
+      "key": "word::show",
+      "id": "rg_word_show",
+      "word": "show",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:41:37.754Z"
+    },
+    {
+      "key": "word::hold",
+      "id": "rg_word_hold",
+      "word": "hold",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:41:39.722Z"
+    },
+    {
+      "key": "word::carry",
+      "id": "rg_word_carry",
+      "word": "carry",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:41:41.643Z"
+    },
+    {
+      "key": "word::held",
+      "id": "rg_word_held",
+      "word": "held",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:41:43.760Z"
+    },
+    {
+      "key": "word::deal",
+      "id": "rg_word_deal",
+      "word": "deal",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:41:46.738Z"
+    },
+    {
+      "key": "word::turn",
+      "id": "rg_word_turn",
+      "word": "turn",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:42:43.531Z"
+    },
+    {
+      "key": "word::both",
+      "id": "rg_word_both",
+      "word": "both",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:10.873Z"
+    },
+    {
+      "key": "word::staff",
+      "id": "rg_word_staff",
+      "word": "staff",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:14.188Z"
+    },
+    {
+      "key": "word::try",
+      "id": "rg_word_try",
+      "word": "try",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:16.418Z"
+    },
+    {
+      "key": "word::time",
+      "id": "rg_word_time",
+      "word": "time",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:17.726Z"
+    },
+    {
+      "key": "word::kind",
+      "id": "rg_word_kind",
+      "word": "kind",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:18.717Z"
+    },
+    {
+      "key": "word::save",
+      "id": "rg_word_save",
+      "word": "save",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:19.827Z"
+    },
+    {
+      "key": "word::idea",
+      "id": "rg_word_idea",
+      "word": "idea",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:21.203Z"
+    },
+    {
+      "key": "word::person",
+      "id": "rg_word_person",
+      "word": "person",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:22.431Z"
+    },
+    {
+      "key": "word::build",
+      "id": "rg_word_build",
+      "word": "build",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:24.443Z"
+    },
+    {
+      "key": "word::learn",
+      "id": "rg_word_learn",
+      "word": "learn",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:28.312Z"
+    },
+    {
+      "key": "word::quick",
+      "id": "rg_word_quick",
+      "word": "quick",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:29.628Z"
+    },
+    {
+      "key": "word::yet",
+      "id": "rg_word_yet",
+      "word": "yet",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:33.938Z"
+    },
+    {
+      "key": "word::hand",
+      "id": "rg_word_hand",
+      "word": "hand",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:36.308Z"
+    },
+    {
+      "key": "word::move",
+      "id": "rg_word_move",
+      "word": "move",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:39.428Z"
+    },
+    {
+      "key": "word::soon",
+      "id": "rg_word_soon",
+      "word": "soon",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:40.560Z"
+    },
+    {
+      "key": "word::set",
+      "id": "rg_word_set",
+      "word": "set",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:41.683Z"
+    },
+    {
+      "key": "word::happen",
+      "id": "rg_word_happen",
+      "word": "happen",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:47.933Z"
+    },
+    {
+      "key": "word::help",
+      "id": "rg_word_help",
+      "word": "help",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:49.886Z"
+    },
+    {
+      "key": "word::high",
+      "id": "rg_word_high",
+      "word": "high",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:53.602Z"
+    },
+    {
+      "key": "word::work",
+      "id": "rg_word_work",
+      "word": "work",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:54.659Z"
+    },
+    {
+      "key": "word::add",
+      "id": "rg_word_add",
+      "word": "add",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:55.856Z"
+    },
+    {
+      "key": "word::watch",
+      "id": "rg_word_watch",
+      "word": "watch",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:48:57.526Z"
+    },
+    {
+      "key": "word::adding",
+      "id": "rg_word_adding",
+      "word": "adding",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:03.265Z"
+    },
+    {
+      "key": "word::adds",
+      "id": "rg_word_adds",
+      "word": "adds",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:04.297Z"
+    },
+    {
+      "key": "word::ads",
+      "id": "rg_word_ads",
+      "word": "ads",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:08.088Z"
+    },
+    {
+      "key": "word::s",
+      "id": "rg_word_s",
+      "word": "s",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:22.757Z"
+    },
+    {
+      "key": "word::e",
+      "id": "rg_word_e",
+      "word": "e",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:25.147Z"
+    },
+    {
+      "key": "word::n",
+      "id": "rg_word_n",
+      "word": "n",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:26.722Z"
+    },
+    {
+      "key": "word::okay",
+      "id": "rg_word_okay",
+      "word": "okay",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:28.157Z"
+    },
+    {
+      "key": "word::does",
+      "id": "rg_word_does",
+      "word": "does",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:31.108Z"
+    },
+    {
+      "key": "word::midnight",
+      "id": "rg_word_midnight",
+      "word": "midnight",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:33.693Z"
+    },
+    {
+      "key": "word::thanks",
+      "id": "rg_word_thanks",
+      "word": "thanks",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:36.479Z"
+    },
+    {
+      "key": "word::wine",
+      "id": "rg_word_wine",
+      "word": "wine",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:39.819Z"
+    },
+    {
+      "key": "word::b",
+      "id": "rg_word_b",
+      "word": "b",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:40.954Z"
+    },
+    {
+      "key": "word::c",
+      "id": "rg_word_c",
+      "word": "c",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:43.797Z"
+    },
+    {
+      "key": "word::d",
+      "id": "rg_word_d",
+      "word": "d",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:46.419Z"
+    },
+    {
+      "key": "word::f",
+      "id": "rg_word_f",
+      "word": "f",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:47.526Z"
+    },
+    {
+      "key": "word::g",
+      "id": "rg_word_g",
+      "word": "g",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:48.948Z"
+    },
+    {
+      "key": "word::h",
+      "id": "rg_word_h",
+      "word": "h",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:49:51.430Z"
+    },
+    {
+      "key": "word::aren't",
+      "id": "rg_word_aren_t",
+      "word": "aren't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::asked",
+      "id": "rg_word_asked",
+      "word": "asked",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::asks",
+      "id": "rg_word_asks",
+      "word": "asks",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::begins",
+      "id": "rg_word_begins",
+      "word": "begins",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::being",
+      "id": "rg_word_being",
+      "word": "being",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::beings",
+      "id": "rg_word_beings",
+      "word": "beings",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::believes",
+      "id": "rg_word_believes",
+      "word": "believes",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::bringing",
+      "id": "rg_word_bringing",
+      "word": "bringing",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::buys",
+      "id": "rg_word_buys",
+      "word": "buys",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::calls",
+      "id": "rg_word_calls",
+      "word": "calls",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::can't",
+      "id": "rg_word_can_t",
+      "word": "can't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::cm",
+      "id": "rg_word_cm",
+      "word": "cm",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::com",
+      "id": "rg_word_com",
+      "word": "com",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::considers",
+      "id": "rg_word_considers",
+      "word": "considers",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::continues",
+      "id": "rg_word_continues",
+      "word": "continues",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::couldn't",
+      "id": "rg_word_couldn_t",
+      "word": "couldn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::created",
+      "id": "rg_word_created",
+      "word": "created",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::cuts",
+      "id": "rg_word_cuts",
+      "word": "cuts",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::deals",
+      "id": "rg_word_deals",
+      "word": "deals",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::didn't",
+      "id": "rg_word_didn_t",
+      "word": "didn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::doesn",
+      "id": "rg_word_doesn",
+      "word": "doesn",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::doesn't",
+      "id": "rg_word_doesn_t",
+      "word": "doesn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::don",
+      "id": "rg_word_don",
+      "word": "don",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::don't",
+      "id": "rg_word_don_t",
+      "word": "don't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::etc",
+      "id": "rg_word_etc",
+      "word": "etc",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::falls",
+      "id": "rg_word_falls",
+      "word": "falls",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::feels",
+      "id": "rg_word_feels",
+      "word": "feels",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::finds",
+      "id": "rg_word_finds",
+      "word": "finds",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::gets",
+      "id": "rg_word_gets",
+      "word": "gets",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::goes",
+      "id": "rg_word_goes",
+      "word": "goes",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::grows",
+      "id": "rg_word_grows",
+      "word": "grows",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::hasn't",
+      "id": "rg_word_hasn_t",
+      "word": "hasn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::helped",
+      "id": "rg_word_helped",
+      "word": "helped",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::helps",
+      "id": "rg_word_helps",
+      "word": "helps",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::holds",
+      "id": "rg_word_holds",
+      "word": "holds",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::i'd",
+      "id": "rg_word_i_d",
+      "word": "i'd",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::i'm",
+      "id": "rg_word_i_m",
+      "word": "i'm",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::i've",
+      "id": "rg_word_i_ve",
+      "word": "i've",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::included",
+      "id": "rg_word_included",
+      "word": "included",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::includes",
+      "id": "rg_word_includes",
+      "word": "includes",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::isn",
+      "id": "rg_word_isn",
+      "word": "isn",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::isn't",
+      "id": "rg_word_isn_t",
+      "word": "isn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::j",
+      "id": "rg_word_j",
+      "word": "j",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::k",
+      "id": "rg_word_k",
+      "word": "k",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::keeps",
+      "id": "rg_word_keeps",
+      "word": "keeps",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::l",
+      "id": "rg_word_l",
+      "word": "l",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::leads",
+      "id": "rg_word_leads",
+      "word": "leads",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::lets",
+      "id": "rg_word_lets",
+      "word": "lets",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::ll",
+      "id": "rg_word_ll",
+      "word": "ll",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::m",
+      "id": "rg_word_m",
+      "word": "m",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::makes",
+      "id": "rg_word_makes",
+      "word": "makes",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::meets",
+      "id": "rg_word_meets",
+      "word": "meets",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::moves",
+      "id": "rg_word_moves",
+      "word": "moves",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::needn",
+      "id": "rg_word_needn",
+      "word": "needn",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::needn't",
+      "id": "rg_word_needn_t",
+      "word": "needn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::needs",
+      "id": "rg_word_needs",
+      "word": "needs",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::o",
+      "id": "rg_word_o",
+      "word": "o",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::offers",
+      "id": "rg_word_offers",
+      "word": "offers",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::opens",
+      "id": "rg_word_opens",
+      "word": "opens",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::org",
+      "id": "rg_word_org",
+      "word": "org",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::p",
+      "id": "rg_word_p",
+      "word": "p",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::passes",
+      "id": "rg_word_passes",
+      "word": "passes",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::pays",
+      "id": "rg_word_pays",
+      "word": "pays",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::provides",
+      "id": "rg_word_provides",
+      "word": "provides",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::q",
+      "id": "rg_word_q",
+      "word": "q",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::raises",
+      "id": "rg_word_raises",
+      "word": "raises",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::remembers",
+      "id": "rg_word_remembers",
+      "word": "remembers",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::reports",
+      "id": "rg_word_reports",
+      "word": "reports",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::requires",
+      "id": "rg_word_requires",
+      "word": "requires",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::runs",
+      "id": "rg_word_runs",
+      "word": "runs",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::says",
+      "id": "rg_word_says",
+      "word": "says",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::seeming",
+      "id": "rg_word_seeming",
+      "word": "seeming",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::sees",
+      "id": "rg_word_sees",
+      "word": "sees",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::sending",
+      "id": "rg_word_sending",
+      "word": "sending",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::serves",
+      "id": "rg_word_serves",
+      "word": "serves",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::sets",
+      "id": "rg_word_sets",
+      "word": "sets",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::shouldn",
+      "id": "rg_word_shouldn",
+      "word": "shouldn",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::shouldn't",
+      "id": "rg_word_shouldn_t",
+      "word": "shouldn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::shows",
+      "id": "rg_word_shows",
+      "word": "shows",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::sits",
+      "id": "rg_word_sits",
+      "word": "sits",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::staffed",
+      "id": "rg_word_staffed",
+      "word": "staffed",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::starts",
+      "id": "rg_word_starts",
+      "word": "starts",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::stays",
+      "id": "rg_word_stays",
+      "word": "stays",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::t",
+      "id": "rg_word_t",
+      "word": "t",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::talks",
+      "id": "rg_word_talks",
+      "word": "talks",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::tells",
+      "id": "rg_word_tells",
+      "word": "tells",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::that'll",
+      "id": "rg_word_that_ll",
+      "word": "that'll",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::they'll",
+      "id": "rg_word_they_ll",
+      "word": "they'll",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::they're",
+      "id": "rg_word_they_re",
+      "word": "they're",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::they've",
+      "id": "rg_word_they_ve",
+      "word": "they've",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::thinks",
+      "id": "rg_word_thinks",
+      "word": "thinks",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::turns",
+      "id": "rg_word_turns",
+      "word": "turns",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::u",
+      "id": "rg_word_u",
+      "word": "u",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::understands",
+      "id": "rg_word_understands",
+      "word": "understands",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::uses",
+      "id": "rg_word_uses",
+      "word": "uses",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::ve",
+      "id": "rg_word_ve",
+      "word": "ve",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::w",
+      "id": "rg_word_w",
+      "word": "w",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::walks",
+      "id": "rg_word_walks",
+      "word": "walks",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::wasn't",
+      "id": "rg_word_wasn_t",
+      "word": "wasn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::watched",
+      "id": "rg_word_watched",
+      "word": "watched",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::watches",
+      "id": "rg_word_watches",
+      "word": "watches",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::we'd",
+      "id": "rg_word_we_d",
+      "word": "we'd",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::we'll",
+      "id": "rg_word_we_ll",
+      "word": "we'll",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::we're",
+      "id": "rg_word_we_re",
+      "word": "we're",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::we've",
+      "id": "rg_word_we_ve",
+      "word": "we've",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::weren't",
+      "id": "rg_word_weren_t",
+      "word": "weren't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::won't",
+      "id": "rg_word_won_t",
+      "word": "won't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::worked",
+      "id": "rg_word_worked",
+      "word": "worked",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::world-class",
+      "id": "rg_word_world_class",
+      "word": "world-class",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::world-record",
+      "id": "rg_word_world_record",
+      "word": "world-record",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::wouldn",
+      "id": "rg_word_wouldn",
+      "word": "wouldn",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::wouldn't",
+      "id": "rg_word_wouldn_t",
+      "word": "wouldn't",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::www",
+      "id": "rg_word_www",
+      "word": "www",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::x",
+      "id": "rg_word_x",
+      "word": "x",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::year-old",
+      "id": "rg_word_year_old",
+      "word": "year-old",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::year-olds",
+      "id": "rg_word_year_olds",
+      "word": "year-olds",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::you'd",
+      "id": "rg_word_you_d",
+      "word": "you'd",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::you'll",
+      "id": "rg_word_you_ll",
+      "word": "you'll",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::you're",
+      "id": "rg_word_you_re",
+      "word": "you're",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::you've",
+      "id": "rg_word_you_ve",
+      "word": "you've",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T15:54:05.381Z"
+    },
+    {
+      "key": "word::two",
+      "id": "rg_word_two",
+      "word": "two",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:45:03.439Z"
+    },
+    {
+      "key": "word::guess",
+      "id": "rg_word_guess",
+      "word": "guess",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:45:29.611Z"
+    },
+    {
+      "key": "word::own",
+      "id": "rg_word_own",
+      "word": "own",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:48:26.707Z"
+    },
+    {
+      "key": "word::rest",
+      "id": "rg_word_rest",
+      "word": "rest",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:48:42.623Z"
+    },
+    {
+      "key": "word::near",
+      "id": "rg_word_near",
+      "word": "near",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:48:46.974Z"
+    },
+    {
+      "key": "word::type",
+      "id": "rg_word_type",
+      "word": "type",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:00.749Z"
+    },
+    {
+      "key": "word::young",
+      "id": "rg_word_young",
+      "word": "young",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:01.933Z"
+    },
+    {
+      "key": "word::due",
+      "id": "rg_word_due",
+      "word": "due",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:03.678Z"
+    },
+    {
+      "key": "word::look",
+      "id": "rg_word_look",
+      "word": "look",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:04.891Z"
+    },
+    {
+      "key": "word::make",
+      "id": "rg_word_make",
+      "word": "make",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:07.416Z"
+    },
+    {
+      "key": "word::until",
+      "id": "rg_word_until",
+      "word": "until",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:09.157Z"
+    },
+    {
+      "key": "word::or",
+      "id": "rg_word_or",
+      "word": "or",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:18.797Z"
+    },
+    {
+      "key": "word::half",
+      "id": "rg_word_half",
+      "word": "half",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:20.319Z"
+    },
+    {
+      "key": "word::huge",
+      "id": "rg_word_huge",
+      "word": "huge",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:23.984Z"
+    },
+    {
+      "key": "word::tell",
+      "id": "rg_word_tell",
+      "word": "tell",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:49:25.659Z"
+    },
+    {
+      "key": "word::bee",
+      "id": "rg_word_bee",
+      "word": "bee",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:51:32.865Z"
+    },
+    {
+      "key": "word::apps",
+      "id": "rg_word_apps",
+      "word": "apps",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:51:48.757Z"
+    },
+    {
+      "key": "word::id",
+      "id": "rg_word_id",
+      "word": "id",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:51:57.213Z"
+    },
+    {
+      "key": "word::kph",
+      "id": "rg_word_kph",
+      "word": "kph",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:51:58.748Z"
+    },
+    {
+      "key": "word::bays",
+      "id": "rg_word_bays",
+      "word": "bays",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:52:00.310Z"
+    },
+    {
+      "key": "word::beds",
+      "id": "rg_word_beds",
+      "word": "beds",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:52:04.418Z"
+    },
+    {
+      "key": "word::cats",
+      "id": "rg_word_cats",
+      "word": "cats",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:52:06.598Z"
+    },
+    {
+      "key": "word::cows",
+      "id": "rg_word_cows",
+      "word": "cows",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:52:11.481Z"
+    },
+    {
+      "key": "word::cups",
+      "id": "rg_word_cups",
+      "word": "cups",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:52:15.623Z"
+    },
+    {
+      "key": "word::dogs",
+      "id": "rg_word_dogs",
+      "word": "dogs",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:52:19.844Z"
+    },
+    {
+      "key": "word::fans",
+      "id": "rg_word_fans",
+      "word": "fans",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T16:52:24.022Z"
+    },
+    {
+      "key": "word::care",
+      "id": "rg_word_care",
+      "word": "care",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T17:13:19.068Z"
+    },
+    {
+      "key": "word::hope",
+      "id": "rg_word_hope",
+      "word": "hope",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T17:13:22.653Z"
+    },
+    {
+      "key": "word::mind",
+      "id": "rg_word_mind",
+      "word": "mind",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T17:13:27.540Z"
+    },
+    {
+      "key": "word::past",
+      "id": "rg_word_past",
+      "word": "past",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T17:13:29.810Z"
+    },
+    {
+      "key": "word::talk",
+      "id": "rg_word_talk",
+      "word": "talk",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T17:13:31.241Z"
+    },
+    {
+      "key": "word::books",
+      "id": "rg_word_books",
+      "word": "books",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T17:49:02.707Z"
+    },
+    {
+      "key": "word::bowls",
+      "id": "rg_word_bowls",
+      "word": "bowls",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T17:49:04.384Z"
+    },
+    {
+      "key": "word::socks",
+      "id": "rg_word_socks",
+      "word": "socks",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:14:22.221Z"
+    },
+    {
+      "key": "word::owns",
+      "id": "rg_word_owns",
+      "word": "owns",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:14:27.312Z"
+    },
+    {
+      "key": "word::tens",
+      "id": "rg_word_tens",
+      "word": "tens",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:14:28.614Z"
+    },
+    {
+      "key": "word::chips",
+      "id": "rg_word_chips",
+      "word": "chips",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:14:31.164Z"
+    },
+    {
+      "key": "word::downs",
+      "id": "rg_word_downs",
+      "word": "downs",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:14:32.887Z"
+    },
+    {
+      "key": "word::kinds",
+      "id": "rg_word_kinds",
+      "word": "kinds",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:14:36.352Z"
+    },
+    {
+      "key": "word::if",
+      "id": "rg_word_if",
+      "word": "if",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:15:28.214Z"
+    },
+    {
+      "key": "word::app",
+      "id": "rg_word_app",
+      "word": "app",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:15:29.511Z"
+    },
+    {
+      "key": "word::hot",
+      "id": "rg_word_hot",
+      "word": "hot",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:15:31.351Z"
+    },
+    {
+      "key": "word::man",
+      "id": "rg_word_man",
+      "word": "man",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:15:35.871Z"
+    },
+    {
+      "key": "word::sun",
+      "id": "rg_word_sun",
+      "word": "sun",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:15:40.123Z"
+    },
+    {
+      "key": "word::boy",
+      "id": "rg_word_boy",
+      "word": "boy",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:16:20.991Z"
+    },
+    {
+      "key": "word::cat",
+      "id": "rg_word_cat",
+      "word": "cat",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:16:24.485Z"
+    },
+    {
+      "key": "word::deer",
+      "id": "rg_word_deer",
+      "word": "deer",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:16:28.332Z"
+    },
+    {
+      "key": "word::let",
+      "id": "rg_word_let",
+      "word": "let",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:16:32.110Z"
+    },
+    {
+      "key": "word::say",
+      "id": "rg_word_say",
+      "word": "say",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:16:34.570Z"
+    },
+    {
+      "key": "word::cup",
+      "id": "rg_word_cup",
+      "word": "cup",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:16:40.538Z"
+    },
+    {
+      "key": "word::face",
+      "id": "rg_word_face",
+      "word": "face",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:16:42.160Z"
+    },
+    {
+      "key": "word::nice",
+      "id": "rg_word_nice",
+      "word": "nice",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:04.117Z"
+    },
+    {
+      "key": "word::drink",
+      "id": "rg_word_drink",
+      "word": "drink",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:05.985Z"
+    },
+    {
+      "key": "word::lot",
+      "id": "rg_word_lot",
+      "word": "lot",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:07.705Z"
+    },
+    {
+      "key": "word::date",
+      "id": "rg_word_date",
+      "word": "date",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:13.311Z"
+    },
+    {
+      "key": "word::lose",
+      "id": "rg_word_lose",
+      "word": "lose",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:15.527Z"
+    },
+    {
+      "key": "word::brings",
+      "id": "rg_word_brings",
+      "word": "brings",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:17.312Z"
+    },
+    {
+      "key": "word::because",
+      "id": "rg_word_because",
+      "word": "because",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:20.563Z"
+    },
+    {
+      "key": "word::people",
+      "id": "rg_word_people",
+      "word": "people",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:26.214Z"
+    },
+    {
+      "key": "word::future",
+      "id": "rg_word_future",
+      "word": "future",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:28.701Z"
+    },
+    {
+      "key": "word::eat",
+      "id": "rg_word_eat",
+      "word": "eat",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:31.268Z"
+    },
+    {
+      "key": "word::kid",
+      "id": "rg_word_kid",
+      "word": "kid",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:32.658Z"
+    },
+    {
+      "key": "word::win",
+      "id": "rg_word_win",
+      "word": "win",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:34.880Z"
+    },
+    {
+      "key": "word::go",
+      "id": "rg_word_go",
+      "word": "go",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:37.315Z"
+    },
+    {
+      "key": "word::wind",
+      "id": "rg_word_wind",
+      "word": "wind",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:42.072Z"
+    },
+    {
+      "key": "word::march",
+      "id": "rg_word_march",
+      "word": "march",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:17:51.364Z"
+    },
+    {
+      "key": "word::pen",
+      "id": "rg_word_pen",
+      "word": "pen",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:00.288Z"
+    },
+    {
+      "key": "word::sixth",
+      "id": "rg_word_sixth",
+      "word": "sixth",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:03.396Z"
+    },
+    {
+      "key": "word::give",
+      "id": "rg_word_give",
+      "word": "give",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:06.704Z"
+    },
+    {
+      "key": "word::know",
+      "id": "rg_word_know",
+      "word": "know",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:10.911Z"
+    },
+    {
+      "key": "word::real",
+      "id": "rg_word_real",
+      "word": "real",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:23.851Z"
+    },
+    {
+      "key": "word::once",
+      "id": "rg_word_once",
+      "word": "once",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:36.267Z"
+    },
+    {
+      "key": "word::south",
+      "id": "rg_word_south",
+      "word": "south",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:42.938Z"
+    },
+    {
+      "key": "word::spend",
+      "id": "rg_word_spend",
+      "word": "spend",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:44.935Z"
+    },
+    {
+      "key": "word::fifth",
+      "id": "rg_word_fifth",
+      "word": "fifth",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:48.009Z"
+    },
+    {
+      "key": "word::long",
+      "id": "rg_word_long",
+      "word": "long",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:18:53.680Z"
+    },
+    {
+      "key": "word::today",
+      "id": "rg_word_today",
+      "word": "today",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:07.111Z"
+    },
+    {
+      "key": "word::power",
+      "id": "rg_word_power",
+      "word": "power",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:11.689Z"
+    },
+    {
+      "key": "word::may",
+      "id": "rg_word_may",
+      "word": "may",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:13.900Z"
+    },
+    {
+      "key": "word::why",
+      "id": "rg_word_why",
+      "word": "why",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:17.116Z"
+    },
+    {
+      "key": "word::see",
+      "id": "rg_word_see",
+      "word": "see",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:29.790Z"
+    },
+    {
+      "key": "word::cause",
+      "id": "rg_word_cause",
+      "word": "cause",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:31.539Z"
+    },
+    {
+      "key": "word::come",
+      "id": "rg_word_come",
+      "word": "come",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:33.544Z"
+    },
+    {
+      "key": "word::but",
+      "id": "rg_word_but",
+      "word": "but",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:37.037Z"
+    },
+    {
+      "key": "word::last",
+      "id": "rg_word_last",
+      "word": "last",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:40.091Z"
+    },
+    {
+      "key": "word::less",
+      "id": "rg_word_less",
+      "word": "less",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:41.963Z"
+    },
+    {
+      "key": "word::kill",
+      "id": "rg_word_kill",
+      "word": "kill",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:44.337Z"
+    },
+    {
+      "key": "word::bag",
+      "id": "rg_word_bag",
+      "word": "bag",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:19:45.888Z"
+    },
+    {
+      "key": "word::cv",
+      "id": "rg_word_cv",
+      "word": "cv",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:41:17.208Z"
+    },
+    {
+      "key": "word::re",
+      "id": "rg_word_re",
+      "word": "re",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:41:20.319Z"
+    },
+    {
+      "key": "word::ii",
+      "id": "rg_word_ii",
+      "word": "ii",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:41:23.178Z"
+    },
+    {
+      "key": "word::eighteenth-century",
+      "id": "rg_word_eighteenth_century",
+      "word": "eighteenth-century",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:46:57.416Z"
+    },
+    {
+      "key": "word::by",
+      "id": "rg_word_by",
+      "word": "by",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:02.702Z"
+    },
+    {
+      "key": "word::car",
+      "id": "rg_word_car",
+      "word": "car",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:05.497Z"
+    },
+    {
+      "key": "word::end",
+      "id": "rg_word_end",
+      "word": "end",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:08.766Z"
+    },
+    {
+      "key": "word::get",
+      "id": "rg_word_get",
+      "word": "get",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:24.707Z"
+    },
+    {
+      "key": "word::one",
+      "id": "rg_word_one",
+      "word": "one",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:38.834Z"
+    },
+    {
+      "key": "word::hit",
+      "id": "rg_word_hit",
+      "word": "hit",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:43.953Z"
+    },
+    {
+      "key": "word::pay",
+      "id": "rg_word_pay",
+      "word": "pay",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:47.591Z"
+    },
+    {
+      "key": "word::sit",
+      "id": "rg_word_sit",
+      "word": "sit",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:51.536Z"
+    },
+    {
+      "key": "word::use",
+      "id": "rg_word_use",
+      "word": "use",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:54.862Z"
+    },
+    {
+      "key": "word::way",
+      "id": "rg_word_way",
+      "word": "way",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:57.420Z"
+    },
+    {
+      "key": "word::guy",
+      "id": "rg_word_guy",
+      "word": "guy",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:47:58.616Z"
+    },
+    {
+      "key": "word::map",
+      "id": "rg_word_map",
+      "word": "map",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:01.309Z"
+    },
+    {
+      "key": "word::top",
+      "id": "rg_word_top",
+      "word": "top",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:03.330Z"
+    },
+    {
+      "key": "word::pie",
+      "id": "rg_word_pie",
+      "word": "pie",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:05.438Z"
+    },
+    {
+      "key": "word::rat",
+      "id": "rg_word_rat",
+      "word": "rat",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:07.317Z"
+    },
+    {
+      "key": "word::won",
+      "id": "rg_word_won",
+      "word": "won",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:18.616Z"
+    },
+    {
+      "key": "word::few",
+      "id": "rg_word_few",
+      "word": "few",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:21.126Z"
+    },
+    {
+      "key": "word::now",
+      "id": "rg_word_now",
+      "word": "now",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:22.439Z"
+    },
+    {
+      "key": "word::via",
+      "id": "rg_word_via",
+      "word": "via",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:24.841Z"
+    },
+    {
+      "key": "word::age",
+      "id": "rg_word_age",
+      "word": "age",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:26.720Z"
+    },
+    {
+      "key": "word::arm",
+      "id": "rg_word_arm",
+      "word": "arm",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:28.395Z"
+    },
+    {
+      "key": "word::ask",
+      "id": "rg_word_ask",
+      "word": "ask",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:48:30.000Z"
+    },
+    {
+      "key": "word::bar",
+      "id": "rg_word_bar",
+      "word": "bar",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:49:10.169Z"
+    },
+    {
+      "key": "word::day",
+      "id": "rg_word_day",
+      "word": "day",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:49:16.590Z"
+    },
+    {
+      "key": "word::egg",
+      "id": "rg_word_egg",
+      "word": "egg",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:49:18.562Z"
+    },
+    {
+      "key": "word::fee",
+      "id": "rg_word_fee",
+      "word": "fee",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:49:19.961Z"
+    },
+    {
+      "key": "word::hat",
+      "id": "rg_word_hat",
+      "word": "hat",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:49:21.691Z"
+    },
+    {
+      "key": "word::ice",
+      "id": "rg_word_ice",
+      "word": "ice",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:49:23.275Z"
+    },
+    {
+      "key": "word::so",
+      "id": "rg_word_so",
+      "word": "so",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:52:25.514Z"
+    },
+    {
+      "key": "word::key",
+      "id": "rg_word_key",
+      "word": "key",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:52:29.245Z"
+    },
+    {
+      "key": "word::sea",
+      "id": "rg_word_sea",
+      "word": "sea",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:52:31.959Z"
+    },
+    {
+      "key": "word::war",
+      "id": "rg_word_war",
+      "word": "war",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:52:33.409Z"
+    },
+    {
+      "key": "word::wet",
+      "id": "rg_word_wet",
+      "word": "wet",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:52:37.193Z"
+    },
+    {
+      "key": "word::oil",
+      "id": "rg_word_oil",
+      "word": "oil",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T18:52:39.648Z"
+    },
+    {
+      "key": "word::pro",
+      "id": "rg_word_pro",
+      "word": "pro",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T05:50:10.304Z"
+    },
+    {
+      "key": "word::bin",
+      "id": "rg_word_bin",
+      "word": "bin",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:02:34.363Z"
+    },
+    {
+      "key": "word::lip",
+      "id": "rg_word_lip",
+      "word": "lip",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:02:38.193Z"
+    },
+    {
+      "key": "word::van",
+      "id": "rg_word_van",
+      "word": "van",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:02:41.821Z"
+    },
+    {
+      "key": "word::art",
+      "id": "rg_word_art",
+      "word": "art",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:02:57.013Z"
+    },
+    {
+      "key": "word::new",
+      "id": "rg_word_new",
+      "word": "new",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:03:12.885Z"
+    },
+    {
+      "key": "word::dna",
+      "id": "rg_word_dna",
+      "word": "DNA",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:03:17.023Z"
+    },
+    {
+      "key": "word::bed",
+      "id": "rg_word_bed",
+      "word": "bed",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:08:21.108Z"
+    },
+    {
+      "key": "word::big",
+      "id": "rg_word_big",
+      "word": "big",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:08:23.056Z"
+    },
+    {
+      "key": "word::bus",
+      "id": "rg_word_bus",
+      "word": "bus",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:25.913Z"
+    },
+    {
+      "key": "word::buy",
+      "id": "rg_word_buy",
+      "word": "buy",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:28.334Z"
+    },
+    {
+      "key": "word::dog",
+      "id": "rg_word_dog",
+      "word": "dog",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:29.625Z"
+    },
+    {
+      "key": "word::eye",
+      "id": "rg_word_eye",
+      "word": "eye",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:31.310Z"
+    },
+    {
+      "key": "word::low",
+      "id": "rg_word_low",
+      "word": "low",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:32.649Z"
+    },
+    {
+      "key": "word::old",
+      "id": "rg_word_old",
+      "word": "old",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:34.563Z"
+    },
+    {
+      "key": "word::pop",
+      "id": "rg_word_pop",
+      "word": "pop",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:36.184Z"
+    },
+    {
+      "key": "word::red",
+      "id": "rg_word_red",
+      "word": "red",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:37.858Z"
+    },
+    {
+      "key": "word::run",
+      "id": "rg_word_run",
+      "word": "run",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:39.383Z"
+    },
+    {
+      "key": "word::tea",
+      "id": "rg_word_tea",
+      "word": "tea",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:40.636Z"
+    },
+    {
+      "key": "word::tip",
+      "id": "rg_word_tip",
+      "word": "tip",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:42.133Z"
+    },
+    {
+      "key": "word::toy",
+      "id": "rg_word_toy",
+      "word": "toy",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:13:43.405Z"
+    },
+    {
+      "key": "word::fan",
+      "id": "rg_word_fan",
+      "word": "fan",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:18:08.634Z"
+    },
+    {
+      "key": "word::flu",
+      "id": "rg_word_flu",
+      "word": "flu",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:18:10.288Z"
+    },
+    {
+      "key": "word::air",
+      "id": "rg_word_air",
+      "word": "air",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:23:41.529Z"
+    },
+    {
+      "key": "word::fun",
+      "id": "rg_word_fun",
+      "word": "fun",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:23:43.861Z"
+    },
+    {
+      "key": "word::lad",
+      "id": "rg_word_lad",
+      "word": "lad",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:23:53.218Z"
+    },
+    {
+      "key": "word::vet",
+      "id": "rg_word_vet",
+      "word": "vet",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:23:57.113Z"
+    },
+    {
+      "key": "word::mix",
+      "id": "rg_word_mix",
+      "word": "mix",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:23:58.820Z"
+    },
+    {
+      "key": "word::job",
+      "id": "rg_word_job",
+      "word": "job",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:24:05.852Z"
+    },
+    {
+      "key": "word::pass",
+      "id": "rg_word_pass",
+      "word": "pass",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:24:12.134Z"
+    },
+    {
+      "key": "word::bad",
+      "id": "rg_word_bad",
+      "word": "bad",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:31:27.770Z"
+    },
+    {
+      "key": "word::net",
+      "id": "rg_word_net",
+      "word": "net",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:31:30.242Z"
+    },
+    {
+      "key": "word::pan",
+      "id": "rg_word_pan",
+      "word": "pan",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:31:39.822Z"
+    },
+    {
+      "key": "word::pet",
+      "id": "rg_word_pet",
+      "word": "pet",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:31:41.208Z"
+    },
+    {
+      "key": "word::tap",
+      "id": "rg_word_tap",
+      "word": "tap",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:31:44.370Z"
+    },
+    {
+      "key": "word::web",
+      "id": "rg_word_web",
+      "word": "web",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:31:46.170Z"
+    },
+    {
+      "key": "word::dug",
+      "id": "rg_word_dug",
+      "word": "dug",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:38:35.894Z"
+    },
+    {
+      "key": "word::fog",
+      "id": "rg_word_fog",
+      "word": "fog",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:38:38.784Z"
+    },
+    {
+      "key": "word::odd",
+      "id": "rg_word_odd",
+      "word": "odd",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:38:41.073Z"
+    },
+    {
+      "key": "word::gap",
+      "id": "rg_word_gap",
+      "word": "gap",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:38:43.210Z"
+    },
+    {
+      "key": "word::sat",
+      "id": "rg_word_sat",
+      "word": "sat",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:38:50.140Z"
+    },
+    {
+      "key": "word::lab",
+      "id": "rg_word_lab",
+      "word": "lab",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:38:52.048Z"
+    },
+    {
+      "key": "word::mud",
+      "id": "rg_word_mud",
+      "word": "mud",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:38:54.349Z"
+    },
+    {
+      "key": "word::leg",
+      "id": "rg_word_leg",
+      "word": "leg",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:01.842Z"
+    },
+    {
+      "key": "word::log",
+      "id": "rg_word_log",
+      "word": "log",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:03.848Z"
+    },
+    {
+      "key": "word::tag",
+      "id": "rg_word_tag",
+      "word": "tag",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:06.062Z"
+    },
+    {
+      "key": "word::dig",
+      "id": "rg_word_dig",
+      "word": "dig",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:07.624Z"
+    },
+    {
+      "key": "word::ham",
+      "id": "rg_word_ham",
+      "word": "ham",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:09.379Z"
+    },
+    {
+      "key": "word::son",
+      "id": "rg_word_son",
+      "word": "son",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:11.033Z"
+    },
+    {
+      "key": "word::ban",
+      "id": "rg_word_ban",
+      "word": "ban",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:13.215Z"
+    },
+    {
+      "key": "word::gas",
+      "id": "rg_word_gas",
+      "word": "gas",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:21.960Z"
+    },
+    {
+      "key": "word::kit",
+      "id": "rg_word_kit",
+      "word": "kit",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:26.633Z"
+    },
+    {
+      "key": "word::mid",
+      "id": "rg_word_mid",
+      "word": "mid",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:39:30.296Z"
+    },
+    {
+      "key": "word::opt",
+      "id": "rg_word_opt",
+      "word": "opt",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T06:07:32.225Z"
+    },
+    {
+      "key": "word::pod",
+      "id": "rg_word_pod",
+      "word": "pod",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:08.145Z"
+    },
+    {
+      "key": "word::gym",
+      "id": "rg_word_gym",
+      "word": "gym",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:17.434Z"
+    },
+    {
+      "key": "word::sky",
+      "id": "rg_word_sky",
+      "word": "sky",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:18.875Z"
+    },
+    {
+      "key": "word::sex",
+      "id": "rg_word_sex",
+      "word": "sex",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:20.877Z"
+    },
+    {
+      "key": "word::dry",
+      "id": "rg_word_dry",
+      "word": "dry",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:26.775Z"
+    },
+    {
+      "key": "word::fly",
+      "id": "rg_word_fly",
+      "word": "fly",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:29.375Z"
+    },
+    {
+      "key": "word::fox",
+      "id": "rg_word_fox",
+      "word": "fox",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:30.937Z"
+    },
+    {
+      "key": "word::joy",
+      "id": "rg_word_joy",
+      "word": "joy",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:32.467Z"
+    },
+    {
+      "key": "word::tax",
+      "id": "rg_word_tax",
+      "word": "tax",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:33.970Z"
+    },
+    {
+      "key": "word::shy",
+      "id": "rg_word_shy",
+      "word": "shy",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:43.116Z"
+    },
+    {
+      "key": "word::jet",
+      "id": "rg_word_jet",
+      "word": "jet",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:40:47.730Z"
+    },
+    {
+      "key": "word::summer",
+      "id": "rg_word_summer",
+      "word": "summer",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:41:34.260Z"
+    },
+    {
+      "key": "word::food",
+      "id": "rg_word_food",
+      "word": "food",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:42:54.057Z"
+    },
+    {
+      "key": "word::free",
+      "id": "rg_word_free",
+      "word": "free",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:42:56.244Z"
+    },
+    {
+      "key": "word::love",
+      "id": "rg_word_love",
+      "word": "love",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:56:54.010Z"
+    },
+    {
+      "key": "word::main",
+      "id": "rg_word_main",
+      "word": "main",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:56:57.198Z"
+    },
+    {
+      "key": "word::need",
+      "id": "rg_word_need",
+      "word": "need",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:57:00.490Z"
+    },
+    {
+      "key": "word::park",
+      "id": "rg_word_park",
+      "word": "park",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:57:03.391Z"
+    },
+    {
+      "key": "word::pick",
+      "id": "rg_word_pick",
+      "word": "pick",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:57:05.648Z"
+    },
+    {
+      "key": "word::plan",
+      "id": "rg_word_plan",
+      "word": "plan",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:57:07.930Z"
+    },
+    {
+      "key": "word::poor",
+      "id": "rg_word_poor",
+      "word": "poor",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:57:10.517Z"
+    },
+    {
+      "key": "word::push",
+      "id": "rg_word_push",
+      "word": "push",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T19:57:14.719Z"
+    },
+    {
+      "key": "word::home",
+      "id": "rg_word_home",
+      "word": "home",
+      "entryType": "word",
+      "deletedAt": "2026-08-03T20:15:01.084Z"
+    },
+    {
+      "key": "word::room",
+      "id": "rg_word_room",
+      "word": "room",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:12.129Z"
+    },
+    {
+      "key": "word::road",
+      "id": "rg_word_road",
+      "word": "road",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:14.356Z"
+    },
+    {
+      "key": "word::role",
+      "id": "rg_word_role",
+      "word": "role",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:23.080Z"
+    },
+    {
+      "key": "word::sale",
+      "id": "rg_word_sale",
+      "word": "sale",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:32.631Z"
+    },
+    {
+      "key": "word::slow",
+      "id": "rg_word_slow",
+      "word": "slow",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:35.994Z"
+    },
+    {
+      "key": "word::soft",
+      "id": "rg_word_soft",
+      "word": "soft",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:38.199Z"
+    },
+    {
+      "key": "word::take",
+      "id": "rg_word_take",
+      "word": "take",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:43.843Z"
+    },
+    {
+      "key": "word::town",
+      "id": "rg_word_town",
+      "word": "town",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:47.358Z"
+    },
+    {
+      "key": "word::walk",
+      "id": "rg_word_walk",
+      "word": "walk",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:49.281Z"
+    },
+    {
+      "key": "word::walker",
+      "id": "rg_word_walker",
+      "word": "walker",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:51.810Z"
+    },
+    {
+      "key": "word::want",
+      "id": "rg_word_want",
+      "word": "want",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:53.946Z"
+    },
+    {
+      "key": "word::warm",
+      "id": "rg_word_warm",
+      "word": "warm",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:55.729Z"
+    },
+    {
+      "key": "word::weak",
+      "id": "rg_word_weak",
+      "word": "weak",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:57.604Z"
+    },
+    {
+      "key": "word::wear",
+      "id": "rg_word_wear",
+      "word": "wear",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:04:59.909Z"
+    },
+    {
+      "key": "word::west",
+      "id": "rg_word_west",
+      "word": "west",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:01.476Z"
+    },
+    {
+      "key": "word::wild",
+      "id": "rg_word_wild",
+      "word": "wild",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:03.335Z"
+    },
+    {
+      "key": "word::wish",
+      "id": "rg_word_wish",
+      "word": "wish",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:05.225Z"
+    },
+    {
+      "key": "word::word",
+      "id": "rg_word_word",
+      "word": "word",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:06.944Z"
+    },
+    {
+      "key": "word::year",
+      "id": "rg_word_year",
+      "word": "year",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:08.020Z"
+    },
+    {
+      "key": "word::cent",
+      "id": "rg_word_cent",
+      "word": "cent",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:19.285Z"
+    },
+    {
+      "key": "word::hide",
+      "id": "rg_word_hide",
+      "word": "hide",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:31.949Z"
+    },
+    {
+      "key": "word::born",
+      "id": "rg_word_born",
+      "word": "born",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:35.986Z"
+    },
+    {
+      "key": "word::meat",
+      "id": "rg_word_meat",
+      "word": "meat",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:40.043Z"
+    },
+    {
+      "key": "word::base",
+      "id": "rg_word_base",
+      "word": "base",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:05:48.297Z"
+    },
+    {
+      "key": "word::drop",
+      "id": "rg_word_drop",
+      "word": "drop",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:00.647Z"
+    },
+    {
+      "key": "word::book",
+      "id": "rg_word_book",
+      "word": "book",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:04.544Z"
+    },
+    {
+      "key": "word::bike",
+      "id": "rg_word_bike",
+      "word": "bike",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:12.576Z"
+    },
+    {
+      "key": "word::boss",
+      "id": "rg_word_boss",
+      "word": "boss",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:15.548Z"
+    },
+    {
+      "key": "word::card",
+      "id": "rg_word_card",
+      "word": "card",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:23.636Z"
+    },
+    {
+      "key": "word::cash",
+      "id": "rg_word_cash",
+      "word": "cash",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:25.238Z"
+    },
+    {
+      "key": "word::club",
+      "id": "rg_word_club",
+      "word": "club",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:26.985Z"
+    },
+    {
+      "key": "word::fail",
+      "id": "rg_word_fail",
+      "word": "fail",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:28.831Z"
+    },
+    {
+      "key": "word::film",
+      "id": "rg_word_film",
+      "word": "film",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:30.793Z"
+    },
+    {
+      "key": "word::fish",
+      "id": "rg_word_fish",
+      "word": "fish",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:32.091Z"
+    },
+    {
+      "key": "word::gold",
+      "id": "rg_word_gold",
+      "word": "gold",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:06:36.352Z"
+    },
+    {
+      "key": "word::hour",
+      "id": "rg_word_hour",
+      "word": "hour",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:15:41.813Z"
+    },
+    {
+      "key": "word::lake",
+      "id": "rg_word_lake",
+      "word": "lake",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:15:43.344Z"
+    },
+    {
+      "key": "word::lift",
+      "id": "rg_word_lift",
+      "word": "lift",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:15:48.057Z"
+    },
+    {
+      "key": "word::like",
+      "id": "rg_word_like",
+      "word": "like",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:15:49.609Z"
+    },
+    {
+      "key": "word::line",
+      "id": "rg_word_line",
+      "word": "line",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:15:51.301Z"
+    },
+    {
+      "key": "word::lock",
+      "id": "rg_word_lock",
+      "word": "lock",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:15:52.446Z"
+    },
+    {
+      "key": "word::mean",
+      "id": "rg_word_mean",
+      "word": "mean",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:00.733Z"
+    },
+    {
+      "key": "word::meet",
+      "id": "rg_word_meet",
+      "word": "meet",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:03.032Z"
+    },
+    {
+      "key": "word::burrell",
+      "id": "rg_word_burrell",
+      "word": "burrell",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::cameron",
+      "id": "rg_word_cameron",
+      "word": "cameron",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::canterbury",
+      "id": "rg_word_canterbury",
+      "word": "canterbury",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::ellington",
+      "id": "rg_word_ellington",
+      "word": "ellington",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::ferrando",
+      "id": "rg_word_ferrando",
+      "word": "ferrando",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::frederick",
+      "id": "rg_word_frederick",
+      "word": "frederick",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::grafton",
+      "id": "rg_word_grafton",
+      "word": "grafton",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::heyerdahl",
+      "id": "rg_word_heyerdahl",
+      "word": "heyerdahl",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::honeyball",
+      "id": "rg_word_honeyball",
+      "word": "honeyball",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::knitted",
+      "id": "rg_word_knitted",
+      "word": "knitted",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::mins",
+      "id": "rg_word_mins",
+      "word": "mins",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::mohamed",
+      "id": "rg_word_mohamed",
+      "word": "mohamed",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::mychoice",
+      "id": "rg_word_mychoice",
+      "word": "mychoice",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::pre-gold",
+      "id": "rg_word_pre_gold",
+      "word": "pre-gold",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::pre-pitched",
+      "id": "rg_word_pre_pitched",
+      "word": "pre-pitched",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::rail-appointed",
+      "id": "rg_word_rail_appointed",
+      "word": "rail-appointed",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::shaped",
+      "id": "rg_word_shaped",
+      "word": "shaped",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::simmons",
+      "id": "rg_word_simmons",
+      "word": "simmons",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::spoon-billed",
+      "id": "rg_word_spoon_billed",
+      "word": "spoon-billed",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::super-snifter",
+      "id": "rg_word_super_snifter",
+      "word": "super-snifter",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::tongtianlong",
+      "id": "rg_word_tongtianlong",
+      "word": "tongtianlong",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::vandenbulcke",
+      "id": "rg_word_vandenbulcke",
+      "word": "vandenbulcke",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::billed",
+      "id": "rg_word_billed",
+      "word": "billed",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::weldown",
+      "id": "rg_word_weldown",
+      "word": "weldown",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::wollongbar",
+      "id": "rg_word_wollongbar",
+      "word": "wollongbar",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::zealanders",
+      "id": "rg_word_zealanders",
+      "word": "zealanders",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:23.931Z"
+    },
+    {
+      "key": "word::pool",
+      "id": "rg_word_pool",
+      "word": "pool",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:24.217Z"
+    },
+    {
+      "key": "word::read",
+      "id": "rg_word_read",
+      "word": "read",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:30.058Z"
+    },
+    {
+      "key": "word::reader",
+      "id": "rg_word_reader",
+      "word": "reader",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:32.768Z"
+    },
+    {
+      "key": "word::shop",
+      "id": "rg_word_shop",
+      "word": "shop",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:47.250Z"
+    },
+    {
+      "key": "word::skin",
+      "id": "rg_word_skin",
+      "word": "skin",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:48.362Z"
+    },
+    {
+      "key": "word::star",
+      "id": "rg_word_star",
+      "word": "star",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:16:51.815Z"
+    },
+    {
+      "key": "word::team",
+      "id": "rg_word_team",
+      "word": "team",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:10.117Z"
+    },
+    {
+      "key": "word::tree",
+      "id": "rg_word_tree",
+      "word": "tree",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:12.414Z"
+    },
+    {
+      "key": "word::wall",
+      "id": "rg_word_wall",
+      "word": "wall",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:13.953Z"
+    },
+    {
+      "key": "word::wash",
+      "id": "rg_word_wash",
+      "word": "wash",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:15.061Z"
+    },
+    {
+      "key": "word::week",
+      "id": "rg_word_week",
+      "word": "week",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:22.487Z"
+    },
+    {
+      "key": "word::york",
+      "id": "rg_word_york",
+      "word": "york",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:23.297Z"
+    },
+    {
+      "key": "word::cook",
+      "id": "rg_word_cook",
+      "word": "cook",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:51.733Z"
+    },
+    {
+      "key": "word::cooker",
+      "id": "rg_word_cooker",
+      "word": "cooker",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:17:54.695Z"
+    },
+    {
+      "key": "word::lion",
+      "id": "rg_word_lion",
+      "word": "lion",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:18:54.886Z"
+    },
+    {
+      "key": "word::moon",
+      "id": "rg_word_moon",
+      "word": "moon",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:18:57.033Z"
+    },
+    {
+      "key": "word::rice",
+      "id": "rg_word_rice",
+      "word": "rice",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:18:58.469Z"
+    },
+    {
+      "key": "word::sing",
+      "id": "rg_word_sing",
+      "word": "sing",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:15.849Z"
+    },
+    {
+      "key": "word::singer",
+      "id": "rg_word_singer",
+      "word": "singer",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:16.958Z"
+    },
+    {
+      "key": "word::song",
+      "id": "rg_word_song",
+      "word": "song",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:18.261Z"
+    },
+    {
+      "key": "word::swim",
+      "id": "rg_word_swim",
+      "word": "swim",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:19.169Z"
+    },
+    {
+      "key": "word::swimmer",
+      "id": "rg_word_swimmer",
+      "word": "swimmer",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:19.846Z"
+    },
+    {
+      "key": "word::wake",
+      "id": "rg_word_wake",
+      "word": "wake",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:21.146Z"
+    },
+    {
+      "key": "word::wave",
+      "id": "rg_word_wave",
+      "word": "wave",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:22.189Z"
+    },
+    {
+      "key": "word::wife",
+      "id": "rg_word_wife",
+      "word": "wife",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:23.189Z"
+    },
+    {
+      "key": "word::ears",
+      "id": "rg_word_ears",
+      "word": "ears",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:28.120Z"
+    },
+    {
+      "key": "word::snow",
+      "id": "rg_word_snow",
+      "word": "snow",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:31.235Z"
+    },
+    {
+      "key": "word::warn",
+      "id": "rg_word_warn",
+      "word": "warn",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:32.497Z"
+    },
+    {
+      "key": "word::risk",
+      "id": "rg_word_risk",
+      "word": "risk",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:41.837Z"
+    },
+    {
+      "key": "word::died",
+      "id": "rg_word_died",
+      "word": "died",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:55.336Z"
+    },
+    {
+      "key": "word::golf",
+      "id": "rg_word_golf",
+      "word": "golf",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:56.012Z"
+    },
+    {
+      "key": "word::drug",
+      "id": "rg_word_drug",
+      "word": "drug",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:19:58.645Z"
+    },
+    {
+      "key": "word::some",
+      "id": "rg_word_some",
+      "word": "some",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:20:02.755Z"
+    },
+    {
+      "key": "word::wolf",
+      "id": "rg_word_wolf",
+      "word": "wolf",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:05.020Z"
+    },
+    {
+      "key": "word::bird",
+      "id": "rg_word_bird",
+      "word": "bird",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:07.649Z"
+    },
+    {
+      "key": "word::blue",
+      "id": "rg_word_blue",
+      "word": "blue",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:10.333Z"
+    },
+    {
+      "key": "word::boat",
+      "id": "rg_word_boat",
+      "word": "boat",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:11.858Z"
+    },
+    {
+      "key": "word::call",
+      "id": "rg_word_call",
+      "word": "call",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:12.846Z"
+    },
+    {
+      "key": "word::caller",
+      "id": "rg_word_caller",
+      "word": "caller",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:15.558Z"
+    },
+    {
+      "key": "word::cost",
+      "id": "rg_word_cost",
+      "word": "cost",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:21.337Z"
+    },
+    {
+      "key": "word::door",
+      "id": "rg_word_door",
+      "word": "door",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:22.544Z"
+    },
+    {
+      "key": "word::east",
+      "id": "rg_word_east",
+      "word": "east",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:23.776Z"
+    },
+    {
+      "key": "word::fast",
+      "id": "rg_word_fast",
+      "word": "fast",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:25.619Z"
+    },
+    {
+      "key": "word::foot",
+      "id": "rg_word_foot",
+      "word": "foot",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:27.078Z"
+    },
+    {
+      "key": "word::keep",
+      "id": "rg_word_keep",
+      "word": "keep",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:33.513Z"
+    },
+    {
+      "key": "word::meal",
+      "id": "rg_word_meal",
+      "word": "meal",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:35.186Z"
+    },
+    {
+      "key": "word::mile",
+      "id": "rg_word_mile",
+      "word": "mile",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:36.247Z"
+    },
+    {
+      "key": "word::miss",
+      "id": "rg_word_miss",
+      "word": "miss",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:37.128Z"
+    },
+    {
+      "key": "word::name",
+      "id": "rg_word_name",
+      "word": "name",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:38.494Z"
+    },
+    {
+      "key": "word::rain",
+      "id": "rg_word_rain",
+      "word": "rain",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:32:59.377Z"
+    },
+    {
+      "key": "word::tool",
+      "id": "rg_word_tool",
+      "word": "tool",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:08.738Z"
+    },
+    {
+      "key": "word::wait",
+      "id": "rg_word_wait",
+      "word": "wait",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:10.314Z"
+    },
+    {
+      "key": "word::chat",
+      "id": "rg_word_chat",
+      "word": "chat",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:13.307Z"
+    },
+    {
+      "key": "word::luck",
+      "id": "rg_word_luck",
+      "word": "luck",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:20.767Z"
+    },
+    {
+      "key": "word::mail",
+      "id": "rg_word_mail",
+      "word": "mail",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:22.102Z"
+    },
+    {
+      "key": "word::milk",
+      "id": "rg_word_milk",
+      "word": "milk",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:23.210Z"
+    },
+    {
+      "key": "word::page",
+      "id": "rg_word_page",
+      "word": "page",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:25.133Z"
+    },
+    {
+      "key": "word::pink",
+      "id": "rg_word_pink",
+      "word": "pink",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:26.022Z"
+    },
+    {
+      "key": "word::left",
+      "id": "rg_word_left",
+      "word": "left",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:33:52.764Z"
+    },
+    {
+      "key": "word::fake",
+      "id": "rg_word_fake",
+      "word": "fake",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:19.610Z"
+    },
+    {
+      "key": "word::rank",
+      "id": "rg_word_rank",
+      "word": "rank",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:21.956Z"
+    },
+    {
+      "key": "word::cafe",
+      "id": "rg_word_cafe",
+      "word": "cafe",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:37.093Z"
+    },
+    {
+      "key": "word::cold",
+      "id": "rg_word_cold",
+      "word": "cold",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:39.836Z"
+    },
+    {
+      "key": "word::desk",
+      "id": "rg_word_desk",
+      "word": "desk",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:40.839Z"
+    },
+    {
+      "key": "word::feel",
+      "id": "rg_word_feel",
+      "word": "feel",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:45.726Z"
+    },
+    {
+      "key": "word::hair",
+      "id": "rg_word_hair",
+      "word": "hair",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:47.100Z"
+    },
+    {
+      "key": "word::stay",
+      "id": "rg_word_stay",
+      "word": "stay",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:51.374Z"
+    },
+    {
+      "key": "word::step",
+      "id": "rg_word_step",
+      "word": "step",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:34:53.232Z"
+    },
+    {
+      "key": "word::frog",
+      "id": "rg_word_frog",
+      "word": "frog",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:35:05.888Z"
+    },
+    {
+      "key": "word::mate",
+      "id": "rg_word_mate",
+      "word": "mate",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:35:16.365Z"
+    },
+    {
+      "key": "word::till",
+      "id": "rg_word_till",
+      "word": "till",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:35:22.708Z"
+    },
+    {
+      "key": "word::ball",
+      "id": "rg_word_ball",
+      "word": "ball",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:35:26.449Z"
+    },
+    {
+      "key": "word::bath",
+      "id": "rg_word_bath",
+      "word": "bath",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:35:27.571Z"
+    },
+    {
+      "key": "word::chef",
+      "id": "rg_word_chef",
+      "word": "chef",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:35:31.895Z"
+    },
+    {
+      "key": "word::shoe",
+      "id": "rg_word_shoe",
+      "word": "shoe",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:36:17.209Z"
+    },
+    {
+      "key": "word::thai",
+      "id": "rg_word_thai",
+      "word": "thai",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:36:55.272Z"
+    },
+    {
+      "key": "word::twin",
+      "id": "rg_word_twin",
+      "word": "twin",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:36:56.973Z"
+    },
+    {
+      "key": "word::sent",
+      "id": "rg_word_sent",
+      "word": "sent",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:36:59.856Z"
+    },
+    {
+      "key": "word::didn",
+      "id": "rg_word_didn",
+      "word": "didn",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:53:46.896Z"
+    },
+    {
+      "key": "word::john",
+      "id": "rg_word_john",
+      "word": "john",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:56:52.997Z"
+    },
+    {
+      "key": "word::speak",
+      "id": "rg_word_speak",
+      "word": "speak",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:57:02.677Z"
+    },
+    {
+      "key": "word::fruit",
+      "id": "rg_word_fruit",
+      "word": "fruit",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:57:25.630Z"
+    },
+    {
+      "key": "word::share",
+      "id": "rg_word_share",
+      "word": "share",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:57:36.457Z"
+    },
+    {
+      "key": "word::child",
+      "id": "rg_word_child",
+      "word": "child",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:58:09.121Z"
+    },
+    {
+      "key": "word::blood",
+      "id": "rg_word_blood",
+      "word": "blood",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:59:04.808Z"
+    },
+    {
+      "key": "word::twice",
+      "id": "rg_word_twice",
+      "word": "twice",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T01:59:08.071Z"
+    },
+    {
+      "key": "word::metre",
+      "id": "rg_word_metre",
+      "word": "metre",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T03:48:07.468Z"
+    },
+    {
+      "key": "word::caf",
+      "id": "rg_word_caf",
+      "word": "caf",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T05:50:01.369Z"
+    },
+    {
+      "key": "word::non",
+      "id": "rg_word_non",
+      "word": "non",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T05:50:01.886Z"
+    },
+    {
+      "key": "word::los",
+      "id": "rg_word_los",
+      "word": "los",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T05:50:03.389Z"
+    },
+    {
+      "key": "word::nil",
+      "id": "rg_word_nil",
+      "word": "nil",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T05:50:04.308Z"
+    },
+    {
+      "key": "word::opted",
+      "id": "rg_word_opted",
+      "word": "opted",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T06:07:35.925Z"
+    },
+    {
+      "key": "word::roles",
+      "id": "rg_word_roles",
+      "word": "roles",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T06:08:58.254Z"
+    },
+    {
+      "key": "word::fines",
+      "id": "rg_word_fines",
+      "word": "fines",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T07:35:08.331Z"
+    },
+    {
+      "key": "word::game",
+      "id": "rg_word_game",
+      "word": "game",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T07:35:09.596Z"
+    },
+    {
+      "key": "word::plus",
+      "id": "rg_word_plus",
+      "word": "plus",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T07:37:08.229Z"
+    },
+    {
+      "key": "word::seat",
+      "id": "rg_word_seat",
+      "word": "seat",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T07:37:13.715Z"
+    },
+    {
+      "key": "word::ago",
+      "id": "rg_word_ago",
+      "word": "ago",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T07:38:41.072Z"
+    },
+    {
+      "key": "word::news",
+      "id": "rg_word_news",
+      "word": "news",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T07:38:42.745Z"
+    },
+    {
+      "key": "word::size",
+      "id": "rg_word_size",
+      "word": "size",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T07:38:47.229Z"
+    },
+    {
+      "key": "word::check",
+      "id": "rg_word_check",
+      "word": "check",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T09:17:01.636Z"
+    },
+    {
+      "key": "word::thing",
+      "id": "rg_word_thing",
+      "word": "thing",
+      "entryType": "word",
+      "deletedAt": "2026-08-04T09:18:42.874Z"
+    },
+    {
+      "key": "word::question-and-answer",
+      "id": "rg_word_question_and_answer",
+      "word": "question-and-answer",
+      "entryType": "word",
+      "deletedAt": "2026-08-05T12:46:13.310Z"
+    },
+    {
+      "key": "word::friends-and-family",
+      "id": "rg_word_friends_and_family",
+      "word": "friends-and-family",
+      "entryType": "word",
+      "deletedAt": "2026-08-05T12:46:15.447Z"
+    },
+    {
+      "key": "word::pre-presentation",
+      "id": "rg_word_pre_presentation",
+      "word": "pre-presentation",
+      "entryType": "word",
+      "deletedAt": "2026-08-05T12:46:59.813Z"
+    },
+    {
+      "key": "word::chinese-styled",
+      "id": "rg_word_chinese_styled",
+      "word": "chinese-styled",
+      "entryType": "word",
+      "deletedAt": "2026-08-05T16:35:40.118Z"
+    },
+    {
+      "key": "word::atherton",
+      "id": "rg_word_atherton",
+      "word": "atherton",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::fenton",
+      "id": "rg_word_fenton",
+      "word": "fenton",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::sasha",
+      "id": "rg_word_sasha",
+      "word": "sasha",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::wessex",
+      "id": "rg_word_wessex",
+      "word": "wessex",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::hatcliff",
+      "id": "rg_word_hatcliff",
+      "word": "hatcliff",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::brene",
+      "id": "rg_word_brene",
+      "word": "brene",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::coffs",
+      "id": "rg_word_coffs",
+      "word": "coffs",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::ffyona",
+      "id": "rg_word_ffyona",
+      "word": "ffyona",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::helmsley",
+      "id": "rg_word_helmsley",
+      "word": "helmsley",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::locksley",
+      "id": "rg_word_locksley",
+      "word": "locksley",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::logitech",
+      "id": "rg_word_logitech",
+      "word": "logitech",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::marshbrook",
+      "id": "rg_word_marshbrook",
+      "word": "marshbrook",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::sloane",
+      "id": "rg_word_sloane",
+      "word": "sloane",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::darren's",
+      "id": "rg_word_darren_s",
+      "word": "darren's",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::bramley",
+      "id": "rg_word_bramley",
+      "word": "bramley",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::hanugoldi",
+      "id": "rg_word_hanugoldi",
+      "word": "hanugoldi",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::microsoft",
+      "id": "rg_word_microsoft",
+      "word": "microsoft",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::tang",
+      "id": "rg_word_tang",
+      "word": "tang",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::percil",
+      "id": "rg_word_percil",
+      "word": "percil",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::ripton",
+      "id": "rg_word_ripton",
+      "word": "ripton",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::wychwood",
+      "id": "rg_word_wychwood",
+      "word": "wychwood",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::croyde",
+      "id": "rg_word_croyde",
+      "word": "croyde",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::lillee's",
+      "id": "rg_word_lillee_s",
+      "word": "lillee's",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::maplehampton",
+      "id": "rg_word_maplehampton",
+      "word": "maplehampton",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::sture",
+      "id": "rg_word_sture",
+      "word": "sture",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::bingham",
+      "id": "rg_word_bingham",
+      "word": "bingham",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::buchanan",
+      "id": "rg_word_buchanan",
+      "word": "buchanan",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::caldy",
+      "id": "rg_word_caldy",
+      "word": "caldy",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::cambourne",
+      "id": "rg_word_cambourne",
+      "word": "cambourne",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::carey",
+      "id": "rg_word_carey",
+      "word": "carey",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::dingle",
+      "id": "rg_word_dingle",
+      "word": "dingle",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::palmer's",
+      "id": "rg_word_palmer_s",
+      "word": "palmer's",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::sinclair",
+      "id": "rg_word_sinclair",
+      "word": "sinclair",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::skybag",
+      "id": "rg_word_skybag",
+      "word": "skybag",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:06:53.013Z"
+    },
+    {
+      "key": "word::aining",
+      "id": "rg_word_aining",
+      "word": "aining",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::onlyfrom",
+      "id": "rg_word_onlyfrom",
+      "word": "onlyfrom",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::ifces",
+      "id": "rg_word_ifces",
+      "word": "ifces",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::imeet",
+      "id": "rg_word_imeet",
+      "word": "imeet",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::abusiness",
+      "id": "rg_word_abusiness",
+      "word": "abusiness",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::appropriatefor",
+      "id": "rg_word_appropriatefor",
+      "word": "appropriatefor",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::arevery",
+      "id": "rg_word_arevery",
+      "word": "arevery",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::aselection",
+      "id": "rg_word_aselection",
+      "word": "aselection",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::atcertain",
+      "id": "rg_word_atcertain",
+      "word": "atcertain",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::beremoved",
+      "id": "rg_word_beremoved",
+      "word": "beremoved",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::co-operatewithin",
+      "id": "rg_word_co_operatewithin",
+      "word": "co-operatewithin",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::firstterm",
+      "id": "rg_word_firstterm",
+      "word": "firstterm",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::fordelivery",
+      "id": "rg_word_fordelivery",
+      "word": "fordelivery",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::inacting",
+      "id": "rg_word_inacting",
+      "word": "inacting",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::intheir",
+      "id": "rg_word_intheir",
+      "word": "intheir",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::onany",
+      "id": "rg_word_onany",
+      "word": "onany",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::receivetransition",
+      "id": "rg_word_receivetransition",
+      "word": "receivetransition",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::smpentitlement",
+      "id": "rg_word_smpentitlement",
+      "word": "smpentitlement",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::takingchildren",
+      "id": "rg_word_takingchildren",
+      "word": "takingchildren",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::thanimmigrants",
+      "id": "rg_word_thanimmigrants",
+      "word": "thanimmigrants",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::thegiant",
+      "id": "rg_word_thegiant",
+      "word": "thegiant",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::thei",
+      "id": "rg_word_thei",
+      "word": "thei",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::theirnew",
+      "id": "rg_word_theirnew",
+      "word": "theirnew",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::travellingby",
+      "id": "rg_word_travellingby",
+      "word": "travellingby",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::vement",
+      "id": "rg_word_vement",
+      "word": "vement",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::walkor",
+      "id": "rg_word_walkor",
+      "word": "walkor",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::climb-and",
+      "id": "rg_word_climb_and",
+      "word": "climb-and",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::j'guide",
+      "id": "rg_word_j_guide",
+      "word": "j'guide",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::yourself-your",
+      "id": "rg_word_yourself_your",
+      "word": "yourself-your",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "word::paps",
+      "id": "rg_word_paps",
+      "word": "paps",
+      "entryType": "word",
+      "deletedAt": "2026-08-06T03:11:47.269Z"
+    },
+    {
+      "key": "phrase::health and safety",
+      "id": "rg_phrase_health_and_safety",
+      "word": "health and safety",
+      "entryType": "phrase",
+      "deletedAt": "2026-08-06T06:59:48.787Z"
+    }
+  ]
+}

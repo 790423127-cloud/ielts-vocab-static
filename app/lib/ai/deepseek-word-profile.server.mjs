@@ -2,9 +2,12 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "
 import path from "path";
 import {
   AI_CONTENT_PROFILE_VERSION,
+  hasCompleteAiSynonymDetails,
   isAiCoreContentComplete,
-  normalizeAiGeneratedEntry
+  normalizeAiGeneratedEntry,
+  normalizeAiSynonyms
 } from "../vocab/admin-ai-content-profile.mjs";
+import { synonymEquivalenceKey } from "../vocab/synonym-equivalence.mjs";
 import {
   AI_VOCAB_SYSTEM_PROMPT,
   buildAiWordProfilePrompt
@@ -176,6 +179,8 @@ export function isUsableReadingAiProfile(word) {
     Array.isArray(word?.forms) &&
     Array.isArray(word?.wordFamily) &&
     Array.isArray(word?.synonyms) &&
+    Array.isArray(word?.synonymDetails) &&
+    hasCompleteAiSynonymDetails(word) &&
     Array.isArray(word?.ieltsUse) && word.ieltsUse.length &&
     Array.isArray(word?.topics) && word.topics.length &&
     word?.difficulty
@@ -195,6 +200,9 @@ export function describeUnusableAiProfile(word) {
   if (!Array.isArray(word?.forms)) reasons.push("missing forms");
   if (!Array.isArray(word?.wordFamily)) reasons.push("missing wordFamily");
   if (!Array.isArray(word?.synonyms)) reasons.push("missing synonyms");
+  if (!Array.isArray(word?.synonymDetails) || !hasCompleteAiSynonymDetails(word)) {
+    reasons.push("missing synonymDetails");
+  }
   if (!Array.isArray(word?.ieltsUse) || !word.ieltsUse.length) reasons.push("missing ieltsUse");
   if (!Array.isArray(word?.topics) || !word.topics.length) reasons.push("missing topics");
   if (!word?.difficulty) reasons.push("missing difficulty");
@@ -385,12 +393,21 @@ async function requestProfileBatch(items, { timeoutMs, maxTokens, profileQuality
     const usable = quality === "reading"
       ? isUsableReadingAiProfile(entry)
       : isUsableAiProfile(entry);
-    if (!usable) {
+    const requestedSynonyms = normalizeAiSynonyms(expected.requestedSynonyms, canonicalWord);
+    const returnedSynonymKeys = new Set(
+      normalizeAiSynonyms(entry.synonyms, canonicalWord).map(synonymEquivalenceKey)
+    );
+    const keptRequestedSynonyms = requestedSynonyms.every(
+      (word) => returnedSynonymKeys.has(synonymEquivalenceKey(word))
+    ) && returnedSynonymKeys.size === requestedSynonyms.length;
+    if (!usable || (requestedSynonyms.length && !keptRequestedSynonyms)) {
       const reasons = describeUnusableAiProfile(entry);
       invalid.push({
         inputId: expected.inputId,
         word: expected.word,
-        reason: `incomplete or invalid profile (${reasons.slice(0, 4).join(", ") || "unknown"})`
+        reason: `incomplete or invalid profile (${requestedSynonyms.length && !keptRequestedSynonyms
+          ? "requested synonyms changed"
+          : reasons.slice(0, 4).join(", ") || "unknown"})`
       });
       continue;
     }
@@ -467,7 +484,8 @@ export async function requestDeepseekProfiles(inputItems, {
 } = {}) {
   const items = inputItems.map((item, index) => ({
     inputId: String(item.inputId || `item-${index + 1}`),
-    word: String(item.word || "").trim()
+    word: String(item.word || "").trim(),
+    requestedSynonyms: normalizeAiSynonyms(item.requestedSynonyms, item.word)
   }));
 
   return resolveProfiles(items, { timeoutMs, maxTokens, maxSplitDepth, profileQuality });

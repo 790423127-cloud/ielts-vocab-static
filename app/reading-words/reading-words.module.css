@@ -1,8 +1,14 @@
 .page {
-  width: calc(100% - var(--study-sidebar-width));
-  min-height: calc(100vh - var(--study-header-height));
-  margin-left: var(--study-sidebar-width);
-  padding: 28px 34px 44px;
+  /* 与主词库同一纵向 flex；左右偏移交给 body>main 全局规则，避免二次扣 sidebar 变窄 */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: none;
+  min-height: calc(100dvh - var(--study-header-height));
+  margin-left: 0;
+  padding: 12px 20px 16px;
+  gap: 8px;
+  box-sizing: border-box;
   color: var(--study-text, #1f332d);
   background: var(--study-bg, #f7f9f8);
 }
@@ -10,7 +16,7 @@
 .page button,
 .page input,
 .page textarea {
-  font: inherit;
+  font-family: inherit;
 }
 
 .pageHeader {
@@ -66,18 +72,88 @@
 }
 
 .toolbar {
-  width: min(1440px, 100%);
-  margin: 0 auto;
-  min-height: 60px;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 9px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.manageMenu {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.manageMenu > summary {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 9px;
+  border: 1px solid var(--study-border, #dfe6e2);
+  border-radius: 8px;
+  background: var(--study-card, #fff);
+  cursor: pointer;
+  font-size: calc(10px * var(--font-scale));
+  font-weight: 750;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.manageMenu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.manageMenu[open] > summary {
+  border-color: color-mix(in srgb, var(--primary, #28705d) 38%, var(--study-border, #dfe6e2));
+  color: var(--primary, #28705d);
+  background: var(--study-green-soft, #eaf4f0);
+}
+
+.manageMenu > div {
+  position: absolute;
+  z-index: 80;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(360px, calc(100vw - 32px));
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
   padding: 10px;
   border: 1px solid var(--study-border, #dfe6e2);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--study-card, #fff);
-  box-shadow: 0 8px 28px rgba(31, 51, 45, .045);
+  box-shadow: 0 16px 38px rgba(24, 48, 40, .16);
+}
+
+.manageMenu > div > * {
+  width: 100%;
+}
+
+.staticPublishBanner {
+  width: min(1440px, 100%);
+  margin: 8px auto 0;
+  padding: 8px 13px;
+  border: 1px solid #cfe5dc;
+  border-radius: 12px;
+  background: #f2faf6;
+  color: #28705d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.staticPublishError {
+  border-color: #f0c9c5;
+  background: #fff4f2;
+  color: #ad3a35;
 }
 
 .toolbar :global(.word-order-controls) {
@@ -88,13 +164,13 @@
 
 .toolbar :global(.word-order-select),
 .toolbar :global(.word-relation-select) {
-  min-height: 40px;
+  min-height: 32px;
   padding: 0 10px;
   border: 1px solid var(--study-border, #dfe6e2);
   border-radius: 8px;
   color: var(--study-text, #1f332d);
   background: var(--study-card, #fff);
-  font-size: 12px;
+  font-size: calc(10px * var(--font-scale));
   font-weight: 750;
 }
 
@@ -139,12 +215,13 @@
 }
 
 .searchBox {
-  min-width: 220px;
-  flex: 1 1 320px;
+  width: min(320px, 28vw);
+  min-width: 180px;
+  flex: 1 1 240px;
   display: flex;
   align-items: center;
   gap: 9px;
-  height: 40px;
+  height: 32px;
   padding: 0 12px;
   border: 1px solid var(--study-border, #dfe6e2);
   border-radius: 8px;
@@ -463,6 +540,65 @@
   margin: 7px 0 0;
   color: var(--study-muted, #6b7c76);
   font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.aiProgressError {
+  color: #a63d2d !important;
+  font-weight: 700;
+}
+
+/* 补全结果条：不依赖 AI 面板展开，避免结束后「像没发生过」 */
+.aiResultBanner {
+  width: min(1440px, 100%);
+  margin: 10px auto 0;
+  padding: 12px 16px;
+  border: 1px solid var(--study-border, #dfe6e2);
+  border-radius: 10px;
+  background: var(--study-card, #fff);
+  display: grid;
+  gap: 4px;
+}
+
+.aiResultBanner strong {
+  font-size: 13px;
+  color: var(--study-text, #1f332d);
+}
+
+.aiResultBanner p {
+  margin: 0;
+  color: var(--study-muted, #6b7c76);
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.aiResultBanner span {
+  color: var(--study-muted, #6b7c76);
+  font-size: 11px;
+}
+
+.aiResultOk {
+  border-color: color-mix(in srgb, var(--primary, #28705d) 35%, var(--study-border, #dfe6e2));
+  background: color-mix(in srgb, var(--primary, #28705d) 8%, #fff);
+}
+
+.aiResultWarn {
+  border-color: #e0c08a;
+  background: #fff9ef;
+}
+
+.aiResultError {
+  border-color: #e1b3aa;
+  background: #fff4f2;
+}
+
+.aiResultError strong,
+.aiResultError p {
+  color: #a63d2d;
 }
 
 .aiActions {
@@ -489,26 +625,32 @@
   font-size: 12px;
 }
 
+/* 挂到 WordStudyWorkspace 的 word-flash-shell 上：填满剩余高度 */
 .workspace {
   width: min(1440px, 100%);
-  min-height: 620px;
-  margin: 14px auto 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 330px);
-  gap: 14px;
+  height: 0;
+  min-height: 0;
+  flex: 1 1 0;
+  margin: 0 auto;
+  padding: 0;
 }
 
-.wordList,
-.wordCard {
+.studyColumn {
+  min-width: 0;
+  min-height: 0;
+}
+
+.wordList {
   min-width: 0;
   border: 1px solid var(--study-border, #dfe6e2);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--study-card, #fff);
 }
 
 .wordList {
-  grid-column: 2;
-  grid-row: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -534,6 +676,14 @@
   max-height: 690px;
   overflow: auto;
   padding: 7px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.listRows::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 .wordRow {
@@ -651,15 +801,6 @@
   max-width: 330px;
   font-size: 12px;
   line-height: 1.55;
-}
-
-.wordCard {
-  grid-column: 1;
-  grid-row: 1;
-  min-height: 620px;
-  display: flex;
-  flex-direction: column;
-  padding: 22px;
 }
 
 .cardTop {
@@ -990,25 +1131,133 @@
   display: grid;
   place-items: center;
   color: var(--study-muted, #6b7c76);
-  font-size: 13px;
+  font-size: calc(10px * var(--font-scale));
+}
+
+.toolbar .secondaryButton,
+.toolbar .activeTool,
+.toolbar .aiButton {
+  min-height: 32px;
+  padding: 0 9px;
+  font-size: calc(10px * var(--font-scale));
+}
+
+/* Keep the desktop reading notebook inside the available viewport. Long word
+ * lists and enlarged card content scroll in their own panels instead of
+ * stretching the document and leaving a mostly empty page beside them. */
+@media (min-width: 901px) {
+  .page.page {
+    height: calc(100dvh - var(--study-header-height));
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-top: clamp(12px, 2vh, 28px);
+    padding-bottom: clamp(12px, 2vh, 28px);
+  }
+
+  :global(html[data-adaptive-shell="compact"]) .page.page {
+    height: auto;
+    min-height: calc(100dvh - var(--study-header-height) - 60px);
+    overflow: visible;
+  }
+
+  .pageHeader {
+    display: none;
+  }
+
+  .syncBanner {
+    min-height: 24px;
+    margin-bottom: 4px;
+  }
+
+  .staticPublishBanner {
+    margin-top: 0;
+    padding-block: 5px;
+  }
+
+  .toolbar {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .pageHeader,
+  .syncBanner,
+  .staticPublishBanner,
+  .toolbar,
+  .studyProgress,
+  .errorBanner {
+    flex: 0 0 auto;
+  }
+
+  .editorPanel,
+  .aiPanel {
+    flex: 0 1 auto;
+    max-height: min(38dvh, 360px);
+    overflow-y: auto;
+  }
+
+  .workspace {
+    min-height: 0;
+    height: auto;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .studyColumn {
+    container-name: reading-study;
+    container-type: size;
+  }
+
+  :global(html[data-adaptive-shell="compact"]) .workspace {
+    height: auto;
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
+  :global(html[data-adaptive-shell="compact"]) .studyColumn {
+    container-name: none;
+    container-type: normal;
+  }
+
+  :global(html[data-adaptive-shell="compact"]) .page :global(.word-study-layout) > .wordList {
+    max-height: 310px;
+    display: flex;
+  }
+
+  .wordList {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .listRows {
+    min-height: 0;
+    max-height: none;
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+
+  /* 不覆盖 word-study-card / example / word-study-content：完全用 globals 主词库样式 */
+  :global(html[data-adaptive-shell="compact"]) .syncBanner:not(.syncError),
+  :global(html[data-adaptive-shell="compact"]) .staticPublishBanner:not(.staticPublishError) {
+    display: none;
+  }
 }
 
 @media (max-width: 1120px) {
   .toolbar {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   .searchBox {
-    flex-basis: calc(100% - 10px);
+    flex-basis: 220px;
   }
 
   .wordForm {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .detailGrid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 @media (max-width: 900px) {
@@ -1023,18 +1272,17 @@
   }
 
   .workspace {
-    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    min-height: 0;
+    flex: 0 0 auto;
   }
 
   .wordList {
-    grid-column: 1;
-    grid-row: 1;
     max-height: 310px;
   }
 
-  .wordCard {
-    grid-column: 1;
-    grid-row: 2;
+  .page :global(.word-study-layout) > .wordList {
+    display: flex;
   }
 
   .listRows {
@@ -1056,7 +1304,34 @@
   }
 
   .toolbar > button {
-    flex: 1 1 calc(50% - 6px);
+    flex: 0 0 auto;
+  }
+
+  .toolbar {
+    width: max-content;
+    min-width: 100%;
+    flex-direction: row;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .searchBox {
+    display: none;
+  }
+
+  .toolbar :global(.word-order-controls) {
+    flex: 0 0 auto;
+    display: inline-flex;
+  }
+
+  .toolbar :global(.word-order-select),
+  .toolbar :global(.word-relation-select) {
+    width: 112px;
   }
 
   .wordForm {
@@ -1101,9 +1376,5 @@
 
   .wordHero h2 {
     font-size: clamp(32px, 10vw, 44px);
-  }
-
-  .wordCard {
-    padding: 14px;
   }
 }

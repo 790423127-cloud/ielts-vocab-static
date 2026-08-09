@@ -35,6 +35,7 @@ import {
   getIelts538ProgressKey,
   loadIelts538Words
 } from "../lib/ielts-538/load-ielts-538.mjs";
+import { advanceStudyQueueAfterExit } from "../lib/vocab/study-queue-delete.mjs";
 import {
   IELTS_538_LEARNING_ENTRIES,
   IELTS_538_STATUS,
@@ -219,6 +220,15 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
   const storageReadyRef = useRef(false);
   const positionsRef = useRef({});
   const restoredRef = useRef(false);
+  const liveStudyRef = useRef({
+    words: [],
+    index: 0,
+    filter: { type: "all", value: "" },
+    statusMap: {},
+    studyList: [],
+    safeStudyPosition: 0,
+    dailyCount: 0
+  });
 
   useEffect(() => {
     if (loadAttempted.current) return;
@@ -252,13 +262,23 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
         setPhase("ready");
         storageReadyRef.current = true;
 
-        const restoreKey = savedSession?.wordKey || positionsRef.current[storageFilterKey({ type: "all", value: "" })] || "";
-        if (restoreKey) {
-          const found = loaded.words.findIndex(
-            (word) => wordKey(word) === restoreKey
-          );
-          if (found >= 0) setIndex(found);
-        }
+        const restoreFilter =
+          savedSession?.filter
+          && typeof savedSession.filter === "object"
+          && savedSession.filter.type
+            ? savedSession.filter
+            : { type: "all", value: "" };
+        setFilter(restoreFilter);
+        const restoreKey =
+          savedSession?.wordKey
+          || positionsRef.current[storageFilterKey(restoreFilter)]
+          || "";
+        const restoreList = buildStudyList(loaded.words, restoreFilter, savedStatus);
+        const restoredRow = restoreKey
+          ? restoreList.find((row) => wordKey(row.entry) === restoreKey)
+          : null;
+        const restoredIndex = restoredRow?.originalIndex ?? restoreList[0]?.originalIndex;
+        if (Number.isInteger(restoredIndex)) setIndex(restoredIndex);
         restoredRef.current = true;
       } catch (err) {
         if (!cancelled) {
@@ -282,6 +302,7 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
   }, [
     config.loadEmptyError,
     config.loadFallbackError,
+    buildStudyList,
     loadWords,
     readDailyCount,
     readPositions,
@@ -335,6 +356,16 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
   const progressPercent = studyList.length
     ? Math.max(1, ((safeStudyPosition + 1) / studyList.length) * 100)
     : 0;
+
+  liveStudyRef.current = {
+    words,
+    index,
+    filter,
+    statusMap,
+    studyList,
+    safeStudyPosition,
+    dailyCount
+  };
 
   const familiarCount = useMemo(
     () => words.filter((word) => getWordStatus(word, statusMap) === status.FAMILIAR).length,
@@ -459,18 +490,28 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
   }
 
   function markStatus(nextRequestedStatus) {
-    if (isStudyEmpty || !item?.word) return;
-    const current = getWordStatus(item, statusMap);
+    const live = liveStudyRef.current;
+    const activeWords = Array.isArray(live.words) ? live.words : [];
+    const activeStudyList = Array.isArray(live.studyList) ? live.studyList : [];
+    const activeFilter = live.filter || { type: "all", value: "" };
+    const activeStatusMap = live.statusMap || {};
+    const currentItem = activeWords[live.index]
+      || activeStudyList.find((row) => row.originalIndex === live.index)?.entry
+      || null;
+    if (!activeStudyList.length || !currentItem?.word) return;
+
+    const current = getWordStatus(currentItem, activeStatusMap);
     const nextStatus =
       nextRequestedStatus === status.UNFAMILIAR && current === status.UNFAMILIAR
         ? status.PENDING
         : nextRequestedStatus;
-    const nextMap = patchWordStatus(statusMap, item, { status: nextStatus });
+    const nextMap = patchWordStatus(activeStatusMap, currentItem, { status: nextStatus });
     setStatusMap(nextMap);
     writeStatusMap(nextMap);
 
+    let nextDaily = live.dailyCount;
     if (nextStatus === status.FAMILIAR || nextStatus === status.UNFAMILIAR) {
-      const nextDaily = dailyCount + 1;
+      nextDaily += 1;
       setDailyCount(nextDaily);
       writeDailyCount(nextDaily);
     }
@@ -483,20 +524,46 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
           : "已取消不熟"
     );
 
-    window.setTimeout(() => {
-      const nextList = buildStudyList(words, filter, nextMap);
-      if (!nextList.length) return;
-      const stillHere = nextList.some((row) => row.originalIndex === index);
-      if (!stillHere) {
-        const nextIndex =
-          nextList[Math.min(safeStudyPosition, nextList.length - 1)]?.originalIndex ??
-          nextList[0].originalIndex;
-        setIndex(nextIndex);
-        persistSession(nextIndex);
-      } else if (nextStatus === status.FAMILIAR) {
-        goToStudyOffset(1);
-      }
-    }, 120);
+    const nextEligibleList = buildStudyList(activeWords, activeFilter, nextMap);
+    const currentId = String(currentItem.id || "").trim();
+    const stillHere = nextEligibleList.some((row) => row.originalIndex === live.index);
+    let nextRow = null;
+    let nextStudyList = activeStudyList;
+
+    if (!stillHere) {
+      const advanced = advanceStudyQueueAfterExit(activeStudyList, currentId, nextEligibleList);
+      nextStudyList = advanced?.nextList || nextEligibleList;
+      nextRow =
+        advanced?.landingRow
+        || nextEligibleList[Math.min(live.safeStudyPosition, Math.max(0, nextEligibleList.length - 1))]
+        || nextEligibleList[0]
+        || null;
+    } else {
+      const currentPos = activeStudyList.findIndex((row) => row.originalIndex === live.index);
+      const nextPos = currentPos >= 0
+        ? (currentPos + 1) % activeStudyList.length
+        : Math.min(live.safeStudyPosition, activeStudyList.length - 1);
+      nextRow = activeStudyList[nextPos] || null;
+    }
+
+    const nextIndex = Number.isInteger(nextRow?.originalIndex) ? nextRow.originalIndex : live.index;
+    liveStudyRef.current = {
+      ...live,
+      index: nextIndex,
+      statusMap: nextMap,
+      studyList: nextStudyList,
+      safeStudyPosition: nextRow
+        ? Math.max(0, nextStudyList.findIndex((row) => row.originalIndex === nextIndex))
+        : 0,
+      dailyCount: nextDaily
+    };
+
+    if (nextRow) {
+      setIndex(nextIndex);
+      persistSession(nextIndex, activeFilter);
+    } else if (!nextEligibleList.length) {
+      setIndex(0);
+    }
   }
 
   function toggleFavorite() {
@@ -531,10 +598,10 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
       } else if (event.key === " " || event.key === "Enter") {
         if (event.key === " ") event.preventDefault();
         if (event.key === " ") speakText(item?.example, "sentence");
-      } else if (event.key === "0" || event.key === "2") {
+      } else if (event.key === "1") {
         event.preventDefault();
         markStatus(status.FAMILIAR);
-      } else if (event.key === "1") {
+      } else if (event.key === "3") {
         event.preventDefault();
         markStatus(status.UNFAMILIAR);
       }

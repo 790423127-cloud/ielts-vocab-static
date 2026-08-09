@@ -9,6 +9,8 @@ import {
   readStoredZipEntries,
   resolveStaticSwipeStep,
   STATIC_FILTER_FIX_MARKER,
+  STATIC_FONT_ZOOM_MARKER,
+  STATIC_HOME_WORKSPACE_MARKER,
   STATIC_RESPONSIVE_MARKER,
   STATIC_RESPONSIVE_VERSION,
   STATIC_SWIPE_ENGINE,
@@ -102,6 +104,11 @@ test("static CSS unlocks desktop height and adds compact laptop, mobile entry an
   assert.match(patched, /\.entry-grid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(patched, /\.static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y;overscroll-behavior-x:contain\}/);
   assert.match(patched, /\.static-build-version\{/);
+  assert.match(patched, new RegExp(STATIC_HOME_WORKSPACE_MARKER));
+  assert.match(patched, new RegExp(STATIC_FONT_ZOOM_MARKER));
+  assert.match(patched, /--workspace-sidebar:0px/);
+  assert.match(patched, /min-width:901px\) and \(max-width:1100px/);
+  assert.match(patched, /body\[data-static-page="home"\] \.static-study-card\{overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:none\}/);
   assert.equal(patchStaticCss(patched), patched, "responsive CSS patch must be idempotent");
 });
 

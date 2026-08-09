@@ -1,7 +1,12 @@
 import { filterDistinctSynonymTerms } from "../vocab/synonym-equivalence.mjs";
+import {
+  hasCompleteReadingSynonymDetails,
+  normalizeReadingSynonymDetails
+} from "./synonym-details.mjs";
 
 export const READING_WORDS_STORAGE_KEY = "ielts-personal-reading-words-v1";
 export const READING_WORDS_ROLLBACK_KEY = "ielts-personal-reading-words-rollback-v1";
+export const READING_WORDS_SESSION_KEY = "ielts-personal-reading-words-session-v1";
 export const READING_WORDS_BACKUP_VERSION = 1;
 const READING_AI_REVIEW_SOURCE = "reading-ai";
 
@@ -63,6 +68,15 @@ export function normalizeReadingWordKey(value) {
     .replace(/[“”]/g, '"');
 }
 
+export function normalizeReadingWordsSession(value = {}) {
+  return {
+    selectedId: cleanText(value?.selectedId),
+    search: cleanText(value?.search),
+    onlyIncomplete: value?.onlyIncomplete === true,
+    onlyFrequent: value?.onlyFrequent === true
+  };
+}
+
 export function normalizeReadingSynonyms(value, headword = "") {
   return filterDistinctSynonymTerms(value, headword, { max: 8 });
 }
@@ -94,6 +108,16 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
     forms: Array.isArray(input.forms) ? input.forms : [],
     wordFamily: Array.isArray(input.wordFamily) ? input.wordFamily : [],
     synonyms: normalizeReadingSynonyms(input.synonyms || input.validatedSynonyms || input.recommendedSynonyms, word),
+    synonymDetails: normalizeReadingSynonymDetails(
+      [
+        ...(Array.isArray(input.synonymDetails || input.synonym_details)
+          ? (input.synonymDetails || input.synonym_details)
+          : []),
+        ...(Array.isArray(input.synonyms) ? input.synonyms : [])
+      ],
+      input.synonyms || input.validatedSynonyms || input.recommendedSynonyms,
+      word
+    ),
     // Keep AI review flags even if an older write lost the exact source tag;
     // otherwise words can stay "incomplete" forever after a successful AI pass.
     formsReviewed: input.formsReviewed === true,
@@ -121,6 +145,7 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
     firstImportedAt: cleanText(input.firstImportedAt) || cleanText(input.createdAt) || now,
     lastImportedAt: cleanText(input.lastImportedAt) || cleanText(input.updatedAt) || now,
     status: ["熟悉", "模糊", "不熟"].includes(input.status) ? input.status : "",
+    lastReviewedAt: cleanText(input.lastReviewedAt),
     favorite: Boolean(input.favorite),
     source: "personal-reading",
     createdAt: cleanText(input.createdAt) || now,
@@ -134,6 +159,7 @@ export function getReadingWordMissingFields(word) {
     const hasData = Array.isArray(word?.[field]) && word[field].length > 0;
     if (!hasData && word?.[reviewedField] !== true) missing.push(field);
   }
+  if (!hasCompleteReadingSynonymDetails(word)) missing.push("synonymDetails");
   return missing;
 }
 
@@ -323,6 +349,14 @@ export function mergeReadingWordAiProfile(word, profile = {}) {
   if (!Array.isArray(next.synonyms) || !next.synonyms.length) {
     next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
   }
+  next.synonymDetails = normalizeReadingSynonymDetails(
+    [
+      ...(Array.isArray(next.synonymDetails) ? next.synonymDetails : []),
+      ...(Array.isArray(profile.synonymDetails) ? profile.synonymDetails : [])
+    ],
+    next.synonyms,
+    next.word
+  );
   // Usable AI profiles always include relation arrays (possibly empty). Mark
   // them reviewed so empty-but-checked relations do not keep the card incomplete.
   const aiMarkedRelations = profile?.aiGenerated === true
@@ -359,13 +393,43 @@ export function readReadingWords() {
   }
 }
 
+export function readReadingWordsSession() {
+  if (typeof window === "undefined") return normalizeReadingWordsSession();
+  try {
+    return normalizeReadingWordsSession(
+      JSON.parse(window.localStorage.getItem(READING_WORDS_SESSION_KEY) || "null")
+    );
+  } catch {
+    return normalizeReadingWordsSession();
+  }
+}
+
+export function writeReadingWordsSession(session) {
+  if (typeof window === "undefined") return false;
+  try {
+    window.localStorage.setItem(READING_WORDS_SESSION_KEY, JSON.stringify({
+      ...normalizeReadingWordsSession(session),
+      updatedAt: new Date().toISOString()
+    }));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function compactReadingWordsForPersistence(words) {
+  return (Array.isArray(words) ? words : [])
+    .map((item) => normalizeReadingWord(item))
+    .filter((item) => item.word);
+}
+
 export function writeReadingWords(words) {
   if (typeof window === "undefined") return false;
   try {
     window.localStorage.setItem(READING_WORDS_STORAGE_KEY, JSON.stringify({
       version: READING_WORDS_BACKUP_VERSION,
       updatedAt: new Date().toISOString(),
-      words: Array.isArray(words) ? words : []
+      words: compactReadingWordsForPersistence(words)
     }));
     return true;
   } catch {
@@ -379,7 +443,7 @@ export function writeReadingWordsWithBackup(words, previousWords) {
     window.localStorage.setItem(READING_WORDS_ROLLBACK_KEY, JSON.stringify({
       version: READING_WORDS_BACKUP_VERSION,
       createdAt: new Date().toISOString(),
-      words: Array.isArray(previousWords) ? previousWords : []
+      words: compactReadingWordsForPersistence(previousWords)
     }));
     return writeReadingWords(words);
   } catch {
@@ -402,6 +466,6 @@ export function buildReadingWordsBackup(words) {
   return {
     version: READING_WORDS_BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
-    words: Array.isArray(words) ? words : []
+    words: compactReadingWordsForPersistence(words)
   };
 }

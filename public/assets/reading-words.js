@@ -1,9 +1,12 @@
 (function () {
   "use strict";
 
-  const VERSION = "20260805_master_g_audit_sync_v20";
+  const VERSION = "20260809_reading_keyboard_v49";
   const READING_KEY = "ielts-personal-reading-words-v1";
+  const READING_SESSION_KEY = "ielts-personal-reading-words-session-v1";
   const MAIN_SUPPLEMENT_KEY = "static_personal_reading_main_v1";
+  const STATIC_PUBLISH_REVISION_KEY = "ielts_static_reading_words_publish_revision_v1";
+  const STATIC_PUBLISH_URL = "./data/personal-reading-words.json";
   const TRANSFER_TYPE = "ielts-reading-words-transfer";
   const els = Object.fromEntries([
     "mainStatus", "totalCount", "frequentCount", "incompleteCount", "searchInput",
@@ -14,7 +17,9 @@
     "frequencyBadge", "exampleText", "exampleCnText", "exampleSoundBtn", "wordSoundBtn",
     "phoneticText", "posText", "meaningText", "formsList", "familyList", "synonymList",
     "favoriteBtn", "prevBtn", "knownBtn", "blurryBtn", "unknownBtn", "nextBtn", "deleteBtn", "visibleCount",
-    "wordList", "toast"
+    "progressScope", "progressFill", "progressSeek", "progressPosition", "progressPreview", "progressJumpToggle",
+    "progressJumpForm", "progressJumpInput", "progressJumpTotal", "progressJumpCancel",
+    "wordList", "toast", "studyCard"
   ].map((id) => [id, document.getElementById(id)]));
 
   let mainWords = [];
@@ -102,8 +107,13 @@
   ];
   const SYNONYM_VARIANT_KEY = new Map();
   SYNONYM_VARIANT_GROUPS.forEach((group) => group.forEach((variant) => SYNONYM_VARIANT_KEY.set(variant, group[0])));
+  const restoredSession = readReadingWordsSession();
   words = readReadingWords();
-  selectedId = words[0]?.id || "";
+  selectedId = words.some((word) => word.id === restoredSession.selectedId)
+    ? restoredSession.selectedId
+    : words[0]?.id || "";
+  frequentOnly = restoredSession.frequentOnly;
+  els.searchInput.value = restoredSession.search;
 
   function synonymEquivalenceKey(value) {
     const compact = clean(value).toLowerCase().replace(/[’‘`]/g, "'").replace(/[^a-z0-9]+/g, "");
@@ -135,6 +145,31 @@
       }).slice(0, 8);
   }
 
+  function normalizeSynonymDetails(value, synonyms, word) {
+    const detailByWord = new Map();
+    for (const item of Array.isArray(value) ? value : []) {
+      const detailWord = clean(item?.word || item?.replacement);
+      const meaningZh = clean(item?.meaningZh || item?.meaning || item?.chineseMeaning);
+      const detailKey = synonymEquivalenceKey(detailWord);
+      if (!detailWord || !meaningZh || !detailKey || detailByWord.has(detailKey)) continue;
+      detailByWord.set(detailKey, {
+        word: detailWord,
+        pos: clean(item?.pos || item?.primaryPos),
+        meaningZh
+      });
+    }
+    return normalizeSynonyms(synonyms, word).map((synonym) => {
+      const detail = detailByWord.get(synonymEquivalenceKey(synonym));
+      return detail ? { ...detail, word: synonym } : null;
+    }).filter(Boolean);
+  }
+
+  function hasCompleteSynonymDetails(word) {
+    const synonyms = normalizeSynonyms(word?.synonyms, word?.word);
+    if (!synonyms.length) return true;
+    return normalizeSynonymDetails(word?.synonymDetails, synonyms, word?.word).length === synonyms.length;
+  }
+
   function normalizeReadingWord(input, now = new Date().toISOString()) {
     const word = clean(input?.word || input?.headword);
     const importCount = Math.max(1, Math.floor(Number(input?.importCount) || 1));
@@ -153,9 +188,18 @@
       forms: Array.isArray(input?.forms) ? input.forms : [],
       wordFamily: Array.isArray(input?.wordFamily) ? input.wordFamily : [],
       synonyms: normalizeSynonyms(input?.synonyms, word),
+      synonymDetails: normalizeSynonymDetails(
+        [
+          ...(Array.isArray(input?.synonymDetails) ? input.synonymDetails : []),
+          ...(Array.isArray(input?.synonyms) ? input.synonyms : [])
+        ],
+        input?.synonyms,
+        word
+      ),
       importCount,
       highFrequency: input?.highFrequency === true || importCount >= 2,
       status: ["熟悉", "模糊", "不熟"].includes(input?.status) ? input.status : "",
+      lastReviewedAt: clean(input?.lastReviewedAt),
       favorite: Boolean(input?.favorite),
       firstImportedAt: clean(input?.firstImportedAt) || now,
       lastImportedAt: clean(input?.lastImportedAt) || now,
@@ -195,7 +239,16 @@
   function applyMain(readingWord, mainWord) {
     if (!mainWord) return readingWord;
     const next = { ...readingWord, mainWordId: clean(mainWord.id || mainWord.wordId || mainWord.word) };
-    for (const field of ["phonetic", "pos", "forms", "wordFamily"]) {
+    for (const field of [
+      "phonetic",
+      "pos",
+      "forms",
+      "wordFamily",
+      "synonymDetails",
+      "otherMeanings",
+      "senses",
+      "meaningsZh"
+    ]) {
       if (Array.isArray(mainWord[field]) ? mainWord[field].length : clean(mainWord[field])) next[field] = mainWord[field];
     }
     for (const field of ["meaning", "definition", "example", "exampleCn"]) {
@@ -225,9 +278,13 @@
       definition: readingWord.definition,
       example: readingWord.example,
       exampleCn: readingWord.exampleCn,
+      otherMeanings: Array.isArray(readingWord.otherMeanings) ? readingWord.otherMeanings : [],
+      senses: Array.isArray(readingWord.senses) ? readingWord.senses : [],
+      meaningsZh: Array.isArray(readingWord.meaningsZh) ? readingWord.meaningsZh : [],
       forms: readingWord.forms,
       wordFamily: readingWord.wordFamily,
       synonyms: readingWord.synonyms,
+      synonymDetails: readingWord.synonymDetails,
       source: "personal-reading",
       supplemental: true,
       addedFromReadingWords: true
@@ -299,7 +356,7 @@
   }
 
   function isIncomplete(word) {
-    return !word.pos || !word.meaning || !word.definition || !word.example || !word.exampleCn;
+    return !word.pos || !word.meaning || !word.definition || !word.example || !word.exampleCn || !hasCompleteSynonymDetails(word);
   }
 
   function visibleWords() {
@@ -316,22 +373,62 @@
     return visible.find((word) => word.id === selectedId) || visible[0] || null;
   }
 
+  function renderStudyProgress(visible, current) {
+    const total = visible.length;
+    const position = current ? Math.max(1, visible.findIndex((word) => word.id === current.id) + 1) : 0;
+    const percent = total ? Math.round((position / total) * 100) : 0;
+    const canSeek = total > 1;
+    els.progressScope.textContent = frequentOnly ? "高频阅读生词" : "全部阅读生词";
+    els.progressFill.style.width = `${percent}%`;
+    els.progressSeek.min = "1";
+    els.progressSeek.max = String(Math.max(1, total));
+    els.progressSeek.value = String(Math.max(1, position));
+    els.progressSeek.disabled = !canSeek;
+    els.progressSeek.setAttribute("aria-valuetext", current ? `第 ${position} / ${total} 个词：${current.word}` : "当前没有可学习单词");
+    els.progressPosition.textContent = `${position} / ${total}`;
+    els.progressJumpToggle.disabled = !canSeek;
+    els.progressJumpTotal.textContent = `/ ${total}`;
+    els.progressJumpInput.min = "1";
+    els.progressJumpInput.max = String(Math.max(1, total));
+    if (!els.progressJumpForm.classList.contains("hidden")) {
+      els.progressJumpInput.value = String(Math.max(1, position));
+    }
+    if (!els.progressSeek.matches(":active")) {
+      els.progressPreview.textContent = total ? `${percent}%` : "0%";
+    }
+  }
+
+  function seekStudyPosition(value) {
+    const visible = visibleWords();
+    if (!visible.length) return;
+    const position = Math.min(visible.length, Math.max(1, Math.round(Number(value) || 1)));
+    selectedId = visible[position - 1].id;
+    render();
+  }
+
   function listHtml(items, formatter) {
     return items.length
       ? items.map((item) => `<p>${escapeHtml(formatter(item))}</p>`).join("")
       : '<p class="empty">暂无可靠内容</p>';
   }
 
-  function synonymListHtml(items) {
+  function synonymListHtml(items, details) {
     if (!items.length) return '<p class="empty">暂无可靠内容</p>';
+    const detailByWord = new Map(
+      normalizeSynonymDetails(details, items, currentWord()?.word)
+        .map((detail) => [synonymEquivalenceKey(detail.word), detail])
+    );
     return items.map((item) => {
       const word = clean(typeof item === "string" ? item : item?.word || item?.replacement);
       const linked = mainIndex.get(key(word));
+      const detail = detailByWord.get(synonymEquivalenceKey(word));
       const meaning = clean(
-        (typeof item === "object" && item
+        detail?.meaningZh
+        || (typeof item === "object" && item
           ? item.meaning || item.meaningZh || item.chineseMeaning
           : "")
         || linked?.meaning
+        || linked?.meaningZh
         || linked?.chineseMeaning
       );
       return `
@@ -350,16 +447,106 @@
     })[character]);
   }
 
+  function displayMeaningKey(value) {
+    return clean(value)
+      .normalize("NFKC")
+      .toLowerCase()
+      .replace(/[\s，,。；;：:、（）()\[\]【】“”"'·/\\-]+/g, "");
+  }
+
+  function normalizeDisplaySense(value) {
+    if (!value) return null;
+    if (typeof value === "string") {
+      const meaning = clean(value);
+      return meaning ? { pos: "", meaning } : null;
+    }
+    const meaning = clean(
+      value.meaningZh
+      || value.meaning_zh
+      || value.gloss
+      || value.quizMeaningZh
+      || value.meaning
+      || value.chinese
+    );
+    if (!meaning) return null;
+    return {
+      pos: clean(value.pos || value.posFamily || value.partOfSpeech || value.part_of_speech),
+      meaning,
+      isPrimary: value.isPrimary === true,
+      readingCommon: value.readingCommon === true
+    };
+  }
+
+  function displayPosKey(value) {
+    const aliases = { n: "noun", v: "verb", adj: "adjective", adv: "adverb" };
+    return [...new Set(clean(value).toLowerCase()
+      .split(/\s*(?:\/|\||,|;|、|，|；)\s*/)
+      .map((token) => token.replace(/\.$/, ""))
+      .map((token) => aliases[token] || token)
+      .filter(Boolean))]
+      .sort()
+      .join("|");
+  }
+
+  function supplementalDisplaySenses(entry) {
+    const explicit = (Array.isArray(entry?.senses) ? entry.senses : [])
+      .map(normalizeDisplaySense)
+      .filter(Boolean);
+    const preferredIndex = explicit.findIndex((sense) => sense.isPrimary);
+    const readingIndex = explicit.findIndex((sense) => sense.readingCommon);
+    const primaryIndex = preferredIndex >= 0 ? preferredIndex : readingIndex >= 0 ? readingIndex : 0;
+    const primaryMeaning = explicit[primaryIndex]?.meaning || clean(entry?.meaning);
+    const seen = new Set(primaryMeaning.split(/[；;，,、/]+/).map(displayMeaningKey).filter(Boolean));
+    const candidates = [
+      ...explicit.filter((_, index) => index !== primaryIndex),
+      ...(Array.isArray(entry?.otherMeanings) ? entry.otherMeanings : []).map(normalizeDisplaySense).filter(Boolean),
+      ...(Array.isArray(entry?.meaningsZh) ? entry.meaningsZh : [])
+        .filter((sense) => !sense?.confidence || String(sense.confidence).toLowerCase() === "high")
+        .map(normalizeDisplaySense)
+        .filter(Boolean)
+    ];
+    return candidates.map((sense) => {
+      const parts = clean(sense.meaning).split(/[；;，,、/]+/).map(clean).filter(Boolean).filter((part) => {
+        const senseKey = displayMeaningKey(part);
+        if (!senseKey || seen.has(senseKey)) return false;
+        seen.add(senseKey);
+        return true;
+      });
+      return parts.length ? { ...sense, meaning: parts.join("；") } : null;
+    }).filter(Boolean);
+  }
+
+  function inlineStudyMeaningText(entry) {
+    const explicit = (Array.isArray(entry?.senses) ? entry.senses : [])
+      .map(normalizeDisplaySense)
+      .filter(Boolean);
+    const preferredIndex = explicit.findIndex((sense) => sense.isPrimary);
+    const readingIndex = explicit.findIndex((sense) => sense.readingCommon);
+    const primaryIndex = preferredIndex >= 0 ? preferredIndex : readingIndex >= 0 ? readingIndex : 0;
+    const primary = explicit[primaryIndex] || null;
+    const primaryMeaning = primary?.meaning || clean(entry?.meaning) || "释义待补全";
+    const primaryPos = primary?.pos || clean(entry?.pos);
+    const primaryPosKey = displayPosKey(primaryPos);
+    return [primaryMeaning, ...supplementalDisplaySenses(entry).map((sense) => {
+      const sensePos = clean(sense.pos);
+      return sensePos && displayPosKey(sensePos) !== primaryPosKey
+        ? `[${sensePos}] ${sense.meaning}`
+        : sense.meaning;
+    })].join("；");
+  }
+
   function render() {
     const visible = visibleWords();
     const current = currentWord();
-    if (current && !selectedId) selectedId = current.id;
+    if (current && current.id !== selectedId) selectedId = current.id;
     els.totalCount.textContent = words.length;
     els.frequentCount.textContent = words.filter((word) => word.highFrequency || Number(word.importCount) >= 2).length;
     els.incompleteCount.textContent = words.filter(isIncomplete).length;
     els.visibleCount.textContent = `${visible.length} 个`;
     els.frequentFilterBtn.setAttribute("aria-pressed", String(frequentOnly));
     els.frequentFilterBtn.classList.toggle("primary", frequentOnly);
+    renderStudyProgress(visible, current);
+    saveReadingWordsSession();
     els.wordList.innerHTML = visible.map((word) => `
       <button class="word-row${word.id === current?.id ? " active" : ""}" type="button" data-id="${escapeHtml(word.id)}">
         <span><strong>${escapeHtml(word.word)}</strong><span>${escapeHtml(word.meaning || "待补全")}</span></span>
@@ -389,10 +576,24 @@
     els.wordSoundBtn.textContent = current.word;
     els.phoneticText.textContent = current.phonetic || "";
     els.posText.textContent = current.pos || "词性待补全";
-    els.meaningText.textContent = current.meaning || "释义待补全";
-    els.formsList.innerHTML = listHtml(current.forms || [], (item) => `${item.word || ""}${item.type ? ` · ${item.type}` : ""}`);
-    els.familyList.innerHTML = listHtml(current.wordFamily || [], (item) => `${item.word || ""}${item.pos ? ` · ${item.pos}` : ""}${item.meaning ? ` · ${item.meaning}` : ""}`);
-    els.synonymList.innerHTML = synonymListHtml(current.synonyms || []);
+    els.meaningText.textContent = inlineStudyMeaningText(current);
+    var forms = Array.isArray(current.forms) ? current.forms : [];
+    var family = Array.isArray(current.wordFamily) ? current.wordFamily : [];
+    var synonyms = Array.isArray(current.synonyms) ? current.synonyms : [];
+    var detailSections = [
+      [els.formsList, forms],
+      [els.familyList, family],
+      [els.synonymList, synonyms]
+    ];
+    detailSections.forEach(function (entry) {
+      var section = entry[0] && entry[0].closest("section");
+      if (section) section.hidden = entry[1].length === 0;
+    });
+    var detailGrid = els.formsList && els.formsList.closest(".detail-grid");
+    if (detailGrid) detailGrid.hidden = detailSections.every(function (entry) { return entry[1].length === 0; });
+    els.formsList.innerHTML = listHtml(forms, (item) => `${item.word || ""}${item.type ? ` · ${item.type}` : ""}`);
+    els.familyList.innerHTML = listHtml(family, (item) => `${item.word || ""}${item.pos ? ` · ${item.pos}` : ""}${item.meaning ? ` · ${item.meaning}` : ""}`);
+    els.synonymList.innerHTML = synonymListHtml(synonyms, current.synonymDetails);
     els.synonymList.querySelectorAll("[data-synonym]").forEach((button) => {
       button.onclick = () => speak(button.dataset.synonym);
     });
@@ -413,10 +614,107 @@
     const current = currentWord();
     if (!current) return;
     words = words.map((word) => word.id === current.id
-      ? { ...word, status: word.status === status ? "" : status, updatedAt: new Date().toISOString() }
+      ? {
+        ...word,
+        status: word.status === status ? "" : status,
+        lastReviewedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
       : word);
     saveReadingWords();
-    render();
+    move(1);
+  }
+
+  function normalizeReadingWordsSession(value) {
+    return {
+      selectedId: clean(value?.selectedId),
+      search: clean(value?.search),
+      frequentOnly: value?.frequentOnly === true
+    };
+  }
+
+  function readReadingWordsSession() {
+    return normalizeReadingWordsSession(parseJsonStorage(READING_SESSION_KEY, {}));
+  }
+
+  function saveReadingWordsSession() {
+    localStorage.setItem(READING_SESSION_KEY, JSON.stringify({
+      selectedId,
+      search: els.searchInput.value,
+      frequentOnly,
+      updatedAt: new Date().toISOString()
+    }));
+  }
+
+  function publishedTransfer(payload) {
+    const transfer = payload?.transfer && typeof payload.transfer === "object" ? payload.transfer : payload;
+    if (
+      transfer?.type !== "ielts-reading-words-transfer" ||
+      Number(transfer?.version) !== 1 ||
+      !Array.isArray(transfer?.readingWords) ||
+      !Array.isArray(transfer?.linkedMainEntries)
+    ) {
+      return null;
+    }
+    const revision = clean(payload?.revision) || clean(transfer.exportedAt);
+    return revision ? { revision, transfer } : null;
+  }
+
+  async function applyPublishedSnapshot(formalWords) {
+    try {
+      const response = await fetch(`${STATIC_PUBLISH_URL}?v=${VERSION}`, { cache: "no-store" });
+      if (response.status === 404) return false;
+      if (!response.ok) throw new Error(`静态发布包读取失败：HTTP ${response.status}`);
+      const published = publishedTransfer(await response.json());
+      if (!published) throw new Error("静态发布包格式无效");
+      if (
+        localStorage.getItem(STATIC_PUBLISH_REVISION_KEY) === published.revision &&
+        words.length
+      ) {
+        return false;
+      }
+
+      const previousByKey = new Map(words.map((word) => [key(word.word), word]));
+      const supplements = published.transfer.linkedMainEntries
+        .filter((entry) => entry?.transferType === "supplement")
+        .map((entry) => ({ ...entry, transferType: undefined }));
+      const nextMainWords = [...formalWords];
+      const known = new Set(formalWords.map((entry) => key(entry.word)));
+      for (const supplement of supplements) {
+        if (!known.has(key(supplement.word))) nextMainWords.push(supplement);
+      }
+      const nextMainIndex = new Map(nextMainWords.map((entry) => [key(entry.word), entry]));
+      const now = new Date().toISOString();
+      const publishedWords = published.transfer.readingWords.map((raw) => {
+        const incoming = canonicalizeReadingWord(normalizeReadingWord(raw, now), formalWords);
+        const previous = previousByKey.get(key(incoming.word));
+        return applyMain({
+          ...incoming,
+          id: previous?.id || incoming.id,
+          wordId: previous?.wordId || incoming.wordId,
+          favorite: Boolean(incoming.favorite || previous?.favorite),
+          status: incoming.status || previous?.status || ""
+        }, nextMainIndex.get(key(incoming.word)));
+      });
+      const publishedKeys = new Set(publishedWords.map((word) => key(word.word)));
+      const retainedLocalWords = words
+        .filter((word) => !publishedKeys.has(key(word.word)))
+        .map((word) => applyMain(word, nextMainIndex.get(key(word.word))));
+      words = [...retainedLocalWords, ...publishedWords];
+      const previousSelectedId = selectedId;
+      selectedId = words.some((word) => word.id === previousSelectedId)
+        ? previousSelectedId
+        : words[0]?.id || "";
+      mainWords = nextMainWords;
+      mainIndex = nextMainIndex;
+      saveSupplements(supplements);
+      saveReadingWords();
+      localStorage.setItem(STATIC_PUBLISH_REVISION_KEY, published.revision);
+      return true;
+    } catch (error) {
+      console.warn("Reading words static publish load skipped", error);
+      return false;
+    }
   }
 
   function toggleFavorite() {
@@ -440,9 +738,20 @@
   function getStudyKeyboardAction(event) {
     if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return "";
     const tag = String(event.target?.tagName || "").toLowerCase();
-    if (tag === "input" || tag === "textarea" || tag === "select" || event.target?.isContentEditable) return "";
-    if (event.key === "Tab") return "word-audio";
-    if (event.key === " " || event.code === "Space" || event.key === "Spacebar") return "example-audio";
+    const inputType = tag === "input"
+      ? String(event.target?.type || event.target?.getAttribute?.("type") || "text").toLowerCase()
+      : "";
+    const isTextEditor = tag === "textarea"
+      || event.target?.isContentEditable
+      || (tag === "input" && ![
+        "button", "checkbox", "color", "file", "hidden", "image",
+        "radio", "range", "reset", "submit"
+      ].includes(inputType));
+    if (event.key === "Tab") return event.shiftKey ? "" : "word-audio";
+    if (event.key === " " || event.code === "Space" || event.key === "Spacebar") {
+      return isTextEditor ? "" : "example-audio";
+    }
+    if (isTextEditor) return "";
     if (event.key === "ArrowLeft") return "previous";
     if (event.key === "ArrowRight") return "next";
     if (event.code === "Digit1" || event.code === "Numpad1" || event.key === "1") return "known";
@@ -540,6 +849,31 @@
     render();
   };
   els.searchInput.oninput = render;
+  els.progressSeek.oninput = () => {
+    const visible = visibleWords();
+    const target = visible[Math.max(0, Number(els.progressSeek.value) - 1)];
+    els.progressPreview.textContent = target?.word || "";
+  };
+  els.progressSeek.onchange = () => seekStudyPosition(els.progressSeek.value);
+  els.progressJumpToggle.onclick = () => {
+    const open = els.progressJumpForm.classList.toggle("hidden");
+    els.progressJumpToggle.setAttribute("aria-expanded", String(!open));
+    if (!open) {
+      els.progressJumpInput.value = els.progressSeek.value;
+      els.progressJumpInput.focus();
+      els.progressJumpInput.select();
+    }
+  };
+  els.progressJumpCancel.onclick = () => {
+    els.progressJumpForm.classList.add("hidden");
+    els.progressJumpToggle.setAttribute("aria-expanded", "false");
+  };
+  els.progressJumpForm.onsubmit = (event) => {
+    event.preventDefault();
+    els.progressJumpForm.classList.add("hidden");
+    els.progressJumpToggle.setAttribute("aria-expanded", "false");
+    seekStudyPosition(els.progressJumpInput.value);
+  };
   els.singleForm.onsubmit = (event) => {
     event.preventDefault();
     mergeImport([{
@@ -597,13 +931,13 @@
     else if (action === "blurry") mark("模糊");
     else if (action === "unknown") mark("不熟");
   });
-
   async function boot() {
     try {
       const response = await fetch(`./data/words.json?v=${VERSION}`, { cache: "force-cache" });
       if (!response.ok) throw new Error("主词库读取失败");
       const payload = await response.json();
       const formalWords = Array.isArray(payload?.words) ? payload.words : Array.isArray(payload) ? payload : [];
+      const publishedSnapshotApplied = await applyPublishedSnapshot(formalWords);
       const supplements = readSupplements();
       let correctedHeadwords = 0;
       words = words.map((word) => {
@@ -624,6 +958,7 @@
       words = words.map((word) => applyMain(word, mainIndex.get(key(word.word))));
       saveReadingWords();
       els.mainStatus.textContent = `已连接主词库 ${formalWords.length.toLocaleString("zh-CN")} 词`;
+      if (publishedSnapshotApplied) toast("已加载电脑端最新静态发布包");
       if (correctedHeadwords) toast(`已自动纠正 ${correctedHeadwords} 个阅读断词。`);
     } catch (error) {
       els.mainStatus.textContent = error.message;

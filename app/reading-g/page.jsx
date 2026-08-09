@@ -8,16 +8,20 @@ import {
   LAYER_META,
   invalidateReadingGVocabCache,
   loadReadingGParaphrases,
+  loadReadingGQuestionEvidence,
   loadReadingGVocab,
   normalizeReadingGItem,
   normalizeReadingGKey
 } from "../lib/reading-g-vocab/load-reading-g.mjs";
+import { enrichReadingGParaphraseSources } from "../lib/reading-g-vocab/question-evidence.mjs";
 import { migrateReadingGProgress } from "../lib/reading-g-vocab/migration.mjs";
 import {
   getReadingGCompleteness,
   isReadingGContentComplete,
   isReadingGContentIncomplete
 } from "../lib/reading-g-vocab/content-completeness.mjs";
+import { isReadingGAiCompletionCandidate } from "../lib/reading-g-vocab/ai-completion.mjs";
+import { isReadingGSynonymCompletionCandidate } from "../lib/reading-g-vocab/synonym-completion.mjs";
 import { countStageUniques } from "../lib/reading-g-vocab/stages.mjs";
 import {
   DEFAULT_SESSION_MODE,
@@ -102,13 +106,12 @@ import {
 
 const DEFAULT_FILTER = { type: "pathStage", value: "1" };
 const AI_COMPLETION_BATCH_SIZE = 10;
+const SYNONYM_AI_COMPLETION_BATCH_SIZE = 120;
+const SYNONYM_AI_REQUEST_BATCH_SIZE = 40;
+const SYNONYM_AI_CONCURRENCY = 3;
 
-function isPendingAiCompletionEntry(entry) {
-  return (
-    entry?.primaryLayer === "questionBankPending" &&
-    entry?.studyMode === "reference" &&
-    (entry.qualityFlags || []).includes("missing_master_lexicon")
-  );
+function isAiCompletionCandidateEntry(entry) {
+  return isReadingGAiCompletionCandidate(entry);
 }
 
 function prioritizeCurrentAiTarget(entries, currentId) {
@@ -122,6 +125,7 @@ export default function ReadingGVocabPage() {
   const [phase, setPhase] = useState("loading");
   const [items, setItems] = useState([]);
   const [paraphraseGroups, setParaphraseGroups] = useState([]);
+  const [questionEvidenceMeta, setQuestionEvidenceMeta] = useState({ count: 0, coverage: {} });
   const [meta, setMeta] = useState({
     version: "",
     count: 0,
@@ -142,6 +146,9 @@ export default function ReadingGVocabPage() {
   const [aiRunning, setAiRunning] = useState(false);
   const [aiAutoRunning, setAiAutoRunning] = useState(false);
   const [aiMessage, setAiMessage] = useState("");
+  const [synonymAiRunning, setSynonymAiRunning] = useState(false);
+  const [synonymAiAutoRunning, setSynonymAiAutoRunning] = useState(false);
+  const [synonymAiMessage, setSynonymAiMessage] = useState("");
   const [deleteBusy, setDeleteBusy] = useState(false);
   /**
    * When non-null, this freezes the visible study queue for rapid deletes so we do
@@ -152,6 +159,7 @@ export default function ReadingGVocabPage() {
   const deletedIdsRef = useRef(new Set());
   /** Authoritative freeze queue for rapid D/Delete — not overwritten by stale renders. */
   const frozenStudyQueueRef = useRef(null);
+  const libraryBrowseEntryIdRef = useRef("");
   const [dailyCount, setDailyCount] = useState(0);
   const [migrationInfo, setMigrationInfo] = useState(null);
 
@@ -182,6 +190,10 @@ export default function ReadingGVocabPage() {
     currentEntryId: "",
     studyList: [],
     filter: DEFAULT_FILTER,
+    statusMap: {},
+    dailyCount: 0,
+    learnMode: RG_LEARN_MODE.MEANING,
+    safeStudyPosition: 0,
     phase: "loading",
     isQuizMode: false,
     aiRunning: false,
@@ -194,6 +206,7 @@ export default function ReadingGVocabPage() {
   const persistTimerRef = useRef(0);
   const persistInFlightRef = useRef(false);
   const aiAutoStopRef = useRef(false);
+  const synonymAiAutoStopRef = useRef(false);
 
   const isQuizMode = filter.type === "paraphraseQuiz";
   const learnMode = useMemo(() => {
@@ -211,9 +224,10 @@ export default function ReadingGVocabPage() {
 
     async function load() {
       try {
-        const [loaded, para] = await Promise.all([
+        const [loaded, para, questionEvidence] = await Promise.all([
           loadReadingGVocab(),
-          loadReadingGParaphrases().catch(() => ({ groups: [], count: 0 }))
+          loadReadingGParaphrases().catch(() => ({ groups: [], count: 0 })),
+          loadReadingGQuestionEvidence().catch(() => ({ count: 0, coverage: {}, byKey: new Map() }))
         ]);
         if (cancelled) return;
 
@@ -250,7 +264,8 @@ export default function ReadingGVocabPage() {
         }
         setDailyCount(savedDaily);
         setItems(loaded.items);
-        setParaphraseGroups(para.groups || []);
+        setParaphraseGroups(enrichReadingGParaphraseSources(para.groups || [], questionEvidence.byKey));
+        setQuestionEvidenceMeta({ count: questionEvidence.count || 0, coverage: questionEvidence.coverage || {} });
         setMeta({
           version: loaded.version,
           count: loaded.count || loaded.items.length,
@@ -496,11 +511,17 @@ export default function ReadingGVocabPage() {
     [items]
   );
   const questionBankAiCompletedCount = useMemo(
-    () => items.filter((entry) => entry.primaryLayer === "questionBankAiCompleted").length,
+    () => items.filter((entry) => (
+      (entry.qualityFlags || []).includes("reading_g_ai_completed")
+    )).length,
     [items]
   );
-  const pendingAiEntries = useMemo(
-    () => items.filter(isPendingAiCompletionEntry),
+  const aiCompletionEntries = useMemo(
+    () => items.filter(isAiCompletionCandidateEntry),
+    [items]
+  );
+  const synonymPendingEntries = useMemo(
+    () => items.filter(isReadingGSynonymCompletionCandidate),
     [items]
   );
 
@@ -651,6 +672,7 @@ export default function ReadingGVocabPage() {
     }
 
     const focusedId = String(currentEntryId || "").trim();
+    if (focusedId && libraryBrowseEntryIdRef.current === focusedId) return;
     if (
       focusedId &&
       studyList.some((row) => String(row?.entry?.id || "").trim() === focusedId)
@@ -850,6 +872,7 @@ export default function ReadingGVocabPage() {
       return;
     }
     if (!studyList.length) return;
+    libraryBrowseEntryIdRef.current = "";
     // Prefer stable id — never fall back to queue head (that feels like a random jump).
     const currentId = activeEntryId || item?.id || items[index]?.id || "";
     let pos = studyList.findIndex((row) => String(row?.entry?.id || "").trim() === String(currentId || "").trim());
@@ -864,6 +887,7 @@ export default function ReadingGVocabPage() {
   }
 
   function setLibraryFilter(nextFilter) {
+    libraryBrowseEntryIdRef.current = "";
     setFilter(nextFilter);
     setQuizRevealed(false);
     setQuizSelected(null);
@@ -959,8 +983,8 @@ export default function ReadingGVocabPage() {
       }));
     }
 
-    const nextPendingIndex = nextItems.findIndex(isPendingAiCompletionEntry);
-    setFilter({ type: "primaryLayer", value: "questionBankPending" });
+    const nextPendingIndex = nextItems.findIndex(isAiCompletionCandidateEntry);
+    setFilter({ type: "layer", value: "questionBankPending" });
     const aiIndex = nextPendingIndex >= 0 ? nextPendingIndex : 0;
     setIndex(aiIndex);
     setCurrentEntryId(String(nextItems[aiIndex]?.id || "").trim());
@@ -984,6 +1008,41 @@ export default function ReadingGVocabPage() {
     };
   }
 
+  function applySynonymCompletionResult(result, sourceItems) {
+    const updatedById = new Map(
+      (result.updatedEntries || []).map((entry, entryIndex) => [
+        entry.id,
+        normalizeReadingGItem(entry, entryIndex)
+      ])
+    );
+    const nextItems = sourceItems.map((entry) => updatedById.get(entry.id) || entry);
+    invalidateReadingGVocabCache();
+    setItems(nextItems);
+    const nextPendingIndex = nextItems.findIndex(isReadingGSynonymCompletionCandidate);
+    setFilter({ type: "synonymPending", value: "" });
+    const nextIndex = nextPendingIndex >= 0 ? nextPendingIndex : 0;
+    setIndex(nextIndex);
+    setCurrentEntryId(String(nextItems[nextIndex]?.id || "").trim());
+    return nextItems;
+  }
+
+  async function requestSynonymCompletionBatch(targets, sourceItems) {
+    setSynonymAiMessage(`正在核查同义替换：${targets.map((entry) => entry.word).join("、")}`);
+    const response = await fetch("/api/reading-g/complete-synonyms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entryIds: targets.map((entry) => entry.id) })
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || result.detail || "G类同义替换AI补全失败");
+    }
+    return {
+      result,
+      nextItems: applySynonymCompletionResult(result, sourceItems)
+    };
+  }
+
   function stopAutoAiCompletion() {
     aiAutoStopRef.current = true;
     const message = "已请求停止：当前批完成后不再继续自动补全";
@@ -991,9 +1050,16 @@ export default function ReadingGVocabPage() {
     setToast(message);
   }
 
-  async function runPendingAiCompletion({ currentOnly = false, autoAll = false } = {}) {
+  function stopAutoSynonymCompletion() {
+    synonymAiAutoStopRef.current = true;
+    const message = "已请求停止：当前批核查完成后不再继续";
+    setSynonymAiMessage(message);
+    setToast(message);
+  }
+
+  async function runAiCompletion({ currentOnly = false, autoAll = false } = {}) {
     if (aiRunning) return;
-    const prioritizedPending = prioritizeCurrentAiTarget(pendingAiEntries, item?.id);
+    const prioritizedPending = prioritizeCurrentAiTarget(aiCompletionEntries, item?.id);
     const currentPending = prioritizedPending.find((entry) => entry.id === item?.id);
     const targets = autoAll
       ? prioritizedPending
@@ -1002,18 +1068,18 @@ export default function ReadingGVocabPage() {
       : prioritizedPending.slice(0, AI_COMPLETION_BATCH_SIZE);
 
     if (!targets.length) {
-      setToast(currentOnly ? "当前词不是待补词，请先点击“待补词”" : "没有需要AI补全的G类待补词");
+      setToast(currentOnly ? "当前词的主资料与词族都已完整；同义替换请使用专项核查" : "没有需要AI补全的主资料待补词");
       return;
     }
 
     const confirmed = autoAll
       ? window.confirm(
-          `准备自动补全全部 ${targets.length} 个G类待补词，预计 ${Math.ceil(targets.length / AI_COMPLETION_BATCH_SIZE)} 批，每批最多 ${AI_COMPLETION_BATCH_SIZE} 词、1次请求、顺序执行不并发。\n\n` +
-          "只写回G类阅读词库，不修改总词库和学习进度。缓存命中不调用付费模型；未命中会调用 DeepSeek，可能产生费用。开始后可点“停止自动补全”，当前批完成后不再继续；失败词本轮不自动重试。\n\n确定继续吗？"
+          `准备自动补全全部 ${targets.length} 个G类主资料待补词，预计 ${Math.ceil(targets.length / AI_COMPLETION_BATCH_SIZE)} 批，每批最多 ${AI_COMPLETION_BATCH_SIZE} 词、1次请求、顺序执行不并发。\n\n` +
+          "补齐音标、词性、释义、例句与词族中的缺失资料，已有内容保留；不补词形或同义替换。同义替换由另一入口单独处理。不会修改总词库和学习进度。缓存命中不调用付费模型；未命中会调用 DeepSeek，可能产生费用。开始后可点“停止自动补全”，当前批完成后不再继续；失败词本轮不自动重试。\n\n确定继续吗？"
         )
       : window.confirm(
-          `准备补全 ${targets.length} 个G类待补词：${targets.map((entry) => entry.word).join("、")}\n\n` +
-          "只写回G类阅读词库，不修改总词库和学习进度。缓存未命中时会调用 DeepSeek API，可能产生费用；本批最多发起1次请求，不自动重试。\n\n确定继续吗？"
+          `准备补全 ${targets.length} 个G类主资料待补词：${targets.map((entry) => entry.word).join("、")}\n\n` +
+          "补齐音标、词性、释义、例句与词族中的缺失资料，已有内容保留；不补词形或同义替换。同义替换由另一入口单独处理。不会修改总词库和学习进度。缓存未命中时会调用 DeepSeek API，可能产生费用；本批最多发起1次请求，不自动重试。\n\n确定继续吗？"
         );
     if (!confirmed) return;
 
@@ -1028,7 +1094,7 @@ export default function ReadingGVocabPage() {
       let cacheHitTotal = 0;
       let deepseekTotal = 0;
       let failedTotal = 0;
-      let lastPendingCount = pendingAiEntries.length;
+      let lastPendingCount = aiCompletionEntries.length;
       const attemptedIds = new Set();
       const plannedTotal = targets.length;
       let batchNumber = 0;
@@ -1052,11 +1118,11 @@ export default function ReadingGVocabPage() {
         failedTotal += Number(stats.failed) || 0;
         lastPendingCount =
           result.totals?.pendingCount ??
-          items.filter(isPendingAiCompletionEntry).length - completedTotal;
+          items.filter(isAiCompletionCandidateEntry).length - completedTotal;
 
         if (!autoAll) break;
         remainingTargets = prioritizeCurrentAiTarget(
-          workingItems.filter(isPendingAiCompletionEntry),
+          workingItems.filter(isAiCompletionCandidateEntry),
           item?.id
         ).filter((entry) => !attemptedIds.has(entry.id));
       } while (autoAll && remainingTargets.length && !aiAutoStopRef.current);
@@ -1078,6 +1144,87 @@ export default function ReadingGVocabPage() {
     }
   }
 
+  async function runSynonymCompletion({ currentOnly = false, autoAll = false } = {}) {
+    if (synonymAiRunning) return;
+    const prioritizedPending = prioritizeCurrentAiTarget(synonymPendingEntries, item?.id);
+    const currentPending = prioritizedPending.find((entry) => entry.id === item?.id);
+    const targets = autoAll
+      ? prioritizedPending
+      : currentOnly
+        ? (currentPending ? [currentPending] : [])
+        : prioritizedPending.slice(0, SYNONYM_AI_COMPLETION_BATCH_SIZE);
+    if (!targets.length) {
+      setToast(currentOnly ? "当前词没有待补同义替换" : "没有需要AI核查的同义替换");
+      return;
+    }
+
+    const confirmed = autoAll
+      ? window.confirm(
+          `准备核查全部 ${targets.length} 个G类同义替换，预计 ${Math.ceil(targets.length / SYNONYM_AI_COMPLETION_BATCH_SIZE)} 轮，每轮最多 ${SYNONYM_AI_COMPLETION_BATCH_SIZE} 词，分 ${SYNONYM_AI_CONCURRENCY} 路、每路最多 ${SYNONYM_AI_REQUEST_BATCH_SIZE} 词并发请求。\n\n` +
+          "只写回G类词条的 synonyms 与审核状态，不修改主词库或学习进度。缓存命中不调用付费模型；未命中会调用 DeepSeek，可能产生费用。AI 返回空数组会标为“已核查无替换”，不会继续待补。开始后可停止，失败词本轮不自动重试。\n\n确定继续吗？"
+        )
+      : window.confirm(
+          `准备核查 ${targets.length} 个G类同义替换：${targets.map((entry) => entry.word).join("、")}\n\n` +
+          "只写回G类词条的 synonyms 与审核状态。缓存未命中时会调用 DeepSeek API，可能产生费用；本批最多发起1次请求，不自动重试。\n\n确定继续吗？"
+        );
+    if (!confirmed) return;
+
+    try {
+      setSynonymAiRunning(true);
+      setSynonymAiAutoRunning(autoAll);
+      synonymAiAutoStopRef.current = false;
+      let workingItems = items;
+      let remainingTargets = targets;
+      let completedTotal = 0;
+      let cacheHitTotal = 0;
+      let deepseekTotal = 0;
+      let failedTotal = 0;
+      let lastPendingCount = synonymPendingEntries.length;
+      const attemptedIds = new Set();
+      const plannedTotal = targets.length;
+      let batchNumber = 0;
+
+      do {
+        const batch = remainingTargets.slice(0, SYNONYM_AI_COMPLETION_BATCH_SIZE);
+        batchNumber += 1;
+        batch.forEach((entry) => attemptedIds.add(entry.id));
+        if (autoAll) {
+          setSynonymAiMessage(
+            `自动核查第 ${batchNumber} 轮：${batch.map((entry) => entry.word).join("、")}（已完成 ${completedTotal}/${plannedTotal}）`
+          );
+        }
+        const { result, nextItems } = await requestSynonymCompletionBatch(batch, workingItems);
+        workingItems = nextItems;
+        const stats = result.stats || {};
+        completedTotal += Number(stats.completed) || 0;
+        cacheHitTotal += Number(stats.cacheHit) || 0;
+        deepseekTotal += Number(stats.deepseek) || 0;
+        failedTotal += Number(stats.failed) || 0;
+        lastPendingCount = result.totals?.pendingCount ?? lastPendingCount - (Number(stats.completed) || 0);
+        if (!autoAll) break;
+        remainingTargets = prioritizeCurrentAiTarget(
+          workingItems.filter(isReadingGSynonymCompletionCandidate),
+          item?.id
+        ).filter((entry) => !attemptedIds.has(entry.id));
+      } while (autoAll && remainingTargets.length && !synonymAiAutoStopRef.current);
+
+      const stopped = autoAll && synonymAiAutoStopRef.current;
+      const message = autoAll
+        ? `${stopped ? "自动核查已停止" : "自动核查完成"}：完成 ${completedTotal}/${plannedTotal}，缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，失败/跳过 ${failedTotal}，仍待补 ${lastPendingCount}`
+        : `同义替换核查完成 ${completedTotal} 个：缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，仍待补 ${lastPendingCount}`;
+      setSynonymAiMessage(message);
+      setToast(message);
+    } catch (error) {
+      const message = error?.message || "G类同义替换AI补全失败";
+      setSynonymAiMessage(message);
+      setToast(message);
+    } finally {
+      synonymAiAutoStopRef.current = false;
+      setSynonymAiAutoRunning(false);
+      setSynonymAiRunning(false);
+    }
+  }
+
   function markStatus(status) {
     if (isQuizMode) {
       if (!quizQuestion?.groupId) return;
@@ -1096,19 +1243,36 @@ export default function ReadingGVocabPage() {
       return;
     }
 
-    if (isStudyEmpty || !item?.word) return;
-    const mode = resolveLearnMode(learnMode, item, filter);
-    const current = getRgStatus(item, statusMap, mode);
+    const live = liveDeleteRef.current;
+    libraryBrowseEntryIdRef.current = "";
+    const activeItems = Array.isArray(live.items) ? live.items : [];
+    const activeStudyList = Array.isArray(live.studyList) ? live.studyList : [];
+    const activeFilter = live.filter || DEFAULT_FILTER;
+    const activeStatusMap = live.statusMap || {};
+    const currentId = resolveCurrentStudyEntryId({
+      focusEntryId: live.currentEntryId,
+      studyList: activeStudyList,
+      items: activeItems,
+      index: live.index
+    });
+    const currentItem = activeItems.find((entry) => String(entry?.id || "").trim() === currentId)
+      || activeItems[live.index]
+      || null;
+    if (!activeStudyList.length || !currentItem?.word) return;
+
+    const mode = resolveLearnMode(live.learnMode, currentItem, activeFilter);
+    const current = getRgStatus(currentItem, activeStatusMap, mode);
     const nextStatus =
       status === RG_STATUS.UNFAMILIAR && current === RG_STATUS.UNFAMILIAR
         ? RG_STATUS.PENDING
         : status;
-    const nextMap = patchRgStatus(statusMap, item, { status: nextStatus }, mode);
+    const nextMap = patchRgStatus(activeStatusMap, currentItem, { status: nextStatus }, mode);
     setStatusMap(nextMap);
     writeRgStatusMap(nextMap);
 
+    let nextDaily = live.dailyCount;
     if (nextStatus === RG_STATUS.FAMILIAR || nextStatus === RG_STATUS.UNFAMILIAR) {
-      const nextDaily = dailyCount + 1;
+      nextDaily += 1;
       setDailyCount(nextDaily);
       writeRgDailyCount(nextDaily);
     }
@@ -1123,46 +1287,70 @@ export default function ReadingGVocabPage() {
           : "已取消不熟"
     );
 
-    window.setTimeout(() => {
-      const nextList = buildRgStudyList(items, filter, nextMap, mode);
-      const stillHere = nextList.some((row) => String(row?.entry?.id || "").trim() === activeEntryId);
-      if (!stillHere) {
-        const advanced = advanceStudyQueueAfterExit(studyList, activeEntryId, nextList);
-        if (advanced) freezeStudyQueueRows(advanced.nextList);
-        const row =
-          advanced?.landingRow
-          || nextList[Math.min(safeStudyPosition, Math.max(0, nextList.length - 1))]
-          || nextList[0]
-          || null;
-        if (row) {
-          const landingId = String(row.entry?.id || "").trim();
-          const landingIndex = Number.isInteger(row.originalIndex) ? row.originalIndex : 0;
-          liveDeleteRef.current = {
-            ...liveDeleteRef.current,
-            index: landingIndex,
-            currentEntryId: landingId,
-            studyList: advanced?.nextList || nextList,
-            isStudyEmpty: false,
-            safeStudyPosition: Math.max(0, advanced?.landingPos ?? safeStudyPosition)
-          };
-          focusStudyRow(row);
-        } else {
-          freezeStudyQueueRows(null);
-          setCurrentEntryId("");
-          setIndex(0);
-          liveDeleteRef.current = {
-            ...liveDeleteRef.current,
-            index: 0,
-            currentEntryId: "",
-            studyList: [],
-            isStudyEmpty: true,
-            safeStudyPosition: 0
-          };
-        }
-      } else if (nextStatus === RG_STATUS.FAMILIAR) {
-        goToStudyOffset(1);
-      }
-    }, 120);
+    const nextEligibleList = buildRgStudyList(activeItems, activeFilter, nextMap, mode);
+    const stillHere = nextEligibleList.some(
+      (row) => String(row?.entry?.id || "").trim() === currentId
+    );
+    let nextRow = null;
+    let nextStudyList = activeStudyList;
+    let nextPosition = live.safeStudyPosition;
+
+    if (!stillHere) {
+      const advanced = advanceStudyQueueAfterExit(activeStudyList, currentId, nextEligibleList);
+      nextStudyList = advanced?.nextList || nextEligibleList;
+      nextRow =
+        advanced?.landingRow
+        || nextEligibleList[Math.min(live.safeStudyPosition, Math.max(0, nextEligibleList.length - 1))]
+        || nextEligibleList[0]
+        || null;
+      nextPosition = Math.max(0, advanced?.landingPos ?? live.safeStudyPosition);
+      freezeStudyQueueRows(nextStudyList.length ? nextStudyList : null);
+    } else {
+      const currentPosition = activeStudyList.findIndex(
+        (row) => String(row?.entry?.id || "").trim() === currentId
+      );
+      nextPosition = currentPosition >= 0
+        ? (currentPosition + 1) % activeStudyList.length
+        : Math.min(live.safeStudyPosition, activeStudyList.length - 1);
+      nextRow = activeStudyList[nextPosition] || null;
+    }
+
+    if (nextRow) {
+      const landingId = String(nextRow.entry?.id || "").trim();
+      const landingIndex = Number.isInteger(nextRow.originalIndex) ? nextRow.originalIndex : 0;
+      liveDeleteRef.current = {
+        ...live,
+        index: landingIndex,
+        currentEntryId: landingId,
+        studyList: nextStudyList,
+        statusMap: nextMap,
+        dailyCount: nextDaily,
+        isStudyEmpty: false,
+        safeStudyPosition: Math.max(0, nextPosition)
+      };
+      focusStudyRow(nextRow, activeFilter);
+    } else if (!nextEligibleList.length) {
+      freezeStudyQueueRows(null);
+      setCurrentEntryId("");
+      setIndex(0);
+      liveDeleteRef.current = {
+        ...live,
+        index: 0,
+        currentEntryId: "",
+        studyList: [],
+        statusMap: nextMap,
+        dailyCount: nextDaily,
+        isStudyEmpty: true,
+        safeStudyPosition: 0
+      };
+    } else {
+      liveDeleteRef.current = {
+        ...live,
+        statusMap: nextMap,
+        dailyCount: nextDaily,
+        studyList: nextStudyList
+      };
+    }
   }
 
   function toggleFavorite() {
@@ -1579,9 +1767,12 @@ export default function ReadingGVocabPage() {
     currentEntryId: activeEntryId || currentEntryId,
     studyList: (frozenStudyQueueRef.current || studyList),
     filter,
+    statusMap,
+    dailyCount,
+    learnMode,
     phase,
     isQuizMode,
-    aiRunning,
+    aiRunning: aiRunning || synonymAiRunning,
     isStudyEmpty,
     safeStudyPosition
   };
@@ -1618,10 +1809,10 @@ export default function ReadingGVocabPage() {
       } else if (!isQuizMode && event.key === " ") {
         event.preventDefault();
         speakText(item?.example, "sentence");
-      } else if (!isQuizMode && (event.key === "0" || event.key === "2")) {
+      } else if (!isQuizMode && event.key === "1") {
         event.preventDefault();
         markStatus(RG_STATUS.FAMILIAR);
-      } else if (!isQuizMode && event.key === "1") {
+      } else if (!isQuizMode && event.key === "3") {
         event.preventDefault();
         markStatus(RG_STATUS.UNFAMILIAR);
       } else if (isQuizMode && !quizRevealed && ["1", "2", "3", "4", "a", "b", "c", "d", "A", "B", "C", "D"].includes(event.key)) {
@@ -1663,7 +1854,8 @@ export default function ReadingGVocabPage() {
     quizRevealed,
     quizQuestion,
     deleteBusy,
-    aiRunning
+    aiRunning,
+    synonymAiRunning
   ]);
 
   // Light overview rows — avoid spreading full lexicon entries on every keypress.
@@ -1798,7 +1990,13 @@ export default function ReadingGVocabPage() {
         if (isQuizMode) return;
         const row = studyList.find((r) => r.originalIndex === originalIndex)
           || { originalIndex, entry: items[originalIndex] };
-        if (row?.entry) focusStudyRow(row);
+        if (row?.entry) {
+          const targetId = String(row.entry.id || "").trim();
+          libraryBrowseEntryIdRef.current = studyList.some(
+            (candidate) => String(candidate?.entry?.id || "").trim() === targetId
+          ) ? "" : targetId;
+          focusStudyRow(row);
+        }
         else {
           setIndex(originalIndex);
           setCurrentEntryId(String(items[originalIndex]?.id || "").trim());
@@ -1828,7 +2026,7 @@ export default function ReadingGVocabPage() {
         ).length,
         todayReviewed: dailyCount
       }}
-      statsLine={`词库 ${meta.count.toLocaleString()} · 单词 ${meta.wordCount.toLocaleString()} · 词组 ${meta.phraseCount.toLocaleString()} · active ${meta.activeCount.toLocaleString()} · 参考 ${meta.referenceCount.toLocaleString()} · 同义可训 ${highQuizParas.length} · 词义熟悉 ${familiarCount} · 今日 ${dailyCount}${migrationInfo?.v4?.matchedCount != null ? ` · 迁移${migrationInfo.v4.matchedCount}` : ""}`}
+      statsLine={`词库 ${meta.count.toLocaleString()} · 单词 ${meta.wordCount.toLocaleString()} · 词组 ${meta.phraseCount.toLocaleString()} · active ${meta.activeCount.toLocaleString()} · 参考 ${meta.referenceCount.toLocaleString()} · 同义可训 ${highQuizParas.length} · 真题证据 ${questionEvidenceMeta.count.toLocaleString()} · 定位句 ${Number(questionEvidenceMeta.coverage?.answerSentence?.available || 0).toLocaleString()} · 待定位 ${Number(questionEvidenceMeta.coverage?.answerSentence?.pending || 0).toLocaleString()} · 词义熟悉 ${familiarCount} · 今日 ${dailyCount}${migrationInfo?.v4?.matchedCount != null ? ` · 迁移${migrationInfo.v4.matchedCount}` : ""}`}
       toast={toast}
       extraActions={(
         <>
@@ -1844,14 +2042,21 @@ export default function ReadingGVocabPage() {
             className="top-pill spelling-entry-link"
             onClick={() => setLibraryFilter({ type: "contentIncomplete", value: "" })}
           >
-            内容补全队列 {incompleteContentEntries.length}
+            资料待修复 {incompleteContentEntries.length}
+          </button>
+          <button
+            type="button"
+            className="top-pill spelling-entry-link"
+            onClick={() => setLibraryFilter({ type: "synonymPending", value: "" })}
+          >
+            同义待补全 {synonymPendingEntries.length}
           </button>
           <details className="menu reading-g-ai-menu">
             <summary className="top-pill">AI补全待补词</summary>
             <div className="menu-panel wide reading-g-ai-panel">
-              <h2 className="panel-title">G类待补词专用 AI</h2>
+              <h2 className="panel-title">G类主资料补全 AI</h2>
               <p className="panel-desc">
-                内容补全队列按核心教学字段、释义过短和未拆分多词性统计 {incompleteContentEntries.length} 个；这些词不会进入普通刷词。其中本专用 AI 仅处理“全题库·待补资料” {pendingAiEntries.length} 个。已由 AI 补全 {questionBankAiCompletedCount} 个，不会修改原有词、总词库或学习进度。
+                完整度包含音标、词性、释义、例句、词族、同义替换。这里处理前五项任一缺失的词，共 {aiCompletionEntries.length} 个；只补缺失资料，已有内容保留，不补词形。同义替换由右侧专项入口独立处理。已由 AI 补全 {questionBankAiCompletedCount} 个，不会修改总词库或学习进度。
               </p>
               <p className="ai-warning">
                 每批最多10词、1次请求、自动重试0次。缓存命中不调用付费模型；未命中会调用 DeepSeek，开始前还会再次确认。
@@ -1860,26 +2065,26 @@ export default function ReadingGVocabPage() {
                 <button
                   type="button"
                   className="small-btn warm"
-                  disabled={aiRunning || !pendingAiEntries.some((entry) => entry.id === item?.id)}
-                  onClick={() => runPendingAiCompletion({ currentOnly: true })}
+                  disabled={aiRunning || !aiCompletionEntries.some((entry) => entry.id === item?.id)}
+                  onClick={() => runAiCompletion({ currentOnly: true })}
                 >
                   {aiRunning ? "处理中" : "补全当前待补词"}
                 </button>
                 <button
                   type="button"
                   className="small-btn ai-paid"
-                  disabled={aiRunning || !pendingAiEntries.length}
-                  onClick={() => runPendingAiCompletion({ currentOnly: false })}
+                  disabled={aiRunning || !aiCompletionEntries.length}
+                  onClick={() => runAiCompletion({ currentOnly: false })}
                 >
-                  {aiRunning ? "处理中" : `补全下一批 ${Math.min(AI_COMPLETION_BATCH_SIZE, pendingAiEntries.length)} 词（可能扣费）`}
+                  {aiRunning ? "处理中" : `补全下一批 ${Math.min(AI_COMPLETION_BATCH_SIZE, aiCompletionEntries.length)} 词（可能扣费）`}
                 </button>
                 <button
                   type="button"
                   className="small-btn ai-paid"
-                  disabled={aiRunning || !pendingAiEntries.length}
-                  onClick={() => runPendingAiCompletion({ autoAll: true })}
+                  disabled={aiRunning || !aiCompletionEntries.length}
+                  onClick={() => runAiCompletion({ autoAll: true })}
                 >
-                  {aiRunning ? "处理中" : `自动补全全部 ${pendingAiEntries.length} 词（可能扣费）`}
+                  {aiRunning ? "处理中" : `自动补全全部 ${aiCompletionEntries.length} 词（可能扣费）`}
                 </button>
                 {aiAutoRunning ? (
                   <button
@@ -1894,6 +2099,54 @@ export default function ReadingGVocabPage() {
               {aiMessage ? <div className="status-line">{aiMessage}</div> : null}
             </div>
           </details>
+          <details className="menu reading-g-ai-menu">
+            <summary className="top-pill">AI核查同义替换</summary>
+            <div className="menu-panel wide reading-g-ai-panel">
+              <h2 className="panel-title">G类同义替换专用 AI</h2>
+              <p className="panel-desc">
+                主词库已有的同义替换、词性和中文释义会直接复用；当前还有 {synonymPendingEntries.length} 个单词或短语待 AI 核查。每个词条只保留 0–4 个能替换当前义项的常见表达，并只显示词性与中文释义；空数组会明确标为“已核查无替换”。
+              </p>
+              <p className="ai-warning">
+                每轮最多120词，分3路、每路最多40词并发核查，自动重试0次。缓存命中不调用付费模型；未命中会调用 DeepSeek，开始前还会再次确认。
+              </p>
+              <div className="action-grid">
+                <button
+                  type="button"
+                  className="small-btn warm"
+                  disabled={synonymAiRunning || !synonymPendingEntries.some((entry) => entry.id === item?.id)}
+                  onClick={() => runSynonymCompletion({ currentOnly: true })}
+                >
+                  {synonymAiRunning ? "处理中" : "核查当前条目"}
+                </button>
+                <button
+                  type="button"
+                  className="small-btn ai-paid"
+                  disabled={synonymAiRunning || !synonymPendingEntries.length}
+                  onClick={() => runSynonymCompletion({ currentOnly: false })}
+                >
+                  {synonymAiRunning ? "处理中" : `核查下一批 ${Math.min(SYNONYM_AI_COMPLETION_BATCH_SIZE, synonymPendingEntries.length)} 词（可能扣费）`}
+                </button>
+                <button
+                  type="button"
+                  className="small-btn ai-paid"
+                  disabled={synonymAiRunning || !synonymPendingEntries.length}
+                  onClick={() => runSynonymCompletion({ autoAll: true })}
+                >
+                  {synonymAiRunning ? "处理中" : `自动核查全部 ${synonymPendingEntries.length} 词（可能扣费）`}
+                </button>
+                {synonymAiAutoRunning ? (
+                  <button
+                    type="button"
+                    className="small-btn warm"
+                    onClick={stopAutoSynonymCompletion}
+                  >
+                    停止自动核查
+                  </button>
+                ) : null}
+              </div>
+              {synonymAiMessage ? <div className="status-line">{synonymAiMessage}</div> : null}
+            </div>
+          </details>
         </>
       )}
       chipGroups={chipGroups}
@@ -1903,6 +2156,7 @@ export default function ReadingGVocabPage() {
       paraStatusMap={paraStatusMap}
       onParaphraseMaster={markParaphraseMastered}
       contentQuality={contentQuality}
+      showContentQuality={filter.type === "contentIncomplete"}
       quizMode={isQuizMode}
       quizQuestion={quizQuestion}
       quizRevealed={quizRevealed}
@@ -1930,7 +2184,7 @@ export default function ReadingGVocabPage() {
       onQuizReviewWrong={handleReviewWrong}
       onQuizResume={() => continueSavedParaphraseSession(false)}
       onQuizRestartSession={() => continueSavedParaphraseSession(true)}
-      familiarLabel={isQuizMode ? "掌握" : "熟悉"}
+      familiarLabel={isQuizMode ? "掌握" : "认识"}
       unfamiliarLabel={isQuizMode ? "未掌握" : "不熟"}
       panelStatusCounts={statusCounts}
     />

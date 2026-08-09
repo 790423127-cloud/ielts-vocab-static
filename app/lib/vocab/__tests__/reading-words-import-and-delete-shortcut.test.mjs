@@ -87,6 +87,8 @@ test("reading delete shortcut accepts D and Delete outside editors only", () => 
 
 test("reading word study shortcuts match the main flashcard outside editors", () => {
   const body = { tagName: "BODY" };
+  const range = { tagName: "INPUT", type: "range" };
+  const select = { tagName: "SELECT" };
   assert.equal(getStudyKeyboardAction({ key: "Tab", target: body }), "word-audio");
   assert.equal(getStudyKeyboardAction({ key: " ", code: "Space", target: body }), "example-audio");
   assert.equal(getStudyKeyboardAction({ key: "ArrowLeft", target: body }), "previous");
@@ -94,8 +96,15 @@ test("reading word study shortcuts match the main flashcard outside editors", ()
   assert.equal(getStudyKeyboardAction({ key: "1", code: "Digit1", target: body }), "known");
   assert.equal(getStudyKeyboardAction({ key: "2", code: "Digit2", target: body }), "blurry");
   assert.equal(getStudyKeyboardAction({ key: "3", code: "Digit3", target: body }), "unknown");
-  assert.equal(getStudyKeyboardAction({ key: "Tab", target: { tagName: "INPUT" } }), "");
-  assert.equal(getStudyKeyboardAction({ key: " ", code: "Space", target: { tagName: "SELECT" } }), "");
+  assert.equal(getStudyKeyboardAction({ key: "Tab", target: { tagName: "INPUT" } }), "word-audio");
+  assert.equal(getStudyKeyboardAction({ key: "Tab", shiftKey: true, target: { tagName: "INPUT" } }), "");
+  assert.equal(getStudyKeyboardAction({ key: " ", code: "Space", target: { tagName: "INPUT" } }), "");
+  assert.equal(getStudyKeyboardAction({ key: "Tab", target: select }), "word-audio");
+  assert.equal(getStudyKeyboardAction({ key: " ", code: "Space", target: select }), "example-audio");
+  assert.equal(getStudyKeyboardAction({ key: "Tab", target: range }), "word-audio");
+  assert.equal(getStudyKeyboardAction({ key: " ", code: "Space", target: range }), "example-audio");
+  assert.equal(getStudyKeyboardAction({ key: "ArrowRight", target: range }), "next");
+  assert.equal(getStudyKeyboardAction({ key: "3", code: "Digit3", target: range }), "unknown");
   assert.equal(getStudyKeyboardAction({ key: "Tab", repeat: true, target: body }), "");
 });
 

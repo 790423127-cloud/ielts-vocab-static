@@ -36,7 +36,11 @@ export async function POST(req) {
     const cleanItems = sourceItems
       .map((item, index) => ({
         inputId: String(item?.inputId || `item-${index + 1}`).trim(),
-        word: String(item?.word || "").trim()
+        word: String(item?.word || "").trim(),
+        requestedSynonyms: (Array.isArray(item?.requestedSynonyms) ? item.requestedSynonyms : [])
+          .map((value) => String(typeof value === "string" ? value : value?.word || value?.replacement || "").trim())
+          .filter(Boolean)
+          .slice(0, 4)
       }))
       .filter((item) => item.inputId && item.word)
       .slice(0, MAX_BATCH_WORDS);
@@ -52,7 +56,7 @@ export async function POST(req) {
     const uniqueToGenerate = new Map();
     let cacheHit = 0;
 
-    for (const { word } of cleanItems) {
+    for (const { word, requestedSynonyms } of cleanItems) {
       const key = normalizeProfileKey(word);
       const cached = cache[key];
       if (shouldReuseAiProfileCache(cached, {
@@ -67,14 +71,15 @@ export async function POST(req) {
         });
         cacheHit += 1;
       } else if (!uniqueToGenerate.has(key)) {
-        uniqueToGenerate.set(key, word);
+        uniqueToGenerate.set(key, { word, requestedSynonyms });
       }
     }
 
-    const inputItems = [...uniqueToGenerate.entries()].map(([key, word], index) => ({
+    const inputItems = [...uniqueToGenerate.entries()].map(([key, value], index) => ({
       inputId: `item-${index + 1}`,
       key,
-      word
+      word: value.word,
+      requestedSynonyms: value.requestedSynonyms
     }));
     let usage = null;
     let invalid = [];

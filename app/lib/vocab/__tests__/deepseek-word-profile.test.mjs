@@ -33,6 +33,7 @@ function rawProfile(inputId, word, { collocationCount = 4 } = {}) {
     forms: [],
     word_family: [],
     synonyms: [],
+    synonym_details: [],
     common_collocations: Array.from({ length: collocationCount }, (_, index) => ({
       phrase: `${word} common ${index}`,
       chinese: `常用搭配${index}`
@@ -165,6 +166,41 @@ test("two genuine translated collocations are usable and do not discard the whol
   );
 });
 
+test("reading profiles keep requested synonyms and require a Chinese meaning for each", async () => {
+  const completed = {
+    ...rawProfile("item-1", "extensive"),
+    synonyms: ["broad"],
+    synonym_details: [{ word: "broad", part_of_speech: "adjective", meaning_zh: "广泛的" }]
+  };
+  await withMockedDeepseek(
+    async () => mockDeepseekResponse([completed]),
+    async () => {
+      const result = await requestDeepseekProfiles([{
+        inputId: "item-1",
+        word: "extensive",
+        requestedSynonyms: ["broad"]
+      }], { profileQuality: "reading" });
+      assert.deepEqual(result.entries.get("item-1").synonymDetails, [
+        { word: "broad", pos: "adjective", meaningZh: "广泛的" }
+      ]);
+      assert.equal(result.invalid.length, 0);
+    }
+  );
+
+  await withMockedDeepseek(
+    async () => mockDeepseekResponse([{ ...completed, synonym_details: [] }]),
+    async () => {
+      const result = await requestDeepseekProfiles([{
+        inputId: "item-1",
+        word: "extensive",
+        requestedSynonyms: ["broad"]
+      }], { profileQuality: "reading" });
+      assert.equal(result.entries.size, 0);
+      assert.match(result.invalid[0].reason, /synonymDetails/);
+    }
+  );
+});
+
 test("AI profiles remove self-equivalent synonym spellings before cache or client delivery", () => {
   const airmail = normalizeAiGeneratedEntry({
     ...rawProfile("item-1", "Airmail"),
@@ -198,7 +234,11 @@ test("explicit empty relation arrays are reusable and preserve reviewed-empty me
 });
 
 test("the unified prompt requests useful ranges and forbids filler", () => {
-  const prompt = buildAiWordProfilePrompt([{ inputId: "item-1", word: "access" }]);
+  const prompt = buildAiWordProfilePrompt([{
+    inputId: "item-1",
+    word: "access",
+    requestedSynonyms: ["entry"]
+  }]);
   assert.match(prompt, /exactly one primary English example/i);
   assert.match(prompt, /2-4 genuinely useful common_collocations/i);
   assert.match(prompt, /Never invent filler/i);
@@ -206,4 +246,7 @@ test("the unified prompt requests useful ranges and forbids filler", () => {
   assert.match(prompt, /Echo input_id exactly/);
   assert.match(prompt, /capitalization\/spacing\/hyphen\/apostrophe variants/i);
   assert.match(prompt, /British\/American spelling variants/i);
+  assert.match(prompt, /synonym_details/);
+  assert.match(prompt, /keep exactly those supplied terms/i);
+  assert.match(prompt, /"existing_synonyms":\s*\[\s*"entry"/);
 });

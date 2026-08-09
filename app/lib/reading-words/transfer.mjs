@@ -1,5 +1,6 @@
 import { USER_STATE_FIELDS } from "../vocab/word-cache-meta.mjs";
 import {
+  compactReadingWordsForPersistence,
   normalizeReadingWord,
   normalizeReadingWordKey
 } from "./storage.mjs";
@@ -36,8 +37,9 @@ function selectTransferMainEntry(entry = {}) {
 }
 
 export function buildReadingWordsTransferPackage(readingWords, mainWords, mainMeta = {}) {
+  const compactReadingWords = compactReadingWordsForPersistence(readingWords);
   const readingKeys = new Set(
-    (Array.isArray(readingWords) ? readingWords : [])
+    compactReadingWords
       .map((entry) => normalizeReadingWordKey(entry?.word))
       .filter(Boolean)
   );
@@ -49,7 +51,7 @@ export function buildReadingWordsTransferPackage(readingWords, mainWords, mainMe
     type: "ielts-reading-words-transfer",
     version: READING_WORDS_TRANSFER_VERSION,
     exportedAt: new Date().toISOString(),
-    readingWords: Array.isArray(readingWords) ? readingWords : [],
+    readingWords: compactReadingWords,
     linkedMainEntries,
     sourceMainMeta: {
       version: cleanText(mainMeta.version),
@@ -163,7 +165,7 @@ export function mergeTransferredReadingWords(currentWords, transferredWords, opt
     ]) {
       if (!cleanText(next[field]) && cleanText(incoming[field])) next[field] = incoming[field];
     }
-    for (const field of ["otherMeanings", "forms", "wordFamily", "synonyms"]) {
+    for (const field of ["otherMeanings", "forms", "wordFamily", "synonyms", "synonymDetails"]) {
       if ((!Array.isArray(next[field]) || !next[field].length) && Array.isArray(incoming[field])) {
         next[field] = incoming[field];
       }

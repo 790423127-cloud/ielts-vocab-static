@@ -48,6 +48,24 @@ test("cross-device package round-trips reading counts, stable ids, supplements a
   assert.equal(restored.mainWords[0].favorite, true);
 });
 
+test("cross-device package excludes main-lexicon-only display fields", () => {
+  const payload = buildReadingWordsTransferPackage([{
+    id: "reading-alpha",
+    word: "alpha",
+    meaning: "阿尔法",
+    synonyms: ["beginning"],
+    synonymDetails: [{ word: "beginning", pos: "noun", meaningZh: "开端" }],
+    collocations: [{ phrase: "alpha version", chinese: "初始版本" }],
+    phraseCollocations: [{ phrase: "the alpha and omega", chinese: "始终" }]
+  }], []);
+
+  assert.deepEqual(payload.readingWords[0].synonymDetails, [
+    { word: "beginning", pos: "noun", meaningZh: "开端" }
+  ]);
+  assert.equal(Object.hasOwn(payload.readingWords[0], "collocations"), false);
+  assert.equal(Object.hasOwn(payload.readingWords[0], "phraseCollocations"), false);
+});
+
 test("cross-device import merges by word without increasing frequency or overwriting target progress", () => {
   const payload = {
     type: "ielts-reading-words-transfer",

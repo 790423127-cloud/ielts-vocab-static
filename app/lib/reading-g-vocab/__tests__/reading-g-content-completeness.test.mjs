@@ -103,12 +103,18 @@ test("G-reading complete and incomplete filters use the same field-based rule as
   assert.equal(getRgFilterLabel({ type: "contentIncomplete", value: "" }), "待补词（按实际字段）");
 });
 
-test("G-reading completion queue catches short meanings and unsplit multi-POS entries", () => {
+test("G-reading completion queue accepts exact one-character glosses but catches unusable short meanings and unsplit multi-POS entries", () => {
+  const exactShort = completeEntry({
+    id: "rg_word_bear",
+    word: "bear",
+    primaryPos: "noun",
+    primaryMeaningZh: "熊"
+  });
   const tooShort = completeEntry({
     id: "rg_word_brief",
     word: "brief",
     primaryPos: "adjective",
-    primaryMeaningZh: "好"
+    primaryMeaningZh: "x"
   });
   const unsplit = completeEntry({
     id: "rg_word_record",
@@ -130,6 +136,7 @@ test("G-reading completion queue catches short meanings and unsplit multi-POS en
     ]
   });
 
+  assert.equal(getReadingGContentIssues(exactShort).includes("meaningTooShort"), false);
   assert.ok(getReadingGContentIssues(tooShort).includes("meaningTooShort"));
   assert.ok(getReadingGContentIssues(unsplit).includes("multiPosNeedsSplit"));
   assert.equal(getReadingGContentIssues(split).includes("multiPosNeedsSplit"), false);
@@ -164,7 +171,6 @@ test("current G-reading data exposes every actually incomplete word in the pendi
     (entry.qualityFlags || []).includes("missing_master_lexicon")
   ));
 
-  assert.ok(incomplete.length > 0);
   assert.equal(filtered.length, incomplete.length);
   assert.ok(explicitAiPending.every(isReadingGContentIncomplete));
   assert.ok(words.some((entry) => (

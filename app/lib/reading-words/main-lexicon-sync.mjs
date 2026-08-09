@@ -4,6 +4,8 @@ import {
   normalizeReadingSynonyms,
   normalizeReadingWordKey
 } from "./storage.mjs";
+import { getStudyEntryDisplay } from "../vocab/study-entry-display.mjs";
+import { normalizeReadingSynonymDetails } from "./synonym-details.mjs";
 
 const MAIN_TEXT_FIELDS = [
   "phonetic",
@@ -18,7 +20,11 @@ const MAIN_TEXT_FIELDS = [
 const MAIN_ARRAY_FIELDS = [
   "otherMeanings",
   "forms",
-  "wordFamily"
+  "wordFamily",
+  "synonymDetails",
+  "collocations",
+  "phraseCollocations",
+  "senses"
 ];
 
 function cleanText(value) {
@@ -67,21 +73,27 @@ function canonicalizeReadingWordAgainstMain(readingWord = {}, mainWords = [], op
 
 export function applyMainEntryToReadingWord(readingWord = {}, mainEntry = {}, now = "") {
   if (!mainEntry?.word) return readingWord;
+  // Prefer top-level main fields; fall back to sense-aware display (例句常挂在 senses 上)
+  const mainDisplay = getStudyEntryDisplay(mainEntry);
   const next = {
     ...readingWord,
     mainWordId: cleanText(mainEntry.id || mainEntry.wordId || mainEntry.word)
   };
 
   for (const field of ["phonetic", "pos"]) {
-    if (cleanText(mainEntry[field])) next[field] = cleanText(mainEntry[field]);
+    const fromMain = cleanText(mainEntry[field] || mainDisplay?.[field]);
+    if (fromMain) next[field] = fromMain;
   }
   for (const field of ["meaning", "meaningDetailZh", "definition", "example", "exampleCn"]) {
-    if (!cleanText(next[field]) && cleanText(mainEntry[field])) {
-      next[field] = cleanText(mainEntry[field]);
+    if (!cleanText(next[field])) {
+      const fromMain = cleanText(mainEntry[field] || mainDisplay?.[field]);
+      if (fromMain) next[field] = fromMain;
     }
   }
   for (const field of MAIN_ARRAY_FIELDS) {
-    if (Array.isArray(mainEntry[field]) && mainEntry[field].length) {
+    // 生词本为空数组时也要用主词库补全（forms / collocations / senses）
+    const localEmpty = !Array.isArray(next[field]) || next[field].length === 0;
+    if (localEmpty && Array.isArray(mainEntry[field]) && mainEntry[field].length) {
       next[field] = mainEntry[field];
     }
   }
@@ -113,6 +125,11 @@ export function buildPersonalReadingMainEntry(readingWord = {}, options = {}) {
     forms: Array.isArray(readingWord.forms) ? readingWord.forms : [],
     wordFamily: Array.isArray(readingWord.wordFamily) ? readingWord.wordFamily : [],
     synonyms: normalizeReadingSynonyms(readingWord.synonyms, readingWord.word),
+    synonymDetails: normalizeReadingSynonymDetails(
+      readingWord.synonymDetails,
+      readingWord.synonyms,
+      readingWord.word
+    ),
     formsReviewed: readingWord.formsReviewed === true || Boolean(readingWord.forms?.length),
     wordFamilyReviewed: readingWord.wordFamilyReviewed === true || Boolean(readingWord.wordFamily?.length),
     synonymsReviewed: readingWord.synonymsReviewed === true || Boolean(readingWord.synonyms?.length),
@@ -217,7 +234,7 @@ export function buildReadingSynonymDisplay(item, mainEntry = {}) {
     typeof item === "object" && item
       ? item.meaning || item.meaningZh || item.chineseMeaning
       : ""
-  ) || cleanText(mainEntry?.meaning || mainEntry?.chineseMeaning);
+  ) || cleanText(mainEntry?.meaning || mainEntry?.meaningZh || mainEntry?.chineseMeaning);
   return { word, meaning };
 }
 
@@ -440,6 +457,14 @@ export function mergeAiProfileIntoMainEntry(mainEntry = {}, profile = {}, option
   if ((!Array.isArray(next.synonyms) || !next.synonyms.length) && Array.isArray(profile.synonyms)) {
     next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
   }
+  next.synonymDetails = normalizeReadingSynonymDetails(
+    [
+      ...(Array.isArray(next.synonymDetails) ? next.synonymDetails : []),
+      ...(Array.isArray(profile.synonymDetails) ? profile.synonymDetails : [])
+    ],
+    next.synonyms,
+    next.word
+  );
   if (Array.isArray(profile.forms)) next.formsReviewed = true;
   if (Array.isArray(profile.wordFamily)) next.wordFamilyReviewed = true;
   if (Array.isArray(profile.synonyms)) next.synonymsReviewed = true;

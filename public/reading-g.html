@@ -7,7 +7,8 @@
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23225f52'/%3E%3Cpath d='M9 8h14v3H12v4h9v3h-9v4h11v3H9z' fill='white'/%3E%3C/svg%3E" />
   <title>G类阅读提升 · 静态便携版</title>
-  <link rel="stylesheet" href="./assets/style.css?v=20260805_master_g_audit_sync_v20" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
+  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
   <style>
     .hidden{display:none!important}
     .module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px;align-items:center}
@@ -28,31 +29,22 @@
     .para-stem{text-align:center;font-size:clamp(26px,5vw,44px);font-weight:850;margin-bottom:12px;overflow-wrap:anywhere}
     .para-option{display:block;width:100%;text-align:left;margin-bottom:8px;min-height:42px}.para-option.correct{background:#e5f2ed;border-color:#225f52}.para-option.wrong,.topic-chip.danger{background:#fdf0ed;border-color:#c45c4a;color:#953d2f}
     .para-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;padding:14px;border:1px solid #ece3d8;border-radius:8px;background:#faf8f5}.para-summary span{display:flex;justify-content:space-between;gap:12px}
+    .para-evidence{margin-bottom:18px;border:1px solid #dce8e3;border-radius:12px;background:#fbfdfc;overflow:hidden}.para-evidence-head,.para-evidence-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}.para-evidence-head{padding:10px 13px;border-bottom:1px solid #e4ece8;color:#225f52;font-size:13px}.para-evidence-head span{color:#6b7c8a;font-size:12px}.para-evidence-list{display:grid}.para-evidence-item{display:grid;gap:5px;padding:12px 13px}.para-evidence-item+.para-evidence-item{border-top:1px solid #e4ece8}.para-evidence-meta{color:#5c6e7d;font-size:12px}.para-evidence-meta strong{color:#1f6b58}.para-evidence-answer{font-size:13px;font-weight:800;color:#26384b}.para-evidence-sentence,.para-evidence-pending,.para-evidence-empty{margin:0;font-size:13px;line-height:1.55;overflow-wrap:anywhere}.para-evidence-sentence{color:#334155}.para-evidence-pending{color:#9b6a28}.para-evidence-empty{padding:12px 13px;color:#6b7c8a}
     .expression-note{font-size:12px;color:#756d63;line-height:1.5;margin:4px 0 0}
-    .sense-hint{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px;font-size:12px;color:#587269}.sense-hint button{border:1px solid #c9ddd5;border-radius:999px;padding:5px 10px;background:#edf6f2;color:#246454;font-weight:800;cursor:pointer}.sense-hint .sense-list{width:100%;padding:9px 11px;border:1px solid #e5eae7;border-radius:8px;background:#fbfcfb;line-height:1.55;color:#405265}
-    .reading-controls-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 0;padding:9px 11px;border:1px solid #dce3df;border-radius:8px;background:#fff}
     .reading-controls-summary{min-width:0;color:#5f6f68;font-size:12px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .reading-controls-summary strong{color:#225f52}
-    .reading-controls-toggle{flex:0 0 auto;border:1px solid #b9d1c8;border-radius:6px;padding:7px 11px;background:#edf6f2;color:#225f52;font-weight:800;font-size:12px;cursor:pointer}
-    .reading-controls-toggle:hover{border-color:#225f52}
-    .reading-controls.is-collapsed .reading-controls-body{display:none}
-    .reading-controls:not(.is-collapsed) .reading-controls-head{margin-bottom:8px}
-    @media(min-width:901px){.reading-controls{width:min(1480px,100%);margin-inline:auto}.reading-controls-head{display:none}}
-    @media(min-width:901px) and (max-height:900px){.reading-controls-head{display:flex}.reading-controls{margin-bottom:4px}.reading-controls-body .top-actions{margin-top:8px}}
-    @media(max-width:900px){.reading-controls{margin-bottom:4px}.reading-controls-body .top-actions{margin-top:8px}.reading-controls-body .expression-note{margin:8px 2px 0}.topic-bar{max-height:42vh;overflow:auto;padding-bottom:2px}}
-    @media(min-width:1600px){.module-nav{margin-top:10px}.meta-pill,.topic-chip{font-size:14px}.topic-chip{padding:8px 12px}.expression-note{font-size:14px}.reading-controls-body .top-actions{gap:10px}}
     @media(max-width:520px){.para-pair{grid-template-columns:1fr;gap:5px}.para-pair span{transform:rotate(90deg)}.para-summary{grid-template-columns:1fr}}
   </style>
 </head>
-<body>
+<body class="reading-g-static" data-static-page="reading-g">
   <header class="static-brand-bar">
     <a class="static-brand" href="./index.html"><span aria-hidden="true"></span>IELTS VOCAB</a>
     <div class="static-session-context"><strong>G类阅读提升</strong><span>静态便携版</span></div>
-    <nav class="static-brand-nav" aria-label="主要学习模式">
+    <nav class="static-brand-nav" data-static-primary-nav aria-label="主要学习模式">
       <a href="./meaning.html">选义</a><a href="./spelling.html">拼写</a>
     </nav>
   </header>
-  <aside class="static-shell-sidebar" aria-label="学习导航">
+  <aside class="static-shell-sidebar" data-static-sidebar aria-label="全站学习导航">
     <nav>
       <a href="./index.html">刷词</a>
       <a href="./spelling.html">拼写</a>
@@ -68,38 +60,64 @@
     </nav>
   </aside>
   <main class="app">
-    <header class="top">
-      <button id="prevBtn" class="top-btn" type="button">上一个</button>
+    <header id="readingTopbar" class="top reading-g-topbar">
+      <button id="prevTopBtn" class="top-btn reading-g-top-prev" type="button">上一个</button>
+      <button id="topToolsToggle" class="top-tools-toggle" type="button">工具与词库</button>
+      <div id="readingTopTools" class="top-actions">
+        <select id="wordOrderSelect" class="top-select reading-g-order-select" aria-label="排列关系" title="选择当前学习入口内的单词排列关系">
+          <option value="current">现有顺序</option>
+          <option value="random">随机</option>
+          <option value="family">词族关系</option>
+          <option value="association">场景关联</option>
+        </select>
+        <select id="difficultyOrderSelect" class="top-select reading-g-difficulty-select" aria-label="入口内部相对难度" title="按当前入口内部的相对难度排序或筛选">
+          <option value="default">难度默认</option>
+          <option value="easy-to-hard">简单→困难</option>
+          <option value="hard-to-easy">困难→简单</option>
+          <option value="easier-only">只刷相对较易</option>
+          <option value="standard-only">只刷常规</option>
+          <option value="harder-only">只刷相对较难</option>
+        </select>
+        <select id="entrySelect" class="top-select reading-g-entry-select" aria-label="G类阅读学习入口">
+          <option value="">正在载入入口</option>
+        </select>
+        <button class="top-btn" type="button" data-study-meaning-toggle>隐藏释义</button>
+        <button id="readingEntryBtn" class="top-btn reading-g-entry-button" type="button" aria-haspopup="dialog">入口</button>
+        <button id="autoPlayBtn" class="top-btn" type="button">自动播放 · A</button>
+        <select id="autoPlaySpeed" class="top-select reading-g-speed-select" aria-label="自动播放间隔">
+          <option value="2">2秒</option>
+          <option value="4">4秒</option>
+          <option value="6" selected>6秒</option>
+          <option value="10">10秒</option>
+        </select>
+        <button id="shuffleBtn" class="top-btn" type="button">随机</button>
+        <a href="./ielts-538.html" class="top-btn">538考点</a>
+        <a href="./basic.html" class="top-btn">零基础单词</a>
+        <a href="./reading-g.html" class="top-btn active">G类阅读提升</a>
+        <a href="./meaning.html" class="top-btn">看词选意思·6000</a>
+        <a href="./spelling.html" class="top-btn">拼写训练</a>
+        <a href="./reading-words.html" class="top-btn">阅读生词本</a>
+      </div>
     </header>
 
-    <section id="readingControls" class="reading-controls" aria-label="G类阅读学习设置">
-      <div class="reading-controls-head">
-        <div id="readingControlsSummary" class="reading-controls-summary"><strong>当前范围</strong> · 阶段1</div>
-        <button id="readingControlsToggle" class="reading-controls-toggle" type="button" aria-expanded="true" aria-controls="readingControlsBody">收起设置</button>
-      </div>
-      <div id="readingControlsBody" class="reading-controls-body">
-        <div class="top-actions">
-          <a href="./index.html" class="top-btn">← 主词库</a>
-          <button class="top-btn" type="button" data-study-meaning-toggle>隐藏释义</button>
-          <button id="autoPlayBtn" class="top-btn" type="button">自动播放 · A</button>
-          <select id="autoPlaySpeed" class="top-select" aria-label="自动播放间隔">
-            <option value="2">2秒</option>
-            <option value="4">4秒</option>
-            <option value="6" selected>6秒</option>
-            <option value="10">10秒</option>
-          </select>
-          <button id="shuffleBtn" class="top-btn" type="button">随机</button>
-          <button id="nextBtn" class="top-btn" type="button">下一个</button>
+    <section id="readingControls" class="entry-panel hidden" aria-label="G类阅读学习入口">
+      <div class="entry-card" role="dialog" aria-modal="true" aria-labelledby="readingEntryTitle">
+        <div class="reading-entry-head">
+          <div>
+            <h2 id="readingEntryTitle">选择 G 类阅读学习入口</h2>
+            <div id="readingControlsSummary" class="reading-controls-summary"><strong>当前范围</strong> · 正在载入</div>
+          </div>
+          <button id="readingControlsClose" class="reading-entry-close" type="button" aria-label="关闭入口面板">×</button>
         </div>
         <div class="module-nav">
           <span class="meta-pill" id="bankMeta">G类阅读提升</span>
         </div>
-        <div class="topic-bar" id="topicBar" aria-label="学习范围筛选"></div>
-        <p class="expression-note">同义训练仅使用安全题库233组；仅浏览关系67组不进入选择题。表达识别核心1006个表达、扩展500个表达。AI补全需要安全的本地服务器环境，请在电脑本地版使用“AI补全待补词”。</p>
+        <div class="entry-grid reading-entry-grid" id="topicBar" aria-label="学习范围筛选"></div>
+        <p class="entry-help expression-note">词义和短语入口显示单词、词性、变形、词族与同义替换；同义引导和同义测验是独立训练入口。静态版不会调用付费 AI。</p>
       </div>
     </section>
 
-    <section id="swipeArea" class="hero">
+    <section id="swipeArea" class="hero" data-static-swipe-card>
       <button id="favoriteBtn" class="star" title="收藏" type="button">☆</button>
       <div id="unfamiliarAlert" class="unfamiliar-alert hidden">已标记不熟，优先复习</div>
       <button id="wordSoundBtn" class="sound-main" title="播放单词" type="button">🔊</button>
@@ -118,23 +136,40 @@
           <div id="example" class="example-en">读取分层词库并恢复学习位置</div>
         </div>
         <div id="exampleCn" class="example-cn"></div>
-        <div id="senseHint" class="sense-hint hidden"></div>
       </div>
     </section>
 
+    <section id="relationBlocks" class="blocks study-answer-content" aria-label="词形、词族与同义替换"></section>
+
     <footer class="bottom">
       <div class="actions">
-        <button id="knownBtn" class="status known" type="button">熟悉</button>
-        <button id="unknownBtn" class="status unknown" type="button">不熟</button>
+        <button id="prevBtn" class="study-step-button" type="button">上一个</button>
+        <button id="knownBtn" class="status known" type="button" title="快捷键：1">认识</button>
+        <button id="unknownBtn" class="status unknown" type="button" title="快捷键：3">不熟</button>
+        <button id="nextBtn" class="study-step-button" type="button">下一个</button>
       </div>
       <div class="progress-row">
-        <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
-        <div id="count" class="count">0 / 0</div>
+        <div class="progress-control">
+          <div class="progress" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
+          <input id="progressSeek" class="progress-seek hidden" type="range" min="1" max="1" step="1" value="1" aria-label="拖动跳转到词表位置" />
+        </div>
+        <button id="progressJumpBtn" class="progress-jump-button" type="button" disabled aria-label="精确跳转位置"><span id="count" class="count">0 / 0</span></button>
       </div>
+      <output id="progressPreview" class="progress-preview hidden" aria-live="polite"></output>
+      <form id="progressJump" class="progress-jump hidden">
+        <label for="progressJumpInput">跳转到第</label>
+        <input id="progressJumpInput" type="number" min="1" max="1" step="1" inputmode="numeric" value="1" />
+        <span id="progressJumpTotal">/ 0</span>
+        <button type="submit">跳转</button>
+        <button id="progressJumpCancel" type="button" aria-label="取消跳转">×</button>
+      </form>
     </footer>
   </main>
   <div id="toast" class="toast"></div>
-  <script src="./assets/study-meaning-visibility.js?v=20260805_master_g_audit_sync_v20"></script>
-  <script src="./assets/reading-g.js?v=20260805_master_g_audit_sync_v20"></script>
+<script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./sync-config.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/static-cloud-sync.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/study-meaning-visibility.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/reading-g.js?v=20260809_reading_keyboard_v49"></script>
 </body>
 </html>

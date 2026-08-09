@@ -29,6 +29,31 @@ function fixtureWord(id, word) {
   };
 }
 
+function desktopFixtureWord() {
+  return {
+    ...fixtureWord("word-vacancy", "vacancy"),
+    meaning: "空缺",
+    example: "The company has a vacancy for a marketing manager.",
+    exampleCn: "公司有一个市场经理的空缺。",
+    forms: [
+      { word: "vacancies", label: "复数形式", meaning: "空缺" }
+    ],
+    wordFamily: [
+      { word: "vacant", pos: "adjective", meaning: "空缺的" },
+      { word: "vacate", pos: "verb", meaning: "腾出" }
+    ],
+    collocations: [
+      { phrase: "job vacancy", meaning: "职位空缺" },
+      { phrase: "fill a vacancy", meaning: "填补空缺" },
+      { phrase: "vacancy rate", meaning: "空置率" }
+    ],
+    phraseCollocations: [
+      { phrase: "no vacancy", meaning: "无空位" },
+      { phrase: "vacancy announcement", meaning: "招聘公告" }
+    ]
+  };
+}
+
 function contentType(file) {
   if (file.endsWith(".html")) return "text/html; charset=utf-8";
   if (file.endsWith(".js")) return "text/javascript; charset=utf-8";
@@ -135,6 +160,85 @@ test("actual exported mobile page uses the 538 touch gesture for reliable left a
     await touchSwipe(page, { selector: "#favoriteBtn", fromX: 330, fromY: 220, toX: 70, toY: 224, identifier: 44 });
     await expect(page.locator("#word")).toHaveText("alpha");
     expect(pageErrors).toEqual([]);
+  } finally {
+    await context.close();
+    await server.close();
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("exported desktop home keeps the action dock visible without page-level vertical overflow", async ({ browser }) => {
+  const request = new Request("http://127.0.0.1:3000/api/export-static?audio=0", {
+    method: "POST",
+    headers: { host: "127.0.0.1:3000", "content-type": "application/json" },
+    body: JSON.stringify({ words: [desktopFixtureWord()] })
+  });
+  const response = await POST(request);
+  expect(response.status).toBe(200);
+
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "static-vocab-desktop-"));
+  for (const entry of readStoredZipEntries(Buffer.from(await response.arrayBuffer()))) {
+    const target = path.join(directory, entry.name);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, entry.data);
+  }
+  const server = await serveDirectory(directory);
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${server.url}/index.html`, { waitUntil: "networkidle" });
+    await expect(page.locator("#word")).toHaveText("vacancy");
+
+    const layout = await page.evaluate(() => ({
+      scrollHeight: document.documentElement.scrollHeight,
+      clientHeight: document.documentElement.clientHeight,
+      dockBottom: document.querySelector(".bottom")?.getBoundingClientRect().bottom ?? 0,
+      viewportHeight: window.innerHeight
+    }));
+
+    expect(layout.scrollHeight).toBeLessThanOrEqual(layout.clientHeight);
+    expect(layout.dockBottom).toBeLessThanOrEqual(layout.viewportHeight);
+  } finally {
+    await context.close();
+    await server.close();
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("exported zero-foundation page refreshes its status counts from saved progress", async ({ browser }) => {
+  const request = new Request("http://127.0.0.1:3000/api/export-static?audio=0", {
+    method: "POST",
+    headers: { host: "127.0.0.1:3000", "content-type": "application/json" },
+    body: JSON.stringify({ words: [fixtureWord("word-alpha", "alpha")] })
+  });
+  const response = await POST(request);
+  expect(response.status).toBe(200);
+
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "static-vocab-basic-status-"));
+  for (const entry of readStoredZipEntries(Buffer.from(await response.arrayBuffer()))) {
+    const target = path.join(directory, entry.name);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, entry.data);
+  }
+  const server = await serveDirectory(directory);
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  try {
+    await page.goto(`${server.url}/basic.html`, { waitUntil: "networkidle" });
+    const firstWord = String(await page.locator("#word").textContent()).trim().toLowerCase();
+    expect(firstWord).not.toBe("");
+    await page.evaluate((word) => {
+      localStorage.setItem("ielts_basic_flash_status_v1", JSON.stringify({
+        [word]: { status: "熟悉", favorite: false }
+      }));
+    }, firstWord);
+    await page.reload({ waitUntil: "networkidle" });
+
+    await expect(page.locator("#basicTopbar")).toHaveClass(/is-tools-collapsed/);
+    await page.locator("#topToolsToggle").click();
+    await expect(page.locator("#basicFilterPanel")).toBeVisible();
+    await expect(page.locator("#statusSummary")).toContainText("熟悉 1");
+    await expect(page.getByRole("button", { name: "熟悉 1" })).toBeVisible();
   } finally {
     await context.close();
     await server.close();

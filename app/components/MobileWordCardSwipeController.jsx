@@ -15,7 +15,7 @@ export default function MobileWordCardSwipeController() {
     function handlePointerDown(event) {
       if (event.pointerType === "mouse") return;
       const target = event.target;
-      const card = target?.closest?.(".word-study-card");
+      const card = target?.closest?.("[data-word-swipe-card], .word-study-card");
       if (!card || target.closest?.(INTERACTIVE_SELECTOR)) return;
 
       swipeStartRef.current = {
@@ -70,5 +70,5 @@ export default function MobileWordCardSwipeController() {
     };
   }, []);
 
-  return <style>{`.word-study-card { touch-action: pan-y; }`}</style>;
+  return <style>{`.word-study-card, [data-word-swipe-card] { touch-action: pan-y; }`}</style>;
 }

@@ -1,10 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  buildReadingWordsBackup,
   getReadingWordMissingFields,
   isReadingWordIncomplete,
   mergeReadingWordAiProfile,
   mergeReadingWordImports,
+  normalizeReadingWordsSession,
   parseReadingWordsTable
 } from "../storage.mjs";
 
@@ -68,6 +70,10 @@ test("AI merge fills only missing reading fields and never adds collocation sect
     forms: [],
     wordFamily: [],
     synonyms: ["keep", "preserve"],
+    synonymDetails: [
+      { word: "keep", pos: "verb", meaningZh: "保留" },
+      { word: "preserve", pos: "verb", meaningZh: "保存" }
+    ],
     collocations: [{ phrase: "retain control", chinese: "保持控制" }],
     phraseCollocations: [{ phrase: "retain the right to", chinese: "保留……的权利" }]
   });
@@ -75,6 +81,10 @@ test("AI merge fills only missing reading fields and never adds collocation sect
   assert.equal(after.meaning, "用户自己的释义");
   assert.equal(after.definition, "to continue to have something");
   assert.deepEqual(after.synonyms, ["keep", "preserve"]);
+  assert.deepEqual(after.synonymDetails, [
+    { word: "keep", pos: "verb", meaningZh: "保留" },
+    { word: "preserve", pos: "verb", meaningZh: "保存" }
+  ]);
   assert.equal(Object.hasOwn(after, "collocations"), false);
   assert.equal(Object.hasOwn(after, "phraseCollocations"), false);
   assert.equal(after.id, "reading-1");
@@ -82,4 +92,42 @@ test("AI merge fills only missing reading fields and never adds collocation sect
   assert.equal(after.favorite, true);
   assert.equal(isReadingWordIncomplete(after), false);
   assert.deepEqual(getReadingWordMissingFields(after), []);
+});
+
+test("reading study session keeps only safe, reusable filter and position values", () => {
+  assert.deepEqual(
+    normalizeReadingWordsSession({
+      selectedId: " reading-7 ",
+      search: "  allocate  ",
+      onlyIncomplete: true,
+      onlyFrequent: "true",
+      ignored: "value"
+    }),
+    {
+      selectedId: "reading-7",
+      search: "allocate",
+      onlyIncomplete: true,
+      onlyFrequent: false
+    }
+  );
+});
+
+test("reading backups keep notebook fields but strip main-lexicon display supplements", () => {
+  const backup = buildReadingWordsBackup([{
+    id: "reading-encyclopaedia",
+    word: "encyclopaedia",
+    meaning: "百科全书",
+    synonyms: ["compendium"],
+    synonymDetails: [{ word: "compendium", pos: "noun", meaningZh: "概要" }],
+    collocations: [{ phrase: "online encyclopaedia", chinese: "在线百科全书" }],
+    phraseCollocations: [{ phrase: "in an encyclopaedia", chinese: "在百科全书中" }],
+    difficulty: "advanced"
+  }]);
+
+  assert.deepEqual(backup.words[0].synonymDetails, [
+    { word: "compendium", pos: "noun", meaningZh: "概要" }
+  ]);
+  assert.equal(Object.hasOwn(backup.words[0], "collocations"), false);
+  assert.equal(Object.hasOwn(backup.words[0], "phraseCollocations"), false);
+  assert.equal(Object.hasOwn(backup.words[0], "difficulty"), false);
 });

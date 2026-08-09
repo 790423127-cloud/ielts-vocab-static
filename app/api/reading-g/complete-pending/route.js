@@ -13,10 +13,15 @@ import {
 } from "../../../lib/ai/deepseek-word-profile.server.mjs";
 import {
   READING_G_AI_COMPLETION_SOURCE,
-  isReadingGPendingAiEntry
+  buildReadingGAiCompletedEntry,
+  isReadingGAiCompletionCandidate
 } from "../../../lib/reading-g-vocab/ai-completion.mjs";
+import { isReadingGContentIncomplete } from "../../../lib/reading-g-vocab/content-completeness.mjs";
 import { normalizeReadingGKey } from "../../../lib/reading-g-vocab/normalize.mjs";
-import { runReadingGQuestionBankExpansion } from "../../../../scripts/expand-reading-g-question-bank.mjs";
+import {
+  atomicWriteReadingGJson,
+  withReadingGVocabWriteLock
+} from "../../../lib/reading-g-vocab/write-lock.server.mjs";
 
 const MAX_BATCH_WORDS = 10;
 const PROJECT_ROOT = process.cwd();
@@ -24,27 +29,13 @@ const VOCAB_PATH = path.join(PROJECT_ROOT, "public", "data", "reading-g-vocab.js
 const COMPLETION_PATH = path.join(PROJECT_ROOT, READING_G_AI_COMPLETION_SOURCE);
 const BACKUP_DIR = path.join(PROJECT_ROOT, "backups", "reading-g-ai");
 
-let writeQueue = Promise.resolve();
-
 function readJson(filePath, fallback = null) {
   if (!fs.existsSync(filePath)) return fallback;
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
-function atomicWriteJson(filePath, value) {
-  const tempPath = `${filePath}.tmp-${process.pid}-${Date.now()}`;
-  fs.writeFileSync(tempPath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
-  fs.renameSync(tempPath, filePath);
-}
-
 function timestampForFile() {
   return new Date().toISOString().replace(/[:.]/g, "-");
-}
-
-async function serializeWrite(task) {
-  const run = writeQueue.then(task, task);
-  writeQueue = run.catch(() => {});
-  return run;
 }
 
 function resolvePendingTargets(vocab, requestedIds) {
@@ -54,14 +45,15 @@ function resolvePendingTargets(vocab, requestedIds) {
   return ids.map((id) => {
     const entry = byId.get(id);
     if (!entry) throw new Error(`G类词库中没有找到待补词：${id}`);
-    if (!isReadingGPendingAiEntry(entry)) {
-      throw new Error(`只允许处理“全题库待补资料”：${entry.word || id}`);
+    if (!isReadingGAiCompletionCandidate(entry)) {
+      throw new Error(`只允许处理音标、词性、释义、例句或词族缺失的G类单词：${entry.word || id}`);
     }
     return entry;
   });
 }
 
-async function completePendingEntries(requestedIds) {
+async function completePendingEntriesUnsafe(requestedIds, options = {}) {
+  const allowPaid = options.allowPaid !== false;
   const vocab = readJson(VOCAB_PATH);
   if (!vocab || !Array.isArray(vocab.items)) throw new Error("G类阅读词库无法读取");
   const targets = resolvePendingTargets(vocab, requestedIds);
@@ -85,7 +77,7 @@ async function completePendingEntries(requestedIds) {
 
   let usage = null;
   let invalid = [];
-  if (toGenerate.length) {
+  if (toGenerate.length && allowPaid) {
     const generated = await requestDeepseekProfiles(toGenerate, {
       timeoutMs: 75000,
       maxTokens: 14000,
@@ -127,9 +119,30 @@ async function completePendingEntries(requestedIds) {
     ? nextPayload.entries
     : {};
   const completedAt = new Date().toISOString();
+  const nextVocab = structuredClone(vocab);
+  const nextIndexById = new Map(nextVocab.items.map((entry, index) => [entry.id, index]));
+  const updatedEntries = [];
   for (const entry of targets) {
     const result = resolved.get(entry.id);
     if (!result) continue;
+    let completed;
+    try {
+      completed = buildReadingGAiCompletedEntry(entry, result.profile, {
+        aiSource: result.source,
+        generatedAt: completedAt
+      });
+    } catch {
+      invalid.push({
+        inputId: entry.id,
+        word: entry.word,
+        reason: "缓存资料未满足G类完整度要求，已保留在待补队列"
+      });
+      continue;
+    }
+    const targetIndex = nextIndexById.get(entry.id);
+    if (targetIndex == null) throw new Error(`写回前找不到G类词条：${entry.word}`);
+    nextVocab.items[targetIndex] = completed;
+    updatedEntries.push(completed);
     nextPayload.entries[normalizeReadingGKey(entry.word)] = {
       word: entry.word,
       source: result.source,
@@ -137,49 +150,90 @@ async function completePendingEntries(requestedIds) {
       profile: result.profile
     };
   }
-  nextPayload.updatedAt = completedAt;
+  if (updatedEntries.length) nextPayload.updatedAt = completedAt;
   nextPayload.count = Object.keys(nextPayload.entries).length;
+  const remainingIncomplete = nextVocab.items.filter(isReadingGContentIncomplete).length;
+  const contentAiCompletedCount = nextVocab.items.filter((entry) => (
+    (entry.qualityFlags || []).includes("reading_g_ai_completed")
+  )).length;
+  const questionBankAiCompletedCount = nextVocab.items.filter((entry) => (
+    (entry.layers || []).includes("questionBankAiCompleted")
+    && (entry.qualityFlags || []).includes("question_bank_5262_expansion")
+    && !(entry.qualityFlags || []).some((flag) => [
+      "grok_full_bank_true_missing_supplement_v1",
+      "grok_excel_part1_2_missing_supplement_v1"
+    ].includes(flag))
+    && !(entry.layers || []).some((layer) => [
+      "grokFullBankSupplement",
+      "grokExcelPart12Supplement"
+    ].includes(layer))
+  )).length;
+  const totals = {
+    count: nextVocab.items.length,
+    wordCount: nextVocab.items.filter((entry) => (entry.entryType || "word") === "word").length,
+    phraseCount: nextVocab.items.filter((entry) => entry.entryType === "phrase").length,
+    activeCount: nextVocab.items.filter((entry) => entry.studyMode === "active").length,
+    referenceCount: nextVocab.items.filter((entry) => entry.studyMode === "reference").length,
+    aiCompletedCount: contentAiCompletedCount,
+    pendingCount: remainingIncomplete
+  };
+  let backupPath = null;
 
-  fs.mkdirSync(BACKUP_DIR, { recursive: true });
-  const backupPath = path.join(BACKUP_DIR, `reading-g-ai-completions-${timestampForFile()}.json`);
-  atomicWriteJson(backupPath, originalPayload);
-
-  try {
-    atomicWriteJson(COMPLETION_PATH, nextPayload);
-    const expanded = runReadingGQuestionBankExpansion({ projectRoot: PROJECT_ROOT });
-    const updatedById = new Map(expanded.vocab.items.map((entry) => [entry.id, entry]));
-    const updatedEntries = [...resolved.keys()].map((id) => updatedById.get(id)).filter(Boolean);
-    return {
-      ok: true,
-      updatedEntries,
-      totals: {
-        count: expanded.vocab.count,
-        wordCount: expanded.vocab.wordCount,
-        phraseCount: expanded.vocab.phraseCount,
-        activeCount: expanded.vocab.activeCount,
-        referenceCount: expanded.vocab.referenceCount,
-        aiCompletedCount: expanded.vocab.questionBankExpansion?.aiCompletedCount || 0,
-        pendingCount:
-          expanded.vocab.questionBankExpansion?.pendingIndependentCount
-          ?? expanded.vocab.questionBankExpansion?.pendingCount
-          ?? 0
-      },
-      stats: {
-        requested: targets.length,
-        completed: updatedEntries.length,
-        cacheHit,
-        deepseek: [...resolved.values()].filter((item) => item.source === "deepseek").length,
-        failed: targets.length - updatedEntries.length,
-        invalid,
-        usage
-      },
-      backupPath
+  if (updatedEntries.length) {
+    nextVocab.updatedAt = completedAt;
+    nextVocab.count = totals.count;
+    nextVocab.wordCount = totals.wordCount;
+    nextVocab.phraseCount = totals.phraseCount;
+    nextVocab.activeCount = totals.activeCount;
+    nextVocab.referenceCount = totals.referenceCount;
+    nextVocab.multiSenseCount = nextVocab.items.filter((entry) => (entry.senses || []).length > 1).length;
+    nextVocab.questionBankExpansion = {
+      ...(nextVocab.questionBankExpansion || {}),
+      aiCompletedCount: questionBankAiCompletedCount,
+      contentAiCompletedCount,
+      contentIncompleteCount: remainingIncomplete
     };
-  } catch (error) {
-    atomicWriteJson(COMPLETION_PATH, originalPayload);
-    runReadingGQuestionBankExpansion({ projectRoot: PROJECT_ROOT });
-    throw error;
+
+    fs.mkdirSync(BACKUP_DIR, { recursive: true });
+    const backupStamp = timestampForFile();
+    const completionBackupPath = path.join(BACKUP_DIR, `reading-g-ai-completions-${backupStamp}.json`);
+    const vocabBackupPath = path.join(BACKUP_DIR, `reading-g-vocab-${backupStamp}.json`);
+    atomicWriteReadingGJson(completionBackupPath, originalPayload);
+    atomicWriteReadingGJson(vocabBackupPath, vocab);
+
+    try {
+      atomicWriteReadingGJson(COMPLETION_PATH, nextPayload);
+      atomicWriteReadingGJson(VOCAB_PATH, nextVocab);
+      backupPath = {
+        completions: completionBackupPath,
+        vocab: vocabBackupPath
+      };
+    } catch (error) {
+      atomicWriteReadingGJson(COMPLETION_PATH, originalPayload);
+      atomicWriteReadingGJson(VOCAB_PATH, vocab);
+      throw error;
+    }
   }
+
+  return {
+    ok: true,
+    updatedEntries,
+    totals,
+    stats: {
+      requested: targets.length,
+      completed: updatedEntries.length,
+      cacheHit,
+      deepseek: [...resolved.values()].filter((item) => item.source === "deepseek").length,
+      failed: targets.length - updatedEntries.length,
+      invalid,
+      usage
+    },
+    backupPath
+  };
+}
+
+export function completePendingEntries(requestedIds, options = {}) {
+  return withReadingGVocabWriteLock(() => completePendingEntriesUnsafe(requestedIds, options));
 }
 
 export async function POST(req) {
@@ -194,7 +248,7 @@ export async function POST(req) {
     if (!body.entryIds.some((value) => String(value || "").trim())) {
       return Response.json({ ok: false, error: "至少选择一个待补词" }, { status: 400 });
     }
-    const result = await serializeWrite(() => completePendingEntries(body.entryIds));
+    const result = await completePendingEntries(body.entryIds);
     return Response.json(result, { status: result.ok ? 200 : 502 });
   } catch (error) {
     const status = error instanceof AiProfileError ? error.status : 500;

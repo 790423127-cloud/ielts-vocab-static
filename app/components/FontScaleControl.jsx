@@ -45,9 +45,9 @@ export default function FontScaleControl({ className = "" }) {
       className={`font-scale-control${className ? ` ${className}` : ""}`}
       role="group"
       aria-label="全站字号"
-      title="仅放大文字，按钮和布局尺寸不变；全页面同步，刷新后仍保留"
+      title="调整全站字号；页面布局会同步自适应，刷新后仍保留"
     >
-      <span className="font-scale-control__label">仅字号</span>
+      <span className="font-scale-control__label">字号</span>
       <button
         type="button"
         className="font-scale-control__btn"

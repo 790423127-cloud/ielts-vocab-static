@@ -18,6 +18,10 @@ import {
   isReadingGContentComplete,
   isReadingGContentIncomplete
 } from "./content-completeness.mjs";
+import {
+  getReadingGSynonymStatus,
+  READING_G_SYNONYM_STATUS
+} from "./synonym-relations.mjs";
 import { isInflectedReferenceWord } from "../vocab/word-study-eligibility.mjs";
 
 function safeGet(key, fallback) {
@@ -437,6 +441,12 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
   if (filter.type === "questionBankComplete") {
     return item.primaryLayer === "questionBankActive" && isReadingGContentComplete(item);
   }
+  if (filter.type === "synonymPending") {
+    return getReadingGSynonymStatus(item).state === READING_G_SYNONYM_STATUS.PENDING;
+  }
+  if (filter.type === "synonymReviewedNone") {
+    return getReadingGSynonymStatus(item).state === READING_G_SYNONYM_STATUS.REVIEWED_NONE;
+  }
 
   const isExplicitCompletionQueue =
     filter.type === "layer" && filter.value === "questionBankPending";
@@ -465,6 +475,8 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
     filter.type !== "paraphraseQuiz" &&
     filter.type !== "reference" &&
     filter.type !== "primaryLayer" &&
+    filter.type !== "synonymPending" &&
+    filter.type !== "synonymReviewedNone" &&
     !(filter.type === "pathStage" && filter.value === "4")
   ) {
     return false;
@@ -514,7 +526,7 @@ export function getRgFilterLabel(filter) {
     return "阶段1：基础保分";
   }
   if (filter.type === "pathStage" && filter.value === "2") return "阶段2：扩大覆盖";
-  if (filter.type === "pathStage" && filter.value === "3") return "阶段3：真题强化";
+  if (filter.type === "pathStage" && filter.value === "3") return "阶段3：文章强化";
   if (filter.type === "pathStage" && filter.value === "4") return "阶段4：参考查阅";
   if (filter.type === "active") return "默认待学（全部active）";
   if (filter.type === "reference") return "参考701（查阅）";
@@ -538,6 +550,8 @@ export function getRgFilterLabel(filter) {
   if (filter.type === "contentIncomplete") {
     return "待补词（按实际字段）";
   }
+  if (filter.type === "synonymPending") return "同义替换待补";
+  if (filter.type === "synonymReviewedNone") return "同义替换：已核查无结果";
   if (filter.type === "primaryLayer" && filter.value === "questionBankPending") {
     return "待补词（独立词条）";
   }
@@ -615,21 +629,36 @@ export const RG_LEARNING_ENTRIES = [
     ]
   },
   {
+    group: "同义替换资料",
+    items: [
+      {
+        title: "同义待补全",
+        desc: "主词库无现成资料，等待 AI 核查",
+        filter: { type: "synonymPending", value: "" }
+      },
+      {
+        title: "已核查无替换",
+        desc: "AI 已扫描，当前义项暂无安全常见替换",
+        filter: { type: "synonymReviewedNone", value: "" }
+      }
+    ]
+  },
+  {
     group: "阶段路线",
     items: [
       {
         title: "阶段1：基础保分",
-        desc: "先把高收益词吃稳",
+        desc: "基础高频词 + 阅读必懂逻辑与核心词",
         filter: { type: "pathStage", value: "1" }
       },
       {
         title: "阶段2：扩大覆盖",
-        desc: "阶段1之外的B层与后200词组",
+        desc: "常见中级阅读词 + 常用阅读词组",
         filter: { type: "pathStage", value: "2" }
       },
       {
-        title: "阶段3：真题强化",
-        desc: "前两阶段之外的全部可学习词",
+        title: "阶段3：文章强化",
+        desc: "文章定位词 + 进阶、低频与主题词",
         filter: { type: "pathStage", value: "3" }
       },
       {

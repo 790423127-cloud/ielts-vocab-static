@@ -4,8 +4,9 @@
 
   var STATUS_KEY = "ielts_basic_flash_status_v1";
   var SESSION_KEY = "ielts_basic_flash_session_v1";
+  var TOP_TOOLS_KEY = "ielts_static_basic_tools_collapsed_v1";
   var DATA_URL = "./data/basic-words.json";
-  var DATA_VERSION = "20260805_master_g_audit_sync_v20";
+  var DATA_VERSION = "20260809_reading_keyboard_v49";
 
   var words = [];
   var filter = { type: "all", value: "" };
@@ -24,10 +25,14 @@
     favoriteBtn: document.getElementById("favoriteBtn"),
     unfamiliarAlert: document.getElementById("unfamiliarAlert"),
     bankMeta: document.getElementById("bankMeta"),
+    statusSummary: document.getElementById("statusSummary"),
     topicBar: document.getElementById("topicBar"),
     toast: document.getElementById("toast"),
     knownBtn: document.getElementById("knownBtn"),
-    unknownBtn: document.getElementById("unknownBtn")
+    unknownBtn: document.getElementById("unknownBtn"),
+    swipeArea: document.getElementById("swipeArea"),
+    basicTopbar: document.getElementById("basicTopbar"),
+    topToolsToggle: document.getElementById("topToolsToggle")
   };
 
   function toast(msg) {
@@ -37,6 +42,17 @@
     toast._t = setTimeout(function () {
       els.toast.classList.remove("show");
     }, 1800);
+  }
+
+  function setTopToolsCollapsed(collapsed, persist) {
+    if (els.basicTopbar) els.basicTopbar.classList.toggle("is-tools-collapsed", !!collapsed);
+    if (els.topToolsToggle) {
+      els.topToolsToggle.setAttribute("aria-expanded", String(!collapsed));
+      els.topToolsToggle.textContent = "工具与词库";
+    }
+    if (persist) {
+      try { localStorage.setItem(TOP_TOOLS_KEY, collapsed ? "1" : "0"); } catch (e) {}
+    }
   }
 
   function loadJson(key, fallback) {
@@ -226,6 +242,23 @@
     render();
   }
 
+  function rebuildAfterMark(previousStudy, previousPos, currentIndex, advance) {
+    rebuildStudy();
+    if (!study.length) return;
+    if (!advance && study.indexOf(currentIndex) >= 0) {
+      index = currentIndex;
+      return;
+    }
+    for (var offset = 1; offset <= previousStudy.length; offset += 1) {
+      var candidate = previousStudy[(previousPos + offset) % previousStudy.length];
+      if (study.indexOf(candidate) >= 0) {
+        index = candidate;
+        return;
+      }
+    }
+    index = study[Math.min(previousPos, study.length - 1)];
+  }
+
   function setFilter(next) {
     filter = next;
     rebuildStudy();
@@ -243,20 +276,33 @@
 
   function buildTopics() {
     var counts = {};
+    var summary = { pending: 0, unfamiliar: 0, familiar: 0, favorite: 0 };
     words.forEach(function (w) {
+      var status = getStatus(w);
+      if (status === "熟悉") summary.familiar += 1;
+      else summary.pending += 1;
+      if (status === "不熟") summary.unfamiliar += 1;
+      if (isFavorite(w) && status !== "熟悉") summary.favorite += 1;
       (w.topics || []).forEach(function (t) {
         counts[t] = (counts[t] || 0) + 1;
       });
     });
+    if (els.statusSummary) {
+      els.statusSummary.textContent =
+        "学习状态：待学 " + summary.pending +
+        " · 不熟 " + summary.unfamiliar +
+        " · 熟悉 " + summary.familiar +
+        " · 收藏 " + summary.favorite;
+    }
     var topics = Object.keys(counts).sort(function (a, b) {
       return counts[b] - counts[a];
     });
     var chips = [
-      { label: "全部待学", f: { type: "all", value: "" } },
-      { label: "全部词", f: { type: "everything", value: "" } },
-      { label: "不熟", f: { type: "status", value: "不熟" } },
-      { label: "熟悉", f: { type: "status", value: "熟悉" } },
-      { label: "收藏", f: { type: "status", value: "收藏" } }
+      { label: "全部待学 " + summary.pending, f: { type: "all", value: "" } },
+      { label: "全部词 " + words.length, f: { type: "everything", value: "" } },
+      { label: "不熟 " + summary.unfamiliar, f: { type: "status", value: "不熟" } },
+      { label: "熟悉 " + summary.familiar, f: { type: "status", value: "熟悉" } },
+      { label: "收藏 " + summary.favorite, f: { type: "status", value: "收藏" } }
     ];
     topics.slice(0, 16).forEach(function (t) {
       chips.push({ label: t + " " + counts[t], f: { type: "topic", value: t } });
@@ -283,6 +329,28 @@
       }
       els.topicBar.appendChild(b);
     });
+  }
+
+  function restoreStudySession(savedSession) {
+    if (savedSession && savedSession.filter) filter = savedSession.filter;
+    rebuildStudy();
+    if (savedSession && savedSession.wordKey) {
+      for (var i = 0; i < words.length; i++) {
+        if (nk(words[i].word) === savedSession.wordKey && matches(words[i])) {
+          index = i;
+          break;
+        }
+      }
+    }
+  }
+
+  function applyMergedCloudProgress() {
+    statusMap = loadJson(STATUS_KEY, {}) || {};
+    session = loadJson(SESSION_KEY, null);
+    if (!words.length) return;
+    restoreStudySession(session);
+    buildTopics();
+    render();
   }
 
   document.getElementById("prevBtn").onclick = function () {
@@ -316,27 +384,31 @@
     var c = current();
     if (!c) return;
     patchStatus(c, { favorite: !isFavorite(c) });
+    buildTopics();
     render();
   };
   els.knownBtn.onclick = function () {
     var c = current();
     if (!c) return;
+    var previousStudy = study.slice();
+    var previousPos = studyPos();
+    var currentIndex = index;
     patchStatus(c, { status: "熟悉" });
-    rebuildStudy();
-    if (study.length) {
-      var pos = Math.min(studyPos(), study.length - 1);
-      index = study[pos];
-    }
+    rebuildAfterMark(previousStudy, previousPos, currentIndex, true);
+    buildTopics();
     render();
     toast("已标记熟悉");
-    if (study.length) setTimeout(function () { go(1); }, 200);
   };
   els.unknownBtn.onclick = function () {
     var c = current();
     if (!c) return;
+    var previousStudy = study.slice();
+    var previousPos = studyPos();
+    var currentIndex = index;
     var next = getStatus(c) === "不熟" ? "" : "不熟";
     patchStatus(c, { status: next });
-    rebuildStudy();
+    rebuildAfterMark(previousStudy, previousPos, currentIndex, true);
+    buildTopics();
     render();
     toast(next ? "已标记不熟" : "已取消不熟");
   };
@@ -356,12 +428,21 @@
       var c2 = current();
       if (c2) speak(c2.example);
     }
-    if (e.key === "0" || e.key === "2") { e.preventDefault(); els.knownBtn.click(); }
-    if (e.key === "1") { e.preventDefault(); els.unknownBtn.click(); }
+    if (e.key === "1") { e.preventDefault(); els.knownBtn.click(); }
+    if (e.key === "3") { e.preventDefault(); els.unknownBtn.click(); }
   });
 
   statusMap = loadJson(STATUS_KEY, {}) || {};
   var session = loadJson(SESSION_KEY, null);
+  var savedTools = null;
+  try { savedTools = localStorage.getItem(TOP_TOOLS_KEY); } catch (e) {}
+  setTopToolsCollapsed(window.innerHeight <= 900 || savedTools === "1", false);
+  if (els.topToolsToggle) {
+    els.topToolsToggle.addEventListener("click", function () {
+      var collapsed = !els.basicTopbar.classList.contains("is-tools-collapsed");
+      setTopToolsCollapsed(collapsed, true);
+    });
+  }
 
   fetch(DATA_URL + "?v=" + DATA_VERSION, { cache: "default" })
     .then(function (r) {
@@ -376,16 +457,7 @@
         words.length +
         " 词 · " +
         (data.version || "basic");
-      if (session && session.filter) filter = session.filter;
-      rebuildStudy();
-      if (session && session.wordKey) {
-        for (var i = 0; i < words.length; i++) {
-          if (nk(words[i].word) === session.wordKey && matches(words[i])) {
-            index = i;
-            break;
-          }
-        }
-      }
+      restoreStudySession(session);
       buildTopics();
       render();
     })
@@ -394,4 +466,9 @@
       els.basic.textContent = String(err && err.message ? err.message : err);
       els.bankMeta.textContent = "无法读取 data/basic-words.json";
     });
+  if (window.StaticCloudSync) {
+    window.StaticCloudSync.register("basic", [STATUS_KEY, SESSION_KEY], {
+      onMerged: applyMergedCloudProgress
+    });
+  }
 })();

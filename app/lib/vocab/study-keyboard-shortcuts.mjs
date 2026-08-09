@@ -3,17 +3,33 @@ export function getStudyKeyboardAction(event = {}) {
 
   const target = event.target;
   const tag = String(target?.tagName || "").toLowerCase();
-  if (
-    tag === "input"
-    || tag === "textarea"
-    || tag === "select"
+  const inputType = tag === "input"
+    ? String(target?.type || target?.getAttribute?.("type") || "text").toLowerCase()
+    : "";
+  const isTextEditor = tag === "textarea"
     || target?.isContentEditable
-  ) return "";
-
-  if (event.key === "Tab") return "word-audio";
+    || (tag === "input" && ![
+      "button",
+      "checkbox",
+      "color",
+      "file",
+      "hidden",
+      "image",
+      "radio",
+      "range",
+      "reset",
+      "submit"
+    ].includes(inputType));
+  // Tab and Space are dedicated study shortcuts even when a toolbar select or
+  // progress slider still owns focus.  Real text editors keep their native
+  // typing behaviour, so Space can still be entered in search/add forms.
+  if (event.key === "Tab") return event.shiftKey ? "" : "word-audio";
   if (event.key === " " || event.code === "Space" || event.key === "Spacebar") {
-    return "example-audio";
+    return isTextEditor ? "" : "example-audio";
   }
+
+  if (isTextEditor) return "";
+
   if (event.key === "ArrowLeft") return "previous";
   if (event.key === "ArrowRight") return "next";
   if (event.code === "Digit1" || event.code === "Numpad1" || event.key === "1") return "known";

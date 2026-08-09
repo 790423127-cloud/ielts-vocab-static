@@ -90,6 +90,7 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("assets/static-navigation.js"), /addEventListener\("touchstart"/);
   assert.match(entries.get("assets/static-cloud-sync.js"), /window\.StaticCloudSync/);
   assert.match(entries.get("assets/static-cloud-sync.js"), /module_progress_/);
+  assert.match(entries.get("assets/static-font-scale.js"), /ielts-vocab-font-scale/);
   assert.match(entries.get("assets/static-navigation.js"), /阅读同义替换/);
   assert.match(entries.get("assets/static-navigation.js"), /阅读生词本/);
   assert.match(entries.get("reading-g.html"), /body class="reading-g-static"/);
@@ -117,6 +118,7 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("index.html"), /staticBuildVersion/);
   assert.match(entries.get("sw.js"), new RegExp(STATIC_RESPONSIVE_VERSION));
   assert.match(entries.get("sw.js"), /assets\/static-navigation\.js/);
+  assert.match(entries.get("sw.js"), /assets\/static-font-scale\.js/);
   assert.match(entries.get("sw.js"), /url\.pathname\.endsWith\("\/reading-words\.html"\)/);
   assert.match(entries.get("reading-words.html"), /id="favoriteBtn"/);
   assert.match(entries.get("reading-words.html"), /id="deleteBtn"/);

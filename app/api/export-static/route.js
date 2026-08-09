@@ -3368,6 +3368,7 @@ const SHELL=[
   "./reading-words.html",
   "./ielts-538.html",
   "./assets/style.css?v=${STATIC_EXPORT_VERSION}",
+  "./assets/static-font-scale.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/static-navigation.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/static-cloud-sync.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/app.js?v=${STATIC_EXPORT_VERSION}",
@@ -3654,6 +3655,10 @@ function buildExport(words, audioIndex, options = {}) {
     {
       name: "assets/style.css",
       data: readFileSync(publicAssetPath("assets", "style.css"), "utf-8")
+    },
+    {
+      name: "assets/static-font-scale.js",
+      data: readFileSync(publicAssetPath("assets", "static-font-scale.js"), "utf-8")
     },
     {
       name: "assets/static-navigation.js",

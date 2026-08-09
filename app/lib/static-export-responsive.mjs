@@ -485,6 +485,7 @@ export function patchStaticExportZip(input) {
   const css = byName.get("assets/style.css") || "";
   const html = byName.get("index.html") || "";
   const sw = byName.get("sw.js") || "";
+  const fontScaleJs = byName.get("assets/static-font-scale.js") || "";
   const readingHtml = byName.get("reading-words.html") || "";
   const readingJs = byName.get("assets/reading-words.js") || "";
   const readingCss = byName.get("assets/reading-words.css") || "";
@@ -499,6 +500,9 @@ export function patchStaticExportZip(input) {
   }
   if (!sw.includes(STATIC_RESPONSIVE_VERSION)) {
     throw new Error("Final static ZIP service worker version is stale");
+  }
+  if (!fontScaleJs.includes("ielts-vocab-font-scale") || !sw.includes("assets/static-font-scale.js")) {
+    throw new Error("Final static ZIP is missing the shared font-scale runtime or offline cache entry");
   }
   if (!sw.includes('url.pathname.endsWith("/reading-words.html")')) {
     throw new Error("Final static ZIP does not support offline reading-words navigation");

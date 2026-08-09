@@ -190,12 +190,16 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
       data: Buffer.from('var DATA_VERSION = "old";')
     },
     {
+      name: "assets/static-font-scale.js",
+      data: Buffer.from('var KEY = "ielts-vocab-font-scale";')
+    },
+    {
       name: "index.html",
       data: Buffer.from('<!doctype html><html><head><link rel="stylesheet" href="./assets/style.css?v=old" /></head><body><main><section id="swipeArea" class="hero"></section><section class="blocks"></section><footer class="bottom"></footer></main></body></html>')
     },
     {
       name: "sw.js",
-      data: Buffer.from('const CACHE_NAME="static_vocab_shell_old";const A="./assets/style.css?v=old";url.pathname.endsWith("/reading-words.html");')
+      data: Buffer.from('const CACHE_NAME="static_vocab_shell_old";const A="./assets/style.css?v=old";const B="./assets/static-font-scale.js?v=old";url.pathname.endsWith("/reading-words.html");')
     },
     {
       name: "reading-words.html",
@@ -233,6 +237,7 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
   assert.match(entries.get("assets/spelling.js"), new RegExp(`STATIC_DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("assets/reading-g.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("assets/meaning-static.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
+  assert.match(entries.get("assets/static-font-scale.js"), /ielts-vocab-font-scale/);
   assert.match(entries.get("assets/reading-words.js"), new RegExp(`VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("build-info.json"), new RegExp(STATIC_SWIPE_ENGINE));
   assert.match(entries.get("build-info.json"), /ielts-538/);

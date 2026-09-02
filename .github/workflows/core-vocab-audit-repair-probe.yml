@@ -1,0 +1,36 @@
+name: Core vocab audit repair probe
+
+on:
+  push:
+    branches:
+      - fix/core-vocab-audit-20260902
+    paths:
+      - ".github/workflows/core-vocab-audit-repair-probe.yml"
+      - "scripts/core-vocab-audit-repair-probe.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run detailed repair probe
+        run: node scripts/core-vocab-audit-repair-probe.mjs
+
+      - name: Upload probe report
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-vocab-audit-repair-probe
+          path: reports/core-vocab-audit-repair-probe.json
+          if-no-files-found: error
+          retention-days: 7

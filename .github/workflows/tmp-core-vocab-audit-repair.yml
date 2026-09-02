@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Diagnose current gate failures
+      - name: Diagnose reference rows and phrase candidates
         shell: bash
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import { CONFIRMED_PERSON_NAME_WORDS, normalizeHeadword } from './app/lib/vocab/lexicon-guard-shared.mjs';
+          import { isBrushableWord } from './app/lib/vocab/word-study-eligibility.mjs';
 
           const payload = JSON.parse(fs.readFileSync('.static-export-cache/words.json', 'utf8'));
           const words = Array.isArray(payload) ? payload : payload.words || [];
@@ -29,47 +30,54 @@ jobs:
             const reviewedCompound = entry?.entryType === 'headword' && entry?.lexicalizedCompound === true;
             return Boolean(entry?.isPhrase || entry?.entryType === 'phrase' || entry?.pos === 'phrase' || (word.includes(' ') && !reviewedCompound));
           };
+          const groupBy = (rows, keyFn) => {
+            const out = {};
+            for (const row of rows) {
+              const key = keyFn(row) || '<empty>';
+              out[key] = (out[key] || 0) + 1;
+            }
+            return out;
+          };
 
           const invalid = words.filter((entry) => !valid.has(entry?.difficulty));
-          const difficultyCounts = {};
-          for (const entry of invalid) {
-            const key = String(entry?.difficulty ?? '<missing>');
-            difficultyCounts[key] = (difficultyCounts[key] || 0) + 1;
-          }
+          const invalidBrushable = invalid.filter(isBrushableWord);
+          const invalidReference = invalid.filter((entry) => !isBrushableWord(entry));
           const phrases = words.filter(isPhraseEntry).map((entry) => ({
             id: entry?.id || entry?.wordId || '',
             word: entry?.word || '',
-            difficulty: entry?.difficulty ?? '',
+            brushable: isBrushableWord(entry),
+            studyMode: entry?.studyMode ?? '',
             entryType: entry?.entryType ?? '',
             pos: entry?.pos ?? '',
             isPhrase: entry?.isPhrase === true,
-            category: entry?.category ?? '',
+            lexicalizedCompound: entry?.lexicalizedCompound === true,
+            baseWord: entry?.baseWord ?? '',
+            baseWordId: entry?.baseWordId ?? '',
+            redirectToWord: entry?.redirectToWord ?? '',
+            relationType: entry?.relationType ?? '',
+            difficulty: entry?.difficulty ?? '',
             source: entry?.source ?? ''
           }));
           const names = words.filter((entry) => CONFIRMED_PERSON_NAME_WORDS.has(normalizeHeadword(entry?.word))).map((entry) => ({
-            id: entry?.id || entry?.wordId || '',
-            word: entry?.word || '',
-            source: entry?.source ?? '',
-            addedFromReadingG: entry?.addedFromReadingG === true,
-            sourceReadingGId: entry?.sourceReadingGId ?? ''
+            id: entry?.id || entry?.wordId || '', word: entry?.word || '', brushable: isBrushableWord(entry), source: entry?.source ?? ''
           }));
-          const empty = words.filter((entry) => !normalizeHeadword(entry?.word) || !String(entry?.meaning || '').trim() || !String(entry?.example || '').trim()).map((entry) => ({ id: entry?.id || entry?.wordId || '', word: entry?.word || '' }));
 
           console.log('AUDIT_BREAKDOWN=' + JSON.stringify({
             totalWords: words.length,
+            brushableWords: words.filter(isBrushableWord).length,
+            referenceRows: words.filter((entry) => !isBrushableWord(entry)).length,
             invalidDifficultyCount: invalid.length,
-            difficultyCounts,
+            invalidBrushableCount: invalidBrushable.length,
+            invalidReferenceCount: invalidReference.length,
+            invalidByDifficulty: groupBy(invalid, (entry) => String(entry?.difficulty ?? '<missing>')),
+            invalidByEntryType: groupBy(invalid, (entry) => String(entry?.entryType ?? '<missing>')),
+            invalidByStudyMode: groupBy(invalid, (entry) => String(entry?.studyMode ?? '<missing>')),
+            invalidBySource: groupBy(invalid, (entry) => String(entry?.source ?? '<missing>')),
+            invalidBrushablePreview: invalidBrushable.slice(0, 30).map((entry) => ({id: entry?.id || entry?.wordId || '', word: entry?.word || '', difficulty: entry?.difficulty ?? '', entryType: entry?.entryType ?? '', studyMode: entry?.studyMode ?? '', source: entry?.source ?? ''})),
             phraseCount: phrases.length,
+            brushablePhraseCount: phrases.filter((entry) => entry.brushable).length,
             phrases,
             confirmedNameCount: names.length,
-            names,
-            requiredFieldMissingCount: empty.length,
-            requiredFieldMissingPreview: empty.slice(0, 50),
-            metadata: {
-              count: payload?.count,
-              version: payload?.version,
-              savedAt: payload?.savedAt,
-              lexiconHash: payload?.lexiconHash
-            }
+            names
           }));
           NODE

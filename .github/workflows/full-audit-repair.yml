@@ -1,0 +1,139 @@
+name: Full Audit Repair
+
+on:
+  push:
+    branches:
+      - audit/full-repair-20260902
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: full repository audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency audit production
+        id: prod_audit
+        continue-on-error: true
+        run: npm run audit:dependencies
+
+      - name: Dependency audit including dev
+        id: dev_audit
+        continue-on-error: true
+        run: npm run audit:dependencies:all
+
+      - name: ESLint errors
+        id: lint_errors
+        continue-on-error: true
+        run: npm run lint:errors
+
+      - name: ESLint warning budget
+        id: lint_budget
+        continue-on-error: true
+        run: npm run lint:budget
+
+      - name: Formal vocabulary quality gates
+        id: quality
+        continue-on-error: true
+        run: npm run quality:all
+
+      - name: Generate current core vocabulary audit
+        id: core_audit
+        continue-on-error: true
+        run: npm run audit:core
+
+      - name: Generate master lexicon deep audit
+        id: master_audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p reports
+          node scripts/audit-master-lexicon-quality.mjs --full | tee reports/master-lexicon-quality-full.json
+
+      - name: Generate manual vocabulary review queue
+        id: manual_queue
+        continue-on-error: true
+        run: npm run audit:vocab-manual-queue
+
+      - name: Unit tests
+        id: unit_tests
+        continue-on-error: true
+        run: npm test
+
+      - name: Wide tests
+        id: wide_tests
+        continue-on-error: true
+        run: npm run test:wide
+
+      - name: Production build
+        id: build
+        continue-on-error: true
+        run: npm run build
+        env:
+          DEEPSEEK_API_KEY: ""
+
+      - name: Install Chromium
+        id: chromium
+        continue-on-error: true
+        run: npx playwright install --with-deps chromium
+
+      - name: Production E2E and performance tests
+        id: e2e
+        continue-on-error: true
+        run: npm run test:e2e
+        env:
+          DEEPSEEK_API_KEY: ""
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-audit-reports-${{ github.run_id }}
+          path: |
+            reports
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Fail if any audit section failed
+        if: always()
+        shell: bash
+        run: |
+          failures=0
+          check() {
+            name="$1"
+            outcome="$2"
+            if [ "$outcome" != "success" ]; then
+              echo "FAILED: $name ($outcome)"
+              failures=$((failures + 1))
+            fi
+          }
+          check "production dependency audit" "${{ steps.prod_audit.outcome }}"
+          check "development dependency audit" "${{ steps.dev_audit.outcome }}"
+          check "ESLint errors" "${{ steps.lint_errors.outcome }}"
+          check "ESLint warning budget" "${{ steps.lint_budget.outcome }}"
+          check "formal vocabulary quality" "${{ steps.quality.outcome }}"
+          check "core vocabulary audit" "${{ steps.core_audit.outcome }}"
+          check "master lexicon audit" "${{ steps.master_audit.outcome }}"
+          check "manual review queue generation" "${{ steps.manual_queue.outcome }}"
+          check "unit tests" "${{ steps.unit_tests.outcome }}"
+          check "wide tests" "${{ steps.wide_tests.outcome }}"
+          check "production build" "${{ steps.build.outcome }}"
+          check "Chromium install" "${{ steps.chromium.outcome }}"
+          check "E2E/performance" "${{ steps.e2e.outcome }}"
+          if [ "$failures" -ne 0 ]; then
+            echo "$failures audit section(s) failed"
+            exit 1
+          fi

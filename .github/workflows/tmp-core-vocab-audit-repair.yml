@@ -14,70 +14,63 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Diagnose reference rows and phrase candidates
+      - name: Verify Reading G classification source
         shell: bash
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          import { CONFIRMED_PERSON_NAME_WORDS, normalizeHeadword } from './app/lib/vocab/lexicon-guard-shared.mjs';
+          import { normalizeHeadword } from './app/lib/vocab/lexicon-guard-shared.mjs';
           import { isBrushableWord } from './app/lib/vocab/word-study-eligibility.mjs';
 
-          const payload = JSON.parse(fs.readFileSync('.static-export-cache/words.json', 'utf8'));
-          const words = Array.isArray(payload) ? payload : payload.words || [];
+          const masterPayload = JSON.parse(fs.readFileSync('.static-export-cache/words.json', 'utf8'));
+          const master = masterPayload.words || [];
+          const readingPayload = JSON.parse(fs.readFileSync('public/data/reading-g-vocab.json', 'utf8'));
+          const reading = Array.isArray(readingPayload) ? readingPayload : readingPayload.items || readingPayload.words || [];
           const valid = new Set(['基础高频', '中级核心', '高级加分', '阅读扩展', '低频认识即可']);
-          const isPhraseEntry = (entry) => {
-            const word = normalizeHeadword(entry?.word);
-            const reviewedCompound = entry?.entryType === 'headword' && entry?.lexicalizedCompound === true;
-            return Boolean(entry?.isPhrase || entry?.entryType === 'phrase' || entry?.pos === 'phrase' || (word.includes(' ') && !reviewedCompound));
-          };
-          const groupBy = (rows, keyFn) => {
+          const sourceById = new Map(reading.map((entry) => [String(entry?.id || ''), entry]).filter(([id]) => id));
+          const missingDifficulty = master.filter((entry) => isBrushableWord(entry) && !valid.has(entry?.difficulty));
+          const readingAdded = missingDifficulty.filter((entry) => entry?.source === 'reading-g-ai');
+          const sourceRows = readingAdded.map((entry) => ({ master: entry, source: sourceById.get(String(entry?.sourceReadingGId || '')) || null }));
+          const group = (rows, pick) => {
             const out = {};
             for (const row of rows) {
-              const key = keyFn(row) || '<empty>';
+              const key = String(pick(row) ?? '<missing>') || '<empty>';
               out[key] = (out[key] || 0) + 1;
             }
             return out;
           };
+          const phrasesPayload = JSON.parse(fs.readFileSync('public/data/phrases.json', 'utf8'));
+          const phrases = Array.isArray(phrasesPayload) ? phrasesPayload : phrasesPayload.phrases || [];
+          const phraseKeys = new Set(phrases.map((entry) => normalizeHeadword(entry?.phrase || entry?.word)).filter(Boolean));
+          const phraseCandidates = master.filter((entry) => isBrushableWord(entry) && (
+            entry?.isPhrase || entry?.entryType === 'phrase' || entry?.pos === 'phrase' || normalizeHeadword(entry?.word).includes(' ')
+          ));
 
-          const invalid = words.filter((entry) => !valid.has(entry?.difficulty));
-          const invalidBrushable = invalid.filter(isBrushableWord);
-          const invalidReference = invalid.filter((entry) => !isBrushableWord(entry));
-          const phrases = words.filter(isPhraseEntry).map((entry) => ({
-            id: entry?.id || entry?.wordId || '',
-            word: entry?.word || '',
-            brushable: isBrushableWord(entry),
-            studyMode: entry?.studyMode ?? '',
-            entryType: entry?.entryType ?? '',
-            pos: entry?.pos ?? '',
-            isPhrase: entry?.isPhrase === true,
-            lexicalizedCompound: entry?.lexicalizedCompound === true,
-            baseWord: entry?.baseWord ?? '',
-            baseWordId: entry?.baseWordId ?? '',
-            redirectToWord: entry?.redirectToWord ?? '',
-            relationType: entry?.relationType ?? '',
-            difficulty: entry?.difficulty ?? '',
-            source: entry?.source ?? ''
-          }));
-          const names = words.filter((entry) => CONFIRMED_PERSON_NAME_WORDS.has(normalizeHeadword(entry?.word))).map((entry) => ({
-            id: entry?.id || entry?.wordId || '', word: entry?.word || '', brushable: isBrushableWord(entry), source: entry?.source ?? ''
-          }));
-
-          console.log('AUDIT_BREAKDOWN=' + JSON.stringify({
-            totalWords: words.length,
-            brushableWords: words.filter(isBrushableWord).length,
-            referenceRows: words.filter((entry) => !isBrushableWord(entry)).length,
-            invalidDifficultyCount: invalid.length,
-            invalidBrushableCount: invalidBrushable.length,
-            invalidReferenceCount: invalidReference.length,
-            invalidByDifficulty: groupBy(invalid, (entry) => String(entry?.difficulty ?? '<missing>')),
-            invalidByEntryType: groupBy(invalid, (entry) => String(entry?.entryType ?? '<missing>')),
-            invalidByStudyMode: groupBy(invalid, (entry) => String(entry?.studyMode ?? '<missing>')),
-            invalidBySource: groupBy(invalid, (entry) => String(entry?.source ?? '<missing>')),
-            invalidBrushablePreview: invalidBrushable.slice(0, 30).map((entry) => ({id: entry?.id || entry?.wordId || '', word: entry?.word || '', difficulty: entry?.difficulty ?? '', entryType: entry?.entryType ?? '', studyMode: entry?.studyMode ?? '', source: entry?.source ?? ''})),
-            phraseCount: phrases.length,
-            brushablePhraseCount: phrases.filter((entry) => entry.brushable).length,
-            phrases,
-            confirmedNameCount: names.length,
-            names
+          console.log('SOURCE_CHECK=' + JSON.stringify({
+            readingItemCount: reading.length,
+            missingDifficultyBrushableCount: missingDifficulty.length,
+            readingAddedCount: readingAdded.length,
+            sourceMatchedCount: sourceRows.filter((row) => row.source).length,
+            sourceMissingCount: sourceRows.filter((row) => !row.source).length,
+            sourceDifficultyCounts: group(sourceRows, (row) => row.source?.difficulty),
+            sourceInvalidDifficultyCount: sourceRows.filter((row) => !row.source || !valid.has(row.source?.difficulty)).length,
+            sourceInvalidPreview: sourceRows.filter((row) => !row.source || !valid.has(row.source?.difficulty)).slice(0, 50).map((row) => ({
+              id: row.master.id,
+              word: row.master.word,
+              sourceReadingGId: row.master.sourceReadingGId,
+              sourceDifficulty: row.source?.difficulty ?? '',
+              sourceStudyMode: row.source?.studyMode ?? '',
+              sourcePrimaryLayer: row.source?.primaryLayer ?? '',
+              sourceArticleFrequency: row.source?.articleFrequency ?? null,
+              sourceQuestionFrequency: row.source?.questionFrequency ?? null
+            })),
+            phraseLibraryCount: phrases.length,
+            phraseCandidates: phraseCandidates.map((entry) => ({
+              id: entry.id || entry.wordId || '',
+              word: entry.word || '',
+              alreadyInPhraseLibrary: phraseKeys.has(normalizeHeadword(entry.word)),
+              pos: entry.pos || '',
+              source: entry.source || ''
+            }))
           }));
           NODE

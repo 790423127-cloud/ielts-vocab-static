@@ -17,6 +17,9 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Apply safe morphology fallback
+        run: node .github/scripts/tmp-repair-runner-patch.mjs
+
       - name: Apply scoped audit repair
         run: node .github/scripts/tmp-core-vocab-audit-repair.mjs
 
@@ -29,7 +32,7 @@ jobs:
 
       - name: Commit only after all checks pass
         run: |
-          rm -f .github/workflows/tmp-core-vocab-audit-repair.yml .github/scripts/tmp-core-vocab-audit-repair.mjs
+          rm -f .github/workflows/tmp-core-vocab-audit-repair.yml .github/scripts/tmp-core-vocab-audit-repair.mjs .github/scripts/tmp-repair-runner-patch.mjs
           git config user.name "IELTS Vocab Repair"
           git config user.email "local@ielts-vocab.dev"
           git add -A

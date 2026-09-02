@@ -10,6 +10,7 @@ import {
   PENDING_PERSON_NAME_WORDS,
   normalizeHeadword
 } from "../app/lib/vocab/lexicon-guard-shared.mjs";
+import { isBrushableWord } from "../app/lib/vocab/word-study-eligibility.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WORDS_PATH = path.join(ROOT, ".static-export-cache", "words.json");
@@ -142,10 +143,11 @@ function addIssue(state, entry, issueType, riskLevel, action, evidence) {
 export function auditCoreVocab(payload) {
   const words = Array.isArray(payload) ? payload : Array.isArray(payload?.words) ? payload.words : [];
   const state = { issues: [], candidates: new Map() };
+  const activeWords = words.filter(isBrushableWord);
   const wordSet = new Set(words.map((entry) => normalizeHeadword(entry.word)).filter(Boolean));
-  const coreWords = words.filter((entry) => entry.difficulty === "中级核心");
+  const coreWords = activeWords.filter((entry) => entry.difficulty === "中级核心");
 
-  for (const entry of words) {
+  for (const entry of activeWords) {
     const word = normalizeHeadword(entry.word);
     if (!VALID_DIFFICULTIES.has(entry.difficulty)) {
       addIssue(state, entry, "invalid_difficulty", "high", "调整分类", `difficulty=${JSON.stringify(entry.difficulty)}`);
@@ -246,11 +248,12 @@ export function auditCoreVocab(payload) {
 
 export function runQualityGate(payload, apiPayload = null) {
   const words = Array.isArray(payload) ? payload : Array.isArray(payload?.words) ? payload.words : [];
+  const activeWords = words.filter(isBrushableWord);
   const errors = [];
-  const invalid = words.filter((entry) => !VALID_DIFFICULTIES.has(entry.difficulty));
-  const empty = words.filter((entry) => !normalizeHeadword(entry.word) || !String(entry.meaning || "").trim() || !String(entry.example || "").trim());
-  const phrases = words.filter(isPhraseEntry);
-  const confirmedNames = words.filter((entry) => CONFIRMED_PERSON_NAME_WORDS.has(normalizeHeadword(entry.word)));
+  const invalid = activeWords.filter((entry) => !VALID_DIFFICULTIES.has(entry.difficulty));
+  const empty = activeWords.filter((entry) => !normalizeHeadword(entry.word) || !String(entry.meaning || "").trim() || !String(entry.example || "").trim());
+  const phrases = activeWords.filter(isPhraseEntry);
+  const confirmedNames = activeWords.filter((entry) => CONFIRMED_PERSON_NAME_WORDS.has(normalizeHeadword(entry.word)));
 
   if (invalid.length) errors.push(`invalid difficulty: ${invalid.length}`);
   if (empty.length) errors.push(`required field missing: ${empty.length}`);

@@ -1,7 +1,7 @@
 {
   "version": "reading-g-retirements-v1",
-  "updatedAt": "2026-08-28T17:09:09.747Z",
-  "count": 658,
+  "updatedAt": "2026-09-02T03:35:46.012Z",
+  "count": 659,
   "entries": [
     {
       "key": "word::send",
@@ -4608,6 +4608,13 @@
       "word": "nunsuitable",
       "entryType": "word",
       "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::stuart",
+      "id": "rg_word_stuart",
+      "word": "stuart",
+      "entryType": "word",
+      "deletedAt": "2026-09-02T03:35:46.012Z"
     }
   ]
 }

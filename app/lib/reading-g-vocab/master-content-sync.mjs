@@ -29,6 +29,21 @@ function text(value) {
   return String(value == null ? "" : value).trim();
 }
 
+const MASTER_DIFFICULTIES = new Set([
+  "基础高频",
+  "中级核心",
+  "高级加分",
+  "阅读扩展",
+  "低频认识即可"
+]);
+
+function normalizeMasterDifficulty(value) {
+  const raw = text(value);
+  if (MASTER_DIFFICULTIES.has(raw)) return raw;
+  if (raw === "阅读逻辑核心") return "阅读扩展";
+  return "";
+}
+
 function list(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -125,6 +140,13 @@ function mergeOneMasterEntry(master, source) {
           : (value) => Boolean(text(value));
     if (copyFilledField(next, master, source, field, valid)) fields.push(field);
   }
+  if (!text(master?.difficulty)) {
+    const difficulty = normalizeMasterDifficulty(source?.difficulty);
+    if (difficulty) {
+      next.difficulty = difficulty;
+      fields.push("difficulty");
+    }
+  }
   fields.push(...mergeExamplePair(next, master, source));
 
   for (const field of MASTER_FILL_LISTS) {
@@ -205,6 +227,8 @@ function buildAddedMasterEntry(source, usedIds, now) {
   for (const field of MASTER_FILL_SCALARS) {
     if (text(source?.[field])) entry[field] = source[field];
   }
+  const difficulty = normalizeMasterDifficulty(source?.difficulty);
+  if (difficulty) entry.difficulty = difficulty;
   const examplePair = validExamplePair(source);
   if (examplePair) Object.assign(entry, examplePair);
   for (const field of MASTER_ADDITION_LISTS) {

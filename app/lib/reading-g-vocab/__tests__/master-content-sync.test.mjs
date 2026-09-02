@@ -18,6 +18,7 @@ function completedGEntry(overrides = {}) {
     qualityFlags: ["reading_g_ai_completed"],
     phonetic: "/ˈælfə/",
     pos: "noun",
+    difficulty: "中级核心",
     meaning: "阿尔法；开端",
     definition: "the first letter of the Greek alphabet",
     meaningDetailZh: "指希腊字母表的第一个字母，也可指开端。",
@@ -75,6 +76,7 @@ test("G AI master sync fills only missing fields and preserves master learning c
   assert.equal(alpha.favorite, true);
   assert.equal(alpha.phonetic, "/ˈælfə/");
   assert.equal(alpha.definition, "the first letter of the Greek alphabet");
+  assert.equal(alpha.difficulty, "中级核心");
   assert.equal(alpha.forms.length, 1);
   assert.equal(alpha.wordFamily.length, 1);
   assert.deepEqual(alpha.synonyms, ["first"]);
@@ -82,6 +84,21 @@ test("G AI master sync fills only missing fields and preserves master learning c
   assert.equal(plan.nextWords[2].word, "missing");
   assert.equal(plan.nextWords[2].addedFromReadingG, true);
   assert.equal(plan.nextWords[2].source, "reading-g-ai");
+  assert.equal(plan.nextWords[2].difficulty, "中级核心");
+});
+
+test("G AI master sync normalizes Reading G logic difficulty for the master lexicon", () => {
+  const plan = buildReadingGAiMasterSyncPlan({
+    count: 1,
+    words: [{ id: "word_alpha", wordId: "word_alpha", word: "alpha" }]
+  }, [completedGEntry({
+    id: "rg_word_logic",
+    word: "logicword",
+    sourceWordId: "",
+    difficulty: "阅读逻辑核心"
+  })]);
+
+  assert.equal(plan.nextWords[1].difficulty, "阅读扩展");
 });
 
 test("G AI master sync accepts definition-only additional common senses", () => {

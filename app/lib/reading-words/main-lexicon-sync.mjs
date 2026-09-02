@@ -53,6 +53,11 @@ export function shouldKeepReadingWordLocal(readingWord = {}) {
   const word = normalizeHeadword(readingWord?.word);
   if (!word) return true;
   if (CONFIRMED_PERSON_NAME_WORDS.has(word)) return true;
+  if (
+    readingWord?.entryType === "phrase" ||
+    readingWord?.isPhrase === true ||
+    /\bphrase\b/i.test(cleanText(readingWord?.pos))
+  ) return true;
   const tokens = word.split(" ").filter(Boolean);
   if (tokens.length >= 8) return true;
   if (word.length >= 48 && /[.!?'’“”]/.test(word)) return true;

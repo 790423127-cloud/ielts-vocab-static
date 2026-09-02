@@ -12,7 +12,13 @@ test("surface morphology recognizes grammatical forms without reading lexicon la
   assert.equal(classifySurfaceInflection("stop", "stopped"), "past-or-past-participle");
   assert.equal(classifySurfaceInflection("write", "wrote"), "irregular");
   assert.equal(classifySurfaceInflection("child", "children"), "irregular");
+  assert.equal(classifySurfaceInflection("automaton", "automata"), "irregular");
+  assert.equal(classifySurfaceInflection("bacterium", "bacteria"), "irregular");
+  assert.equal(classifySurfaceInflection("dormouse", "dormice"), "irregular");
   assert.equal(classifySurfaceInflection("fisherman", "fishermen"), "irregular");
+  assert.equal(classifySurfaceInflection("fireman", "firemen"), "irregular");
+  assert.equal(classifySurfaceInflection("tear", "tore"), "irregular");
+  assert.equal(classifySurfaceInflection("workman", "workmen"), "irregular");
 });
 
 test("surface morphology rejects derivations, spelling variants and lookalikes", () => {

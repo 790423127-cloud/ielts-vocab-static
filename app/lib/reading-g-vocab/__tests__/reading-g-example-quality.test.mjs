@@ -76,8 +76,8 @@ test("reading-g contains no legacy meta-description examples", () => {
 });
 
 test("all reviewed repairs are bilingual real-usage examples", () => {
-  assert.equal(repairPatch.count, 647);
-  assert.equal(repairPatch.repairs.length, 647);
+  assert.equal(repairPatch.count, 657);
+  assert.equal(repairPatch.repairs.length, 657);
   const seenExamples = new Set();
   const issues = [];
   for (const repair of repairPatch.repairs) {

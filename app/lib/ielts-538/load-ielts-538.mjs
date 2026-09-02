@@ -92,14 +92,25 @@ export function normalizeIelts538Item(entry, index = 0) {
     sourceGroup: Number(entry?.sourceGroup) || 0,
     sourceGroupIndex: Number(entry?.sourceGroupIndex) || 0,
     forms: Array.isArray(entry?.forms) ? entry.forms : [],
-    wordFamily: Array.isArray(entry?.wordFamily) ? entry.wordFamily : []
+    wordFamily: Array.isArray(entry?.wordFamily) ? entry.wordFamily : [],
+    part3HighFrequency: entry?.part3HighFrequency === true,
+    part3HighFrequencyReplacements: Array.isArray(entry?.part3HighFrequencyReplacements)
+      ? entry.part3HighFrequencyReplacements.map((item) => String(item || "").trim()).filter(Boolean)
+      : [],
+    practiceKind: String(entry?.practiceKind || "").trim(),
+    questionExpression: String(entry?.questionExpression || "").trim(),
+    sourceExpression: String(entry?.sourceExpression || "").trim(),
+    occurrenceCount: Number(entry?.occurrenceCount) || 0,
+    questionProbability: Number(entry?.questionProbability) || 0,
+    sourceFiles: Array.isArray(entry?.sourceFiles) ? entry.sourceFiles : [],
+    sources: Array.isArray(entry?.sources) ? entry.sources : []
   };
 }
 
 export async function loadIelts538Words(fetchImpl = fetch) {
   const useMemory = fetchImpl === fetch;
   return loadSessionValue(
-    "ielts-538:normalized",
+    "ielts-538:normalized:20260824-high-frequency-min3-v1",
     async () => {
       let data;
       if (useMemory) {
@@ -112,18 +123,31 @@ export async function loadIelts538Words(fetchImpl = fetch) {
         data = await response.json();
       }
       const rawList = Array.isArray(data?.words) ? data.words : [];
-      const words = rawList.map(normalizeIelts538Item).filter(Boolean);
+      const rawPracticeList = Array.isArray(data?.questionParaphrases)
+        ? data.questionParaphrases
+        : [];
+      const baseWords = rawList.map(normalizeIelts538Item).filter(Boolean);
+      const practiceWords = rawPracticeList.map((entry, index) =>
+        normalizeIelts538Item(entry, rawList.length + index)
+      ).filter(Boolean);
 
-      if (Number(data?.count) !== words.length) {
-        throw new Error(`538 考点词库数量不一致：声明 ${data?.count}，实际 ${words.length}`);
+      if (Number(data?.count) !== baseWords.length) {
+        throw new Error(`538 考点词库数量不一致：声明 ${data?.count}，实际 ${baseWords.length}`);
+      }
+      const declaredPracticeCount = Number(data?.aiCoachQuestionParaphrases?.practiceEntryCount) || 0;
+      if (declaredPracticeCount !== practiceWords.length) {
+        throw new Error(
+          `AI教练真题替换数量不一致：声明 ${declaredPracticeCount}，实际 ${practiceWords.length}`
+        );
       }
 
       return {
         version: String(data?.version || "ielts-538-v1"),
-        count: words.length,
+        count: baseWords.length,
+        practiceCount: practiceWords.length,
         generatedAt: String(data?.generatedAt || ""),
         note: String(data?.note || ""),
-        words
+        words: [...baseWords, ...practiceWords]
       };
     },
     { useMemory }

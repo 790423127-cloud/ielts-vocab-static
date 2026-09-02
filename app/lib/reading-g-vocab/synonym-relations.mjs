@@ -3,7 +3,10 @@ import {
   synonymEquivalenceKey
 } from "../vocab/synonym-equivalence.mjs";
 
-export const READING_G_SYNONYM_LIMIT = 4;
+// A replacement list is a learning aid, not a thesaurus dump: show direct
+// single-word replacements first, then only the most useful phrase rewrites.
+export const READING_G_SYNONYM_LIMIT = 5;
+export const READING_G_SYNONYM_REVIEW_POLICY = "g-replacement-v2-words-first-phrases";
 
 export const READING_G_SYNONYM_STATUS = Object.freeze({
   AVAILABLE: "available",
@@ -12,9 +15,14 @@ export const READING_G_SYNONYM_STATUS = Object.freeze({
 });
 
 export function normalizeReadingGSynonyms(value, headword = "") {
-  return filterDistinctSynonymTerms(value, headword, {
-    max: READING_G_SYNONYM_LIMIT
+  const distinct = filterDistinctSynonymTerms(value, headword, {
+    max: Number.MAX_SAFE_INTEGER
   });
+  return distinct
+    .map((word, index) => ({ word, index, isPhrase: /\s/.test(word) }))
+    .sort((left, right) => Number(left.isPhrase) - Number(right.isPhrase) || left.index - right.index)
+    .slice(0, READING_G_SYNONYM_LIMIT)
+    .map((item) => item.word);
 }
 
 function text(value) {
@@ -26,11 +34,18 @@ function synonymDetailWord(value) {
 }
 
 function normalizeSynonymDetail(value, word) {
+  const declaredType = text(value?.replacementType || value?.replacement_type).toLowerCase();
+  const replacementType = declaredType === "phrase" || /\s/.test(word) ? "phrase" : "word";
   return {
     word,
     pos: text(value?.pos || value?.primaryPos),
-    meaningZh: text(value?.meaningZh || value?.primaryMeaningZh || value?.meaning)
+    meaningZh: text(value?.meaningZh || value?.primaryMeaningZh || value?.meaning),
+    ...(replacementType === "phrase" ? { replacementType } : {})
   };
+}
+
+export function isReadingGSynonymReviewCurrent(entry = {}) {
+  return String(entry?.synonymsReviewPolicy || "").trim() === READING_G_SYNONYM_REVIEW_POLICY;
 }
 
 export function normalizeReadingGSynonymDetails(value, headword = "", synonyms = []) {

@@ -72,6 +72,23 @@ test("changed source content updates one linked word without overwriting local s
   assert.equal(second.words[0].favorite, true);
 });
 
+test("an imported source sentence without a supplied meaning stays pending for contextual AI review", () => {
+  const [incoming] = packageWith().words;
+  const result = mergeReadingCoachWords([], [{
+    ...incoming,
+    meaning: "",
+    sources: [{
+      id: "source-1",
+      sentence: "Visitors can stroke or feed the sheep.",
+      testTitle: "剑雅17 Test 4"
+    }]
+  }], { now: "2026-08-11T00:00:00.000Z" });
+
+  assert.equal(result.words[0].readingContextPending, true);
+  assert.equal(result.words[0].readingContextReviewed, false);
+  assert.equal(result.words[0].readingMeaning, "");
+});
+
 test("paraphrase updates by external id even when the phrase changes", () => {
   const first = mergeReadingCoachParaphrases(createReadingParaphraseState(), packageWith().paraphrases, 100);
   first.state.items[0].study = { status: "fuzzy", updatedAt: 200 };

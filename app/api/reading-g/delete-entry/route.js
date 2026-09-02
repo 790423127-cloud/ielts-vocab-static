@@ -12,6 +12,7 @@ import {
   atomicWriteReadingGJson,
   withReadingGVocabWriteLock
 } from "../../../lib/reading-g-vocab/write-lock.server.mjs";
+import { syncReadingGDeletedEntriesToMaster } from "../../../lib/reading-g-vocab/master-content-sync.server.mjs";
 
 const PROJECT_ROOT = process.cwd();
 const VOCAB_PATH = path.join(PROJECT_ROOT, "public", "data", "reading-g-vocab.json");
@@ -67,7 +68,7 @@ function normalizeEntryIds(body = {}) {
  * Batch fast-path delete for continuous UI deletes:
  * one disk read/write for many ids (no full question-bank re-expand).
  */
-function deleteReadingGEntries(entryIds) {
+async function deleteReadingGEntries(entryIds) {
   const ids = normalizeEntryIds({ entryIds });
   if (!ids.length) throw new Error("entryId or entryIds is required");
 
@@ -109,6 +110,7 @@ function deleteReadingGEntries(entryIds) {
       alreadyDeletedCount: alreadyDeleted.length,
       totals: recomputeVocabTotals(vocab.items),
       retirementCount: normalizeReadingGRetirements(originalRetirements).length,
+      masterDelete: { ok: true, mode: "skipped", deletedCount: 0 },
       fastPath: true,
       batched: true
     };
@@ -143,11 +145,7 @@ function deleteReadingGEntries(entryIds) {
   atomicWriteReadingGJson(backupPath, {
     version: "reading-g-delete-batch-backup-v1",
     deletedAt,
-    removed: removed.map((entry) => ({
-      id: entry.id,
-      word: entry.word,
-      entryType: entry.entryType || "word"
-    })),
+    removed,
     fastPath: true,
     batched: true
   });
@@ -175,6 +173,7 @@ function deleteReadingGEntries(entryIds) {
     if (removed.some((entry) => remainingIds.has(entry.id))) {
       throw new Error("G类词条批量删除校验失败，已回退");
     }
+    const masterDelete = await syncReadingGDeletedEntriesToMaster(removed);
     return {
       ok: true,
       deleted: [
@@ -191,6 +190,7 @@ function deleteReadingGEntries(entryIds) {
       totals,
       backupPath,
       retirementCount: nextRetirements.count,
+      masterDelete,
       fastPath: true,
       batched: true
     };

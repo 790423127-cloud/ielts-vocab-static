@@ -37,15 +37,15 @@ export function createIoOps(ctx) {
     demoWords, setFilter
   } = ctx;
 
-  function confirmFormalDeletion(nextWords, previousWords) {
+  function confirmFormalDeletion(nextWords, previousWords, actionLabel = "恢复") {
     const deletionIntent = buildLexiconDeletionIntent(previousWords, nextWords, {
       action: "preview-formal-replacement",
       confirmed: true
     });
     if (!deletionIntent) return true;
     return confirm(
-      `恢复内容会从正式主词库删除 ${deletionIntent.removed.length} 条记录。\n\n` +
-      "服务器会先生成可恢复备份，是否继续？"
+      `${actionLabel}会从正式主词库移除 ${deletionIntent.removed.length} 条记录。\n\n` +
+      "服务器会先生成可恢复备份；每次删除都需要单独确认。是否继续？"
     );
   }
 
@@ -182,7 +182,7 @@ export function createIoOps(ctx) {
       setToast(`恢复失败：只找到 ${Array.isArray(recoveredWords) ? recoveredWords.length : 0} 个词，数量太少，已拒绝覆盖`);
       return;
     }
-    if (!confirmFormalDeletion(recoveredWords, words)) {
+    if (!confirmFormalDeletion(recoveredWords, words, "恢复词库")) {
       setToast("已取消会删除正式词条的恢复操作");
       return;
     }
@@ -487,11 +487,18 @@ export function createIoOps(ctx) {
           if (!okSmall) return;
         }
 
+        const deletionIntent = buildLexiconDeletionIntent(words, importedWords, {
+          action: "manual_import",
+          confirmed: true
+        });
+        const removedCount = deletionIntent?.removed?.length || 0;
+
         const ok = confirm(
           `确定导入这个词库备份？\n\n` +
           `文件词数：${importedWords.length}\n` +
-          `当前词数：${words.length}\n\n` +
-          `导入后会替换当前本地词库。`
+          `当前词数：${words.length}\n` +
+          `将从正式主词库移除：${removedCount} 条\n\n` +
+          `导入后会替换当前本地词库；如有删除，服务器会先生成可恢复备份。`
         );
 
         if (!ok) return;

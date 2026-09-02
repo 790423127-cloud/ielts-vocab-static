@@ -15,9 +15,10 @@ test("font scale exposes stable semantic levels", () => {
 });
 
 test("desktop shell switches when enlarged text reduces effective width", () => {
-  assert.equal(resolveAdaptiveShell(1366, 1.4), "desktop");
+  assert.equal(resolveAdaptiveShell(1600, 1), "desktop");
+  assert.equal(resolveAdaptiveShell(1366, 1.4), "compact");
   assert.equal(resolveAdaptiveShell(1024, 1.4), "compact");
-  assert.equal(resolveAdaptiveShell(901, 1), "desktop");
+  assert.equal(resolveAdaptiveShell(901, 1), "compact");
   assert.equal(resolveAdaptiveShell(900, 1.6), "native");
 });
 
@@ -35,7 +36,7 @@ test("reading study surfaces keep every font step monotonic and remove the 538 i
 
   assert.doesNotMatch(readingCss, /data-font-scale-level=/);
   assert.match(readingCss, /font-size:\s*calc\(clamp\(46px, 4vw, 62px\) \* var\(--font-scale\)\)/);
-  assert.match(readingCss, /display:\s*contents;/);
+  assert.match(readingCss, /\.page\s*\{[\s\S]*?display:\s*flex;/);
   assert.doesNotMatch(globalCss, /\.ielts-538-study \.word-study-card\s*\{\s*scrollbar-width:\s*thin/);
   assert.match(globalCss, /\.ielts-538-study \.word-study-card,[\s\S]*?overflow:\s*hidden;[\s\S]*?scrollbar-width:\s*none;/);
 });

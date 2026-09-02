@@ -2,8 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  SPELLING_ALL_DIFFICULTIES_VALUE,
   SPELLING_BATCH_SIZE,
   SPELLING_PHRASE_CATEGORY_TYPES,
+  SPELLING_SKILL_OPTIONS,
+  countEntriesBySpellingCategories,
   dedupePhrasePracticeEntries,
   filterBySpellingCategory,
   filterBySpellingScope,
@@ -55,6 +58,76 @@ test("filterBySpellingCategory keeps only the selected difficulty across the ful
   const filtered = filterBySpellingCategory(sampleEntries, "difficulty", "基础高频");
   assert.equal(filtered.length, 400);
   assert.ok(filtered.every((entry) => entry.difficulty === "基础高频"));
+});
+
+test("word skills form one complete, non-overlapping master-lexicon partition", () => {
+  const entries = [
+    { wordId: "writing", word: "argument", entryType: "word", difficulty: "中级核心", ieltsUse: ["Writing", "Reading"] },
+    { wordId: "speaking", word: "fluency", entryType: "word", difficulty: "基础高频", ieltsUse: ["Speaking", "Listening"] },
+    { wordId: "listening", word: "lecture", entryType: "word", difficulty: "中级核心", ieltsUse: ["Listening", "Reading"] },
+    { wordId: "reading", word: "analysis", entryType: "word", difficulty: "高级加分", ieltsUse: ["Reading"] },
+    { wordId: "fallback", word: "general", entryType: "word", difficulty: "低频认识即可", ieltsUse: [] }
+  ];
+
+  const groups = SPELLING_SKILL_OPTIONS.map((option) => (
+    filterBySpellingCategory(entries, "skill", option.value, "word")
+  ));
+  const assigned = groups.flat().map((entry) => entry.wordId);
+
+  assert.equal(new Set(assigned).size, entries.length);
+  assert.equal(assigned.length, entries.length);
+  assert.deepEqual(groups[3].map((entry) => entry.wordId), ["writing"]);
+  assert.ok(groups[1].some((entry) => entry.wordId === "speaking"));
+  assert.deepEqual(groups[0].map((entry) => entry.wordId), ["listening"]);
+  assert.deepEqual(groups[2].map((entry) => entry.wordId), ["reading"]);
+});
+
+test("word skill counts exclude multiword phrase entries from the master payload", () => {
+  const counts = countEntriesBySpellingCategories(sampleEntries, ["skill"], "word").skill;
+  const total = [...counts.values()].reduce((sum, count) => sum + count, 0);
+
+  assert.equal(total, 700);
+});
+
+test("difficulty stays a real category while the all-difficulties view can change direction", () => {
+  const entries = Array.from({ length: 801 }, (_, index) => ({
+    wordId: `word-${index}`,
+    word: `word-${String(index).padStart(4, "0")}`,
+    entryType: "word",
+    difficulty: index < 400 ? "基础高频" : index < 800 ? "低频认识即可" : "",
+    ieltsUse: ["Listening"]
+  }));
+
+  const basic = selectSpellingBatch(entries, {
+    scopeKind: "word",
+    categoryType: "difficulty",
+    categoryValue: "基础高频",
+    batchIndex: 0
+  });
+  const hardToEasy = selectSpellingBatch(entries, {
+    scopeKind: "word",
+    categoryType: "difficulty",
+    categoryValue: SPELLING_ALL_DIFFICULTIES_VALUE,
+    sortDirection: "hard_to_easy",
+    batchIndex: 0
+  });
+
+  const easyToHard = selectSpellingBatch(entries, {
+    scopeKind: "word",
+    categoryType: "difficulty",
+    categoryValue: SPELLING_ALL_DIFFICULTIES_VALUE,
+    sortDirection: "easy_to_hard",
+    batchIndex: 0
+  });
+
+  assert.equal(basic.totalInCategory, 400);
+  assert.equal(basic.batchCount, 1);
+  assert.ok(basic.entries.every((entry) => entry.difficulty === "基础高频"));
+  assert.equal(easyToHard.totalInCategory, 801);
+  assert.equal(easyToHard.batchCount, 3);
+  assert.equal(easyToHard.batchEntryCount, 400);
+  assert.ok(easyToHard.entries.every((entry) => entry.difficulty === "基础高频"));
+  assert.ok(hardToEasy.entries.every((entry) => entry.difficulty === "低频认识即可"));
 });
 
 test("word partition batch excludes phrases even when source pool contains both scopes", () => {

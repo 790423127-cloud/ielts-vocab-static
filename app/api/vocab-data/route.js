@@ -59,10 +59,11 @@ async function encodePayload(encoding) {
 
   if (encoding === "br") {
     if (!cachedBrotliPromise) {
-      // Quality 4 is much faster to produce for ~30MB JSON while still
-      // shrinking transfer size enough for local LAN / loopback.
+      // Quality 6 keeps the current ~35 MB payload below the 4 MB transfer
+      // budget. The compressed buffer is memoized, so the small extra cost is
+      // paid only once per lexicon version/server process.
       cachedBrotliPromise = compressBrotli(input, {
-        params: { [constants.BROTLI_PARAM_QUALITY]: 4 }
+        params: { [constants.BROTLI_PARAM_QUALITY]: 6 }
       });
     }
     return cachedBrotliPromise;

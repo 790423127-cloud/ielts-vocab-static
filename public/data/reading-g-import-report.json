@@ -1859,11 +1859,11 @@
   "mainEnhancedEnriched": 2,
   "multiSenseTagged": 150,
   "summary": {
-    "itemCount": 7315,
-    "wordCount": 6647,
-    "phraseCount": 668,
-    "activeCount": 6855,
-    "referenceOnlyCount": 460,
+    "itemCount": 7241,
+    "wordCount": 6555,
+    "phraseCount": 686,
+    "activeCount": 6797,
+    "referenceOnlyCount": 444,
     "multiSenseCount": 1661,
     "paraphraseHighCount": 300,
     "networkCandidateExpressions": 2187,
@@ -2039,5 +2039,313 @@
       "stage3": 3577,
       "stage4": 460
     }
+  },
+  "unlinkedPluralLemmaRepair": {
+    "version": "reading-g-unlinked-plural-lemma-repair-v2-20260810",
+    "completedAt": "2026-08-10T14:01:39.814Z",
+    "backupDir": "C:\\Users\\Administrator\\Desktop\\ielts-vocab-deepseek-edge-tts\\backups\\reading-g-unlinked-plural-lemma-repair-2026-08-10T14-01-39-818Z",
+    "mode": "write",
+    "mergedPluralCount": 43,
+    "createdLemmaCount": 16,
+    "createdLemmas": [
+      "cloth",
+      "dessert",
+      "flier",
+      "hovercraft",
+      "idea",
+      "imitation",
+      "indian",
+      "migrant",
+      "strand",
+      "american",
+      "hope",
+      "sighting",
+      "fireman",
+      "lace",
+      "marshal",
+      "mug"
+    ],
+    "repairedPhraseCount": 2,
+    "retainedPluralOnlyCount": 2,
+    "resultingCount": 7298,
+    "resultingWordCount": 6623,
+    "resultingPhraseCount": 675,
+    "compaction": {
+      "configuredFamilyCount": 1373,
+      "appliedFamilyCount": 20,
+      "removedIndependentWordCount": 20,
+      "representedAliasCount": 2651,
+      "suppressedBecauseCanonicalMissing": 0
+    }
+  },
+  "invalidFormRelationRepair": {
+    "version": "reading-g-invalid-form-relation-repair-v1-20260810",
+    "completedAt": "2026-08-10T14:10:02.416Z",
+    "backupDir": "C:\\Users\\Administrator\\Desktop\\ielts-vocab-deepseek-edge-tts\\backups\\reading-g-invalid-form-relation-repair-2026-08-10T14-10-02-421Z",
+    "mode": "write",
+    "directMergeCount": 5,
+    "typoRemovalCount": 3,
+    "spellingFormatRepairCount": 1,
+    "standaloneFormCleanupCount": 1,
+    "count": 7290,
+    "wordCount": 6615,
+    "compaction": {
+      "configuredFamilyCount": 1374,
+      "appliedFamilyCount": 4,
+      "removedIndependentWordCount": 5,
+      "representedAliasCount": 2673,
+      "suppressedBecauseCanonicalMissing": 0
+    }
+  },
+  "masterReferenceFormReconciliation": {
+    "version": "reading-g-master-reference-forms-v1",
+    "source": "public/data/words.json",
+    "reconciledAt": "2026-08-12T10:33:27.639Z",
+    "sourceAliasCount": 771,
+    "independentAliasCount": 203,
+    "canonicalHeadwordCount": 732,
+    "missingCanonicalHeadwordCount": 107,
+    "resultingRuleCount": 1541,
+    "addedCanonicalHeadwordCount": 107,
+    "removedIndependentWordCount": 203,
+    "appliedFamilyCount": 194
+  },
+  "redundantPluralCompaction": {
+    "version": "reading-g-redundant-plural-compaction-v1-20260816",
+    "completedAt": "2026-08-16T11:57:08.200Z",
+    "mergedPluralCount": 41,
+    "mappings": [
+      {
+        "plural": "abilities",
+        "headword": "ability"
+      },
+      {
+        "plural": "accountants",
+        "headword": "accountant"
+      },
+      {
+        "plural": "ankles",
+        "headword": "ankle"
+      },
+      {
+        "plural": "assessments",
+        "headword": "assessment"
+      },
+      {
+        "plural": "auditions",
+        "headword": "audition"
+      },
+      {
+        "plural": "businesses",
+        "headword": "business"
+      },
+      {
+        "plural": "campsites",
+        "headword": "campsite"
+      },
+      {
+        "plural": "caretakers",
+        "headword": "caretaker"
+      },
+      {
+        "plural": "commitments",
+        "headword": "commitment"
+      },
+      {
+        "plural": "companions",
+        "headword": "companion"
+      },
+      {
+        "plural": "concentrations",
+        "headword": "concentration"
+      },
+      {
+        "plural": "departments",
+        "headword": "department"
+      },
+      {
+        "plural": "developments",
+        "headword": "development"
+      },
+      {
+        "plural": "diplomas",
+        "headword": "diploma"
+      },
+      {
+        "plural": "dressings",
+        "headword": "dressing"
+      },
+      {
+        "plural": "entitlements",
+        "headword": "entitlement"
+      },
+      {
+        "plural": "environments",
+        "headword": "environment"
+      },
+      {
+        "plural": "exceptions",
+        "headword": "exception"
+      },
+      {
+        "plural": "forklifts",
+        "headword": "forklift"
+      },
+      {
+        "plural": "governments",
+        "headword": "government"
+      },
+      {
+        "plural": "illnesses",
+        "headword": "illness"
+      },
+      {
+        "plural": "inspections",
+        "headword": "inspection"
+      },
+      {
+        "plural": "introductions",
+        "headword": "introduction"
+      },
+      {
+        "plural": "keyboards",
+        "headword": "keyboard"
+      },
+      {
+        "plural": "lounges",
+        "headword": "lounge"
+      },
+      {
+        "plural": "lunchtimes",
+        "headword": "lunchtime"
+      },
+      {
+        "plural": "negotiations",
+        "headword": "negotiation"
+      },
+      {
+        "plural": "newsletters",
+        "headword": "newsletter"
+      },
+      {
+        "plural": "partnerships",
+        "headword": "partnership"
+      },
+      {
+        "plural": "pensions",
+        "headword": "pension"
+      },
+      {
+        "plural": "productions",
+        "headword": "production"
+      },
+      {
+        "plural": "racks",
+        "headword": "rack"
+      },
+      {
+        "plural": "responsibilities",
+        "headword": "responsibility"
+      },
+      {
+        "plural": "savers",
+        "headword": "saver"
+      },
+      {
+        "plural": "sessions",
+        "headword": "session"
+      },
+      {
+        "plural": "situations",
+        "headword": "situation"
+      },
+      {
+        "plural": "specialists",
+        "headword": "specialist"
+      },
+      {
+        "plural": "spreadsheets",
+        "headword": "spreadsheet"
+      },
+      {
+        "plural": "translations",
+        "headword": "translation"
+      },
+      {
+        "plural": "vaccinations",
+        "headword": "vaccination"
+      },
+      {
+        "plural": "workstations",
+        "headword": "workstation"
+      }
+    ]
+  },
+  "hyphenSpellingCompaction": {
+    "version": "hyphen-spelling-variant-keep-hyphen-v1-20260818",
+    "completedAt": "2026-08-18T02:11:34.060Z",
+    "mergedCount": 12,
+    "mappings": [
+      {
+        "variant": "audiovisual",
+        "headword": "audio-visual",
+        "kind": "word"
+      },
+      {
+        "variant": "email",
+        "headword": "e-mail",
+        "kind": "word"
+      },
+      {
+        "variant": "ensuite",
+        "headword": "en-suite",
+        "kind": "word"
+      },
+      {
+        "variant": "lifecycle",
+        "headword": "life-cycle",
+        "kind": "word"
+      },
+      {
+        "variant": "makeup",
+        "headword": "make-up",
+        "kind": "word"
+      },
+      {
+        "variant": "ongoing",
+        "headword": "on-going",
+        "kind": "word"
+      },
+      {
+        "variant": "onsite",
+        "headword": "on-site",
+        "kind": "word"
+      },
+      {
+        "variant": "postgraduate",
+        "headword": "post-graduate",
+        "kind": "word"
+      },
+      {
+        "variant": "touchscreen",
+        "headword": "touch-screen",
+        "kind": "word"
+      },
+      {
+        "variant": "wellbeing",
+        "headword": "well-being",
+        "kind": "word"
+      },
+      {
+        "variant": "sixth form",
+        "headword": "sixth-form",
+        "kind": "phrase"
+      },
+      {
+        "variant": "on site",
+        "headword": "on-site",
+        "kind": "phrase"
+      }
+    ]
   }
 }

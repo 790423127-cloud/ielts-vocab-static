@@ -43,8 +43,16 @@ export function buildReadingWordsTransferPackage(readingWords, mainWords, mainMe
       .map((entry) => normalizeReadingWordKey(entry?.word))
       .filter(Boolean)
   );
+  const linkedMainIds = new Set(
+    compactReadingWords
+      .map((entry) => cleanText(entry?.mainWordId || entry?.baseWordId))
+      .filter(Boolean)
+  );
   const linkedMainEntries = (Array.isArray(mainWords) ? mainWords : [])
-    .filter((entry) => readingKeys.has(normalizeReadingWordKey(entry?.word)))
+    .filter((entry) => (
+      readingKeys.has(normalizeReadingWordKey(entry?.word))
+      || linkedMainIds.has(cleanText(entry?.id || entry?.wordId))
+    ))
     .map(selectTransferMainEntry);
 
   return {

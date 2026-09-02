@@ -8,6 +8,7 @@ import {
   getReadingGContentIssues,
   isReadingGContentComplete,
   isReadingGContentIncomplete,
+  isReadingGContextOnlyMeaningDetail,
   isReadingGPlaceholderContent
 } from "../content-completeness.mjs";
 import { normalizeReadingGItem } from "../load-reading-g.mjs";
@@ -23,6 +24,7 @@ function completeEntry(overrides = {}) {
     phonetic: "/kəmˈpliːt/",
     primaryPos: "adjective",
     primaryMeaningZh: "完整的",
+    meaningDetailZh: "表示具有所需的全部部分，没有缺失或尚未完成的内容。",
     definition: "having all necessary parts",
     example: "The record is complete.",
     exampleCn: "这条记录是完整的。",
@@ -41,6 +43,7 @@ test("G-reading content completeness checks visible teaching fields, not layer t
     phonetic: "",
     primaryPos: "word",
     primaryMeaningZh: "全题库阅读词汇（总词库待补）",
+    meaningDetailZh: "",
     definition: "",
     example: "",
     exampleCn: ""
@@ -54,7 +57,8 @@ test("G-reading content completeness checks visible teaching fields, not layer t
     "meaning",
     "definition",
     "example",
-    "exampleZh"
+    "exampleZh",
+    "meaningDetail"
   ]);
   assert.equal(isReadingGPlaceholderContent(placeholder.primaryMeaningZh), true);
   assert.equal(isReadingGPlaceholderContent("未知的；不熟悉的"), false);
@@ -141,6 +145,26 @@ test("G-reading completion queue accepts exact one-character glosses but catches
   assert.ok(getReadingGContentIssues(unsplit).includes("multiPosNeedsSplit"));
   assert.equal(getReadingGContentIssues(split).includes("multiPosNeedsSplit"), false);
   assert.equal(getReadingGCompleteness(tooShort).isLearningBlocked, true);
+});
+
+test("G-reading rejects a sentence-specific detail even when the text itself is long enough", () => {
+  const contextualOnly = completeEntry({
+    word: "inside",
+    primaryPos: "preposition",
+    primaryMeaningZh: "在……里面",
+    meaningDetailZh: "在当前例句中作介词，后接 the drawer，表示钥匙位于抽屉里面。"
+  });
+  const commonSense = completeEntry({
+    word: "inside",
+    primaryPos: "preposition",
+    primaryMeaningZh: "在……里面",
+    meaningDetailZh: "可作介词或副词表示在……里面，也可作名词指内部；作形容词时表示内部的。"
+  });
+
+  assert.equal(isReadingGContextOnlyMeaningDetail(contextualOnly), true);
+  assert.ok(getReadingGContentIssues(contextualOnly).includes("meaningDetail"));
+  assert.equal(isReadingGContextOnlyMeaningDetail(commonSense), false);
+  assert.equal(getReadingGContentIssues(commonSense).includes("meaningDetail"), false);
 });
 
 test("G-reading completeness score covers all seven requested dimensions", () => {

@@ -66,6 +66,24 @@ test("cross-device package excludes main-lexicon-only display fields", () => {
   assert.equal(Object.hasOwn(payload.readingWords[0], "phraseCollocations"), false);
 });
 
+test("cross-device package includes a lemma linked by mainWordId", () => {
+  const payload = buildReadingWordsTransferPackage([{
+    id: "reading-disqualified",
+    word: "disqualified",
+    mainWordId: "main-disqualify",
+    baseWord: "disqualify",
+    baseWordId: "main-disqualify",
+    relationType: "past-or-past-participle"
+  }], [{
+    id: "main-disqualify",
+    word: "disqualify",
+    status: "不熟"
+  }]);
+
+  assert.equal(payload.linkedMainEntries.length, 1);
+  assert.equal(payload.linkedMainEntries[0].word, "disqualify");
+});
+
 test("cross-device import merges by word without increasing frequency or overwriting target progress", () => {
   const payload = {
     type: "ielts-reading-words-transfer",

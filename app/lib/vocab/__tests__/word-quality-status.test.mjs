@@ -16,6 +16,7 @@ function readyWord(overrides = {}) {
     word: "access",
     pos: "noun",
     meaning: "进入；使用权",
+    meaningDetailZh: "指进入某处、接触某物，或获得使用某项服务、资料及设施的权利或机会。",
     definition: "the right or opportunity to use something",
     example: "Residents have access to the library.",
     exampleCn: "居民可以使用图书馆。",
@@ -28,7 +29,7 @@ function readyWord(overrides = {}) {
   };
 }
 
-test("optional enrichment does not create a paid completion backlog", () => {
+test("a missing detailed explanation enters the required completion backlog", () => {
   const word = readyWord({
     meaningDetailZh: "",
     otherMeanings: undefined,
@@ -36,9 +37,17 @@ test("optional enrichment does not create a paid completion backlog", () => {
     wordFamily: undefined,
     aiContentProfile: undefined
   });
-  assert.equal(isMissingAiFields(word), false);
-  assert.equal(getUnifiedQualityQueue(word), "ready");
+  assert.equal(isMissingAiFields(word), true);
+  assert.equal(getUnifiedQualityQueue(word), "completion");
   assert.equal(needsOptionalWordEnrichment(word), false);
+});
+
+test("a repetitive detailed explanation is still missing learning content", () => {
+  const word = readyWord({
+    meaningDetailZh: "“access”在当前词条中作noun名词使用，主要表示“进入；使用权”。"
+  });
+  assert.deepEqual(getWordQualityStatus(word).missingContentFields, ["meaningDetailZh"]);
+  assert.equal(getUnifiedQualityQueue(word), "completion");
 });
 
 test("legitimate words named none, null, and unknown are valid headwords", () => {
@@ -97,6 +106,20 @@ test("difficulty and part of speech control enrichment without forcing four plus
   });
   assert.equal(isMissingAiFields(functionWord), false);
   assert.equal(getWordEnrichmentStatus(functionWord).enrichmentStatus, "standard");
+});
+
+test("explicit proper names are not forced to invent teaching collocations", () => {
+  const properName = readyWord({
+    word: "Withney",
+    pos: "noun",
+    properNameType: "place-name",
+    collocations: [],
+    phraseCollocations: []
+  });
+  const status = getWordEnrichmentStatus(properName);
+  assert.equal(status.enrichmentApplicable, false);
+  assert.equal(status.enrichmentStatus, "rich");
+  assert.equal(status.needsOptionalEnrichment, false);
 });
 
 test("family promotion candidates are reported separately from repair queues", () => {

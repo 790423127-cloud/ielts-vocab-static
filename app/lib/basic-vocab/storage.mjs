@@ -5,7 +5,7 @@ import {
   BASIC_FLASH_STATUS_KEY
 } from "./keys.mjs";
 import { normalizeBasicWordKey } from "./load-basic-words.mjs";
-import { isInflectedReferenceWord } from "../vocab/word-study-eligibility.mjs";
+import { isBrushableWord } from "../vocab/word-study-eligibility.mjs";
 
 function safeGet(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -121,7 +121,7 @@ export function filterKey(filter) {
 }
 
 export function wordMatchesBasicFilter(word, filter, statusMap) {
-  if (isInflectedReferenceWord(word)) return false;
+  if (!isBrushableWord(word)) return false;
   const status = getBasicWordStatus(word, statusMap);
   const favorite = isBasicFavorite(word, statusMap);
 

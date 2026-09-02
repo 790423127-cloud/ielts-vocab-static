@@ -1,12 +1,13 @@
 (function () {
   "use strict";
 
-  var DATA_URL = "./data/ielts-538-words.json";
+  var DATA_URL = "./data/ielts-538-words.json?v=20260824_high_frequency_min3_v1";
   var STATUS_KEY = "ielts_538_flash_status_v1";
   var SESSION_KEY = "ielts_538_flash_session_v1";
   var LEGACY_SESSION_KEY = "ielts_538_static_session_v1";
   var POSITIONS_KEY = "ielts_538_flash_positions_v1";
   var DELETED_KEY = "ielts_538_static_deleted_v1";
+  var TOP_TOOLS_KEY = "ielts_static_538_tools_collapsed_v1";
   var words = [];
   var study = [];
   var statusMap = readJson(STATUS_KEY, {});
@@ -24,7 +25,8 @@
     "rangeLabel", "progressFill", "progressCount", "positionMeta", "favoriteBtn",
     "exampleSoundBtn", "exampleEn", "exampleCn", "wordSoundBtn", "word",
     "phonetic", "pos", "meaning", "paraphrase", "relatedGrid", "meaningToggle",
-    "studyCard", "prevBtn", "knownBtn", "unknownBtn", "nextBtn", "toast"
+    "studyCard", "prevBtn", "knownBtn", "unknownBtn", "nextBtn", "toast",
+    "statusSummary", "basicTopbar", "topToolsToggle"
   ].forEach(function (id) { els[id] = document.getElementById(id); });
 
   function readJson(key, fallback) {
@@ -112,6 +114,8 @@
     if (typeof value === "string") return value;
     if (!value || typeof value !== "object") return "all";
     if (value.type === "everything") return "everything";
+    if (value.type === "part3HighFrequency") return "part3HighFrequency";
+    if (value.type === "aiCoachParaphrase") return "aiCoachParaphrase";
     if (value.type === "status" && value.value === "不熟") return "unfamiliar";
     if (value.type === "status" && value.value === "收藏") return "favorite";
     return "all";
@@ -119,6 +123,8 @@
 
   function sharedFilter(value) {
     if (value === "everything") return { type: "everything", value: "" };
+    if (value === "part3HighFrequency") return { type: "part3HighFrequency", value: "" };
+    if (value === "aiCoachParaphrase") return { type: "aiCoachParaphrase", value: "" };
     if (value === "unfamiliar") return { type: "status", value: "不熟" };
     if (value === "favorite") return { type: "status", value: "收藏" };
     return { type: "all", value: "" };
@@ -169,13 +175,54 @@
     toast.timer = setTimeout(function () { els.toast.classList.remove("show"); }, 2200);
   }
 
+  function setTopToolsCollapsed(collapsed, persist) {
+    if (els.basicTopbar) els.basicTopbar.classList.toggle("is-tools-collapsed", !!collapsed);
+    if (els.topToolsToggle) {
+      els.topToolsToggle.setAttribute("aria-expanded", String(!collapsed));
+      els.topToolsToggle.textContent = "工具与词库";
+    }
+    if (persist) {
+      try { localStorage.setItem(TOP_TOOLS_KEY, collapsed ? "1" : "0"); } catch (error) {}
+    }
+  }
+
+  function renderStatusSummary() {
+    if (!els.statusSummary) return;
+    var summary = { pending: 0, unfamiliar: 0, familiar: 0, favorite: 0 };
+    words.forEach(function (entry) {
+      if (entry.practiceKind === "aiCoachQuestionParaphrase") return;
+      if (deletedMap[wordId(entry)]) return;
+      var state = statusOf(entry);
+      if (state.status === "熟悉") summary.familiar += 1;
+      else summary.pending += 1;
+      if (state.status === "不熟") summary.unfamiliar += 1;
+      if (state.favorite && state.status !== "熟悉") summary.favorite += 1;
+    });
+    els.statusSummary.textContent =
+      "学习状态：待学 " + summary.pending +
+      " · 不熟 " + summary.unfamiliar +
+      " · 熟悉 " + summary.familiar +
+      " · 收藏 " + summary.favorite;
+  }
+
   function visibleWords() {
     return words.filter(function (item) {
       if (deletedMap[wordId(item)]) return false;
       var state = statusOf(item);
+      var isAiCoachParaphrase = item.practiceKind === "aiCoachQuestionParaphrase";
+      if (filter === "aiCoachParaphrase") {
+        return isAiCoachParaphrase && state.status !== "熟悉";
+      }
+      if (isAiCoachParaphrase) return false;
       if (filter === "everything") return true;
       if (filter === "unfamiliar") return state.status === "不熟";
       if (filter === "favorite") return state.favorite && state.status !== "熟悉";
+      if (filter === "part3HighFrequency") {
+        return state.status !== "熟悉" && (
+          item.part3HighFrequency === true ||
+          (item.part3HighFrequencyReplacements || []).length > 0
+        );
+      }
       return state.status !== "熟悉";
     });
   }
@@ -231,6 +278,8 @@
     });
     var recommended = {};
     (item.recommendedSynonyms || []).forEach(function (word) { recommended[norm(word)] = true; });
+    var part3High = {};
+    (item.part3HighFrequencyReplacements || []).forEach(function (word) { part3High[norm(word)] = true; });
     var seen = {};
     return (item.synonyms || []).concat((item.paraphraseExamples || []).map(function (pair) {
       return pair.replacement;
@@ -247,6 +296,7 @@
         pair: pair,
         section: sectionFor(item, word, pair),
         recommended: !!recommended[norm(word)] || !!(pair && pair.isRecommended),
+        part3HighFrequency: !!part3High[norm(word)],
         pos: String(detail.pos || ""),
         posLabel: compactPosLabel(detail.pos),
         originalMeaning: String(detail.originalMeaning || ""),
@@ -283,19 +333,24 @@
       ? '<em class="study538-section">' + esc(selected.section) + "</em>" : "";
     var recommended = selected.recommended
       ? '<em class="study538-recommended">★ 最推荐</em>' : "";
+    var part3 = selected.part3HighFrequency
+      ? '<em class="study538-section">文章高频</em>' : "";
     if (!pair) {
       els.paraphrase.innerHTML =
         '<div class="study538-para-title">该候选词暂无审核例句</div>' +
         '<div class="study538-replacement"><button class="study538-sound" data-speak="' +
         esc(selected.word) + '">🔊</button><strong>' + esc(selected.word) +
-        "</strong>" + badge + recommended + "</div>";
+        "</strong>" + badge + recommended + part3 + "</div>";
       return;
     }
     els.paraphrase.innerHTML =
-      '<div class="study538-para-title">仿雅思 G 类题目改写句</div>' +
+      '<div class="study538-para-title">' +
+      (item.practiceKind === "aiCoachQuestionParaphrase" ?
+        "AI教练真题：原文表达 → 题干改写" : "仿雅思 G 类题目改写句") +
+      "</div>" +
       '<div class="study538-replacement"><button class="study538-sound" data-speak="' +
       esc(selected.word) + '">🔊</button><strong>' + esc(selected.word) +
-      "</strong>" + badge + recommended + "</div>" +
+      "</strong>" + badge + recommended + part3 + "</div>" +
       '<div class="study538-para-sentence">' + esc(pair.paraphraseSentence) + "</div>" +
       '<div class="study538-para-cn">' + esc(pair.meaningCn) + "</div>";
   }
@@ -314,11 +369,12 @@
           "<span>" + esc(entry.extra) + "</span></div>" : "";
       return '<div class="study538-synonym ' +
         (selected && selected.word === entry.word ? "active" : "") +
-        '" data-word="' + esc(entry.word) + '" tabindex="0" role="button">' +
+        '" data-word="' + esc(entry.word) + '" data-static-swipe-handle tabindex="0" role="button">' +
         '<div class="study538-synonym-head"><span class="study538-synonym-word">' +
         esc(entry.word) + "</span>" +
         (entry.section ? '<em class="study538-section">' + esc(entry.section) + "</em>" : "") +
         (entry.recommended ? '<em class="study538-recommended">★ 最推荐</em>' : "") +
+        (entry.part3HighFrequency ? '<em class="study538-section">文章高频</em>' : "") +
         '</div><div class="study538-synonym-state">' +
         (entry.pair ? "已审核" : "暂无审核例句") + "</div>" + extra +
         '<button class="study538-sound" data-speak="' + esc(entry.word) +
@@ -328,6 +384,8 @@
 
   function rangeName() {
     return filter === "everything" ? "全部376词" :
+      filter === "aiCoachParaphrase" ? "AI教练真题替换" :
+      filter === "part3HighFrequency" ? "G类阅读文章高频" :
       filter === "unfamiliar" ? "不熟词" :
       filter === "favorite" ? "收藏词" : "全部待学";
   }
@@ -336,6 +394,7 @@
     var item = current();
     els.filterSelect.value = filter;
     els.rangeLabel.textContent = rangeName();
+    renderStatusSummary();
     if (!item) {
       els.word.textContent = "暂无单词";
       els.meaning.textContent = "当前范围没有内容，可以切换到“全部376词”。";
@@ -358,7 +417,7 @@
     els.pos.textContent = item.pos || "";
     els.pos.classList.toggle("hidden", !item.pos);
     els.meaning.textContent = item.meaning || "";
-    els.exampleEn.textContent = item.example || "暂无例句";
+    window.IeltsExampleHighlight.render(els.exampleEn, item.example || "暂无例句", item);
     els.exampleCn.textContent = item.exampleCn || "";
     els.progressCount.textContent = (index + 1) + " / " + study.length;
     els.progressFill.style.width = study.length ? ((index + 1) / study.length * 100) + "%" : "0%";
@@ -407,9 +466,15 @@
         (item.synonyms || []).some(function (word) { return norm(word).indexOf(query) >= 0; });
     });
     if (found < 0) {
-      found = words.findIndex(function (item) { return norm(item.word).indexOf(query) >= 0; });
+      found = words.findIndex(function (item) {
+        return norm(item.word).indexOf(query) >= 0 ||
+          (item.paraphraseExamples || []).some(function (pair) {
+            return norm(pair.replacement).indexOf(query) >= 0;
+          });
+      });
       if (found >= 0) {
-        filter = "everything";
+        filter = words[found].practiceKind === "aiCoachQuestionParaphrase"
+          ? "aiCoachParaphrase" : "everything";
         rebuildStudy(wordId(words[found]));
         found = study.findIndex(function (item) { return wordId(item) === wordId(words[found]); });
       }
@@ -486,18 +551,37 @@
     else if (event.key === "3") { event.preventDefault(); mark("不熟"); }
   });
 
+  var savedTools = null;
+  try { savedTools = localStorage.getItem(TOP_TOOLS_KEY); } catch (error) {}
+  setTopToolsCollapsed(window.innerHeight <= 900 || savedTools === "1", false);
+  if (els.topToolsToggle) {
+    els.topToolsToggle.addEventListener("click", function () {
+      var collapsed = !els.basicTopbar.classList.contains("is-tools-collapsed");
+      setTopToolsCollapsed(collapsed, true);
+    });
+  }
+
   fetch(DATA_URL, { cache: "no-store" })
     .then(function (response) {
       if (!response.ok) throw new Error("HTTP " + response.status);
       return response.json();
     })
     .then(function (data) {
-      words = Array.isArray(data.words) ? data.words.filter(function (item) {
+      var baseWords = Array.isArray(data.words) ? data.words.filter(function (item) {
         return item && item.word && (item.wordId || item.id);
       }) : [];
-      if (Number(data.count) !== words.length) {
+      var practiceWords = Array.isArray(data.questionParaphrases) ?
+        data.questionParaphrases.filter(function (item) {
+          return item && item.word && (item.wordId || item.id) &&
+            item.practiceKind === "aiCoachQuestionParaphrase";
+        }) : [];
+      if (Number(data.count) !== baseWords.length) {
         throw new Error("词库声明数量与实际数量不一致");
       }
+      if (Number(data.aiCoachQuestionParaphrases && data.aiCoachQuestionParaphrases.practiceEntryCount) !== practiceWords.length) {
+        throw new Error("AI教练真题替换声明数量与实际数量不一致");
+      }
+      words = baseWords.concat(practiceWords);
       var savedKey = session.wordKey || positions[filterKey(filter)] || "";
       rebuildStudy(savedKey);
       render();

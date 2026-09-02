@@ -29,7 +29,16 @@ export default function VocabAdminToolsPanel({
 }) {
   const a = actions;
   const continuousActive = ["running", "stopping"].includes(aiRunState?.status);
-  const continuousModeLabel = aiRunState?.mode === "enrichment" ? "连续丰富" : "连续补全";
+  const continuousModeLabel = {
+    enrichment: "连续丰富",
+    repair: "连续结构修复",
+    completion: "连续补全"
+  }[aiRunState?.mode] || "连续补全";
+  const continuousResultLabel = {
+    enrichment: "已丰富",
+    repair: "已修复",
+    completion: "已补全"
+  }[aiRunState?.mode] || "已补全";
   const continuousStatusLabel = {
     running: `${continuousModeLabel}运行中`,
     stopping: "正在安全停止",
@@ -294,10 +303,11 @@ export default function VocabAdminToolsPanel({
                       <div><strong>词族复核 / 独立词候选：</strong>{qualityStats.familyReview || 0} / {qualityStats.familyPromotion || 0}</div>
                     </div>
                     <div className="ai-tool-explain">
+                      <p><strong>主释义详解：</strong>必须补充语义范围、典型对象/场景或用法边界；只重复单词、词性、短释义，或只写词形与搭配，都仍算待补全。</p>
                       <p><strong>单词级：</strong>只重做当前词的完整 AI 内容，保留 ID、学习状态和收藏。</p>
                       <p><strong>单轮补全：</strong>最多 100 词；每请求 5 词、最多 3 路并发，完成后停止。</p>
                       <p><strong>连续补全：</strong>逐轮处理剩余队列，每轮保存检查点；停止后下次从最新队列继续。</p>
-                      <p><strong>异常重做：</strong>按字段精准修复，保留词形、词族、ID、收藏和学习进度。</p>
+                      <p><strong>异常重做：</strong>按字段精准修复，支持单轮或连续运行；保留词形、词族、ID、收藏和学习进度。</p>
                       <p><strong>可选丰富：</strong>只合并自然搭配与句型，最多 4+4；不覆盖释义、例句、分类或词族。</p>
                     </div>
                     <div className="action-grid">
@@ -326,6 +336,15 @@ export default function VocabAdminToolsPanel({
                       <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.("AI精准修复结构异常：最多100词 / 每请求5词 / 2并发；不改词族和学习状态（会扣费）") && a.aiStableRepairWrongWords10x2?.()}>
                         精准修复结构异常 · 最多100词
                       </button>
+                      <button
+                        className="small-btn ai-paid ai-continuous-start"
+                        disabled={loading}
+                        onClick={() => a.confirmAiCost?.(
+                          `AI连续修复结构异常：当前约 ${qualityStats.repairMissing || 0} 词；每轮最多100词、每请求5词、2路并发，直到队列完成、手动停止或触发失败熔断；不改词族和学习状态（会持续扣费）`
+                        ) && a.startContinuousAiStructureRepair?.()}
+                      >
+                        连续修复结构异常 · 可暂停
+                      </button>
                       <button className="small-btn ai-paid" disabled={loading} onClick={() => a.confirmAiCost?.(`AI丰富可选词条：当前约 ${qualityStats.enrichmentThin || 0} 词；本轮最多100词，只补搭配和句型（会扣费）`) && a.enrichOptionalBatch?.()}>
                         丰富可选项 · 最多100词
                       </button>
@@ -345,7 +364,7 @@ export default function VocabAdminToolsPanel({
                           </progress>
                         ) : null}
                         <div className="ai-run-metrics">
-                          <span>已补全 {aiRunState.filled || 0}</span>
+                          <span>{continuousResultLabel} {aiRunState.filled || 0}</span>
                           <span>失败待处理 {aiRunState.blocked ?? aiRunState.failed ?? 0}</span>
                           <span>真实剩余 {aiRunState.remaining || 0}</span>
                         </div>

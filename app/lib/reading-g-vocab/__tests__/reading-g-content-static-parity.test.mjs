@@ -14,8 +14,8 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "../../../.
 function loadStaticQualityHelpers() {
   let source = fs.readFileSync(path.join(root, "public/assets/reading-g.js"), "utf8");
   source = source.replace(
-    /\n\s*boot\(\);\s*\n\}\)\(\);\s*$/,
-    "\n  globalThis.__readingGQuality = { normalizeEntry: normalizeEntry, getStaticContentIssues: getStaticContentIssues, matchStage: matchStage, getStaticSynonymStatus: getStaticSynonymStatus, isStaticSynonymSupportedEntry: isStaticSynonymSupportedEntry };\n})();\n"
+    /\n\s*boot\(\);\s*/,
+    "\n  globalThis.__readingGQuality = { normalizeEntry: normalizeEntry, getStaticContentIssues: getStaticContentIssues, matchStage: matchStage, getStaticSynonymStatus: getStaticSynonymStatus, isStaticSynonymSupportedEntry: isStaticSynonymSupportedEntry, inlineStaticStudyMeaning: inlineStaticStudyMeaning };\n"
   );
   assert.match(source, /__readingGQuality/);
 
@@ -43,6 +43,20 @@ function loadStaticQualityHelpers() {
   vm.runInContext(source, context);
   return context.globalThis.__readingGQuality;
 }
+
+test("static G-reading display hides a retired pending marker after AI completion", () => {
+  const vocab = JSON.parse(
+    fs.readFileSync(path.join(root, "public/data/reading-g-vocab.json"), "utf8")
+  );
+  const boar = vocab.items.find((item) => item.word === "boar");
+  const staticHelpers = loadStaticQualityHelpers();
+
+  assert.ok(boar);
+  assert.equal(
+    staticHelpers.inlineStaticStudyMeaning(boar),
+    "野猪；公猪（未阉割的雄性家猪）"
+  );
+});
 
 test("dynamic and static G-reading completion queues classify every word identically", () => {
   const vocab = JSON.parse(

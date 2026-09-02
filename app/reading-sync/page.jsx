@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 
 import {
-  readReadingWords,
-  writeReadingWords,
-  writeReadingWordsWithBackup
+  loadPersistedReadingWords,
+  persistReadingWords
 } from "../lib/reading-words/storage.mjs";
 import {
-  loadReadingParaphraseState,
-  saveReadingParaphraseState,
-  saveReadingParaphraseStateWithBackup
+  loadPersistedReadingParaphraseState,
+  persistReadingParaphraseRollback,
+  persistReadingParaphraseState
 } from "../lib/reading-paraphrases/storage.mjs";
 import {
   READING_COACH_SYNC_TYPE,
@@ -48,7 +47,7 @@ export default function ReadingSyncPage() {
     let handledTransferId = "";
     let handledResult = null;
     const send = (message) => opener.postMessage(message, sourceOrigin);
-    const onMessage = (event) => {
+    const onMessage = async (event) => {
       if (event.origin !== sourceOrigin || event.source !== opener) return;
       if (event.data?.type !== READING_COACH_SYNC_TYPE) return;
       try {
@@ -58,20 +57,43 @@ export default function ReadingSyncPage() {
           return;
         }
 
-        const previousWords = readReadingWords();
-        const previousParaphrases = loadReadingParaphraseState();
+        const previousWords = (await loadPersistedReadingWords()).words;
+        const previousParaphrases = await loadPersistedReadingParaphraseState();
         const wordResult = mergeReadingCoachWords(previousWords, payload.words);
         const paraphraseResult = mergeReadingCoachParaphrases(
           previousParaphrases,
           payload.paraphrases
         );
-        if (!writeReadingWordsWithBackup(wordResult.words, previousWords)) {
-          throw new Error("生词本写入失败，原数据未改变");
+        const wordsChanged = wordResult.added > 0 || wordResult.updated > 0;
+        const paraphrasesChanged = paraphraseResult.added > 0 || paraphraseResult.updated > 0;
+
+        const rollbackOk = await persistReadingParaphraseRollback(
+          paraphraseResult.state,
+          previousParaphrases
+        );
+        if (!rollbackOk && paraphrasesChanged) {
+          throw new Error("同义替换本回退备份写入失败，原数据未改变");
         }
-        if (!saveReadingParaphraseStateWithBackup(paraphraseResult.state, previousParaphrases)) {
-          writeReadingWords(previousWords);
-          saveReadingParaphraseState(previousParaphrases);
-          throw new Error("同义替换本写入失败，已恢复传输前数据");
+        if (wordsChanged) {
+          const savedWords = await persistReadingWords(wordResult.words, previousWords);
+          if (!savedWords.ok) {
+            throw new Error(`生词本写入失败，原数据未改变：${savedWords.error?.message || "未知错误"}`);
+          }
+        }
+        if (paraphrasesChanged) {
+          const savedParaphrases = await persistReadingParaphraseState(
+            paraphraseResult.state,
+            previousParaphrases
+          );
+          if (!savedParaphrases) {
+            const restoredWords = wordsChanged
+              ? await persistReadingWords(previousWords)
+              : { ok: true };
+            if (!restoredWords.ok) {
+              throw new Error("同义替换本写入失败，生词本自动回退也失败，请勿继续操作");
+            }
+            throw new Error("同义替换本写入失败，已恢复传输前数据");
+          }
         }
 
         const nextSummary = {

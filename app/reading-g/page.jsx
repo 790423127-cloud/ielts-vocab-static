@@ -10,19 +10,25 @@ import {
   loadReadingGParaphrases,
   loadReadingGQuestionEvidence,
   loadReadingGVocab,
+  loadReadingGVocabRevision,
   normalizeReadingGItem,
   normalizeReadingGKey
 } from "../lib/reading-g-vocab/load-reading-g.mjs";
 import { enrichReadingGParaphraseSources } from "../lib/reading-g-vocab/question-evidence.mjs";
+import { confirmReadingGDelete } from "../lib/reading-g-vocab/delete-confirmation.mjs";
 import { migrateReadingGProgress } from "../lib/reading-g-vocab/migration.mjs";
 import {
   getReadingGCompleteness,
   isReadingGContentComplete,
   isReadingGContentIncomplete
 } from "../lib/reading-g-vocab/content-completeness.mjs";
-import { isReadingGAiCompletionCandidate } from "../lib/reading-g-vocab/ai-completion.mjs";
+import {
+  isReadingGAiCompletionCandidate,
+  isReadingGMeaningCoverageCandidate
+} from "../lib/reading-g-vocab/ai-completion.mjs";
 import { isReadingGSynonymCompletionCandidate } from "../lib/reading-g-vocab/synonym-completion.mjs";
 import { countStageUniques } from "../lib/reading-g-vocab/stages.mjs";
+import { getReadingGEntrySearchRank } from "../lib/reading-g-vocab/search.mjs";
 import {
   DEFAULT_SESSION_MODE,
   PARA_SESSION_SIZE,
@@ -61,7 +67,9 @@ import {
   clearRgParaphraseSession,
   countParaphraseStatus,
   countStatusByMode,
+  familiarStatusSignature,
   filterKey,
+  flushRgStatusMapWrite,
   getEntryProgressKey,
   getParaphraseStatus,
   getRgFilterLabel,
@@ -83,16 +91,20 @@ import {
   writeRgParaphraseReview,
   writeRgParaphraseSession,
   writeRgParaphraseStatusMap,
+  scheduleRgStatusMapWrite,
+  studyQueueLeavesOnStatusChange,
   writeRgPositions,
-  writeRgSession,
-  writeRgStatusMap
+  writeRgSession
 } from "../lib/reading-g-vocab/storage.mjs";
 import {
   fetchSpeechAudioResult,
   preloadSpeechAudioUrl
 } from "../lib/vocab-speech.mjs";
 import { DELETE_CURRENT_WORD_EVENT } from "../lib/vocab/delete-current-word-request.mjs";
-import { shouldHandleStudyDeleteShortcut } from "../lib/vocab/study-keyboard-shortcuts.mjs";
+import {
+  getStudyKeyboardAction,
+  shouldHandleStudyDeleteShortcut
+} from "../lib/vocab/study-keyboard-shortcuts.mjs";
 import {
   advanceStudyQueueAfterDelete,
   advanceStudyQueueAfterExit,
@@ -105,9 +117,11 @@ import {
 } from "../lib/speech-audio-playback.mjs";
 
 const DEFAULT_FILTER = { type: "pathStage", value: "1" };
-const AI_COMPLETION_BATCH_SIZE = 10;
+const AI_COMPLETION_BATCH_SIZE = 120;
+const AI_COMPLETION_REQUEST_BATCH_SIZE = 40;
+const AI_COMPLETION_CONCURRENCY = 3;
 const SYNONYM_AI_COMPLETION_BATCH_SIZE = 120;
-const SYNONYM_AI_REQUEST_BATCH_SIZE = 40;
+const SYNONYM_AI_REQUEST_BATCH_SIZE = 20;
 const SYNONYM_AI_CONCURRENCY = 3;
 
 function isAiCompletionCandidateEntry(entry) {
@@ -121,6 +135,21 @@ function prioritizeCurrentAiTarget(entries, currentId) {
     : entries;
 }
 
+function resolveEntryAfterVocabularyRefresh(entries, previousId, previousWord = "") {
+  const id = String(previousId || "").trim();
+  const wordKey = normalizeReadingGKey(previousWord);
+  return (entries || []).find((entry) => String(entry?.id || "").trim() === id)
+    || (entries || []).find((entry) => (
+      (entry?.mergedAliases || []).some((alias) => String(alias?.id || "").trim() === id) ||
+      (entry?.mergedEntries || []).some((alias) => String(alias?.id || "").trim() === id) ||
+      (entry?.forms || []).some((form) => String(form?.entryId || form?.id || "").trim() === id)
+    ))
+    || (wordKey
+      ? (entries || []).find((entry) => normalizeReadingGKey(entry?.word) === wordKey)
+      : null)
+    || null;
+}
+
 export default function ReadingGVocabPage() {
   const [phase, setPhase] = useState("loading");
   const [items, setItems] = useState([]);
@@ -132,7 +161,8 @@ export default function ReadingGVocabPage() {
     wordCount: 0,
     phraseCount: 0,
     activeCount: 0,
-    referenceCount: 0
+    referenceCount: 0,
+    revision: ""
   });
   const [error, setError] = useState("");
   const [index, setIndex] = useState(0);
@@ -207,6 +237,8 @@ export default function ReadingGVocabPage() {
   const persistInFlightRef = useRef(false);
   const aiAutoStopRef = useRef(false);
   const synonymAiAutoStopRef = useRef(false);
+  const aiQueuePreflightRef = useRef(false);
+  const vocabRevisionRef = useRef("");
 
   const isQuizMode = filter.type === "paraphraseQuiz";
   const learnMode = useMemo(() => {
@@ -272,8 +304,10 @@ export default function ReadingGVocabPage() {
           wordCount: loaded.wordCount || 0,
           phraseCount: loaded.phraseCount || 0,
           activeCount: loaded.activeCount || 0,
-          referenceCount: loaded.referenceCount || 0
+          referenceCount: loaded.referenceCount || 0,
+          revision: loaded.revision || loaded.updatedAt || ""
         });
+        vocabRevisionRef.current = loaded.revision || loaded.updatedAt || "";
 
         const savedCoverage = readRgParaCoverage();
         setParaCoverage(savedCoverage);
@@ -321,7 +355,11 @@ export default function ReadingGVocabPage() {
             found = loaded.items.findIndex(
               (row) =>
                 getEntryProgressKey(row) === restoreKey ||
-                normalizeReadingGKey(row.word) === restoreKey
+                normalizeReadingGKey(row.word) === restoreKey ||
+                (row.mergedAliases || []).some((alias) => (
+                  String(alias?.id || "").trim() === restoreKey ||
+                  normalizeReadingGKey(alias?.key || alias?.word) === restoreKey
+                ))
             );
           }
           if (found < 0) {
@@ -367,6 +405,22 @@ export default function ReadingGVocabPage() {
     return () => clearTimeout(timer);
   }, [toast]);
 
+  useEffect(() => {
+    const flush = () => flushRgStatusMapWrite();
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") flush();
+    };
+    window.addEventListener("pagehide", flush);
+    window.addEventListener("beforeunload", flush);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      flush();
+      window.removeEventListener("pagehide", flush);
+      window.removeEventListener("beforeunload", flush);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
   const highQuizParas = useMemo(
     () => getQuizEligibleGroups(paraphraseGroups),
     [paraphraseGroups]
@@ -375,6 +429,9 @@ export default function ReadingGVocabPage() {
     () => paraphraseGroups.filter((group) => group?.confidence === "high" && group?.sourceType !== "network" && group?.anchor && group?.members?.length),
     [paraphraseGroups]
   );
+
+  const familiarSig = useMemo(() => familiarStatusSignature(statusMap), [statusMap]);
+  const studyListStatusKey = filter.type === "status" ? statusMap : familiarSig;
 
   const baseStudyList = useMemo(() => {
     if (isQuizMode) return [];
@@ -401,7 +458,9 @@ export default function ReadingGVocabPage() {
     }
     if (!deletedIdsRef.current.size) return list;
     return list.filter((row) => row?.entry?.id && !deletedIdsRef.current.has(row.entry.id));
-  }, [items, filter, statusMap, verifiedParas, isQuizMode, learnMode]);
+    // studyListStatusKey is familiarSig unless the current filter is a status queue.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, filter, studyListStatusKey, verifiedParas, isQuizMode, learnMode]);
   const wordOrdering = useOrderedStudyRows({
     orderKey: `reading-g:${filterKey(filter)}:${learnMode}`,
     rows: baseStudyList,
@@ -520,6 +579,18 @@ export default function ReadingGVocabPage() {
     () => items.filter(isAiCompletionCandidateEntry),
     [items]
   );
+  const aiCompletionFailureEntries = useMemo(
+    () => aiCompletionEntries.filter((entry) => entry.aiCompletionLastFailure?.reason),
+    [aiCompletionEntries]
+  );
+  const meaningCoverageEntries = useMemo(
+    () => items.filter(isReadingGMeaningCoverageCandidate),
+    [items]
+  );
+  const meaningCoverageFailureEntries = useMemo(
+    () => meaningCoverageEntries.filter((entry) => entry.meaningCoverageLastFailure?.reason),
+    [meaningCoverageEntries]
+  );
   const synonymPendingEntries = useMemo(
     () => items.filter(isReadingGSynonymCompletionCandidate),
     [items]
@@ -558,13 +629,32 @@ export default function ReadingGVocabPage() {
       phraseFamiliar: c.phraseFamiliar,
       paraphraseFamiliar: p.familiar
     };
-  }, [items, statusMap, paraStatusMap]);
+    // familiarSig stands in for statusMap so marking 不熟 does not recount every card.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, familiarSig, paraStatusMap]);
 
   const familiarCount = statusCounts.meaningFamiliar;
 
   const stageTotals = useMemo(() => countStageUniques(items), [items]);
 
-  const learningEntryGroups = useMemo(() => {
+  const [unfamiliarEntryCount, setUnfamiliarEntryCount] = useState(0);
+  const unfamiliarSeededRef = useRef(false);
+
+  useEffect(() => {
+    unfamiliarSeededRef.current = false;
+  }, [items, learnMode]);
+
+  useEffect(() => {
+    if (!items.length || unfamiliarSeededRef.current) return;
+    unfamiliarSeededRef.current = true;
+    let count = 0;
+    for (const entry of items) {
+      if (getRgStatus(entry, statusMap, learnMode) === RG_STATUS.UNFAMILIAR) count += 1;
+    }
+    setUnfamiliarEntryCount(count);
+  }, [items, statusMap, learnMode]);
+
+  const heavyEntryGroups = useMemo(() => {
     return RG_LEARNING_ENTRIES.map((group) => ({
       ...group,
       items: group.items.map((entry) => {
@@ -573,7 +663,9 @@ export default function ReadingGVocabPage() {
             ? verifiedParas.length
             : entry.filter.type === "paraphraseQuiz"
               ? highQuizParas.length
-              : buildRgStudyList(items, entry.filter, statusMap, learnMode).length;
+              : entry.filter.type === "status" && entry.filter.value === RG_STATUS.UNFAMILIAR
+                ? 0
+                : buildRgStudyList(items, entry.filter, statusMap, learnMode).length;
         const stageTotal = entry.filter.type === "pathStage"
           ? stageTotals[`stage${entry.filter.value}`]
           : null;
@@ -588,19 +680,30 @@ export default function ReadingGVocabPage() {
         };
       })
     }));
-  }, [items, statusMap, highQuizParas, verifiedParas, learnMode, stageTotals]);
+    // statusMap is read inside but only familiar-set changes should rebuild these counts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, familiarSig, highQuizParas, verifiedParas, learnMode, stageTotals]);
+
+  const learningEntryGroups = useMemo(() => {
+    return heavyEntryGroups.map((group) => ({
+      ...group,
+      items: group.items.map((entry) => (
+        entry.filter.type === "status" && entry.filter.value === RG_STATUS.UNFAMILIAR
+          ? { ...entry, count: unfamiliarEntryCount, countLabel: undefined }
+          : entry
+      ))
+    }));
+  }, [heavyEntryGroups, unfamiliarEntryCount]);
 
   const libraryRows = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return items
-      .map((entry, originalIndex) => ({ entry, originalIndex }))
-      .filter(({ entry }) => {
-        if (!q) return true;
-        return (
-          String(entry.word || "").toLowerCase().includes(q) ||
-          String(entry.meaning || "").toLowerCase().includes(q)
-        );
-      });
+    const rows = items.map((entry, originalIndex) => ({ entry, originalIndex }));
+    if (!q) return rows;
+    return rows
+      .map((row) => ({ ...row, searchRank: getReadingGEntrySearchRank(row.entry, q) }))
+      .filter((row) => Number.isFinite(row.searchRank))
+      .sort((left, right) => left.searchRank - right.searchRank || left.originalIndex - right.originalIndex)
+      .map(({ searchRank: _searchRank, ...row }) => row);
   }, [items, search]);
 
   const persistSession = useCallback(
@@ -708,6 +811,101 @@ export default function ReadingGVocabPage() {
   const clearStudyQueueFreeze = useCallback(() => {
     freezeStudyQueueRows(null);
   }, [freezeStudyQueueRows]);
+
+  const adoptFreshVocabularySnapshot = useCallback((loaded, options = {}) => {
+    const freshItems = Array.isArray(loaded?.items) ? loaded.items : [];
+    if (!freshItems.length) throw new Error("重新读取到的 G 类词库为空，已保留当前页面数据");
+
+    const previousId = liveDeleteRef.current.currentEntryId || currentEntryId || items[index]?.id || "";
+    const previousWord = liveDeleteRef.current.items?.find((entry) => entry?.id === previousId)?.word
+      || items[index]?.word
+      || "";
+    const nextEntry = resolveEntryAfterVocabularyRefresh(freshItems, previousId, previousWord)
+      || freshItems[Math.min(Math.max(0, index), freshItems.length - 1)]
+      || freshItems[0];
+    const nextIndex = Math.max(0, freshItems.findIndex((entry) => entry.id === nextEntry?.id));
+
+    clearStudyQueueFreeze();
+    setItems(freshItems);
+    setIndex(nextIndex);
+    setCurrentEntryId(String(nextEntry?.id || "").trim());
+    setMeta({
+      version: loaded.version,
+      count: loaded.count || freshItems.length,
+      wordCount: loaded.wordCount || 0,
+      phraseCount: loaded.phraseCount || 0,
+      activeCount: loaded.activeCount || 0,
+      referenceCount: loaded.referenceCount || 0,
+      revision: loaded.revision || loaded.updatedAt || ""
+    });
+    vocabRevisionRef.current = loaded.revision || loaded.updatedAt || "";
+    invalidateReadingGVocabCache();
+
+    if (options.notify === true) {
+      const message = "检测到 G 类词库已更新，已重新生成当前卡片与待补队列";
+      setToast(message);
+      setAiMessage(message);
+    }
+    return freshItems;
+  }, [clearStudyQueueFreeze, currentEntryId, index, items]);
+
+  const refreshVocabularyBeforeAiAction = useCallback(async () => {
+    const loaded = await loadReadingGVocab(fetch, { cacheBust: true });
+    const previousRevision = vocabRevisionRef.current;
+    const nextRevision = loaded.revision || loaded.updatedAt || "";
+    const changed = Boolean(
+      previousRevision && nextRevision && previousRevision !== nextRevision
+    ) || loaded.items.length !== items.length;
+    return {
+      changed,
+      items: adoptFreshVocabularySnapshot(loaded, { notify: changed })
+    };
+  }, [adoptFreshVocabularySnapshot, items.length]);
+
+  useEffect(() => {
+    if (phase !== "ready") return undefined;
+    let cancelled = false;
+
+    async function checkForVocabularyUpdate() {
+      if (
+        cancelled ||
+        document.hidden ||
+        aiRunning ||
+        synonymAiRunning ||
+        persistInFlightRef.current ||
+        pendingPersistIdsRef.current.size
+      ) return;
+      try {
+        const revision = await loadReadingGVocabRevision();
+        if (
+          !cancelled &&
+          revision &&
+          vocabRevisionRef.current &&
+          revision !== vocabRevisionRef.current
+        ) {
+          const loaded = await loadReadingGVocab(fetch, { cacheBust: true });
+          if (!cancelled) adoptFreshVocabularySnapshot(loaded, { notify: true });
+        }
+      } catch (error) {
+        console.warn("G 类词库后台版本检查失败", error);
+      }
+    }
+
+    const onFocus = () => { checkForVocabularyUpdate(); };
+    const onVisibilityChange = () => {
+      if (!document.hidden) checkForVocabularyUpdate();
+    };
+    const interval = window.setInterval(checkForVocabularyUpdate, 30_000);
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [adoptFreshVocabularySnapshot, aiRunning, phase, synonymAiRunning]);
 
   const seekStudyPosition = useCallback((position) => {
     if (isQuizMode) return;
@@ -930,14 +1128,18 @@ export default function ReadingGVocabPage() {
           })()
         : buildRgStudyList(items, nextFilter, statusMap, mode);
 
-    const savedKey = positionsRef.current[filterKey(nextFilter)];
+      const savedKey = positionsRef.current[filterKey(nextFilter)];
     let nextIndex = rebuilt[0]?.originalIndex ?? 0;
     if (savedKey) {
       const found = rebuilt.find((row) => {
         const it = items[row.originalIndex];
         return (
           getEntryProgressKey(it) === savedKey ||
-          normalizeReadingGKey(it?.word) === savedKey
+          normalizeReadingGKey(it?.word) === savedKey ||
+          (it?.mergedAliases || []).some((alias) => (
+            String(alias?.id || "").trim() === savedKey ||
+            normalizeReadingGKey(alias?.key || alias?.word) === savedKey
+          ))
         );
       });
       if (found) nextIndex = found.originalIndex;
@@ -962,9 +1164,13 @@ export default function ReadingGVocabPage() {
     );
   }
 
-  function applyAiCompletionResult(result, sourceItems) {
+  function applyAiCompletionResult(result, sourceItems, mode = "g-main") {
+    const changedEntries = [
+      ...(result.updatedEntries || []),
+      ...(result.statusUpdatedEntries || [])
+    ];
     const updatedById = new Map(
-      (result.updatedEntries || []).map((entry, entryIndex) => [
+      changedEntries.map((entry, entryIndex) => [
         entry.id,
         normalizeReadingGItem(entry, entryIndex)
       ])
@@ -983,6 +1189,8 @@ export default function ReadingGVocabPage() {
       }));
     }
 
+    if (mode === "meaning-coverage") return nextItems;
+
     const nextPendingIndex = nextItems.findIndex(isAiCompletionCandidateEntry);
     setFilter({ type: "layer", value: "questionBankPending" });
     const aiIndex = nextPendingIndex >= 0 ? nextPendingIndex : 0;
@@ -991,12 +1199,36 @@ export default function ReadingGVocabPage() {
     return nextItems;
   }
 
-  async function requestAiCompletionBatch(targets, sourceItems) {
+  async function reconcileMeaningCoverageStatus() {
+    if (aiRunning) return;
+    try {
+      setAiRunning(true);
+      setAiMessage("正在核对常见义状态与已保存的失败原因（不调用 AI）");
+      const response = await fetch("/api/reading-g/reconcile-meaning-coverage", { method: "POST" });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "常见义状态对账失败");
+      }
+      applyAiCompletionResult(result, items, "meaning-coverage");
+      const stats = result.stats || {};
+      const message = `常见义状态已对账：已直接通过 ${Number(stats.reconciled) || 0} 个；仍待 AI 复核 ${Number(stats.retained) || 0} 个，已逐词标注原因。`;
+      setAiMessage(message);
+      setToast(message);
+    } catch (error) {
+      const message = error?.message || "常见义状态对账失败";
+      setAiMessage(message);
+      setToast(message);
+    } finally {
+      setAiRunning(false);
+    }
+  }
+
+  async function requestAiCompletionBatch(targets, sourceItems, mode = "g-main") {
     setAiMessage(`正在补全：${targets.map((entry) => entry.word).join("、")}`);
     const response = await fetch("/api/reading-g/complete-pending", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entryIds: targets.map((entry) => entry.id) })
+      body: JSON.stringify({ entryIds: targets.map((entry) => entry.id), mode })
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result.ok) {
@@ -1004,7 +1236,7 @@ export default function ReadingGVocabPage() {
     }
     return {
       result,
-      nextItems: applyAiCompletionResult(result, sourceItems)
+      nextItems: applyAiCompletionResult(result, sourceItems, mode)
     };
   }
 
@@ -1057,8 +1289,113 @@ export default function ReadingGVocabPage() {
     setToast(message);
   }
 
-  async function runAiCompletion({ currentOnly = false, autoAll = false } = {}) {
+  async function runMeaningCoverageReview({ autoAll = false, preflightDone = false } = {}) {
     if (aiRunning) return;
+    if (!preflightDone && !aiQueuePreflightRef.current) {
+      try {
+        aiQueuePreflightRef.current = true;
+        const refreshed = await refreshVocabularyBeforeAiAction();
+        if (refreshed.changed) {
+          setToast("词库刚刚发生更新，已刷新待复核队列；请核对新数量后再点击一次");
+          return;
+        }
+      } catch (error) {
+        const message = error?.message || "开始前重新核对 G 类词库失败";
+        setAiMessage(message);
+        setToast(message);
+        return;
+      } finally {
+        aiQueuePreflightRef.current = false;
+      }
+    }
+    const prioritized = prioritizeCurrentAiTarget(meaningCoverageEntries, item?.id);
+    const targets = autoAll ? prioritized : prioritized.slice(0, AI_COMPLETION_BATCH_SIZE);
+    if (!targets.length) {
+      setToast("没有需要复核常见义的可单独刷词");
+      return;
+    }
+    const confirmed = window.confirm(
+      autoAll
+        ? `准备自动复核全部 ${targets.length} 个可单独刷词的常见义，预计 ${Math.ceil(targets.length / AI_COMPLETION_BATCH_SIZE)} 轮。\n\n` +
+          "只补充生活和阅读中常见、但当前未完整覆盖的义项；保留原主释义，不生成例句，不补词形、词族、搭配或同义替换。每轮最多120词，分最多3路、每路最多40词并发请求；缓存未命中会调用 DeepSeek，可能产生费用。可随时点“停止自动补全”，当前轮结束后不再继续；失败词本轮不自动重试。\n\n确定继续吗？"
+        : `准备复核 ${targets.length} 个可单独刷词的常见义：${targets.map((entry) => entry.word).join("、")}。\n\n` +
+          "只补充生活和阅读中常见、但当前未完整覆盖的义项；保留原主释义，不生成例句，不补词形、词族、搭配或同义替换。缓存未命中时会调用 DeepSeek API，可能产生费用；本轮最多分3路、每路最多40词并发请求，不自动重试。\n\n确定继续吗？"
+    );
+    if (!confirmed) return;
+
+    try {
+      setAiRunning(true);
+      setAiAutoRunning(autoAll);
+      aiAutoStopRef.current = false;
+      let workingItems = items;
+      let remainingTargets = targets;
+      let completedTotal = 0;
+      let cacheHitTotal = 0;
+      let deepseekTotal = 0;
+      let failedTotal = 0;
+      let remainingCount = meaningCoverageEntries.length;
+      const attemptedIds = new Set();
+      let round = 0;
+
+      do {
+        const batch = remainingTargets.slice(0, AI_COMPLETION_BATCH_SIZE);
+        round += 1;
+        batch.forEach((entry) => attemptedIds.add(entry.id));
+        setAiMessage(
+          autoAll
+            ? `自动复核第 ${round} 轮：${batch.map((entry) => entry.word).join("、")}（已完成 ${completedTotal}/${targets.length}）`
+            : `正在复核常见义：${batch.map((entry) => entry.word).join("、")}`
+        );
+        const { result, nextItems } = await requestAiCompletionBatch(batch, workingItems, "meaning-coverage");
+        workingItems = nextItems;
+        const stats = result.stats || {};
+        completedTotal += Number(stats.completed) || 0;
+        cacheHitTotal += Number(stats.cacheHit) || 0;
+        deepseekTotal += Number(stats.deepseek) || 0;
+        failedTotal += Number(stats.failed) || 0;
+        remainingCount = result.totals?.pendingCount ?? Math.max(0, remainingCount - (Number(stats.completed) || 0));
+        if (!autoAll) break;
+        remainingTargets = workingItems
+          .filter(isReadingGMeaningCoverageCandidate)
+          .filter((entry) => !attemptedIds.has(entry.id));
+      } while (autoAll && remainingTargets.length && !aiAutoStopRef.current);
+
+      const stopped = autoAll && aiAutoStopRef.current;
+      const message = autoAll
+        ? `${stopped ? "自动常见义复核已停止" : "自动常见义复核完成"}：完成 ${completedTotal}/${targets.length}，缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，失败/跳过 ${failedTotal}，仍待复核 ${remainingCount}`
+        : `常见义复核完成 ${completedTotal} 个：缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，失败/跳过 ${failedTotal}，仍待复核 ${remainingCount}`;
+      setAiMessage(message);
+      setToast(message);
+    } catch (error) {
+      const message = error?.message || "常见义复核失败";
+      setAiMessage(message);
+      setToast(message);
+    } finally {
+      aiAutoStopRef.current = false;
+      setAiAutoRunning(false);
+      setAiRunning(false);
+    }
+  }
+
+  async function runAiCompletion({ currentOnly = false, autoAll = false, preflightDone = false } = {}) {
+    if (aiRunning) return;
+    if (!preflightDone && !aiQueuePreflightRef.current) {
+      try {
+        aiQueuePreflightRef.current = true;
+        const refreshed = await refreshVocabularyBeforeAiAction();
+        if (refreshed.changed) {
+          setToast("词库刚刚发生更新，已刷新待补队列；请核对新数量后再点击一次");
+          return;
+        }
+      } catch (error) {
+        const message = error?.message || "开始前重新核对 G 类词库失败";
+        setAiMessage(message);
+        setToast(message);
+        return;
+      } finally {
+        aiQueuePreflightRef.current = false;
+      }
+    }
     const prioritizedPending = prioritizeCurrentAiTarget(aiCompletionEntries, item?.id);
     const currentPending = prioritizedPending.find((entry) => entry.id === item?.id);
     const targets = autoAll
@@ -1068,18 +1405,18 @@ export default function ReadingGVocabPage() {
       : prioritizedPending.slice(0, AI_COMPLETION_BATCH_SIZE);
 
     if (!targets.length) {
-      setToast(currentOnly ? "当前词的主资料与词族都已完整；同义替换请使用专项核查" : "没有需要AI补全的主资料待补词");
+      setToast(currentOnly ? "当前词的主资料、常见义覆盖、词形词族、搭配与同义替换都已完成" : "没有需要AI补全的主资料或常见义待复核词");
       return;
     }
 
     const confirmed = autoAll
       ? window.confirm(
-          `准备自动补全全部 ${targets.length} 个G类主资料待补词，预计 ${Math.ceil(targets.length / AI_COMPLETION_BATCH_SIZE)} 批，每批最多 ${AI_COMPLETION_BATCH_SIZE} 词、1次请求、顺序执行不并发。\n\n` +
-          "补齐音标、词性、释义、例句与词族中的缺失资料，已有内容保留；不补词形或同义替换。同义替换由另一入口单独处理。不会修改总词库和学习进度。缓存命中不调用付费模型；未命中会调用 DeepSeek，可能产生费用。开始后可点“停止自动补全”，当前批完成后不再继续；失败词本轮不自动重试。\n\n确定继续吗？"
+          `准备自动补全全部 ${targets.length} 个G类主资料待补词，预计 ${Math.ceil(targets.length / AI_COMPLETION_BATCH_SIZE)} 轮，每轮最多 ${AI_COMPLETION_BATCH_SIZE} 词，分最多 ${AI_COMPLETION_CONCURRENCY} 路、每路最多 ${AI_COMPLETION_REQUEST_BATCH_SIZE} 词并发请求。\n\n` +
+          "补齐音标、词性、主释义的一组双语例句、词形、词族、两类搭配和同义替换；额外常见义只补词性、中文释义和英文定义，不会为每个义项另生成双语例句，原主释义保留。完成后，主词库已有的词只补实际缺少的教学字段；主词库没有且已完整补全的独立主词会新增。绝不覆盖已有释义、分类、学习进度、收藏或稳定 ID；短语、引用词形、身份冲突词和已退役词会跳过。缓存命中不调用付费模型；未命中会调用 DeepSeek，可能产生费用。开始后可点“停止自动补全”，当前批完成后不再继续；失败词本轮不自动重试。\n\n确定继续吗？"
         )
       : window.confirm(
           `准备补全 ${targets.length} 个G类主资料待补词：${targets.map((entry) => entry.word).join("、")}\n\n` +
-          "补齐音标、词性、释义、例句与词族中的缺失资料，已有内容保留；不补词形或同义替换。同义替换由另一入口单独处理。不会修改总词库和学习进度。缓存未命中时会调用 DeepSeek API，可能产生费用；本批最多发起1次请求，不自动重试。\n\n确定继续吗？"
+          "补齐音标、词性、主释义的一组双语例句、词形、词族、两类搭配和同义替换；额外常见义只补词性、中文释义和英文定义，不会为每个义项另生成双语例句，原主释义保留。完成后，主词库已有的词只补缺失字段；主词库没有且已完整补全的独立主词会新增。绝不覆盖已有释义、分类、学习进度、收藏或稳定 ID；短语、引用词形、身份冲突词和已退役词会跳过。缓存未命中时会调用 DeepSeek API，可能产生费用；本轮最多分3路、每路最多40词并发请求，不自动重试。\n\n确定继续吗？"
         );
     if (!confirmed) return;
 
@@ -1094,6 +1431,9 @@ export default function ReadingGVocabPage() {
       let cacheHitTotal = 0;
       let deepseekTotal = 0;
       let failedTotal = 0;
+      let masterSyncedTotal = 0;
+      let masterAddedTotal = 0;
+      let masterSyncError = "";
       let lastPendingCount = aiCompletionEntries.length;
       const attemptedIds = new Set();
       const plannedTotal = targets.length;
@@ -1105,7 +1445,7 @@ export default function ReadingGVocabPage() {
         batch.forEach((entry) => attemptedIds.add(entry.id));
         if (autoAll) {
           setAiMessage(
-            `自动补全第 ${batchNumber} 批：${batch.map((entry) => entry.word).join("、")}（已完成 ${completedTotal}/${plannedTotal}）`
+            `自动补全第 ${batchNumber} 轮：${batch.map((entry) => entry.word).join("、")}（已完成 ${completedTotal}/${plannedTotal}）`
           );
         }
 
@@ -1116,6 +1456,12 @@ export default function ReadingGVocabPage() {
         cacheHitTotal += Number(stats.cacheHit) || 0;
         deepseekTotal += Number(stats.deepseek) || 0;
         failedTotal += Number(stats.failed) || 0;
+        if (result.masterSync?.ok === false) {
+          masterSyncError ||= result.masterSync.error || "主词库安全同步失败";
+        } else {
+          masterSyncedTotal += Number(result.masterSync?.updatedCount) || 0;
+          masterAddedTotal += Number(result.masterSync?.addedCount) || 0;
+        }
         lastPendingCount =
           result.totals?.pendingCount ??
           items.filter(isAiCompletionCandidateEntry).length - completedTotal;
@@ -1128,9 +1474,12 @@ export default function ReadingGVocabPage() {
       } while (autoAll && remainingTargets.length && !aiAutoStopRef.current);
 
       const stopped = autoAll && aiAutoStopRef.current;
-      const message = autoAll
+      const completionMessage = autoAll
         ? `${stopped ? "自动补全已停止" : "自动补全完成"}：完成 ${completedTotal}/${plannedTotal}，缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，失败/跳过 ${failedTotal}，仍待补 ${lastPendingCount}`
         : `AI补全完成 ${completedTotal} 个：缓存 ${cacheHitTotal}，DeepSeek ${deepseekTotal}，仍待补 ${lastPendingCount}`;
+      const message = masterSyncError
+        ? `${completionMessage}。G类已保存，但主词库未同步：${masterSyncError}`
+        : `${completionMessage}，主词库补齐 ${masterSyncedTotal} 个、新增 ${masterAddedTotal} 个词。`;
       setAiMessage(message);
       setToast(message);
     } catch (error) {
@@ -1268,7 +1617,12 @@ export default function ReadingGVocabPage() {
         : status;
     const nextMap = patchRgStatus(activeStatusMap, currentItem, { status: nextStatus }, mode);
     setStatusMap(nextMap);
-    writeRgStatusMap(nextMap);
+    scheduleRgStatusMapWrite(nextMap);
+    if (current !== RG_STATUS.UNFAMILIAR && nextStatus === RG_STATUS.UNFAMILIAR) {
+      setUnfamiliarEntryCount((count) => count + 1);
+    } else if (current === RG_STATUS.UNFAMILIAR && nextStatus !== RG_STATUS.UNFAMILIAR) {
+      setUnfamiliarEntryCount((count) => Math.max(0, count - 1));
+    }
 
     let nextDaily = live.dailyCount;
     if (nextStatus === RG_STATUS.FAMILIAR || nextStatus === RG_STATUS.UNFAMILIAR) {
@@ -1287,10 +1641,11 @@ export default function ReadingGVocabPage() {
           : "已取消不熟"
     );
 
-    const nextEligibleList = buildRgStudyList(activeItems, activeFilter, nextMap, mode);
-    const stillHere = nextEligibleList.some(
-      (row) => String(row?.entry?.id || "").trim() === currentId
-    );
+    const leavesQueue = studyQueueLeavesOnStatusChange(activeFilter, nextStatus);
+    const nextEligibleList = leavesQueue
+      ? buildRgStudyList(activeItems, activeFilter, nextMap, mode)
+      : activeStudyList;
+    const stillHere = !leavesQueue;
     let nextRow = null;
     let nextStudyList = activeStudyList;
     let nextPosition = live.safeStudyPosition;
@@ -1358,7 +1713,7 @@ export default function ReadingGVocabPage() {
     const nextFavorite = !isRgFavorite(item, statusMap);
     const nextMap = patchRgStatus(statusMap, item, { favorite: nextFavorite }, learnMode);
     setStatusMap(nextMap);
-    writeRgStatusMap(nextMap);
+    scheduleRgStatusMapWrite(nextMap);
     setToast(nextFavorite ? "已收藏" : "已取消收藏");
   }
 
@@ -1391,17 +1746,6 @@ export default function ReadingGVocabPage() {
     const pick = studyList[Math.floor(Math.random() * studyList.length)];
     focusStudyRow(pick);
     setToast("已随机跳转");
-  }
-
-  function markParaphraseMastered(groupId, mastered) {
-    const next = patchParaphraseStatus(
-      paraStatusMap,
-      groupId,
-      mastered ? "familiar" : "unfamiliar"
-    );
-    setParaStatusMap(next);
-    writeRgParaphraseStatusMap(next);
-    setToast(mastered ? "同义关系已掌握" : "同义关系标为未掌握");
   }
 
   function moveToNextParaphraseTask(sessionIn, reviewIn = paraReview) {
@@ -1568,10 +1912,14 @@ export default function ReadingGVocabPage() {
           }));
         }
         const count = Number(result.deletedCount) || ids.length;
-        if (count > 1) setToast(`已删除 ${count} 个词`);
+        const masterDeleted = Number(result.masterDelete?.deletedCount) || 0;
+        const masterNote = masterDeleted > 0
+          ? `；主词库同步删除 ${masterDeleted} 个词`
+          : "；主词库没有可安全匹配的同名主词";
+        if (count > 1) setToast(`已删除 ${count} 个G类词条${masterNote}`);
         else {
           const word = result.deleted?.[0]?.word || "";
-          setToast(word ? `已删除：${word}` : "已删除");
+          setToast(`${word ? `已删除：${word}` : "已删除"}${masterNote}`);
         }
       })
       .catch((error) => {
@@ -1658,6 +2006,14 @@ export default function ReadingGVocabPage() {
 
     const removedIsPhrase = removedEntry.entryType === "phrase";
     const removedIsReference = removedEntry.studyMode === "reference";
+    const cascadeNotice = removedIsPhrase
+      ? "这是短语，只删除G类短语记录，不删除主词库单词。"
+      : removedIsReference
+        ? "这是引用词形；只有主词库存在完全同名且身份一致的主词时才联动删除，不会误删它指向的其他原形。"
+        : "如果正式主词库存在同名关联主词，将同时删除；删除前会自动备份。";
+    if (!confirmReadingGDelete(
+      `确定删除G类词条“${removedEntry.word}”吗？\n\n${cascadeNotice}`
+    )) return;
     const nextStudyList = advanced.nextList;
     const landingRow = advanced.landingRow;
     const landingIndex = advanced.landingOriginalIndex;
@@ -1780,14 +2136,6 @@ export default function ReadingGVocabPage() {
   useEffect(() => {
     function onKeyDown(event) {
       if (phase !== "ready") return;
-      const tag = document.activeElement?.tagName?.toLowerCase();
-      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
-      if (
-        tag === "input"
-        || tag === "textarea"
-        || (tag === "select" && !isHorizontalArrow)
-      ) return;
-
       if (!isQuizMode && shouldHandleStudyDeleteShortcut(event)) {
         event.preventDefault();
         event.stopPropagation();
@@ -1795,24 +2143,25 @@ export default function ReadingGVocabPage() {
         return;
       }
 
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      const action = getStudyKeyboardAction(event, { verticalNavigation: true });
+      if (action === "next") {
         event.preventDefault();
         goToStudyOffset(1);
-      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      } else if (action === "previous") {
         event.preventDefault();
         goToStudyOffset(-1);
-      } else if (!isQuizMode && event.key === "Tab") {
+      } else if (!isQuizMode && action === "word-audio") {
         event.preventDefault();
         const kind =
           item?.entryType === "phrase" || /\s/.test(item?.word || "") ? "phrase" : "word";
         speakText(item?.word, kind);
-      } else if (!isQuizMode && event.key === " ") {
+      } else if (!isQuizMode && action === "example-audio") {
         event.preventDefault();
         speakText(item?.example, "sentence");
-      } else if (!isQuizMode && event.key === "1") {
+      } else if (!isQuizMode && action === "known") {
         event.preventDefault();
         markStatus(RG_STATUS.FAMILIAR);
-      } else if (!isQuizMode && event.key === "3") {
+      } else if (!isQuizMode && action === "unknown") {
         event.preventDefault();
         markStatus(RG_STATUS.UNFAMILIAR);
       } else if (isQuizMode && !quizRevealed && ["1", "2", "3", "4", "a", "b", "c", "d", "A", "B", "C", "D"].includes(event.key)) {
@@ -1872,7 +2221,7 @@ export default function ReadingGVocabPage() {
 
   if (phase === "loading") {
     return (
-      <main className="page page--word-flash system-loading-page">
+      <main className="page page--word-flash system-loading-page" data-study-surface="reading-g">
         <StableLoadingState
           mark="G"
           eyebrow="G类阅读提升"
@@ -1884,7 +2233,7 @@ export default function ReadingGVocabPage() {
 
   if (phase === "error") {
     return (
-      <main className="page page--word-flash system-loading-page">
+      <main className="page page--word-flash system-loading-page" data-study-surface="reading-g">
         <StableLoadingState
           mark="G"
           eyebrow="G类阅读提升"
@@ -1934,6 +2283,7 @@ export default function ReadingGVocabPage() {
           label: "完整测验·80题",
           filter: { type: "paraphraseQuiz", value: "", sessionMode: "full" }
         },
+        { label: "不熟", filter: { type: "status", value: "不熟" } },
         { label: "熟悉", filter: { type: "status", value: "熟悉" } },
         { label: "全部含参考", filter: { type: "everything", value: "" } },
         { label: "单词（含参考）", filter: { type: "entryType", value: "word" } },
@@ -1944,6 +2294,9 @@ export default function ReadingGVocabPage() {
     {
       title: "专项层",
       chips: [
+        { label: "文章高频 P1–3", filter: { type: "layer", value: "part12ArticleHighFrequency" } },
+        { label: "文章高频 P1–2", filter: { type: "part12OnlyHighFrequency", value: "" } },
+        { label: "其余词汇", filter: { type: "articleNonHighFrequency", value: "" } },
         { label: "核心1500", filter: { type: "layer", value: "priority1500" } },
         { label: "B层1200", filter: { type: "layer", value: "tierB1200" } },
         { label: "C层800", filter: { type: "layer", value: "tierC800" } },
@@ -2033,6 +2386,34 @@ export default function ReadingGVocabPage() {
           <button
             type="button"
             className="top-pill spelling-entry-link"
+            onClick={() => setLibraryFilter({ type: "layer", value: "part12ArticleHighFrequency" })}
+          >
+            文章高频
+          </button>
+          <button
+            type="button"
+            className="top-pill spelling-entry-link"
+            onClick={() => setLibraryFilter({ type: "part12OnlyHighFrequency", value: "" })}
+          >
+            P1+2高频
+          </button>
+          <button
+            type="button"
+            className="top-pill spelling-entry-link"
+            onClick={() => setLibraryFilter({ type: "articleNonHighFrequency", value: "" })}
+          >
+            其余词汇
+          </button>
+          <button
+            type="button"
+            className="top-pill spelling-entry-link"
+            onClick={() => setLibraryFilter({ type: "status", value: "不熟" })}
+          >
+            不熟
+          </button>
+          <button
+            type="button"
+            className="top-pill spelling-entry-link"
             onClick={() => setLibraryFilter({ type: "questionBankComplete", value: "" })}
           >
             新增完整词 {questionBankCompleteCount}
@@ -2056,10 +2437,10 @@ export default function ReadingGVocabPage() {
             <div className="menu-panel wide reading-g-ai-panel">
               <h2 className="panel-title">G类主资料补全 AI</h2>
               <p className="panel-desc">
-                完整度包含音标、词性、释义、例句、词族、同义替换。这里处理前五项任一缺失的词，共 {aiCompletionEntries.length} 个；只补缺失资料，已有内容保留，不补词形。同义替换由右侧专项入口独立处理。已由 AI 补全 {questionBankAiCompletedCount} 个，不会修改总词库或学习进度。
+                队列只包含可单独刷词的 active 主词；参考词、词形跳转词和词组不会进入。它会处理音标、词性、释义、例句、词形、词族、两类搭配和同义替换待补词，以及“常见义待复核”词，共 {aiCompletionEntries.length} 个。主释义详解必须说明语义范围、典型场景或用法边界，不能只重复单词、词性和短释义；每词只生成主释义的一组双语例句，额外常见义只补词性、中文释义和英文定义，并保留原主释义。已由 AI 补全 {questionBankAiCompletedCount} 个，不会修改总词库或学习进度。
               </p>
               <p className="ai-warning">
-                每批最多10词、1次请求、自动重试0次。缓存命中不调用付费模型；未命中会调用 DeepSeek，开始前还会再次确认。
+                每轮最多120词，拆成最多3个每批40词的并发请求；自动重试0次。缓存命中不调用付费模型；未命中会调用 DeepSeek，开始前还会再次确认。
               </p>
               <div className="action-grid">
                 <button
@@ -2081,6 +2462,30 @@ export default function ReadingGVocabPage() {
                 <button
                   type="button"
                   className="small-btn ai-paid"
+                  disabled={aiRunning || !meaningCoverageEntries.length}
+                  onClick={runMeaningCoverageReview}
+                >
+                  {aiRunning ? "处理中" : `常见义复核 ${Math.min(AI_COMPLETION_BATCH_SIZE, meaningCoverageEntries.length)} 词（待复核 ${meaningCoverageEntries.length}）`}
+                </button>
+                <button
+                  type="button"
+                  className="small-btn"
+                  disabled={aiRunning || !meaningCoverageEntries.length}
+                  onClick={reconcileMeaningCoverageStatus}
+                >
+                  {aiRunning ? "处理中" : "检查待复核原因（不调用 AI）"}
+                </button>
+                <button
+                  type="button"
+                  className="small-btn ai-paid"
+                  disabled={aiRunning || !meaningCoverageEntries.length}
+                  onClick={() => runMeaningCoverageReview({ autoAll: true })}
+                >
+                  {aiRunning ? "处理中" : `自动复核全部常见义 ${meaningCoverageEntries.length} 词（可能扣费）`}
+                </button>
+                <button
+                  type="button"
+                  className="small-btn ai-paid"
                   disabled={aiRunning || !aiCompletionEntries.length}
                   onClick={() => runAiCompletion({ autoAll: true })}
                 >
@@ -2097,6 +2502,32 @@ export default function ReadingGVocabPage() {
                 ) : null}
               </div>
               {aiMessage ? <div className="status-line">{aiMessage}</div> : null}
+              {aiCompletionFailureEntries.length ? (
+                <details className="reading-g-meaning-failures">
+                  <summary>仍未补全的 {aiCompletionFailureEntries.length} 词：查看真实失败原因</summary>
+                  <ul>
+                    {aiCompletionFailureEntries.map((entry) => (
+                      <li key={entry.id}>
+                        <strong>{entry.word}</strong>
+                        <span>{entry.aiCompletionLastFailure.reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
+              {meaningCoverageFailureEntries.length ? (
+                <details className="reading-g-meaning-failures">
+                  <summary>仍待复核的 {meaningCoverageFailureEntries.length} 词：查看逐词原因</summary>
+                  <ul>
+                    {meaningCoverageFailureEntries.map((entry) => (
+                      <li key={entry.id}>
+                        <strong>{entry.word}</strong>
+                        <span>{entry.meaningCoverageLastFailure.reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
             </div>
           </details>
           <details className="menu reading-g-ai-menu">
@@ -2152,9 +2583,6 @@ export default function ReadingGVocabPage() {
       chipGroups={chipGroups}
       studyPathNote={studyPathNote}
       layerMeta={LAYER_META}
-      relatedParas={relatedParas}
-      paraStatusMap={paraStatusMap}
-      onParaphraseMaster={markParaphraseMastered}
       contentQuality={contentQuality}
       showContentQuality={filter.type === "contentIncomplete"}
       quizMode={isQuizMode}

@@ -4,6 +4,7 @@ import {
   isIdictationFlashFilter as isIdictationFlashSessionFilter
 } from "./word-flashcard-session.mjs";
 import {
+  findWordSearchMatches,
   isBrushableWord,
   resolveBrushableWord
 } from "./word-study-eligibility.mjs";
@@ -323,13 +324,18 @@ export function buildFilteredWordIndices(pool, filter, search, {
     return sortWordIndicesForFilter(indices, pool, filter);
   }
 
+  if (q) {
+    return findWordSearchMatches(pool, q)
+      .map((result) => result.index)
+      .filter((index) => matchesWord(pool[index], filter, index));
+  }
+
   const wordMap = buildLibraryWordMap(pool);
   const indexByWord = new Map(pool.map((word, index) => [word, index]));
   const seen = new Set();
   const indices = [];
   for (let i = 0; i < pool.length; i += 1) {
     const word = pool[i];
-    if (q && !word.word.toLowerCase().includes(q)) continue;
     const target = resolveBrushableWord(word, wordMap);
     const targetIndex = indexByWord.get(target);
     if (!Number.isInteger(targetIndex) || seen.has(targetIndex)) continue;

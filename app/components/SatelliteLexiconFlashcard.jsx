@@ -24,10 +24,18 @@ import {
 } from "../lib/reading-g-vocab/synonym-relations.mjs";
 import { getFormChineseType } from "../lib/vocab/page-word-helpers.mjs";
 import StudyMeaningToggle from "./StudyMeaningToggle";
+import HighlightedExampleText from "./HighlightedExampleText.jsx";
 import InlineStudyMeaning from "./InlineStudyMeaning.jsx";
 import WordStudyOrderControls from "./WordStudyOrderControls";
 import { getPosDisplay } from "../lib/vocab/pos-display.mjs";
+import { getMainMeaningDetailDisplay } from "../lib/vocab/meaning-display.mjs";
 import { getStudyEntryDisplay } from "../lib/vocab/study-entry-display.mjs";
+import {
+  CURRENT_SYSTEM_SEARCH_REQUEST_EVENT,
+  CURRENT_SYSTEM_SEARCH_RESULTS_EVENT,
+  CURRENT_SYSTEM_SEARCH_RESULT_LIMIT,
+  CURRENT_SYSTEM_SEARCH_SELECT_EVENT
+} from "../lib/vocab/current-system-search.mjs";
 import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
 import rgStyles from "../reading-g/reading-g.module.css";
 
@@ -109,6 +117,15 @@ function filterKeyOf(filter) {
   return `${filter.type}:${filter.value || ""}`;
 }
 
+function isFeaturedReadingGEntry(filter) {
+  if (!filter) return false;
+  if (filter.value === "part12ArticleHighFrequency") return true;
+  if (filter.type === "part12OnlyHighFrequency") return true;
+  if (filter.type === "articleNonHighFrequency") return true;
+  if (filter.type === "status" && filter.value === "不熟") return true;
+  return false;
+}
+
 function isSameFilter(a, b) {
   return filterKeyOf(a) === filterKeyOf(b);
 }
@@ -177,9 +194,6 @@ function QuizQuestionEvidence({ group }) {
  * @param {"default"|"readingG"} [props.layoutMode]
  * @param {string} [props.studyPathNote] - only shown inside 筛选 panel (readingG)
  * @param {Array} [props.layerMeta] - [{id,label}] for library panel
- * @param {Array} [props.relatedParas] - paraphrase groups for library panel
- * @param {object} [props.paraStatusMap]
- * @param {function} [props.onParaphraseMaster]
  */
 export default function SatelliteLexiconFlashcard({
   modeLabel,
@@ -226,9 +240,6 @@ export default function SatelliteLexiconFlashcard({
   layoutMode = "default",
   studyPathNote = "",
   layerMeta = [],
-  relatedParas = [],
-  paraStatusMap = {},
-  onParaphraseMaster,
   contentQuality = null,
   showContentQuality = false,
   /** paraphrase MCQ mode */
@@ -250,7 +261,7 @@ export default function SatelliteLexiconFlashcard({
   unfamiliarLabel = "不熟",
   panelStatusCounts = null,
   sensesExtra = null,
-  overviewWords = [],
+  overviewWords = null,
   overviewStats = {},
   onPrev = null,
   onNext = null
@@ -259,11 +270,13 @@ export default function SatelliteLexiconFlashcard({
   const [showRelatedMeanings, setShowRelatedMeanings] = useState(true);
   const [autoPlayActive, setAutoPlayActive] = useState(false);
   const [autoPlaySeconds, setAutoPlaySeconds] = useState(6);
+  const [currentSystemSearchRequest, setCurrentSystemSearchRequest] = useState(null);
   const [paraphraseSelection, setParaphraseSelection] = useState({
     itemKey: "",
     replacement: ""
   });
   const wordStudyCardRef = useRef(null);
+  const libraryMenuRef = useRef(null);
   const autoPlayActiveRef = useRef(false);
   const canAutoPlayRef = useRef(false);
   const onNextRef = useRef(onNext);
@@ -278,7 +291,7 @@ export default function SatelliteLexiconFlashcard({
     isReadingG && headwordText.length > 18 ? "word--long" : ""
   ].filter(Boolean).join(" ");
   const previousDisplay = getStudyEntryDisplay(prevItem || {});
-  const insightVisible = !isIelts538 && showInsight;
+  const insightVisible = showInsight;
   const commonCollocations = normalizePhraseItems(item?.collocations);
   const phraseCollocations = normalizePhraseItems(item?.phraseCollocations);
   const normalizedForms = normalizeReadingGForms(item?.forms, item?.word);
@@ -314,8 +327,61 @@ export default function SatelliteLexiconFlashcard({
   const collocationFallback = [{ phrase: "暂无搭配", chinese: "" }];
   const phraseCollocationFallback = [{ phrase: "暂无短语搭配", chinese: "" }];
   const speakSmall = onSpeakSmall || (() => {});
+
+  useEffect(() => {
+    const handleCurrentSystemSearch = (event) => {
+      const query = String(event.detail?.query || "").trim();
+      const requestId = String(event.detail?.requestId || "").trim();
+      if (!query || !requestId) return;
+      setCurrentSystemSearchRequest({ query, requestId });
+      setSearch(query);
+    };
+    const handleCurrentSystemSelection = (event) => {
+      if (event.detail?.provider !== "satellite") return;
+      const originalIndex = Number(event.detail?.originalIndex);
+      if (!Number.isInteger(originalIndex)) return;
+      setCurrentSystemSearchRequest(null);
+      setSearch("");
+      onJumpIndex(originalIndex);
+    };
+    window.addEventListener(CURRENT_SYSTEM_SEARCH_REQUEST_EVENT, handleCurrentSystemSearch);
+    window.addEventListener(CURRENT_SYSTEM_SEARCH_SELECT_EVENT, handleCurrentSystemSelection);
+    return () => {
+      window.removeEventListener(CURRENT_SYSTEM_SEARCH_REQUEST_EVENT, handleCurrentSystemSearch);
+      window.removeEventListener(CURRENT_SYSTEM_SEARCH_SELECT_EVENT, handleCurrentSystemSelection);
+    };
+  }, [onJumpIndex, setSearch]);
+
+  useEffect(() => {
+    if (!currentSystemSearchRequest) return;
+    if (search.trim().toLowerCase() !== currentSystemSearchRequest.query.toLowerCase()) return;
+    const results = libraryRows.slice(0, CURRENT_SYSTEM_SEARCH_RESULT_LIMIT).map((row) => {
+      const entry = row.entry || {};
+      return {
+        key: `satellite:${entry.id || entry.word}:${row.originalIndex}`,
+        provider: "satellite",
+        originalIndex: row.originalIndex,
+        word: String(entry.word || "").trim(),
+        meaning: getStudyEntryDisplay(entry).meaning || "释义待补"
+      };
+    });
+    window.dispatchEvent(new CustomEvent(CURRENT_SYSTEM_SEARCH_RESULTS_EVENT, {
+      detail: {
+        requestId: currentSystemSearchRequest.requestId,
+        query: currentSystemSearchRequest.query,
+        total: libraryRows.length,
+        results
+      }
+    }));
+    setCurrentSystemSearchRequest(null);
+  }, [currentSystemSearchRequest, libraryRows, search]);
   const supplementalSenses = itemDisplay.supplementalSenses;
   const primaryPosLabel = getPosDisplay(itemDisplay.pos);
+  const mainMeaningDetail = getMainMeaningDetailDisplay(item, {
+    word: itemDisplay.word || item?.word,
+    meaning: itemDisplay.meaning,
+    posLabel: primaryPosLabel
+  });
   const inlineMeaningText = [
     itemDisplay.meaning,
     ...supplementalSenses.map((sense) => {
@@ -325,11 +391,21 @@ export default function SatelliteLexiconFlashcard({
         : sense.meaning;
     })
   ].filter(Boolean).join("；");
+  const currentWordTopicTags = Array.from(new Set([
+    item?.domain,
+    item?.category ? displaySatelliteCategory(item.category, isReadingG) : "",
+    ...(item?.topics || []),
+    ...(item?.ieltsUse || [])
+  ].map((value) => String(value || "").trim()).filter(Boolean)));
   const isContentCompletionQueue = isReadingG && Boolean(contentQuality?.isLearningBlocked);
+  const hasBilingualStudyExample = Boolean(itemDisplay.example && itemDisplay.exampleCn);
+  const shouldShowStudyExample = isContentCompletionQueue || hasBilingualStudyExample;
   const contentScoreLabel = contentQuality
     ? `${contentQuality.completedCount}/${contentQuality.totalCount} · ${contentQuality.percent}%`
     : "";
-  const overviewStudyWords = overviewWords.length
+  // An explicit empty array is a real empty filter result. Only fall back to
+  // the library listing when the caller did not provide an overview at all.
+  const overviewStudyWords = Array.isArray(overviewWords)
     ? overviewWords
     : libraryRows.map((row) => row.entry).filter(Boolean);
   const paraphraseExamples = useMemo(() => {
@@ -472,7 +548,7 @@ export default function SatelliteLexiconFlashcard({
   const morphologyBlocks = (
     <>
       {hasReadingGForms ? (
-        <div className="block">
+        <div className="block relation-block--forms">
           <div className="block-title">变形</div>
           <div className="list">
             {displayForms.map((form) => (
@@ -488,7 +564,11 @@ export default function SatelliteLexiconFlashcard({
                 </button>
                 <div className="pair-text">
                   <div className="en relation-en">{form.word}</div>
-                  <div className="zh relation-zh">{form.meaning || form.note || getFormChineseType(form.type)}</div>
+                  <div className="zh relation-zh">{form.meaning || form.note || getFormChineseType(form.type, {
+                    baseWord: item?.word,
+                    formWord: form.word,
+                    pos: item?.primaryPos || item?.pos
+                  })}</div>
                 </div>
               </div>
             ))}
@@ -497,7 +577,7 @@ export default function SatelliteLexiconFlashcard({
       ) : null}
 
       {hasReadingGFamily ? (
-        <div className="block">
+        <div className="block relation-block--family">
           <div className="block-title">词族</div>
           <div className="list">
             {displayWordFamily.map((family) => (
@@ -522,7 +602,7 @@ export default function SatelliteLexiconFlashcard({
       ) : null}
 
       {hasReadingGSynonyms ? (
-        <div className="block">
+        <div className="block relation-block--synonyms">
           <div className="block-title">
             同义替换{readingGSynonymSourceLabel ? ` · ${readingGSynonymSourceLabel}` : ""}
           </div>
@@ -777,7 +857,7 @@ export default function SatelliteLexiconFlashcard({
 
   const filterPanelBody = (
     <>
-      <h2 className="panel-title">筛选</h2>
+      <h2 className="panel-title">{isReadingG ? "选择学习入口" : "筛选"}</h2>
       <p className="panel-desc">
         {isReadingG
           ? "阶段路线互不重复；范围总数相加等于词库总数，当前待学会随熟悉状态减少。"
@@ -804,10 +884,10 @@ export default function SatelliteLexiconFlashcard({
               <button
                 key={`${entry.title}-${filterKeyOf(entry.filter)}`}
                 type="button"
-                className={`entry-btn ${isSameFilter(filter, entry.filter) ? "active" : ""}`}
+                className={`entry-btn ${isSameFilter(filter, entry.filter) ? "active" : ""} ${isFeaturedReadingGEntry(entry.filter) ? "entry-btn-featured" : ""}`}
                 onClick={() => selectFilter(entry.filter)}
               >
-                <span className="entry-title">{entry.title}</span>
+                <span className="entry-title">{isFeaturedReadingGEntry(entry.filter) ? "常用 · " : ""}{entry.title}</span>
                 <span className="entry-desc">{entry.desc}</span>
                 <span className="entry-meta">{entry.countLabel || `${entry.count} 个`}</span>
               </button>
@@ -871,80 +951,23 @@ export default function SatelliteLexiconFlashcard({
 
         <div className={rgStyles.rgMetaTitle}>3. 主题领域</div>
         <div className={rgStyles.rgTagRow}>
-          {item.domain ? <span className={rgStyles.rgTagNeutral}>{item.domain}</span> : null}
-          {item.category ? <span className={rgStyles.rgTagNeutral}>{displaySatelliteCategory(item.category, isReadingG)}</span> : null}
-          {(item.topics || []).map((t) => (
-            <span key={`t-${t}`} className={rgStyles.rgTagNeutral}>
-              {t}
+          {currentWordTopicTags.map((tag) => (
+            <span key={tag} className={`${rgStyles.rgTag} ${rgStyles.rgTagNeutral}`}>
+              {tag}
             </span>
           ))}
-          {(item.ieltsUse || []).map((u) => (
-            <span key={`u-${u}`} className={rgStyles.rgTagNeutral}>
-              {u}
-            </span>
-          ))}
-          {!item.domain &&
-          !item.category &&
-          !(item.topics || []).length &&
-          !(item.ieltsUse || []).length ? (
+          {!currentWordTopicTags.length ? (
             <span className={rgStyles.rgMetaLine}>—</span>
           ) : null}
         </div>
-
-        <div className={rgStyles.rgMetaTitle}>4. 同义替换关系</div>
-        {relatedParas.length ? (
-          relatedParas.map((g) => {
-            const st = paraStatusMap[g.groupId] || {};
-            return (
-              <div key={g.groupId} className={rgStyles.rgParaItem}>
-                <div>
-                  <strong>
-                    {g.anchor} ↔ {(g.members || []).join(" / ")}
-                  </strong>
-                </div>
-                <div>
-                  {g.relationType}
-                  {g.commonMeaningZh ? ` · ${g.commonMeaningZh}` : ""}
-                  {g.canAutoQuiz ? " · 可训练" : ""}
-                </div>
-                {g.differenceZh ? <div>差别：{g.differenceZh}</div> : null}
-                {onParaphraseMaster ? (
-                  <div className={rgStyles.rgParaActions}>
-                    <button type="button" onClick={() => onParaphraseMaster(g.groupId, true)}>
-                      {st.mastered ? "已掌握 ✓" : "标记掌握"}
-                    </button>
-                    <button type="button" onClick={() => onParaphraseMaster(g.groupId, false)}>
-                      未掌握
-                    </button>
-                  </div>
-                ) : null}
-              </div>
-            );
-          })
-        ) : (
-          <p className={rgStyles.rgMetaLine}>本词暂无高可信同义关系</p>
-        )}
-
-        <div className={rgStyles.rgMetaTitle}>5. 来源信息</div>
-        <p className={rgStyles.rgMetaLine}>
-          {(item.sourceFiles || []).length
-            ? (item.sourceFiles || []).join(" · ")
-            : "—"}
-        </p>
-        {(item.qualityFlags || []).length ? (
-          <div className={rgStyles.rgTagRow}>
-            {(item.qualityFlags || []).slice(0, 12).map((f) => (
-              <span key={f} className={rgStyles.rgTagNeutral}>
-                {f}
-              </span>
-            ))}
-          </div>
-        ) : null}
       </div>
     ) : null;
 
   return (
-    <main className={`page page--word-flash${isReadingG ? " reading-g-study" : ""}${isIelts538 ? " ielts-538-study" : ""}${isDenseIelts538 ? " ielts-538-study--dense" : ""}`}>
+    <main
+      className={`page page--word-flash${isReadingG ? " reading-g-study" : ""}${isIelts538 ? " ielts-538-study" : ""}${isDenseIelts538 ? " ielts-538-study--dense" : ""}`}
+      data-study-surface={isReadingG ? "reading-g" : isIelts538 ? "ielts-538" : "basic"}
+    >
       <WordStudyWorkspace
         showInsight={insightVisible}
         overview={insightVisible ? (
@@ -982,6 +1005,7 @@ export default function SatelliteLexiconFlashcard({
           </div>
 
           <div className="top-actions">
+            {extraActions}
             {!quizMode && onWordOrderModeChange ? (
               <WordStudyOrderControls
                 mode={wordOrderMode}
@@ -1038,16 +1062,14 @@ export default function SatelliteLexiconFlashcard({
                 {link.label}
               </a>
             ))}
-            {extraActions}
-
             <details className="menu">
-              <summary className="top-pill">学习范围</summary>
+              <summary className="top-pill">{isReadingG ? "入口" : "学习范围"}</summary>
               <div className="menu-panel wide">{filterPanelBody}</div>
             </details>
 
-            <details className="menu">
+            <details className="menu" ref={libraryMenuRef}>
               <summary className="top-pill">词库面板</summary>
-              <div className="menu-panel wide">
+              <div className={`menu-panel wide${isReadingG ? ` ${rgStyles.rgLibraryPanel}` : ""}`}>
                 <h2 className="panel-title">词库</h2>
                 {isReadingG ? (
                   <p className="panel-desc">当前词详细信息与词表检索。类目/层级仅在此查看。</p>
@@ -1102,12 +1124,10 @@ export default function SatelliteLexiconFlashcard({
                   renderItem={(row) => {
                     const word = row.entry;
                     if (!word) return null;
-                    const metaBits = [];
-                    if (word.primaryLayer) {
-                      metaBits.push(layerLabel(word.primaryLayer, layerMeta));
-                    }
-                    if (word.entryType === "phrase") metaBits.push("词组");
-                    if (word.studyMode === "reference") metaBits.push("查阅");
+                    const libraryMeaning = fallback(
+                      getStudyEntryDisplay(word).meaning,
+                      "释义待补"
+                    );
                     return (
                       <div
                         className={`library-item ${row.originalIndex === index ? "active" : ""}`}
@@ -1126,9 +1146,7 @@ export default function SatelliteLexiconFlashcard({
                           {word.word}
                         </div>
                         <div className="library-meta">
-                          {metaBits.length
-                            ? metaBits.join(" · ")
-                            : word.difficulty || displaySatelliteCategory(word.category, isReadingG) || "—"}
+                          {libraryMeaning}
                         </div>
                       </div>
                     );
@@ -1147,7 +1165,7 @@ export default function SatelliteLexiconFlashcard({
           )}
         />
 
-        <article ref={wordStudyCardRef} className="word-study-card">
+        <article ref={wordStudyCardRef} className="word-study-card" data-effective-study-region>
           <div className="word-canvas-tools">
             <span>{rangeDetail || `${modeLabel} · ${rangeMeta}`}</span>
             <div>
@@ -1161,7 +1179,7 @@ export default function SatelliteLexiconFlashcard({
               >
                 <Bookmark aria-hidden="true" />
               </button>
-              {!isIelts538 && !showInsight ? (
+              {!showInsight ? (
                 <button
                   className="word-canvas-icon"
                   type="button"
@@ -1178,50 +1196,54 @@ export default function SatelliteLexiconFlashcard({
           <section className="main">
           <div className="center word-study-content">
 
-            <div className="example-box study-answer-content">
-              <div className="example-head">
-                <button
-                  className="hero-sound-btn"
-                  type="button"
+            {shouldShowStudyExample ? (
+              <div className="example-box study-answer-content">
+                <div className="example-head">
+                  <button
+                    className="hero-sound-btn"
+                    type="button"
+                    onClick={isContentCompletionQueue ? undefined : onSpeakExample}
+                    disabled={isContentCompletionQueue}
+                    title="播放例句发音 (空格)"
+                    aria-label="播放例句发音，快捷键空格"
+                  >
+                    <span aria-hidden="true">🔊</span>
+                    <span>空格·例句</span>
+                  </button>
+                  {isIelts538 ? (
+                    <div className="ielts-538-example-meta" aria-label="仿雅思 G 类文章句">
+                      <span>仿雅思 G 类文章句</span>
+                    </div>
+                  ) : null}
+                </div>
+                <div
+                  className="example-clickable"
                   onClick={isContentCompletionQueue ? undefined : onSpeakExample}
-                  disabled={isContentCompletionQueue}
-                  title="播放例句发音 (空格)"
-                  aria-label="播放例句发音，快捷键空格"
+                  role="button"
+                  tabIndex={isContentCompletionQueue ? -1 : 0}
+                  onKeyDown={(event) => {
+                    if (!isContentCompletionQueue && (event.key === "Enter" || event.key === " ")) {
+                      event.preventDefault();
+                      onSpeakExample();
+                    }
+                  }}
                 >
-                  <span aria-hidden="true">🔊</span>
-                  <span>空格·例句</span>
-                </button>
-                {isIelts538 ? (
-                  <div className="ielts-538-example-meta" aria-label="仿雅思 G 类文章句">
-                    <span>仿雅思 G 类文章句</span>
-                  </div>
-                ) : null}
+                  {isContentCompletionQueue ? (
+                    <>
+                      <div className="example">已转入内容补全队列，补全后才会进入普通刷词。</div>
+                      <div className="example-cn">待补：{contentQuality.issueLabels.join("、")}</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="example">
+                        <HighlightedExampleText sentence={itemDisplay.example} item={item} forms={displayForms} />
+                      </div>
+                      <div className="example-cn">{itemDisplay.exampleCn}</div>
+                    </>
+                  )}
+                </div>
               </div>
-              <div
-                className="example-clickable"
-                onClick={isContentCompletionQueue ? undefined : onSpeakExample}
-                role="button"
-                tabIndex={isContentCompletionQueue ? -1 : 0}
-                onKeyDown={(event) => {
-                  if (!isContentCompletionQueue && (event.key === "Enter" || event.key === " ")) {
-                    event.preventDefault();
-                    onSpeakExample();
-                  }
-                }}
-              >
-                {isContentCompletionQueue ? (
-                  <>
-                    <div className="example">已转入内容补全队列，补全后才会进入普通刷词。</div>
-                    <div className="example-cn">待补：{contentQuality.issueLabels.join("、")}</div>
-                  </>
-                ) : (
-                  <>
-                    <div className="example">{fallback(itemDisplay.example, "暂无例句")}</div>
-                    <div className="example-cn">{fallback(itemDisplay.exampleCn, "暂无例句中文")}</div>
-                  </>
-                )}
-              </div>
-            </div>
+            ) : null}
 
             {itemStatus === "不熟" ? (
               <div className="unfamiliar-alert">当前词标记为不熟，复习时会优先出现</div>
@@ -1427,9 +1449,18 @@ export default function SatelliteLexiconFlashcard({
                       <strong>资料提示：</strong>该词含多个词性，现有释义尚未按词性拆分。
                     </div>
                   ) : null}
+                  {isReadingG && !quizMode && !isStudyEmpty ? (
+                    <div className="meaning-detail">
+                      <strong>主释义详解：</strong>{mainMeaningDetail}
+                    </div>
+                  ) : null}
                   {isIelts538 && selectedRelatedWord ? (
                     <div className="block ielts-538-paraphrase" aria-label="阅读同义改写">
-                      <div className="block-title">仿雅思 G 类题目改写句</div>
+                      <div className="block-title">
+                        {item?.practiceKind === "aiCoachQuestionParaphrase"
+                          ? "AI教练真题：原文表达 → 题干改写"
+                          : "仿雅思 G 类题目改写句"}
+                      </div>
                       <div className="ielts-538-paraphrase__replacement">
                         <span>本句可替换表达</span>
                         <button
@@ -1473,7 +1504,9 @@ export default function SatelliteLexiconFlashcard({
                             {selectedParaphrase.meaningCn}
                           </p>
                           <p className="ielts-538-paraphrase__note">
-                            上方为文章语境，下方为题干式改写；信息对应，但词汇和句法结构可以变化。
+                            {item?.practiceKind === "aiCoachQuestionParaphrase"
+                              ? "上方是真题原文证据，下方是真实题干。这里只学习该题语境中的对应关系，不表示两边在所有句子中都能直接互换。"
+                              : "上方为文章语境，下方为题干式改写；信息对应，但词汇和句法结构可以变化。"}
                           </p>
                         </>
                       ) : (
@@ -1696,7 +1729,7 @@ export default function SatelliteLexiconFlashcard({
           </section>
         </article>
 
-        <footer className="bottom bottombar">
+        <footer className="bottom bottombar" data-effective-study-region>
           <button
             className="study-step-button study-step-button--previous"
             type="button"

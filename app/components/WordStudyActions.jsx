@@ -1,6 +1,61 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { requestCurrentWordDeletion } from "../lib/vocab/delete-current-word-request.mjs";
+import { createStudyHoldStepper } from "../lib/vocab/study-hold-step.mjs";
+
+function StudyHoldStepButton({
+  className,
+  disabled = false,
+  direction,
+  onStep,
+  title,
+  children
+}) {
+  const onStepRef = useRef(onStep);
+  const handledByPointerRef = useRef(false);
+  const stepperRef = useRef(null);
+  onStepRef.current = onStep;
+  if (!stepperRef.current) {
+    stepperRef.current = createStudyHoldStepper({
+      step() {
+        onStepRef.current?.();
+      }
+    });
+  }
+
+  useEffect(() => () => stepperRef.current?.stop(), []);
+
+  return (
+    <button
+      className={className}
+      type="button"
+      disabled={disabled}
+      title={title}
+      onPointerDown={(event) => {
+        if (disabled) return;
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        handledByPointerRef.current = true;
+        event.preventDefault();
+        event.currentTarget.setPointerCapture?.(event.pointerId);
+        stepperRef.current.start(direction);
+      }}
+      onPointerUp={() => stepperRef.current.stop()}
+      onPointerCancel={() => stepperRef.current.stop()}
+      onLostPointerCapture={() => stepperRef.current.stop()}
+      onClick={(event) => {
+        if (handledByPointerRef.current) {
+          handledByPointerRef.current = false;
+          event.preventDefault();
+          return;
+        }
+        if (!disabled) onStepRef.current?.();
+      }}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function WordStudyActions({
   item,
@@ -15,9 +70,9 @@ export default function WordStudyActions({
   if (tidyReview?.active) {
     return (
       <footer className="bottom bottombar tidy-review-actions" aria-label="词库整理操作">
-        <button className="study-step-button study-step-button--previous" type="button" disabled={isStudyEmpty} onClick={prevWord}>
+        <StudyHoldStepButton className="study-step-button study-step-button--previous" disabled={isStudyEmpty} direction={-1} onStep={prevWord}>
           上一个
-        </button>
+        </StudyHoldStepButton>
         <div className="actions">
           <button className="status known" type="button" disabled={isStudyEmpty} onClick={tidyReview.onKeep}>
             留着
@@ -29,24 +84,24 @@ export default function WordStudyActions({
             删除
           </button>
         </div>
-        <button className="study-step-button study-step-button--next" type="button" disabled={isStudyEmpty} onClick={nextWord}>
+        <StudyHoldStepButton className="study-step-button study-step-button--next" disabled={isStudyEmpty} direction={1} onStep={nextWord}>
           下一个
-        </button>
+        </StudyHoldStepButton>
       </footer>
     );
   }
 
   return (
-    <footer className="bottom bottombar" aria-label="学习操作">
-      <button
+    <footer className="bottom bottombar" aria-label="学习操作" data-effective-study-region>
+      <StudyHoldStepButton
         className="study-step-button study-step-button--previous"
-        type="button"
         disabled={isStudyEmpty}
-        onClick={prevWord}
+        direction={-1}
+        onStep={prevWord}
         title={showDirectionArrows ? "上一个（快捷键：←）" : undefined}
       >
         {showDirectionArrows ? "← 上一个" : "上一个"}
-      </button>
+      </StudyHoldStepButton>
       <div className="actions">
         <button
           className={`status known${item.status === "熟悉" ? " is-selected" : ""}`}
@@ -73,15 +128,15 @@ export default function WordStudyActions({
           {isExternalIdictationItem ? "跳过" : item.status === "不熟" ? "取消不熟" : "不熟"}
         </button>
       </div>
-      <button
+      <StudyHoldStepButton
         className="study-step-button study-step-button--next"
-        type="button"
         disabled={isStudyEmpty}
-        onClick={nextWord}
+        direction={1}
+        onStep={nextWord}
         title={showDirectionArrows ? "下一个（快捷键：→）" : undefined}
       >
         {showDirectionArrows ? "下一个 →" : "下一个"}
-      </button>
+      </StudyHoldStepButton>
     </footer>
   );
 }

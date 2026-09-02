@@ -1,0 +1,21 @@
+{
+  "version": "reading-g-wrong-answer-supplement-20260823-v1",
+  "sourceWorkbook": "雅思阅读全部做题数据_AI对比分析版_20260823.xlsx",
+  "reviewedAt": "2026-08-23",
+  "policy": "Only add non-basic headwords that are absent from the G-reading lexicon and its retirements; reuse complete master-lexicon content without paid AI.",
+  "count": 1,
+  "rows": [
+    {
+      "word": "replenish",
+      "difficulty": "中级核心",
+      "domain": "阅读通用",
+      "targetStage": 2,
+      "evidence": {
+        "wrongQuestions": 4,
+        "currentWrongQuestions": 4,
+        "tests": 2,
+        "parts": 2
+      }
+    }
+  ]
+}

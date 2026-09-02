@@ -43,7 +43,14 @@ function targetForWord(word) {
 
 function requestItemForWord(word) {
   const target = targetForWord(word);
-  return { inputId: target.inputId, word: target.requestedWord };
+  return {
+    inputId: target.inputId,
+    word: target.requestedWord,
+    existingMeaning: word?.meaning || word?.meaningZh || "",
+    existingPos: word?.primaryPos || word?.pos || "",
+    contextSentence: word?.example || "",
+    contextLabel: word?.category || "主词库例句"
+  };
 }
 
 function indexAiResponses(items = []) {
@@ -253,9 +260,8 @@ export function createAiOps(ctx) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        word: target.word,
-        force,
-        inputId: writeTarget.inputId
+        ...requestItemForWord(target),
+        force
       })
     });
 
@@ -582,14 +588,12 @@ export function createAiOps(ctx) {
         );
 
         try {
-          const writeTarget = targetForWord(target.w);
           const res = await fetch("/api/generate-word", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              word: target.w.word,
-              force: target.wrong || target.truncated,
-              inputId: writeTarget.inputId
+              ...requestItemForWord(target.w),
+              force: target.wrong || target.truncated
             })
           });
 
@@ -712,14 +716,12 @@ export function createAiOps(ctx) {
 
       async function completeSingle(item, reason = "") {
         try {
-          const writeTarget = targetForWord(item.w);
           const res = await fetch("/api/generate-word", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              word: item.w.word,
-              force: isLikelyWrongAiWord(item.w) || hasHeadwordRepair(item.w.word),
-              inputId: writeTarget.inputId
+              ...requestItemForWord(item.w),
+              force: isLikelyWrongAiWord(item.w) || hasHeadwordRepair(item.w.word)
             })
           });
 
@@ -814,172 +816,227 @@ export function createAiOps(ctx) {
     }
   }
 
+  function countStructureRepairTargets(sourceWords, excludedWordKeys = new Set()) {
+    return buildWrongRepairPlan(sourceWords, {
+      maxTargets: Infinity,
+      excludeWordKeys: excludedWordKeys
+    }).targets.length;
+  }
+
+  async function executeStructureRepairRound(sourceWords, options = {}) {
+    const {
+      excludedWordKeys = new Set(),
+      roundNumber = 1,
+      signal
+    } = options;
+    const { targets, chunks, workerCount } = buildWrongRepairPlan(sourceWords, {
+      excludeWordKeys: excludedWordKeys
+    });
+
+    if (!targets.length) {
+      return {
+        words: sourceWords,
+        total: 0,
+        filled: 0,
+        repaired: 0,
+        failed: 0,
+        failedWordKeys: [],
+        failedDetails: [],
+        aborted: Boolean(signal?.aborted)
+      };
+    }
+
+    const generatedByInputId = new Map();
+    const attemptedWordKeys = new Set();
+    const failedWordKeys = new Set();
+    const failedDetails = [];
+
+    function addFailure(target, reason) {
+      const key = normalizeWord(target?.w?.word);
+      if (key) failedWordKeys.add(key);
+      const detail = `${target?.w?.word || "未知词条"}: ${reason || "结构修复失败"}`;
+      if (!failedDetails.includes(detail)) failedDetails.push(detail);
+    }
+
+    function collectEntry(target, entry) {
+      const writeTarget = targetForWord(target.w);
+      if (!entry || String(entry.inputId || "") !== writeTarget.inputId) return false;
+      generatedByInputId.set(writeTarget.inputId, entry);
+      return true;
+    }
+
+    async function repairSingle(target, reason = "") {
+      if (signal?.aborted) return;
+      try {
+        const res = await fetch("/api/generate-word", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...requestItemForWord(target.w),
+            force: true
+          }),
+          signal
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw retryableBatchError(
+            data?.detail || data?.error || `AI单词接口返回 HTTP ${res.status}`,
+            res.status,
+            res.headers?.get?.("retry-after")
+          );
+        }
+        if (!collectEntry(target, data)) {
+          throw new Error("单词级返回缺少匹配的 inputId");
+        }
+      } catch (error) {
+        if (signal?.aborted || error?.name === "AbortError") return;
+        addFailure(target, error?.message || reason || "单词级修复失败");
+      }
+    }
+
+    await runAdminAiBatch({
+      chunks,
+      workerCount,
+      signal,
+      maxRetries: 2,
+      allowAutomaticRetry: true,
+      shouldRetry: ({ error }) => error?.name !== "AbortError",
+      retryDelayMs: ({ workerId, nextAttempt }) => 900 * nextAttempt + workerId * 150,
+      onChunkStart({ chunk, workerId, completedItems }) {
+        const wordList = chunk.map(({ w }) => w.word);
+        for (const word of wordList) {
+          const key = normalizeWord(word);
+          if (key) attemptedWordKeys.add(key);
+        }
+        setBatchInfo(
+          `AI结构修复第 ${roundNumber} 轮：${completedItems} / ${targets.length} ｜ 第 ${workerId} 路：${wordList.slice(0, 5).join(", ")}${wordList.length > 5 ? "..." : ""}`
+        );
+      },
+      async executeChunk({ chunk }) {
+        const res = await fetch("/api/generate-words", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items: chunk.map(({ w }) => requestItemForWord(w)),
+            force: true
+          }),
+          signal
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw retryableBatchError(
+            data?.detail || data?.error || `AI结构修复接口返回 HTTP ${res.status}`,
+            res.status,
+            res.headers?.get?.("retry-after")
+          );
+        }
+        if (!Array.isArray(data?.items) || !data.items.length) {
+          throw new Error("批量没有返回有效词条");
+        }
+
+        const entriesByInputId = indexAiResponses(data.items);
+        for (const target of chunk) {
+          const writeTarget = targetForWord(target.w);
+          const entry = entriesByInputId.get(writeTarget.inputId);
+          if (!collectEntry(target, entry)) {
+            await repairSingle(target, "批量返回缺少这个词");
+          }
+        }
+      },
+      onRetry({ workerId, error }) {
+        setBatchInfo(`AI结构修复第 ${workerId} 路失败，正在受控重试：${error.message}`);
+      },
+      async onChunkError({ chunk, workerId, error }) {
+        if (signal?.aborted || error?.name === "AbortError") return;
+        setBatchInfo(`AI结构修复第 ${workerId} 路批量失败，正在逐词补救：${error.message}`);
+        for (const target of chunk) {
+          if (signal?.aborted) break;
+          await repairSingle(target, error?.message || "批量失败后单词级补救");
+        }
+      },
+      onChunkSettled({ completedItems, remainingChunks }) {
+        setBatchInfo(
+          `AI结构修复第 ${roundNumber} 轮：${Math.min(completedItems, targets.length)} / ${targets.length} ｜ 已返回 ${generatedByInputId.size} ｜ 失败 ${failedWordKeys.size} ｜ 剩余批次 ${remainingChunks}`
+        );
+      }
+    });
+
+    let nextWords = sourceWords;
+    let repaired = 0;
+    for (const target of targets) {
+      const writeTarget = targetForWord(target.w);
+      const entry = generatedByInputId.get(writeTarget.inputId);
+      const key = normalizeWord(target.w.word);
+      if (!entry) {
+        if (!signal?.aborted && attemptedWordKeys.has(key) && !failedWordKeys.has(key)) {
+          addFailure(target, "AI没有返回可写入的词条");
+        }
+        continue;
+      }
+
+      try {
+        nextWords = applyIdentityUpdate(nextWords, writeTarget, entry, (existing) => ({
+          ...entry,
+          ieltsUse: normalizeStringArray(entry.ieltsUse || entry.ielts_use),
+          topics: normalizeStringArray(entry.topics),
+          difficulty: entry.difficulty || existing.difficulty || "",
+          collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
+          phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations),
+          status: existing.status || "",
+          aiWriteMode: "precise-structure-repair",
+          aiWrongRepairedAt: Date.now()
+        }));
+
+        const updatedWord = resolveWordWriteTarget(nextWords, writeTarget).word;
+        if (isInvalidAiContent(updatedWord) || isLikelyWrongAiWord(updatedWord)) {
+          addFailure(
+            target,
+            isLikelyWrongAiWord(updatedWord)
+              ? "修复后仍命中异常判定"
+              : "修复后其他义项结构仍无效"
+          );
+        } else {
+          repaired += 1;
+          if (key) failedWordKeys.delete(key);
+        }
+      } catch (error) {
+        addFailure(target, error?.message || "结构修复结果写回失败");
+      }
+    }
+
+    return {
+      words: nextWords,
+      total: attemptedWordKeys.size,
+      filled: repaired,
+      repaired,
+      failed: failedWordKeys.size,
+      failedWordKeys: [...failedWordKeys],
+      failedDetails,
+      error: failedDetails[0] || "",
+      aborted: Boolean(signal?.aborted)
+    };
+  }
+
   async function aiStableRepairWrongWords10x2() {
     try {
       setLoading(true);
-
-      const { targets, chunks, workerCount: concurrency } = buildWrongRepairPlan(words);
-
-      if (!targets.length) {
-        setToast("没有发现确定错词");
-        return { total: 0, failed: 0 };
-      }
-
-      let nextChunkIndex = 0;
-      let completed = 0;
-      let repaired = 0;
-      const failed = [];
-      const failedDetails = [];
-
-      function applyEntries(chunk, items) {
-        const itemMap = indexAiResponses(items);
-
-        const missing = [];
-
-        setWords((prev) => {
-          let next = prev;
-
-          chunk.forEach(({ w }) => {
-            const writeTarget = targetForWord(w);
-            const entry = itemMap.get(writeTarget.inputId);
-
-            if (!entry) {
-              missing.push({ w });
-              return;
-            }
-
-            next = applyIdentityUpdate(next, writeTarget, entry, (existing) => ({
-              ...entry,
-              ieltsUse: normalizeStringArray(entry.ieltsUse || entry.ielts_use),
-              topics: normalizeStringArray(entry.topics),
-              difficulty: entry.difficulty || existing.difficulty || "",
-              collocations: normalizePhraseItems(entry.collocations || entry.common_collocations),
-              phraseCollocations: normalizePhraseItems(entry.phraseCollocations || entry.phrase_collocations),
-              status: existing.status || "",
-              aiWriteMode: "precise-structure-repair",
-              aiWrongRepairedAt: Date.now()
-            }));
-
-            const updatedWord = resolveWordWriteTarget(next, writeTarget).word;
-            if (isInvalidAiContent(updatedWord) || isLikelyWrongAiWord(updatedWord)) {
-              if (!failed.includes(w.word)) failed.push(w.word);
-              const reason = isLikelyWrongAiWord(updatedWord)
-                ? "修复后仍命中异常判定"
-                : "修复后其他义项结构仍无效";
-              failedDetails.push(`${w.word}: ${reason}`);
-            } else {
-              repaired += 1;
-            }
-          });
-
-          return next;
-        });
-
-        return missing;
-      }
-
-      async function repairSingle(item, reason = "") {
-        try {
-          const writeTarget = targetForWord(item.w);
-          const res = await fetch("/api/generate-word", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              word: item.w.word,
-              force: true,
-              inputId: writeTarget.inputId
-            })
-          });
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
-          }
-
-          applyEntries([item], [data]);
-        } catch (error) {
-          failed.push(item.w.word);
-          failedDetails.push(`${item.w.word}: ${error.message || reason || "单词级修复失败"}`);
-        }
-      }
-
-      async function runChunk(chunk, workerId, retry = 0) {
-        const wordList = chunk.map(({ w }) => w.word);
-        const preview = wordList.slice(0, 5).join(", ");
-
-        setBatchInfo(
-          `AI稳定修复确定错词 10×2：${completed} / ${targets.length} ｜ 第 ${workerId} 路：${preview}${wordList.length > 5 ? "..." : ""}`
-        );
-
-        try {
-          const res = await fetch("/api/generate-words", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              items: chunk.map(({ w }) => requestItemForWord(w)),
-              force: true
-            })
-          });
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
-          }
-
-          if (!Array.isArray(data.items) || !data.items.length) {
-            throw new Error("批量没有返回有效词条");
-          }
-
-          const missing = applyEntries(chunk, data.items);
-
-          for (const item of missing) {
-            await repairSingle(item, "批量返回缺少这个词");
-          }
-        } catch (error) {
-          if (retry < 2) {
-            await new Promise((resolve) => setTimeout(resolve, 1200 * (retry + 1)));
-            return runChunk(chunk, workerId, retry + 1);
-          }
-
-          for (const item of chunk) {
-            await repairSingle(item, error.message || "批量失败后单词级补救");
-          }
-        }
-      }
-
-      async function worker(workerId) {
-        while (nextChunkIndex < chunks.length) {
-          const chunk = chunks[nextChunkIndex];
-          nextChunkIndex += 1;
-
-          try {
-            await runChunk(chunk, workerId);
-          } finally {
-            completed += chunk.length;
-            setBatchInfo(
-              `AI稳定修复确定错词 10×2：${Math.min(completed, targets.length)} / ${targets.length} ｜ 已修复 ${repaired} 个 ｜ 失败 ${failed.length} 个`
-            );
-          }
-        }
-      }
-
-      const workerCount = Math.min(concurrency, chunks.length);
-      await Promise.all(Array.from({ length: workerCount }, (_, i) => worker(i + 1)));
-
       setBatchInfo("");
-      setToast(`AI精准结构修复完成：尝试 ${targets.length} 个，真正退出异常队列 ${repaired} 个，仍需处理 ${failed.length} 个${failedDetails[0] ? "｜示例：" + failedDetails.slice(0, 3).join("；") : ""}`);
+      const result = await executeStructureRepairRound(words);
 
-      return {
-        total: targets.length,
-        repaired,
-        failed: failed.length,
-        failedDetails
-      };
+      if (!result.total) {
+        setToast("没有发现结构异常词条");
+        return result;
+      }
+
+      setWords(result.words);
+      setBatchInfo("");
+      setToast(`AI精准结构修复完成：尝试 ${result.total} 个，真正退出异常队列 ${result.repaired} 个，仍需处理 ${result.failed} 个${result.failedDetails[0] ? "｜示例：" + result.failedDetails.slice(0, 3).join("；") : ""}`);
+      return result;
     } catch (error) {
-      setToast(error.message || "AI稳定修复确定错词失败");
+      setToast(error.message || "AI精准结构修复失败");
+      return { words, total: 0, filled: 0, repaired: 0, failed: 0, failedWordKeys: [] };
     } finally {
+      setBatchInfo("");
       setLoading(false);
     }
   }
@@ -1426,6 +1483,95 @@ export function createAiOps(ctx) {
     }
   }
 
+  async function startContinuousAiStructureRepair() {
+    const controlRef = aiRunControlRef || fallbackAiRunControlRef;
+    if (controlRef.current?.running) {
+      setToast("已有连续 AI 任务正在运行");
+      return;
+    }
+
+    const initialRemaining = countStructureRepairTargets(words);
+    if (!initialRemaining) {
+      setToast("没有结构异常词条，不需要调用 AI");
+      return;
+    }
+
+    const controller = new AbortController();
+    controlRef.current = { controller, running: true };
+    setLoading(true);
+    setAiRunState?.({
+      mode: "repair",
+      status: "running",
+      rounds: 0,
+      processed: 0,
+      filled: 0,
+      failed: 0,
+      remaining: initialRemaining,
+      initialRemaining
+    });
+
+    try {
+      const result = await runContinuousAiCompletion({
+        initialWords: words,
+        signal: controller.signal,
+        maxRounds: Math.min(
+          CONTINUOUS_AI_POLICY.maxRounds,
+          Math.ceil(initialRemaining / 100) + 1
+        ),
+        countRemaining: (snapshot, excludedWordKeys) => (
+          countStructureRepairTargets(snapshot, excludedWordKeys)
+        ),
+        executeRound: async ({ words: snapshot, roundNumber, failedWordKeys, signal }) => {
+          const roundResult = await executeStructureRepairRound(snapshot, {
+            excludedWordKeys: failedWordKeys,
+            roundNumber,
+            signal
+          });
+          if (roundResult.total > 0) setWords(roundResult.words);
+          return roundResult;
+        },
+        onProgress(progress) {
+          setAiRunState?.({ ...progress, mode: "repair" });
+        }
+      });
+
+      const status = result.reason === "completed"
+        ? "completed"
+        : result.reason === "completed-with-failures"
+          ? "completed-with-failures"
+          : result.reason;
+      setAiRunState?.({ ...result, mode: "repair", status });
+      setBatchInfo("");
+
+      if (result.reason === "stopped") {
+        setToast(`AI连续结构修复已停止：修复 ${result.filled} 个，剩余 ${result.remaining} 个`);
+      } else if (result.reason === "fused") {
+        setToast(`AI连续结构修复已自动熔断：修复 ${result.filled} 个，失败 ${result.failed} 个，请检查网络或 AI 返回`);
+      } else if (result.reason === "limit") {
+        setToast(`AI连续结构修复达到安全轮次上限：修复 ${result.filled} 个，剩余 ${result.remaining} 个`);
+      } else {
+        setToast(`AI连续结构修复结束：${result.rounds} 轮，修复 ${result.filled} 个，失败 ${result.failed} 个`);
+      }
+      return result;
+    } catch (error) {
+      const stopped = controller.signal.aborted || error?.name === "AbortError";
+      setAiRunState?.((previous) => ({
+        ...(previous || {}),
+        mode: "repair",
+        status: stopped ? "stopped" : "failed",
+        error: stopped ? "" : (error.message || "连续结构修复失败")
+      }));
+      setToast(stopped ? "AI连续结构修复已停止" : (error.message || "AI连续结构修复失败"));
+      return undefined;
+    } finally {
+      if (controlRef.current?.controller === controller) {
+        controlRef.current = { controller: null, running: false };
+      }
+      setBatchInfo("");
+      setLoading(false);
+    }
+  }
+
   async function startContinuousAiCompletion() {
     const controlRef = aiRunControlRef || fallbackAiRunControlRef;
     if (controlRef.current?.running) {
@@ -1443,6 +1589,7 @@ export function createAiOps(ctx) {
     controlRef.current = { controller, running: true };
     setLoading(true);
     setAiRunState?.({
+      mode: "completion",
       status: "running",
       rounds: 0,
       processed: 0,
@@ -1473,7 +1620,7 @@ export function createAiOps(ctx) {
           return roundResult;
         },
         onProgress(progress) {
-          setAiRunState?.(progress);
+          setAiRunState?.({ ...progress, mode: "completion" });
         }
       });
 
@@ -1482,7 +1629,7 @@ export function createAiOps(ctx) {
         : result.reason === "completed-with-failures"
           ? "completed-with-failures"
           : result.reason;
-      setAiRunState?.({ ...result, status });
+      setAiRunState?.({ ...result, mode: "completion", status });
       setBatchInfo("");
 
       if (result.reason === "stopped") {
@@ -1500,6 +1647,7 @@ export function createAiOps(ctx) {
       const stopped = controller.signal.aborted || error?.name === "AbortError";
       setAiRunState?.((previous) => ({
         ...(previous || {}),
+        mode: "completion",
         status: stopped ? "stopped" : "failed",
         error: stopped ? "" : (error.message || "连续补全失败")
       }));
@@ -1748,6 +1896,7 @@ export function createAiOps(ctx) {
     enrichOptionalBatch,
     startContinuousAiEnrichment,
     generateHundredByFiveBatch,
+    startContinuousAiStructureRepair,
     startContinuousAiCompletion,
     stopContinuousAiCompletion,
     completeMeaningAndAudio,

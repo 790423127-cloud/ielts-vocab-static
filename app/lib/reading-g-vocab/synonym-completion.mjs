@@ -1,9 +1,9 @@
 import { normalizeReadingGKey } from "./normalize.mjs";
 import {
-  getReadingGSynonymStatus,
+  isReadingGSynonymReviewCurrent,
   normalizeReadingGSynonymDetails,
   normalizeReadingGSynonyms,
-  READING_G_SYNONYM_STATUS
+  READING_G_SYNONYM_REVIEW_POLICY
 } from "./synonym-relations.mjs";
 
 export const READING_G_SYNONYM_COMPLETION_SOURCE =
@@ -33,14 +33,15 @@ function unique(values) {
 
 export function isReadingGSynonymSupportedEntry(entry) {
   const entryType = String(entry?.entryType || "word").trim();
-  return entryType === "word" || entryType === "phrase";
+  return (entryType === "word" || entryType === "phrase")
+    && entry?.studyMode !== "reference";
 }
 
 export function isReadingGSynonymCompletionCandidate(entry) {
   return Boolean(
     entry
     && isReadingGSynonymSupportedEntry(entry)
-    && getReadingGSynonymStatus(entry).state === READING_G_SYNONYM_STATUS.PENDING
+    && !isReadingGSynonymReviewCurrent(entry)
   );
 }
 
@@ -72,6 +73,7 @@ export function buildReadingGSynonymCompletedEntry(entry, review, options = {}) 
     synonymsReviewed: true,
     synonymsReviewSource: source,
     synonymsReviewedAt: reviewedAt,
+    synonymsReviewPolicy: READING_G_SYNONYM_REVIEW_POLICY,
     sourceFiles: unique([
       ...list(entry.sourceFiles),
       READING_G_SYNONYM_COMPLETION_SOURCE

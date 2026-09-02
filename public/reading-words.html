@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#f4f6f5" />
   <title>阅读生词本 · IELTS Vocab 静态版</title>
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
-  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
-  <link rel="stylesheet" href="./assets/reading-words.css?v=20260809_reading_keyboard_v49" />
-  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
+  <link rel="stylesheet" href="./assets/style.css?v=20260830_system_safety_v80" />
+  <link rel="stylesheet" href="./assets/reading-words.css?v=20260830_system_safety_v80" />
+  <script src="./assets/static-font-scale.js?v=20260830_system_safety_v80"></script>
 </head>
 <body class="static-unified-reading-page" data-static-page="reading-words">
   <header class="reading-header">
@@ -109,9 +109,10 @@
             <button id="exampleSoundBtn" type="button" aria-label="播放例句，快捷键空格" title="播放例句（空格）">🔊</button>
             <div><p id="exampleText"></p><span id="exampleCnText"></span></div>
           </div>
-          <button id="wordSoundBtn" class="word" type="button" title="播放单词发音（Tab）" data-static-swipe-handle></button>
+          <button id="wordSoundBtn" class="word" type="button" title="播放单词发音（Tab）"></button>
           <div class="word-meta study-answer-content"><span id="phoneticText"></span><b id="posText"></b></div>
           <h2 id="meaningText" class="study-answer-content"></h2>
+          <div class="study-answer-content" style="margin:8px auto 0;max-width:760px;color:#526579;font-size:clamp(13px,1.6vw,16px);line-height:1.55;text-align:center"><strong>主释义详解：</strong><span id="meaningDetailText"></span></div>
           <div class="detail-grid study-answer-content">
             <section><h3>变形</h3><div id="formsList"></div></section>
             <section><h3>词族</h3><div id="familyList"></div></section>
@@ -135,8 +136,9 @@
     </section>
   </main>
   <div id="toast" class="toast" role="status"></div>
-  <script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
-  <script src="./assets/study-meaning-visibility.js?v=20260809_reading_keyboard_v49"></script>
-  <script src="./assets/reading-words.js?v=20260809_reading_keyboard_v49"></script>
+  <script src="./assets/static-navigation.js?v=20260830_system_safety_v80"></script>
+  <script src="./assets/study-meaning-visibility.js?v=20260830_system_safety_v80"></script>
+  <script src="./assets/example-highlight.js?v=20260830_system_safety_v80"></script>
+  <script src="./assets/reading-words.js?v=20260830_system_safety_v80"></script>
 </body>
 </html>

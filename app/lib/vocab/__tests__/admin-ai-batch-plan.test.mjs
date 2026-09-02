@@ -22,7 +22,7 @@ function completeWord(word, overrides = {}) {
     phonetic: `/${word}/`,
     pos: "noun",
     meaning: `${word} meaning`,
-    meaningDetailZh: `${word} detailed meaning`,
+    meaningDetailZh: "指该主释义所涵盖的具体对象、动作或状态，并说明其常见使用范围。",
     definition: `${word} definition`,
     otherMeanings: [],
     example: `${word} example`,
@@ -115,6 +115,23 @@ test("structurally invalid other meanings enter the repair queue", () => {
   assert.deepEqual(buildFastCompletionPlan(words).targets.map(({ i }) => i), []);
 });
 
+test("structure repair plans support continuous-run exclusions without hiding unresolved words", () => {
+  const words = [
+    completeWord("alpha", { meaning: "undefined" }),
+    completeWord("beta", { meaning: "undefined" }),
+    completeWord("ready")
+  ];
+
+  const allRepairs = buildWrongRepairPlan(words, { maxTargets: Infinity });
+  const remainingRepairs = buildWrongRepairPlan(words, {
+    maxTargets: Infinity,
+    excludeWordKeys: new Set(["alpha"])
+  });
+
+  assert.deepEqual(allRepairs.targets.map(({ w }) => w.word), ["alpha", "beta"]);
+  assert.deepEqual(remainingRepairs.targets.map(({ w }) => w.word), ["beta"]);
+});
+
 test("quality lane summary explains required work separately from enrichment", () => {
   const words = [
     completeWord("ready"),
@@ -140,8 +157,8 @@ test("quality lane summary explains required work separately from enrichment", (
   });
 });
 
-test("paid plans exclude inflected references", () => {
-  const reference = completeWord("questions", {
+test("paid plans exclude inflected and spelling-variant references", () => {
+  const inflectedReference = completeWord("questions", {
     definition: "",
     aiContentProfile: "",
     entryType: "inflected-form",
@@ -149,8 +166,17 @@ test("paid plans exclude inflected references", () => {
     baseWord: "question",
     relationType: "plural"
   });
+  const spellingReference = completeWord("leed", {
+    definition: "",
+    aiContentProfile: "",
+    entryType: "headword",
+    studyMode: "reference",
+    baseWord: "lead",
+    redirectToWord: "lead",
+    relationType: "spelling variant"
+  });
   const normal = completeWord("cashless", { definition: "", aiContentProfile: "" });
-  const plan = buildFastCompletionPlan([reference, normal]);
+  const plan = buildFastCompletionPlan([inflectedReference, spellingReference, normal]);
 
   assert.deepEqual(plan.targets.map(({ w }) => w.word), ["cashless"]);
 });
@@ -217,7 +243,7 @@ test("enrichment plan selects ready thin words, prioritizes favorites and exclud
   assert.deepEqual(capped.targets.map(({ w }) => w.word), ["favorite"]);
 });
 
-test("optional enrichment fields and a legacy profile marker do not create a paid backlog", () => {
+test("a legacy entry without an informative detail enters the paid completion backlog", () => {
   const legacy = completeWord("legacy", {
     meaningDetailZh: "",
     otherMeanings: undefined,
@@ -225,5 +251,5 @@ test("optional enrichment fields and a legacy profile marker do not create a pai
     wordFamily: undefined,
     aiContentProfile: undefined
   });
-  assert.deepEqual(buildFastCompletionPlan([legacy]).targets.map(({ w }) => w.word), []);
+  assert.deepEqual(buildFastCompletionPlan([legacy]).targets.map(({ w }) => w.word), ["legacy"]);
 });

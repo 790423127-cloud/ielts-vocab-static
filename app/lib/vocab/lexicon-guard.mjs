@@ -43,14 +43,27 @@ export function computeLexiconHash(words = []) {
 
 export function validateExportCacheWrite(incoming = {}, current = null) {
   const words = Array.isArray(incoming.words) ? incoming.words : [];
-  const confirmedHits = findConfirmedPersonNamesInWords(words);
+  const currentWords = Array.isArray(current?.words) ? current.words : [];
+  const currentConfirmedNameEntryIds = new Set(
+    currentWords
+      .filter((entry) => isConfirmedPersonNameWord(entry?.word))
+      .map((entry) => String(entry?.id || entry?.wordId || "").trim())
+      .filter(Boolean)
+  );
+  const reintroducedConfirmedNames = words
+    .filter((entry) => {
+      if (!isConfirmedPersonNameWord(entry?.word)) return false;
+      const id = String(entry?.id || entry?.wordId || "").trim();
+      return !id || !currentConfirmedNameEntryIds.has(id);
+    })
+    .map((entry) => normalizeHeadword(entry?.word));
 
-  if (confirmedHits.length) {
+  if (reintroducedConfirmedNames.length) {
     return {
       ok: false,
       status: 409,
-      error: "拒绝写入：待保存词库仍含已删除的确定人名",
-      detail: `命中 ${confirmedHits.length} 条：${confirmedHits.slice(0, 12).join(", ")}${confirmedHits.length > 12 ? "..." : ""}`
+      error: "拒绝写入：待保存词库重新加入了已删除的确定人名",
+      detail: `命中 ${reintroducedConfirmedNames.length} 条：${reintroducedConfirmedNames.slice(0, 12).join(", ")}${reintroducedConfirmedNames.length > 12 ? "..." : ""}`
     };
   }
 

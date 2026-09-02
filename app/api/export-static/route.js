@@ -278,7 +278,7 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, endRecord]);
 }
 
-const STATIC_EXPORT_VERSION = "20260809_reading_keyboard_v49";
+const STATIC_EXPORT_VERSION = STATIC_RESPONSIVE_VERSION;
 
 const STATIC_INDEX_HTML = `<!doctype html>
 <html lang="zh-CN">
@@ -353,6 +353,7 @@ const STATIC_INDEX_HTML = `<!doctype html>
       <button id="wordSoundBtn" class="sound-main" title="播放单词">🔊</button>
       <div id="word" class="word">Loading</div>
       <div id="basic" class="basic-line study-answer-content">正在准备学习内容</div>
+      <div id="meaningDetail" class="study-answer-content" style="margin:8px auto 0;max-width:760px;color:#526579;font-size:clamp(13px,1.6vw,16px);line-height:1.55;text-align:center"><strong>主释义详解：</strong><span id="meaningDetailText"></span></div>
       <div id="loadInfo" class="load-info">第一次打开会稍慢，之后会自动缓存。</div>
       <div class="swipe-hint">← 右滑上一个 · 左滑下一个 →　Tab 发音单词 · 空格发音英文例句 · 按住 ←/→ 连续切词</div>
 
@@ -492,6 +493,7 @@ const STATIC_INDEX_HTML = `<!doctype html>
   </main>
   <script src="./assets/static-navigation.js?v=${STATIC_EXPORT_VERSION}"></script>
   <script src="./sync-config.js?v=${STATIC_EXPORT_VERSION}"></script>
+  <script src="./assets/example-highlight.js?v=${STATIC_EXPORT_VERSION}"></script>
   <script src="./assets/app.js?v=${STATIC_EXPORT_VERSION}"></script>
 </body>
 </html>`;
@@ -754,6 +756,7 @@ const CLOUDBASE_SYNC_CODE_KEY="static_vocab_cloudbase_sync_code_v1";
 const TOP_TOOLS_PREF_PREFIX="static_vocab_top_tools_collapsed_v1_";
 const WORD_ORDER_KEY="ielts_vocab_word_order_modes_v1";
 const WORD_ORDER_CURSOR_KEY="ielts_vocab_word_order_cursors_v1";
+const ORDERING_MODULE_ROOT="./study-ordering-v64/";
 const MEANING_VISIBILITY_KEY="ielts_vocab_hide_meanings_v1";
 const CLOUDBASE_SDK_URLS=[
   // CloudBase JS SDK 2.x：旧版 1.x 会触发 ACCESS_TOKEN_DISABLED。
@@ -766,6 +769,7 @@ let words=[];
 let idictationPayload=null;
 let filter="all";
 let index=0;
+let mainDeleteConfirmedInSession=false;
 let audio=null;
 let mobileMode=false;
 let saveTimer=null;
@@ -788,6 +792,8 @@ let holdStepDir=0;
 let holdTouchActive=false;
 let suppressNextSwipe=false;
 let studyListCache=new Map();
+let sharedWordStudyOrdering=null;
+let sharedWordDifficulty=null;
 
 function invalidateStudyListCache(){
   studyListCache.clear();
@@ -799,6 +805,7 @@ const els={
   topToolsToggle:document.getElementById("topToolsToggle"),
   word:document.getElementById("word"),
   basic:document.getElementById("basic"),
+  meaningDetailText:document.getElementById("meaningDetailText"),
   loadInfo:document.getElementById("loadInfo"),
   example:document.getElementById("example"),
   exampleCn:document.getElementById("exampleCn"),
@@ -867,7 +874,7 @@ function arr(v){return Array.isArray(v)?v:[]}
 function uniq(values){return Array.from(new Set(values.map(x=>String(x||"").trim()).filter(Boolean)))}
 function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 const FIXED_WORD_ORDER_MODES=["family","association"];
-const WORD_ORDER_SNAPSHOT_VERSION=4;
+const WORD_ORDER_SNAPSHOT_VERSION=5;
 const WORD_DIFFICULTY_MODES=["default","easy-to-hard","hard-to-easy","easier-only","standard-only","harder-only"];
 function normalizeWordOrderMode(mode){return ["current","random","family","association"].includes(mode)?mode:"current"}
 function normalizeDifficultyMode(mode){return WORD_DIFFICULTY_MODES.includes(mode)?mode:"default"}
@@ -901,16 +908,13 @@ function difficultyScore(word){
 }
 function difficultySortKey(word){return intrinsicDifficulty(word)*1000+Math.min(999,difficultyScore(word))}
 function difficultyProfile(source){
-  const scores=source.map(difficultyScore).sort(function(a,b){return a-b});
-  const at=function(ratio){return scores[Math.max(0,Math.min(scores.length-1,Math.floor((scores.length-1)*ratio)))]||0};
-  return {available:scores.length>=6&&new Set(scores).size>=3,easierMax:at(.3),harderMin:at(.7)};
+  if(!sharedWordDifficulty)return {available:false};
+  return sharedWordDifficulty.createWordInternalDifficultyProfile(source);
 }
 function difficultyTier(word,profile){
-  if(!profile.available)return "standard";
-  const score=difficultyScore(word);
-  if(score<=profile.easierMax)return "easier";
-  if(score>=profile.harderMin)return "harder";
-  return "standard";
+  return sharedWordDifficulty&&profile
+    ?sharedWordDifficulty.wordInternalDifficultyTier(word,profile)
+    :"standard";
 }
 function requestedDifficultyTier(mode){
   if(mode==="easier-only")return "easier";
@@ -1080,9 +1084,9 @@ function reconcileWordOrderSnapshot(snapshot,source,fallback){
       )
     );
   if(compactMatches){
-    snapshot.indices.forEach(function(sourceIndex){appendWord(byIndex.get(sourceIndex))});
-  }else{
-    arr(snapshot&&snapshot.keys).forEach(function(key){appendWord(byKey.get(key))});
+    const stableKeys=arr(snapshot&&snapshot.keys);
+    if(stableKeys.length)stableKeys.forEach(function(key){appendWord(byKey.get(key))});
+    else snapshot.indices.forEach(function(sourceIndex){appendWord(byIndex.get(sourceIndex))});
   }
   (fallback||source).forEach(appendWord);
   source.forEach(appendWord);
@@ -1314,70 +1318,22 @@ function orderSceneWords(source,preferredScene){
 function generateStudyList(source,pref){
   const ordered=source.slice();
   if(ordered.length<2)return ordered;
-  const profile=difficultyProfile(ordered);
-  const requestedTier=requestedDifficultyTier(pref.difficultyMode);
-  const eligible=filterDifficultyTier(ordered,profile,requestedTier);
-  if(!eligible.length)return [];
-  if(pref.mode==="random"){
-    return eligible.sort(function(a,b){
-      return deterministicHash(pref.seed+":"+norm(a.word)+":"+a.originalIndex)-deterministicHash(pref.seed+":"+norm(b.word)+":"+b.originalIndex)||a.originalIndex-b.originalIndex;
-    });
-  }
-  let groups=[];
-  if(pref.mode==="family"){
-    groups=familyConnectedGroups(eligible).map(function(group){
-      const incoming=new Map();
-      const activeKeys=new Set(group.map(function(word){return norm(word.word)}));
-      group.forEach(function(word){familyLinks(word).filter(function(key){return activeKeys.has(key)}).forEach(function(key){incoming.set(key,(incoming.get(key)||0)+1)})});
-      return group.sort(function(a,b){
-        const ak=norm(a.word),bk=norm(b.word);
-        const ai=Array.from(activeKeys).some(function(base){return isSurfaceInflection(base,ak)})?1:0;
-        const bi=Array.from(activeKeys).some(function(base){return isSurfaceInflection(base,bk)})?1:0;
-        const as=familyLinks(a).length*8+(incoming.get(ak)||0)*3;
-        const bs=familyLinks(b).length*8+(incoming.get(bk)||0)*3;
-        return ai-bi||bs-as||ak.split(" ").length-bk.split(" ").length||ak.length-bk.length||a.originalIndex-b.originalIndex;
-      });
-    });
-  }else if(pref.mode==="association"){
-    const sceneBuckets=new Map();
-    const standalone=[];
-    connectedGroups(eligible,explicitAssociationLinks).forEach(function(group){
-      const scene=group.map(sceneForWord).find(Boolean)||"";
-      if(!scene){standalone.push(group);return}
-      if(!sceneBuckets.has(scene))sceneBuckets.set(scene,[]);
-      sceneBuckets.get(scene).push.apply(sceneBuckets.get(scene),group);
-    });
-    groups=Array.from(sceneBuckets.entries()).sort(function(a,b){
-      return Math.min.apply(null,a[1].map(function(word){return word.originalIndex}))-Math.min.apply(null,b[1].map(function(word){return word.originalIndex}));
-    }).map(function(entry){return orderSceneWords(entry[1],entry[0])}).concat(standalone.sort(function(a,b){
-      return Math.min.apply(null,a.map(function(word){return word.originalIndex}))-Math.min.apply(null,b.map(function(word){return word.originalIndex}));
-    }).map(function(group){return orderSceneWords(group)}));
-  }else{
-    groups=eligible.map(function(word){return [word]});
-  }
-  const direction=difficultyDirection(pref.difficultyMode);
-  if(direction){
-    groups=groups.map(function(group){
-      return group.slice().sort(function(a,b){
-        return (difficultySortKey(a)-difficultySortKey(b))*direction||a.originalIndex-b.originalIndex;
-      });
-    }).sort(function(a,b){
-      function median(group){
-        const scores=group.map(difficultySortKey).sort(function(x,y){return x-y});
-        const middle=Math.floor(scores.length/2);
-        return scores.length%2?scores[middle]:(scores[middle-1]+scores[middle])/2;
-      }
-      return (median(a)-median(b))*direction
-        ||Math.min.apply(null,a.map(function(word){return word.originalIndex}))
-          -Math.min.apply(null,b.map(function(word){return word.originalIndex}));
-    });
-  }else{
-    groups.sort(function(a,b){
-      return Math.min.apply(null,a.map(function(word){return word.originalIndex}))
-        -Math.min.apply(null,b.map(function(word){return word.originalIndex}));
-    });
-  }
-  return groups.flat();
+  if(!sharedWordStudyOrdering)throw new Error("共享单词排序模块尚未加载");
+  const idictation=isIdictationFilter(filter);
+  const pool=idictation?ordered:words;
+  const byIndex=new Map(ordered.map(function(word){return [word.originalIndex,word]}));
+  const orderedIndices=sharedWordStudyOrdering.orderStudyWordIndices(
+    ordered.map(function(word){return word.originalIndex}),
+    pool,
+    {
+      mode:pref.mode,
+      difficultyMode:pref.difficultyMode,
+      difficultyEnabled:!idictation,
+      seed:pref.seed,
+      idictation:idictation
+    }
+  );
+  return orderedIndices.map(function(sourceIndex){return byIndex.get(sourceIndex)}).filter(Boolean);
 }
 
 function orderStudyList(source,activeFilter){
@@ -1706,14 +1662,13 @@ function getVocabId(){
 function safeLsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function safeLsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){console.warn("localStorage full",k,e);return false}}
 function safeLsRemove(k){try{localStorage.removeItem(k)}catch(e){}}
-function isInflectedReferenceWord(word){
-  if(!word)return false;
-  if(word.entryType==="inflected-form"&&word.studyMode==="reference")return true;
+function isReferenceWord(word){
+  if(!word||word.studyMode!=="reference")return false;
   const hasBase=Boolean(norm(word.baseWord)||String(word.baseWordId||"").trim()||norm(word.redirectToWord));
-  return word.studyMode==="reference"&&hasBase&&/(?:plural|past tense|past participle|present participle|comparative|superlative|third-person|inflected form)/i.test(String(word.relationType||""));
+  return hasBase||word.entryType==="word-reference"||word.entryType==="inflected-form";
 }
 function brushableWords(list){
-  return (Array.isArray(list)?list:[]).filter(function(word){return !isInflectedReferenceWord(word)});
+  return (Array.isArray(list)?list:[]).filter(function(word){return !isReferenceWord(word)});
 }
 function mergeReadingMainSupplements(baseWords){
   let supplements=[];
@@ -1821,7 +1776,10 @@ function deleteCurrentWord(){
   const baseKey=w.editBaseKey||norm(w.word);
   if(!baseKey){toast("当前单词无效，无法删除");return}
   const sameCount=words.filter(function(item){return norm(item.word)===baseKey}).length;
-  if(!confirm("确定删除这个单词？\\n\\n"+w.word+"\\n\\n将从本机词库隐藏/删除 "+sameCount+" 条同名单词记录。电脑端正式删除后重新发布，会彻底移除。"))return;
+  if(!mainDeleteConfirmedInSession){
+    if(!confirm("确定删除这个单词？\\n\\n"+w.word+"\\n\\n将从本机词库隐藏/删除 "+sameCount+" 条同名单词记录。电脑端正式删除后重新发布，会彻底移除。本次打开页面后续删除不再重复确认。"))return;
+    mainDeleteConfirmedInSession=true;
+  }
   const oldIndex=index;
   const previousWords=words;
   const pref=wordOrderPreference(filter);
@@ -1941,6 +1899,46 @@ function inlineStudyMeaning(item){
     const posLabel=sensePos&&posKey(sensePos)!==primaryKey?posDisplay(sensePos)+" ":"";
     return meaning?posLabel+meaning:"";
   }).filter(Boolean)).join("；");
+}
+function mainMeaningDetail(item,meaning){
+  const word=String(item&&item.word||"").trim();
+  const primary=String(meaning||item&&item.meaningZh||item&&item.meaning||"").trim();
+  const rawDetail=String(item&&(item.meaningDetailZh||item.meaningDetailedZh)||"").trim();
+  const compact=function(value){return String(value||"").trim().toLowerCase().replace(/[“”"'‘’；;，,。.!！?？、：:\\s]/g,"")};
+  const primaryKeys=primary.split(/[；;，,、/]+/).map(compact).filter(Boolean);
+  const wholePrimaryKey=compact(primary);
+  const semantic=[];
+  const collocations=[];
+  const hasPlaceholder=/无中文释义|暂无释义|待补充|待完善|待审核|需要复核|专有名词，需结合原文识别/.test(rawDetail);
+  if(rawDetail&&!hasPlaceholder){
+    rawDetail.split(/[。！？!?；;]+/).forEach(function(part){
+      const clause=String(part||"").trim().replace(/^[，,：:\\s]+|[，,：:\\s]+$/g,"");
+      const clauseKey=compact(clause);
+      if(!clauseKey||clauseKey===wholePrimaryKey||primaryKeys.indexOf(clauseKey)>=0)return;
+      const lower=clause.toLowerCase();
+      const wordLower=word.toLowerCase();
+      const headwordPrefix=word&&(lower.indexOf(wordLower+":")===0||lower.indexOf(wordLower+"：")===0);
+      const remainder=headwordPrefix?clause.slice(word.length+1).trim():"";
+      if(headwordPrefix&&(compact(remainder)===wholePrimaryKey||primaryKeys.indexOf(compact(remainder))>=0))return;
+      if(/^(?:“?[a-z][a-z' -]*”?)(?:常见含义为|在雅思(?:听力|阅读)?中的常用含义是|的核心意思是|表示|在当前词条中)/i.test(clause))return;
+      if(/^(?:本词条|该词|“?[a-z][a-z' -]*”?)?(?:按|作).*(?:词|使用)$/i.test(clause))return;
+      if(/^(?:常见|固定|短语)?搭配(?:有|包括|如|例如)?[“"']?.+$/.test(clause)){collocations.push(clause);return;}
+      if(/(?:(?:复数(?:形式)?|第三人称单数(?:形式)?|过去式|过去分词|现在分词|动名词|比较级|最高级)(?:形式)?$|^(?:plural|third[- ]person singular|past tense|past participle|present participle|gerund|comparative|superlative)(?:\\s+form)?\\s*(?:为|是|[:：]|is\\b).+$)/i.test(clause))return;
+      if(/^例句提示[：:]?/.test(clause))return;
+      if(/^在当前例句中[，,:：]?/.test(clause)){
+        const exampleRemainder=clause.replace(/^在当前例句中[，,:：]?/,"").trim();
+        const exampleCn=String(item&&(item.exampleCn||item.exampleChinese||item.example_chinese)||"").trim();
+        if(exampleCn&&(compact(exampleRemainder)===compact(exampleCn)||compact(exampleRemainder).indexOf(compact(exampleCn))>=0||compact(exampleCn).indexOf(compact(exampleRemainder))>=0))return;
+      }
+      semantic.push(clause);
+    });
+  }
+  const semanticVerified=semantic.join("；");
+  if((semanticVerified.match(/[\\u3400-\\u9fff]/g)||[]).length>=8){
+    const verified=semantic.concat(collocations).join("；");
+    return/[。！？!?]$/.test(verified)?verified:verified+"。";
+  }
+  return primary?"现有资料只确认了主释义，语义范围和实际用法仍待补充。":"该词的主释义和详细说明均待补充。";
 }
 function formTypeCn(type=""){const t=String(type).toLowerCase();if(t.includes("irregular plural"))return"不规则复数";if(t.includes("plural"))return"复数形式";if(t.includes("past tense / past participle"))return"过去式 / 过去分词";if(t.includes("past tense"))return"过去式";if(t.includes("past participle"))return"过去分词";if(t.includes("present participle"))return"-ing 形式";return type||"变形"}
 function formHint(form){const cn=formTypeCn(form.type);if(cn==="复数形式")return"注意复数形式";if(cn==="不规则复数")return"注意不规则复数";if(cn==="过去式")return"注意过去式";if(cn==="过去分词")return"注意过去分词";if(cn==="过去式 / 过去分词")return"注意过去式 / 过去分词";if(cn==="-ing 形式")return"注意 -ing 形式";return form.note||""}
@@ -2394,6 +2392,7 @@ function render(){
     els.word.classList.remove("word--wide","word--long");
     els.word.textContent="完成";
     els.basic.textContent="当前范围没有待学习单词";
+    if(els.meaningDetailText)els.meaningDetailText.textContent="";
     els.loadInfo.textContent="可以切换分类或查看熟悉词库。";
     els.count.textContent="0 / 0";
     els.progressFill.style.width="0%";
@@ -2412,9 +2411,10 @@ function render(){
   els.word.classList.toggle("word--long",renderedHeadword.trim().length>18);
   els.word.textContent=renderedHeadword;
   els.basic.textContent=(w.phonetic||"等待音标")+" · "+posDisplay(w.pos)+" · "+inlineStudyMeaning(w);
+  if(els.meaningDetailText)els.meaningDetailText.textContent=mainMeaningDetail(w,w.meaning);
   els.loadInfo.textContent=cloudbaseReady?"本地已保存，云端会自动同步。":"本地已保存；连接云同步后电脑手机可同步。";
   if(els.entryStatus) els.entryStatus.textContent="当前入口："+filterLabel(filter)+" · "+l.length+" 个词";
-  els.example.textContent=w.example||"等待例句";
+  window.IeltsExampleHighlight.render(els.example,w.example||"等待例句",w);
   els.exampleCn.textContent=w.exampleCn||"";
   els.favoriteBtn.textContent=w.favorite?"★":"☆";
   els.unknownBtn.classList.toggle("active-unknown",w.status==="不熟");
@@ -3315,10 +3315,14 @@ async function boot(){
     const savedCode=localStorage.getItem(CLOUDBASE_SYNC_CODE_KEY)||"";
     if(savedCode) els.syncCodeInput.value=savedCode;
 
-    const [res,idictationRes]=await Promise.all([
+    const [orderingModule,difficultyModule,res,idictationRes]=await Promise.all([
+      import(ORDERING_MODULE_ROOT+"word-study-ordering.mjs"),
+      import(ORDERING_MODULE_ROOT+"word-internal-difficulty.mjs"),
       fetch("./data/words.json?v="+APP_VERSION,{cache:"force-cache"}),
       fetch("./data/idictation-frequency.json?v="+APP_VERSION,{cache:"force-cache"}).catch(function(){return null})
     ]);
+    sharedWordStudyOrdering=orderingModule;
+    sharedWordDifficulty=difficultyModule;
     if(!res.ok) throw new Error("words json failed");
     const data=await res.json();
     const physicalWords=applyDeletedWords(applyWordEdits(mergeReadingMainSupplements(Array.isArray(data.words)?data.words:data)));
@@ -3345,6 +3349,7 @@ async function boot(){
       setSyncStatus("未连接",false);
     }
   }catch(e){
+    console.error("静态首页加载失败",e);
     clearTimeout(slowTimer);
     els.word.textContent="加载失败";
     els.basic.textContent="没有成功读取 data/words.json";
@@ -3368,15 +3373,20 @@ const SHELL=[
   "./reading-words.html",
   "./ielts-538.html",
   "./assets/style.css?v=${STATIC_EXPORT_VERSION}",
-  "./assets/static-font-scale.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/static-navigation.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/static-font-scale.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/static-cloud-sync.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/example-highlight.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/app.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/spelling.css?v=${STATIC_EXPORT_VERSION}",
   "./assets/spelling.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/basic.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/meaning-static.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-g.js?v=${STATIC_EXPORT_VERSION}",
+  "./assets/study-ordering-v64/word-study-ordering.mjs",
+  "./assets/study-ordering-v64/word-internal-difficulty.mjs",
+  "./assets/study-ordering-v64/word-internal-difficulty.generated.mjs",
+  "./assets/study-ordering-v64/word-surface-morphology.mjs",
   "./assets/reading-paraphrases.css?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-paraphrases.js?v=${STATIC_EXPORT_VERSION}",
   "./assets/reading-words.css?v=${STATIC_EXPORT_VERSION}",
@@ -3629,6 +3639,22 @@ function buildExport(words, audioIndex, options = {}) {
       data: readFileSync(publicAssetPath("assets", "reading-g.js"), "utf-8")
     },
     {
+      name: "assets/study-ordering-v64/word-study-ordering.mjs",
+      data: readFileSync(publicAssetPath("assets", "study-ordering-v64", "word-study-ordering.mjs"), "utf-8")
+    },
+    {
+      name: "assets/study-ordering-v64/word-internal-difficulty.mjs",
+      data: readFileSync(publicAssetPath("assets", "study-ordering-v64", "word-internal-difficulty.mjs"), "utf-8")
+    },
+    {
+      name: "assets/study-ordering-v64/word-internal-difficulty.generated.mjs",
+      data: readFileSync(publicAssetPath("assets", "study-ordering-v64", "word-internal-difficulty.generated.mjs"), "utf-8")
+    },
+    {
+      name: "assets/study-ordering-v64/word-surface-morphology.mjs",
+      data: readFileSync(publicAssetPath("assets", "study-ordering-v64", "word-surface-morphology.mjs"), "utf-8")
+    },
+    {
       name: "assets/reading-paraphrases.css",
       data: readFileSync(publicAssetPath("assets", "reading-paraphrases.css"), "utf-8")
     },
@@ -3657,16 +3683,20 @@ function buildExport(words, audioIndex, options = {}) {
       data: readFileSync(publicAssetPath("assets", "style.css"), "utf-8")
     },
     {
-      name: "assets/static-font-scale.js",
-      data: readFileSync(publicAssetPath("assets", "static-font-scale.js"), "utf-8")
-    },
-    {
       name: "assets/static-navigation.js",
       data: readFileSync(publicAssetPath("assets", "static-navigation.js"), "utf-8")
     },
     {
+      name: "assets/static-font-scale.js",
+      data: readFileSync(publicAssetPath("assets", "static-font-scale.js"), "utf-8")
+    },
+    {
       name: "assets/static-cloud-sync.js",
       data: readFileSync(publicAssetPath("assets", "static-cloud-sync.js"), "utf-8")
+    },
+    {
+      name: "assets/example-highlight.js",
+      data: readFileSync(publicAssetPath("assets", "example-highlight.js"), "utf-8")
     },
     {
       name: "assets/app.js",

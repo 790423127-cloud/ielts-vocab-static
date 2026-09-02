@@ -1,7 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
 import { PanelRightClose, Volume2 } from "lucide-react";
-import { buildWordStudyOverviewModel } from "../lib/vocab/word-study-overview.mjs";
+import {
+  buildWordStudyOverviewModel,
+  countWordStudyQueue
+} from "../lib/vocab/word-study-overview.mjs";
 
 export default function WordStudyOverview({
   wordLibraryStats,
@@ -14,10 +18,15 @@ export default function WordStudyOverview({
   speakSmallText,
   onClose
 }) {
+  const queueCounts = useMemo(
+    () => countWordStudyQueue(studyWords),
+    [studyWords]
+  );
   const overview = buildWordStudyOverviewModel({
     filter,
     filterName,
     studyWords,
+    queueCounts,
     currentPosition,
     wordLibraryStats,
     isExternalIdictationItem

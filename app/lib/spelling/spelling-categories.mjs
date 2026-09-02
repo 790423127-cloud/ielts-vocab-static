@@ -16,10 +16,29 @@ export const SPELLING_PRACTICE_SOURCES = [
 ];
 
 export const SPELLING_DIFFICULTY_OPTIONS = [
-  { value: "基础高频", label: "基础必会" },
-  { value: "中级核心", label: "核心高频" },
-  { value: "高级加分", label: "高级认识" },
-  { value: "低频认识即可", label: "低频认识" }
+  { value: "基础高频", label: "基础词库" },
+  { value: "中级核心", label: "中级词汇" },
+  { value: "高级加分", label: "高级词汇" },
+  { value: "低频认识即可", label: "低频词汇" }
+];
+
+export const SPELLING_ALL_DIFFICULTIES_VALUE = "all_difficulties";
+
+export const SPELLING_DIFFICULTY_FILTER_OPTIONS = [
+  { value: SPELLING_ALL_DIFFICULTIES_VALUE, label: "全部难度" },
+  ...SPELLING_DIFFICULTY_OPTIONS
+];
+
+export const SPELLING_CATEGORY_ORDER_OPTIONS = [
+  { value: "easy_to_hard", label: "简单 → 困难" },
+  { value: "hard_to_easy", label: "困难 → 简单" }
+];
+
+export const SPELLING_SKILL_OPTIONS = [
+  { value: "listening", label: "听力" },
+  { value: "speaking", label: "口语" },
+  { value: "reading", label: "阅读" },
+  { value: "writing", label: "写作" }
 ];
 
 export const SPELLING_TOPIC_OPTIONS = [
@@ -60,16 +79,15 @@ function isReliableHighFrequencyEntry(entry = {}) {
   return !quality.includes("needs_editorial_review");
 }
 
-export const SPELLING_CATEGORY_TYPES = [
-  { value: "difficulty", label: "难度分类" },
-  { value: "lr_high_frequency", label: "训练重点" },
-  { value: "topic", label: "主题分类" },
-  { value: "all", label: "全库顺序" }
-];
-
-export const SPELLING_PHRASE_CATEGORY_TYPES = listSpellingCategoryTypes("phrase");
-
 export const SPELLING_SRS_INTERVALS_DAYS = SPELLING_REPAIR_CONFIG.longTermIntervalsDays;
+
+const DIFFICULTY_RANKS = new Map([
+  ["基础高频", 0],
+  ["中级核心", 1],
+  ["高级加分", 2],
+  ["阅读扩展", 3],
+  ["低频认识即可", 4]
+]);
 
 function readEntryField(entry, field) {
   return entry?.[field] ?? entry?.sourceWord?.[field];
@@ -82,6 +100,13 @@ export function resolveSpellingEntryScope(entry = {}) {
 }
 
 export function listSpellingCategoryTypes(scopeKind = "word") {
+  if (scopeKind === "word") {
+    return [
+      { value: "difficulty", label: "难度分类" },
+      { value: "skill", label: "听说读写" }
+    ];
+  }
+
   const types = [
     { value: "difficulty", label: "难度分类" }
   ];
@@ -101,6 +126,9 @@ export function listSpellingCategoryTypes(scopeKind = "word") {
 
   return types;
 }
+
+export const SPELLING_CATEGORY_TYPES = listSpellingCategoryTypes("word");
+export const SPELLING_PHRASE_CATEGORY_TYPES = listSpellingCategoryTypes("phrase");
 
 function entryOrderKey(entry = {}) {
   return String(
@@ -175,6 +203,74 @@ function hashSeed(value = "") {
     hash = Math.imul(hash, 16777619);
   }
   return hash >>> 0;
+}
+
+function normalizedIeltsUseSet(entry = {}) {
+  return new Set(
+    (readEntryField(entry, "ieltsUse") || [])
+      .map((use) => String(use || "").trim().toLowerCase())
+      .filter(Boolean)
+  );
+}
+
+function hasIeltsUse(uses, values = []) {
+  return values.some((value) => uses.has(String(value).toLowerCase()));
+}
+
+/**
+ * The four study skills are an exclusive partition, not overlapping labels.
+ * A word with several explicit IELTS uses is assigned to its most specialised
+ * skill; unlabelled words use their stable ID as a balanced deterministic tie
+ * breaker so every master-lexicon word remains trainable exactly once.
+ */
+export function resolveSpellingSkillCategory(entry = {}) {
+  const uses = normalizedIeltsUseSet(entry);
+
+  if (
+    readEntryField(entry, "writingPriority") === true ||
+    hasIeltsUse(uses, ["writing", "写作", "task 2", "task2", "writing task 1", "writing task 2", "g类书信", "写作g类书信"])
+  ) {
+    return "writing";
+  }
+
+  if (hasIeltsUse(uses, ["speaking", "口语", "speaking part 1", "speaking part 2", "speaking part 3"])) {
+    return "speaking";
+  }
+
+  if (readEntryField(entry, "listeningPriority") === true || hasIeltsUse(uses, ["listening", "听力"])) {
+    return "listening";
+  }
+
+  if (hasIeltsUse(uses, ["reading", "阅读", "general reading", "reading passage"])) {
+    return "reading";
+  }
+
+  const index = hashSeed(`spelling-skill:${entryOrderKey(entry)}`) % SPELLING_SKILL_OPTIONS.length;
+  return SPELLING_SKILL_OPTIONS[index]?.value || "reading";
+}
+
+function difficultyRank(entry = {}) {
+  const difficulty = String(readEntryField(entry, "difficulty") || "").trim();
+  return DIFFICULTY_RANKS.get(difficulty);
+}
+
+export function orderSpellingEntriesByDifficulty(entries = [], direction = "easy_to_hard") {
+  const reverse = direction === "hard_to_easy";
+
+  return [...(Array.isArray(entries) ? entries : [])].sort((left, right) => {
+    const leftRank = difficultyRank(left);
+    const rightRank = difficultyRank(right);
+    const leftKnown = Number.isInteger(leftRank);
+    const rightKnown = Number.isInteger(rightRank);
+
+    // A missing or retired difficulty must not be silently dropped. Keep such
+    // words at the end in either direction so the four skill groups cover the
+    // entire current master lexicon.
+    if (leftKnown !== rightKnown) return leftKnown ? -1 : 1;
+    if (leftKnown && leftRank !== rightRank) return reverse ? rightRank - leftRank : leftRank - rightRank;
+
+    return entryOrderKey(left).localeCompare(entryOrderKey(right));
+  });
 }
 
 function deterministicShuffle(entries = [], seed = "spelling-v1") {
@@ -328,8 +424,14 @@ export function matchSpellingCategory(entry, categoryType = "all", categoryValue
   if (type === "all") return true;
 
   if (type === "difficulty") {
-    if (!value) return true;
+    if (!value || value === SPELLING_ALL_DIFFICULTIES_VALUE) return true;
     return readEntryField(entry, "difficulty") === value;
+  }
+
+  if (type === "skill") {
+    return SPELLING_SKILL_OPTIONS.some((option) => option.value === value)
+      ? resolveSpellingSkillCategory(entry) === value
+      : false;
   }
 
   if (type === "topic") {
@@ -359,7 +461,14 @@ export function filterBySpellingCategory(entries = [], categoryType = "all", cat
   const scoped = scopeKind ? filterBySpellingScope(list, scopeKind) : list;
   const filteredRaw = scoped.filter((entry) => matchSpellingCategory(entry, categoryType, categoryValue));
   const filtered = scopeKind === "phrase" ? dedupePhrasePracticeEntries(filteredRaw) : filteredRaw;
-  const shuffleSeed = `${options.shuffleSeed || "ielts-spelling-order-v1"}:${scopeKind}:${categoryType}:${categoryValue}`;
+  const orderDirection = SPELLING_CATEGORY_ORDER_OPTIONS.some((option) => option.value === options.sortDirection)
+    ? options.sortDirection
+    : "";
+  const shuffleSeed = `${options.shuffleSeed || "ielts-spelling-order-v1"}:${scopeKind}:${categoryType}:${categoryValue}:${orderDirection}`;
+
+  if (scopeKind === "word" && ["difficulty", "skill"].includes(categoryType) && orderDirection) {
+    return orderSpellingEntriesByDifficulty(filtered, orderDirection);
+  }
 
   if (categoryType === "lr_high_frequency") {
     return orderListeningReadingEntries(filtered, categoryValue, shuffleSeed);
@@ -460,6 +569,12 @@ export function countEntriesBySpellingCategory(entries = [], categoryType = "dif
     }
   }
 
+  if (categoryType === "skill") {
+    for (const option of SPELLING_SKILL_OPTIONS) {
+      counts.set(option.value, 0);
+    }
+  }
+
   for (const entry of list) {
     if (categoryType === "difficulty") {
       const value = readEntryField(entry, "difficulty");
@@ -491,6 +606,12 @@ export function countEntriesBySpellingCategory(entries = [], categoryType = "dif
           counts.set(option.value, (counts.get(option.value) || 0) + 1);
         }
       }
+      continue;
+    }
+
+    if (categoryType === "skill") {
+      const skill = resolveSpellingSkillCategory(entry);
+      counts.set(skill, (counts.get(skill) || 0) + 1);
     }
   }
 
@@ -513,6 +634,9 @@ export function countEntriesBySpellingCategories(entries = [], categoryTypes = [
   }
   if (requested.has("lr_high_frequency")) {
     counts.lr_high_frequency = new Map(SPELLING_LISTENING_READING_OPTIONS.map((option) => [option.value, 0]));
+  }
+  if (requested.has("skill")) {
+    counts.skill = new Map(SPELLING_SKILL_OPTIONS.map((option) => [option.value, 0]));
   }
 
   for (const entry of list) {
@@ -541,11 +665,17 @@ export function countEntriesBySpellingCategories(entries = [], categoryTypes = [
 
     if (counts.lr_high_frequency) {
       const matches = resolveListeningReadingMatches(entry);
-      if (!matches) continue;
-      for (const option of SPELLING_LISTENING_READING_OPTIONS) {
-        if (!matches[option.value]) continue;
-        counts.lr_high_frequency.set(option.value, (counts.lr_high_frequency.get(option.value) || 0) + 1);
+      if (matches) {
+        for (const option of SPELLING_LISTENING_READING_OPTIONS) {
+          if (!matches[option.value]) continue;
+          counts.lr_high_frequency.set(option.value, (counts.lr_high_frequency.get(option.value) || 0) + 1);
+        }
       }
+    }
+
+    if (counts.skill) {
+      const skill = resolveSpellingSkillCategory(entry);
+      counts.skill.set(skill, (counts.skill.get(skill) || 0) + 1);
     }
   }
 
@@ -560,8 +690,14 @@ export function spellingCategoryLabel(categoryType = "all", categoryValue = "", 
   const scopeKind = options.scopeKind || "";
 
   if (categoryType === "difficulty") {
+    if (categoryValue === SPELLING_ALL_DIFFICULTIES_VALUE) return "全部难度";
     const match = SPELLING_DIFFICULTY_OPTIONS.find((item) => item.value === categoryValue);
     return match?.label || categoryValue || "全部难度";
+  }
+
+  if (categoryType === "skill") {
+    const match = SPELLING_SKILL_OPTIONS.find((item) => item.value === categoryValue);
+    return match?.label || "听说读写";
   }
 
   if (categoryType === "topic") {

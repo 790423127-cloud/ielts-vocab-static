@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   READING_PARAPHRASE_STATUS,
+  buildReadingParaphraseRollback,
   createReadingParaphraseState,
   mergeReadingParaphraseCloudState,
   mergeReadingParaphraseState,
@@ -95,4 +96,18 @@ test("cloud merge keeps the newest per-pair study event", () => {
 
   const merged = mergeReadingParaphraseCloudState(local, remote);
   assert.equal(merged.items[0].study.status, READING_PARAPHRASE_STATUS.FUZZY);
+});
+
+test("rollback stays a compact delta even when duplicate ids would previously force a full snapshot", () => {
+  const previous = mergeReadingParaphraseState(createReadingParaphraseState(), [
+    { id: "dup", questionPhrase: "cost less", sourcePhrase: "under $10" },
+    { id: "dup", questionPhrase: "annual fee", sourcePhrase: "yearly charge" }
+  ], 1).state;
+  const next = mergeReadingParaphraseState(previous, [
+    { id: "dup", questionPhrase: "annual fee", sourcePhrase: "yearly charge", note: "updated" }
+  ], 2).state;
+  const rollback = buildReadingParaphraseRollback(next, previous, 3);
+  assert.equal(rollback.kind, "delta");
+  assert.ok(rollback.previousOrder.length >= 2);
+  assert.ok(JSON.stringify(rollback).length < JSON.stringify(previous).length * 2);
 });

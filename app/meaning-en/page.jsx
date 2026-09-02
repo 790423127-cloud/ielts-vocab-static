@@ -7,6 +7,7 @@ import { speakWord, speakExample, stop } from "../lib/meaning-en/audio.mjs";
 import { createDiagnosticPayload } from "../lib/meaning-en/diagnostics.mjs";
 import StudyRangeSummary from "../components/StudyRangeSummary.jsx";
 import StableLoadingState from "../components/StableLoadingState.jsx";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
 import styles from "./meaning-en.module.css";
 
 const WORD_BANK_URL = "/data/meaning-6000.json";
@@ -162,6 +163,9 @@ export default function MeaningEnPage() {
   }, [engine, runtime, question, phase, applyNextQuestion, clearAdvanceTimer]);
 
   const handleReset = useCallback(() => {
+    if (!window.confirm("确定清空中文选英文训练进度吗？\n\n这会移除本模式的答题记录和复习安排，无法通过撤回恢复。")) {
+      return;
+    }
     advanceTokenRef.current += 1;
     clearAdvanceTimer();
     advancingRef.current = false;
@@ -192,6 +196,21 @@ export default function MeaningEnPage() {
 
   useEffect(() => {
     const onKeyDown = (event) => {
+      const action = getStudyKeyboardAction(event);
+      if (action === "word-audio" && question && (phase === "question" || phase === "result")) {
+        event.preventDefault();
+        speakWord(question.canonicalAnswer);
+        return;
+      }
+      if (action === "example-audio" && phase === "result" && question) {
+        const example = getExampleText(question);
+        if (example) {
+          event.preventDefault();
+          speakExample(example);
+        }
+        return;
+      }
+
       const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
       const isTyping = ["input", "textarea", "select"].includes(tag) || document.activeElement?.isContentEditable;
       if (isTyping) return;
@@ -212,15 +231,6 @@ export default function MeaningEnPage() {
           event.preventDefault();
           if (result?.correct) return;
           handleNext();
-        } else if (event.key === "Tab" && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
-          event.preventDefault();
-          speakWord(question.canonicalAnswer);
-        } else if (event.code === "Space") {
-          const example = getExampleText(question);
-          if (example) {
-            event.preventDefault();
-            speakExample(example);
-          }
         }
       }
     };
@@ -231,7 +241,7 @@ export default function MeaningEnPage() {
 
   if (phase === "loading") {
     return (
-      <main className={`${styles.page} system-loading-page`}>
+      <main className={`${styles.page} system-loading-page`} data-study-surface="quiz">
         <StableLoadingState
           mark="M"
           eyebrow="看中文选英文"
@@ -243,7 +253,7 @@ export default function MeaningEnPage() {
 
   if (phase === "error") {
     return (
-      <main className={`${styles.page} system-loading-page`}>
+      <main className={`${styles.page} system-loading-page`} data-study-surface="quiz">
         <StableLoadingState
           mark="M"
           eyebrow="看中文选英文"
@@ -258,7 +268,7 @@ export default function MeaningEnPage() {
 
   if (phase === "ready") {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar stats={stats} />
         <StudyRangeSummary
           mode="选择题"
@@ -279,7 +289,7 @@ export default function MeaningEnPage() {
 
   if (phase === "done") {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar stats={stats} />
         <div className={styles.centerWrap}>
           <h1 className={styles.title}>暂时没有可用题目</h1>
@@ -291,7 +301,7 @@ export default function MeaningEnPage() {
   }
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-study-surface="quiz">
       <TopBar stats={stats} question={question} />
       <StudyRangeSummary
         mode="选择题"
@@ -347,7 +357,7 @@ function TopBar({ stats, question }) {
 
 function QuestionCard({ question, onSelect }) {
   return (
-    <section className={styles.card}>
+    <section className={styles.card} data-effective-study-region>
       <div className={styles.promptBlock}>
         <div className={styles.promptLabel}>中文义项</div>
         <h1 className={styles.promptText}>{withPos(question.chinesePromptZh, question.posFamily)}</h1>
@@ -371,7 +381,7 @@ function ResultCard({ question, selected, result, onNext, onPlayWord, onPlayExam
   const exampleCn = getExampleCn(question);
 
   return (
-    <section className={styles.card}>
+    <section className={styles.card} data-effective-study-region>
       <div className={`${styles.resultBadge} ${result.correct ? styles.correct : styles.wrong}`}>
         {result.correct ? "正确" : "错误"}
       </div>

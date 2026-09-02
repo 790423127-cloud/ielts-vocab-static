@@ -196,6 +196,9 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   const spellingScript = fs.readFileSync(path.join(root, "public/assets/spelling.js"), "utf8");
   const navigationScript = fs.readFileSync(path.join(root, "public/assets/static-navigation.js"), "utf8");
   const exportRoute = fs.readFileSync(path.join(root, "app/api/export-static/route.js"), "utf8");
+  const staticHomeRuntime = fs.readFileSync(path.join(root, "app/lib/static-home-app-template.mjs"), "utf8");
+  const staticExportContract = fs.readFileSync(path.join(root, "app/lib/static-export-responsive.mjs"), "utf8");
+  const staticHomeStyle = fs.readFileSync(path.join(root, "public/assets/style.css"), "utf8");
 
   for (const source of sources) {
     assert.match(source, /data-static-primary-nav/);
@@ -215,36 +218,34 @@ test("static learning pages expose working reading, error-bank, and SRS navigati
   assert.match(spellingScript, /VALID_ENTRY_MODES\.has\(requestedMode\)/);
   assert.match(spellingSource, /id="settingsToggle"/);
   assert.match(spellingScript, /SETTINGS_PANEL_PREF_PREFIX/);
-  assert.match(spellingScript, /settingsCollapsed = saved === null \? viewport === "mobile"/);
+  assert.match(spellingScript, /settingsCollapsed = saved === null \? true/);
   assert.doesNotMatch(spellingSource, /href="\/spelling-(?:words|phrases)"/);
-  assert.match(
-    exportRoute,
-    new RegExp(`STATIC_EXPORT_VERSION = "${STATIC_RESPONSIVE_VERSION}"`)
-  );
+  assert.match(exportRoute, /STATIC_EXPORT_VERSION = STATIC_RESPONSIVE_VERSION/);
+  assert.match(staticExportContract, new RegExp(`STATIC_RESPONSIVE_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(exportRoute, /href="\.\/reading-words\.html">阅读生词本<\/a>/);
   assert.match(exportRoute, /wordId: stableId/);
   assert.match(exportRoute, /otherMeanings: Array\.isArray\(item\?\.otherMeanings\)/);
   assert.match(exportRoute, /id="topToolsToggle"/);
-  assert.match(exportRoute, /topToolsCollapsed=saved===null\?\(viewport==="mobile"\|\|viewport==="compact-desktop"\)/);
-  assert.match(exportRoute, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-  assert.match(exportRoute, /classList\.toggle\("mobile-mode",narrow&&mobileMode\)/);
+  assert.match(staticHomeRuntime, /topToolsCollapsed=saved===null\?\(viewport==="mobile"\|\|viewport==="compact-desktop"\)/);
+  assert.match(staticHomeStyle, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(staticHomeRuntime, /classList\.toggle\("mobile-mode",narrow&&mobileMode\)/);
   assert.doesNotMatch(exportRoute, /<button id="mobileModeBtn"/);
   assert.match(fs.readFileSync(path.join(root, "public/assets/spelling.css"), "utf8"), /D2\.1 responsive system/);
   assert.match(exportRoute, /static_vocab_audio_\$\{STATIC_EXPORT_VERSION\}/);
   assert.doesNotMatch(exportRoute, /function audioFor\(text\) \{\s*if \(!includeAudioFiles\) return "";/);
   assert.match(exportRoute, /if \(includeAudioFiles && !audioFiles\.has\(target\)\)/);
-  assert.match(exportRoute, /audio=new Audio\(url\)/);
-  assert.match(exportRoute, /audio\.playsInline=true/);
-  assert.doesNotMatch(exportRoute, /createMediaElementSource/);
-  assert.match(exportRoute, /function completeToolbarSelectAction\(control\)/);
-  assert.match(exportRoute, /if\(document\.activeElement===control\)control\.blur\(\)/);
-  assert.match(exportRoute, /const oldOrderedQueue=list\(\)/);
-  assert.match(exportRoute, /remapWordOrderSnapshotsAfterDeletion\(pref\.snapshots,previousWords\)/);
-  assert.match(exportRoute, /saveWordOrderSnapshot\(filter,snapshotKey,createWordOrderSnapshot\(preservedQueue,index\)\)/);
+  assert.match(staticHomeRuntime, /audio=new Audio\(url\)/);
+  assert.match(staticHomeRuntime, /audio\.playsInline=true/);
+  assert.doesNotMatch(staticHomeRuntime, /createMediaElementSource/);
+  assert.match(staticHomeRuntime, /function completeToolbarSelectAction\(control\)/);
+  assert.match(staticHomeRuntime, /if\(document\.activeElement===control\)control\.blur\(\)/);
+  assert.match(staticHomeRuntime, /const oldOrderedQueue=list\(\)/);
+  assert.match(staticHomeRuntime, /remapWordOrderSnapshotsAfterDeletion\(pref\.snapshots,previousWords\)/);
+  assert.match(staticHomeRuntime, /saveWordOrderSnapshot\(filter,snapshotKey,createWordOrderSnapshot\(preservedQueue,index\)\)/);
   assert.match(spellingScript, /audioPlayer = new Audio\(url\)/);
   assert.match(spellingScript, /audioPlayer\.playsInline = true/);
   assert.doesNotMatch(spellingScript, /createMediaElementSource/);
-  assert.match(exportRoute, /D2\.3 high-visibility study action dock/);
-  assert.match(exportRoute, /\.status\{min-width:112px;min-height:50px/);
-  assert.match(exportRoute, /\.progress\{position:relative;height:9px/);
+  assert.match(staticHomeStyle, /D2\.3 high-visibility study action dock/);
+  assert.match(staticHomeStyle, /\.status\{min-width:112px;min-height:50px/);
+  assert.match(staticHomeStyle, /\.progress\{height:9px/);
 });

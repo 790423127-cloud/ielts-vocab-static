@@ -63,105 +63,139 @@
   Array.prototype.forEach.call(document.querySelectorAll("[data-static-primary-nav]"), renderPrimaryNav);
   Array.prototype.forEach.call(document.querySelectorAll("[data-static-sidebar]"), renderSidebar);
 
+  function renderStaticStateNotice() {
+    if (document.getElementById("staticStateNotice")) return;
+    var main = document.querySelector("main");
+    if (!main) return;
+    var notice = document.createElement("p");
+    notice.id = "staticStateNotice";
+    notice.className = "static-state-notice";
+    notice.setAttribute("role", "note");
+    notice.textContent = "独立静态学习包：本页的错词、SRS 与学习进度不会自动和正式网页共享；请在同一版本内连续学习。";
+    main.insertBefore(notice, main.firstChild);
+  }
+
+  renderStaticStateNotice();
+
   /* Shared static flashcard swipe controller.
-   * Pointer Events are the primary path on current phones. Touch Events remain
-   * a fallback for older WebKit, while pan-y keeps normal vertical scrolling.
+   * Touch and non-mouse Pointer Events are both accepted so phones, pens and
+   * hybrid Windows devices follow the same path.  An explicit swipe handle may
+   * remain tappable while still allowing a horizontal gesture to start there.
    */
-  var STATIC_SWIPE_VERSION = "pointer-touch-v1";
-  var swipeCards = Array.prototype.slice.call(document.querySelectorAll("[data-static-swipe-card]"));
-  var swipeStart = null;
-  var suppressClickUntil = 0;
+  var STATIC_SWIPE_VERSION = "touch-pointer-v5";
+  var STATIC_SWIPE_CONTROL_SELECTOR = "button,a,input,textarea,select,option,label,summary,details,[contenteditable='true'],[data-static-swipe-ignore]";
+  var STATIC_SWIPE_ROLE_SELECTOR = "[role='button']";
 
-  function closestSwipeCard(target) {
-    return target && target.closest ? target.closest("[data-static-swipe-card]") : null;
-  }
-
-  function ignoresSwipe(target, card) {
+  function isInteractiveSwipeTarget(target, card) {
     if (!target || !target.closest) return false;
-    if (target.closest("[data-static-swipe-handle]")) return false;
-    var ignored = target.closest("a, input, select, textarea, label, summary, details, [contenteditable='true'], [data-static-swipe-ignore]");
-    return Boolean(ignored && card.contains(ignored));
+    var control = target.closest(STATIC_SWIPE_CONTROL_SELECTOR);
+    if (control && card.contains(control)) return true;
+    var roleButton = target.closest(STATIC_SWIPE_ROLE_SELECTOR);
+    return Boolean(
+      roleButton &&
+      card.contains(roleButton) &&
+      !roleButton.hasAttribute("data-static-swipe-handle")
+    );
   }
 
-  function beginSwipe(card, x, y, pointerId) {
-    swipeStart = {
-      card: card,
-      x: Number(x),
-      y: Number(y),
-      pointerId: pointerId,
-      at: Date.now()
-    };
-  }
+  function bindStaticCardSwipe(card, onSwipe) {
+    if (!card || typeof onSwipe !== "function" || card.dataset.staticSwipeBound === "true") return false;
+    card.dataset.staticSwipeBound = "true";
+    card.style.touchAction = "pan-y";
+    var touchStart = null;
+    var pointerStart = null;
+    var lastSwipeAt = 0;
+    var lastSwipeSource = "";
+    var lastSwipeDirection = "";
+    var suppressClickUntil = 0;
 
-  function finishSwipe(card, x, y, pointerId) {
-    var start = swipeStart;
-    swipeStart = null;
-    if (!start || start.card !== card || (start.pointerId != null && start.pointerId !== pointerId)) return false;
-    var deltaX = Number(x) - start.x;
-    var deltaY = Number(y) - start.y;
-    if (
-      Date.now() - start.at > 900 ||
-      Math.abs(deltaX) < 56 ||
-      Math.abs(deltaX) <= Math.abs(deltaY) * 1.35
-    ) return false;
-
-    var buttonId = deltaX < 0
-      ? (card.dataset.staticSwipeNext || "nextBtn")
-      : (card.dataset.staticSwipePrevious || "prevBtn");
-    var button = document.getElementById(buttonId);
-    if (!button || button.disabled) return false;
-    suppressClickUntil = 0;
-    button.click();
-    suppressClickUntil = Date.now() + 450;
-    return true;
-  }
-
-  function cancelSwipe() {
-    swipeStart = null;
-  }
-
-  if (swipeCards.length) {
-    swipeCards.forEach(function (card) {
-      card.style.touchAction = "pan-y";
-    });
-
-    if ("PointerEvent" in window) {
-      document.addEventListener("pointerdown", function (event) {
-        if (event.pointerType === "mouse" || !event.isPrimary) return;
-        var card = closestSwipeCard(event.target);
-        if (!card || ignoresSwipe(event.target, card)) return;
-        beginSwipe(card, event.clientX, event.clientY, event.pointerId);
-      }, true);
-      document.addEventListener("pointerup", function (event) {
-        var card = closestSwipeCard(event.target) || (swipeStart && swipeStart.card);
-        if (!card) return cancelSwipe();
-        if (finishSwipe(card, event.clientX, event.clientY, event.pointerId)) event.preventDefault();
-      }, true);
-      document.addEventListener("pointercancel", cancelSwipe, true);
-    } else {
-      document.addEventListener("touchstart", function (event) {
-        if (!event.touches || event.touches.length !== 1) return;
-        var card = closestSwipeCard(event.target);
-        if (!card || ignoresSwipe(event.target, card)) return;
-        var touch = event.touches[0];
-        beginSwipe(card, touch.clientX, touch.clientY, touch.identifier);
-      }, { capture: true, passive: true });
-      document.addEventListener("touchend", function (event) {
-        if (!event.changedTouches || event.changedTouches.length !== 1) return cancelSwipe();
-        var touch = event.changedTouches[0];
-        var card = closestSwipeCard(event.target) || (swipeStart && swipeStart.card);
-        if (!card) return cancelSwipe();
-        if (finishSwipe(card, touch.clientX, touch.clientY, touch.identifier)) event.preventDefault();
-      }, { capture: true, passive: false });
-      document.addEventListener("touchcancel", cancelSwipe, true);
+    function resetTouchSwipe() {
+      touchStart = null;
     }
 
-    document.addEventListener("click", function (event) {
-      if (Date.now() >= suppressClickUntil || !closestSwipeCard(event.target)) return;
+    function finishSwipe(start, endX, endY, duration, event, source) {
+      if (!start) return false;
+      var now = Date.now();
+      var deltaX = Number(endX) - start.x;
+      var deltaY = Number(endY) - start.y;
+      var direction = deltaX < 0 ? "next" : "previous";
+      if (
+        lastSwipeSource &&
+        lastSwipeSource !== source &&
+        lastSwipeDirection === direction &&
+        now - lastSwipeAt < 180
+      ) return false;
+      if (
+        duration > 900 ||
+        Math.abs(deltaX) < 56 ||
+        Math.abs(deltaX) <= Math.abs(deltaY) * 1.35
+      ) return false;
+      if (event && event.cancelable) event.preventDefault();
+      onSwipe(direction);
+      lastSwipeAt = now;
+      lastSwipeSource = source;
+      lastSwipeDirection = direction;
+      suppressClickUntil = now + 450;
+      return true;
+    }
+
+    card.addEventListener("touchstart", function (event) {
+      if (!event.touches || event.touches.length !== 1 || isInteractiveSwipeTarget(event.target, card)) {
+        resetTouchSwipe();
+        return;
+      }
+      var touch = event.touches[0];
+      touchStart = { x: touch.clientX, y: touch.clientY, at: Date.now() };
+    }, { passive: true });
+    card.addEventListener("touchend", function (event) {
+      var start = touchStart;
+      resetTouchSwipe();
+      if (!start || !event.changedTouches || event.changedTouches.length !== 1) return;
+      var touch = event.changedTouches[0];
+      finishSwipe(start, touch.clientX, touch.clientY, Date.now() - start.at, event, "touch");
+    }, { passive: false });
+    card.addEventListener("touchcancel", resetTouchSwipe, { passive: true });
+
+    if ("PointerEvent" in window) {
+      card.addEventListener("pointerdown", function (event) {
+        if (!event.isPrimary || event.pointerType === "mouse" || isInteractiveSwipeTarget(event.target, card)) {
+          pointerStart = null;
+          return;
+        }
+        pointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY, at: Date.now() };
+      }, { passive: true });
+      card.addEventListener("pointerup", function (event) {
+        var start = pointerStart;
+        pointerStart = null;
+        if (!start || start.id !== event.pointerId) return;
+        finishSwipe(start, event.clientX, event.clientY, Date.now() - start.at, event, "pointer");
+      }, { passive: false });
+      card.addEventListener("pointercancel", function () {
+        pointerStart = null;
+      }, { passive: true });
+    }
+    card.addEventListener("click", function (event) {
+      if (Date.now() >= suppressClickUntil) return;
       event.preventDefault();
       event.stopImmediatePropagation();
     }, true);
+    return true;
   }
+
+  window.StaticCardSwipe = {
+    version: STATIC_SWIPE_VERSION,
+    bind: bindStaticCardSwipe
+  };
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-static-swipe-card]"), function (card) {
+    bindStaticCardSwipe(card, function (direction) {
+      var buttonId = direction === "next"
+        ? (card.dataset.staticSwipeNext || "nextBtn")
+        : (card.dataset.staticSwipePrevious || "prevBtn");
+      var button = document.getElementById(buttonId);
+      if (button && !button.disabled) button.click();
+    });
+  });
 
   window.__IELTS_STATIC_SWIPE_VERSION__ = STATIC_SWIPE_VERSION;
 }());

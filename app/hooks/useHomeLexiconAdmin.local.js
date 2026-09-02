@@ -18,6 +18,7 @@ import {
 } from "../lib/vocab/page-word-helpers.mjs";
 import { buildLocalChangeLog } from "../lib/vocab/local-change-log.mjs";
 import { buildLexiconDeletionIntent } from "../lib/vocab/lexicon-delete-intent.mjs";
+import { confirmMainLexiconDeletionOnce } from "../lib/vocab/main-delete-confirmation.mjs";
 import { filterKey, isIdictationFlashFilter } from "../lib/vocab/word-flashcard-study-pool.mjs";
 
 
@@ -29,7 +30,7 @@ export function createLocalOps(ctx) {
     setEditOpen, setEditDraft, editDraft,
     isExternalIdictationItem,
     persistWordsImmediately, resetWordStudySessionState,
-    latestStateRef, entryPositionsRef, persistWordFlashSessionNow
+    latestStateRef, mainDeleteConfirmationRef, entryPositionsRef, persistWordFlashSessionNow
   } = ctx;
 
   function recordLocalChange(actionName, beforeWords, afterWords) {
@@ -196,10 +197,12 @@ export function createLocalOps(ctx) {
       if (!confirmed) return false;
     }
 
+    // Register an authorized deletion write before setWords can schedule its
+    // generic autosave, so the server never sees an unconfirmed removal.
+    persistWordsImmediately(nextWords, deletionIntent ? { deletionIntent } : undefined);
     recordLocalChange(actionName, words, nextWords);
     setWords(nextWords);
     if (studyOrderChanged) resetWordStudySessionState();
-    persistWordsImmediately(nextWords, deletionIntent ? { deletionIntent } : undefined);
     setDuplicateInfo(message);
     setToast(`${message}｜已生成修改记录，可撤回`);
     return true;
@@ -602,22 +605,13 @@ export function createLocalOps(ctx) {
 
     const sameCount = sourceWords.filter((word) => normalizeWord(word.word) === targetKey).length;
 
-    // Burst delete: after one confirmed delete, skip confirm for a short window
-    // so D/Delete 连点 only pays the dialog cost once.
-    const now = Date.now();
-    const quietUntil = Number(latestStateRef.current?.deleteConfirmQuietUntil) || 0;
-    const skipConfirm = now < quietUntil;
-    if (!skipConfirm) {
-      const ok = confirm(
-        `确定删除这个单词？\n\n${currentWord.word}\n\n` +
-        `将从本地总词库删除 ${sameCount} 条同名单词记录。\n` +
-        `删除后会保存；8 秒内连点删除不再弹窗。`
-      );
-      if (!ok) return null;
-    }
-    if (latestStateRef.current) {
-      latestStateRef.current.deleteConfirmQuietUntil = now + 8000;
-    }
+    const ok = confirmMainLexiconDeletionOnce(
+      mainDeleteConfirmationRef,
+      `确定删除这个单词？\n\n${currentWord.word}\n\n` +
+      `将从本地总词库删除 ${sameCount} 条同名单词记录。\n` +
+      "删除前会生成可恢复备份；本次打开页面后续删除不再重复确认。"
+    );
+    if (!ok) return null;
 
     const canUsePreparedDeletion = preparedDeletion?.targetKey === targetKey
       && Array.isArray(preparedDeletion.words)
@@ -629,21 +623,14 @@ export function createLocalOps(ctx) {
       ? preparedDeletion.index
       : Math.min(targetIndex, Math.max(0, next.length - 1));
 
+    // Start the write before React publishes the new snapshot. The following
+    // render's generic autosave then reuses this exact, confirmed request.
+    void persistConfirmedChange(next, sourceWords, "delete-current-word");
     recordLocalChange("删除当前单词", sourceWords, next);
     setWords(next);
     setIndex(nextIndex);
-    // Persist off the hot path so the next card can paint before disk/API work.
-    const persistWords = next;
-    const persistBefore = sourceWords;
-    queueMicrotask(() => {
-      persistConfirmedChange(persistWords, persistBefore, "delete-current-word");
-    });
 
-    setToast(
-      skipConfirm
-        ? `已删除：${currentWord.word}`
-        : `已彻底删除：${currentWord.word}（${sameCount} 条）｜8 秒内连点可免确认`
-    );
+    setToast(`已删除：${currentWord.word}（${sameCount} 条）`);
     return {
       ...(canUsePreparedDeletion ? preparedDeletion : {}),
       deleted: true,

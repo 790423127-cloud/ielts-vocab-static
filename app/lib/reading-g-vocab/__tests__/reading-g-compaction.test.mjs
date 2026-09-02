@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   applyReadingGCompaction,
-  buildReadingGCompactionPlan
+  buildReadingGCompactionPlan,
+  findReadingGRedundantPluralAliases
 } from "../compaction.mjs";
 import { buildItemKeyIndex } from "../migration.mjs";
 
@@ -165,4 +166,57 @@ test("deleting a compacted canonical suppresses its aliases on rebuild", () => {
   const result = applyReadingGCompaction(items, plan);
   assert.equal(result.items.length, 0);
   assert.equal(result.suppressedKeys.has("played"), true);
+});
+
+test("an imported noun plural without another meaning is merged under its singular form", () => {
+  const items = [
+    word("rack", "架子；搁物架", { id: "base-rack" }),
+    word("racks", "racks（相关词形）：架子；搁物架", {
+      id: "old-racks",
+      wordFamily: [{ word: "rack", relation: "excel-source-headword" }],
+      layers: ["questionBankActive"]
+    })
+  ];
+
+  assert.deepEqual(findReadingGRedundantPluralAliases(items), [{
+    canonicalKey: "rack",
+    canonicalId: "base-rack",
+    canonicalWord: "rack",
+    aliasKey: "racks",
+    aliasId: "old-racks",
+    aliasWord: "racks",
+    relationType: "form"
+  }]);
+
+  const plan = buildReadingGCompactionPlan(items);
+  assert.equal(plan.rules.length, 1);
+  assert.equal(plan.rules[0].canonicalKey, "rack");
+  assert.deepEqual(plan.rules[0].aliases, [{
+    key: "racks",
+    id: "old-racks",
+    word: "racks",
+    relationType: "form"
+  }]);
+
+  const result = applyReadingGCompaction(items, plan);
+  assert.equal(result.items.length, 1);
+  assert.equal(result.items[0].word, "rack");
+  const racksForm = result.items[0].forms.find((entry) => entry.word === "racks");
+  assert.equal(racksForm?.type, "plural");
+  assert.equal(racksForm?.meaning, "架子；搁物架");
+  assert.equal(result.items[0].mergedAliases.some((entry) => entry.id === "old-racks"), true);
+  assert.deepEqual(result.items[0].layers.sort(), ["priority1500", "questionBankActive"]);
+});
+
+test("a plural with an independent meaning remains its own flashcard", () => {
+  const plural = {
+    ...word("customs", "习俗；惯例", {
+      wordFamily: [{ word: "custom", relation: "excel-source-headword" }]
+    }),
+    otherMeanings: [{ pos: "noun", meaningZh: "海关" }]
+  };
+  const items = [word("custom", "习俗；惯例"), plural];
+
+  assert.deepEqual(findReadingGRedundantPluralAliases(items), []);
+  assert.equal(buildReadingGCompactionPlan(items).rules.length, 0);
 });

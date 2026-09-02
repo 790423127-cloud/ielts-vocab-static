@@ -43,9 +43,12 @@ export function buildWordUserStateMap(words = []) {
 }
 
 export function applyWordUserStateMap(words = [], state = {}) {
-  return (Array.isArray(words) ? words : []).map((entry) => {
+  const list = Array.isArray(words) ? words : [];
+  if (!state || !Object.keys(state).length) return list;
+
+  return list.map((entry) => {
     const record = state?.[wordIdentity(entry)];
-    return record ? { ...entry, ...record } : { ...entry };
+    return record ? { ...entry, ...record } : entry;
   });
 }
 
@@ -81,19 +84,25 @@ export function mergeWordContentWithUserState(
   cachedWords = [],
   { includePersonalSupplements = true, supplementKinds = null } = {}
 ) {
+  const freshList = Array.isArray(freshWords) ? freshWords : [];
+  const cachedList = Array.isArray(cachedWords) ? cachedWords : [];
+  if (!cachedList.length) return freshList;
+
   const cachedById = new Map();
-  for (const entry of Array.isArray(cachedWords) ? cachedWords : []) {
+  for (const entry of cachedList) {
     const key = wordIdentity(entry);
     if (key) cachedById.set(key, entry);
   }
 
-  const mergedWords = (Array.isArray(freshWords) ? freshWords : []).map((fresh) => {
+  const mergedWords = freshList.map((fresh) => {
     const cached = cachedById.get(wordIdentity(fresh));
-    if (!cached) return { ...fresh };
+    if (!cached) return fresh;
 
-    const merged = { ...fresh };
+    let merged = fresh;
     for (const field of USER_STATE_FIELDS) {
-      if (Object.prototype.hasOwnProperty.call(cached, field)) merged[field] = cached[field];
+      if (!Object.prototype.hasOwnProperty.call(cached, field)) continue;
+      if (merged === fresh) merged = { ...fresh };
+      merged[field] = cached[field];
     }
     return merged;
   });
@@ -102,7 +111,7 @@ export function mergeWordContentWithUserState(
 
   const allowedKinds = Array.isArray(supplementKinds) ? new Set(supplementKinds) : null;
   const freshIds = new Set(mergedWords.map(wordIdentity).filter(Boolean));
-  for (const cached of Array.isArray(cachedWords) ? cachedWords : []) {
+  for (const cached of cachedList) {
     const key = wordIdentity(cached);
     const supplementKind =
       cached?.addedFromReadingWords === true || cached?.source === "personal-reading"
@@ -126,9 +135,10 @@ export function mergeWordContentWithUserState(
 
 export function formatVocabCountLabel(status, count) {
   if (status === "loading") return "加载中";
-  if ((status === "online" || status === "offline") && Number.isFinite(Number(count))) {
+  if ((status === "online" || status === "offline") && Number(count) > 0) {
     return `${Number(count).toLocaleString("en-US")} 词`;
   }
+  if (status === "online" || status === "offline") return "准备中";
   return "词库不可用";
 }
 

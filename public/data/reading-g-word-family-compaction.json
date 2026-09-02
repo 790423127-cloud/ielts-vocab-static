@@ -1,5 +1,5 @@
 {
-  "version": "reading-g-word-only-inflection-review-v2-20260804",
+  "version": "reading-g-unlinked-plural-lemma-repair-v2-20260810",
   "generatedAt": "2026-08-05T15:28:22.344Z",
   "scope": "reading-g-direct-inflections-only-word-derived-no-family-compaction",
   "sourceWordCount": 8110,
@@ -14,6 +14,19 @@
           "key": "abandoning",
           "id": "rg_word_abandoning",
           "word": "abandoning",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "ability",
+      "canonicalId": "rg_word_ability",
+      "canonicalWord": "ability",
+      "aliases": [
+        {
+          "key": "abilities",
+          "id": "rg_word_abilities",
+          "word": "abilities",
           "relationType": "form"
         }
       ]
@@ -116,6 +129,19 @@
       ]
     },
     {
+      "canonicalKey": "accountant",
+      "canonicalId": "rg_word_accountant",
+      "canonicalWord": "accountant",
+      "aliases": [
+        {
+          "key": "accountants",
+          "id": "rg_word_accountants",
+          "word": "accountants",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "accumulate",
       "canonicalId": "rg_word_accumulate",
       "canonicalWord": "accumulate",
@@ -167,6 +193,19 @@
       ]
     },
     {
+      "canonicalKey": "acre",
+      "canonicalId": "rg_word_acre",
+      "canonicalWord": "acre",
+      "aliases": [
+        {
+          "key": "acres",
+          "id": "rg_word_acres",
+          "word": "acres",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "act",
       "canonicalId": "rg_word_act",
       "canonicalWord": "act",
@@ -199,6 +238,19 @@
       ]
     },
     {
+      "canonicalKey": "activate",
+      "canonicalId": "rg_word_activate",
+      "canonicalWord": "activate",
+      "aliases": [
+        {
+          "key": "activated",
+          "id": "rg_word_activated",
+          "word": "activated",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "activity",
       "canonicalId": "rg_word_activity",
       "canonicalWord": "activity",
@@ -220,6 +272,19 @@
           "key": "actors",
           "id": "rg_word_actors",
           "word": "actors",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "address",
+      "canonicalId": "rg_word_address",
+      "canonicalWord": "address",
+      "aliases": [
+        {
+          "key": "addressing",
+          "id": "rg_word_addressing",
+          "word": "addressing",
           "relationType": "form"
         }
       ]
@@ -270,6 +335,19 @@
       ]
     },
     {
+      "canonicalKey": "adult",
+      "canonicalId": "rg_word_adult",
+      "canonicalWord": "adult",
+      "aliases": [
+        {
+          "key": "adults",
+          "id": "rg_word_adults",
+          "word": "adults",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "advance",
       "canonicalId": "rg_word_advance",
       "canonicalWord": "advance",
@@ -296,6 +374,19 @@
       ]
     },
     {
+      "canonicalKey": "advert",
+      "canonicalId": "rg_word_advert",
+      "canonicalWord": "advert",
+      "aliases": [
+        {
+          "key": "adverts",
+          "id": "rg_word_adverts",
+          "word": "adverts",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "advise",
       "canonicalId": "rg_word_advise",
       "canonicalWord": "advise",
@@ -304,6 +395,32 @@
           "key": "advises",
           "id": "rg_word_advises",
           "word": "advises",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "advocate",
+      "canonicalId": "rg_word_advocate",
+      "canonicalWord": "advocate",
+      "aliases": [
+        {
+          "key": "advocates",
+          "id": "rg_word_advocates",
+          "word": "advocates",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "affair",
+      "canonicalId": "rg_word_affair",
+      "canonicalWord": "affair",
+      "aliases": [
+        {
+          "key": "affairs",
+          "id": "rg_word_affairs",
+          "word": "affairs",
           "relationType": "form"
         }
       ]
@@ -344,9 +461,7 @@
           "word": "ages",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "agency",
@@ -501,6 +616,12 @@
       "canonicalWord": "alter",
       "aliases": [
         {
+          "key": "altered",
+          "id": "rg_word_altered",
+          "word": "altered",
+          "relationType": "form"
+        },
+        {
           "key": "altering",
           "id": "rg_word_altering",
           "word": "altering",
@@ -522,6 +643,19 @@
       ]
     },
     {
+      "canonicalKey": "ambition",
+      "canonicalId": "rg_word_ambition",
+      "canonicalWord": "ambition",
+      "aliases": [
+        {
+          "key": "ambitions",
+          "id": "rg_word_ambitions",
+          "word": "ambitions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "amend",
       "canonicalId": "rg_word_amend",
       "canonicalWord": "amend",
@@ -530,6 +664,19 @@
           "key": "amended",
           "id": "rg_word_amended",
           "word": "amended",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "american",
+      "canonicalId": "rg_word_american",
+      "canonicalWord": "american",
+      "aliases": [
+        {
+          "key": "americans",
+          "id": "rg_word_americans",
+          "word": "americans",
           "relationType": "form"
         }
       ]
@@ -613,6 +760,19 @@
       ]
     },
     {
+      "canonicalKey": "ankle",
+      "canonicalId": "rg_word_ankle",
+      "canonicalWord": "ankle",
+      "aliases": [
+        {
+          "key": "ankles",
+          "id": "rg_word_ankles",
+          "word": "ankles",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "announcement",
       "canonicalId": "rg_word_announcement",
       "canonicalWord": "announcement",
@@ -621,6 +781,19 @@
           "key": "announcements",
           "id": "rg_word_announcements",
           "word": "announcements",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "ape",
+      "canonicalId": "rg_word_ape",
+      "canonicalWord": "ape",
+      "aliases": [
+        {
+          "key": "apes",
+          "id": "rg_word_apes",
+          "word": "apes",
           "relationType": "form"
         }
       ]
@@ -651,6 +824,19 @@
       ]
     },
     {
+      "canonicalKey": "appliance",
+      "canonicalId": "rg_word_appliance",
+      "canonicalWord": "appliance",
+      "aliases": [
+        {
+          "key": "appliances",
+          "id": "rg_word_appliances",
+          "word": "appliances",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "applicant",
       "canonicalId": "rg_word_applicant",
       "canonicalWord": "applicant",
@@ -665,6 +851,19 @@
           "key": "applicants",
           "id": "rg_word_applicants",
           "word": "applicants",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "application",
+      "canonicalId": "rg_word_application",
+      "canonicalWord": "application",
+      "aliases": [
+        {
+          "key": "applications",
+          "id": "rg_word_applications",
+          "word": "applications",
           "relationType": "form"
         }
       ]
@@ -879,9 +1078,20 @@
           "word": "arms",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "arrangement",
+      "canonicalId": "rg_word_arrangement",
+      "canonicalWord": "arrangement",
+      "aliases": [
+        {
+          "key": "arrangements",
+          "id": "rg_word_arrangements",
+          "word": "arrangements",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "arrival",
@@ -932,9 +1142,20 @@
           "word": "arts",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "artefact",
+      "canonicalId": "rg_word_artefact",
+      "canonicalWord": "artefact",
+      "aliases": [
+        {
+          "key": "artefacts",
+          "id": "rg_word_artefacts",
+          "word": "artefacts",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "article",
@@ -986,9 +1207,7 @@
           "word": "asking",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "aspect",
@@ -1031,6 +1250,32 @@
           "key": "assessing",
           "id": "rg_word_assessing",
           "word": "assessing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "assessment",
+      "canonicalId": "rg_word_assessment",
+      "canonicalWord": "assessment",
+      "aliases": [
+        {
+          "key": "assessments",
+          "id": "rg_word_assessments",
+          "word": "assessments",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "assignment",
+      "canonicalId": "rg_word_assignment",
+      "canonicalWord": "assignment",
+      "aliases": [
+        {
+          "key": "assignments",
+          "id": "rg_word_assignments",
+          "word": "assignments",
           "relationType": "form"
         }
       ]
@@ -1119,9 +1364,21 @@
       "canonicalWord": "attack",
       "aliases": [
         {
+          "key": "attacked",
+          "id": "rg_word_attacked",
+          "word": "attacked",
+          "relationType": "form"
+        },
+        {
           "key": "attacking",
           "id": "rg_word_attacking",
           "word": "attacking",
+          "relationType": "form"
+        },
+        {
+          "key": "attacks",
+          "id": "rg_word_attacks",
+          "word": "attacks",
           "relationType": "form"
         }
       ]
@@ -1148,6 +1405,19 @@
           "key": "attending",
           "id": "rg_word_attending",
           "word": "attending",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "attendee",
+      "canonicalId": "rg_word_attendee",
+      "canonicalWord": "attendee",
+      "aliases": [
+        {
+          "key": "attendees",
+          "id": "rg_word_attendees",
+          "word": "attendees",
           "relationType": "form"
         }
       ]
@@ -1198,6 +1468,32 @@
       ]
     },
     {
+      "canonicalKey": "audio-visual",
+      "canonicalId": "rg_word_audio_visual",
+      "canonicalWord": "audio-visual",
+      "aliases": [
+        {
+          "key": "audiovisual",
+          "id": "rg_word_audiovisual",
+          "word": "audiovisual",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "audition",
+      "canonicalId": "rg_word_audition",
+      "canonicalWord": "audition",
+      "aliases": [
+        {
+          "key": "auditions",
+          "id": "rg_word_auditions",
+          "word": "auditions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "author",
       "canonicalId": "rg_word_author",
       "canonicalWord": "author",
@@ -1219,6 +1515,19 @@
           "key": "authorised",
           "id": "rg_word_authorised",
           "word": "authorised",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "automaton",
+      "canonicalId": "rg_word_automaton",
+      "canonicalWord": "automaton",
+      "aliases": [
+        {
+          "key": "automata",
+          "id": "rg_word_automata",
+          "word": "automata",
           "relationType": "form"
         }
       ]
@@ -1275,6 +1584,19 @@
       ]
     },
     {
+      "canonicalKey": "bacterium",
+      "canonicalId": "rg_word_bacterium",
+      "canonicalWord": "bacterium",
+      "aliases": [
+        {
+          "key": "bacteria",
+          "id": "rg_word_bacteria",
+          "word": "bacteria",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "badge",
       "canonicalId": "rg_word_badge",
       "canonicalWord": "badge",
@@ -1298,9 +1620,7 @@
           "word": "bags",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "balance",
@@ -1311,6 +1631,12 @@
           "key": "balances",
           "id": "rg_word_balances",
           "word": "balances",
+          "relationType": "form"
+        },
+        {
+          "key": "balancing",
+          "id": "rg_word_balancing",
+          "word": "balancing",
           "relationType": "form"
         }
       ]
@@ -1326,9 +1652,7 @@
           "word": "banned",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "band",
@@ -1448,6 +1772,19 @@
       ]
     },
     {
+      "canonicalKey": "become",
+      "canonicalId": "rg_word_become",
+      "canonicalWord": "become",
+      "aliases": [
+        {
+          "key": "becomes",
+          "id": "rg_word_becomes",
+          "word": "becomes",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "bedtime",
       "canonicalId": "rg_word_bedtime",
       "canonicalWord": "bedtime",
@@ -1471,9 +1808,7 @@
           "word": "bees",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "begin",
@@ -1653,9 +1988,7 @@
           "word": "bigger",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "bike",
@@ -1668,9 +2001,7 @@
           "word": "bikes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "bill",
@@ -1696,9 +2027,7 @@
           "word": "bins",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "biologist",
@@ -1724,9 +2053,7 @@
           "word": "birds",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "bit",
@@ -1817,9 +2144,7 @@
           "word": "boats",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "body",
@@ -1830,6 +2155,19 @@
           "key": "bodies",
           "id": "rg_word_bodies",
           "word": "bodies",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "bond",
+      "canonicalId": "rg_word_bond",
+      "canonicalWord": "bond",
+      "aliases": [
+        {
+          "key": "bonds",
+          "id": "rg_word_bonds",
+          "word": "bonds",
           "relationType": "form"
         }
       ]
@@ -1856,6 +2194,19 @@
           "key": "bonuses",
           "id": "rg_word_bonuses",
           "word": "bonuses",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "booking",
+      "canonicalId": "rg_word_booking",
+      "canonicalWord": "booking",
+      "aliases": [
+        {
+          "key": "bookings",
+          "id": "rg_word_bookings",
+          "word": "bookings",
           "relationType": "form"
         }
       ]
@@ -2003,6 +2354,19 @@
       ]
     },
     {
+      "canonicalKey": "bring",
+      "canonicalId": "rg_word_bring",
+      "canonicalWord": "bring",
+      "aliases": [
+        {
+          "key": "brings",
+          "id": "rg_word_brings",
+          "word": "brings",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "broad",
       "canonicalId": "rg_word_broad",
       "canonicalWord": "broad",
@@ -2037,6 +2401,19 @@
           "key": "buckets",
           "id": "rg_word_buckets",
           "word": "buckets",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "build",
+      "canonicalId": "rg_word_build",
+      "canonicalWord": "build",
+      "aliases": [
+        {
+          "key": "built",
+          "id": "rg_word_built",
+          "word": "built",
           "relationType": "form"
         }
       ]
@@ -2143,9 +2520,7 @@
           "word": "buses",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "business",
@@ -2156,6 +2531,12 @@
           "key": "business's",
           "id": "rg_word_business_s",
           "word": "business's",
+          "relationType": "form"
+        },
+        {
+          "key": "businesses",
+          "id": "rg_word_businesses",
+          "word": "businesses",
           "relationType": "form"
         }
       ]
@@ -2169,6 +2550,19 @@
           "key": "busier",
           "id": "rg_word_busier",
           "word": "busier",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "butcher",
+      "canonicalId": "rg_word_butcher",
+      "canonicalWord": "butcher",
+      "aliases": [
+        {
+          "key": "butchers",
+          "id": "rg_word_butchers",
+          "word": "butchers",
           "relationType": "form"
         }
       ]
@@ -2226,6 +2620,19 @@
       ]
     },
     {
+      "canonicalKey": "cake",
+      "canonicalId": "rg_word_cake",
+      "canonicalWord": "cake",
+      "aliases": [
+        {
+          "key": "cakes",
+          "id": "rg_word_cakes",
+          "word": "cakes",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "calculate",
       "canonicalId": "rg_word_calculate",
       "canonicalWord": "calculate",
@@ -2249,9 +2656,20 @@
           "word": "called",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "calorie",
+      "canonicalId": "rg_word_calorie",
+      "canonicalWord": "calorie",
+      "aliases": [
+        {
+          "key": "calories",
+          "id": "rg_word_calories",
+          "word": "calories",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "camera",
@@ -2275,6 +2693,19 @@
           "key": "camps",
           "id": "rg_word_camps",
           "word": "camps",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "campsite",
+      "canonicalId": "rg_word_campsite",
+      "canonicalWord": "campsite",
+      "aliases": [
+        {
+          "key": "campsites",
+          "id": "rg_word_campsites",
+          "word": "campsites",
           "relationType": "form"
         }
       ]
@@ -2319,6 +2750,32 @@
       ]
     },
     {
+      "canonicalKey": "canoer",
+      "canonicalId": "rg_word_canoer",
+      "canonicalWord": "canoer",
+      "aliases": [
+        {
+          "key": "canoers",
+          "id": "rg_word_canoers",
+          "word": "canoers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "canton",
+      "canonicalId": "rg_word_canton",
+      "canonicalWord": "canton",
+      "aliases": [
+        {
+          "key": "cantons",
+          "id": "rg_word_cantons",
+          "word": "cantons",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "capability",
       "canonicalId": "rg_word_capability",
       "canonicalWord": "capability",
@@ -2355,9 +2812,7 @@
           "word": "cars",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "card",
@@ -2370,9 +2825,7 @@
           "word": "cards",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "carer",
@@ -2383,6 +2836,19 @@
           "key": "carer's",
           "id": "rg_word_carer_s",
           "word": "carer's",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "caretaker",
+      "canonicalId": "rg_word_caretaker",
+      "canonicalWord": "caretaker",
+      "aliases": [
+        {
+          "key": "caretakers",
+          "id": "rg_word_caretakers",
+          "word": "caretakers",
           "relationType": "form"
         }
       ]
@@ -2409,6 +2875,25 @@
           "key": "carriages",
           "id": "rg_word_carriages",
           "word": "carriages",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "carry",
+      "canonicalId": "rg_word_carry",
+      "canonicalWord": "carry",
+      "aliases": [
+        {
+          "key": "carried",
+          "id": "rg_word_carried",
+          "word": "carried",
+          "relationType": "form"
+        },
+        {
+          "key": "carrying",
+          "id": "rg_word_carrying",
+          "word": "carrying",
           "relationType": "form"
         }
       ]
@@ -2505,7 +2990,7 @@
     },
     {
       "canonicalKey": "cause",
-      "canonicalId": "rg_word_cause",
+      "canonicalId": "rg_logic_582696_79014139",
       "canonicalWord": "cause",
       "aliases": [
         {
@@ -2526,9 +3011,7 @@
           "word": "causing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "cave",
@@ -2583,6 +3066,19 @@
       ]
     },
     {
+      "canonicalKey": "ceremony",
+      "canonicalId": "rg_word_ceremony",
+      "canonicalWord": "ceremony",
+      "aliases": [
+        {
+          "key": "ceremonies",
+          "id": "rg_word_ceremonies",
+          "word": "ceremonies",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "certificate",
       "canonicalId": "rg_word_certificate",
       "canonicalWord": "certificate",
@@ -2603,7 +3099,7 @@
         {
           "key": "chains",
           "id": "rg_word_chains",
-          "word": "chains",
+          "word": "Chains",
           "relationType": "form"
         }
       ]
@@ -2687,10 +3183,29 @@
       ]
     },
     {
+      "canonicalKey": "characteristic",
+      "canonicalId": "rg_word_characteristic",
+      "canonicalWord": "characteristic",
+      "aliases": [
+        {
+          "key": "characteristics",
+          "id": "rg_word_characteristics",
+          "word": "characteristics",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "charge",
       "canonicalId": "rg_word_charge",
       "canonicalWord": "charge",
       "aliases": [
+        {
+          "key": "charged",
+          "id": "rg_word_charged",
+          "word": "charged",
+          "relationType": "form"
+        },
         {
           "key": "charges",
           "id": "rg_word_charges",
@@ -2710,15 +3225,19 @@
           "word": "chatting",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "cheap",
       "canonicalId": "rg_word_cheap",
       "canonicalWord": "cheap",
       "aliases": [
+        {
+          "key": "cheaper",
+          "id": "rg_word_cheaper",
+          "word": "cheaper",
+          "relationType": "form"
+        },
         {
           "key": "cheapest",
           "id": "rg_word_cheapest",
@@ -2750,9 +3269,33 @@
           "word": "checks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "chef",
+      "canonicalId": "rg_word_chef",
+      "canonicalWord": "chef",
+      "aliases": [
+        {
+          "key": "chefs",
+          "id": "rg_word_chefs",
+          "word": "chefs",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "chemical",
+      "canonicalId": "rg_word_chemical",
+      "canonicalWord": "chemical",
+      "aliases": [
+        {
+          "key": "chemicals",
+          "id": "rg_word_chemicals",
+          "word": "chemicals",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "cheque",
@@ -2769,7 +3312,7 @@
     },
     {
       "canonicalKey": "child",
-      "canonicalId": "rg_word_child",
+      "canonicalId": "rg_word_takingchildren",
       "canonicalWord": "child",
       "aliases": [
         {
@@ -2778,9 +3321,7 @@
           "word": "children",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "chimpanzee",
@@ -2931,6 +3472,19 @@
       ]
     },
     {
+      "canonicalKey": "classmate",
+      "canonicalId": "rg_word_classmate",
+      "canonicalWord": "classmate",
+      "aliases": [
+        {
+          "key": "classmates",
+          "id": "rg_word_classmates",
+          "word": "classmates",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "clear",
       "canonicalId": "rg_word_clear",
       "canonicalWord": "clear",
@@ -3018,6 +3572,18 @@
           "id": "rg_word_closed",
           "word": "closed",
           "relationType": "form"
+        },
+        {
+          "key": "closer",
+          "id": "rg_word_closer",
+          "word": "closer",
+          "relationType": "form"
+        },
+        {
+          "key": "closest",
+          "id": "rg_word_closest",
+          "word": "closest",
+          "relationType": "form"
         }
       ]
     },
@@ -3035,6 +3601,19 @@
       ]
     },
     {
+      "canonicalKey": "cloth",
+      "canonicalId": "rg_word_cloth",
+      "canonicalWord": "cloth",
+      "aliases": [
+        {
+          "key": "cloths",
+          "id": "rg_word_cloths",
+          "word": "cloths",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "club",
       "canonicalId": "rg_word_club",
       "canonicalWord": "club",
@@ -3045,9 +3624,7 @@
           "word": "clubs",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "coach",
@@ -3076,6 +3653,19 @@
       ]
     },
     {
+      "canonicalKey": "coin",
+      "canonicalId": "rg_word_coin",
+      "canonicalWord": "coin",
+      "aliases": [
+        {
+          "key": "coins",
+          "id": "rg_word_coins",
+          "word": "coins",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "cold",
       "canonicalId": "rg_word_cold",
       "canonicalWord": "cold",
@@ -3086,9 +3676,7 @@
           "word": "coldest",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "collapse",
@@ -3210,9 +3798,7 @@
           "word": "coming",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "commence",
@@ -3241,6 +3827,19 @@
       ]
     },
     {
+      "canonicalKey": "comment",
+      "canonicalId": "rg_word_comment",
+      "canonicalWord": "comment",
+      "aliases": [
+        {
+          "key": "comments",
+          "id": "rg_word_comments",
+          "word": "comments",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "commit",
       "canonicalId": "rg_word_commit",
       "canonicalWord": "commit",
@@ -3254,6 +3853,19 @@
       ]
     },
     {
+      "canonicalKey": "commitment",
+      "canonicalId": "rg_word_commitment",
+      "canonicalWord": "commitment",
+      "aliases": [
+        {
+          "key": "commitments",
+          "id": "rg_word_commitments",
+          "word": "commitments",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "community",
       "canonicalId": "rg_word_community",
       "canonicalWord": "community",
@@ -3262,6 +3874,19 @@
           "key": "communities",
           "id": "rg_word_communities",
           "word": "communities",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "companion",
+      "canonicalId": "rg_word_companion",
+      "canonicalWord": "companion",
+      "aliases": [
+        {
+          "key": "companions",
+          "id": "rg_word_companions",
+          "word": "companions",
           "relationType": "form"
         }
       ]
@@ -3293,6 +3918,19 @@
       ]
     },
     {
+      "canonicalKey": "competition",
+      "canonicalId": "rg_word_competition",
+      "canonicalWord": "competition",
+      "aliases": [
+        {
+          "key": "competitions",
+          "id": "rg_word_competitions",
+          "word": "competitions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "competitor",
       "canonicalId": "rg_word_competitor",
       "canonicalWord": "competitor",
@@ -3314,6 +3952,32 @@
           "key": "complaints",
           "id": "rg_word_complaints",
           "word": "complaints",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "complete",
+      "canonicalId": "rg_word_complete",
+      "canonicalWord": "complete",
+      "aliases": [
+        {
+          "key": "completed",
+          "id": "rg_word_completed",
+          "word": "completed",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "component",
+      "canonicalId": "rg_word_component",
+      "canonicalWord": "component",
+      "aliases": [
+        {
+          "key": "components",
+          "id": "rg_word_components",
+          "word": "components",
           "relationType": "form"
         }
       ]
@@ -3345,6 +4009,19 @@
       ]
     },
     {
+      "canonicalKey": "con",
+      "canonicalId": "rg_word_con",
+      "canonicalWord": "con",
+      "aliases": [
+        {
+          "key": "cons",
+          "id": "rg_word_cons",
+          "word": "cons",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "conceal",
       "canonicalId": "rg_word_conceal",
       "canonicalWord": "conceal",
@@ -3366,6 +4043,19 @@
           "key": "concentrates",
           "id": "rg_word_concentrates",
           "word": "concentrates",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "concentration",
+      "canonicalId": "rg_word_concentration",
+      "canonicalWord": "concentration",
+      "aliases": [
+        {
+          "key": "concentrations",
+          "id": "rg_word_concentrations",
+          "word": "concentrations",
           "relationType": "form"
         }
       ]
@@ -3410,6 +4100,19 @@
       ]
     },
     {
+      "canonicalKey": "concert-goer",
+      "canonicalId": "rg_word_concert_goer",
+      "canonicalWord": "concert-goer",
+      "aliases": [
+        {
+          "key": "concert-goers",
+          "id": "rg_word_concert_goers",
+          "word": "concert-goers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "conclude",
       "canonicalId": "rg_word_conclude",
       "canonicalWord": "conclude",
@@ -3418,6 +4121,19 @@
           "key": "concluded",
           "id": "rg_word_concluded",
           "word": "concluded",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "condition",
+      "canonicalId": "rg_word_condition",
+      "canonicalWord": "condition",
+      "aliases": [
+        {
+          "key": "conditions",
+          "id": "rg_word_conditions",
+          "word": "conditions",
           "relationType": "form"
         }
       ]
@@ -3436,7 +4152,7 @@
         {
           "key": "conducting",
           "id": "rg_word_conducting",
-          "word": "conducting",
+          "word": "Conducting",
           "relationType": "form"
         }
       ]
@@ -3624,6 +4340,12 @@
           "key": "consisting",
           "id": "rg_word_consisting",
           "word": "consisting",
+          "relationType": "form"
+        },
+        {
+          "key": "consists",
+          "id": "rg_word_consists",
+          "word": "consists",
           "relationType": "form"
         }
       ]
@@ -3871,6 +4593,19 @@
       ]
     },
     {
+      "canonicalKey": "conversation",
+      "canonicalId": "rg_word_conversation",
+      "canonicalWord": "conversation",
+      "aliases": [
+        {
+          "key": "conversations",
+          "id": "rg_word_conversations",
+          "word": "conversations",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "convert",
       "canonicalId": "rg_word_convert",
       "canonicalWord": "convert",
@@ -3894,9 +4629,7 @@
           "word": "cooking",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "copy",
@@ -3952,7 +4685,7 @@
     },
     {
       "canonicalKey": "cost",
-      "canonicalId": "rg_word_cost",
+      "canonicalId": "rg_logic_582696_79014285",
       "canonicalWord": "cost",
       "aliases": [
         {
@@ -3961,9 +4694,7 @@
           "word": "costs",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "cottage",
@@ -4000,6 +4731,19 @@
           "key": "counts",
           "id": "rg_word_counts",
           "word": "counts",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "counterpart",
+      "canonicalId": "rg_word_counterpart",
+      "canonicalWord": "counterpart",
+      "aliases": [
+        {
+          "key": "counterparts",
+          "id": "rg_word_counterparts",
+          "word": "counterparts",
           "relationType": "form"
         }
       ]
@@ -4310,6 +5054,19 @@
       ]
     },
     {
+      "canonicalKey": "curtain",
+      "canonicalId": "rg_word_curtain",
+      "canonicalWord": "curtain",
+      "aliases": [
+        {
+          "key": "curtains",
+          "id": "rg_word_curtains",
+          "word": "curtains",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "customer",
       "canonicalId": "rg_word_customer",
       "canonicalWord": "customer",
@@ -4318,6 +5075,19 @@
           "key": "customers",
           "id": "rg_word_customers",
           "word": "customers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "cutting",
+      "canonicalId": "rg_word_cutting",
+      "canonicalWord": "cutting",
+      "aliases": [
+        {
+          "key": "cuttings",
+          "id": "rg_word_cuttings",
+          "word": "cuttings",
           "relationType": "form"
         }
       ]
@@ -4336,6 +5106,19 @@
       ]
     },
     {
+      "canonicalKey": "cycleway",
+      "canonicalId": "rg_word_cycleway",
+      "canonicalWord": "cycleway",
+      "aliases": [
+        {
+          "key": "cycleways",
+          "id": "rg_word_cycleways",
+          "word": "cycleways",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "cyclist",
       "canonicalId": "rg_word_cyclist",
       "canonicalWord": "cyclist",
@@ -4344,6 +5127,19 @@
           "key": "cyclists",
           "id": "rg_word_cyclists",
           "word": "cyclists",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "dance",
+      "canonicalId": "rg_word_dance",
+      "canonicalWord": "dance",
+      "aliases": [
+        {
+          "key": "dances",
+          "id": "rg_word_dances",
+          "word": "dances",
           "relationType": "form"
         }
       ]
@@ -4385,9 +5181,7 @@
           "word": "dates",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "day",
@@ -4400,9 +5194,7 @@
           "word": "days",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "deadline",
@@ -4413,6 +5205,19 @@
           "key": "deadlines",
           "id": "rg_word_deadlines",
           "word": "deadlines",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "dealing",
+      "canonicalId": "rg_word_dealing",
+      "canonicalWord": "dealing",
+      "aliases": [
+        {
+          "key": "dealings",
+          "id": "rg_word_dealings",
+          "word": "dealings",
           "relationType": "form"
         }
       ]
@@ -4655,6 +5460,12 @@
       "canonicalWord": "demand",
       "aliases": [
         {
+          "key": "demanded",
+          "id": "rg_word_demanded",
+          "word": "demanded",
+          "relationType": "form"
+        },
+        {
           "key": "demands",
           "id": "rg_word_demands",
           "word": "demands",
@@ -4671,6 +5482,19 @@
           "key": "demonstrated",
           "id": "rg_word_demonstrated",
           "word": "demonstrated",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "department",
+      "canonicalId": "rg_word_department",
+      "canonicalWord": "department",
+      "aliases": [
+        {
+          "key": "departments",
+          "id": "rg_word_departments",
+          "word": "departments",
           "relationType": "form"
         }
       ]
@@ -4727,6 +5551,32 @@
       ]
     },
     {
+      "canonicalKey": "deposit",
+      "canonicalId": "rg_word_deposit",
+      "canonicalWord": "deposit",
+      "aliases": [
+        {
+          "key": "deposited",
+          "id": "rg_word_deposited",
+          "word": "deposited",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "descend",
+      "canonicalId": "rg_logic_582696_79014121",
+      "canonicalWord": "descend",
+      "aliases": [
+        {
+          "key": "descended",
+          "id": "rg_word_descended",
+          "word": "descended",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "describe",
       "canonicalId": "rg_word_describe",
       "canonicalWord": "describe",
@@ -4741,6 +5591,19 @@
           "key": "describing",
           "id": "rg_word_describing",
           "word": "describing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "description",
+      "canonicalId": "rg_word_description",
+      "canonicalWord": "description",
+      "aliases": [
+        {
+          "key": "descriptions",
+          "id": "rg_word_descriptions",
+          "word": "descriptions",
           "relationType": "form"
         }
       ]
@@ -4784,6 +5647,19 @@
       ]
     },
     {
+      "canonicalKey": "designer",
+      "canonicalId": "rg_word_designer",
+      "canonicalWord": "designer",
+      "aliases": [
+        {
+          "key": "designers",
+          "id": "rg_word_designers",
+          "word": "designers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "desk",
       "canonicalId": "rg_word_desk",
       "canonicalWord": "desk",
@@ -4794,9 +5670,33 @@
           "word": "desks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "dessert",
+      "canonicalId": "rg_word_dessert",
+      "canonicalWord": "dessert",
+      "aliases": [
+        {
+          "key": "desserts",
+          "id": "rg_word_desserts",
+          "word": "desserts",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "destination",
+      "canonicalId": "rg_word_destination",
+      "canonicalWord": "destination",
+      "aliases": [
+        {
+          "key": "destinations",
+          "id": "rg_word_destinations",
+          "word": "destinations",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "destroy",
@@ -4859,6 +5759,19 @@
           "key": "develops",
           "id": "rg_word_develops",
           "word": "develops",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "development",
+      "canonicalId": "rg_word_development",
+      "canonicalWord": "development",
+      "aliases": [
+        {
+          "key": "developments",
+          "id": "rg_word_developments",
+          "word": "developments",
           "relationType": "form"
         }
       ]
@@ -4952,9 +5865,7 @@
           "word": "digging",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "dinner",
@@ -4983,6 +5894,19 @@
       ]
     },
     {
+      "canonicalKey": "diploma",
+      "canonicalId": "rg_word_diploma",
+      "canonicalWord": "diploma",
+      "aliases": [
+        {
+          "key": "diplomas",
+          "id": "rg_word_diplomas",
+          "word": "diplomas",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "direct",
       "canonicalId": "rg_word_direct",
       "canonicalWord": "direct",
@@ -4991,6 +5915,19 @@
           "key": "directed",
           "id": "rg_word_directed",
           "word": "directed",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "direction",
+      "canonicalId": "rg_word_direction",
+      "canonicalWord": "direction",
+      "aliases": [
+        {
+          "key": "directions",
+          "id": "rg_word_directions",
+          "word": "directions",
           "relationType": "form"
         }
       ]
@@ -5144,6 +6081,19 @@
       ]
     },
     {
+      "canonicalKey": "discussion",
+      "canonicalId": "rg_word_discussion",
+      "canonicalWord": "discussion",
+      "aliases": [
+        {
+          "key": "discussions",
+          "id": "rg_word_discussions",
+          "word": "discussions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "disease",
       "canonicalId": "rg_word_disease",
       "canonicalWord": "disease",
@@ -5216,6 +6166,19 @@
           "key": "disposed",
           "id": "rg_word_disposed",
           "word": "disposed",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "disrupt",
+      "canonicalId": "rg_word_disrupt",
+      "canonicalWord": "disrupt",
+      "aliases": [
+        {
+          "key": "disrupted",
+          "id": "rg_word_disrupted",
+          "word": "disrupted",
           "relationType": "form"
         }
       ]
@@ -5318,6 +6281,32 @@
       ]
     },
     {
+      "canonicalKey": "document",
+      "canonicalId": "rg_word_document",
+      "canonicalWord": "document",
+      "aliases": [
+        {
+          "key": "documented",
+          "id": "rg_word_documented",
+          "word": "documented",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "dolphin",
+      "canonicalId": "rg_word_dolphin",
+      "canonicalWord": "dolphin",
+      "aliases": [
+        {
+          "key": "dolphins",
+          "id": "rg_word_dolphins",
+          "word": "dolphins",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "dominate",
       "canonicalId": "rg_word_dominate",
       "canonicalWord": "dominate",
@@ -5350,6 +6339,19 @@
       ]
     },
     {
+      "canonicalKey": "donation",
+      "canonicalId": "rg_word_donation",
+      "canonicalWord": "donation",
+      "aliases": [
+        {
+          "key": "donations",
+          "id": "rg_word_donations",
+          "word": "donations",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "door",
       "canonicalId": "rg_word_door",
       "canonicalWord": "door",
@@ -5360,9 +6362,20 @@
           "word": "doors",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "dormouse",
+      "canonicalId": "rg_word_dormouse",
+      "canonicalWord": "dormouse",
+      "aliases": [
+        {
+          "key": "dormice",
+          "id": "rg_word_dormice",
+          "word": "dormice",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "double",
@@ -5449,6 +6462,58 @@
       ]
     },
     {
+      "canonicalKey": "drawing",
+      "canonicalId": "rg_word_drawing",
+      "canonicalWord": "drawing",
+      "aliases": [
+        {
+          "key": "drawings",
+          "id": "rg_word_drawings",
+          "word": "drawings",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "dress",
+      "canonicalId": "rg_word_dress",
+      "canonicalWord": "dress",
+      "aliases": [
+        {
+          "key": "dressed",
+          "id": "rg_word_dressed",
+          "word": "dressed",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "dressing",
+      "canonicalId": "rg_word_dressing",
+      "canonicalWord": "dressing",
+      "aliases": [
+        {
+          "key": "dressings",
+          "id": "rg_word_dressings",
+          "word": "dressings",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "drill",
+      "canonicalId": "rg_word_drill",
+      "canonicalWord": "drill",
+      "aliases": [
+        {
+          "key": "drilled",
+          "id": "rg_word_drilled",
+          "word": "drilled",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "drink",
       "canonicalId": "rg_word_drink",
       "canonicalWord": "drink",
@@ -5465,13 +6530,11 @@
           "word": "drinks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "drop",
-      "canonicalId": "rg_word_drop",
+      "canonicalId": "rg_logic_582696_79014123",
       "canonicalWord": "drop",
       "aliases": [
         {
@@ -5486,9 +6549,7 @@
           "word": "dropping",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "drown",
@@ -5512,6 +6573,32 @@
           "key": "duties",
           "id": "rg_word_duties",
           "word": "duties",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "dweller",
+      "canonicalId": "rg_word_dweller",
+      "canonicalWord": "dweller",
+      "aliases": [
+        {
+          "key": "dwellers",
+          "id": "rg_word_dwellers",
+          "word": "dwellers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "e-mail",
+      "canonicalId": "rg_word_e_mail",
+      "canonicalWord": "e-mail",
+      "aliases": [
+        {
+          "key": "email",
+          "id": "rg_word_email",
+          "word": "email",
           "relationType": "form"
         }
       ]
@@ -5562,6 +6649,19 @@
       ]
     },
     {
+      "canonicalKey": "easy",
+      "canonicalId": "rg_word_easy",
+      "canonicalWord": "easy",
+      "aliases": [
+        {
+          "key": "easier",
+          "id": "rg_word_easier",
+          "word": "easier",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "eat",
       "canonicalId": "rg_word_eat",
       "canonicalWord": "eat",
@@ -5578,9 +6678,7 @@
           "word": "eating",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "ecosystem",
@@ -5609,6 +6707,38 @@
       ]
     },
     {
+      "canonicalKey": "educator",
+      "canonicalId": "rg_word_educator",
+      "canonicalWord": "educator",
+      "aliases": [
+        {
+          "key": "educators",
+          "id": "rg_word_educators",
+          "word": "educators",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "effect",
+      "canonicalId": "rg_word_effect",
+      "canonicalWord": "effect",
+      "aliases": [
+        {
+          "key": "effected",
+          "id": "rg_word_effected",
+          "word": "effected",
+          "relationType": "form"
+        },
+        {
+          "key": "effects",
+          "id": "rg_word_effects",
+          "word": "effects",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "effort",
       "canonicalId": "rg_word_effort",
       "canonicalWord": "effort",
@@ -5632,9 +6762,20 @@
           "word": "eggs",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "element",
+      "canonicalId": "rg_word_element",
+      "canonicalWord": "element",
+      "aliases": [
+        {
+          "key": "elements",
+          "id": "rg_word_elements",
+          "word": "elements",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "elephant",
@@ -5676,6 +6817,32 @@
       ]
     },
     {
+      "canonicalKey": "embark",
+      "canonicalId": "rg_word_embark",
+      "canonicalWord": "embark",
+      "aliases": [
+        {
+          "key": "embarked",
+          "id": "rg_word_embarked",
+          "word": "embarked",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "emotion",
+      "canonicalId": "rg_word_emotion",
+      "canonicalWord": "emotion",
+      "aliases": [
+        {
+          "key": "emotions",
+          "id": "rg_word_emotions",
+          "word": "emotions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "employee",
       "canonicalId": "rg_word_employee",
       "canonicalWord": "employee",
@@ -5703,6 +6870,25 @@
           "key": "employer's",
           "id": "rg_word_employer_s",
           "word": "employer's",
+          "relationType": "form"
+        },
+        {
+          "key": "employers",
+          "id": "rg_word_employers",
+          "word": "employers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "en-suite",
+      "canonicalId": "rg_word_en_suite",
+      "canonicalWord": "en-suite",
+      "aliases": [
+        {
+          "key": "ensuite",
+          "id": "rg_word_ensuite",
+          "word": "ensuite",
           "relationType": "form"
         }
       ]
@@ -5781,9 +6967,7 @@
           "word": "ends",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "engage",
@@ -5816,6 +7000,12 @@
       "canonicalId": "rg_word_engineer",
       "canonicalWord": "engineer",
       "aliases": [
+        {
+          "key": "engineered",
+          "id": "rg_word_engineered",
+          "word": "engineered",
+          "relationType": "form"
+        },
         {
           "key": "engineers",
           "id": "rg_word_engineers",
@@ -5940,6 +7130,19 @@
       ]
     },
     {
+      "canonicalKey": "entitlement",
+      "canonicalId": "rg_word_entitlement",
+      "canonicalWord": "entitlement",
+      "aliases": [
+        {
+          "key": "entitlements",
+          "id": "rg_word_entitlements",
+          "word": "entitlements",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "entrance",
       "canonicalId": "rg_word_entrance",
       "canonicalWord": "entrance",
@@ -5974,6 +7177,45 @@
           "key": "entries",
           "id": "rg_word_entries",
           "word": "entries",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "environment",
+      "canonicalId": "rg_word_environment",
+      "canonicalWord": "environment",
+      "aliases": [
+        {
+          "key": "environments",
+          "id": "rg_word_environments",
+          "word": "environments",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "environmentalist",
+      "canonicalId": "rg_word_environmentalist",
+      "canonicalWord": "environmentalist",
+      "aliases": [
+        {
+          "key": "environmentalists",
+          "id": "rg_word_environmentalists",
+          "word": "environmentalists",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "equal",
+      "canonicalId": "rg_word_equal",
+      "canonicalWord": "equal",
+      "aliases": [
+        {
+          "key": "equals",
+          "id": "rg_word_equals",
+          "word": "equals",
           "relationType": "form"
         }
       ]
@@ -6204,6 +7446,19 @@
       ]
     },
     {
+      "canonicalKey": "exception",
+      "canonicalId": "rg_word_exception",
+      "canonicalWord": "exception",
+      "aliases": [
+        {
+          "key": "exceptions",
+          "id": "rg_word_exceptions",
+          "word": "exceptions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "exclude",
       "canonicalId": "rg_word_exclude",
       "canonicalWord": "exclude",
@@ -6212,6 +7467,19 @@
           "key": "excluded",
           "id": "rg_word_excluded",
           "word": "excluded",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "executive",
+      "canonicalId": "rg_word_executive",
+      "canonicalWord": "executive",
+      "aliases": [
+        {
+          "key": "executives",
+          "id": "rg_word_executives",
+          "word": "executives",
           "relationType": "form"
         }
       ]
@@ -6282,6 +7550,19 @@
           "key": "expects",
           "id": "rg_word_expects",
           "word": "expects",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "expectation",
+      "canonicalId": "rg_word_expectation",
+      "canonicalWord": "expectation",
+      "aliases": [
+        {
+          "key": "expectations",
+          "id": "rg_word_expectations",
+          "word": "expectations",
           "relationType": "form"
         }
       ]
@@ -6516,9 +7797,7 @@
           "word": "eyes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "fabric",
@@ -6556,9 +7835,20 @@
           "word": "facing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "facility",
+      "canonicalId": "rg_word_facility",
+      "canonicalWord": "facility",
+      "aliases": [
+        {
+          "key": "facilities",
+          "id": "rg_word_facilities",
+          "word": "facilities",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "fact",
@@ -6610,9 +7900,7 @@
           "word": "fails",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "fall",
@@ -6673,6 +7961,25 @@
       ]
     },
     {
+      "canonicalKey": "fast",
+      "canonicalId": "rg_word_fast",
+      "canonicalWord": "fast",
+      "aliases": [
+        {
+          "key": "faster",
+          "id": "rg_word_faster",
+          "word": "faster",
+          "relationType": "form"
+        },
+        {
+          "key": "fastest",
+          "id": "rg_word_fastest",
+          "word": "fastest",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "fault",
       "canonicalId": "rg_word_fault",
       "canonicalWord": "fault",
@@ -6725,7 +8032,7 @@
     },
     {
       "canonicalKey": "fee",
-      "canonicalId": "rg_word_fee",
+      "canonicalId": "rg_logic_582696_79014286",
       "canonicalWord": "fee",
       "aliases": [
         {
@@ -6766,9 +8073,7 @@
           "word": "felt",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "feeling",
@@ -6898,9 +8203,7 @@
           "word": "films",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "filter",
@@ -6930,6 +8233,19 @@
           "key": "finances",
           "id": "rg_word_finances",
           "word": "finances",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "finding",
+      "canonicalId": "rg_word_finding",
+      "canonicalWord": "finding",
+      "aliases": [
+        {
+          "key": "findings",
+          "id": "rg_word_findings",
+          "word": "findings",
           "relationType": "form"
         }
       ]
@@ -6980,6 +8296,19 @@
       ]
     },
     {
+      "canonicalKey": "fireman",
+      "canonicalId": "rg_word_fireman",
+      "canonicalWord": "fireman",
+      "aliases": [
+        {
+          "key": "firemen",
+          "id": "rg_word_firemen",
+          "word": "firemen",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "firm",
       "canonicalId": "rg_word_firm",
       "canonicalWord": "firm",
@@ -7003,9 +8332,7 @@
           "word": "fishing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "fisherman",
@@ -7040,6 +8367,19 @@
       ]
     },
     {
+      "canonicalKey": "fitting",
+      "canonicalId": "rg_word_fitting",
+      "canonicalWord": "fitting",
+      "aliases": [
+        {
+          "key": "fittings",
+          "id": "rg_word_fittings",
+          "word": "fittings",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "flash",
       "canonicalId": "rg_word_flash",
       "canonicalWord": "flash",
@@ -7048,6 +8388,19 @@
           "key": "flashing",
           "id": "rg_word_flashing",
           "word": "flashing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "flier",
+      "canonicalId": "rg_word_flier",
+      "canonicalWord": "flier",
+      "aliases": [
+        {
+          "key": "fliers",
+          "id": "rg_word_fliers",
+          "word": "fliers",
           "relationType": "form"
         }
       ]
@@ -7178,9 +8531,7 @@
           "word": "foods",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "footpath",
@@ -7222,10 +8573,29 @@
       ]
     },
     {
+      "canonicalKey": "forklift",
+      "canonicalId": "rg_word_forklift",
+      "canonicalWord": "forklift",
+      "aliases": [
+        {
+          "key": "forklifts",
+          "id": "rg_word_forklifts",
+          "word": "forklifts",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "form",
       "canonicalId": "rg_word_form",
       "canonicalWord": "form",
       "aliases": [
+        {
+          "key": "formed",
+          "id": "rg_word_formed",
+          "word": "formed",
+          "relationType": "form"
+        },
         {
           "key": "forming",
           "id": "rg_word_forming",
@@ -7303,9 +8673,7 @@
           "word": "foxes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "friend",
@@ -7331,9 +8699,7 @@
           "word": "frogs",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "fuel",
@@ -7344,6 +8710,19 @@
           "key": "fuels",
           "id": "rg_word_fuels",
           "word": "fuels",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "fulfil",
+      "canonicalId": "rg_word_fulfil",
+      "canonicalWord": "fulfil",
+      "aliases": [
+        {
+          "key": "fulfilled",
+          "id": "rg_word_fulfilled",
+          "word": "fulfilled",
           "relationType": "form"
         }
       ]
@@ -7381,6 +8760,19 @@
       ]
     },
     {
+      "canonicalKey": "fungus",
+      "canonicalId": "rg_word_fungus",
+      "canonicalWord": "fungus",
+      "aliases": [
+        {
+          "key": "fungi",
+          "id": "rg_word_fungi",
+          "word": "fungi",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "gain",
       "canonicalId": "rg_word_gain",
       "canonicalWord": "gain",
@@ -7400,6 +8792,19 @@
       ]
     },
     {
+      "canonicalKey": "galaxy",
+      "canonicalId": "rg_word_galaxy",
+      "canonicalWord": "galaxy",
+      "aliases": [
+        {
+          "key": "galaxies",
+          "id": "rg_word_galaxies",
+          "word": "galaxies",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "game",
       "canonicalId": "rg_word_game",
       "canonicalWord": "game",
@@ -7410,9 +8815,7 @@
           "word": "games",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "gap",
@@ -7425,9 +8828,7 @@
           "word": "gaps",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "garden",
@@ -7466,9 +8867,7 @@
           "word": "gases",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "gather",
@@ -7542,6 +8941,19 @@
       ]
     },
     {
+      "canonicalKey": "german",
+      "canonicalId": "rg_word_german",
+      "canonicalWord": "german",
+      "aliases": [
+        {
+          "key": "germans",
+          "id": "rg_word_germans",
+          "word": "germans",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "get",
       "canonicalId": "rg_word_get",
       "canonicalWord": "get",
@@ -7552,9 +8964,7 @@
           "word": "getting",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "give",
@@ -7579,9 +8989,7 @@
           "word": "giving",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "glide",
@@ -7652,9 +9060,7 @@
           "word": "gone",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "goal",
@@ -7670,14 +9076,46 @@
       ]
     },
     {
+      "canonicalKey": "government",
+      "canonicalId": "rg_word_government",
+      "canonicalWord": "government",
+      "aliases": [
+        {
+          "key": "governments",
+          "id": "rg_word_governments",
+          "word": "governments",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "graduate",
       "canonicalId": "rg_word_graduate",
       "canonicalWord": "graduate",
       "aliases": [
         {
+          "key": "graduated",
+          "id": "rg_word_graduated",
+          "word": "graduated",
+          "relationType": "form"
+        },
+        {
           "key": "graduates",
           "id": "rg_word_graduates",
           "word": "graduates",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "grant",
+      "canonicalId": "rg_word_grant",
+      "canonicalWord": "grant",
+      "aliases": [
+        {
+          "key": "grants",
+          "id": "rg_word_grants",
+          "word": "grants",
           "relationType": "form"
         }
       ]
@@ -7929,6 +9367,25 @@
       ]
     },
     {
+      "canonicalKey": "hand",
+      "canonicalId": "rg_word_hand",
+      "canonicalWord": "hand",
+      "aliases": [
+        {
+          "key": "handed",
+          "id": "rg_word_handed",
+          "word": "handed",
+          "relationType": "form"
+        },
+        {
+          "key": "hands",
+          "id": "rg_word_hands",
+          "word": "hands",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "handle",
       "canonicalId": "rg_word_handle",
       "canonicalWord": "handle",
@@ -7950,6 +9407,51 @@
           "key": "handouts",
           "id": "rg_word_handouts",
           "word": "handouts",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "happen",
+      "canonicalId": "rg_word_happen",
+      "canonicalWord": "happen",
+      "aliases": [
+        {
+          "key": "happened",
+          "id": "rg_word_happened",
+          "word": "happened",
+          "relationType": "form"
+        },
+        {
+          "key": "happens",
+          "id": "rg_word_happens",
+          "word": "happens",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "harbor",
+      "canonicalId": "rg_word_harbor",
+      "canonicalWord": "harbor",
+      "aliases": [
+        {
+          "key": "harbors",
+          "id": "rg_word_harbors",
+          "word": "harbors",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "hard",
+      "canonicalId": "rg_word_hard",
+      "canonicalWord": "hard",
+      "aliases": [
+        {
+          "key": "harder",
+          "id": "rg_word_harder",
+          "word": "harder",
           "relationType": "form"
         }
       ]
@@ -7978,9 +9480,7 @@
           "word": "hats",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "hatch",
@@ -8030,6 +9530,19 @@
           "key": "headphones",
           "id": "rg_word_headphones",
           "word": "headphones",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "healthy",
+      "canonicalId": "rg_word_healthy",
+      "canonicalWord": "healthy",
+      "aliases": [
+        {
+          "key": "healthier",
+          "id": "rg_word_healthier",
+          "word": "healthier",
           "relationType": "form"
         }
       ]
@@ -8129,9 +9642,26 @@
           "word": "hiding",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "high",
+      "canonicalId": "rg_word_high",
+      "canonicalWord": "high",
+      "aliases": [
+        {
+          "key": "higher",
+          "id": "rg_word_higher",
+          "word": "higher",
+          "relationType": "form"
+        },
+        {
+          "key": "highest",
+          "id": "rg_word_highest",
+          "word": "highest",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "highland",
@@ -8142,6 +9672,19 @@
           "key": "highlands",
           "id": "rg_word_highlands",
           "word": "highlands",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "highlight",
+      "canonicalId": "rg_word_highlight",
+      "canonicalWord": "highlight",
+      "aliases": [
+        {
+          "key": "highlights",
+          "id": "rg_word_highlights",
+          "word": "highlights",
           "relationType": "form"
         }
       ]
@@ -8183,9 +9726,7 @@
           "word": "hitting",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "holder",
@@ -8243,9 +9784,33 @@
           "word": "homes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "hoodie",
+      "canonicalId": "rg_word_hoodie",
+      "canonicalWord": "hoodie",
+      "aliases": [
+        {
+          "key": "hoodies",
+          "id": "rg_word_hoodies",
+          "word": "hoodies",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "hope",
+      "canonicalId": "rg_word_hope",
+      "canonicalWord": "hope",
+      "aliases": [
+        {
+          "key": "hopes",
+          "id": "rg_word_hopes",
+          "word": "hopes",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "horse",
@@ -8256,6 +9821,19 @@
           "key": "horses",
           "id": "rg_word_horses",
           "word": "horses",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "hose",
+      "canonicalId": "rg_word_hose",
+      "canonicalWord": "hose",
+      "aliases": [
+        {
+          "key": "hoses",
+          "id": "rg_word_hoses",
+          "word": "hoses",
           "relationType": "form"
         }
       ]
@@ -8284,9 +9862,7 @@
           "word": "hours",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "house",
@@ -8315,6 +9891,19 @@
       ]
     },
     {
+      "canonicalKey": "hovercraft",
+      "canonicalId": "rg_word_hovercraft",
+      "canonicalWord": "hovercraft",
+      "aliases": [
+        {
+          "key": "hovercrafts",
+          "id": "rg_word_hovercrafts",
+          "word": "hovercrafts",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "human",
       "canonicalId": "rg_word_human",
       "canonicalWord": "human",
@@ -8336,6 +9925,19 @@
           "key": "hunters",
           "id": "rg_word_hunters",
           "word": "hunters",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "idea",
+      "canonicalId": "rg_word_idea",
+      "canonicalWord": "idea",
+      "aliases": [
+        {
+          "key": "ideas",
+          "id": "rg_word_ideas",
+          "word": "ideas",
           "relationType": "form"
         }
       ]
@@ -8392,6 +9994,19 @@
       ]
     },
     {
+      "canonicalKey": "illness",
+      "canonicalId": "rg_word_illness",
+      "canonicalWord": "illness",
+      "aliases": [
+        {
+          "key": "illnesses",
+          "id": "rg_word_illnesses",
+          "word": "illnesses",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "illustration",
       "canonicalId": "rg_word_illustration",
       "canonicalWord": "illustration",
@@ -8426,6 +10041,19 @@
           "key": "imagined",
           "id": "rg_word_imagined",
           "word": "imagined",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "imitation",
+      "canonicalId": "rg_word_imitation",
+      "canonicalWord": "imitation",
+      "aliases": [
+        {
+          "key": "imitations",
+          "id": "rg_word_imitations",
+          "word": "imitations",
           "relationType": "form"
         }
       ]
@@ -8476,6 +10104,19 @@
       ]
     },
     {
+      "canonicalKey": "implication",
+      "canonicalId": "rg_word_implication",
+      "canonicalWord": "implication",
+      "aliases": [
+        {
+          "key": "implications",
+          "id": "rg_word_implications",
+          "word": "implications",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "import",
       "canonicalId": "rg_word_import",
       "canonicalWord": "import",
@@ -8484,6 +10125,19 @@
           "key": "imports",
           "id": "rg_word_imports",
           "word": "imports",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "impose",
+      "canonicalId": "rg_word_impose",
+      "canonicalWord": "impose",
+      "aliases": [
+        {
+          "key": "imposed",
+          "id": "rg_word_imposed",
+          "word": "imposed",
           "relationType": "form"
         }
       ]
@@ -8510,6 +10164,19 @@
           "key": "improves",
           "id": "rg_word_improves",
           "word": "improves",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "improvement",
+      "canonicalId": "rg_word_improvement",
+      "canonicalWord": "improvement",
+      "aliases": [
+        {
+          "key": "improvements",
+          "id": "rg_word_improvements",
+          "word": "improvements",
           "relationType": "form"
         }
       ]
@@ -8562,6 +10229,19 @@
           "key": "increases",
           "id": "rg_word_increases",
           "word": "increases",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "indian",
+      "canonicalId": "rg_word_indian",
+      "canonicalWord": "indian",
+      "aliases": [
+        {
+          "key": "indians",
+          "id": "rg_word_indians",
+          "word": "indians",
           "relationType": "form"
         }
       ]
@@ -8652,6 +10332,19 @@
           "key": "informing",
           "id": "rg_word_informing",
           "word": "informing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "ingredient",
+      "canonicalId": "rg_word_ingredient",
+      "canonicalWord": "ingredient",
+      "aliases": [
+        {
+          "key": "ingredients",
+          "id": "rg_word_ingredients",
+          "word": "ingredients",
           "relationType": "form"
         }
       ]
@@ -8748,6 +10441,32 @@
       ]
     },
     {
+      "canonicalKey": "insist",
+      "canonicalId": "rg_word_insist",
+      "canonicalWord": "insist",
+      "aliases": [
+        {
+          "key": "insists",
+          "id": "rg_word_insists",
+          "word": "insists",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "inspection",
+      "canonicalId": "rg_word_inspection",
+      "canonicalWord": "inspection",
+      "aliases": [
+        {
+          "key": "inspections",
+          "id": "rg_word_inspections",
+          "word": "inspections",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "install",
       "canonicalId": "rg_word_install",
       "canonicalWord": "install",
@@ -8800,6 +10519,19 @@
       ]
     },
     {
+      "canonicalKey": "instrument",
+      "canonicalId": "rg_word_instrument",
+      "canonicalWord": "instrument",
+      "aliases": [
+        {
+          "key": "instruments",
+          "id": "rg_word_instruments",
+          "word": "instruments",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "integrate",
       "canonicalId": "rg_word_integrate",
       "canonicalWord": "integrate",
@@ -8834,6 +10566,19 @@
           "key": "interacting",
           "id": "rg_word_interacting",
           "word": "interacting",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "interest",
+      "canonicalId": "rg_word_interest",
+      "canonicalWord": "interest",
+      "aliases": [
+        {
+          "key": "interests",
+          "id": "rg_word_interests",
+          "word": "interests",
           "relationType": "form"
         }
       ]
@@ -8924,6 +10669,32 @@
           "key": "introducing",
           "id": "rg_word_introducing",
           "word": "introducing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "introduction",
+      "canonicalId": "rg_word_introduction",
+      "canonicalWord": "introduction",
+      "aliases": [
+        {
+          "key": "introductions",
+          "id": "rg_word_introductions",
+          "word": "introductions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "invent",
+      "canonicalId": "rg_word_invent",
+      "canonicalWord": "invent",
+      "aliases": [
+        {
+          "key": "invented",
+          "id": "rg_word_invented",
+          "word": "invented",
           "relationType": "form"
         }
       ]
@@ -9040,6 +10811,12 @@
           "id": "rg_word_issued",
           "word": "issued",
           "relationType": "form"
+        },
+        {
+          "key": "issues",
+          "id": "rg_word_issues",
+          "word": "issues",
+          "relationType": "form"
         }
       ]
     },
@@ -9067,9 +10844,7 @@
           "word": "jobs",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "jobseeker",
@@ -9093,6 +10868,32 @@
           "key": "joining",
           "id": "rg_word_joining",
           "word": "joining",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "joint",
+      "canonicalId": "rg_word_joint",
+      "canonicalWord": "joint",
+      "aliases": [
+        {
+          "key": "joints",
+          "id": "rg_word_joints",
+          "word": "joints",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "journalist",
+      "canonicalId": "rg_word_journalist",
+      "canonicalWord": "journalist",
+      "aliases": [
+        {
+          "key": "journalists",
+          "id": "rg_word_journalists",
+          "word": "journalists",
           "relationType": "form"
         }
       ]
@@ -9191,9 +10992,7 @@
           "word": "kept",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "key",
@@ -9206,9 +11005,20 @@
           "word": "keys",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "keyboard",
+      "canonicalId": "rg_word_keyboard",
+      "canonicalWord": "keyboard",
+      "aliases": [
+        {
+          "key": "keyboards",
+          "id": "rg_word_keyboards",
+          "word": "keyboards",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "kid",
@@ -9221,9 +11031,7 @@
           "word": "kids",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "kilometre",
@@ -9299,9 +11107,7 @@
           "word": "knows",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "label",
@@ -9318,6 +11124,19 @@
           "key": "labels",
           "id": "rg_word_labels",
           "word": "labels",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "lace",
+      "canonicalId": "rg_word_lace",
+      "canonicalWord": "lace",
+      "aliases": [
+        {
+          "key": "laces",
+          "id": "rg_word_laces",
+          "word": "laces",
           "relationType": "form"
         }
       ]
@@ -9359,9 +11178,7 @@
           "word": "lakes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "lamp",
@@ -9492,9 +11309,28 @@
       "canonicalWord": "large",
       "aliases": [
         {
+          "key": "larger",
+          "id": "rg_word_larger",
+          "word": "larger",
+          "relationType": "form"
+        },
+        {
           "key": "largest",
           "id": "rg_word_largest",
           "word": "largest",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "laugh",
+      "canonicalId": "rg_word_laugh",
+      "canonicalWord": "laugh",
+      "aliases": [
+        {
+          "key": "laughing",
+          "id": "rg_word_laughing",
+          "word": "laughing",
           "relationType": "form"
         }
       ]
@@ -9560,6 +11396,18 @@
           "key": "led",
           "id": "rg_word_led",
           "word": "led",
+          "relationType": "form"
+        },
+        {
+          "key": "leed",
+          "id": "rg_word_leed",
+          "word": "leed",
+          "relationType": "form"
+        },
+        {
+          "key": "leeds",
+          "id": "rg_word_leeds",
+          "word": "leeds",
           "relationType": "form"
         }
       ]
@@ -9639,18 +11487,11 @@
           "id": "rg_word_lectures",
           "word": "lectures",
           "relationType": "form"
-        }
-      ]
-    },
-    {
-      "canonicalKey": "leed",
-      "canonicalId": "rg_word_leed",
-      "canonicalWord": "leed",
-      "aliases": [
+        },
         {
-          "key": "leeds",
-          "id": "rg_word_leeds",
-          "word": "leeds",
+          "key": "lecturing",
+          "id": "rg_word_lecturing",
+          "word": "lecturing",
           "relationType": "form"
         }
       ]
@@ -9666,9 +11507,7 @@
           "word": "legs",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "lens",
@@ -9758,6 +11597,12 @@
           "id": "rg_word_licensed",
           "word": "licensed",
           "relationType": "form"
+        },
+        {
+          "key": "licensing",
+          "id": "rg_word_licensing",
+          "word": "licensing",
+          "relationType": "form"
         }
       ]
     },
@@ -9776,6 +11621,32 @@
           "key": "lying",
           "id": "rg_word_lying",
           "word": "lying",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "life-cycle",
+      "canonicalId": "rg_word_life_cycle",
+      "canonicalWord": "life-cycle",
+      "aliases": [
+        {
+          "key": "lifecycle",
+          "id": "rg_word_lifecycle",
+          "word": "lifecycle",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "lifeguard",
+      "canonicalId": "rg_word_lifeguard",
+      "canonicalWord": "lifeguard",
+      "aliases": [
+        {
+          "key": "lifeguards",
+          "id": "rg_word_lifeguards",
+          "word": "lifeguards",
           "relationType": "form"
         }
       ]
@@ -9804,9 +11675,7 @@
           "word": "lifted",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "light",
@@ -9823,7 +11692,7 @@
     },
     {
       "canonicalKey": "like",
-      "canonicalId": "rg_word_like",
+      "canonicalId": "rg_logic_582696_79014158",
       "canonicalWord": "like",
       "aliases": [
         {
@@ -9832,9 +11701,7 @@
           "word": "liked",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "limit",
@@ -9873,9 +11740,7 @@
           "word": "lines",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "link",
@@ -9913,9 +11778,7 @@
           "word": "lions",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "lip",
@@ -9928,9 +11791,7 @@
           "word": "lips",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "liquid",
@@ -10043,6 +11904,19 @@
       ]
     },
     {
+      "canonicalKey": "location",
+      "canonicalId": "rg_word_location",
+      "canonicalWord": "location",
+      "aliases": [
+        {
+          "key": "locations",
+          "id": "rg_word_locations",
+          "word": "locations",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "lock",
       "canonicalId": "rg_word_lock",
       "canonicalWord": "lock",
@@ -10053,9 +11927,7 @@
           "word": "locks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "long",
@@ -10074,9 +11946,7 @@
           "word": "longest",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "look",
@@ -10101,9 +11971,7 @@
           "word": "looks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "lorry",
@@ -10129,9 +11997,7 @@
           "word": "lost",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "lot",
@@ -10144,9 +12010,20 @@
           "word": "lots",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "lounge",
+      "canonicalId": "rg_word_lounge",
+      "canonicalWord": "lounge",
+      "aliases": [
+        {
+          "key": "lounges",
+          "id": "rg_word_lounges",
+          "word": "lounges",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "low",
@@ -10159,9 +12036,7 @@
           "word": "lowest",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "lunch",
@@ -10177,6 +12052,19 @@
       ]
     },
     {
+      "canonicalKey": "lunchtime",
+      "canonicalId": "rg_word_lunchtime",
+      "canonicalWord": "lunchtime",
+      "aliases": [
+        {
+          "key": "lunchtimes",
+          "id": "rg_word_lunchtimes",
+          "word": "lunchtimes",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "luxury",
       "canonicalId": "rg_word_luxury",
       "canonicalWord": "luxury",
@@ -10185,6 +12073,19 @@
           "key": "luxuries",
           "id": "rg_word_luxuries",
           "word": "luxuries",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "macadamia",
+      "canonicalId": "rg_word_macadamia",
+      "canonicalWord": "macadamia",
+      "aliases": [
+        {
+          "key": "macadamias",
+          "id": "rg_word_macadamias",
+          "word": "macadamias",
           "relationType": "form"
         }
       ]
@@ -10245,9 +12146,20 @@
           "word": "making",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "make-up",
+      "canonicalId": "rg_word_make_up",
+      "canonicalWord": "make-up",
+      "aliases": [
+        {
+          "key": "makeup",
+          "id": "rg_word_makeup",
+          "word": "makeup",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "maker",
@@ -10367,7 +12279,7 @@
     },
     {
       "canonicalKey": "map",
-      "canonicalId": "rg_word_map",
+      "canonicalId": "rg_word_paps",
       "canonicalWord": "map",
       "aliases": [
         {
@@ -10376,9 +12288,7 @@
           "word": "maps",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "margin",
@@ -10394,6 +12304,19 @@
       ]
     },
     {
+      "canonicalKey": "mark",
+      "canonicalId": "rg_word_mark",
+      "canonicalWord": "mark",
+      "aliases": [
+        {
+          "key": "marks",
+          "id": "rg_word_marks",
+          "word": "marks",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "market",
       "canonicalId": "rg_word_market",
       "canonicalWord": "market",
@@ -10402,6 +12325,19 @@
           "key": "markets",
           "id": "rg_word_markets",
           "word": "markets",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "marshal",
+      "canonicalId": "rg_word_marshal",
+      "canonicalWord": "marshal",
+      "aliases": [
+        {
+          "key": "marshals",
+          "id": "rg_word_marshals",
+          "word": "marshals",
           "relationType": "form"
         }
       ]
@@ -10430,9 +12366,7 @@
           "word": "mates",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "material",
@@ -10484,9 +12418,7 @@
           "word": "meals",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "mean",
@@ -10499,9 +12431,7 @@
           "word": "meant",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "measure",
@@ -10512,6 +12442,12 @@
           "key": "measured",
           "id": "rg_word_measured",
           "word": "measured",
+          "relationType": "form"
+        },
+        {
+          "key": "measures",
+          "id": "rg_word_measures",
+          "word": "measures",
           "relationType": "form"
         },
         {
@@ -10563,7 +12499,7 @@
     },
     {
       "canonicalKey": "meet",
-      "canonicalId": "rg_word_meet",
+      "canonicalId": "rg_word_imeet",
       "canonicalWord": "meet",
       "aliases": [
         {
@@ -10572,9 +12508,7 @@
           "word": "met",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "meeting",
@@ -10687,6 +12621,19 @@
       ]
     },
     {
+      "canonicalKey": "methodology",
+      "canonicalId": "rg_word_methodology",
+      "canonicalWord": "methodology",
+      "aliases": [
+        {
+          "key": "methodologies",
+          "id": "rg_word_methodologies",
+          "word": "methodologies",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "metre",
       "canonicalId": "rg_word_metre",
       "canonicalWord": "metre",
@@ -10697,9 +12644,7 @@
           "word": "metres",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "microbe",
@@ -10715,6 +12660,19 @@
       ]
     },
     {
+      "canonicalKey": "migrant",
+      "canonicalId": "rg_word_migrant",
+      "canonicalWord": "migrant",
+      "aliases": [
+        {
+          "key": "migrants",
+          "id": "rg_word_migrants",
+          "word": "migrants",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "mile",
       "canonicalId": "rg_word_mile",
       "canonicalWord": "mile",
@@ -10725,9 +12683,7 @@
           "word": "miles",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "milestone",
@@ -10805,9 +12761,7 @@
           "word": "missed",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "mistake",
@@ -10857,6 +12811,32 @@
           "key": "modules",
           "id": "rg_word_modules",
           "word": "modules",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "molecule",
+      "canonicalId": "rg_word_molecule",
+      "canonicalWord": "molecule",
+      "aliases": [
+        {
+          "key": "molecules",
+          "id": "rg_word_molecules",
+          "word": "molecules",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "mongoose",
+      "canonicalId": "rg_word_mongoose",
+      "canonicalWord": "mongoose",
+      "aliases": [
+        {
+          "key": "mongooses",
+          "id": "rg_word_mongooses",
+          "word": "mongooses",
           "relationType": "form"
         }
       ]
@@ -10998,6 +12978,45 @@
       ]
     },
     {
+      "canonicalKey": "move",
+      "canonicalId": "rg_word_move",
+      "canonicalWord": "move",
+      "aliases": [
+        {
+          "key": "moved",
+          "id": "rg_word_moved",
+          "word": "moved",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "movement",
+      "canonicalId": "rg_word_movement",
+      "canonicalWord": "movement",
+      "aliases": [
+        {
+          "key": "movements",
+          "id": "rg_word_movements",
+          "word": "movements",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "mug",
+      "canonicalId": "rg_word_mug",
+      "canonicalWord": "mug",
+      "aliases": [
+        {
+          "key": "mugs",
+          "id": "rg_word_mugs",
+          "word": "mugs",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "muscle",
       "canonicalId": "rg_word_muscle",
       "canonicalWord": "muscle",
@@ -11079,9 +13098,7 @@
           "word": "names",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "nation",
@@ -11120,9 +13137,7 @@
           "word": "needing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "negotiate",
@@ -11133,6 +13148,19 @@
           "key": "negotiated",
           "id": "rg_word_negotiated",
           "word": "negotiated",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "negotiation",
+      "canonicalId": "rg_word_negotiation",
+      "canonicalWord": "negotiation",
+      "aliases": [
+        {
+          "key": "negotiations",
+          "id": "rg_word_negotiations",
+          "word": "negotiations",
           "relationType": "form"
         }
       ]
@@ -11151,14 +13179,59 @@
       ]
     },
     {
+      "canonicalKey": "nerve",
+      "canonicalId": "rg_word_nerve",
+      "canonicalWord": "nerve",
+      "aliases": [
+        {
+          "key": "nerves",
+          "id": "rg_word_nerves",
+          "word": "nerves",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "nest",
       "canonicalId": "rg_word_nest",
       "canonicalWord": "nest",
       "aliases": [
         {
+          "key": "nesting",
+          "id": "rg_word_nesting",
+          "word": "nesting",
+          "relationType": "form"
+        },
+        {
           "key": "nests",
           "id": "rg_word_nests",
           "word": "nests",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "net",
+      "canonicalId": "rg_word_net",
+      "canonicalWord": "net",
+      "aliases": [
+        {
+          "key": "nets",
+          "id": "rg_word_nets",
+          "word": "nets",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "newsletter",
+      "canonicalId": "rg_word_newsletter",
+      "canonicalWord": "newsletter",
+      "aliases": [
+        {
+          "key": "newsletters",
+          "id": "rg_word_newsletters",
+          "word": "newsletters",
           "relationType": "form"
         }
       ]
@@ -11242,6 +13315,19 @@
       ]
     },
     {
+      "canonicalKey": "nowadays",
+      "canonicalId": "rg_word_nowadays",
+      "canonicalWord": "nowadays",
+      "aliases": [
+        {
+          "key": "nowaday",
+          "id": "rg_word_nowaday",
+          "word": "nowaday",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "number",
       "canonicalId": "rg_word_number",
       "canonicalWord": "number",
@@ -11263,6 +13349,19 @@
           "key": "nurseries",
           "id": "rg_word_nurseries",
           "word": "nurseries",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "nutrient",
+      "canonicalId": "rg_word_nutrient",
+      "canonicalWord": "nutrient",
+      "aliases": [
+        {
+          "key": "nutrients",
+          "id": "rg_word_nutrients",
+          "word": "nutrients",
           "relationType": "form"
         }
       ]
@@ -11315,6 +13414,19 @@
           "key": "observing",
           "id": "rg_word_observing",
           "word": "observing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "obstacle",
+      "canonicalId": "rg_word_obstacle",
+      "canonicalWord": "obstacle",
+      "aliases": [
+        {
+          "key": "obstacles",
+          "id": "rg_word_obstacles",
+          "word": "obstacles",
           "relationType": "form"
         }
       ]
@@ -11391,6 +13503,19 @@
       ]
     },
     {
+      "canonicalKey": "official",
+      "canonicalId": "rg_word_official",
+      "canonicalWord": "official",
+      "aliases": [
+        {
+          "key": "officials",
+          "id": "rg_word_officials",
+          "word": "officials",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "old",
       "canonicalId": "rg_word_old",
       "canonicalWord": "old",
@@ -11407,9 +13532,33 @@
           "word": "oldest",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "on-going",
+      "canonicalId": "rg_word_on_going",
+      "canonicalWord": "on-going",
+      "aliases": [
+        {
+          "key": "ongoing",
+          "id": "rg_word_ongoing",
+          "word": "ongoing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "on-site",
+      "canonicalId": "rg_word_on_site",
+      "canonicalWord": "on-site",
+      "aliases": [
+        {
+          "key": "onsite",
+          "id": "rg_word_onsite",
+          "word": "onsite",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "one",
@@ -11422,9 +13571,7 @@
           "word": "ones",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "open",
@@ -11454,6 +13601,19 @@
           "key": "operates",
           "id": "rg_word_operates",
           "word": "operates",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "operation",
+      "canonicalId": "rg_word_operation",
+      "canonicalWord": "operation",
+      "aliases": [
+        {
+          "key": "operations",
+          "id": "rg_word_operations",
+          "word": "operations",
           "relationType": "form"
         }
       ]
@@ -11498,6 +13658,19 @@
       ]
     },
     {
+      "canonicalKey": "opportunity",
+      "canonicalId": "rg_word_opportunity",
+      "canonicalWord": "opportunity",
+      "aliases": [
+        {
+          "key": "opportunities",
+          "id": "rg_word_opportunities",
+          "word": "opportunities",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "option",
       "canonicalId": "rg_word_option",
       "canonicalWord": "option",
@@ -11525,6 +13698,19 @@
           "key": "orders",
           "id": "rg_word_orders",
           "word": "orders",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "organisation",
+      "canonicalId": "rg_word_organisation",
+      "canonicalWord": "organisation",
+      "aliases": [
+        {
+          "key": "organisations",
+          "id": "rg_word_organisations",
+          "word": "organisations",
           "relationType": "form"
         }
       ]
@@ -11570,6 +13756,19 @@
           "key": "originated",
           "id": "rg_word_originated",
           "word": "originated",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "ornament",
+      "canonicalId": "rg_word_ornament",
+      "canonicalWord": "ornament",
+      "aliases": [
+        {
+          "key": "ornaments",
+          "id": "rg_word_ornaments",
+          "word": "ornaments",
           "relationType": "form"
         }
       ]
@@ -11662,9 +13861,7 @@
           "word": "owned",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "owner",
@@ -11722,9 +13919,7 @@
           "word": "pages",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "painting",
@@ -11763,9 +13958,7 @@
           "word": "pans",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "panel",
@@ -11776,6 +13969,19 @@
           "key": "panels",
           "id": "rg_word_panels",
           "word": "panels",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "panelling",
+      "canonicalId": "rg_word_panelling",
+      "canonicalWord": "panelling",
+      "aliases": [
+        {
+          "key": "panellings",
+          "id": "rg_word_panellings",
+          "word": "panellings",
           "relationType": "form"
         }
       ]
@@ -11830,9 +14036,7 @@
           "word": "parks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "part",
@@ -11909,6 +14113,12 @@
           "id": "rg_word_partnership_s",
           "word": "partnership's",
           "relationType": "form"
+        },
+        {
+          "key": "partnerships",
+          "id": "rg_word_partnerships",
+          "word": "partnerships",
+          "relationType": "form"
         }
       ]
     },
@@ -11942,9 +14152,7 @@
           "word": "passing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "passenger",
@@ -12073,9 +14281,20 @@
           "word": "paying",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "payment",
+      "canonicalId": "rg_word_payment",
+      "canonicalWord": "payment",
+      "aliases": [
+        {
+          "key": "payments",
+          "id": "rg_word_payments",
+          "word": "payments",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "paypal",
@@ -12140,9 +14359,20 @@
           "word": "pens",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "pension",
+      "canonicalId": "rg_word_pension",
+      "canonicalWord": "pension",
+      "aliases": [
+        {
+          "key": "pensions",
+          "id": "rg_word_pensions",
+          "word": "pensions",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "perform",
@@ -12172,6 +14402,19 @@
           "key": "performances",
           "id": "rg_word_performances",
           "word": "performances",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "performer",
+      "canonicalId": "rg_word_performer",
+      "canonicalWord": "performer",
+      "aliases": [
+        {
+          "key": "performers",
+          "id": "rg_word_performers",
+          "word": "performers",
           "relationType": "form"
         }
       ]
@@ -12307,9 +14550,7 @@
           "word": "picks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "picnic",
@@ -12348,9 +14589,7 @@
           "word": "pies",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "piece",
@@ -12449,6 +14688,12 @@
       "canonicalWord": "place",
       "aliases": [
         {
+          "key": "placed",
+          "id": "rg_word_placed",
+          "word": "placed",
+          "relationType": "form"
+        },
+        {
           "key": "places",
           "id": "rg_word_places",
           "word": "places",
@@ -12492,9 +14737,7 @@
           "word": "plans",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "plane",
@@ -12618,6 +14861,12 @@
       "canonicalWord": "point",
       "aliases": [
         {
+          "key": "pointing",
+          "id": "rg_word_pointing",
+          "word": "pointing",
+          "relationType": "form"
+        },
+        {
           "key": "points",
           "id": "rg_word_points",
           "word": "points",
@@ -12639,6 +14888,19 @@
       ]
     },
     {
+      "canonicalKey": "politician",
+      "canonicalId": "rg_word_politician",
+      "canonicalWord": "politician",
+      "aliases": [
+        {
+          "key": "politicians",
+          "id": "rg_word_politicians",
+          "word": "politicians",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "pollutant",
       "canonicalId": "rg_word_pollutant",
       "canonicalWord": "pollutant",
@@ -12647,6 +14909,19 @@
           "key": "pollutants",
           "id": "rg_word_pollutants",
           "word": "pollutants",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "pond",
+      "canonicalId": "rg_word_pond",
+      "canonicalWord": "pond",
+      "aliases": [
+        {
+          "key": "ponds",
+          "id": "rg_word_ponds",
+          "word": "ponds",
           "relationType": "form"
         }
       ]
@@ -12675,9 +14950,7 @@
           "word": "pools",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "poor",
@@ -12690,9 +14963,7 @@
           "word": "poorest",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "population",
@@ -12766,6 +15037,19 @@
       ]
     },
     {
+      "canonicalKey": "post-graduate",
+      "canonicalId": "rg_word_post_graduate",
+      "canonicalWord": "post-graduate",
+      "aliases": [
+        {
+          "key": "postgraduate",
+          "id": "rg_word_postgraduate",
+          "word": "postgraduate",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "postbus",
       "canonicalId": "rg_word_postbus",
       "canonicalWord": "postbus",
@@ -12779,6 +15063,19 @@
       ]
     },
     {
+      "canonicalKey": "poster",
+      "canonicalId": "rg_word_poster",
+      "canonicalWord": "poster",
+      "aliases": [
+        {
+          "key": "posters",
+          "id": "rg_word_posters",
+          "word": "posters",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "pound",
       "canonicalId": "rg_word_pound",
       "canonicalWord": "pound",
@@ -12787,6 +15084,19 @@
           "key": "pounds",
           "id": "rg_word_pounds",
           "word": "pounds",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "power",
+      "canonicalId": "rg_word_power",
+      "canonicalWord": "power",
+      "aliases": [
+        {
+          "key": "powers",
+          "id": "rg_word_powers",
+          "word": "powers",
           "relationType": "form"
         }
       ]
@@ -12875,9 +15185,28 @@
       "canonicalWord": "present",
       "aliases": [
         {
+          "key": "presented",
+          "id": "rg_word_presented",
+          "word": "presented",
+          "relationType": "form"
+        },
+        {
           "key": "presents",
           "id": "rg_word_presents",
           "word": "presents",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "presentation",
+      "canonicalId": "rg_word_presentation",
+      "canonicalWord": "presentation",
+      "aliases": [
+        {
+          "key": "presentations",
+          "id": "rg_word_presentations",
+          "word": "presentations",
           "relationType": "form"
         }
       ]
@@ -12891,6 +15220,19 @@
           "key": "preserved",
           "id": "rg_word_preserved",
           "word": "preserved",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "press",
+      "canonicalId": "rg_word_press",
+      "canonicalWord": "press",
+      "aliases": [
+        {
+          "key": "pressed",
+          "id": "rg_word_pressed",
+          "word": "pressed",
           "relationType": "form"
         }
       ]
@@ -12973,6 +15315,19 @@
       ]
     },
     {
+      "canonicalKey": "printer",
+      "canonicalId": "rg_word_printer",
+      "canonicalWord": "printer",
+      "aliases": [
+        {
+          "key": "printers",
+          "id": "rg_word_printers",
+          "word": "printers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "prioritise",
       "canonicalId": "rg_word_prioritise",
       "canonicalWord": "prioritise",
@@ -12981,6 +15336,19 @@
           "key": "prioritised",
           "id": "rg_word_prioritised",
           "word": "prioritised",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "priority",
+      "canonicalId": "rg_word_priority",
+      "canonicalWord": "priority",
+      "aliases": [
+        {
+          "key": "priorities",
+          "id": "rg_word_priorities",
+          "word": "priorities",
           "relationType": "form"
         }
       ]
@@ -12999,6 +15367,19 @@
       ]
     },
     {
+      "canonicalKey": "pro",
+      "canonicalId": "rg_word_pro",
+      "canonicalWord": "pro",
+      "aliases": [
+        {
+          "key": "pros",
+          "id": "rg_word_pros",
+          "word": "pros",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "problem",
       "canonicalId": "rg_word_problem",
       "canonicalWord": "problem",
@@ -13007,6 +15388,19 @@
           "key": "problems",
           "id": "rg_word_problems",
           "word": "problems",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "procedure",
+      "canonicalId": "rg_word_procedure",
+      "canonicalWord": "procedure",
+      "aliases": [
+        {
+          "key": "procedures",
+          "id": "rg_word_procedures",
+          "word": "procedures",
           "relationType": "form"
         }
       ]
@@ -13058,6 +15452,19 @@
           "key": "products",
           "id": "rg_word_products",
           "word": "products",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "production",
+      "canonicalId": "rg_word_production",
+      "canonicalWord": "production",
+      "aliases": [
+        {
+          "key": "productions",
+          "id": "rg_word_productions",
+          "word": "productions",
           "relationType": "form"
         }
       ]
@@ -13205,6 +15612,19 @@
       ]
     },
     {
+      "canonicalKey": "prompt",
+      "canonicalId": "rg_word_prompt",
+      "canonicalWord": "prompt",
+      "aliases": [
+        {
+          "key": "prompted",
+          "id": "rg_word_prompted",
+          "word": "prompted",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "property",
       "canonicalId": "rg_word_property",
       "canonicalWord": "property",
@@ -13284,6 +15704,19 @@
           "key": "providing",
           "id": "rg_word_providing",
           "word": "providing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "psychologist",
+      "canonicalId": "rg_word_psychologist",
+      "canonicalWord": "psychologist",
+      "aliases": [
+        {
+          "key": "psychologists",
+          "id": "rg_word_psychologists",
+          "word": "psychologists",
           "relationType": "form"
         }
       ]
@@ -13414,9 +15847,33 @@
           "word": "pushing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "qualification",
+      "canonicalId": "rg_word_qualification",
+      "canonicalWord": "qualification",
+      "aliases": [
+        {
+          "key": "qualifications",
+          "id": "rg_word_qualifications",
+          "word": "qualifications",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "quantity",
+      "canonicalId": "rg_word_quantity",
+      "canonicalWord": "quantity",
+      "aliases": [
+        {
+          "key": "quantities",
+          "id": "rg_word_quantities",
+          "word": "quantities",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "query",
@@ -13471,6 +15928,19 @@
       ]
     },
     {
+      "canonicalKey": "rack",
+      "canonicalId": "rg_word_rack",
+      "canonicalWord": "rack",
+      "aliases": [
+        {
+          "key": "racks",
+          "id": "rg_word_racks",
+          "word": "racks",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "radio",
       "canonicalId": "rg_word_radio",
       "canonicalWord": "radio",
@@ -13507,9 +15977,7 @@
           "word": "rains",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "rainforest",
@@ -13539,6 +16007,25 @@
           "key": "ranging",
           "id": "rg_word_ranging",
           "word": "ranging",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "rank",
+      "canonicalId": "rg_word_rank",
+      "canonicalWord": "rank",
+      "aliases": [
+        {
+          "key": "ranked",
+          "id": "rg_word_ranked",
+          "word": "ranked",
+          "relationType": "form"
+        },
+        {
+          "key": "ranks",
+          "id": "rg_word_ranks",
+          "word": "ranks",
           "relationType": "form"
         }
       ]
@@ -13595,6 +16082,19 @@
       ]
     },
     {
+      "canonicalKey": "reaction",
+      "canonicalId": "rg_word_reaction",
+      "canonicalWord": "reaction",
+      "aliases": [
+        {
+          "key": "reactions",
+          "id": "rg_word_reactions",
+          "word": "reactions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "reader",
       "canonicalId": "rg_word_reader",
       "canonicalWord": "reader",
@@ -13605,9 +16105,7 @@
           "word": "readers",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "realise",
@@ -13752,6 +16250,19 @@
       ]
     },
     {
+      "canonicalKey": "recruit",
+      "canonicalId": "rg_word_recruit",
+      "canonicalWord": "recruit",
+      "aliases": [
+        {
+          "key": "recruits",
+          "id": "rg_word_recruits",
+          "word": "recruits",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "reduce",
       "canonicalId": "rg_word_reduce",
       "canonicalWord": "reduce",
@@ -13861,6 +16372,19 @@
       ]
     },
     {
+      "canonicalKey": "refreshment",
+      "canonicalId": "rg_word_refreshment",
+      "canonicalWord": "refreshment",
+      "aliases": [
+        {
+          "key": "refreshments",
+          "id": "rg_word_refreshments",
+          "word": "refreshments",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "refund",
       "canonicalId": "rg_word_refund",
       "canonicalWord": "refund",
@@ -13888,6 +16412,19 @@
           "key": "refusing",
           "id": "rg_word_refusing",
           "word": "refusing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "regard",
+      "canonicalId": "rg_word_regard",
+      "canonicalWord": "regard",
+      "aliases": [
+        {
+          "key": "regarded",
+          "id": "rg_word_regarded",
+          "word": "regarded",
           "relationType": "form"
         }
       ]
@@ -13927,6 +16464,19 @@
           "key": "regulates",
           "id": "rg_word_regulates",
           "word": "regulates",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "regulation",
+      "canonicalId": "rg_word_regulation",
+      "canonicalWord": "regulation",
+      "aliases": [
+        {
+          "key": "regulations",
+          "id": "rg_word_regulations",
+          "word": "regulations",
           "relationType": "form"
         }
       ]
@@ -14035,6 +16585,19 @@
       ]
     },
     {
+      "canonicalKey": "relation",
+      "canonicalId": "rg_word_relation",
+      "canonicalWord": "relation",
+      "aliases": [
+        {
+          "key": "relations",
+          "id": "rg_word_relations",
+          "word": "relations",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "relationship",
       "canonicalId": "rg_word_relationship",
       "canonicalWord": "relationship",
@@ -14043,6 +16606,19 @@
           "key": "relationships",
           "id": "rg_word_relationships",
           "word": "relationships",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "relative",
+      "canonicalId": "rg_word_relative",
+      "canonicalWord": "relative",
+      "aliases": [
+        {
+          "key": "relatives",
+          "id": "rg_word_relatives",
+          "word": "relatives",
           "relationType": "form"
         }
       ]
@@ -14107,6 +16683,12 @@
           "key": "remarking",
           "id": "rg_word_remarking",
           "word": "remarking",
+          "relationType": "form"
+        },
+        {
+          "key": "remarks",
+          "id": "rg_word_remarks",
+          "word": "remarks",
           "relationType": "form"
         }
       ]
@@ -14247,6 +16829,38 @@
       ]
     },
     {
+      "canonicalKey": "represent",
+      "canonicalId": "rg_word_represent",
+      "canonicalWord": "represent",
+      "aliases": [
+        {
+          "key": "represented",
+          "id": "rg_word_represented",
+          "word": "represented",
+          "relationType": "form"
+        },
+        {
+          "key": "representing",
+          "id": "rg_word_representing",
+          "word": "representing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "representative",
+      "canonicalId": "rg_word_representative",
+      "canonicalWord": "representative",
+      "aliases": [
+        {
+          "key": "representatives",
+          "id": "rg_word_representatives",
+          "word": "representatives",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "reproduce",
       "canonicalId": "rg_word_reproduce",
       "canonicalWord": "reproduce",
@@ -14286,6 +16900,32 @@
       ]
     },
     {
+      "canonicalKey": "requirement",
+      "canonicalId": "rg_word_requirement",
+      "canonicalWord": "requirement",
+      "aliases": [
+        {
+          "key": "requirements",
+          "id": "rg_word_requirements",
+          "word": "requirements",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "researcher",
+      "canonicalId": "rg_word_researcher",
+      "canonicalWord": "researcher",
+      "aliases": [
+        {
+          "key": "researchers",
+          "id": "rg_word_researchers",
+          "word": "researchers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "resemble",
       "canonicalId": "rg_word_resemble",
       "canonicalWord": "resemble",
@@ -14294,6 +16934,32 @@
           "key": "resembles",
           "id": "rg_word_resembles",
           "word": "resembles",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "reservation",
+      "canonicalId": "rg_word_reservation",
+      "canonicalWord": "reservation",
+      "aliases": [
+        {
+          "key": "reservations",
+          "id": "rg_word_reservations",
+          "word": "reservations",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "reserve",
+      "canonicalId": "rg_word_reserve",
+      "canonicalWord": "reserve",
+      "aliases": [
+        {
+          "key": "reserves",
+          "id": "rg_word_reserves",
+          "word": "reserves",
           "relationType": "form"
         }
       ]
@@ -14396,6 +17062,19 @@
       ]
     },
     {
+      "canonicalKey": "responsibility",
+      "canonicalId": "rg_word_responsibility",
+      "canonicalWord": "responsibility",
+      "aliases": [
+        {
+          "key": "responsibilities",
+          "id": "rg_word_responsibilities",
+          "word": "responsibilities",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "restaurant",
       "canonicalId": "rg_word_restaurant",
       "canonicalWord": "restaurant",
@@ -14430,6 +17109,19 @@
           "key": "restricting",
           "id": "rg_word_restricting",
           "word": "restricting",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "restriction",
+      "canonicalId": "rg_word_restriction",
+      "canonicalWord": "restriction",
+      "aliases": [
+        {
+          "key": "restrictions",
+          "id": "rg_word_restrictions",
+          "word": "restrictions",
           "relationType": "form"
         }
       ]
@@ -14546,6 +17238,12 @@
           "id": "rg_word_reviewed",
           "word": "reviewed",
           "relationType": "form"
+        },
+        {
+          "key": "reviews",
+          "id": "rg_word_reviews",
+          "word": "reviews",
+          "relationType": "form"
         }
       ]
     },
@@ -14576,6 +17274,19 @@
       ]
     },
     {
+      "canonicalKey": "rhythm",
+      "canonicalId": "rg_word_rhythm",
+      "canonicalWord": "rhythm",
+      "aliases": [
+        {
+          "key": "rhythms",
+          "id": "rg_word_rhythms",
+          "word": "rhythms",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "rider",
       "canonicalId": "rg_word_rider",
       "canonicalWord": "rider",
@@ -14597,6 +17308,19 @@
           "key": "ridges",
           "id": "rg_word_ridges",
           "word": "ridges",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "right",
+      "canonicalId": "rg_word_right",
+      "canonicalWord": "right",
+      "aliases": [
+        {
+          "key": "rights",
+          "id": "rg_word_rights",
+          "word": "rights",
           "relationType": "form"
         }
       ]
@@ -14664,9 +17388,7 @@
           "word": "roads",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "rock",
@@ -14691,6 +17413,12 @@
           "id": "rg_word_rolled",
           "word": "rolled",
           "relationType": "form"
+        },
+        {
+          "key": "rolls",
+          "id": "rg_word_rolls",
+          "word": "rolls",
+          "relationType": "form"
         }
       ]
     },
@@ -14708,6 +17436,19 @@
       ]
     },
     {
+      "canonicalKey": "rooftop",
+      "canonicalId": "rg_word_rooftop",
+      "canonicalWord": "rooftop",
+      "aliases": [
+        {
+          "key": "rooftops",
+          "id": "rg_word_rooftops",
+          "word": "rooftops",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "room",
       "canonicalId": "rg_word_room",
       "canonicalWord": "room",
@@ -14718,9 +17459,7 @@
           "word": "rooms",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "root",
@@ -14758,6 +17497,12 @@
           "id": "rg_word_ruined",
           "word": "ruined",
           "relationType": "form"
+        },
+        {
+          "key": "ruins",
+          "id": "rg_word_ruins",
+          "word": "ruins",
+          "relationType": "form"
         }
       ]
     },
@@ -14791,9 +17536,7 @@
           "word": "running",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "rush",
@@ -14810,6 +17553,32 @@
           "key": "rushing",
           "id": "rg_word_rushing",
           "word": "rushing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "sack",
+      "canonicalId": "rg_word_sack",
+      "canonicalWord": "sack",
+      "aliases": [
+        {
+          "key": "sacks",
+          "id": "rg_word_sacks",
+          "word": "sacks",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "safe",
+      "canonicalId": "rg_word_safe",
+      "canonicalWord": "safe",
+      "aliases": [
+        {
+          "key": "safer",
+          "id": "rg_word_safer",
+          "word": "safer",
           "relationType": "form"
         }
       ]
@@ -14838,9 +17607,7 @@
           "word": "sales",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "sample",
@@ -14882,6 +17649,19 @@
       ]
     },
     {
+      "canonicalKey": "saver",
+      "canonicalId": "rg_word_saver",
+      "canonicalWord": "saver",
+      "aliases": [
+        {
+          "key": "savers",
+          "id": "rg_word_savers",
+          "word": "savers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "scan",
       "canonicalId": "rg_word_scan",
       "canonicalWord": "scan",
@@ -14890,6 +17670,12 @@
           "key": "scanned",
           "id": "rg_word_scanned",
           "word": "scanned",
+          "relationType": "form"
+        },
+        {
+          "key": "scans",
+          "id": "rg_word_scans",
+          "word": "scans",
           "relationType": "form"
         }
       ]
@@ -14903,6 +17689,19 @@
           "key": "scarecrows",
           "id": "rg_word_scarecrows",
           "word": "scarecrows",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "scarf",
+      "canonicalId": "rg_word_scarf",
+      "canonicalWord": "scarf",
+      "aliases": [
+        {
+          "key": "scarves",
+          "id": "rg_word_scarves",
+          "word": "scarves",
           "relationType": "form"
         }
       ]
@@ -15005,6 +17804,19 @@
       ]
     },
     {
+      "canonicalKey": "score",
+      "canonicalId": "rg_word_score",
+      "canonicalWord": "score",
+      "aliases": [
+        {
+          "key": "scores",
+          "id": "rg_word_scores",
+          "word": "scores",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "screen",
       "canonicalId": "rg_word_screen",
       "canonicalWord": "screen",
@@ -15054,9 +17866,7 @@
           "word": "seas",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "search",
@@ -15101,9 +17911,7 @@
           "word": "seats",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "section",
@@ -15154,9 +17962,7 @@
           "word": "seen",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "seed",
@@ -15180,6 +17986,25 @@
           "key": "sought",
           "id": "rg_word_sought",
           "word": "sought",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "seem",
+      "canonicalId": "rg_word_seem",
+      "canonicalWord": "seem",
+      "aliases": [
+        {
+          "key": "seemed",
+          "id": "rg_word_seemed",
+          "word": "seemed",
+          "relationType": "form"
+        },
+        {
+          "key": "seems",
+          "id": "rg_word_seems",
+          "word": "seems",
           "relationType": "form"
         }
       ]
@@ -15212,6 +18037,19 @@
           "key": "sellers",
           "id": "rg_word_sellers",
           "word": "sellers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "seminar",
+      "canonicalId": "rg_word_seminar",
+      "canonicalWord": "seminar",
+      "aliases": [
+        {
+          "key": "seminars",
+          "id": "rg_word_seminars",
+          "word": "seminars",
           "relationType": "form"
         }
       ]
@@ -15264,6 +18102,32 @@
           "key": "services",
           "id": "rg_word_services",
           "word": "services",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "session",
+      "canonicalId": "rg_word_session",
+      "canonicalWord": "session",
+      "aliases": [
+        {
+          "key": "sessions",
+          "id": "rg_word_sessions",
+          "word": "sessions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "setting",
+      "canonicalId": "rg_word_setting",
+      "canonicalWord": "setting",
+      "aliases": [
+        {
+          "key": "settings",
+          "id": "rg_word_settings",
+          "word": "settings",
           "relationType": "form"
         }
       ]
@@ -15324,9 +18188,7 @@
           "word": "sharing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "sheet",
@@ -15394,6 +18256,19 @@
       ]
     },
     {
+      "canonicalKey": "shirt",
+      "canonicalId": "rg_word_shirt",
+      "canonicalWord": "shirt",
+      "aliases": [
+        {
+          "key": "shirts",
+          "id": "rg_word_shirts",
+          "word": "shirts",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "shoe",
       "canonicalId": "rg_word_shoe",
       "canonicalWord": "shoe",
@@ -15404,9 +18279,7 @@
           "word": "shoes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "shoot",
@@ -15438,9 +18311,20 @@
           "word": "shops",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "shopper",
+      "canonicalId": "rg_word_shopper",
+      "canonicalWord": "shopper",
+      "aliases": [
+        {
+          "key": "shoppers",
+          "id": "rg_word_shoppers",
+          "word": "shoppers",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "short",
@@ -15482,6 +18366,25 @@
       ]
     },
     {
+      "canonicalKey": "show",
+      "canonicalId": "rg_word_show",
+      "canonicalWord": "show",
+      "aliases": [
+        {
+          "key": "showing",
+          "id": "rg_word_showing",
+          "word": "showing",
+          "relationType": "form"
+        },
+        {
+          "key": "shown",
+          "id": "rg_word_shown",
+          "word": "shown",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "shower",
       "canonicalId": "rg_word_shower",
       "canonicalWord": "shower",
@@ -15508,6 +18411,19 @@
       ]
     },
     {
+      "canonicalKey": "shrub",
+      "canonicalId": "rg_word_shrub",
+      "canonicalWord": "shrub",
+      "aliases": [
+        {
+          "key": "shrubs",
+          "id": "rg_word_shrubs",
+          "word": "shrubs",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "side",
       "canonicalId": "rg_word_side",
       "canonicalWord": "side",
@@ -15529,6 +18445,19 @@
           "key": "sights",
           "id": "rg_word_sights",
           "word": "sights",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "sighting",
+      "canonicalId": "rg_word_sighting",
+      "canonicalWord": "sighting",
+      "aliases": [
+        {
+          "key": "sightings",
+          "id": "rg_word_sightings",
+          "word": "sightings",
           "relationType": "form"
         }
       ]
@@ -15589,9 +18518,7 @@
           "word": "singing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "sink",
@@ -15630,9 +18557,7 @@
           "word": "sitting",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "site",
@@ -15648,6 +18573,19 @@
       ]
     },
     {
+      "canonicalKey": "situation",
+      "canonicalId": "rg_word_situation",
+      "canonicalWord": "situation",
+      "aliases": [
+        {
+          "key": "situations",
+          "id": "rg_word_situations",
+          "word": "situations",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "size",
       "canonicalId": "rg_word_size",
       "canonicalWord": "size",
@@ -15658,9 +18596,7 @@
           "word": "sizes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "skill",
@@ -15686,9 +18622,7 @@
           "word": "skins",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "sleeper",
@@ -15717,6 +18651,19 @@
       ]
     },
     {
+      "canonicalKey": "sleigh",
+      "canonicalId": "rg_word_sleigh",
+      "canonicalWord": "sleigh",
+      "aliases": [
+        {
+          "key": "sleighs",
+          "id": "rg_word_sleighs",
+          "word": "sleighs",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "slip",
       "canonicalId": "rg_word_slip",
       "canonicalWord": "slip",
@@ -15738,6 +18685,19 @@
           "key": "slopes",
           "id": "rg_word_slopes",
           "word": "slopes",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "slow",
+      "canonicalId": "rg_word_slow",
+      "canonicalWord": "slow",
+      "aliases": [
+        {
+          "key": "slower",
+          "id": "rg_word_slower",
+          "word": "slower",
           "relationType": "form"
         }
       ]
@@ -15865,6 +18825,19 @@
       ]
     },
     {
+      "canonicalKey": "solution",
+      "canonicalId": "rg_word_solution",
+      "canonicalWord": "solution",
+      "aliases": [
+        {
+          "key": "solutions",
+          "id": "rg_word_solutions",
+          "word": "solutions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "solvent",
       "canonicalId": "rg_word_solvent",
       "canonicalWord": "solvent",
@@ -15888,9 +18861,20 @@
           "word": "songs",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "songbird",
+      "canonicalId": "rg_word_songbird",
+      "canonicalWord": "songbird",
+      "aliases": [
+        {
+          "key": "songbirds",
+          "id": "rg_word_songbirds",
+          "word": "songbirds",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "sort",
@@ -15981,9 +18965,7 @@
           "word": "speaking",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "speaker",
@@ -16026,6 +19008,19 @@
           "key": "specialising",
           "id": "rg_word_specialising",
           "word": "specialising",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "specialist",
+      "canonicalId": "rg_word_specialist",
+      "canonicalWord": "specialist",
+      "aliases": [
+        {
+          "key": "specialists",
+          "id": "rg_word_specialists",
+          "word": "specialists",
           "relationType": "form"
         }
       ]
@@ -16092,9 +19087,7 @@
           "word": "spent",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "spice",
@@ -16200,6 +19193,19 @@
       ]
     },
     {
+      "canonicalKey": "spreadsheet",
+      "canonicalId": "rg_word_spreadsheet",
+      "canonicalWord": "spreadsheet",
+      "aliases": [
+        {
+          "key": "spreadsheets",
+          "id": "rg_word_spreadsheets",
+          "word": "spreadsheets",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "squirrel",
       "canonicalId": "rg_word_squirrel",
       "canonicalWord": "squirrel",
@@ -16208,6 +19214,19 @@
           "key": "squirrels",
           "id": "rg_word_squirrels",
           "word": "squirrels",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "stack",
+      "canonicalId": "rg_word_stack",
+      "canonicalWord": "stack",
+      "aliases": [
+        {
+          "key": "stacked",
+          "id": "rg_word_stacked",
+          "word": "stacked",
           "relationType": "form"
         }
       ]
@@ -16275,9 +19294,7 @@
           "word": "stars",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "start",
@@ -16355,9 +19372,7 @@
           "word": "staying",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "stem",
@@ -16383,9 +19398,7 @@
           "word": "steps",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "stick",
@@ -16486,6 +19499,32 @@
           "key": "stories",
           "id": "rg_word_stories",
           "word": "stories",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "strain",
+      "canonicalId": "rg_word_strain",
+      "canonicalWord": "strain",
+      "aliases": [
+        {
+          "key": "strains",
+          "id": "rg_word_strains",
+          "word": "strains",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "strand",
+      "canonicalId": "rg_word_strand",
+      "canonicalWord": "strand",
+      "aliases": [
+        {
+          "key": "strands",
+          "id": "rg_word_strands",
+          "word": "strands",
           "relationType": "form"
         }
       ]
@@ -16787,6 +19826,19 @@
       ]
     },
     {
+      "canonicalKey": "suggestion",
+      "canonicalId": "rg_word_suggestion",
+      "canonicalWord": "suggestion",
+      "aliases": [
+        {
+          "key": "suggestions",
+          "id": "rg_word_suggestions",
+          "word": "suggestions",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "suit",
       "canonicalId": "rg_word_suit",
       "canonicalWord": "suit",
@@ -16892,6 +19944,19 @@
           "key": "supports",
           "id": "rg_word_supports",
           "word": "supports",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "supporter",
+      "canonicalId": "rg_word_supporter",
+      "canonicalWord": "supporter",
+      "aliases": [
+        {
+          "key": "supporters",
+          "id": "rg_word_supporters",
+          "word": "supporters",
           "relationType": "form"
         }
       ]
@@ -17026,6 +20091,19 @@
       ]
     },
     {
+      "canonicalKey": "table",
+      "canonicalId": "rg_word_table",
+      "canonicalWord": "table",
+      "aliases": [
+        {
+          "key": "tables",
+          "id": "rg_word_tables",
+          "word": "tables",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "tablet",
       "canonicalId": "rg_word_tablet",
       "canonicalWord": "tablet",
@@ -17068,9 +20146,7 @@
           "word": "taking",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "tale",
@@ -17102,9 +20178,20 @@
           "word": "talking",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "tap",
+      "canonicalId": "rg_word_tap",
+      "canonicalWord": "tap",
+      "aliases": [
+        {
+          "key": "taps",
+          "id": "rg_word_taps",
+          "word": "taps",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "target",
@@ -17134,7 +20221,7 @@
     },
     {
       "canonicalKey": "tax",
-      "canonicalId": "rg_word_tax",
+      "canonicalId": "rg_logic_582696_79014291",
       "canonicalWord": "tax",
       "aliases": [
         {
@@ -17143,9 +20230,7 @@
           "word": "taxes",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "teach",
@@ -17171,9 +20256,7 @@
           "word": "teams",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "tear",
@@ -17184,6 +20267,12 @@
           "key": "tears",
           "id": "rg_word_tears",
           "word": "tears",
+          "relationType": "form"
+        },
+        {
+          "key": "tore",
+          "id": "rg_word_tore",
+          "word": "tore",
           "relationType": "form"
         }
       ]
@@ -17215,6 +20304,19 @@
       ]
     },
     {
+      "canonicalKey": "teen",
+      "canonicalId": "rg_word_teen",
+      "canonicalWord": "teen",
+      "aliases": [
+        {
+          "key": "teens",
+          "id": "rg_word_teens",
+          "word": "teens",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "teenager",
       "canonicalId": "rg_word_teenager",
       "canonicalWord": "teenager",
@@ -17238,9 +20340,7 @@
           "word": "told",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "temperature",
@@ -17415,9 +20515,20 @@
           "word": "things",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "thought",
+      "canonicalId": "rg_word_thought",
+      "canonicalWord": "thought",
+      "aliases": [
+        {
+          "key": "thoughts",
+          "id": "rg_word_thoughts",
+          "word": "thoughts",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "thousand",
@@ -17523,6 +20634,19 @@
       ]
     },
     {
+      "canonicalKey": "tie",
+      "canonicalId": "rg_word_tie",
+      "canonicalWord": "tie",
+      "aliases": [
+        {
+          "key": "tied",
+          "id": "rg_word_tied",
+          "word": "tied",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "tile",
       "canonicalId": "rg_word_tile",
       "canonicalWord": "tile",
@@ -17531,6 +20655,19 @@
           "key": "tiles",
           "id": "rg_word_tiles",
           "word": "tiles",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "time",
+      "canonicalId": "rg_word_time",
+      "canonicalWord": "time",
+      "aliases": [
+        {
+          "key": "times",
+          "id": "rg_word_times",
+          "word": "times",
           "relationType": "form"
         }
       ]
@@ -17559,9 +20696,7 @@
           "word": "tips",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "title",
@@ -17572,6 +20707,19 @@
           "key": "titles",
           "id": "rg_word_titles",
           "word": "titles",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "toilet",
+      "canonicalId": "rg_word_toilet",
+      "canonicalWord": "toilet",
+      "aliases": [
+        {
+          "key": "toilets",
+          "id": "rg_word_toilets",
+          "word": "toilets",
           "relationType": "form"
         }
       ]
@@ -17626,9 +20774,7 @@
           "word": "tools",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "tooth",
@@ -17654,9 +20800,7 @@
           "word": "tops",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "topic",
@@ -17691,6 +20835,19 @@
       ]
     },
     {
+      "canonicalKey": "touch-screen",
+      "canonicalId": "rg_word_touch_screen",
+      "canonicalWord": "touch-screen",
+      "aliases": [
+        {
+          "key": "touchscreen",
+          "id": "rg_word_touchscreen",
+          "word": "touchscreen",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "tour",
       "canonicalId": "rg_word_tour",
       "canonicalWord": "tour",
@@ -17712,6 +20869,19 @@
           "key": "tourists",
           "id": "rg_word_tourists",
           "word": "tourists",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "towel",
+      "canonicalId": "rg_word_towel",
+      "canonicalWord": "towel",
+      "aliases": [
+        {
+          "key": "towels",
+          "id": "rg_word_towels",
+          "word": "towels",
           "relationType": "form"
         }
       ]
@@ -17740,9 +20910,7 @@
           "word": "towns",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "toy",
@@ -17755,9 +20923,7 @@
           "word": "toys",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "trace",
@@ -17807,6 +20973,19 @@
           "key": "traders",
           "id": "rg_word_traders",
           "word": "traders",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "trail",
+      "canonicalId": "rg_word_trail",
+      "canonicalWord": "trail",
+      "aliases": [
+        {
+          "key": "trails",
+          "id": "rg_word_trails",
+          "word": "trails",
           "relationType": "form"
         }
       ]
@@ -17916,6 +21095,19 @@
       ]
     },
     {
+      "canonicalKey": "translation",
+      "canonicalId": "rg_word_translation",
+      "canonicalWord": "translation",
+      "aliases": [
+        {
+          "key": "translations",
+          "id": "rg_word_translations",
+          "word": "translations",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "transport",
       "canonicalId": "rg_word_transport",
       "canonicalWord": "transport",
@@ -17990,9 +21182,7 @@
           "word": "trees",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "trick",
@@ -18092,6 +21282,19 @@
       ]
     },
     {
+      "canonicalKey": "try",
+      "canonicalId": "rg_word_try",
+      "canonicalWord": "try",
+      "aliases": [
+        {
+          "key": "tried",
+          "id": "rg_word_tried",
+          "word": "tried",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "tuck",
       "canonicalId": "rg_word_tuck",
       "canonicalWord": "tuck",
@@ -18126,6 +21329,19 @@
           "key": "turbines",
           "id": "rg_word_turbines",
           "word": "turbines",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "turn",
+      "canonicalId": "rg_word_turn",
+      "canonicalWord": "turn",
+      "aliases": [
+        {
+          "key": "turned",
+          "id": "rg_word_turned",
+          "word": "turned",
           "relationType": "form"
         }
       ]
@@ -18167,9 +21383,7 @@
           "word": "types",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "umbrella",
@@ -18219,6 +21433,19 @@
           "key": "units",
           "id": "rg_word_units",
           "word": "units",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "universal",
+      "canonicalId": "rg_word_universal",
+      "canonicalWord": "universal",
+      "aliases": [
+        {
+          "key": "universals",
+          "id": "rg_word_universals",
+          "word": "universals",
           "relationType": "form"
         }
       ]
@@ -18323,9 +21550,7 @@
           "word": "using",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "user",
@@ -18355,6 +21580,19 @@
           "key": "vacancies",
           "id": "rg_word_vacancies",
           "word": "vacancies",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "vaccination",
+      "canonicalId": "rg_word_vaccination",
+      "canonicalWord": "vaccination",
+      "aliases": [
+        {
+          "key": "vaccinations",
+          "id": "rg_word_vaccinations",
+          "word": "vaccinations",
           "relationType": "form"
         }
       ]
@@ -18409,9 +21647,7 @@
           "word": "vans",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "variation",
@@ -18487,6 +21723,19 @@
           "key": "venues",
           "id": "rg_word_venues",
           "word": "venues",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "version",
+      "canonicalId": "rg_word_version",
+      "canonicalWord": "version",
+      "aliases": [
+        {
+          "key": "versions",
+          "id": "rg_word_versions",
+          "word": "versions",
           "relationType": "form"
         }
       ]
@@ -18582,6 +21831,19 @@
       ]
     },
     {
+      "canonicalKey": "visitor",
+      "canonicalId": "rg_word_visitor",
+      "canonicalWord": "visitor",
+      "aliases": [
+        {
+          "key": "visitors",
+          "id": "rg_word_visitors",
+          "word": "visitors",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "volunteer",
       "canonicalId": "rg_word_volunteer",
       "canonicalWord": "volunteer",
@@ -18590,6 +21852,19 @@
           "key": "volunteers",
           "id": "rg_word_volunteers",
           "word": "volunteers",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "vote",
+      "canonicalId": "rg_word_vote",
+      "canonicalWord": "vote",
+      "aliases": [
+        {
+          "key": "voted",
+          "id": "rg_word_voted",
+          "word": "voted",
           "relationType": "form"
         }
       ]
@@ -18622,7 +21897,7 @@
     },
     {
       "canonicalKey": "walk",
-      "canonicalId": "rg_word_walk",
+      "canonicalId": "rg_word_walkor",
       "canonicalWord": "walk",
       "aliases": [
         {
@@ -18631,9 +21906,7 @@
           "word": "walked",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "walkway",
@@ -18659,9 +21932,7 @@
           "word": "walls",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "want",
@@ -18686,9 +21957,7 @@
           "word": "wants",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "warn",
@@ -18701,9 +21970,7 @@
           "word": "warns",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "wash",
@@ -18716,9 +21983,7 @@
           "word": "washed",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "water",
@@ -18744,9 +22009,7 @@
           "word": "waves",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "way",
@@ -18759,9 +22022,7 @@
           "word": "ways",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "wear",
@@ -18774,9 +22035,7 @@
           "word": "wearing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "website",
@@ -18802,9 +22061,20 @@
           "word": "weeks",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "weekday",
+      "canonicalId": "rg_word_weekday",
+      "canonicalWord": "weekday",
+      "aliases": [
+        {
+          "key": "weekdays",
+          "id": "rg_word_weekdays",
+          "word": "weekdays",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "weekend",
@@ -18852,6 +22122,19 @@
       ]
     },
     {
+      "canonicalKey": "well-being",
+      "canonicalId": "rg_word_well_being",
+      "canonicalWord": "well-being",
+      "aliases": [
+        {
+          "key": "wellbeing",
+          "id": "rg_word_wellbeing",
+          "word": "wellbeing",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "wetland",
       "canonicalId": "rg_word_wetland",
       "canonicalWord": "wetland",
@@ -18891,6 +22174,19 @@
       ]
     },
     {
+      "canonicalKey": "whisper",
+      "canonicalId": "rg_word_whisper",
+      "canonicalWord": "whisper",
+      "aliases": [
+        {
+          "key": "whispered",
+          "id": "rg_word_whispered",
+          "word": "whispered",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "wide",
       "canonicalId": "rg_word_wide",
       "canonicalWord": "wide",
@@ -18914,9 +22210,7 @@
           "word": "winning",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "wind",
@@ -18929,9 +22223,7 @@
           "word": "winds",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "window",
@@ -18955,6 +22247,19 @@
           "key": "wings",
           "id": "rg_word_wings",
           "word": "wings",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "wipe",
+      "canonicalId": "rg_word_wipe",
+      "canonicalWord": "wipe",
+      "aliases": [
+        {
+          "key": "wiped",
+          "id": "rg_word_wiped",
+          "word": "wiped",
           "relationType": "form"
         }
       ]
@@ -18989,9 +22294,20 @@
           "word": "wishing",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
+    },
+    {
+      "canonicalKey": "witness",
+      "canonicalId": "rg_word_witness",
+      "canonicalWord": "witness",
+      "aliases": [
+        {
+          "key": "witnessed",
+          "id": "rg_word_witnessed",
+          "word": "witnessed",
+          "relationType": "form"
+        }
+      ]
     },
     {
       "canonicalKey": "wonder",
@@ -19030,9 +22346,7 @@
           "word": "words",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "worker",
@@ -19054,6 +22368,19 @@
       ]
     },
     {
+      "canonicalKey": "workman",
+      "canonicalId": "rg_word_workman",
+      "canonicalWord": "workman",
+      "aliases": [
+        {
+          "key": "workmen",
+          "id": "rg_word_workmen",
+          "word": "workmen",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
       "canonicalKey": "workshop",
       "canonicalId": "rg_word_workshop",
       "canonicalWord": "workshop",
@@ -19062,6 +22389,19 @@
           "key": "workshops",
           "id": "rg_word_workshops",
           "word": "workshops",
+          "relationType": "form"
+        }
+      ]
+    },
+    {
+      "canonicalKey": "workstation",
+      "canonicalId": "rg_word_workstation",
+      "canonicalWord": "workstation",
+      "aliases": [
+        {
+          "key": "workstations",
+          "id": "rg_word_workstations",
+          "word": "workstations",
           "relationType": "form"
         }
       ]
@@ -19129,9 +22469,7 @@
           "word": "years",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "yield",
@@ -19169,9 +22507,7 @@
           "word": "youngest",
           "relationType": "form"
         }
-      ],
-      "suppressionOnly": true,
-      "suppressionReason": "canonical-retired-by-user"
+      ]
     },
     {
       "canonicalKey": "zip",
@@ -19203,14 +22539,32 @@
   "stats": {
     "familyCount": 1330,
     "aliasCount": 1597,
-    "activeInflectionRuleCount": 1179,
-    "activeInflectionAliasCount": 1402,
+    "activeInflectionRuleCount": 1580,
+    "activeInflectionAliasCount": 1890,
     "standaloneRestoredCount": 160,
     "suppressedDeletedCanonicalRuleCount": 151,
     "relationTypes": {
-      "form": 1402,
+      "form": 1890,
       "family": 0
-    }
+    },
+    "repairedUnlinkedPluralAliasCount": 43,
+    "redundantPluralAliasCount": 41
   },
-  "updatedAt": "2026-08-05T15:28:22.344Z"
+  "updatedAt": "2026-08-18T02:11:34.060Z",
+  "masterReferenceForms": {
+    "version": "reading-g-master-reference-forms-v1",
+    "source": "public/data/words.json",
+    "sourceAliasCount": 771,
+    "independentAliasCount": 203,
+    "canonicalHeadwordCount": 732,
+    "missingCanonicalHeadwordCount": 107
+  },
+  "redundantPluralCompaction": {
+    "version": "reading-g-redundant-plural-compaction-v1-20260816",
+    "mergedPluralCount": 41
+  },
+  "hyphenSpellingCompaction": {
+    "version": "hyphen-spelling-variant-keep-hyphen-v1-20260818",
+    "mergedCount": 12
+  }
 }

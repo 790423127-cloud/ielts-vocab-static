@@ -324,9 +324,9 @@ export function useSpellingEngine(words = [], options = {}) {
     return nextSnapshot;
   }
 
-  async function submit() {
+  async function submit(answerOverride = inputValue) {
     const bridge = bridgeRef.current;
-    const answer = inputValue.trim();
+    const answer = String(answerOverride || "").trim();
     if (!bridge || !ready || !answer) return null;
     if (submitInFlightRef.current) return null;
 

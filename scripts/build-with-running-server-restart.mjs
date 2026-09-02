@@ -1,123 +1,149 @@
-import { spawn, spawnSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, renameSync, rmSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import {
+  findListeningPid,
+  isThisProjectServer,
+  startLocalProductionServer,
+  stopLocalProductionServer
+} from "./local-production-server.mjs";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const localPort = 3000;
+const activeBuildDirectory = path.join(projectRoot, ".next");
+const stagedBuildDirectory = path.join(projectRoot, ".next-build-staging");
+const previousBuildDirectory = path.join(projectRoot, ".next-previous");
+const managedBuildDirectories = new Set([
+  activeBuildDirectory,
+  stagedBuildDirectory,
+  previousBuildDirectory
+]);
 
-function findListeningPid(port) {
-  if (process.platform !== "win32") return null;
-  const result = spawnSync("netstat.exe", ["-ano"], {
-    cwd: projectRoot,
-    encoding: "utf8",
-    windowsHide: true
-  });
-  if (result.status !== 0) return null;
-
-  for (const line of String(result.stdout || "").split(/\r?\n/)) {
-    if (!line.includes("LISTENING")) continue;
-    const match = line.trim().match(/^TCP\s+\S+:(\d+)\s+\S+\s+LISTENING\s+(\d+)$/i);
-    if (match && Number(match[1]) === port) return Number(match[2]);
+function assertManagedBuildDirectory(directoryPath) {
+  const resolved = path.resolve(directoryPath);
+  if (!managedBuildDirectories.has(resolved) || path.dirname(resolved) !== projectRoot) {
+    throw new Error(`拒绝操作未受管理的构建目录：${resolved}`);
   }
-  return null;
+  return resolved;
 }
 
-function readWindowsCommandLine(pid) {
-  if (process.platform !== "win32" || !Number.isInteger(pid)) return "";
-  const command = [
-    `$targetPid=${pid}`,
-    "$process=Get-CimInstance Win32_Process -Filter \"ProcessId=$targetPid\"",
-    "if($process){[Console]::Out.Write($process.CommandLine)}"
-  ].join(";");
-  const result = spawnSync(
-    "powershell.exe",
-    ["-NoProfile", "-Command", command],
-    { cwd: projectRoot, encoding: "utf8", windowsHide: true }
-  );
-  return result.status === 0 ? String(result.stdout || "") : "";
+function removeManagedBuildDirectory(directoryPath) {
+  const resolved = assertManagedBuildDirectory(directoryPath);
+  rmSync(resolved, { recursive: true, force: true });
 }
 
-function isThisProjectServer(pid) {
-  const commandLine = readWindowsCommandLine(pid).toLocaleLowerCase("en-US");
-  const root = projectRoot.toLocaleLowerCase("en-US");
-  return commandLine.includes(root)
-    && commandLine.includes("next")
-    && commandLine.includes("start")
-    && commandLine.includes(String(localPort));
-}
-
-function stopRunningServer(pid) {
-  const result = spawnSync(
-    "taskkill.exe",
-    ["/PID", String(pid), "/T", "/F"],
-    { cwd: projectRoot, stdio: "ignore", windowsHide: true }
-  );
-  if (result.status !== 0) {
-    throw new Error(`无法停止占用 ${localPort} 端口的旧版词库服务（PID ${pid}）`);
-  }
-}
-
-function runNextBuild() {
+function runStagedNextBuild() {
   const nextBin = path.join(projectRoot, "node_modules", "next", "dist", "bin", "next");
-  const result = spawnSync(process.execPath, [nextBin, "build"], {
+  return spawnSync(process.execPath, [nextBin, "build"], {
     cwd: projectRoot,
-    env: process.env,
+    env: { ...process.env, NEXT_DIST_DIR: ".next-build-staging" },
     stdio: "inherit",
     windowsHide: true
-  });
-  if (result.status !== 0) process.exit(result.status || 1);
+  }).status ?? 1;
 }
 
-async function waitForServer(url, timeoutMs = 15000) {
-  const startedAt = Date.now();
-  while (Date.now() - startedAt < timeoutMs) {
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      if (response.ok) return true;
-    } catch {}
-    await new Promise((resolve) => setTimeout(resolve, 250));
+function stagedBuildIsComplete() {
+  return existsSync(path.join(stagedBuildDirectory, "BUILD_ID"));
+}
+
+function prepareBuildDirectories() {
+  removeManagedBuildDirectory(stagedBuildDirectory);
+  if (!existsSync(path.join(activeBuildDirectory, "BUILD_ID"))
+      && existsSync(path.join(previousBuildDirectory, "BUILD_ID"))) {
+    // A prior interrupted swap can leave an incomplete .next directory in
+    // place.  Windows cannot rename the known-good fallback over that target.
+    // This directory is only a generated build artifact and has no BUILD_ID,
+    // so remove it before restoring the last complete build.
+    removeManagedBuildDirectory(activeBuildDirectory);
+    renameSync(previousBuildDirectory, activeBuildDirectory);
   }
-  return false;
+  if (existsSync(path.join(activeBuildDirectory, "BUILD_ID"))) {
+    removeManagedBuildDirectory(previousBuildDirectory);
+  }
 }
 
-async function restartServer() {
-  const buildId = readFileSync(path.join(projectRoot, ".next", "BUILD_ID"), "utf8").trim();
-  writeFileSync(path.join(projectRoot, ".next", ".running-build-id"), `${buildId}\n`, "utf8");
+function swapInStagedBuild() {
+  removeManagedBuildDirectory(previousBuildDirectory);
+  if (existsSync(activeBuildDirectory)) {
+    renameSync(activeBuildDirectory, previousBuildDirectory);
+  }
 
-  const child = spawn(
-    "cmd.exe",
-    ["/d", "/s", "/c", "npm.cmd start"],
-    {
-      cwd: projectRoot,
-      detached: true,
-      env: process.env,
-      stdio: "ignore",
-      windowsHide: true
+  try {
+    renameSync(stagedBuildDirectory, activeBuildDirectory);
+  } catch (error) {
+    if (existsSync(previousBuildDirectory) && !existsSync(activeBuildDirectory)) {
+      renameSync(previousBuildDirectory, activeBuildDirectory);
     }
-  );
-  child.unref();
-
-  const ready = await waitForServer(`http://127.0.0.1:${localPort}/`);
-  if (!ready) {
-    throw new Error("新版已构建，但本地服务未能在 15 秒内恢复；请运行 start-windows.bat");
+    throw error;
   }
-  console.log(`本地词库服务已自动重启：http://127.0.0.1:${localPort}`);
 }
 
-const listeningPid = findListeningPid(localPort);
-const shouldRestart = Boolean(listeningPid && isThisProjectServer(listeningPid));
-
-if (shouldRestart) {
-  console.log(`检测到正在运行的旧版词库服务（PID ${listeningPid}），先安全停止再构建。`);
-  stopRunningServer(listeningPid);
-} else if (listeningPid) {
-  console.warn(`端口 ${localPort} 被其他程序占用，本次不会停止或重启该程序。`);
+function restorePreviousBuild() {
+  if (!existsSync(previousBuildDirectory)) return false;
+  removeManagedBuildDirectory(activeBuildDirectory);
+  renameSync(previousBuildDirectory, activeBuildDirectory);
+  return true;
 }
 
-runNextBuild();
+async function restartWithRollback() {
+  try {
+    await startLocalProductionServer({ port: localPort });
+  } catch (newBuildError) {
+    await stopLocalProductionServer({ port: localPort }).catch(() => {});
+    if (!restorePreviousBuild()) throw newBuildError;
 
-if (shouldRestart) {
-  await restartServer();
+    try {
+      await startLocalProductionServer({ port: localPort });
+    } catch (rollbackError) {
+      throw new Error(
+        `新构建启动失败，上一份构建也未能恢复。新构建错误：${newBuildError.message}；恢复错误：${rollbackError.message}`
+      );
+    }
+    throw new Error(`新构建启动失败，已恢复上一份可用服务：${newBuildError.message}`);
+  }
 }
+
+async function main() {
+  prepareBuildDirectories();
+
+  console.log("正在隔离目录中构建新版；当前 3000 服务会继续运行到构建成功。");
+  const buildExitCode = runStagedNextBuild();
+  if (buildExitCode !== 0 || !stagedBuildIsComplete()) {
+    removeManagedBuildDirectory(stagedBuildDirectory);
+    console.error("新版构建失败；当前 3000 服务和上一份构建均未改动。");
+    process.exitCode = buildExitCode || 1;
+    return;
+  }
+
+  const listeningPid = findListeningPid(localPort);
+  const shouldRestart = Boolean(listeningPid && isThisProjectServer(listeningPid, localPort));
+  if (listeningPid && !shouldRestart) {
+    console.warn(`端口 ${localPort} 被其他程序占用，本次不会停止该程序。`);
+  }
+
+  if (shouldRestart) {
+    console.log(`新版构建成功，正在切换本地词库服务（PID ${listeningPid}）。`);
+    await stopLocalProductionServer({ port: localPort });
+  }
+
+  try {
+    swapInStagedBuild();
+  } catch (error) {
+    if (shouldRestart) await startLocalProductionServer({ port: localPort }).catch(() => {});
+    throw new Error(`新版构建完成，但切换构建目录失败：${error.message}`);
+  }
+
+  if (shouldRestart) {
+    await restartWithRollback();
+    console.log(`本地词库服务已切换到新版：http://127.0.0.1:${localPort}`);
+  } else {
+    console.log("新版生产构建已准备完成。");
+  }
+}
+
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exitCode = 1;
+});

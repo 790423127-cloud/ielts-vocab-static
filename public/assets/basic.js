@@ -6,7 +6,7 @@
   var SESSION_KEY = "ielts_basic_flash_session_v1";
   var TOP_TOOLS_KEY = "ielts_static_basic_tools_collapsed_v1";
   var DATA_URL = "./data/basic-words.json";
-  var DATA_VERSION = "20260809_reading_keyboard_v49";
+  var DATA_VERSION = "20260830_system_safety_v80";
 
   var words = [];
   var filter = { type: "all", value: "" };
@@ -220,7 +220,7 @@
       posDisplay(item.pos) +
       " · " +
       (item.meaning || "等待释义");
-    els.example.textContent = item.example || "暂无例句";
+    window.IeltsExampleHighlight.render(els.example, item.example || "暂无例句", item);
     els.exampleCn.textContent = item.exampleCn || "";
     els.count.textContent = pos + 1 + " / " + study.length;
     els.progressFill.style.width = Math.max(1, ((pos + 1) / study.length) * 100) + "%";

@@ -73,7 +73,7 @@ export function applyIdictationPrefsPatch(current, sourceKey, patch) {
   };
 }
 
-export function useSpellingTrainingPreferences(scope = "word") {
+export function useSpellingTrainingPreferences(scope = "word", requestedPracticeSource = "") {
   const normalizedScope = normalizeSpellingScope(scope);
   const [rangeSettingsExpanded, setRangeSettingsExpanded] = useState(false);
   const [uxPrefs, setUxPrefs] = useState(DEFAULT_SPELLING_UX_PREFS);
@@ -84,20 +84,18 @@ export function useSpellingTrainingPreferences(scope = "word") {
     const snapshot = loadSpellingTrainingPreferences(normalizedScope);
     let nextStored = snapshot.storedPrefs;
 
-    // Deep-link: /spelling-words?source=error_bank|srs_review|personal_wrong_book
-    if (typeof window !== "undefined") {
-      const source = new URLSearchParams(window.location.search).get("source");
-      const allowed = new Set(["error_bank", "srs_review", "personal_wrong_book", "category"]);
-      if (source && allowed.has(source)) {
-        nextStored = applyStoredPrefsPatch(nextStored, { practiceSource: source }, normalizedScope);
-      }
+    // Route pages pass this query value, so sidebar navigation between
+    // /spelling-words?source=... entries also updates the active training source.
+    const allowed = new Set(["error_bank", "srs_review", "personal_wrong_book", "category"]);
+    if (requestedPracticeSource && allowed.has(requestedPracticeSource)) {
+      nextStored = applyStoredPrefsPatch(nextStored, { practiceSource: requestedPracticeSource }, normalizedScope);
     }
 
     setRangeSettingsExpanded(snapshot.rangeSettingsExpanded);
     setUxPrefs(snapshot.uxPrefs);
     setStoredPrefs(nextStored);
     setHydratedScope(snapshot.scope);
-  }, [normalizedScope]);
+  }, [normalizedScope, requestedPracticeSource]);
 
   useEffect(() => {
     if (hydratedScope !== normalizedScope) return;

@@ -46,7 +46,8 @@ export function buildLexiconFingerprint(headwords = [], phrases = [], versions =
   const phraseVersion = String(versions.phraseVersion || "");
   const headwordCount = Number(versions.headwordCount || headwords.length || 0);
   const phraseCount = Number(versions.phraseCount || phrases.length || 0);
-  const contentHash = buildContentHash(headwords, phrases);
+  const trustedContentHash = String(versions.contentHash || "").trim();
+  const contentHash = trustedContentHash || buildContentHash(headwords, phrases);
   const lexiconVersion = [headwordVersion, phraseVersion, headwordCount, phraseCount, contentHash].join("|");
   const lexiconHash = hashText(`${lexiconVersion}:${headwordCount}:${phraseCount}:${contentHash}`);
 

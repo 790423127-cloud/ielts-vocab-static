@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   WORD_STUDY_ORDER_MODE,
   normalizeWordStudyOrderMode,
@@ -42,15 +42,19 @@ function writeBrowserCursors(cursors) {
 
 export function useWordStudyOrdering(orderKey) {
   const [preferences, setPreferences] = useState({});
-  const [cursors, setCursors] = useState({});
+  const [cursorsHydrated, setCursorsHydrated] = useState(false);
+  const cursorsRef = useRef({});
 
   useLayoutEffect(() => {
     setPreferences(readBrowserPreferences());
-    setCursors(readBrowserCursors());
+    const nextCursors = readBrowserCursors();
+    cursorsRef.current = nextCursors;
+    setCursorsHydrated(true);
   }, []);
 
   const active = useMemo(() => {
     const stored = preferences?.[orderKey] || {};
+    const storedCursors = cursorsHydrated ? cursorsRef.current : {};
     const legacyDifficultyMode = stored.mode === WORD_STUDY_ORDER_MODE.EASY_TO_HARD
       ? WORD_STUDY_DIFFICULTY_MODE.EASY_TO_HARD
       : stored.mode === WORD_STUDY_ORDER_MODE.HARD_TO_EASY
@@ -69,12 +73,12 @@ export function useWordStudyOrdering(orderKey) {
           mode,
           {
             ...snapshot,
-            cursorKey: cursors?.[orderKey]?.[mode] || snapshot?.cursorKey || ""
+            cursorKey: storedCursors?.[orderKey]?.[mode] || snapshot?.cursorKey || ""
           }
         ])
       )
     };
-  }, [cursors, orderKey, preferences]);
+  }, [cursorsHydrated, orderKey, preferences]);
 
   const setMode = useCallback((nextMode, options = {}) => {
     const normalizedMode = normalizeWordStudyOrderMode(nextMode);
@@ -145,19 +149,18 @@ export function useWordStudyOrdering(orderKey) {
 
   const saveCursor = useCallback((snapshotKey, cursorKey) => {
     if (!snapshotKey || !cursorKey) return;
-    setCursors((current) => {
-      const previousEntry = current?.[orderKey] || {};
-      if (previousEntry[snapshotKey] === cursorKey) return current;
-      const next = {
-        ...(current || {}),
-        [orderKey]: {
-          ...previousEntry,
-          [snapshotKey]: cursorKey
-        }
-      };
-      writeBrowserCursors(next);
-      return next;
-    });
+    const current = cursorsRef.current || {};
+    const previousEntry = current?.[orderKey] || {};
+    if (previousEntry[snapshotKey] === cursorKey) return;
+    const next = {
+      ...current,
+      [orderKey]: {
+        ...previousEntry,
+        [snapshotKey]: cursorKey
+      }
+    };
+    cursorsRef.current = next;
+    writeBrowserCursors(next);
   }, [orderKey]);
 
   return {

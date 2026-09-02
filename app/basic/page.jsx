@@ -36,6 +36,7 @@ import {
   loadIelts538Words
 } from "../lib/ielts-538/load-ielts-538.mjs";
 import { advanceStudyQueueAfterExit } from "../lib/vocab/study-queue-delete.mjs";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
 import {
   IELTS_538_LEARNING_ENTRIES,
   IELTS_538_STATUS,
@@ -92,6 +93,13 @@ const IELTS_538_GROUP_FILTERS = [
 ];
 
 const IELTS_538_CHIP_GROUPS = [
+  {
+    title: "高频",
+    chips: [
+      { label: "AI教练真题替换", filter: { type: "aiCoachParaphrase", value: "" } },
+      { label: "G类阅读文章高频", filter: { type: "part3HighFrequency", value: "" } }
+    ]
+  },
   {
     title: "状态",
     chips: [
@@ -150,7 +158,7 @@ const IELTS_538_CONFIG = {
   modeLabel: "538考点",
   loadingWord: "正在读取 538 考点词库",
   loadingEyebrow: "538考点",
-  loadingNote: "读取 376 条独立词库并恢复上次学习位置",
+  loadingNote: "读取 376 个考点词和 1257 组新增AI教练真题替换，并恢复上次学习位置",
   emptyMeaning: "当前范围没有待学的 538 考点词",
   emptyDetail: "当前范围没有待学内容，可以更改范围或切到全部 376 词。",
   loadEmptyError: "538 考点词库为空。请确认 public/data/ielts-538-words.json 存在。",
@@ -367,13 +375,19 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
     dailyCount
   };
 
+  const statusSummaryWords = useMemo(
+    () => lexicon === "ielts538"
+      ? words.filter((word) => word.practiceKind !== "aiCoachQuestionParaphrase")
+      : words,
+    [lexicon, words]
+  );
   const familiarCount = useMemo(
-    () => words.filter((word) => getWordStatus(word, statusMap) === status.FAMILIAR).length,
-    [getWordStatus, status, words, statusMap]
+    () => statusSummaryWords.filter((word) => getWordStatus(word, statusMap) === status.FAMILIAR).length,
+    [getWordStatus, status, statusMap, statusSummaryWords]
   );
   const unfamiliarCount = useMemo(
-    () => words.filter((word) => getWordStatus(word, statusMap) === status.UNFAMILIAR).length,
-    [getWordStatus, status, words, statusMap]
+    () => statusSummaryWords.filter((word) => getWordStatus(word, statusMap) === status.UNFAMILIAR).length,
+    [getWordStatus, status, statusMap, statusSummaryWords]
   );
 
   const learningEntryGroups = useMemo(() => {
@@ -398,6 +412,17 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
         );
       });
   }, [words, search]);
+
+  const overviewWords = useMemo(
+    () => studyList.map(({ entry }) => ({
+      id: entry.id,
+      word: entry.word,
+      meaning: entry.meaning || "",
+      status: getWordStatus(entry, statusMap),
+      favorite: isFavorite(entry, statusMap)
+    })),
+    [getWordStatus, isFavorite, statusMap, studyList]
+  );
 
   const persistSession = useCallback((nextIndex, nextFilter = filter) => {
     if (!storageReadyRef.current || !restoredRef.current) return;
@@ -578,30 +603,23 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
   useEffect(() => {
     function onKeyDown(event) {
       if (phase !== "ready") return;
-      const tag = document.activeElement?.tagName?.toLowerCase();
-      const isHorizontalArrow = event.key === "ArrowLeft" || event.key === "ArrowRight";
-      if (
-        tag === "input"
-        || tag === "textarea"
-        || (tag === "select" && !isHorizontalArrow)
-      ) return;
-
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      const action = getStudyKeyboardAction(event, { verticalNavigation: true });
+      if (action === "next") {
         event.preventDefault();
         goToStudyOffset(1);
-      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      } else if (action === "previous") {
         event.preventDefault();
         goToStudyOffset(-1);
-      } else if (event.key === "Tab") {
+      } else if (action === "word-audio") {
         event.preventDefault();
         speakText(item?.word, "word");
-      } else if (event.key === " " || event.key === "Enter") {
-        if (event.key === " ") event.preventDefault();
-        if (event.key === " ") speakText(item?.example, "sentence");
-      } else if (event.key === "1") {
+      } else if (action === "example-audio") {
+        event.preventDefault();
+        speakText(item?.example, "sentence");
+      } else if (action === "known") {
         event.preventDefault();
         markStatus(status.FAMILIAR);
-      } else if (event.key === "3") {
+      } else if (action === "unknown") {
         event.preventDefault();
         markStatus(status.UNFAMILIAR);
       }
@@ -614,7 +632,7 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
 
   if (phase === "loading") {
     return (
-      <main className="page page--word-flash system-loading-page">
+      <main className="page page--word-flash system-loading-page" data-study-surface={lexicon === "ielts538" ? "ielts-538" : "basic"}>
         <StableLoadingState
           mark="A"
           eyebrow={config.loadingEyebrow}
@@ -626,7 +644,7 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
 
   if (phase === "error") {
     return (
-      <main className="page page--word-flash system-loading-page">
+      <main className="page page--word-flash system-loading-page" data-study-surface={lexicon === "ielts538" ? "ielts-538" : "basic"}>
         <StableLoadingState
           mark="A"
           eyebrow={config.loadingEyebrow}
@@ -686,11 +704,7 @@ export function StandaloneWordsPage({ lexicon = "basic" }) {
       onWordDifficultyModeChange={changeWordDifficultyMode}
       onPrev={() => goToStudyOffset(-1)}
       onNext={() => goToStudyOffset(1)}
-      overviewWords={studyList.map(({ entry }) => ({
-        ...entry,
-        status: getWordStatus(entry, statusMap),
-        favorite: isFavorite(entry, statusMap)
-      }))}
+      overviewWords={overviewWords}
       overviewStats={{
         familiar: familiarCount,
         unfamiliar: unfamiliarCount,

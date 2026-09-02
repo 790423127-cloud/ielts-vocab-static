@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createAiOps } from "../../../hooks/useHomeLexiconAdmin.ai.js";
+import { AI_CONTENT_PROFILE_VERSION } from "../admin-ai-content-profile.mjs";
 
 function completeWord(word, overrides = {}) {
   return {
@@ -8,6 +9,7 @@ function completeWord(word, overrides = {}) {
     phonetic: `/${word}/`,
     pos: "noun",
     meaning: `${word} meaning`,
+    meaningDetailZh: "指该词在当前主释义下所表达的对象、动作或状态，并说明常见使用范围。",
     definition: `${word} definition`,
     example: `${word} example`,
     exampleCn: `${word} example cn`,
@@ -16,6 +18,7 @@ function completeWord(word, overrides = {}) {
     ieltsUse: ["writing"],
     topics: ["work"],
     difficulty: "B2",
+    aiContentProfile: AI_CONTENT_PROFILE_VERSION,
     status: "learning",
     ...overrides
   };
@@ -23,6 +26,7 @@ function completeWord(word, overrides = {}) {
 
 function createContext(initialWords) {
   let currentWords = initialWords.map((word) => ({ ...word }));
+  let currentAiRunState = null;
   const batchInfo = [];
   const toasts = [];
 
@@ -38,12 +42,19 @@ function createContext(initialWords) {
     setToast(message) {
       toasts.push(message);
     },
+    setAiRunState(update) {
+      currentAiRunState = typeof update === "function" ? update(currentAiRunState) : update;
+    },
+    aiRunControlRef: {
+      current: { controller: null, running: false }
+    },
     resetWordStudySessionState() {}
   };
 
   return {
     ctx,
     getWords: () => currentWords,
+    getAiRunState: () => currentAiRunState,
     setWords(update) {
       ctx.setWords(update);
     },
@@ -137,13 +148,53 @@ test("generateMissingBatch keeps force policy and normalized merge fields", asyn
   assert.deepEqual(requests, [{
     url: "/api/generate-words",
     body: {
-      items: [{ inputId: "word-target:missing", word: "missing" }],
+      items: [{
+        inputId: "word-target:missing",
+        word: "missing",
+        existingMeaning: "",
+        existingPos: "noun",
+        contextSentence: "missing example",
+        contextLabel: "主词库例句"
+      }],
       force: false
     }
   }]);
   assert.equal(state.getWords()[0].meaning, "missing meaning");
   assert.deepEqual(state.getWords()[0].ieltsUse, ["writing"]);
   assert.equal(state.getWords()[0].status, "learning");
+});
+
+test("continuous structure repair processes every bounded round and publishes repair mode", async () => {
+  const initialWords = Array.from({ length: 101 }, (_, index) => (
+    completeWord(`repair-${index}`, { meaning: "undefined" })
+  ));
+  const state = createContext(initialWords);
+  const requests = [];
+
+  await withMockFetch(async (url, init) => {
+    assert.equal(url, "/api/generate-words");
+    assert.equal(init.signal instanceof AbortSignal, true);
+    const body = JSON.parse(init.body);
+    requests.push(body);
+    return jsonResponse({
+      items: body.items.map((item) => completeWord(item.word, {
+        inputId: item.inputId,
+        meaning: `${item.word} repaired meaning`
+      }))
+    });
+  }, async () => {
+    const result = await createAiOps(state.ctx).startContinuousAiStructureRepair();
+    assert.equal(result.reason, "completed");
+    assert.equal(result.rounds, 2);
+    assert.equal(result.filled, 101);
+    assert.equal(result.remaining, 0);
+  });
+
+  assert.equal(requests.length, 21);
+  assert.equal(requests.every((body) => body.force === true && body.items.length <= 5), true);
+  assert.equal(state.getWords().every((word) => word.meaning.endsWith("repaired meaning")), true);
+  assert.equal(state.getAiRunState().mode, "repair");
+  assert.equal(state.getAiRunState().status, "completed");
 });
 
 test("generateHundredByFiveBatch fills data without changing the headword", async () => {
@@ -153,7 +204,14 @@ test("generateHundredByFiveBatch fills data without changing the headword", asyn
     assert.equal(url, "/api/generate-words");
     const body = JSON.parse(init.body);
     assert.deepEqual(body, {
-      items: [{ inputId: "word-target:injury", word: "injury" }]
+      items: [{
+        inputId: "word-target:injury",
+        word: "injury",
+        existingMeaning: "",
+        existingPos: "noun",
+        contextSentence: "injury example",
+        contextLabel: "主词库例句"
+      }]
     });
     return jsonResponse({
       items: [completeWord("injury", {

@@ -1,8 +1,11 @@
 .page {
   min-height: calc(100svh - 64px);
+  max-height: none;
   padding: 24px clamp(18px, 3vw, 46px) 88px;
   background: #f4f7f5;
   color: #173a31;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .header,

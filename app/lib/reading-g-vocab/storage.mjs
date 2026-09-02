@@ -22,7 +22,14 @@ import {
   getReadingGSynonymStatus,
   READING_G_SYNONYM_STATUS
 } from "./synonym-relations.mjs";
-import { isInflectedReferenceWord } from "../vocab/word-study-eligibility.mjs";
+import { isBrushableWord } from "../vocab/word-study-eligibility.mjs";
+import {
+  PART12_ONLY_HF_DESC,
+  PART12_ONLY_HF_FILTER_TYPE,
+  PART12_ONLY_HF_LABEL,
+  compareRgPart12OnlyFrequency,
+  isReadingGPart12OnlyHighFrequency
+} from "./part12-only-high-frequency.mjs";
 
 function safeGet(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -181,28 +188,85 @@ export function readRgStatusMap() {
   return normalizeStatusMap(raw);
 }
 
+let cachedStatusParaphrases = null;
+let statusWriteTimer = 0;
+let pendingStatusWrite = null;
+
 export function writeRgStatusMap(map, paraphrases = null) {
-  const flat = normalizeStatusMap(map);
-  // also merge separate paraphrase key if not provided
-  let para = paraphrases;
-  if (!para) {
-    const existing = safeGet(READING_G_STATUS_KEY, {});
-    if (existing?.paraphrases) para = existing.paraphrases;
+  if (paraphrases && typeof paraphrases === "object") {
+    cachedStatusParaphrases = paraphrases;
   }
-  return safeSet(READING_G_STATUS_KEY, serializeStatusMap(flat, para));
+  if (cachedStatusParaphrases == null) {
+    const existing = safeGet(READING_G_STATUS_KEY, {});
+    cachedStatusParaphrases = existing?.paraphrases || null;
+  }
+  const flat = statusEntries(map);
+  return safeSet(READING_G_STATUS_KEY, serializeStatusMap(flat, cachedStatusParaphrases));
+}
+
+export function scheduleRgStatusMapWrite(map, paraphrases = null) {
+  pendingStatusWrite = { map, paraphrases };
+  if (statusWriteTimer) return;
+  const schedule = typeof window !== "undefined" && typeof window.setTimeout === "function"
+    ? window.setTimeout.bind(window)
+    : setTimeout;
+  statusWriteTimer = schedule(() => {
+    statusWriteTimer = 0;
+    const job = pendingStatusWrite;
+    pendingStatusWrite = null;
+    if (job) writeRgStatusMap(job.map, job.paraphrases);
+  }, 0);
+}
+
+export function flushRgStatusMapWrite() {
+  if (!pendingStatusWrite) return;
+  if (statusWriteTimer && typeof clearTimeout === "function") {
+    clearTimeout(statusWriteTimer);
+    statusWriteTimer = 0;
+  }
+  const job = pendingStatusWrite;
+  pendingStatusWrite = null;
+  writeRgStatusMap(job.map, job.paraphrases);
+}
+
+function statusEntries(statusMap) {
+  if (!statusMap || typeof statusMap !== "object") return {};
+  if (statusMap.entries && typeof statusMap.entries === "object") return statusMap.entries;
+  return statusMap;
+}
+
+function readStatusRecord(flat, key) {
+  if (!key || !flat) return null;
+  if (key === "progressSchemaVersion" || key === "paraphrases" || key === "entries") return null;
+  const raw = flat[key];
+  if (raw == null) return null;
+  return normalizeStatusEntry(raw);
 }
 
 function lookupEntry(statusMap, item) {
-  const flat = normalizeStatusMap(statusMap);
+  const flat = statusEntries(statusMap);
   const stable = getEntryProgressKey(item);
-  if (stable && flat[stable]) return flat[stable];
+  const direct = readStatusRecord(flat, stable)
+    || readStatusRecord(flat, normalizeReadingGKey(item?.normalizedKey || item?.word || ""));
+  if (direct) return direct;
   const nk = normalizeReadingGKey(item?.normalizedKey || item?.word || "");
-  if (nk && flat[nk]) return flat[nk];
   const entryType =
     item?.entryType === "phrase" || /\s/.test(String(item?.word || "")) ? "phrase" : "word";
-  const mk = `${entryType}::${nk}`;
-  if (flat[mk]) return flat[mk];
-  if (item?.id && flat[item.id]) return flat[item.id];
+  const typed = readStatusRecord(flat, nk ? `${entryType}::${nk}` : "")
+    || readStatusRecord(flat, item?.id);
+  if (typed) return typed;
+
+  // A formerly independent G card may now be compacted into this headword.
+  // Read its historic status until the one-shot migration writes the canonical
+  // key, so a refresh can never make the learner appear to have lost progress.
+  for (const alias of Array.isArray(item?.mergedAliases) ? item.mergedAliases : []) {
+    const aliasKey = normalizeReadingGKey(alias?.key || alias?.word || "");
+    const aliasId = String(alias?.id || "").trim();
+    const aliasHit = readStatusRecord(flat, aliasId)
+      || readStatusRecord(flat, aliasKey)
+      || readStatusRecord(flat, aliasKey ? `word::${aliasKey}` : "");
+    if (aliasHit) return aliasHit;
+  }
   return emptyStatusEntry();
 }
 
@@ -227,6 +291,39 @@ export function getModeStatusCode(item, statusMap = {}, mode = RG_LEARN_MODE.MEA
 
 export function isRgFavorite(item, statusMap = {}) {
   return Boolean(lookupEntry(statusMap, item).favorite);
+}
+
+export function familiarStatusSignature(statusMap) {
+  const keys = [];
+  const flat = statusEntries(statusMap);
+  for (const [key, value] of Object.entries(flat)) {
+    if (key === "progressSchemaVersion" || key === "paraphrases" || key === "entries") continue;
+    if (!value) continue;
+    if (typeof value === "string") {
+      if (value === RG_STATUS.FAMILIAR) keys.push(key);
+      continue;
+    }
+    if (value.status === RG_STATUS.FAMILIAR || value.meaningStatus === "familiar") keys.push(key);
+  }
+  keys.sort();
+  return keys.join("\n");
+}
+
+export function studyQueueLeavesOnStatusChange(filter, nextStatus) {
+  if (filter?.type === "status" && filter.value === RG_STATUS.UNFAMILIAR) {
+    return nextStatus !== RG_STATUS.UNFAMILIAR;
+  }
+  if (filter?.type === "status" && filter.value === RG_STATUS.FAMILIAR) {
+    return nextStatus !== RG_STATUS.FAMILIAR;
+  }
+  if (nextStatus === RG_STATUS.FAMILIAR) {
+    return filter?.type !== "everything"
+      && filter?.type !== "reference"
+      && filter?.type !== "paraphrase"
+      && filter?.type !== "paraphraseQuiz"
+      && !(filter?.type === "pathStage" && filter.value === "4");
+  }
+  return false;
 }
 
 /**
@@ -425,7 +522,7 @@ export function filterKey(filter) {
  * @param {string} [learnMode] current mode for status filters
  */
 export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEARN_MODE.MEANING) {
-  if (isInflectedReferenceWord(item)) return false;
+  if (!isBrushableWord(item)) return false;
   const mode = resolveLearnMode(learnMode, item, filter);
   const status = getRgStatus(item, statusMap, mode);
   const favorite = isRgFavorite(item, statusMap);
@@ -450,11 +547,13 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
 
   const isExplicitCompletionQueue =
     filter.type === "layer" && filter.value === "questionBankPending";
+  const isUnfamiliarQueue = filter.type === "status" && filter.value === "不熟";
   // Keep incomplete word cards out of every normal learning range. They stay
   // accessible through the dedicated completion queue (or its legacy pending
   // layer), where the UI explains what needs to be supplied instead of
-  // pretending that an empty field is study content.
-  if (isReadingGContentIncomplete(item) && !isExplicitCompletionQueue) {
+  // pretending that an empty field is study content. The unfamiliar queue is
+  // the exception: users need to find every card they marked.
+  if (isReadingGContentIncomplete(item) && !isExplicitCompletionQueue && !isUnfamiliarQueue) {
     return false;
   }
 
@@ -499,6 +598,12 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
     }
     return false;
   }
+  if (filter.type === "articleNonHighFrequency") {
+    return item.studyMode === "active" && !layers.includes("part12ArticleHighFrequency");
+  }
+  if (filter.type === PART12_ONLY_HF_FILTER_TYPE) {
+    return isReadingGPart12OnlyHighFrequency(item);
+  }
   if (filter.type === "layer") return layers.includes(filter.value);
   if (filter.type === "primaryLayer") return item.primaryLayer === filter.value;
   if (filter.type === "entryType") return item.entryType === filter.value;
@@ -510,12 +615,66 @@ export function itemMatchesRgFilter(item, filter, statusMap, learnMode = RG_LEAR
   return item.studyMode === "active";
 }
 
+function nonNegativeFrequency(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : 0;
+}
+
+export function getRgArticleFrequency(item) {
+  const articleEvidence = item?.part12ArticleFrequency;
+  return {
+    articleCount:
+      nonNegativeFrequency(articleEvidence?.articleCount)
+      + nonNegativeFrequency(articleEvidence?.part3ArticleCount),
+    occurrenceCount: nonNegativeFrequency(articleEvidence?.occurrenceCount)
+  };
+}
+
+export function compareRgArticleFrequency(left, right) {
+  const leftFrequency = getRgArticleFrequency(left?.entry || left);
+  const rightFrequency = getRgArticleFrequency(right?.entry || right);
+  return (
+    rightFrequency.articleCount - leftFrequency.articleCount
+    || rightFrequency.occurrenceCount - leftFrequency.occurrenceCount
+    || (Number(left?.originalIndex) || 0) - (Number(right?.originalIndex) || 0)
+  );
+}
+
+export function getRgLogicFrequency(item) {
+  const articleFrequency = getRgArticleFrequency(item);
+  const questionEvidence = item?.aiCoachQuestionFrequency;
+  return {
+    ...articleFrequency,
+    questionOccurrenceCount: nonNegativeFrequency(questionEvidence?.occurrenceCount),
+    questionCount: nonNegativeFrequency(questionEvidence?.questionCount)
+  };
+}
+
+export function compareRgLogicFrequency(left, right) {
+  const leftFrequency = getRgLogicFrequency(left?.entry || left);
+  const rightFrequency = getRgLogicFrequency(right?.entry || right);
+  return (
+    rightFrequency.articleCount - leftFrequency.articleCount
+    || rightFrequency.occurrenceCount - leftFrequency.occurrenceCount
+    || rightFrequency.questionOccurrenceCount - leftFrequency.questionOccurrenceCount
+    || rightFrequency.questionCount - leftFrequency.questionCount
+    || (Number(left?.originalIndex) || 0) - (Number(right?.originalIndex) || 0)
+  );
+}
+
 export function buildRgStudyList(items, filter, statusMap, learnMode = RG_LEARN_MODE.MEANING) {
   const list = [];
   for (let i = 0; i < items.length; i += 1) {
     if (itemMatchesRgFilter(items[i], filter, statusMap, learnMode)) {
       list.push({ entry: items[i], originalIndex: i });
     }
+  }
+  if (filter?.type === PART12_ONLY_HF_FILTER_TYPE) {
+    list.sort(compareRgPart12OnlyFrequency);
+  } else if (filter?.type === "articleNonHighFrequency" || (filter?.type === "layer" && filter.value === "part12ArticleHighFrequency")) {
+    list.sort(compareRgArticleFrequency);
+  } else if (filter?.type === "layer" && filter.value === "logic120") {
+    list.sort(compareRgLogicFrequency);
   }
   return list;
 }
@@ -536,7 +695,7 @@ export function getRgFilterLabel(filter) {
   if (filter.type === "paraphraseQuiz") return "同义替换训练";
   if (filter.type === "learnMode" && filter.value === "meaning") return "词义学习";
   if (filter.type === "learnMode" && filter.value === "phrase") return "短语学习";
-  if (filter.type === "status" && filter.value === "不熟") return "不熟";
+  if (filter.type === "status" && filter.value === "不熟") return "不熟复习";
   if (filter.type === "status" && filter.value === "熟悉") return "熟悉";
   if (filter.type === "status" && filter.value === "收藏") return "收藏";
   if (filter.type === "entryType" && filter.value === "word") return "仅单词";
@@ -555,11 +714,15 @@ export function getRgFilterLabel(filter) {
   if (filter.type === "primaryLayer" && filter.value === "questionBankPending") {
     return "待补词（独立词条）";
   }
+  if (filter.type === "articleNonHighFrequency") return "其余词汇（非文章高频）";
+  if (filter.type === PART12_ONLY_HF_FILTER_TYPE) return PART12_ONLY_HF_LABEL;
   if (filter.type === "layer") {
     const map = {
       priority1500: "优先核心1500",
       answerCore250: "答案词强化250",
-      logic120: "逻辑连接120",
+      logic120: "逻辑转换（完整词书）",
+      gtPart12Phrases150: "G4-G21 Part1-2考试短语150",
+      part12ArticleHighFrequency: "剑雅5–21文章高频（Part 1–3）",
       phrases400: "高频词组400",
       tierB1200: "B层1200",
       paraCore600: "表达识别核心",
@@ -582,19 +745,44 @@ export const RG_LEARNING_ENTRIES = [
     group: "常用入口",
     items: [
       {
+        title: "剑雅5–21文章高频（Part 1–3）",
+        desc: "覆盖 Part 1+2 的224篇与 Part 3 的56篇补充；进入后显示文章数、出现次数和篇章分布",
+        filter: { type: "layer", value: "part12ArticleHighFrequency" }
+      },
+      {
+        title: PART12_ONLY_HF_LABEL,
+        desc: PART12_ONLY_HF_DESC,
+        filter: { type: PART12_ONLY_HF_FILTER_TYPE, value: "" }
+      },
+      {
+        title: "其余词汇（非文章高频）",
+        desc: "未列入文章高频的其余待学词；默认按剑雅5–21共280篇出现篇数排序",
+        filter: { type: "articleNonHighFrequency", value: "" }
+      },
+      {
+        title: "不熟复习",
+        desc: "只看你标记为不熟的词，方便回头找",
+        filter: { type: "status", value: "不熟" }
+      },
+      {
         title: "阶段1：主线保分",
         desc: "优先核心、答案词、逻辑词与前200词组",
         filter: { type: "pathStage", value: "1" }
       },
       {
+        title: "逻辑转换（完整词书）",
+        desc: "因果、条件、对比、数量程度、语气强度、时间与文章衔接逻辑词",
+        filter: { type: "layer", value: "logic120" }
+      },
+      {
+        title: "G4-G21 Part1-2考试短语150",
+        desc: "考试导向的规则、短语动词与场景表达",
+        filter: { type: "layer", value: "gtPart12Phrases150" }
+      },
+      {
         title: "全部待学",
         desc: "所有可刷 active 词条",
         filter: { type: "active", value: "" }
-      },
-      {
-        title: "不熟复习",
-        desc: "优先回收标记为不熟的内容",
-        filter: { type: "status", value: "不熟" }
       },
       {
         title: "收藏重点",

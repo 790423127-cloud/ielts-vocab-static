@@ -4,7 +4,7 @@
   "use strict";
 
   var DATA_URL = "./data/meaning-6000.json";
-  var DATA_VERSION = "20260809_reading_keyboard_v49";
+  var DATA_VERSION = "20260830_system_safety_v80";
   var PROGRESS_KEY = "ielts_meaning_static_progress_v1";
   var RECENT_KEY = "ielts_meaning_static_recent_v1";
   var AUTO_NEXT_MS = 450;

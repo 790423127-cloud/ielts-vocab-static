@@ -54,16 +54,17 @@ export function useWordFlashNavigation({
   }
 
   function navigationIndices(latest) {
+    const visibleStudyIndices = Array.isArray(latest?.studyWordIndices)
+      ? latest.studyWordIndices
+      : [];
     const visibleStudyWords = Array.isArray(latest?.studyWords) ? latest.studyWords : [];
     const sourceWords = Array.isArray(latest?.words) ? latest.words : [];
     const activeFilter = latest?.filter || filter;
 
     // 页面已经按“现有 / 随机 / 词族 / 场景关联”生成稳定队列。
     // 所有导航都沿用这份队列，避免重新按主词库物理顺序计算。
-    if (visibleStudyWords.length) {
-      return visibleStudyWords
-        .map((word) => word?.originalIndex)
-        .filter((value) => Number.isInteger(value));
+    if (visibleStudyIndices.length) {
+      return visibleStudyIndices.filter((value) => Number.isInteger(value));
     }
 
     // 普通主词库直接由最新 words + filter 生成数字索引队列。

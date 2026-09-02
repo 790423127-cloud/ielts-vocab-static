@@ -9,11 +9,13 @@ import {
 } from "./personal-wrong-book.mjs";
 import {
   SPELLING_CATEGORY_TYPES,
-  SPELLING_DIFFICULTY_OPTIONS,
+  SPELLING_CATEGORY_ORDER_OPTIONS,
+  SPELLING_DIFFICULTY_FILTER_OPTIONS,
   SPELLING_IELTS_USE_OPTIONS,
   SPELLING_LISTENING_READING_OPTIONS,
   SPELLING_PHRASE_CATEGORY_TYPES,
   SPELLING_PRACTICE_SOURCES,
+  SPELLING_SKILL_OPTIONS,
   SPELLING_TOPIC_OPTIONS
 } from "./spelling-categories.mjs";
 import {
@@ -176,8 +178,11 @@ export function normalizePrefs(prefs = {}, scope = "word") {
 
   let categoryValue = String(prefs.categoryValue || "").trim();
   if (categoryType === "difficulty") {
-    const match = SPELLING_DIFFICULTY_OPTIONS.find((item) => item.value === categoryValue);
+    const match = SPELLING_DIFFICULTY_FILTER_OPTIONS.find((item) => item.value === categoryValue);
     categoryValue = match?.value || DEFAULT_PREFS.categoryValue;
+  } else if (categoryType === "skill") {
+    const match = SPELLING_SKILL_OPTIONS.find((item) => item.value === categoryValue);
+    categoryValue = match?.value || SPELLING_SKILL_OPTIONS[0].value;
   } else if (categoryType === "topic") {
     categoryValue = SPELLING_TOPIC_OPTIONS.includes(categoryValue)
       ? categoryValue
@@ -195,6 +200,9 @@ export function normalizePrefs(prefs = {}, scope = "word") {
   return {
     categoryType,
     categoryValue,
+    sortDirection: SPELLING_CATEGORY_ORDER_OPTIONS.some((item) => item.value === prefs.sortDirection)
+      ? prefs.sortDirection
+      : "easy_to_hard",
     batchIndex: Math.max(0, Number(prefs.batchIndex) || 0)
   };
 }

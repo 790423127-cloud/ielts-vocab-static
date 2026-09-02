@@ -42,26 +42,38 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   const entries = new Map(readStoredZipEntries(Buffer.from(await response.arrayBuffer())).map((entry) => [entry.name, entry.data.toString("utf8")]));
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_ENGINE));
-  assert.match(entries.get("assets/app.js"), /staticStudyCard\.addEventListener\("touchstart"/);
-  assert.match(entries.get("assets/app.js"), /staticStudyCard\.addEventListener\("touchend"/);
+  assert.match(entries.get("assets/app.js"), /window\.StaticCardSwipe\.bind\(staticStudyCard/);
+  assert.match(entries.get("assets/static-navigation.js"), /card\.addEventListener\("touchstart"/);
+  assert.match(entries.get("assets/static-navigation.js"), /card\.addEventListener\("touchend"/);
   assert.match(entries.get("assets/app.js"), /audio=new Audio\(url\)/);
   assert.match(entries.get("assets/app.js"), /audio\.playsInline=true/);
   assert.match(entries.get("assets/app.js"), /audio\.volume=1/);
   assert.doesNotMatch(entries.get("assets/app.js"), /createMediaElementSource/);
   assert.match(entries.get("assets/app.js"), /function previewWordForFilter/);
+  assert.match(entries.get("assets/app.js"), /let mainDeleteConfirmedInSession=false/);
+  assert.match(entries.get("assets/app.js"), /if\(!mainDeleteConfirmedInSession\)/);
   assert.match(entries.get("assets/app.js"), /function inlineStudyMeaning\(item\)/);
   assert.match(entries.get("assets/app.js"), /supplementalMeanings/);
+  assert.match(entries.get("index.html"), /id="meaningDetailText"/);
+  assert.match(entries.get("assets/app.js"), /function mainMeaningDetail\(item,meaning\)/);
+  assert.match(entries.get("assets/app.js"), /meaningDetailText\.textContent=mainMeaningDetail/);
+  assert.match(entries.get("assets/app.js"), /现有资料只确认了主释义，语义范围和实际用法仍待补充/);
+  assert.doesNotMatch(entries.get("assets/app.js"), /在当前词条中作.*使用，主要表示/);
+  assert.match(entries.get("reading-g.html"), /id="meaningDetailText"/);
+  assert.match(entries.get("assets/reading-g.js"), /function mainMeaningDetail\(item, meaning\)/);
+  assert.doesNotMatch(entries.get("assets/reading-g.js"), /在当前词条中作.*使用，主要表示/);
+  assert.match(entries.get("reading-words.html"), /id="meaningDetailText"/);
+  assert.match(entries.get("assets/reading-words.js"), /function mainMeaningDetail\(entry, meaning\)/);
+  assert.doesNotMatch(entries.get("assets/reading-words.js"), /在当前词条中作.*使用，主要表示/);
   assert.doesNotMatch(entries.get("assets/app.js"), /其他释义|meaning-other/);
   assert.match(entries.get("assets/app.js"), /count<=0\)return ""/);
   assert.match(entries.get("assets/app.js"), /function seekProgressPosition/);
   assert.match(entries.get("assets/app.js"), /progressSeek\.oninput/);
   assert.match(entries.get("assets/app.js"), /progressJumpForm\.onsubmit/);
   assert.match(entries.get("assets/app.js"), /progressJumpInput\.blur\(\)/);
-  assert.match(entries.get("assets/app.js"), /const WORD_ORDER_SNAPSHOT_VERSION=4/);
-  assert.match(entries.get("assets/app.js"), /function difficultySortKey/);
-  assert.match(entries.get("assets/app.js"), /function familyConnectedGroups/);
-  assert.match(entries.get("assets/app.js"), /function filterDifficultyTier/);
-  assert.match(entries.get("assets/app.js"), /sceneBonus=current\.scene/);
+  assert.match(entries.get("assets/app.js"), /const WORD_ORDER_SNAPSHOT_VERSION=5/);
+  assert.match(entries.get("assets/app.js"), /ORDERING_MODULE_ROOT="\.\/study-ordering-v64\/"/);
+  assert.match(entries.get("assets/app.js"), /sharedWordStudyOrdering\.orderStudyWordIndices/);
   assert.match(entries.get("assets/app.js"), /let studyListCache=new Map\(\)/);
   assert.match(entries.get("assets/app.js"), /arr\(snapshot\.indices\)\.includes\(index\)/);
   assert.match(entries.get("assets/app.js"), /function changeWordOrderCombination[\s\S]*?persistNow\(\);[\s\S]*?const currentWord=currentRaw\(\)/);
@@ -69,7 +81,9 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("assets/app.js"), /\.doc\(deviceDocId\)\.set\(payload\)/);
   assert.doesNotMatch(entries.get("assets/app.js"), /collection\("vocab_progress"\)\.add\(payload\)/);
   assert.doesNotMatch(entries.get("assets/app.js"), /saved\?words\.find/);
-  assert.match(entries.get("assets/app.js"), /!\("ontouchstart" in window\)&&"PointerEvent" in window/);
+  assert.match(entries.get("assets/static-navigation.js"), /if \("PointerEvent" in window\)/);
+  assert.match(entries.get("assets/static-navigation.js"), /data-static-swipe-handle/);
+  assert.match(entries.get("assets/static-navigation.js"), /suppressClickUntil/);
   assert.doesNotMatch(entries.get("assets/app.js"), /pointer-touch-v3/);
   assert.match(entries.get("assets/style.css"), /static-study-card\{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y/);
   assert.match(entries.get("assets/style.css"), /body\.reading-g-static \.reading-g-topbar/);
@@ -84,16 +98,28 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("assets/basic.js"), /buildTopics\(\);\s*render\(\);/);
   assert.match(entries.get("assets/basic.js"), /function setTopToolsCollapsed/);
   assert.match(entries.get("assets/style.css"), /body\.basic-static \.basic-topbar\{/);
+  assert.match(entries.get("ielts-538.html"), /body class="basic-static ielts-538-static"/);
+  assert.match(entries.get("ielts-538.html"), /main class="app" data-study-surface="ielts-538"/);
+  assert.match(entries.get("ielts-538.html"), /id="basicTopbar" class="top basic-topbar"/);
+  assert.match(entries.get("ielts-538.html"), /id="studyCard" class="hero" data-static-swipe-card/);
+  assert.match(entries.get("ielts-538.html"), /footer class="bottom"/);
+  assert.match(entries.get("ielts-538.html"), /id="paraphrase" class="forms-box study538-para/);
+  assert.match(entries.get("assets/ielts-538.js"), /function setTopToolsCollapsed/);
+  assert.match(entries.get("assets/ielts-538.js"), /学习状态：待学/);
   assert.match(entries.get("assets/static-navigation.js"), /(?:const|var) groups\s*=\s*\[/);
-  assert.match(entries.get("assets/static-navigation.js"), /STATIC_SWIPE_VERSION = "pointer-touch-v1"/);
+  assert.match(entries.get("assets/static-navigation.js"), /STATIC_SWIPE_VERSION = "touch-pointer-v5"/);
+  assert.match(entries.get("assets/static-navigation.js"), /window\.StaticCardSwipe/);
+  assert.match(entries.get("assets/static-navigation.js"), /if \("PointerEvent" in window\)/);
   assert.match(entries.get("assets/static-navigation.js"), /addEventListener\("pointerdown"/);
   assert.match(entries.get("assets/static-navigation.js"), /addEventListener\("touchstart"/);
+  assert.match(entries.get("assets/static-navigation.js"), /button,a,input,textarea,select,option,label,summary,details/);
   assert.match(entries.get("assets/static-cloud-sync.js"), /window\.StaticCloudSync/);
   assert.match(entries.get("assets/static-cloud-sync.js"), /module_progress_/);
-  assert.match(entries.get("assets/static-font-scale.js"), /ielts-vocab-font-scale/);
   assert.match(entries.get("assets/static-navigation.js"), /阅读同义替换/);
   assert.match(entries.get("assets/static-navigation.js"), /阅读生词本/);
   assert.match(entries.get("reading-g.html"), /body class="reading-g-static"/);
+  assert.match(entries.get("reading-g.html"), /id="staticStudyCard" class="static-study-card" data-static-swipe-card/);
+  assert.match(entries.get("reading-g.html"), /id="swipeArea" class="hero"[\s\S]*id="relationBlocks"[\s\S]*<\/div>[\s\S]*<footer class="bottom"/);
   assert.match(entries.get("reading-g.html"), /id="wordOrderSelect"/);
   assert.match(entries.get("reading-g.html"), /id="progressSeek"/);
   assert.match(entries.get("reading-g.html"), /id="progressJump"/);
@@ -102,6 +128,7 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("reading-g.html"), /id="readingEntryBtn"/);
   assert.match(entries.get("assets/reading-g.js"), /function staticPosDisplay\(/);
   assert.match(entries.get("assets/reading-g.js"), /function orderStudyIndices\(/);
+  assert.match(entries.get("assets/reading-g.js"), /sharedWordStudyOrdering\.orderStudyWordIndices/);
   assert.match(entries.get("assets/reading-g.js"), /function applyOrderPreference\(/);
   assert.match(entries.get("assets/reading-g.js"), /function seekStudyPosition\(/);
   assert.match(entries.get("assets/reading-g.js"), /function inlineStaticStudyMeaning\(/);
@@ -119,6 +146,16 @@ test("the real export endpoint returns a verified 538-style mobile-swipe ZIP", a
   assert.match(entries.get("sw.js"), new RegExp(STATIC_RESPONSIVE_VERSION));
   assert.match(entries.get("sw.js"), /assets\/static-navigation\.js/);
   assert.match(entries.get("sw.js"), /assets\/static-font-scale\.js/);
+  assert.ok(entries.has("assets/static-font-scale.js"));
+  [
+    "word-study-ordering.mjs",
+    "word-internal-difficulty.mjs",
+    "word-internal-difficulty.generated.mjs",
+    "word-surface-morphology.mjs"
+  ].forEach((name) => {
+    assert.ok(entries.has(`assets/study-ordering-v64/${name}`), `${name} is packaged`);
+    assert.match(entries.get("sw.js"), new RegExp(`assets/study-ordering-v64/${name.replace(".", "\\.")}`));
+  });
   assert.match(entries.get("sw.js"), /url\.pathname\.endsWith\("\/reading-words\.html"\)/);
   assert.match(entries.get("reading-words.html"), /id="favoriteBtn"/);
   assert.match(entries.get("reading-words.html"), /id="deleteBtn"/);

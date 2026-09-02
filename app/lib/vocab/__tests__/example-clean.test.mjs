@@ -3,10 +3,23 @@ import assert from "node:assert/strict";
 import {
   cleanExampleField,
   exampleFieldsNeedCleanup,
+  isExampleLikelyTruncated,
   pickBestExampleSentence,
   stripExampleBulletsAndNoise,
   exampleMentionsTarget
 } from "../example-clean.mjs";
+
+test("detects a dangling tail without treating a complete time phrase as truncated", () => {
+  assert.equal(isExampleLikelyTruncated("She is recovering from."), true);
+  assert.equal(isExampleLikelyTruncated("The company offered me."), false);
+  assert.equal(isExampleLikelyTruncated("I feel sick and need to lie down for a while."), false);
+  assert.equal(isExampleLikelyTruncated("According to the weather report, it will rain."), false);
+  assert.equal(isExampleLikelyTruncated("Which channel is the news on?"), false);
+  assert.equal(isExampleLikelyTruncated("She has not learnt which qualities employers look for."), false);
+  assert.equal(isExampleLikelyTruncated("Please inform us of the place you are travelling to."), false);
+  assert.equal(isExampleLikelyTruncated("My new colleague is very sociable and easy to talk to."), false);
+  assert.equal(isExampleLikelyTruncated("Softwood is easy to work with."), false);
+});
 
 test("fast cleanup guard skips clean examples and catches noisy ones", () => {
   assert.equal(exampleFieldsNeedCleanup("A clean example contains the target word.", "一个干净的例句。"), false);
@@ -42,6 +55,24 @@ test("does not synthesize a meta-description for an empty phrase example", () =>
   assert.equal(cleaned.repaired, true);
   assert.equal(cleaned.example, "");
   assert.equal(cleaned.reason, "missing_real_example");
+});
+
+test("preserves complete examples that end in short words or time abbreviations", () => {
+  const examples = [
+    ["I don't like coffee; rather, I prefer tea.", "rather"],
+    ["Driving without a license is against the law.", "law"],
+    ["She gained experience from the job.", "gain"],
+    ["The museum is showing a new exhibition of modern art.", "showing"],
+    ["Guests must check out by 11 am.", "check out"],
+    ["The gym is open from 6 a.m. to 10 p.m.", "open"]
+  ];
+
+  for (const [example, target] of examples) {
+    assert.equal(
+      cleanExampleField(example, target, { synthesizeIfEmpty: false }).example,
+      example
+    );
+  }
 });
 
 test("removes legacy meta-description examples", () => {

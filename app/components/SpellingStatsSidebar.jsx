@@ -65,34 +65,45 @@ export default function SpellingStatsSidebar({
       ×
     </button>
   </div>
+  <div className="spelling-sidebar-scroll-content">
   <div className="spelling-sidebar-font-scale">
     <FontScaleControl />
   </div>
-  <section className="spelling-sidebar-block" aria-label="今日统计">
-    <h2 className="spelling-sidebar-block__title">今日统计</h2>
-    <dl className="spelling-sidebar-stats spelling-sidebar-stats--daily">
-      <div><dt>学习单词</dt><dd>{dailyStats.learnedWordIds.length}</dd></div>
-      <div><dt>有效学习</dt><dd>{formatActiveLearningTime(dailyStats.activeMs)}</dd></div>
-      <div><dt>错词数量</dt><dd>{dailyStats.wrongWordIds.length}</dd></div>
+  <section className="spelling-sidebar-overview" aria-label="当前训练概览">
+    <div className="spelling-sidebar-overview__head">
+      <h2>当前训练</h2>
+      <span>{scopeConfig.label}拼写</span>
+    </div>
+    <dl className="spelling-sidebar-overview__stats">
+      <div className="is-primary"><dt>剩余</dt><dd>{remainingCount}{unit}</dd></div>
+      <div><dt>正确率</dt><dd>{sessionMetrics.accuracy}%</dd></div>
+      <div><dt>今日学习</dt><dd>{dailyStats.learnedWordIds.length}</dd></div>
+      <div><dt>SRS 到期</dt><dd>{progress.todaySrsDueCount ?? 0}</dd></div>
     </dl>
+    <p>
+      速度 {sessionMetrics.wordsPerMinute} {unit}/分 · 连对 {sessionMetrics.consecutiveCorrect}
+      {sessionMetrics.etaMinutes ? ` · 约 ${sessionMetrics.etaMinutes} 分钟` : ""}
+    </p>
   </section>
 
-  <section className="spelling-sidebar-block" aria-label="训练统计">
-    <h2 className="spelling-sidebar-block__title">训练统计</h2>
-    <dl className="spelling-sidebar-stats">
-      <div><dt>正确率</dt><dd>{sessionMetrics.accuracy}%</dd></div>
-      <div><dt>速度</dt><dd>{sessionMetrics.wordsPerMinute} {unit}/分</dd></div>
-      <div><dt>预计</dt><dd>{sessionMetrics.etaMinutes ? `约 ${sessionMetrics.etaMinutes} 分钟` : "—"}</dd></div>
-      <div><dt>连对</dt><dd>{sessionMetrics.consecutiveCorrect}</dd></div>
-      <div><dt>SRS 到期</dt><dd>{progress.todaySrsDueCount ?? 0}</dd></div>
-      <div><dt>候选池</dt><dd>{candidateTotal}</dd></div>
-      <div><dt>原始批次</dt><dd>{rawBatchTotal}</dd></div>
-      <div><dt>错词本</dt><dd>{errorBank.count}</dd></div>
+  <details className="spelling-sidebar-section spelling-sidebar-section--stats">
+    <summary>
+      <span>今日统计</span>
+      <span>完整数据 · 候选池 {candidateTotal} · 错词本 {errorBank.count}</span>
+    </summary>
+    <dl className="spelling-sidebar-stats spelling-sidebar-stats--detail">
+      <div><dt>有效学习</dt><dd>{formatActiveLearningTime(dailyStats.activeMs)}</dd></div>
+      <div><dt>今日错词</dt><dd>{dailyStats.wrongWordIds.length}</dd></div>
+      <div><dt>预计完成</dt><dd>{sessionMetrics.etaMinutes ? `约 ${sessionMetrics.etaMinutes} 分钟` : "—"}</dd></div>
+      <div><dt>当前批次原始条数</dt><dd>{rawBatchTotal}</dd></div>
       <div><dt>新词通过</dt><dd>{progress.newWordsPassed ?? 0}</dd></div>
       <div><dt>掌握</dt><dd>{progress.masteredCount ?? completedCount}</dd></div>
-      <div><dt>剩余</dt><dd>{remainingCount}{unit}</dd></div>
     </dl>
-  </section>
+    <details className="spelling-sidebar-stat-note">
+      <summary>候选池说明</summary>
+      <p>有效候选池会合并相同拼写，因此可能少于原始词库或原始批次条数。</p>
+    </details>
+  </details>
 
   <section className="spelling-sidebar-block spelling-page-controls" aria-label="学习范围">
         <SpellingRangeBar {...rangeBarProps} />
@@ -163,8 +174,11 @@ export default function SpellingStatsSidebar({
   </section>
   ) : null}
 
-  <section className="spelling-sidebar-block spelling-export-panel" aria-label="导出">
-    <h2 className="spelling-sidebar-block__title">导出</h2>
+  <details className="spelling-sidebar-section spelling-export-panel" aria-label="导出">
+    <summary>
+      <span>导出词库</span>
+      <span>单词、词组与当前批次</span>
+    </summary>
     <p className="spelling-export-panel__hint">
       可导出完整词库、当前批次，或当前所选分类的完整词表。
     </p>
@@ -239,7 +253,7 @@ export default function SpellingStatsSidebar({
         ? ` · 当前分类：${batchSelection.label} ${currentCategoryCount} 条`
         : ""}
     </p>
-  </section>
+  </details>
 
 <details className="spelling-error-bank-panel spelling-aux-panel">
   <summary>
@@ -300,9 +314,10 @@ export default function SpellingStatsSidebar({
           </li>
         ))}
       </ul>
-    ) : null}
+  ) : null}
   </details>
   </section>
+  </div>
 </aside>
   );
 }

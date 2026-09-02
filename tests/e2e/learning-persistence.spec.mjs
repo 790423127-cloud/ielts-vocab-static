@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { isBrushableWord } from "../../app/lib/vocab/word-study-eligibility.mjs";
 
 const PERSONAL_WRONG_WORD = "codexpersistprobe";
+const FONT_SCALE_STORAGE_KEY = "ielts-vocab-font-scale";
 
 async function waitForFullWordLexicon(page) {
   const response = await page.request.get("/data/words.json");
@@ -33,6 +34,22 @@ async function readWordUserState(page) {
   }));
 }
 
+async function setFontScale(page, scale) {
+  await page.evaluate(({ key, nextScale }) => {
+    localStorage.setItem(key, String(nextScale));
+    window.dispatchEvent(new CustomEvent("ielts-vocab-font-scale-change", {
+      detail: { scale: nextScale }
+    }));
+    window.dispatchEvent(new StorageEvent("storage", {
+      key,
+      newValue: String(nextScale)
+    }));
+  }, { key: FONT_SCALE_STORAGE_KEY, nextScale: scale });
+
+  await expect.poll(() => page.evaluate(() => Number(document.documentElement.dataset.fontScale)))
+    .toBe(scale);
+}
+
 test("personal wrong book persists an added word across reload", async ({ page }) => {
   await page.goto("/spelling-words");
   await expect(page.getByTestId("spelling-input")).toBeEnabled({ timeout: 45_000 });
@@ -56,12 +73,66 @@ test("SRS review is reachable and renders its empty state", async ({ page }) => 
 
   await page.getByRole("button", { name: "统计/设置" }).click();
   await page.getByRole("button", { name: "展开设置" }).click();
-  await page.getByRole("button", { name: /SRS 复习/ }).click();
+  const srsReviewButton = page.getByRole("button", { name: /SRS 复习/ });
+  await expect(srsReviewButton).toBeVisible();
+  await srsReviewButton.scrollIntoViewIfNeeded();
+  await expect(srsReviewButton).toBeInViewport();
+  await expect.poll(async () => srsReviewButton.evaluate((button) => {
+      const rect = button.getBoundingClientRect();
+      const target = document.elementFromPoint(rect.left + (rect.width / 2), rect.top + (rect.height / 2));
+      return target === button || button.contains(target);
+    })).toBe(true);
+  await srsReviewButton.click();
 
   await expect(page.getByLabel("训练状态")).toContainText("SRS 复习", { timeout: 30_000 });
   await expect(page.getByLabel("训练状态")).toContainText("SRS 0");
   await expect(page.getByTestId("spelling-input")).toHaveCount(0);
   await expect(page.getByLabel("当前批次进度")).toContainText("进度：0 / 0");
+});
+
+test("spelling settings remain tappable at every supported font scale", async ({ page }) => {
+  test.setTimeout(120_000);
+
+  const scenarios = [
+    { name: "桌面", width: 1366, height: 768 },
+    { name: "手机", width: 390, height: 844 }
+  ];
+
+  for (const scenario of scenarios) {
+    await page.setViewportSize({ width: scenario.width, height: scenario.height });
+
+    for (const scale of [0.8, 1, 1.25, 1.6]) {
+      await page.goto("/spelling-words", { waitUntil: "domcontentloaded" });
+      await expect(page.getByTestId("spelling-input")).toBeEnabled({ timeout: 45_000 });
+      await setFontScale(page, scale);
+
+      const settingsSidebar = page.getByRole("complementary", { name: "统计与设置" });
+      if (!await settingsSidebar.isVisible()) {
+        await page.getByRole("button", { name: "统计/设置" }).click();
+      }
+
+      const settingsToggle = page.getByRole("button", { name: /展开设置|收起设置/ });
+      if (await settingsToggle.getAttribute("aria-expanded") === "false") {
+        await settingsToggle.click();
+      }
+
+      const srsReviewButton = page.getByRole("button", { name: /SRS 复习/ });
+      await srsReviewButton.scrollIntoViewIfNeeded();
+      await expect(srsReviewButton).toBeInViewport();
+      const receivesPointer = await srsReviewButton.evaluate((button) => {
+        const rect = button.getBoundingClientRect();
+        const target = document.elementFromPoint(rect.left + (rect.width / 2), rect.top + (rect.height / 2));
+        return target === button || button.contains(target);
+      });
+      expect(receivesPointer, `${scenario.name} ${Math.round(scale * 100)}% SRS button must receive the pointer`).toBe(true);
+
+      await srsReviewButton.click();
+      await expect(page.getByLabel("训练状态")).toContainText("SRS 复习", { timeout: 30_000 });
+
+      await page.getByRole("button", { name: "词库分类" }).click();
+      await expect(page.getByTestId("spelling-input")).toBeEnabled({ timeout: 30_000 });
+    }
+  }
 });
 
 test("audio cache endpoint reports an explicit local cache miss", async ({ request }) => {

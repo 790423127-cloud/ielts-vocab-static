@@ -22,6 +22,7 @@ export default function WordStudyOrderControls({
   difficultyMode = WORD_STUDY_DIFFICULTY_MODE.DEFAULT,
   onModeChange,
   onDifficultyModeChange,
+  onDifficultyProfileRequest,
   difficultyAvailable = true,
   difficultyEnabled = true,
   difficultyProfile = null
@@ -58,6 +59,9 @@ export default function WordStudyOrderControls({
             difficultyMode !== WORD_STUDY_DIFFICULTY_MODE.DEFAULT ? " is-active" : ""
           }`}
           value={difficultyMode}
+          onFocus={onDifficultyProfileRequest}
+          onPointerEnter={onDifficultyProfileRequest}
+          onPointerDown={onDifficultyProfileRequest}
           onChange={(event) => {
             const nextMode = event.currentTarget.value;
             const control = event.currentTarget;

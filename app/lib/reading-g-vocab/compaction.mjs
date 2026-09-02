@@ -5,6 +5,7 @@ export const READING_G_COMPACTION_VERSION = "reading-g-internal-family-compactio
 
 const WEAK_FORM_TYPES = new Set(["", "form", "corpus-observed-form", "adverbial form"]);
 const PLACEHOLDER_MARKERS = ["待补", "词汇"];
+const EXCEL_SOURCE_HEADWORD_RELATION = "excel-source-headword";
 const IRREGULAR_COMPARISON_FORMS = new Map([
   ["good", new Set(["better", "best"])],
   ["well", new Set(["better", "best"])],
@@ -39,6 +40,111 @@ function chineseText(value) {
 
 function primaryMeaning(entry) {
   return text(entry?.primaryMeaningZh || entry?.meaning || entry?.meaningZh);
+}
+
+function senseMeaning(value) {
+  if (typeof value === "string") return text(value);
+  return text(
+    value?.meaningZh
+    || value?.meaning_zh
+    || value?.gloss
+    || value?.quizMeaningZh
+    || value?.meaning
+    || value?.chinese
+  );
+}
+
+function stripRelatedFormMeaning(entry, value = primaryMeaning(entry)) {
+  const headword = text(entry?.word);
+  let meaning = text(value);
+  const prefixes = [`${headword}（相关词形）`, `${headword}(相关词形)`];
+  const relatedFormPrefix = prefixes.find((prefix) => (
+    headword && meaning.toLowerCase().startsWith(prefix.toLowerCase())
+  ));
+  if (relatedFormPrefix) {
+    meaning = meaning.slice(relatedFormPrefix.length).replace(/^[：:]\s*/u, "");
+  }
+  return meaning;
+}
+
+function comparableMeaning(entry, value = primaryMeaning(entry)) {
+  return stripRelatedFormMeaning(entry, value)
+    .toLowerCase()
+    .replace(/[，,]/gu, "；")
+    .replace(/[。.!！?？\s]/gu, "")
+    .replace(/[；;]{2,}/gu, "；");
+}
+
+function explicitMeaningKeys(entry) {
+  return [
+    ...asArray(entry?.senses),
+    ...asArray(entry?.otherMeanings),
+    ...asArray(entry?.meaningsZh),
+    ...asArray(entry?.alternateMeanings)
+  ].map((value) => comparableMeaning(entry, senseMeaning(value))).filter(Boolean);
+}
+
+function inspectExcelSourcePlural(alias, base, relation) {
+  const relationType = text(relation?.relation || relation?.type).toLowerCase();
+  if (relationType !== EXCEL_SOURCE_HEADWORD_RELATION) return { recognized: false, safe: false };
+
+  const aliasKey = normalizeReadingGKey(alias?.normalizedKey || alias?.word);
+  const baseKey = normalizeReadingGKey(base?.normalizedKey || base?.word);
+  const aliasMeaning = comparableMeaning(alias);
+  const baseMeaning = comparableMeaning(base);
+  const isRegularNounPlural = coarsePos(alias) === "noun"
+    && coarsePos(base) === "noun"
+    && regularForms(baseKey, "plural", "noun").has(aliasKey);
+  const hasIndependentMeaning = explicitMeaningKeys(alias).some((meaning) => meaning !== aliasMeaning);
+
+  return {
+    recognized: true,
+    safe: Boolean(
+      aliasKey
+      && baseKey
+      && aliasKey !== baseKey
+      && alias?.pluralOnly !== true
+      && isRegularNounPlural
+      && aliasMeaning
+      && aliasMeaning === baseMeaning
+      && !hasIndependentMeaning
+    )
+  };
+}
+
+/**
+ * Find imported plural surface forms that accidentally survived as their own
+ * flashcards.  The relation, noun morphology and meaning must all agree; this
+ * deliberately excludes lexicalised plurals and entries with another sense.
+ */
+export function findReadingGRedundantPluralAliases(items) {
+  const wordEntries = asArray(items).filter((entry) => (entry?.entryType || "word") === "word");
+  const byKey = new Map(
+    wordEntries.map((entry) => [normalizeReadingGKey(entry.normalizedKey || entry.word), entry])
+  );
+  const found = new Map();
+
+  for (const alias of wordEntries) {
+    const aliasKey = normalizeReadingGKey(alias.normalizedKey || alias.word);
+    for (const relation of asArray(alias.wordFamily)) {
+      const baseKey = normalizeReadingGKey(relationWord(relation));
+      const base = byKey.get(baseKey);
+      if (!aliasKey || !base || aliasKey === baseKey) continue;
+      const inspection = inspectExcelSourcePlural(alias, base, relation);
+      if (!inspection.safe) continue;
+      found.set(aliasKey, {
+        canonicalKey: baseKey,
+        canonicalId: text(base.id),
+        canonicalWord: text(base.word),
+        aliasKey,
+        aliasId: text(alias.id),
+        aliasWord: text(alias.word),
+        relationType: "form"
+      });
+    }
+  }
+
+  return [...found.values()].sort((left, right) => left.aliasKey.localeCompare(right.aliasKey));
 }
 
 export function isPlaceholderMeaning(value) {
@@ -207,6 +313,27 @@ function acceptedRelationEdges(entries) {
       const to = normalizeReadingGKey(relationWord(relation));
       const target = byKey.get(to);
       if (!from || !target || from === to) continue;
+      const sourcePlural = inspectExcelSourcePlural(entry, target, relation);
+      if (sourcePlural.recognized) {
+        const edge = sourcePlural.safe
+          ? {
+            from: to,
+            to: from,
+            kind: "form",
+            type: "plural",
+            confidence: "regular_form"
+          }
+          : {
+            from,
+            to,
+            kind: "form",
+            type: "plural",
+            confidence: "rejected_source_plural"
+          };
+        if (sourcePlural.safe) edges.push(edge);
+        else rejected.push(edge);
+        continue;
+      }
       const semantic = meaningsAreCompatible(entry, target, characterFrequency);
       const shape = hasFamilyShape(from, to);
       const edge = {
@@ -437,7 +564,7 @@ function aliasSnapshot(entry, relationType) {
     relationType,
     phonetic: text(entry?.phonetic),
     pos: text(entry?.primaryPos || entry?.pos),
-    meaning: primaryMeaning(entry),
+    meaning: stripRelatedFormMeaning(entry),
     definition: text(entry?.definition),
     example: text(entry?.example),
     exampleZh: text(entry?.exampleZh || entry?.exampleCn),
@@ -447,10 +574,14 @@ function aliasSnapshot(entry, relationType) {
   };
 }
 
-function relationRow(snapshot) {
+function relationRow(snapshot, canonical) {
+  const canonicalKey = normalizeReadingGKey(canonical?.normalizedKey || canonical?.word);
+  const isNounPlural = snapshot.relationType === "form"
+    && coarsePos(canonical) === "noun"
+    && regularForms(canonicalKey, "plural", "noun").has(snapshot.key);
   return {
     word: snapshot.word,
-    type: snapshot.relationType === "form" ? "merged-form" : undefined,
+    type: snapshot.relationType === "form" ? (isNounPlural ? "plural" : "merged-form") : undefined,
     pos: snapshot.pos,
     meaning: snapshot.meaning,
     phonetic: snapshot.phonetic,
@@ -509,9 +640,36 @@ function mergeCanonicalEntry(canonical, aliases) {
     };
   });
 
-  for (const snapshot of snapshots) {
-    if (snapshot.relationType === "form") forms.push(relationRow(snapshot));
-    else family.push(relationRow(snapshot));
+  // Preserve aliases already compacted into an intermediate canonical.  They
+  // may no longer have an independent row, but their old ids still point to
+  // real learner progress and must follow the final headword.
+  const inheritedMergedEntries = aliases.flatMap(({ entry }) => asArray(entry?.mergedEntries));
+  const inheritedAliasSnapshots = aliases.flatMap(({ entry }) => asArray(entry?.mergedAliases))
+    .filter((alias) => {
+      const key = normalizeReadingGKey(alias?.key || alias?.word);
+      return key && !snapshots.some((snapshot) => snapshot.key === key);
+    })
+    .map((alias) => {
+      const key = normalizeReadingGKey(alias?.key || alias?.word);
+      const historic = inheritedMergedEntries.find((entry) => (
+        normalizeReadingGKey(entry?.key || entry?.word) === key
+      ));
+      return {
+        ...aliasSnapshot({
+          ...(historic || {}),
+          id: text(alias?.id) || historic?.id,
+          word: text(alias?.word) || historic?.word || key
+        }, alias?.relationType === "family" ? "family" : "form"),
+        key,
+        id: text(alias?.id) || text(historic?.id),
+        word: text(alias?.word || historic?.word || key)
+      };
+    });
+  const allSnapshots = [...snapshots, ...inheritedAliasSnapshots];
+
+  for (const snapshot of allSnapshots) {
+    if (snapshot.relationType === "form") forms.push(relationRow(snapshot, canonical));
+    else family.push(relationRow(snapshot, canonical));
   }
   for (const { entry } of aliases) {
     forms.push(...asArray(entry.forms).filter((row) => !aliasKeys.has(normalizeReadingGKey(relationWord(row)))));
@@ -520,7 +678,7 @@ function mergeCanonicalEntry(canonical, aliases) {
 
   const allEntries = [canonical, ...aliases.map(({ entry }) => entry)];
   const familyAliasKeys = new Set(
-    snapshots
+    allSnapshots
       .filter((snapshot) => snapshot.relationType === "family")
       .map((snapshot) => snapshot.key)
   );
@@ -529,7 +687,11 @@ function mergeCanonicalEntry(canonical, aliases) {
   );
   const formKeys = new Set(normalizedForms.map((row) => normalizeReadingGKey(relationWord(row))));
   const mergedAliases = new Map();
-  for (const alias of [...asArray(canonical.mergedAliases), ...snapshots]) {
+  // An alias can already be a compacted canonical entry itself.  When that
+  // intermediate entry is subsequently merged into its real headword, keep
+  // every historical alias/id instead of orphaning its progress record.
+  const inheritedAliases = aliases.flatMap(({ entry }) => asArray(entry?.mergedAliases));
+  for (const alias of [...asArray(canonical.mergedAliases), ...inheritedAliases, ...allSnapshots]) {
     const key = normalizeReadingGKey(alias?.key || alias?.word);
     if (!key) continue;
     mergedAliases.set(key, {
@@ -540,7 +702,8 @@ function mergeCanonicalEntry(canonical, aliases) {
     });
   }
   const mergedEntries = new Map();
-  for (const merged of [...asArray(canonical.mergedEntries), ...snapshots]) {
+  const inheritedEntries = aliases.flatMap(({ entry }) => asArray(entry?.mergedEntries));
+  for (const merged of [...asArray(canonical.mergedEntries), ...inheritedEntries, ...allSnapshots]) {
     const key = normalizeReadingGKey(merged?.key || merged?.word);
     if (!key) continue;
     mergedEntries.set(key, { ...merged, key });
@@ -595,10 +758,34 @@ export function applyReadingGCompaction(items, payload = {}) {
     }
     representedKeys.add(rule.canonicalKey);
     for (const alias of rule.aliases) representedKeys.add(alias.key);
-    if (!aliases.length) continue;
-    replacements.set(rule.canonicalKey, mergeCanonicalEntry(canonical, aliases));
+    // A persistent plan can include a historic alias whose independent row was
+    // removed in an earlier run.  Materialise its relation/id on the canonical
+    // even without that row, otherwise later chaining would lose navigation
+    // and status migration for the old card.
+    const presentAliasKeys = new Set(aliases.map((alias) => alias.key));
+    const absentAliases = rule.aliases
+      .filter((alias) => !presentAliasKeys.has(alias.key))
+      .map((alias) => ({
+        ...alias,
+        entry: {
+          id: alias.id,
+          entryType: "word",
+          word: alias.word || alias.key,
+          normalizedKey: alias.key,
+          forms: [],
+          wordFamily: [],
+          layers: [],
+          topics: [],
+          sourceFiles: [],
+          qualityFlags: [],
+          studyMode: canonical.studyMode || "active"
+        }
+      }));
+    const allAliases = [...aliases, ...absentAliases];
+    if (!allAliases.length) continue;
+    replacements.set(rule.canonicalKey, mergeCanonicalEntry(canonical, allAliases));
     for (const alias of aliases) removedKeys.add(alias.key);
-    appliedFamilyCount += 1;
+    if (aliases.length) appliedFamilyCount += 1;
   }
 
   const compactedItems = asArray(items).flatMap((entry) => {

@@ -23,7 +23,6 @@ export default function SpellingFocusCard({
   trainingControls,
   handleInputChange,
   submit,
-  handleSkip,
   isPhrase,
   errorAnalysisVisible,
   showEnginePreparing,
@@ -148,17 +147,17 @@ export default function SpellingFocusCard({
           autoFocus
           aria-label="拼写输入框"
         />
-        <div className="spelling-form-actions" aria-hidden="true">
-          <button type="submit" tabIndex={-1} disabled={!current || !spelling.inputValue.trim() || spelling.uiState === "inputting"}>
-            提交
-          </button>
-          <button type="button" tabIndex={-1} disabled={!current || spelling.uiState === "inputting"} onClick={handleSkip}>
-            跳过
-          </button>
-          <button type="button" tabIndex={-1} disabled={!current} onClick={() => spelling.getHint()}>
-            提示
-          </button>
-        </div>
+        <button
+          type="button"
+          className="spelling-hint-button"
+          disabled={!current || spelling.uiState === "inputting"}
+          onClick={() => {
+            spelling.getHint();
+            trainingControls.focusInput({ force: true });
+          }}
+        >
+          提示
+        </button>
       </form>
       </div>
 
@@ -171,6 +170,10 @@ export default function SpellingFocusCard({
       >
         拼写错误，请重试
       </div>
+
+      {spelling.hint ? (
+        <p className="spelling-hint-text" role="status">提示：{spelling.hint}</p>
+      ) : null}
 
       {errorAnalysisVisible ? (
         <div className={layoutStyles.spellingFeedbackWrap} data-testid="spelling-feedback-wrap">

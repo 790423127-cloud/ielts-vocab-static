@@ -3,7 +3,7 @@
  * 不得与主词库、零基础词库或 G 类阅读词库共用。
  */
 
-export const IELTS_538_DATA_URL = "/data/ielts-538-words.json";
+export const IELTS_538_DATA_URL = "/data/ielts-538-words.json?v=20260824-high-frequency-min3-v1";
 
 export const IELTS_538_SESSION_KEY = "ielts_538_flash_session_v1";
 export const IELTS_538_STATUS_KEY = "ielts_538_flash_status_v1";

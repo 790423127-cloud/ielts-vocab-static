@@ -1196,6 +1196,29 @@ textarea:focus-visible {
   }
 }
 
+/* Keep the first-phase spelling workspace intact on wide screens, but do not
+   leave a desktop sidebar consuming the canvas after browser zoom. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  :root {
+    --workspace-header: 112px;
+    --workspace-sidebar: 0px;
+  }
+
+  .brand-bar {
+    height: var(--workspace-header);
+  }
+
+  .static-spelling-sidebar {
+    display: none;
+  }
+
+  .spell-app {
+    width: calc(100% - 24px);
+    margin: 0 auto;
+    padding-bottom: 76px;
+  }
+}
+
 /* D2.1 responsive system: expose all source and range controls on phones. */
 @media (max-width: 420px) {
   .source-tabs-scroll {

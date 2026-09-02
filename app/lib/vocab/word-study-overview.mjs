@@ -2,7 +2,7 @@ const STATUS_FAMILIAR = "熟悉";
 const STATUS_BLURRY = "模糊";
 const STATUS_UNFAMILIAR = "不熟";
 
-function countQueue(words = []) {
+export function countWordStudyQueue(words = []) {
   const counts = {
     total: 0,
     familiar: 0,
@@ -46,11 +46,12 @@ export function buildWordStudyOverviewModel({
   filter = { type: "all", value: "" },
   filterName = "待学词浏览",
   studyWords = [],
+  queueCounts = null,
   currentPosition = 0,
   wordLibraryStats = {},
   isExternalIdictationItem = false
 } = {}) {
-  const counts = countQueue(studyWords);
+  const counts = queueCounts || countWordStudyQueue(studyWords);
   const position = clampPosition(currentPosition, counts.total);
   const progressPercent = counts.total ? Math.round((position / counts.total) * 100) : 0;
   const globalToday = Math.max(0, Number(wordLibraryStats.todayReviewed || 0));

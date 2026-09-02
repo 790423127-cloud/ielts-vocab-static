@@ -104,15 +104,31 @@ export function writeIelts538DailyCount(count) {
   });
 }
 
+export function isIelts538Part3HighFrequency(word) {
+  return word?.part3HighFrequency === true
+    || (Array.isArray(word?.part3HighFrequencyReplacements) && word.part3HighFrequencyReplacements.length > 0);
+}
+
+export function isIelts538AiCoachParaphrase(word) {
+  return word?.practiceKind === "aiCoachQuestionParaphrase";
+}
+
 export function ielts538FilterKey(filter) {
   if (!filter || typeof filter !== "object") return "all";
   if (filter.type === "all" || filter.type === "everything") return filter.type;
+  if (filter.type === "part3HighFrequency") return "part3HighFrequency";
+  if (filter.type === "aiCoachParaphrase") return "aiCoachParaphrase";
   return `${filter.type}:${filter.value || ""}`;
 }
 
 export function wordMatchesIelts538Filter(word, filter, statusMap) {
   const status = getIelts538WordStatus(word, statusMap);
   const favorite = isIelts538Favorite(word, statusMap);
+  const isAiCoachParaphrase = isIelts538AiCoachParaphrase(word);
+  if (filter.type === "aiCoachParaphrase") {
+    return isAiCoachParaphrase && status !== IELTS_538_STATUS.FAMILIAR;
+  }
+  if (isAiCoachParaphrase) return false;
   if (filter.type === "everything") return true;
 
   if (filter.type === "status") {
@@ -122,6 +138,7 @@ export function wordMatchesIelts538Filter(word, filter, statusMap) {
   }
 
   if (status === IELTS_538_STATUS.FAMILIAR) return false;
+  if (filter.type === "part3HighFrequency") return isIelts538Part3HighFrequency(word);
   if (filter.type === "category") return word.category === filter.value;
   if (filter.type === "group") {
     return `${word.sourceCategory}:${word.sourceGroup}` === filter.value;
@@ -141,6 +158,8 @@ export function buildIelts538StudyList(words, filter, statusMap) {
 export function getIelts538FilterLabel(filter) {
   if (filter.type === "all") return "全部待学";
   if (filter.type === "everything") return "全部 376 词";
+  if (filter.type === "part3HighFrequency") return "G类阅读文章高频";
+  if (filter.type === "aiCoachParaphrase") return "AI教练真题替换";
   if (filter.type === "status" && filter.value === "不熟") return "不熟词";
   if (filter.type === "status" && filter.value === "熟悉") return "熟悉词";
   if (filter.type === "status" && filter.value === "收藏") return "收藏词";
@@ -156,6 +175,8 @@ export const IELTS_538_LEARNING_ENTRIES = [
   {
     group: "今天优先",
     items: [
+      { title: "AI教练真题替换", desc: "1257组净新增原文表达与题干改写；另1组已在538原词卡中，只按真题语境学习。", filter: { type: "aiCoachParaphrase", value: "" } },
+      { title: "G类阅读文章高频", desc: "剑雅5-21 G类 Part1+2 224篇和 Part3 56篇中，词头或已审核同义替换至少出现在3篇不同文章里的考点词。", filter: { type: "part3HighFrequency", value: "" } },
       { title: "全部待学", desc: "未标记熟悉的 538 考点词。", filter: { type: "all", value: "" } },
       { title: "不熟词", desc: "已标记不熟，优先复习。", filter: { type: "status", value: "不熟" } },
       { title: "收藏词", desc: "收藏的重点词。", filter: { type: "status", value: "收藏" } },

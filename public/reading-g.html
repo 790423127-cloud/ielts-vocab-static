@@ -7,8 +7,8 @@
   <script>try{document.documentElement.dataset.studyMeaningsHidden=localStorage.getItem("ielts_vocab_hide_meanings_v1")==="1"?"true":"false"}catch(e){}</script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23225f52'/%3E%3Cpath d='M9 8h14v3H12v4h9v3h-9v4h11v3H9z' fill='white'/%3E%3C/svg%3E" />
   <title>G类阅读提升 · 静态便携版</title>
-  <link rel="stylesheet" href="./assets/style.css?v=20260809_reading_keyboard_v49" />
-  <script src="./assets/static-font-scale.js?v=20260809_reading_keyboard_v49"></script>
+  <link rel="stylesheet" href="./assets/style.css?v=20260830_system_safety_v80" />
+  <script src="./assets/static-font-scale.js?v=20260830_system_safety_v80"></script>
   <style>
     .hidden{display:none!important}
     .module-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px;align-items:center}
@@ -63,6 +63,24 @@
     <header id="readingTopbar" class="top reading-g-topbar">
       <button id="prevTopBtn" class="top-btn reading-g-top-prev" type="button">上一个</button>
       <button id="topToolsToggle" class="top-tools-toggle" type="button">工具与词库</button>
+      <div class="reading-g-entry-tools">
+        <button id="hfQuickEntryBtn" class="top-btn reading-g-hf-quick" type="button" aria-pressed="false">
+          <span>文章高频</span>
+          <small id="hfQuickEntryCount">载入中</small>
+        </button>
+        <button id="part12OnlyHfQuickEntryBtn" class="top-btn reading-g-hf-quick" type="button" aria-pressed="false">
+          <span>P1+2高频</span>
+          <small id="part12OnlyHfQuickEntryCount">载入中</small>
+        </button>
+        <button id="unfamiliarQuickEntryBtn" class="top-btn reading-g-hf-quick" type="button" aria-pressed="false">
+          <span>不熟</span>
+          <small id="unfamiliarQuickEntryCount">载入中</small>
+        </button>
+        <select id="entrySelect" class="top-select reading-g-entry-select" aria-label="学习范围入口">
+          <option value="">正在载入入口</option>
+        </select>
+        <button id="readingEntryBtn" class="top-btn reading-g-entry-button" type="button" aria-haspopup="dialog">全部范围</button>
+      </div>
       <div id="readingTopTools" class="top-actions">
         <select id="wordOrderSelect" class="top-select reading-g-order-select" aria-label="排列关系" title="选择当前学习入口内的单词排列关系">
           <option value="current">现有顺序</option>
@@ -78,11 +96,7 @@
           <option value="standard-only">只刷常规</option>
           <option value="harder-only">只刷相对较难</option>
         </select>
-        <select id="entrySelect" class="top-select reading-g-entry-select" aria-label="G类阅读学习入口">
-          <option value="">正在载入入口</option>
-        </select>
         <button class="top-btn" type="button" data-study-meaning-toggle>隐藏释义</button>
-        <button id="readingEntryBtn" class="top-btn reading-g-entry-button" type="button" aria-haspopup="dialog">入口</button>
         <button id="autoPlayBtn" class="top-btn" type="button">自动播放 · A</button>
         <select id="autoPlaySpeed" class="top-select reading-g-speed-select" aria-label="自动播放间隔">
           <option value="2">2秒</option>
@@ -112,17 +126,60 @@
         <div class="module-nav">
           <span class="meta-pill" id="bankMeta">G类阅读提升</span>
         </div>
-        <div class="entry-grid reading-entry-grid" id="topicBar" aria-label="学习范围筛选"></div>
+        <div class="entry-featured-stack">
+        <button type="button" id="hfPanelEntryBtn" class="entry-btn entry-btn-featured" data-hf-entry>
+          <span class="entry-title"><span class="entry-featured-tag">常用</span>剑雅5–21文章高频（Part 1–3）</span>
+          <span class="entry-desc">覆盖 Part 1+2 的224篇短文和 Part 3 的56篇文章；进入后逐词显示原文命中篇数与次数</span>
+          <span class="entry-meta" id="hfPanelEntryCount">点这里进入高频词表</span>
+        </button>
+        <button type="button" id="part12OnlyHfPanelEntryBtn" class="entry-btn entry-btn-featured" data-part12-only-hf-entry>
+          <span class="entry-title"><span class="entry-featured-tag">常用</span>剑雅5–21文章高频（Part 1–2）</span>
+          <span class="entry-desc">只统计 Part 1+2 的224篇短文，出现2篇及以上，并去掉零基础单词；默认按出现篇数从高到低</span>
+          <span class="entry-meta" id="part12OnlyHfPanelEntryCount">点这里进入 Part 1+2 高频词表</span>
+        </button>
+        <button type="button" id="restPanelEntryBtn" class="entry-btn entry-btn-featured" data-rest-entry>
+          <span class="entry-title"><span class="entry-featured-tag">常用</span>其余词汇（非文章高频）</span>
+          <span class="entry-desc">未列入文章高频的其余待学词；默认按剑雅5–21共280篇出现篇数排序</span>
+          <span class="entry-meta" id="restPanelEntryCount">点这里进入其余词表</span>
+        </button>
+        <button type="button" id="unfamiliarPanelEntryBtn" class="entry-btn entry-btn-featured" data-unfamiliar-entry>
+          <span class="entry-title"><span class="entry-featured-tag">常用</span>不熟复习</span>
+          <span class="entry-desc">只看你标记为不熟的词，方便回头找</span>
+          <span class="entry-meta" id="unfamiliarPanelEntryCount">点这里进入不熟词表</span>
+        </button>
+        </div>
+        <div class="entry-grid reading-entry-grid" id="topicBar" aria-label="其他学习范围"></div>
         <p class="entry-help expression-note">词义和短语入口显示单词、词性、变形、词族与同义替换；同义引导和同义测验是独立训练入口。静态版不会调用付费 AI。</p>
       </div>
     </section>
 
-    <section id="swipeArea" class="hero" data-static-swipe-card>
+    <section id="articleFrequencyPanel" class="article-frequency-panel hidden" aria-label="文章高频依据">
+      <div class="article-frequency-main">
+        <span id="articleFrequencyTier" class="article-frequency-tier">文章命中</span>
+        <div class="article-frequency-copy">
+          <strong id="articleFrequencyWord">正在读取当前词的原文依据</strong>
+          <span id="articleFrequencyStats">不同文章数按每篇最多记1篇</span>
+          <span id="articleFrequencySurfaces" class="article-frequency-surfaces"></span>
+        </div>
+      </div>
+      <div class="article-frequency-actions">
+        <button id="articleFrequencyRestartBtn" type="button">从头开始</button>
+        <button id="articleFrequencyRangesBtn" type="button">更换范围</button>
+        <details>
+          <summary>统计口径</summary>
+          <p>“篇”按不同文章去重，“次”保留同一文章内的重复出现。该入口包含 Part 1–3 原文命中补充词；只出现1篇的词会明确标成“单篇命中”，不会伪装成多篇高频。</p>
+        </details>
+      </div>
+    </section>
+
+    <div id="staticStudyCard" class="static-study-card" data-static-swipe-card aria-label="G类阅读滑动学习卡片">
+    <section id="swipeArea" class="hero">
       <button id="favoriteBtn" class="star" title="收藏" type="button">☆</button>
       <div id="unfamiliarAlert" class="unfamiliar-alert hidden">已标记不熟，优先复习</div>
       <button id="wordSoundBtn" class="sound-main" title="播放单词" type="button">🔊</button>
       <div id="word" class="word">Loading</div>
       <div id="basic" class="basic-line study-answer-content">正在准备学习内容</div>
+      <div id="meaningDetail" class="study-answer-content" style="margin:8px auto 0;max-width:760px;color:#526579;font-size:clamp(13px,1.6vw,16px);line-height:1.55;text-align:center"><strong>主释义详解：</strong><span id="meaningDetailText"></span></div>
       <div id="loadInfo" class="load-info">静态便携版 · vocab + paraphrases · 词义/短语/同义三类状态 · 仅存本机</div>
 
       <div id="quizBox" class="hidden" style="margin-top:12px;max-width:640px">
@@ -140,6 +197,7 @@
     </section>
 
     <section id="relationBlocks" class="blocks study-answer-content" aria-label="词形、词族与同义替换"></section>
+    </div>
 
     <footer class="bottom">
       <div class="actions">
@@ -166,10 +224,40 @@
     </footer>
   </main>
   <div id="toast" class="toast"></div>
-<script src="./assets/static-navigation.js?v=20260809_reading_keyboard_v49"></script>
-<script src="./sync-config.js?v=20260809_reading_keyboard_v49"></script>
-<script src="./assets/static-cloud-sync.js?v=20260809_reading_keyboard_v49"></script>
-<script src="./assets/study-meaning-visibility.js?v=20260809_reading_keyboard_v49"></script>
-  <script src="./assets/reading-g.js?v=20260809_reading_keyboard_v49"></script>
+<script src="./assets/static-navigation.js?v=20260830_system_safety_v80"></script>
+<script src="./sync-config.js?v=20260830_system_safety_v80"></script>
+<script src="./assets/static-cloud-sync.js?v=20260830_system_safety_v80"></script>
+<script src="./assets/study-meaning-visibility.js?v=20260830_system_safety_v80"></script>
+<script src="./assets/example-highlight.js?v=20260830_system_safety_v80"></script>
+  <script src="./assets/reading-g.js?v=20260830_system_safety_v80"></script>
+  <script>
+    (function () {
+      var SESSION_KEY = "ielts_reading_g_session_v3";
+      function bindFeaturedEntry(buttonId, openerName, filter, entryParam) {
+        var button = document.getElementById(buttonId);
+        if (!button) return;
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          if (typeof window[openerName] === "function") {
+            window[openerName]();
+            return;
+          }
+          try {
+            localStorage.setItem(SESSION_KEY, JSON.stringify({
+              wordKey: "",
+              filter: filter,
+              index: 0,
+              savedAt: new Date().toISOString()
+            }));
+          } catch (error) {}
+          window.location.href = "./reading-g.html?entry=" + entryParam;
+        });
+      }
+      bindFeaturedEntry("hfPanelEntryBtn", "openReadingGArticleHighFrequency", { type: "layer", value: "part12ArticleHighFrequency" }, "part12ArticleHighFrequency");
+      bindFeaturedEntry("part12OnlyHfPanelEntryBtn", "openReadingGPart12OnlyHighFrequency", { type: "part12OnlyHighFrequency", value: "" }, "part12OnlyHighFrequency");
+      bindFeaturedEntry("restPanelEntryBtn", "openReadingGArticleRest", { type: "articleNonHighFrequency", value: "" }, "articleNonHighFrequency");
+      bindFeaturedEntry("unfamiliarPanelEntryBtn", "openReadingGUnfamiliar", { type: "status", value: "不熟" }, "unfamiliar");
+    }());
+  </script>
 </body>
 </html>

@@ -147,11 +147,8 @@ test("static mobile swipe matches the 538 touch-first gesture and keeps pointer 
   const patched = patchStaticAppJs(STATIC_FILTER_SOURCE);
 
   assert.match(patched, new RegExp(STATIC_SWIPE_FIX_MARKER));
-  assert.match(patched, /staticStudyCard\.addEventListener\("touchstart"/);
-  assert.match(patched, /staticStudyCard\.addEventListener\("touchend"/);
-  assert.match(patched, /\{passive:false\}/);
-  assert.match(patched, /!\("ontouchstart" in window\)&&"PointerEvent" in window/);
-  assert.match(patched, /STATIC_SWIPE_INTERACTIVE_SELECTOR/);
+  assert.match(patched, /window\.StaticCardSwipe\.bind\(staticStudyCard/);
+  assert.match(patched, /direction==="next"\?step\(1\):step\(-1\)/);
   assert.match(patched, new RegExp(STATIC_SWIPE_ENGINE));
   assert.doesNotMatch(patched, /pointer-touch-v3/);
 
@@ -171,7 +168,15 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
     },
     {
       name: "assets/app.js",
-      data: Buffer.from(STATIC_FILTER_SOURCE)
+      data: Buffer.from(STATIC_FILTER_SOURCE + '\nconst ORDERING_MODULE_ROOT="./study-ordering-v64/";sharedWordStudyOrdering.orderStudyWordIndices([]);')
+    },
+    {
+      name: "assets/static-navigation.js",
+      data: Buffer.from(`var STATIC_SWIPE_VERSION = "${STATIC_SWIPE_ENGINE}";var STATIC_SWIPE_INTERACTIVE_SELECTOR = "button,a,input,textarea,select,option,label,summary,details";var suppressClickUntil=0;var handle="data-static-swipe-handle";window.StaticCardSwipe={};`)
+    },
+    {
+      name: "assets/static-font-scale.js",
+      data: Buffer.from('var KEY="ielts-vocab-font-scale";')
     },
     {
       name: "assets/basic.js",
@@ -183,15 +188,11 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
     },
     {
       name: "assets/reading-g.js",
-      data: Buffer.from('var DATA_VERSION = "old";')
+      data: Buffer.from('var DATA_VERSION = "old";var ORDERING_MODULE_ROOT = "./study-ordering-v64/";sharedWordStudyOrdering.orderStudyWordIndices([]);')
     },
     {
       name: "assets/meaning-static.js",
       data: Buffer.from('var DATA_VERSION = "old";')
-    },
-    {
-      name: "assets/static-font-scale.js",
-      data: Buffer.from('var KEY = "ielts-vocab-font-scale";')
     },
     {
       name: "index.html",
@@ -199,7 +200,7 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
     },
     {
       name: "sw.js",
-      data: Buffer.from('const CACHE_NAME="static_vocab_shell_old";const A="./assets/style.css?v=old";const B="./assets/static-font-scale.js?v=old";url.pathname.endsWith("/reading-words.html");')
+      data: Buffer.from('const CACHE_NAME="static_vocab_shell_old";const A="./assets/style.css?v=old";const F="./assets/static-font-scale.js?v=old";const O=["./assets/study-ordering-v64/word-study-ordering.mjs","./assets/study-ordering-v64/word-internal-difficulty.mjs","./assets/study-ordering-v64/word-internal-difficulty.generated.mjs","./assets/study-ordering-v64/word-surface-morphology.mjs"];url.pathname.endsWith("/reading-words.html");')
     },
     {
       name: "reading-words.html",
@@ -213,6 +214,15 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
       name: "assets/reading-words.css",
       data: Buffer.from(".study-actions{grid-template-columns:repeat(6,minmax(0,1fr))}")
     },
+    ...[
+      "word-study-ordering.mjs",
+      "word-internal-difficulty.mjs",
+      "word-internal-difficulty.generated.mjs",
+      "word-surface-morphology.mjs"
+    ].map((name) => ({
+      name: `assets/study-ordering-v64/${name}`,
+      data: Buffer.from("export {};")
+    })),
     {
       name: "data/words.json",
       data: Buffer.from('{"words":[]}')
@@ -231,13 +241,12 @@ test("ZIP transformer patches the real study card, CSS, app JS and service worke
   assert.match(entries.get("assets/app.js"), /index=-1/);
   assert.match(entries.get("assets/app.js"), /基础必会/);
   assert.match(entries.get("assets/app.js"), new RegExp(STATIC_SWIPE_FIX_MARKER));
-  assert.match(entries.get("assets/app.js"), /touchstart/);
-  assert.match(entries.get("assets/app.js"), /touchend/);
+  assert.match(entries.get("assets/app.js"), /window\.StaticCardSwipe\.bind\(staticStudyCard/);
+  assert.match(entries.get("assets/static-navigation.js"), new RegExp(STATIC_SWIPE_ENGINE));
   assert.match(entries.get("assets/basic.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("assets/spelling.js"), new RegExp(`STATIC_DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("assets/reading-g.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("assets/meaning-static.js"), new RegExp(`DATA_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
-  assert.match(entries.get("assets/static-font-scale.js"), /ielts-vocab-font-scale/);
   assert.match(entries.get("assets/reading-words.js"), new RegExp(`VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
   assert.match(entries.get("build-info.json"), new RegExp(STATIC_SWIPE_ENGINE));
   assert.match(entries.get("build-info.json"), /ielts-538/);

@@ -2,6 +2,9 @@ import {
   filterDistinctSynonymTerms,
   synonymEquivalenceKey
 } from "./synonym-equivalence.mjs";
+import { isMeaningDetailInformative } from "./meaning-display.mjs";
+import { normalizePartOfSpeechTokens } from "./multi-pos-sense-coverage.mjs";
+import { classifySurfaceInflection } from "./word-surface-morphology.mjs";
 
 export const AI_CONTENT_PROFILE_VERSION = "main-meaning-detailed-senses-v3";
 export const AI_COLLOCATION_LIMIT = 4;
@@ -216,7 +219,14 @@ export function withAiClientCollocationPayload(entry = {}) {
   };
 }
 
-export function normalizeOtherMeanings(value, mainMeaning = "") {
+function posSetsOverlap(left, right) {
+  const leftTokens = normalizePartOfSpeechTokens(left);
+  const rightTokens = new Set(normalizePartOfSpeechTokens(right));
+  if (!leftTokens.length || !rightTokens.size) return false;
+  return leftTokens.some((token) => rightTokens.has(token));
+}
+
+export function normalizeOtherMeanings(value, mainMeaning = "", mainPos = "") {
   const normalizedMainMeaning = text(mainMeaning);
   const mainMeaningKey = key(normalizedMainMeaning);
   const mainParts = new Set(
@@ -231,10 +241,16 @@ export function normalizeOtherMeanings(value, mainMeaning = "") {
   for (const item of raw) {
     const meaning = text(typeof item === "string" ? item : item?.meaningZh || item?.meaning_zh || item?.meaning || item?.chinese);
     const meaningKey = key(meaning);
-    if (!meaningKey || meaningKey === mainMeaningKey || mainParts.has(meaningKey) || seen.has(meaningKey)) continue;
-    seen.add(meaningKey);
+    const itemPos = text(typeof item === "string" ? "" : item?.pos || item?.partOfSpeech || item?.part_of_speech);
+    const duplicatesPrimaryMeaning = meaningKey === mainMeaningKey || mainParts.has(meaningKey);
+    const duplicatesPrimarySense = duplicatesPrimaryMeaning && (
+      !text(mainPos) || !itemPos || posSetsOverlap(itemPos, mainPos)
+    );
+    const senseKey = `${normalizePartOfSpeechTokens(itemPos).sort().join("/")}::${meaningKey}`;
+    if (!meaningKey || duplicatesPrimarySense || seen.has(senseKey)) continue;
+    seen.add(senseKey);
     result.push({
-      pos: text(typeof item === "string" ? "" : item?.pos || item?.partOfSpeech || item?.part_of_speech),
+      pos: itemPos,
       meaningZh: meaning,
       definitionEn: text(typeof item === "string" ? "" : item?.definitionEn || item?.definition_en || item?.definition || item?.english_definition),
       example: text(typeof item === "string" ? "" : item?.example || item?.ielts_example),
@@ -256,6 +272,22 @@ export function isDetailedOtherMeaning(value) {
   );
 }
 
+/**
+ * Common-sense review deliberately stores only the POS, Chinese gloss and
+ * English definition for each additional sense. The sole bilingual example
+ * belongs to the primary sense, so extra-sense rows must not be rejected for
+ * lacking their own example pair.
+ */
+export function isDefinedOtherMeaning(value) {
+  return Boolean(
+    value &&
+    typeof value === "object" &&
+    text(value.pos) &&
+    text(value.meaningZh) &&
+    text(value.definitionEn)
+  );
+}
+
 export function normalizeAiForms(value, headword = "") {
   if (!Array.isArray(value) || !isSingleEnglishHeadword(headword)) return [];
   const headwordKey = key(headword);
@@ -268,6 +300,12 @@ export function normalizeAiForms(value, headword = "") {
     const type = FORM_TYPE_ALIASES.get(rawType);
     const formKey = key(formWord);
     if (!isSingleEnglishHeadword(formWord) || !type || !formKey || formKey === headwordKey) continue;
+    // A syntactically valid relation is not necessarily a real form of the
+    // requested headword.  For example, an AI profile for "disqualified"
+    // used to return "disqualifies" and "disqualifying" even though all
+    // three forms belong to the lemma "disqualify".  Reject that wrong-owner
+    // relation before it can enter either the reading notebook or master data.
+    if (!classifySurfaceInflection(headwordKey, formKey)) continue;
     if (type === "plural" && formKey === `${headwordKey}s` && /s$/.test(headwordKey)) continue;
     const relationKey = `${formKey}::${type}`;
     if (seen.has(relationKey)) continue;
@@ -310,15 +348,16 @@ export function normalizeAiWordFamily(value, headword = "") {
 export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
   const word = text(entry.word || fallbackWord);
   const meaning = text(entry.chinese_meaning || entry.meaning);
+  const pos = text(entry.part_of_speech || entry.pos);
   const synonyms = normalizeAiSynonyms(entry.synonyms, word);
   return {
     word,
     phonetic: text(entry.phonetic),
-    pos: text(entry.part_of_speech || entry.pos),
+    pos,
     meaning,
     meaningDetailZh: text(entry.main_meaning_detail_zh || entry.meaningDetailZh || entry.meaning_detail_zh),
     definition: text(entry.english_definition || entry.definition),
-    otherMeanings: normalizeOtherMeanings(entry.other_meanings || entry.otherMeanings, meaning),
+    otherMeanings: normalizeOtherMeanings(entry.other_meanings || entry.otherMeanings, meaning, pos),
     example: text(entry.ielts_example || entry.example),
     exampleCn: text(entry.example_chinese || entry.exampleCn),
     forms: normalizeAiForms(entry.forms, word),
@@ -343,6 +382,7 @@ export function normalizeAiGeneratedEntry(entry = {}, fallbackWord = "") {
     category: text(entry.category ? `IELTS G类 · ${entry.category}` : "IELTS G类"),
     aiGenerated: true,
     aiContentProfile: AI_CONTENT_PROFILE_VERSION,
+    aiProfileKind: text(entry.ai_profile_kind || entry.aiProfileKind),
     generatedAt: new Date().toISOString()
   };
 }
@@ -363,7 +403,7 @@ export function isAiCoreContentComplete(word) {
     word?.word &&
     word?.pos &&
     word?.meaning &&
-    word?.meaningDetailZh &&
+    isMeaningDetailInformative(word) &&
     word?.definition &&
     Array.isArray(word?.otherMeanings) &&
     word.otherMeanings.every(isDetailedOtherMeaning) &&
@@ -373,6 +413,34 @@ export function isAiCoreContentComplete(word) {
     Array.isArray(word?.wordFamily) &&
     hasReliableCollocations(word?.collocations) &&
     hasReliableCollocations(word?.phraseCollocations)
+  );
+}
+
+/**
+ * The G-reading main-profile contract retains morphology, word family,
+ * synonyms and both collocation packs, but uses one bilingual primary example
+ * only. Additional common senses are definitions, not mini example cards.
+ */
+export function isAiGMainContentComplete(word) {
+  return Boolean(
+    word?.word &&
+    word?.pos &&
+    word?.meaning &&
+    isMeaningDetailInformative(word) &&
+    word?.definition &&
+    Array.isArray(word?.otherMeanings) &&
+    word.otherMeanings.every(isDefinedOtherMeaning) &&
+    word?.example &&
+    word?.exampleCn &&
+    Array.isArray(word?.forms) &&
+    Array.isArray(word?.wordFamily) &&
+    Array.isArray(word?.synonyms) &&
+    hasCompleteAiSynonymDetails(word) &&
+    hasReliableCollocations(word?.collocations) &&
+    hasReliableCollocations(word?.phraseCollocations) &&
+    Array.isArray(word?.ieltsUse) && word.ieltsUse.length &&
+    Array.isArray(word?.topics) && word.topics.length &&
+    word?.difficulty
   );
 }
 

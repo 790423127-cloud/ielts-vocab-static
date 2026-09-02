@@ -9,6 +9,7 @@ import {
   parseReadingWordsTable
 } from "../../reading-words/storage.mjs";
 import {
+  removeLinkedMainEntry,
   removeReadingWordEntry,
   shouldHandleReadingWordDeleteShortcut
 } from "../../reading-words/delete.mjs";
@@ -76,6 +77,17 @@ test("reading word delete selects the previous visible word when deleting the fi
   assert.equal(result.nextSelectedId, "reading-a");
 });
 
+test("reading word delete removes its stable linked master entry", () => {
+  const masterWords = [
+    { id: "word-brochure", word: "brochure" },
+    { id: "word-other", word: "other" }
+  ];
+  const result = removeLinkedMainEntry(masterWords, masterWords[0]);
+
+  assert.deepEqual(result.words.map((entry) => entry.id), ["word-other"]);
+  assert.equal(result.removed[0].id, "word-brochure");
+});
+
 test("reading delete shortcut accepts D and Delete outside editors only", () => {
   assert.equal(shouldHandleReadingWordDeleteShortcut({ key: "d", target: { tagName: "BODY" } }), true);
   assert.equal(shouldHandleReadingWordDeleteShortcut({ key: "D", target: { tagName: "DIV" } }), true);
@@ -114,7 +126,10 @@ test("the shortcut and button are wired only into the reading words page", () =>
   const spellingCard = fs.readFileSync(path.join(root, "app/components/SpellingFocusCard.jsx"), "utf8");
 
   assert.match(readingPage, /data-testid="reading-word-delete"/);
-  assert.match(readingPage, /writeReadingWordsWithBackup\(result\.words, words\)/);
-  assert.match(readingPage, /主词库未改变/);
+  assert.match(readingPage, /removeLinkedMainEntry\(previousMainWords/);
+  assert.match(readingPage, /confirmedDeletion: true/);
+  assert.match(readingPage, /DELETE_CURRENT_WORD_EVENT/);
+  assert.match(readingPage, /主词库同步删除/);
+  assert.doesNotMatch(readingPage, /只会删除阅读生词记录，不会删除主词库中的单词/);
   assert.doesNotMatch(spellingCard, /移出错词本/);
 });

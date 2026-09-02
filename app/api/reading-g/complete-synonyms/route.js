@@ -18,6 +18,7 @@ import {
 import {
   getReadingGSynonymStatus,
   normalizeReadingGSynonymDetails,
+  READING_G_SYNONYM_REVIEW_POLICY,
   READING_G_SYNONYM_STATUS
 } from "../../../lib/reading-g-vocab/synonym-relations.mjs";
 import { normalizeReadingGKey } from "../../../lib/reading-g-vocab/normalize.mjs";
@@ -27,7 +28,9 @@ import {
 } from "../../../lib/reading-g-vocab/write-lock.server.mjs";
 
 const MAX_BATCH_WORDS = 120;
-const AI_REQUEST_BATCH_SIZE = 40;
+// Five replacement expressions can make a 40-word JSON response too large for
+// reliable parsing. Keep concurrency, but make each model response smaller.
+const AI_REQUEST_BATCH_SIZE = 20;
 const MAX_CONCURRENT_AI_REQUESTS = 3;
 const PROJECT_ROOT = process.cwd();
 const VOCAB_PATH = path.join(PROJECT_ROOT, "public", "data", "reading-g-vocab.json");
@@ -110,7 +113,12 @@ export async function completePendingSynonyms(requestedIds, options = {}) {
   for (const entry of targets) {
     const key = normalizeProfileKey(entry.word);
     const cached = cache[key];
-    if (cached && normalizeProfileKey(cached.word) === key && Array.isArray(cached.synonyms)) {
+    if (
+      cached
+      && cached.reviewPolicy === READING_G_SYNONYM_REVIEW_POLICY
+      && normalizeProfileKey(cached.word) === key
+      && Array.isArray(cached.synonyms)
+    ) {
       resolved.set(entry.id, { review: cached, source: "ai-cache" });
       cacheHit += 1;
     } else {
@@ -131,19 +139,23 @@ export async function completePendingSynonyms(requestedIds, options = {}) {
     for (let startIndex = 0; startIndex < toGenerate.length; startIndex += AI_REQUEST_BATCH_SIZE) {
       requestBatches.push(toGenerate.slice(startIndex, startIndex + AI_REQUEST_BATCH_SIZE));
     }
-    const generatedBatches = await Promise.allSettled(
-      requestBatches.slice(0, MAX_CONCURRENT_AI_REQUESTS).map((requestBatch) =>
-        requestDeepseekSynonymReviews(requestBatch, {
+    const generatedBatches = [];
+    for (let startIndex = 0; startIndex < requestBatches.length; startIndex += MAX_CONCURRENT_AI_REQUESTS) {
+      const wave = requestBatches.slice(startIndex, startIndex + MAX_CONCURRENT_AI_REQUESTS);
+      const settled = await Promise.allSettled(
+        wave.map((requestBatch) => requestDeepseekSynonymReviews(requestBatch, {
           timeoutMs: 90000,
           maxTokens: 6000
-        })
-      )
-    );
+        }))
+      );
+      for (const [waveIndex, result] of settled.entries()) {
+        generatedBatches.push({ requestBatch: wave[waveIndex], result });
+      }
+    }
     const usageByRequest = [];
     const cacheUpdates = new Map();
     let firstRequestError = null;
-    for (const [requestIndex, result] of generatedBatches.entries()) {
-      const requestBatch = requestBatches[requestIndex];
+    for (const { requestBatch, result } of generatedBatches) {
       if (result.status === "rejected") {
         firstRequestError ||= result.reason;
         const reason = result.reason instanceof Error ? result.reason.message : String(result.reason);
@@ -161,7 +173,10 @@ export async function completePendingSynonyms(requestedIds, options = {}) {
         const review = generated.entries.get(input.inputId);
         if (!review) continue;
         resolved.set(input.inputId, { review, source: "deepseek" });
-        cacheUpdates.set(normalizeProfileKey(input.word), review);
+        cacheUpdates.set(normalizeProfileKey(input.word), {
+          ...review,
+          reviewPolicy: READING_G_SYNONYM_REVIEW_POLICY
+        });
       }
     }
     usage = usageByRequest.length === 1 ? usageByRequest[0] : usageByRequest.length ? usageByRequest : null;

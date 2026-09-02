@@ -3,7 +3,7 @@ import {
   isLikelyWrongAiWord,
   normalizeWord
 } from "./page-word-helpers.mjs";
-import { isInflectedReferenceWord } from "./word-study-eligibility.mjs";
+import { isBrushableWord } from "./word-study-eligibility.mjs";
 import {
   getUnifiedQualityQueue,
   isInvalidAiContent,
@@ -45,7 +45,7 @@ function buildPlan(targets, { batchSize, concurrency }) {
 }
 
 function isPaidAiEligibleWord(word) {
-  return Boolean(word?.word && String(word.word).trim()) && !isInflectedReferenceWord(word);
+  return Boolean(word?.word && String(word.word).trim()) && isBrushableWord(word);
 }
 
 function needsStructureRepair(word) {
@@ -145,8 +145,19 @@ export function buildSlowCompletionPlan(words) {
   return buildAnomalyRepairPlan(words, { maxTargets: PAID_AI_LIMITS.slow });
 }
 
-export function buildWrongRepairPlan(words) {
-  const targets = selectIndexedWords(words, needsStructureRepair, PAID_AI_LIMITS.wrongRepair);
+export function buildWrongRepairPlan(words, options = {}) {
+  const maxTargets = resolveTargetLimit(options.maxTargets, PAID_AI_LIMITS.wrongRepair);
+  const excludedWordKeys = options.excludeWordKeys instanceof Set
+    ? options.excludeWordKeys
+    : new Set(options.excludeWordKeys || []);
+  const targets = selectIndexedWords(
+    words,
+    (word) => (
+      !excludedWordKeys.has(normalizeWord(word.word)) &&
+      needsStructureRepair(word)
+    ),
+    maxTargets
+  );
   return buildPlan(targets, {
     batchSize: PAID_AI_LIMITS.batchSize,
     concurrency: Math.min(2, PAID_AI_LIMITS.concurrency)

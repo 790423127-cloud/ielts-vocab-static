@@ -32,10 +32,12 @@ import {
   READING_G_COMPACTION_SOURCE,
   applyReadingGCompaction
 } from "../app/lib/reading-g-vocab/compaction.mjs";
+import { prepareReadingGMasterReferenceForms } from "../app/lib/reading-g-vocab/master-reference-forms.mjs";
 import {
   enrichReadingGRelationMeanings,
   sanitizeReadingGRelations
 } from "../app/lib/reading-g-vocab/relation-meanings.mjs";
+import { isReferenceWord } from "../app/lib/vocab/word-study-eligibility.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.join(__dirname, "..");
@@ -82,6 +84,19 @@ function atomicWriteJson(finalPath, data) {
 
 function clone(value) {
   return value == null ? value : structuredClone(value);
+}
+
+function recordCachedCompletionFailure(entry, source, error) {
+  const reason = error instanceof Error ? error.message : "缓存资料未满足当前完整度要求";
+  return {
+    ...entry,
+    aiCompletionLastFailure: {
+      mode: "question-bank-cache-import",
+      reason,
+      source: text(source || "ai-cache"),
+      recordedAt: new Date().toISOString()
+    }
+  };
 }
 
 function relationWord(value) {
@@ -183,13 +198,39 @@ function isExternalSupplementItem(item) {
   );
 }
 
-function restoreExternalSupplementItems(items, protectedItems, retiredKeys = new Set()) {
+function isProtectedReadingGCoreItem(item) {
+  return Boolean(item) && (
+    isExternalSupplementItem(item)
+    || !asArray(item?.qualityFlags).includes(EXPANSION_FLAG)
+  );
+}
+
+function restoreProtectedReadingGItems(items, protectedItems) {
   const restored = [...items];
   const existing = new Set(restored.map(readingGMergeKey));
   let restoredCount = 0;
   for (const item of protectedItems) {
     const key = readingGMergeKey(item);
-    if (key.endsWith("::") || retiredKeys.has(key) || existing.has(key)) continue;
+    // A later curated supplement is an explicit source restore. It has a
+    // stable non-derived id, so it must survive an older broad word-key
+    // retirement overlay; the subsequent compaction pass still prevents a
+    // pure inflection from becoming an independent card.
+    if (key.endsWith("::") || existing.has(key)) continue;
+    restored.push(clone(item));
+    existing.add(key);
+    restoredCount += 1;
+  }
+  return { items: restored, restoredCount };
+}
+
+function restorePriorExpansionItems(items, priorItems) {
+  const restored = [...items];
+  const existing = new Set(restored.map(readingGMergeKey));
+  let restoredCount = 0;
+  for (const item of priorItems) {
+    if (!asArray(item?.qualityFlags).includes(EXPANSION_FLAG)) continue;
+    const key = readingGMergeKey(item);
+    if (key.endsWith("::") || existing.has(key)) continue;
     restored.push(clone(item));
     existing.add(key);
     restoredCount += 1;
@@ -293,7 +334,7 @@ function buildSenses(word, master, entryId, primaryMeaning, primaryPos) {
   return result;
 }
 
-function buildMasterBackedEntry(word, master) {
+export function buildMasterBackedEntry(word, master) {
   const normalizedKey = normalizeReadingGKey(word);
   const id = stableReadingGId("word", normalizedKey);
   const primaryMeaningZh = text(
@@ -430,6 +471,7 @@ function loadConsistentMasterLexicon(root) {
     byKey.set(key, entry);
   }
   return {
+    words: publicWords,
     byKey,
     count: publicWords.length,
     lexiconHash: publicData.lexiconHash || publicContentHash,
@@ -471,19 +513,15 @@ export function applyReadingGQuestionBankExpansion({
   compactionPayloadOverride = null
 } = {}) {
   if (!vocab || !Array.isArray(vocab.items)) throw new Error("G类词库载荷无效");
-  const protectedExternalSupplementItems = vocab.items.filter(isExternalSupplementItem).map(clone);
+  const priorExpansionItems = vocab.items.filter((item) => (
+    asArray(item?.qualityFlags).includes(EXPANSION_FLAG)
+  )).map(clone);
+  const protectedCoreItems = vocab.items.filter(isProtectedReadingGCoreItem).map(clone);
   const compactionPath = path.join(projectRoot, READING_G_COMPACTION_SOURCE);
-  const compactionPayload = compactionPayloadOverride || (
+  let compactionPayload = compactionPayloadOverride || (
     fs.existsSync(compactionPath)
       ? readJson(compactionPath)
       : { rules: [] }
-  );
-  const configuredCompactionAliasKeys = new Set(
-    asArray(compactionPayload?.rules).flatMap((rule) => (
-      asArray(rule?.aliases)
-        .map((alias) => normalizeReadingGKey(alias?.key || alias?.word))
-        .filter(Boolean)
-    ))
   );
   const sourcePath = path.join(projectRoot, EXPANSION_SOURCE);
   const source = readJson(sourcePath);
@@ -493,6 +531,31 @@ export function applyReadingGQuestionBankExpansion({
   }
 
   const master = loadConsistentMasterLexicon(projectRoot);
+  const retirementPath = path.join(projectRoot, READING_G_RETIREMENTS_SOURCE);
+  const retirementPayload = fs.existsSync(retirementPath)
+    ? readJson(retirementPath)
+    : { entries: [] };
+  // The master lexicon is authoritative about reference-only inflections.
+  // Pre-create their real headwords, then represent every source surface form
+  // through compaction.  This prevents a future full G rebuild from recreating
+  // plural/tense/comparative cards that were intentionally merged before.
+  const masterReferenceForms = prepareReadingGMasterReferenceForms({
+    items: vocab.items,
+    masterWords: master.words,
+    additionalWords: sourceWords,
+    compactionPayload,
+    retirementPayload,
+    createBaseEntry: (masterEntry) => buildMasterBackedEntry(masterEntry.word, masterEntry)
+  });
+  vocab.items = masterReferenceForms.items;
+  compactionPayload = masterReferenceForms.compactionPayload;
+  const configuredCompactionAliasKeys = new Set(
+    asArray(compactionPayload?.rules).flatMap((rule) => (
+      asArray(rule?.aliases)
+        .map((alias) => normalizeReadingGKey(alias?.key || alias?.word))
+        .filter(Boolean)
+    ))
+  );
   const aiCompletionPath = path.join(projectRoot, READING_G_AI_COMPLETION_SOURCE);
   const aiCompletionPayload = fs.existsSync(aiCompletionPath)
     ? readJson(aiCompletionPath)
@@ -511,72 +574,111 @@ export function applyReadingGQuestionBankExpansion({
   let addedCount = 0;
   let refreshedCount = 0;
   let alreadyInCoreCount = 0;
+  let invalidCachedCompletionCount = 0;
+  const invalidCachedCompletionWords = [];
   const skippedConfiguredSourceAliases = new Set();
 
   for (const word of sourceWords) {
     const masterEntry = master.byKey.get(word);
+    const existingAt = existingIndex.get(word);
+    const existing = existingAt == null ? null : vocab.items[existingAt];
+    const isPriorExpansion = Boolean(
+      existing && asArray(existing.qualityFlags).includes(EXPANSION_FLAG)
+    );
+    // A malformed historical cache profile must not erase the already complete
+    // teaching card that it was meant to enrich. Keep that verified local card
+    // and report the bad cache entry instead; a later explicit repair can
+    // replace it safely.
+    const keepExistingCompletedContent = Boolean(
+      isPriorExpansion && !isReadingGContentIncomplete(existing)
+    );
+    if (masterEntry) masterMatchedCount += 1;
+    else masterMissingWords.push(word);
+
+    const isMasterReferenceForm = isReferenceWord(masterEntry);
+
+    // This source word is represented by the base headword.  Skip it before
+    // touching an AI cache record: a reference form has no independent content
+    // to complete and must never be written back as a card.
+    if (isMasterReferenceForm && configuredCompactionAliasKeys.has(word)) {
+      if (existingAt == null) skippedConfiguredSourceAliases.add(word);
+      else alreadyInCoreCount += 1;
+      continue;
+    }
+
     const completionRecord = aiCompletions[word];
     const pendingEntry = !masterEntry ? buildPendingEntry(word) : null;
     let next;
+    let retainedExistingAfterInvalidCache = false;
     if (masterEntry) {
       next = buildMasterBackedEntry(word, masterEntry);
       if (completionRecord && isReadingGContentIncomplete(next)) {
+        try {
+          next = buildReadingGAiCompletedEntry(
+            next,
+            completionRecord.profile || completionRecord,
+            {
+              aiSource: completionRecord.source,
+              generatedAt: completionRecord.completedAt
+            }
+          );
+        } catch (error) {
+          invalidCachedCompletionCount += 1;
+          invalidCachedCompletionWords.push(word);
+          if (keepExistingCompletedContent) {
+            next = clone(existing);
+            retainedExistingAfterInvalidCache = true;
+          } else {
+            next = recordCachedCompletionFailure(next, completionRecord.source, error);
+          }
+        }
+      }
+    } else if (completionRecord) {
+      try {
         next = buildReadingGAiCompletedEntry(
-          next,
+          pendingEntry,
           completionRecord.profile || completionRecord,
           {
             aiSource: completionRecord.source,
             generatedAt: completionRecord.completedAt
           }
         );
-      }
-    } else if (completionRecord) {
-      next = buildReadingGAiCompletedEntry(
-        pendingEntry,
-        completionRecord.profile || completionRecord,
-        {
-          aiSource: completionRecord.source,
-          generatedAt: completionRecord.completedAt
+      } catch (error) {
+        invalidCachedCompletionCount += 1;
+        invalidCachedCompletionWords.push(word);
+        if (keepExistingCompletedContent) {
+          next = clone(existing);
+          retainedExistingAfterInvalidCache = true;
+        } else {
+          next = recordCachedCompletionFailure(pendingEntry, completionRecord.source, error);
         }
-      );
+      }
     } else {
       next = pendingEntry;
     }
-    if (masterEntry) masterMatchedCount += 1;
-    else masterMissingWords.push(word);
-
-    const existingAt = existingIndex.get(word);
     if (existingAt == null) {
       // A compacted source form is represented by its canonical entry. Do not
       // rematerialize it as a fresh pending word on every rebuild; doing so
       // would leak the pending layer back onto the canonical after compaction.
-      if (configuredCompactionAliasKeys.has(word)) {
-        skippedConfiguredSourceAliases.add(word);
-        continue;
-      }
       existingIndex.set(word, vocab.items.length);
       vocab.items.push(next);
       addedCount += 1;
       continue;
     }
-    const existing = vocab.items[existingAt];
     if (isExternalSupplementItem(existing)) {
       alreadyInCoreCount += 1;
       continue;
     }
-    const isPriorExpansion = asArray(existing.qualityFlags).includes(EXPANSION_FLAG);
     if (isPriorExpansion) {
-      vocab.items[existingAt] = preserveCompactedHistory(existing, next);
+      vocab.items[existingAt] = retainedExistingAfterInvalidCache
+        ? next
+        : preserveCompactedHistory(existing, next);
       refreshedCount += 1;
     } else {
       alreadyInCoreCount += 1;
     }
   }
 
-  const retirementPath = path.join(projectRoot, READING_G_RETIREMENTS_SOURCE);
-  const retirementPayload = fs.existsSync(retirementPath)
-    ? readJson(retirementPath)
-    : { entries: [] };
   const retirementResult = applyReadingGRetirements(vocab.items, retirementPayload);
   const morphologyResult = organizeReadingGMorphology(retirementResult.items, master.byKey);
   const compactionResult = applyReadingGCompaction(morphologyResult.items, compactionPayload);
@@ -585,20 +687,47 @@ export function applyReadingGQuestionBankExpansion({
     relationAuditResult.items,
     master.byKey
   );
-  const restoredSupplementResult = restoreExternalSupplementItems(
+  const restoredSupplementResult = restoreProtectedReadingGItems(
     relationMeaningResult.items,
-    protectedExternalSupplementItems,
-    retirementResult.retiredKeys
+    protectedCoreItems
   );
-  // External supplements are restored verbatim so their teaching data is not
-  // lost, but a restored item may itself be an explicitly compacted alias.
+  // Curated/non-expansion cards are restored verbatim so their teaching data
+  // is not lost, but a restored item may itself be an explicitly compacted
+  // alias.
   // Reapply the same plan after restoration so those aliases do not reappear
   // as independent flashcards on every question-bank rebuild.
-  const restoredCompactionResult = applyReadingGCompaction(
+  const restoredPriorExpansionResult = restorePriorExpansionItems(
     restoredSupplementResult.items,
+    priorExpansionItems
+  );
+  const restoredCompactionResult = applyReadingGCompaction(
+    restoredPriorExpansionResult.items,
     compactionPayload
   );
-  vocab.items = restoredCompactionResult.items;
+  // Preserve the established teaching card after compaction has completed.
+  // The persistent compaction plan already contains every alias/id needed for
+  // status migration, so a deterministic rebuild must not rewrite unrelated
+  // meanings, examples, forms, or word families on existing cards.
+  const restoredByKey = new Map(
+    restoredCompactionResult.items
+      .map((item) => [readingGMergeKey(item), item])
+      .filter(([key]) => !key.endsWith("::"))
+  );
+  const finalItems = [];
+  const finalKeys = new Set();
+  for (const original of [...priorExpansionItems, ...protectedCoreItems]) {
+    const key = readingGMergeKey(original);
+    if (finalKeys.has(key) || !restoredByKey.has(key)) continue;
+    finalItems.push(clone(original));
+    finalKeys.add(key);
+  }
+  for (const item of restoredCompactionResult.items) {
+    const key = readingGMergeKey(item);
+    if (finalKeys.has(key)) continue;
+    finalItems.push(item);
+    finalKeys.add(key);
+  }
+  vocab.items = finalItems;
   const items = vocab.items;
   const visibleWordKeys = new Set(
     items
@@ -730,7 +859,10 @@ export function applyReadingGQuestionBankExpansion({
     referenceCount: pendingIndependentCount,
     addedCount,
     refreshedCount,
-    alreadyInCoreCount
+    alreadyInCoreCount,
+    invalidCachedCompletionCount,
+    invalidCachedCompletionWords,
+    masterReferenceForms: clone(masterReferenceForms.stats)
   };
   vocab.morphologyEnrichment = {
     version: "reading-g-master-morphology-v1",
@@ -745,7 +877,8 @@ export function applyReadingGQuestionBankExpansion({
     updatedAt: expandedAt,
     sourceWordCount: morphologyResult.stats.wordEntries,
     resultingWordCount: wordCount,
-    ...compactionResult.stats
+    ...compactionResult.stats,
+    masterReferenceForms: clone(masterReferenceForms.stats)
   };
   vocab.relationMeaningEnrichment = {
     version: "reading-g-relation-meanings-v1",
@@ -789,15 +922,15 @@ export function applyReadingGQuestionBankExpansion({
         removedCount: retirementResult.removed.length
       };
     }
-    if (fs.existsSync(compactionPath)) {
-      report.sourceFiles[READING_G_COMPACTION_SOURCE] = {
-        bytes: fs.statSync(compactionPath).size,
-        sha256: sha256File(compactionPath),
-        rawCount: asArray(compactionPayload.rules).length,
-        role: "reading_g_internal_word_family_compaction",
-        removedIndependentWordCount: compactionResult.stats.removedIndependentWordCount
-      };
-    }
+    const serializedCompaction = JSON.stringify(compactionPayload, null, 2);
+    report.sourceFiles[READING_G_COMPACTION_SOURCE] = {
+      bytes: Buffer.byteLength(serializedCompaction, "utf8"),
+      sha256: sha256Buffer(serializedCompaction),
+      rawCount: asArray(compactionPayload.rules).length,
+      role: "reading_g_internal_word_family_compaction",
+      removedIndependentWordCount: compactionResult.stats.removedIndependentWordCount,
+      masterReferenceForms: clone(masterReferenceForms.stats)
+    };
     report.layerStats = vocab.layerStats;
     report.questionBankExpansion = clone(vocab.questionBankExpansion);
     report.morphologyEnrichment = clone(vocab.morphologyEnrichment);
@@ -834,23 +967,33 @@ export function applyReadingGQuestionBankExpansion({
     alreadyInCoreCount,
     morphology: morphologyResult.stats,
     compaction: compactionResult.stats,
+    masterReferenceForms: masterReferenceForms.stats,
     relationMeanings: relationMeaningResult.stats,
     relationAudit: relationAuditResult.stats,
     externalSupplementsRestored: restoredSupplementResult.restoredCount,
+    priorExpansionItemsRestored: restoredPriorExpansionResult.restoredCount,
     externalSupplementsRecompacted: restoredCompactionResult.stats.removedIndependentWordCount,
-    masterMissingWords
+    invalidCachedCompletionCount,
+    invalidCachedCompletionWords,
+    masterMissingWords,
+    compactionPayload
   };
 }
 
 export function runReadingGQuestionBankExpansion({ projectRoot = DEFAULT_ROOT } = {}) {
   const vocabPath = path.join(projectRoot, "public", "data", "reading-g-vocab.json");
   const reportPath = path.join(projectRoot, "public", "data", "reading-g-import-report.json");
+  const compactionPath = path.join(projectRoot, READING_G_COMPACTION_SOURCE);
   const vocab = readJson(vocabPath);
   const report = fs.existsSync(reportPath) ? readJson(reportPath) : {};
   const result = applyReadingGQuestionBankExpansion({ vocab, report, projectRoot });
   atomicWriteJson(vocabPath, vocab);
   atomicWriteJson(reportPath, report);
-  return { vocabPath, reportPath, result, vocab };
+  const beforeCompaction = fs.existsSync(compactionPath) ? readJson(compactionPath) : { rules: [] };
+  if (JSON.stringify(beforeCompaction) !== JSON.stringify(result.compactionPayload)) {
+    atomicWriteJson(compactionPath, result.compactionPayload);
+  }
+  return { vocabPath, reportPath, compactionPath, result, vocab };
 }
 
 const isMain =

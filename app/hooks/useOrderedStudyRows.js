@@ -54,8 +54,38 @@ export function useOrderedStudyRows({
     }).filter(Boolean);
     return createWordInternalDifficultyProfile(words);
   }, [baseIndices, difficultyEnabled, idictation, pool]);
+  const activeDifficultyMode = difficultyEnabled
+    ? difficultyMode
+    : WORD_STUDY_DIFFICULTY_MODE.DEFAULT;
+  const snapshotKey = wordStudyOrderSnapshotKey(mode, activeDifficultyMode);
+  const activeSnapshot = snapshots[snapshotKey] || null;
+  const reusableSnapshot = useMemo(() => {
+    if (
+      !enabled
+      || baseIndices.length === 0
+      || !isFixedWordStudyOrderMode(mode, activeDifficultyMode)
+      || !activeSnapshot
+    ) {
+      return null;
+    }
+    const candidate = reconcileWordStudyOrderSnapshot(
+      activeSnapshot,
+      baseIndices,
+      pool,
+      { idictation, fallbackOrder: baseIndices }
+    );
+    return candidate.changed ? null : candidate;
+  }, [
+    activeDifficultyMode,
+    activeSnapshot,
+    baseIndices,
+    enabled,
+    idictation,
+    mode,
+    pool
+  ]);
   const generatedIndices = useMemo(
-    () => orderStudyWordIndices(baseIndices, pool, {
+    () => reusableSnapshot?.indices || orderStudyWordIndices(baseIndices, pool, {
       mode: enabled ? mode : WORD_STUDY_ORDER_MODE.CURRENT,
       difficultyMode: enabled && difficultyEnabled
         ? difficultyMode
@@ -74,14 +104,10 @@ export function useOrderedStudyRows({
       idictation,
       mode,
       pool,
+      reusableSnapshot,
       seed
     ]
   );
-  const activeDifficultyMode = difficultyEnabled
-    ? difficultyMode
-    : WORD_STUDY_DIFFICULTY_MODE.DEFAULT;
-  const snapshotKey = wordStudyOrderSnapshotKey(mode, activeDifficultyMode);
-  const activeSnapshot = snapshots[snapshotKey] || null;
   const reconciled = useMemo(() => {
     if (
       !enabled
@@ -91,6 +117,7 @@ export function useOrderedStudyRows({
     ) {
       return null;
     }
+    if (reusableSnapshot) return reusableSnapshot;
     return reconcileWordStudyOrderSnapshot(activeSnapshot, generatedIndices, pool, {
       idictation,
       fallbackOrder: generatedIndices
@@ -103,7 +130,8 @@ export function useOrderedStudyRows({
     generatedIndices,
     idictation,
     mode,
-    pool
+    pool,
+    reusableSnapshot
   ]);
   const orderedIndices = reconciled?.indices || generatedIndices;
   const rowByIndex = useMemo(
@@ -178,6 +206,31 @@ export function useOrderedStudyRows({
       normalizedDifficultyMode
     );
     if (isFixedWordStudyOrderMode(nextMode, normalizedDifficultyMode)) {
+      const existing = snapshots[nextSnapshotKey];
+      if (existing) {
+        const reusable = reconcileWordStudyOrderSnapshot(existing, baseIndices, pool, {
+          idictation,
+          fallbackOrder: baseIndices
+        });
+        const next = reusable.changed ? (() => {
+          const freshOrder = orderStudyWordIndices(baseIndices, pool, {
+            mode: nextMode,
+            difficultyMode: normalizedDifficultyMode,
+            difficultyEnabled,
+            difficultyProfile,
+            idictation
+          });
+          return reconcileWordStudyOrderSnapshot(existing, freshOrder, pool, {
+            idictation,
+            fallbackOrder: freshOrder
+          });
+        })() : reusable;
+        saveSnapshot(nextSnapshotKey, next.snapshot);
+        saveCursor(nextSnapshotKey, next.snapshot.cursorKey);
+        setMode(nextMode);
+        setDifficultyMode(normalizedDifficultyMode);
+        return next.cursorIndex ?? next.indices[0] ?? null;
+      }
       const freshOrder = orderStudyWordIndices(baseIndices, pool, {
         mode: nextMode,
         difficultyMode: normalizedDifficultyMode,
@@ -185,18 +238,6 @@ export function useOrderedStudyRows({
         difficultyProfile,
         idictation
       });
-      const existing = snapshots[nextSnapshotKey];
-      if (existing) {
-        const next = reconcileWordStudyOrderSnapshot(existing, freshOrder, pool, {
-          idictation,
-          fallbackOrder: freshOrder
-        });
-        saveSnapshot(nextSnapshotKey, next.snapshot);
-        saveCursor(nextSnapshotKey, next.snapshot.cursorKey);
-        setMode(nextMode);
-        setDifficultyMode(normalizedDifficultyMode);
-        return next.cursorIndex ?? next.indices[0] ?? null;
-      }
       const snapshot = createWordStudyOrderSnapshot(freshOrder, pool, {
         idictation,
         cursorIndex: freshOrder[0]

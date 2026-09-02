@@ -408,7 +408,7 @@ export default function LrParaphrasePanel() {
       </header>
 
       <section className="main lr-main flash-training-main">
-        <article className="lr-card lr-study-card flash-training-card" aria-label="听力阅读同义替换卡片">
+        <article className="lr-card lr-study-card flash-training-card" aria-label="听力阅读同义替换卡片" data-effective-study-region>
           <div className="lr-card-head">
             <span className="phrase-type-badge">同义替换组</span>
             <span className="lr-source-label">

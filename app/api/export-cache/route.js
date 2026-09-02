@@ -20,6 +20,7 @@ import {
 } from "../../lib/vocab/lexicon-guard.mjs";
 import {
   buildLexiconRetirementPayload,
+  rebaseConfirmedCurrentWordDeletion,
   validateLexiconDeletionIntent
 } from "../../lib/vocab/lexicon-delete-intent.mjs";
 import { writeMasterLexiconBaseline } from "../../lib/vocab/master-lexicon-baseline-io.mjs";
@@ -297,7 +298,7 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    const words = Array.isArray(body.words) ? body.words.map(stripWordUserState) : [];
+    let words = Array.isArray(body.words) ? body.words.map(stripWordUserState) : [];
 
     if (!words.length) {
       return Response.json(
@@ -318,11 +319,12 @@ export async function POST(req) {
     }
 
     const current = readCache();
-    const deletionValidation = validateLexiconDeletionIntent(
-      current?.words || [],
-      words,
-      body.deletionIntent
-    );
+    const isDirectCurrentWordDeletion =
+      body?.deletionIntent?.confirmed === true &&
+      body?.deletionIntent?.action === "delete-current-word";
+    const deletionValidation = isDirectCurrentWordDeletion
+      ? rebaseConfirmedCurrentWordDeletion(current?.words || [], body.deletionIntent)
+      : validateLexiconDeletionIntent(current?.words || [], words, body.deletionIntent);
     if (!deletionValidation.ok) {
       return Response.json(
         {
@@ -332,6 +334,11 @@ export async function POST(req) {
         },
         { status: deletionValidation.status || 409 }
       );
+    }
+    if (isDirectCurrentWordDeletion) {
+      // A confirmed current-word deletion is ID-based. Keep all other current
+      // formal entries when the browser sent an older full snapshot.
+      words = deletionValidation.words;
     }
 
     const validation = validateExportCacheWrite({ ...body, words }, current);
@@ -416,7 +423,8 @@ export async function POST(req) {
       integrityHash: prepared.payload.integrityHash,
       fileHash: published.fileHash,
       deletionBackup,
-      baselineUpdated
+      baselineUpdated,
+      rebased: deletionValidation.rebased === true
     });
   } catch (error) {
     return Response.json(

@@ -1,6 +1,8 @@
 # dependencies / build
 node_modules
 .next
+.next-build-staging
+.next-previous
 out
 dist
 .vercel
@@ -22,14 +24,18 @@ Thumbs.db
 .static-export-cache/*.backup
 .static-export-cache/*.tmp
 .static-export-cache/*.pre-*
+.static-export-cache/reading-words-static-publish/
 .deploy/
 .static-export-cache/words.json.phase*
+.codex-tmp/
+.current-version-recovery/
 .browser-validation-profile/
 playwright-report/
 test-results/
 blob-report/
 .playwright-cli/
 output/
+outputs/*.pid.json
 tmp/
 
 # audit / local work products (do not ship)
@@ -46,9 +52,9 @@ static-site.zip
 
 # keep intentional public data; ignore accidental audio dumps under public
 public/audio/
+public/data/*.tmp-*
 
 # python cache
 scripts/**/__pycache__/
 **/__pycache__/
 *.pyc
-

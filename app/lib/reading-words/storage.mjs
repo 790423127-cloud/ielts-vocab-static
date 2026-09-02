@@ -3,11 +3,24 @@ import {
   hasCompleteReadingSynonymDetails,
   normalizeReadingSynonymDetails
 } from "./synonym-details.mjs";
+import {
+  applyMeaningCoverageReview,
+  isMeaningCoverageProfileUsable,
+  needsMeaningCoverageReview
+} from "../vocab/meaning-coverage-audit.mjs";
+import { needsMultiPosSenseRepair } from "../vocab/multi-pos-sense-coverage.mjs";
 
 export const READING_WORDS_STORAGE_KEY = "ielts-personal-reading-words-v1";
 export const READING_WORDS_ROLLBACK_KEY = "ielts-personal-reading-words-rollback-v1";
 export const READING_WORDS_SESSION_KEY = "ielts-personal-reading-words-session-v1";
 export const READING_WORDS_BACKUP_VERSION = 1;
+export const READING_WORDS_ROLLBACK_VERSION = 2;
+export const READING_WORDS_INDEXED_DB_NAME = "ielts-personal-reading-words-v1";
+const READING_WORDS_INDEXED_DB_VERSION = 1;
+const READING_WORDS_INDEXED_DB_STORE = "notebook";
+const READING_WORDS_INDEXED_DB_SNAPSHOT_KEY = "snapshot";
+const READING_WORDS_INDEXED_DB_ROLLBACK_KEY = "rollback";
+const NO_ROLLBACK_UPDATE = Symbol("no-reading-words-rollback-update");
 const READING_AI_REVIEW_SOURCE = "reading-ai";
 
 const CORE_FIELDS = ["pos", "meaning", "definition", "example", "exampleCn"];
@@ -68,6 +81,29 @@ export function normalizeReadingWordKey(value) {
     .replace(/[“”]/g, '"');
 }
 
+export function getReadingWordContext(word = {}) {
+  const sources = Array.isArray(word?.readingSources) ? word.readingSources : [];
+  const candidates = sources
+    .map((source) => ({
+      source,
+      sentence: cleanText(source?.sentence || source?.text || source?.quote)
+    }))
+    .filter((item) => item.sentence);
+  if (!candidates.length) return { sentence: "", label: "", sourceId: "" };
+
+  const wordKey = normalizeReadingWordKey(word?.word);
+  const selected = candidates.find((item) => (
+    wordKey && normalizeReadingWordKey(item.sentence).includes(wordKey)
+  )) || candidates[0];
+  return {
+    sentence: selected.sentence,
+    label: [cleanText(selected.source?.testTitle), cleanText(selected.source?.context)]
+      .filter(Boolean)
+      .join(" · "),
+    sourceId: cleanText(selected.source?.id)
+  };
+}
+
 export function normalizeReadingWordsSession(value = {}) {
   return {
     selectedId: cleanText(value?.selectedId),
@@ -103,6 +139,12 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
     meaningDetailZh: cleanText(input.meaningDetailZh),
     definition: cleanText(input.definition),
     otherMeanings: Array.isArray(input.otherMeanings) ? input.otherMeanings : [],
+    meaningCoveragePending: input.meaningCoveragePending === true,
+    meaningCoverageReviewed: input.meaningCoverageReviewed === true,
+    meaningCoverageAuditStatus: cleanText(input.meaningCoverageAuditStatus),
+    meaningCoverageReviewSource: cleanText(input.meaningCoverageReviewSource),
+    meaningCoverageReviewedAt: cleanText(input.meaningCoverageReviewedAt),
+    meaningCoveragePromptVersion: cleanText(input.meaningCoveragePromptVersion),
     example: cleanText(input.example),
     exampleCn: cleanText(input.exampleCn),
     forms: Array.isArray(input.forms) ? input.forms : [],
@@ -133,10 +175,22 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
       ? (cleanText(input.synonymsReviewSource) || READING_AI_REVIEW_SOURCE)
       : "",
     mainWordId: cleanText(input.mainWordId),
+    baseWord: cleanText(input.baseWord),
+    baseWordId: cleanText(input.baseWordId),
+    relationType: cleanText(input.relationType),
+    correctedFrom: cleanText(input.correctedFrom),
     externalSource: cleanText(input.externalSource),
     externalId: cleanText(input.externalId),
     externalFingerprint: cleanText(input.externalFingerprint),
     readingMeaning: cleanText(input.readingMeaning),
+    readingContextPending: input.readingContextPending === true && input.readingContextReviewed !== true,
+    readingContextReviewed: input.readingContextReviewed === true,
+    readingContextReviewSource: input.readingContextReviewed === true
+      ? cleanText(input.readingContextReviewSource)
+      : "",
+    readingContextReviewedAt: input.readingContextReviewed === true
+      ? cleanText(input.readingContextReviewedAt)
+      : "",
     readingNote: cleanText(input.readingNote),
     readingStatus: cleanText(input.readingStatus),
     readingSources: Array.isArray(input.readingSources) ? input.readingSources : [],
@@ -155,6 +209,8 @@ export function normalizeReadingWord(input = {}, { idFactory, preserveId = true,
 
 export function getReadingWordMissingFields(word) {
   const missing = CORE_FIELDS.filter((field) => !cleanText(word?.[field]));
+  if (needsMultiPosSenseRepair(word)) missing.push("multiPosSenses");
+  if (needsMeaningCoverageReview(word)) missing.push("meaningDetailZh");
   for (const [field, reviewedField] of REVIEWED_RELATION_FIELDS) {
     const hasData = Array.isArray(word?.[field]) && word[field].length > 0;
     if (!hasData && word?.[reviewedField] !== true) missing.push(field);
@@ -319,8 +375,10 @@ export function mergeReadingWordImports(currentWords, incomingWords, { idFactory
   return { words, added, duplicates, promoted };
 }
 
-export function mergeReadingWordAiProfile(word, profile = {}) {
-  const next = { ...word };
+export function mergeReadingWordAiProfile(word, profile = {}, options = {}) {
+  let next = { ...word };
+  const contextSentence = cleanText(options.contextSentence);
+  const contextAware = Boolean(contextSentence);
   // Accept OCR/import typo fixes from AI (e.g. ncestors → ancestors).
   const corrected = cleanText(profile.word);
   const correctedFrom = cleanText(profile.correctedFrom);
@@ -349,33 +407,70 @@ export function mergeReadingWordAiProfile(word, profile = {}) {
   if (!Array.isArray(next.synonyms) || !next.synonyms.length) {
     next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
   }
-  next.synonymDetails = normalizeReadingSynonymDetails(
-    [
-      ...(Array.isArray(next.synonymDetails) ? next.synonymDetails : []),
-      ...(Array.isArray(profile.synonymDetails) ? profile.synonymDetails : [])
-    ],
-    next.synonyms,
-    next.word
-  );
+  if (contextAware) {
+    // The reading passage owns the primary sense.  Replace semantic fields
+    // inherited from the global lexicon, but keep identity and study state.
+    for (const field of ["pos", "meaning", "meaningDetailZh", "definition", "exampleCn"]) {
+      if (cleanText(profile[field])) next[field] = cleanText(profile[field]);
+    }
+    next.example = contextSentence;
+    for (const field of ["otherMeanings", "forms", "wordFamily"]) {
+      if (Array.isArray(profile[field])) next[field] = profile[field];
+    }
+    next.synonyms = normalizeReadingSynonyms(profile.synonyms, next.word);
+    next.synonymDetails = normalizeReadingSynonymDetails(
+      profile.synonymDetails,
+      next.synonyms,
+      next.word
+    );
+    next.readingMeaning = cleanText(profile.meaning);
+    next.readingContextPending = false;
+    next.readingContextReviewed = true;
+    next.readingContextReviewSource = "reading-context-ai";
+    next.readingContextReviewedAt = cleanText(profile.generatedAt) || new Date().toISOString();
+  }
+  // A semantic-review queue is intentionally different from a missing-field
+  // queue: keep the learner's primary gloss, only replace a template-level
+  // explanation, and append verified common senses from the profile.
+  if (
+    needsMeaningCoverageReview(next) &&
+    isMeaningCoverageProfileUsable(profile, next.word)
+  ) {
+    next = applyMeaningCoverageReview(next, profile, {
+      source: cleanText(profile.source) || READING_AI_REVIEW_SOURCE,
+      reviewedAt: cleanText(profile.generatedAt) || new Date().toISOString()
+    });
+  }
+  if (!contextAware) {
+    next.synonymDetails = normalizeReadingSynonymDetails(
+      [
+        ...(Array.isArray(next.synonymDetails) ? next.synonymDetails : []),
+        ...(Array.isArray(profile.synonymDetails) ? profile.synonymDetails : [])
+      ],
+      next.synonyms,
+      next.word
+    );
+  }
   // Usable AI profiles always include relation arrays (possibly empty). Mark
   // them reviewed so empty-but-checked relations do not keep the card incomplete.
   const aiMarkedRelations = profile?.aiGenerated === true
     || profile?.source === "deepseek"
     || profile?.source === "ai-cache"
     || profile?.aiContentProfile;
+  const relationReviewSource = contextAware ? "reading-context-ai" : READING_AI_REVIEW_SOURCE;
   if (Array.isArray(profile.forms) || aiMarkedRelations) {
     next.formsReviewed = true;
-    next.formsReviewSource = READING_AI_REVIEW_SOURCE;
+    next.formsReviewSource = relationReviewSource;
     if (!Array.isArray(next.forms)) next.forms = [];
   }
   if (Array.isArray(profile.wordFamily) || aiMarkedRelations) {
     next.wordFamilyReviewed = true;
-    next.wordFamilyReviewSource = READING_AI_REVIEW_SOURCE;
+    next.wordFamilyReviewSource = relationReviewSource;
     if (!Array.isArray(next.wordFamily)) next.wordFamily = [];
   }
   if (Array.isArray(profile.synonyms) || aiMarkedRelations) {
     next.synonymsReviewed = true;
-    next.synonymsReviewSource = READING_AI_REVIEW_SOURCE;
+    next.synonymsReviewSource = relationReviewSource;
     if (!Array.isArray(next.synonyms)) next.synonyms = [];
   }
   next.updatedAt = new Date().toISOString();
@@ -383,13 +478,22 @@ export function mergeReadingWordAiProfile(word, profile = {}) {
 }
 
 export function readReadingWords() {
-  if (typeof window === "undefined") return [];
+  return readLegacyReadingWordsSnapshot().words;
+}
+
+function readLegacyReadingWordsSnapshot() {
+  if (typeof window === "undefined") return { words: [], updatedAt: "" };
   try {
     const parsed = JSON.parse(window.localStorage.getItem(READING_WORDS_STORAGE_KEY) || "null");
     const items = Array.isArray(parsed) ? parsed : parsed?.words;
-    return Array.isArray(items) ? items.map((item) => normalizeReadingWord(item)).filter((item) => item.word) : [];
+    return {
+      words: Array.isArray(items)
+        ? items.map((item) => normalizeReadingWord(item)).filter((item) => item.word)
+        : [],
+      updatedAt: cleanText(parsed?.updatedAt)
+    };
   } catch {
-    return [];
+    return { words: [], updatedAt: "" };
   }
 }
 
@@ -417,10 +521,300 @@ export function writeReadingWordsSession(session) {
   }
 }
 
-export function compactReadingWordsForPersistence(words) {
+export function compactReadingWordsForPersistence(words, options = {}) {
   return (Array.isArray(words) ? words : [])
-    .map((item) => normalizeReadingWord(item))
+    .map((item) => normalizeReadingWord(item, { now: options.now }))
     .filter((item) => item.word);
+}
+
+function readingWordRollbackId(word = {}) {
+  return cleanText(word.id || word.wordId);
+}
+
+function hasUniqueRollbackIds(words) {
+  const ids = words.map(readingWordRollbackId);
+  return ids.every(Boolean) && new Set(ids).size === ids.length;
+}
+
+export function buildReadingWordsRollback(words, previousWords, options = {}) {
+  const now = cleanText(options.now) || new Date().toISOString();
+  const next = compactReadingWordsForPersistence(words, { now });
+  const previous = compactReadingWordsForPersistence(previousWords, { now });
+
+  // Stable IDs are the normal data contract. Keep a full snapshot only for
+  // malformed legacy data so rollback can never reconstruct the wrong list.
+  if (!hasUniqueRollbackIds(next) || !hasUniqueRollbackIds(previous)) {
+    return {
+      version: READING_WORDS_BACKUP_VERSION,
+      kind: "snapshot",
+      createdAt: now,
+      words: previous
+    };
+  }
+
+  const nextById = new Map(next.map((item) => [readingWordRollbackId(item), item]));
+  const previousEntries = previous.filter((item) => {
+    const nextItem = nextById.get(readingWordRollbackId(item));
+    return !nextItem || JSON.stringify(nextItem) !== JSON.stringify(item);
+  });
+
+  return {
+    version: READING_WORDS_ROLLBACK_VERSION,
+    kind: "delta",
+    createdAt: now,
+    previousOrder: previous.map(readingWordRollbackId),
+    previousEntries
+  };
+}
+
+export function restoreReadingWordsRollback(currentWords, rollback, options = {}) {
+  if (Array.isArray(rollback?.words)) {
+    return compactReadingWordsForPersistence(rollback.words, options);
+  }
+  if (
+    rollback?.kind !== "delta"
+    || !Array.isArray(rollback.previousOrder)
+    || !Array.isArray(rollback.previousEntries)
+  ) {
+    return null;
+  }
+
+  const current = compactReadingWordsForPersistence(currentWords, options);
+  if (!hasUniqueRollbackIds(current) || !hasUniqueRollbackIds(rollback.previousEntries)) {
+    return null;
+  }
+  const currentById = new Map(current.map((item) => [readingWordRollbackId(item), item]));
+  const previousById = new Map(
+    rollback.previousEntries.map((item) => [readingWordRollbackId(item), item])
+  );
+  const restored = rollback.previousOrder.map((id) => previousById.get(id) || currentById.get(id));
+  return restored.every(Boolean) ? restored : null;
+}
+
+function storageErrorMessage(label, error) {
+  const name = cleanText(error?.name);
+  const message = cleanText(error?.message);
+  return [label, name, message].filter(Boolean).join("：") || label;
+}
+
+function isIndexedDbAvailable() {
+  return typeof window !== "undefined" && typeof window.indexedDB?.open === "function";
+}
+
+function openReadingWordsIndexedDb() {
+  if (!isIndexedDbAvailable()) {
+    return Promise.reject(new Error("当前浏览器未提供 IndexedDB"));
+  }
+  return new Promise((resolve, reject) => {
+    const request = window.indexedDB.open(
+      READING_WORDS_INDEXED_DB_NAME,
+      READING_WORDS_INDEXED_DB_VERSION
+    );
+    request.onupgradeneeded = () => {
+      const database = request.result;
+      if (!database.objectStoreNames.contains(READING_WORDS_INDEXED_DB_STORE)) {
+        database.createObjectStore(READING_WORDS_INDEXED_DB_STORE);
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("IndexedDB 打开失败"));
+    request.onblocked = () => reject(new Error("IndexedDB 被其他页面占用"));
+  });
+}
+
+function indexedDbRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("IndexedDB 请求失败"));
+  });
+}
+
+function indexedDbTransactionDone(transaction) {
+  return new Promise((resolve, reject) => {
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error || new Error("IndexedDB 写入失败"));
+    transaction.onabort = () => reject(transaction.error || new Error("IndexedDB 写入已中止"));
+  });
+}
+
+function createReadingWordsSnapshot(words, updatedAt = new Date().toISOString()) {
+  return {
+    version: READING_WORDS_BACKUP_VERSION,
+    updatedAt,
+    words: compactReadingWordsForPersistence(words, { now: updatedAt })
+  };
+}
+
+function normalizeReadingWordsSnapshot(value) {
+  if (!value || !Array.isArray(value.words)) return null;
+  return {
+    words: compactReadingWordsForPersistence(value.words, { now: value.updatedAt }),
+    updatedAt: cleanText(value.updatedAt)
+  };
+}
+
+async function readReadingWordsIndexedDbState() {
+  const database = await openReadingWordsIndexedDb();
+  try {
+    const transaction = database.transaction(READING_WORDS_INDEXED_DB_STORE, "readonly");
+    const store = transaction.objectStore(READING_WORDS_INDEXED_DB_STORE);
+    const done = indexedDbTransactionDone(transaction);
+    const [snapshot, rollback] = await Promise.all([
+      indexedDbRequest(store.get(READING_WORDS_INDEXED_DB_SNAPSHOT_KEY)),
+      indexedDbRequest(store.get(READING_WORDS_INDEXED_DB_ROLLBACK_KEY))
+    ]);
+    await done;
+    return { snapshot: normalizeReadingWordsSnapshot(snapshot), rollback: rollback || null };
+  } finally {
+    database.close();
+  }
+}
+
+async function writeReadingWordsIndexedDb(words, rollback = NO_ROLLBACK_UPDATE) {
+  const snapshot = createReadingWordsSnapshot(words);
+  const database = await openReadingWordsIndexedDb();
+  try {
+    const transaction = database.transaction(READING_WORDS_INDEXED_DB_STORE, "readwrite");
+    const store = transaction.objectStore(READING_WORDS_INDEXED_DB_STORE);
+    const done = indexedDbTransactionDone(transaction);
+    store.put(snapshot, READING_WORDS_INDEXED_DB_SNAPSHOT_KEY);
+    if (rollback !== NO_ROLLBACK_UPDATE) {
+      store.put(rollback, READING_WORDS_INDEXED_DB_ROLLBACK_KEY);
+    }
+    await done;
+    return snapshot;
+  } finally {
+    database.close();
+  }
+}
+
+function writeLegacyReadingWordsDetailed(words, previousWords = null) {
+  if (typeof window === "undefined") {
+    return { ok: false, error: new Error("当前环境不支持浏览器存储") };
+  }
+  try {
+    if (Array.isArray(previousWords)) {
+      window.localStorage.setItem(
+        READING_WORDS_ROLLBACK_KEY,
+        JSON.stringify(buildReadingWordsRollback(words, previousWords))
+      );
+    }
+    window.localStorage.setItem(
+      READING_WORDS_STORAGE_KEY,
+      JSON.stringify(createReadingWordsSnapshot(words))
+    );
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error };
+  }
+}
+
+function timestamp(value) {
+  const parsed = Date.parse(value || "");
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+/**
+ * Loads the large notebook from IndexedDB.  Existing localStorage data is
+ * preserved and copied once, so upgrades never discard a learner's notebook.
+ */
+export async function loadPersistedReadingWords() {
+  const legacy = readLegacyReadingWordsSnapshot();
+  if (!isIndexedDbAvailable()) {
+    return {
+      words: legacy.words,
+      storage: "localStorage",
+      warning: "当前浏览器不支持 IndexedDB，阅读生词本仍使用容量较小的本地存储。"
+    };
+  }
+
+  try {
+    const indexed = await readReadingWordsIndexedDbState();
+    if (indexed.snapshot && timestamp(indexed.snapshot.updatedAt) >= timestamp(legacy.updatedAt)) {
+      return { words: indexed.snapshot.words, storage: "indexedDB", warning: "" };
+    }
+    if (legacy.words.length || legacy.updatedAt) {
+      await writeReadingWordsIndexedDb(legacy.words);
+      return {
+        words: legacy.words,
+        storage: "indexedDB",
+        warning: "已将旧版阅读生词迁移到更大容量的浏览器数据库。"
+      };
+    }
+    return { words: [], storage: "indexedDB", warning: "" };
+  } catch (error) {
+    return {
+      words: legacy.words,
+      storage: "localStorage",
+      warning: `IndexedDB 读取失败，已回退旧存储：${storageErrorMessage("", error)}`
+    };
+  }
+}
+
+/**
+ * Atomically stores the current notebook and, when provided, its reversible
+ * predecessor.  localStorage remains a compatibility fallback only.
+ */
+export async function persistReadingWords(words, previousWords = null) {
+  let rollback = NO_ROLLBACK_UPDATE;
+  try {
+    if (Array.isArray(previousWords)) {
+      rollback = buildReadingWordsRollback(words, previousWords);
+    }
+  } catch (error) {
+    return {
+      ok: false,
+      error: new Error(storageErrorMessage("阅读生词回退备份生成失败", error))
+    };
+  }
+  if (isIndexedDbAvailable()) {
+    try {
+      await writeReadingWordsIndexedDb(words, rollback);
+      return { ok: true, storage: "indexedDB", warning: "" };
+    } catch (indexedDbError) {
+      const legacy = writeLegacyReadingWordsDetailed(words, previousWords);
+      if (legacy.ok) {
+        return {
+          ok: true,
+          storage: "localStorage",
+          warning: `IndexedDB 写入失败，暂时改用旧存储：${storageErrorMessage("", indexedDbError)}`
+        };
+      }
+      return {
+        ok: false,
+        error: new Error(
+          `${storageErrorMessage("IndexedDB 写入失败", indexedDbError)}；` +
+          `${storageErrorMessage("旧存储写入失败", legacy.error)}`
+        )
+      };
+    }
+  }
+
+  const legacy = writeLegacyReadingWordsDetailed(words, previousWords);
+  return legacy.ok
+    ? {
+      ok: true,
+      storage: "localStorage",
+      warning: "当前浏览器不支持 IndexedDB，阅读生词本仍使用容量较小的本地存储。"
+    }
+    : { ok: false, error: new Error(storageErrorMessage("旧存储写入失败", legacy.error)) };
+}
+
+export async function readPersistedReadingWordsRollback(currentWords = null) {
+  if (isIndexedDbAvailable()) {
+    try {
+      const indexed = await readReadingWordsIndexedDbState();
+      const sourceWords = Array.isArray(currentWords)
+        ? currentWords
+        : indexed.snapshot?.words || [];
+      const words = restoreReadingWordsRollback(sourceWords, indexed.rollback);
+      if (words) return { ...indexed.rollback, words };
+    } catch {
+      // The legacy fallback below keeps prior data recoverable when IndexedDB
+      // is unavailable in a restricted browser profile.
+    }
+  }
+  return readReadingWordsRollback();
 }
 
 export function writeReadingWords(words) {
@@ -438,14 +832,18 @@ export function writeReadingWords(words) {
 }
 
 export function writeReadingWordsWithBackup(words, previousWords) {
+  if (!writeReadingWordsRollback(words, previousWords)) return false;
+  return writeReadingWords(words);
+}
+
+export function writeReadingWordsRollback(words, previousWords) {
   if (typeof window === "undefined") return false;
   try {
-    window.localStorage.setItem(READING_WORDS_ROLLBACK_KEY, JSON.stringify({
-      version: READING_WORDS_BACKUP_VERSION,
-      createdAt: new Date().toISOString(),
-      words: compactReadingWordsForPersistence(previousWords)
-    }));
-    return writeReadingWords(words);
+    window.localStorage.setItem(
+      READING_WORDS_ROLLBACK_KEY,
+      JSON.stringify(buildReadingWordsRollback(words, previousWords))
+    );
+    return true;
   } catch {
     return false;
   }
@@ -455,8 +853,8 @@ export function readReadingWordsRollback() {
   if (typeof window === "undefined") return null;
   try {
     const parsed = JSON.parse(window.localStorage.getItem(READING_WORDS_ROLLBACK_KEY) || "null");
-    if (!Array.isArray(parsed?.words)) return null;
-    return { ...parsed, words: parsed.words.map((item) => normalizeReadingWord(item)).filter((item) => item.word) };
+    const words = restoreReadingWordsRollback(readReadingWords(), parsed);
+    return words ? { ...parsed, words } : null;
   } catch {
     return null;
   }

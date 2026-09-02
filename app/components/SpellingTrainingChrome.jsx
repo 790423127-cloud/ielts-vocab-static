@@ -10,7 +10,7 @@ export function RangeSettingRow({ label, children }) {
 }
 
 export function BatchPicker({ value, options = [], onChange, onInteract, ariaLabel = "批次选择" }) {
-  const selected = options.find((option) => Number(option.value) === Number(value)) || options[0];
+  const selected = options.find((option) => String(option.value) === String(value)) || options[0];
 
   return (
     <details className="spelling-batch-picker" onPointerDownCapture={onInteract}>
@@ -19,7 +19,7 @@ export function BatchPicker({ value, options = [], onChange, onInteract, ariaLab
       </summary>
       <div className="spelling-batch-picker__menu" role="listbox" aria-label={ariaLabel}>
         {options.map((option) => {
-          const active = Number(option.value) === Number(value);
+          const active = String(option.value) === String(value);
           return (
             <button
               key={option.value}
@@ -28,7 +28,7 @@ export function BatchPicker({ value, options = [], onChange, onInteract, ariaLab
               aria-selected={active}
               className={active ? "active" : ""}
               onClick={(event) => {
-                onChange?.(Number(option.value));
+                onChange?.(option.value);
                 event.currentTarget.closest("details")?.removeAttribute("open");
               }}
             >

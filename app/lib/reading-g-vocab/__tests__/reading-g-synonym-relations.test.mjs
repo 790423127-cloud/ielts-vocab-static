@@ -2,8 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   getReadingGSynonymStatus,
+  isReadingGSynonymReviewCurrent,
   normalizeReadingGSynonymDetails,
   normalizeReadingGSynonyms,
+  READING_G_SYNONYM_REVIEW_POLICY,
   READING_G_SYNONYM_STATUS
 } from "../synonym-relations.mjs";
 import {
@@ -11,10 +13,20 @@ import {
   isReadingGSynonymCompletionCandidate
 } from "../synonym-completion.mjs";
 
-test("G-reading synonyms are distinct, direct terms capped at four", () => {
+test("G-reading replacements are distinct, capped at five, with words before phrases", () => {
   assert.deepEqual(
-    normalizeReadingGSynonyms(["colour", "color", "wide", "WIDE", "broad", "extensive", "large"], "Color"),
-    ["wide", "broad", "extensive", "large"]
+    normalizeReadingGSynonyms([
+      "go with",
+      "colour",
+      "color",
+      "wide",
+      "WIDE",
+      "broad",
+      "extensive",
+      "large",
+      "very wide"
+    ], "Color"),
+    ["wide", "broad", "extensive", "large", "go with"]
   );
 });
 
@@ -104,4 +116,33 @@ test("G-reading phrase entries use the same synonym replacement queue", () => {
   assert.equal(completed.entryType, "phrase");
   assert.deepEqual(completed.synonyms, ["in comparison with"]);
   assert.equal(getReadingGSynonymStatus(completed).state, READING_G_SYNONYM_STATUS.AVAILABLE);
+});
+
+test("G-reading synonym review excludes reference-only entries", () => {
+  assert.equal(isReadingGSynonymCompletionCandidate({
+    entryType: "word",
+    word: "reference-only",
+    studyMode: "reference"
+  }), false);
+});
+
+test("G-reading review policy makes legacy synonym reviews eligible for the new rule", () => {
+  assert.equal(isReadingGSynonymReviewCurrent({ synonymsReviewed: true }), false);
+  assert.equal(isReadingGSynonymReviewCurrent({
+    synonymsReviewed: true,
+    synonymsReviewPolicy: READING_G_SYNONYM_REVIEW_POLICY
+  }), true);
+});
+
+test("G-reading phrase rewrites retain their type after normalization", () => {
+  const [detail] = normalizeReadingGSynonymDetails([
+    {
+      word: "high-speed internet",
+      pos: "noun phrase",
+      meaningZh: "高速互联网",
+      replacement_type: "phrase"
+    }
+  ], "broadband", ["high-speed internet"]);
+  assert.equal(detail.word, "high-speed internet");
+  assert.equal(detail.replacementType, "phrase");
 });

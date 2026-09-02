@@ -17,10 +17,10 @@ import {
   READING_PARAPHRASE_DIRECTION,
   READING_PARAPHRASE_STATUS,
   createReadingParaphraseState,
-  loadReadingParaphraseState,
+  loadPersistedReadingParaphraseState,
   mergeReadingParaphraseState,
   parseReadingParaphraseImport,
-  saveReadingParaphraseState
+  persistReadingParaphraseState
 } from "../lib/reading-paraphrases/storage.mjs";
 import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
 import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
@@ -76,14 +76,21 @@ export default function ReadingParaphrasesPage() {
   const liveStudyRef = useRef({ state, visibleItems: [], index: 0, filter: "all", cursorKey: "" });
 
   useEffect(() => {
-    const loaded = loadReadingParaphraseState();
-    setState(loaded);
-    setReady(true);
+    let cancelled = false;
+    loadPersistedReadingParaphraseState().then((loaded) => {
+      if (!cancelled) {
+        setState(loaded);
+        setReady(true);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
     if (!ready) return;
-    saveReadingParaphraseState(state);
+    void persistReadingParaphraseState(state);
   }, [ready, state]);
 
   const visibleItems = useMemo(() => {
@@ -93,6 +100,14 @@ export default function ReadingParaphrasesPage() {
     }
     return state.items.filter((item) => item.study?.status === filter);
   }, [filter, state.items]);
+
+  useEffect(() => {
+    // 状态筛选把列表筛空时，回到「全部」，避免像“记录丢了”
+    if (ready && state.items.length && !visibleItems.length && filter !== "all") {
+      setFilter("all");
+      setNotice("当前学习范围没有条目，已自动切回全部。");
+    }
+  }, [filter, ready, state.items.length, visibleItems.length]);
 
   const current = visibleItems[index] || null;
   const answerVisible = state.direction === READING_PARAPHRASE_DIRECTION.BROWSE || revealed;
@@ -252,7 +267,7 @@ export default function ReadingParaphrasesPage() {
   }
 
   if (!ready) {
-    return <main className={styles.page}><div className={styles.loading}>正在读取阅读同义替换记录本…</div></main>;
+    return <main className={styles.page} data-study-surface="paraphrase"><div className={styles.loading}>正在读取阅读同义替换记录本…</div></main>;
   }
 
   const counts = state.items.reduce((result, item) => {
@@ -262,7 +277,7 @@ export default function ReadingParaphrasesPage() {
   }, {});
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-study-surface="paraphrase">
       <header className={styles.header}>
         <div>
           <p className={styles.eyebrow}>READING PARAPHRASE NOTEBOOK</p>
@@ -306,12 +321,16 @@ export default function ReadingParaphrasesPage() {
         <section className={styles.empty}>
           <FileUp size={32} />
           <h2>还没有可刷的同义替换</h2>
-          <p>请从雅思阅读网站导出 JSON 学习包，再点击“导入学习包”。TXT 旧格式也可以继续导入。</p>
+          <p>
+            本记录本保存在当前浏览器（localStorage）。换浏览器、清站点数据或未导入时会显示为空。
+            请从雅思阅读网站导出 JSON 学习包后点“导入学习包”；若有备份 JSON，也可直接导入恢复。
+            TXT 旧格式仍可用。静态页云同步的进度不会自动写进 Next 动态页。
+          </p>
           <button type="button" onClick={() => fileRef.current?.click()}>选择导入文件</button>
         </section>
       ) : (
         <>
-          <section className={`word-study-card ${styles.card}`} data-word-swipe-card>
+          <section className={`word-study-card ${styles.card}`} data-word-swipe-card data-effective-study-region>
             <div className={styles.cardMeta}>
               <span>{DIRECTION_LABELS[state.direction]}</span>
               <span className={styles.status}>{STATUS_LABELS[current.study?.status || ""]}</span>
@@ -378,7 +397,7 @@ export default function ReadingParaphrasesPage() {
             />
           </section>
 
-          <footer className={styles.actions}>
+          <footer className={styles.actions} data-effective-study-region>
             <button type="button" onClick={() => move(-1)} disabled={index === 0}><ArrowLeft size={18} />上一个 <kbd>←</kbd></button>
             <div className={styles.ratings}>
               <button type="button" className={styles.known} onClick={() => mark(READING_PARAPHRASE_STATUS.KNOWN)}><Check size={17} />认识</button>
@@ -386,7 +405,7 @@ export default function ReadingParaphrasesPage() {
               <button type="button" className={styles.unfamiliar} onClick={() => mark(READING_PARAPHRASE_STATUS.UNFAMILIAR)}>不熟</button>
             </div>
             <button type="button" onClick={() => move(1)} disabled={index >= visibleItems.length - 1}>下一个 <kbd>→</kbd><ArrowRight size={18} /></button>
-            <button type="button" className={styles.delete} onClick={deleteCurrent} aria-label="删除当前同义替换"><Trash2 size={18} /></button>
+            <button type="button" className={styles.delete} onClick={deleteCurrent} aria-label="删除当前同义替换" data-effective-study-ignore><Trash2 size={18} /></button>
           </footer>
         </>
       )}

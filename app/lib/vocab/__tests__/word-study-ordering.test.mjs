@@ -213,6 +213,12 @@ test("serialized static scores cannot replace intrinsic word shape as the sort a
   assert.deepEqual(ordered, [1, 0]);
 });
 
+test("missing serialized difficulty stays missing instead of becoming score zero", () => {
+  const plain = { word: "recognize" };
+  assert.equal(wordInternalDifficultyScore({ ...plain, studyDifficultyScore: null }), wordInternalDifficultyScore(plain));
+  assert.equal(wordInternalDifficultyScore({ ...plain, studyDifficultyScore: "" }), wordInternalDifficultyScore(plain));
+});
+
 test("family order does not connect unrelated entries through a shared absent relation", () => {
   const words = [
     { word: "alpha", wordFamily: [{ word: "missing-bridge" }] },
@@ -374,7 +380,7 @@ test("fixed snapshots keep indices plus stable keys for deletion remaps", () => 
   const indices = WORDS.map((_, index) => index);
   const snapshot = createWordStudyOrderSnapshot(indices, WORDS);
 
-  assert.equal(snapshot.version, 4);
+  assert.equal(snapshot.version, 5);
   assert.deepEqual(snapshot.indices, indices);
   assert.equal(Array.isArray(snapshot.keys), true);
   assert.equal(snapshot.keys.length, indices.length);
@@ -399,7 +405,7 @@ test("fixed snapshots resume their cursor and append newly eligible words", () =
   assert.equal(reconciled.snapshot.cursorKey, "word:opening");
 });
 
-test("compact snapshots remap by stable keys when the physical pool changes", () => {
+test("compact snapshots rebuild when the physical pool changes incompatibly", () => {
   const initialPool = [
     { id: "word-a", word: "alpha" },
     { id: "word-b", word: "beta" }
@@ -417,12 +423,11 @@ test("compact snapshots remap by stable keys when the physical pool changes", ()
     { fallbackOrder: [0, 1, 2] }
   );
 
-  // Prior order was beta, alpha; survivors keep that order, then append new.
-  assert.deepEqual(reconciled.indices, [2, 1, 0]);
+  assert.deepEqual(reconciled.indices, [0, 1, 2]);
   assert.equal(reconciled.changed, true);
 });
 
-test("version 2 difficulty snapshots keep order via stable keys and upgrade to current version", () => {
+test("older difficulty snapshots rebuild their order but preserve the cursor", () => {
   const legacySnapshot = {
     ...createWordStudyOrderSnapshot([2, 1, 0], WORDS, { cursorIndex: 1 }),
     version: 2
@@ -434,11 +439,10 @@ test("version 2 difficulty snapshots keep order via stable keys and upgrade to c
     { fallbackOrder: [0, 1, 2] }
   );
 
-  // Keys preserve the prior easy/hard sequence instead of regenerating.
-  assert.deepEqual(reconciled.indices, [2, 1, 0]);
+  assert.deepEqual(reconciled.indices, [0, 1, 2]);
   assert.equal(reconciled.cursorIndex, 1);
   assert.equal(reconciled.snapshot.cursorKey, legacySnapshot.cursorKey);
-  assert.equal(reconciled.snapshot.version, 4);
+  assert.equal(reconciled.snapshot.version, 5);
   assert.equal(reconciled.changed, true);
 });
 
@@ -495,7 +499,7 @@ test("deletion remaps every saved fixed order without regenerating its sequence"
   assert.equal(remapped["association|hard-to-easy"].cursorKey, "id:word-d");
 });
 
-test("legacy stable-id snapshots migrate without losing their previous order", () => {
+test("legacy stable-id snapshots rebuild order without losing their cursor", () => {
   const shiftedPool = [
     { id: "word-new", word: "new" },
     { id: "word-a", word: "alpha" },
@@ -513,7 +517,7 @@ test("legacy stable-id snapshots migrate without losing their previous order", (
     { fallbackOrder: [0, 1, 2] }
   );
 
-  assert.deepEqual(reconciled.indices, [2, 1, 0]);
+  assert.deepEqual(reconciled.indices, [0, 1, 2]);
   assert.equal(reconciled.cursorIndex, 2);
-  assert.equal(reconciled.snapshot.version, 4);
+  assert.equal(reconciled.snapshot.version, 5);
 });

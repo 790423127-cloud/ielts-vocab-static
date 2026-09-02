@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { persistWordsWithLocalStore } from "../../../hooks/useHomeVocabBootstrap.js";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 function deferred() {
   let resolve;
@@ -69,4 +72,14 @@ test("persistWordsWithLocalStore resolves only after a successful recovery save"
 
   assert.deepEqual(calls, ["initial", "recovered"]);
   assert.deepEqual(result, { ok: true, status: "local-saved", recovered: true });
+});
+
+test("confirmed main deletion write is registered before a state update can autosave", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const source = fs.readFileSync(path.join(root, "app/hooks/useHomeLexiconAdmin.local.js"), "utf8");
+  const deleteStart = source.indexOf("function deleteCurrentWord");
+  const deleteEnd = source.indexOf("\n  return {", deleteStart);
+  const deletion = source.slice(deleteStart, deleteEnd);
+
+  assert.ok(deletion.indexOf("void persistConfirmedChange(next, sourceWords, \"delete-current-word\")") < deletion.indexOf("setWords(next)"));
 });

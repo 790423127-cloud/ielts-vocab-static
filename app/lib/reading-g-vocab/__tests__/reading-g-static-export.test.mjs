@@ -62,6 +62,19 @@ test("static HTML references relative data paths", () => {
   assert.match(html, /id="difficultyOrderSelect"/);
   assert.match(html, /id="entrySelect"/);
   assert.match(html, /id="readingEntryBtn"/);
+  assert.match(html, /id="hfQuickEntryBtn"/);
+  assert.match(html, /id="part12OnlyHfQuickEntryBtn"/);
+  assert.match(html, /id="unfamiliarQuickEntryBtn"/);
+  assert.match(html, /id="hfPanelEntryBtn"/);
+  assert.match(html, /id="part12OnlyHfPanelEntryBtn"/);
+  assert.match(html, /id="unfamiliarPanelEntryBtn"/);
+  assert.match(html, /id="restPanelEntryBtn"/);
+  assert.match(html, /id="articleFrequencyPanel"/);
+  assert.match(html, /剑雅5–21文章高频（Part 1–3）/);
+  assert.match(html, /其余词汇（非文章高频）/);
+  assert.match(html, /id="readingEntryBtn"/);
+  assert.match(html, /全部范围/);
+  assert.match(html, /reading-g-entry-tools/);
   assert.match(html, /id="readingControlsClose"/);
   assert.match(html, /id="prevBtn"[\s\S]*id="knownBtn"[\s\S]*id="unknownBtn"[\s\S]*id="nextBtn"/);
   assert.match(js, /function staticPosDisplay\(/);
@@ -97,17 +110,43 @@ test("static G reading exposes functional brush-style tools and entry chooser", 
   assert.match(html, /value="harder-only">只刷相对较难/);
   assert.match(js, /ielts_static_reading_g_tools_collapsed_v1/);
   assert.match(js, /function orderStudyIndices\(/);
-  assert.match(js, /function intrinsicDifficultyScore\(/);
-  assert.match(js, /function familySortKey\(/);
-  assert.match(js, /function sceneSortKey\(/);
+  assert.match(js, /ORDERING_MODULE_ROOT = "\.\/study-ordering-v64\/"/);
+  assert.match(js, /import\(ORDERING_MODULE_ROOT \+ "word-study-ordering\.mjs"\)/);
+  assert.match(js, /import\(ORDERING_MODULE_ROOT \+ "word-internal-difficulty\.mjs"\)/);
+  assert.match(js, /sharedWordStudyOrdering\.orderStudyWordIndices/);
   assert.match(js, /function applyOrderPreference\(/);
   assert.match(js, /resetStudyToStart\(\);/);
   assert.match(js, /shouldResumeParaSession/);
   assert.match(js, /filterSummaryLabel/);
   assert.match(css, /body\.reading-g-static \.reading-g-topbar/);
   assert.match(css, /body\.reading-g-static \.reading-g-topbar\.is-tools-collapsed \.top-actions\{display:none\}/);
+  assert.match(css, /reading-g-entry-tools/);
+  assert.match(css, /entry-btn-featured/);
+  assert.match(js, /featured: true/);
+  assert.match(js, /剑雅5–21文章高频（Part 1–3）/);
+  assert.match(js, /剑雅5–21文章高频（Part 1–2）/);
+  assert.match(js, /part12OnlyHighFrequency/);
+  assert.match(js, /其余词汇（非文章高频）/);
+  assert.match(js, /articleNonHighFrequency/);
+  assert.match(js, /不熟复习/);
+  assert.match(js, /openReadingGUnfamiliar/);
+  assert.match(js, /renderArticleFrequencyPanel/);
   assert.match(css, /grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   assert.match(css, /@media\(max-width:520px\)/);
+});
+
+test("static and Next study surfaces package the exact same ordering modules", () => {
+  const modules = [
+    "word-study-ordering.mjs",
+    "word-internal-difficulty.mjs",
+    "word-internal-difficulty.generated.mjs",
+    "word-surface-morphology.mjs"
+  ];
+  for (const name of modules) {
+    const nextSource = fs.readFileSync(path.join(root, "app/lib/vocab", name));
+    const staticSource = fs.readFileSync(path.join(root, "public/assets/study-ordering-v64", name));
+    assert.deepEqual(staticSource, nextSource, `${name} must stay byte-identical across desktop and static builds`);
+  }
 });
 
 test("satellite flashcards do not reserve an absent insight sidebar", () => {
@@ -166,7 +205,8 @@ test("export-static route packs paraphrases", () => {
   assert.match(route, /reading-g-import-report\.json/);
   assert.match(route, /reading-g-retirements\.json/);
   assert.match(route, /name: "assets\/style\.css",[\s\S]*?readFileSync\(publicAssetPath\("assets", "style\.css"\), "utf-8"\)/);
-  assert.match(route, new RegExp(STATIC_RESPONSIVE_VERSION));
+  assert.match(route, /STATIC_EXPORT_VERSION = STATIC_RESPONSIVE_VERSION/);
+  assert.match(route, /patchStaticExportZip[\s\S]*?STATIC_EXPORT_VERSION/);
   assert.match(responsive, new RegExp(`STATIC_RESPONSIVE_VERSION = "${STATIC_RESPONSIVE_VERSION}"`));
 });
 
@@ -195,6 +235,8 @@ test("raw static pages and data loaders use the current release cache token", ()
   assert.match(navigationSource, /label: "阅读生词本"/);
   assert.match(navigationSource, /label: "错词本"/);
   assert.match(navigationSource, /label: "SRS 复习"/);
+  assert.match(navigationSource, /静态学习包/);
+  assert.match(navigationSource, /不会自动和正式网页共享/);
 
   const dataAssets = [
     ["public/assets/basic.js", /DATA_VERSION = "([^"]+)"/],

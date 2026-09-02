@@ -1,5 +1,10 @@
 import { normalizeHeadword } from "../vocab/lexicon-guard-shared.mjs";
 
+const KNOWN_TRUNCATED_HEADWORDS = new Map([
+  ["rais", "raise"],
+  ["explosife", "explosive"]
+]);
+
 function detectCanonicalFromMeaning(meaning = "") {
   const match = String(meaning).match(/（原形\s+([a-z][a-z-]*)\s*）/i);
   return match ? normalizeHeadword(match[1]) : "";
@@ -21,12 +26,28 @@ function exampleUsesExactTruncatedSpelling(entry) {
   const example = String(entry.example || "");
   if (!word || !example) return false;
   const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`\\b${escaped}\\b`).test(example);
+  // Sentence examples commonly capitalize a headword at the start. Matching
+  // case-sensitively allowed damaged rows such as "rais" / "Rais your hand"
+  // to bypass the truncation audit even though the canonical "raise" exists.
+  return new RegExp(`\\b${escaped}\\b`, "i").test(example);
 }
 
 function formsReferenceCanonical(entry, canonical) {
   const forms = Array.isArray(entry.forms) ? entry.forms : [];
   return forms.some((form) => normalizeHeadword(form.word) === canonical);
+}
+
+function isDeclaredLexicalRelative(entry, canonical) {
+  const family = Array.isArray(entry.wordFamily) ? entry.wordFamily : [];
+  if (family.some((item) => normalizeHeadword(item?.word || item) === canonical)) return true;
+
+  const forms = Array.isArray(entry.forms) ? entry.forms : [];
+  return forms.some((form) => {
+    if (normalizeHeadword(form?.word || form) !== canonical) return false;
+    const relation = String(form?.relation || "").trim().toLowerCase();
+    const type = String(form?.type || "").trim().toLowerCase();
+    return relation === "related-to" || /^(?:noun|verb|adjective|adverb)$/.test(type);
+  });
 }
 
 function isDeclaredInflectionOfHeadword(entry, canonical) {
@@ -81,6 +102,12 @@ function isPluralizationFalsePositive(headword, canonical, entry) {
   const suffix = canonical.slice(headword.length);
   if (suffix !== "s" && suffix !== "es") return false;
 
+  const explicitlyLinkedPlural = (Array.isArray(entry.forms) ? entry.forms : []).some((form) => (
+    normalizeHeadword(form?.word || form) === canonical
+    && /plural|merged-form/i.test(String(form?.type || form?.relation || ""))
+  ));
+  if (explicitlyLinkedPlural) return true;
+
   if (
     isCorruptedTemplateEntry(entry) &&
     (formsReferenceCanonical(entry, canonical) ||
@@ -98,7 +125,7 @@ function isPluralizationFalsePositive(headword, canonical, entry) {
 
 function exampleImprovesWhenReplaced(entry, headword, canonical) {
   const example = String(entry.example || "");
-  const replaced = example.replace(new RegExp(`\\b${headword}\\b`, "g"), canonical);
+  const replaced = example.replace(new RegExp(`\\b${headword}\\b`, "gi"), canonical);
   if (replaced === example) return false;
 
   if (/\b(will|would|can|could|should|must|need to|have to)\s+\w+(ed|ing)\b/i.test(replaced)) {
@@ -119,6 +146,9 @@ function exampleImprovesWhenReplaced(entry, headword, canonical) {
 
 function hasTruncationCorruption(entry, headword, canonical) {
   if (isPluralizationFalsePositive(headword, canonical, entry)) return false;
+  // A linked derivative such as approximate -> approximately is a valid word
+  // family relation. It is not evidence that the headword was truncated.
+  if (isDeclaredLexicalRelative(entry, canonical)) return false;
   // A longer form explicitly labelled as an inflection is evidence that the
   // shorter value is the correct lemma (activate -> activated), not a damaged
   // headword. Treating it as truncation produced a large false-positive queue.
@@ -157,6 +187,11 @@ export function detectTruncatedHeadword(entry = {}, headwordIndex = new Map(), e
     if (!hasTruncationCorruption(entry, headword, canonical)) continue;
 
     return { canonical, reason: "corrupted-template" };
+  }
+
+  const knownCanonical = KNOWN_TRUNCATED_HEADWORDS.get(headword);
+  if (knownCanonical && entryByHeadword.has(knownCanonical)) {
+    return { canonical: knownCanonical, reason: "known-truncated-import" };
   }
 
   return null;

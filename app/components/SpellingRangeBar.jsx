@@ -5,9 +5,12 @@ import {
   DEFAULT_SPELLING_PREFS as DEFAULT_PREFS
 } from "../lib/spelling/spelling-training-prefs.mjs";
 import {
-  SPELLING_DIFFICULTY_OPTIONS,
+  SPELLING_ALL_DIFFICULTIES_VALUE,
+  SPELLING_CATEGORY_ORDER_OPTIONS,
+  SPELLING_DIFFICULTY_FILTER_OPTIONS,
   SPELLING_IELTS_USE_OPTIONS,
   SPELLING_LISTENING_READING_OPTIONS,
+  SPELLING_SKILL_OPTIONS,
   SPELLING_TOPIC_OPTIONS
 } from "../lib/spelling/spelling-categories.mjs";
 import {
@@ -48,7 +51,9 @@ export default function SpellingRangeBar({
   patchCategoryPrefs,
   categoryTypes,
   scopeConfig,
+  totalCategoryEntryCount,
   difficultyCounts,
+  skillCounts,
   topicCounts,
   ieltsUseCounts,
   lrCounts: listeningReadingCounts,
@@ -65,10 +70,15 @@ export default function SpellingRangeBar({
   errorBankBatchOptions,
   errorBankBatchSelection
 }) {
+  const activeSource = availablePracticeSources.find((entry) => entry.value === practiceSource);
+
   return (
-        <div className="spelling-range-bar">
-<div className="spelling-range-bar__head">
-  <span className="spelling-range-bar__title">学习范围</span>
+    <div className="spelling-range-bar">
+      <div className="spelling-range-bar__head">
+        <div>
+          <span className="spelling-range-bar__title">学习范围</span>
+          <span className="spelling-range-bar__source">{activeSource?.label || "当前来源"}</span>
+        </div>
   <button
     type="button"
     className="spelling-range-expand"
@@ -76,15 +86,31 @@ export default function SpellingRangeBar({
     onMouseDown={trainingControls.markSettingsInteraction}
     onClick={() => setRangeSettingsExpanded((open) => !open)}
   >
-    {rangeSettingsExpanded ? "收起设置" : "展开设置"}
+    {rangeSettingsExpanded ? "完成设置" : "调整范围"}
   </button>
 </div>
 
-{rangeSettingsExpanded ? (
-<div className="spelling-range-bar__toolbar compact-summary">
-  <div className="spelling-range-bar__group">
-    <span className="spelling-control-label">来源</span>
-    <div className="spelling-mode-tabs spelling-mode-tabs--compact">
+      <div className="spelling-range-summary">
+        <p className="spelling-range-summary__line">
+          <span className="spelling-range-summary__label">当前范围</span>
+          <span className="spelling-range-summary__text">{activeRangeLine}</span>
+        </p>
+        {spelling.ready ? (
+          <p className="spelling-range-summary__line spelling-range-summary__line--session">
+            <span className="spelling-range-summary__label">本次训练</span>
+            <span className="spelling-range-summary__text">{sessionTrainingLine.replace(/^本次训练：/, "")}</span>
+          </p>
+        ) : null}
+      </div>
+
+      {rangeSettingsExpanded ? (
+        <div className="spelling-range-settings is-open">
+          <div className="spelling-range-settings__block">
+            <div className="spelling-range-settings__heading">
+              <span>选择来源</span>
+              <small>切换后会保留你的学习进度</small>
+            </div>
+            <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--sources">
       {availablePracticeSources.map((entry) => (
         <button
           key={entry.value}
@@ -106,22 +132,9 @@ export default function SpellingRangeBar({
         </button>
       ))}
     </div>
-  </div>
 
-  {practiceSource === "personal_wrong_book" && showPersonalWrongGroupSelect ? (
-    <div className="spelling-range-bar__group spelling-range-bar__group--batch-select">
-      <span className="spelling-control-label">组别</span>
-      <BatchPicker
-        value={personalWrongBatchSelection.batchIndex}
-        options={personalWrongBatchOptions}
-        ariaLabel="做题错词组别选择"
-        onInteract={trainingControls.markSettingsInteraction}
-        onChange={handlePersonalWrongBatchChange}
-      />
-    </div>
-  ) : null}
-
-  <label className="spelling-toggle spelling-toggle--compact">
+            <div className="spelling-range-quick-toggles" aria-label="训练选项">
+              <label className="spelling-toggle spelling-toggle--compact">
     <input
       type="checkbox"
       checked={includeFamiliar}
@@ -131,7 +144,7 @@ export default function SpellingRangeBar({
     包含刷词已熟悉内容
   </label>
 
-  <label className="spelling-toggle spelling-toggle--compact">
+              <label className="spelling-toggle spelling-toggle--compact">
     <input
       type="checkbox"
       checked={autoNextOnCorrect}
@@ -141,7 +154,7 @@ export default function SpellingRangeBar({
     拼对自动下一词
   </label>
 
-  <label className="spelling-toggle spelling-toggle--compact">
+              <label className="spelling-toggle spelling-toggle--compact">
     <input
       type="checkbox"
       checked={turboMode}
@@ -151,7 +164,7 @@ export default function SpellingRangeBar({
     极速模式（缩短拼对停留，仍有延迟）
   </label>
 
-  <label className="spelling-toggle spelling-toggle--compact">
+              <label className="spelling-toggle spelling-toggle--compact">
     <input
       type="checkbox"
       checked={listenOnlyMode}
@@ -161,7 +174,7 @@ export default function SpellingRangeBar({
     纯听写模式
   </label>
 
-  <label className="spelling-toggle spelling-toggle--compact">
+              <label className="spelling-toggle spelling-toggle--compact">
     <input
       type="checkbox"
       checked={soundEffectsEnabled}
@@ -170,23 +183,9 @@ export default function SpellingRangeBar({
     />
     答对/答错音效
   </label>
-</div>
-) : null}
+            </div>
+          </div>
 
-<div className="spelling-range-summary">
-  <p className="spelling-range-summary__line">
-    <span className="spelling-range-summary__label">当前范围</span>
-    <span className="spelling-range-summary__text">{activeRangeLine}</span>
-  </p>
-  {spelling.ready ? (
-    <p className="spelling-range-summary__line spelling-range-summary__line--session">
-      <span className="spelling-range-summary__label">本次训练</span>
-      <span className="spelling-range-summary__text">{sessionTrainingLine.replace(/^本次训练：/, "")}</span>
-    </p>
-  ) : null}
-</div>
-
-<div className={`spelling-range-settings${rangeSettingsExpanded ? " is-open" : ""}`}>
   {practiceSource === "category" ? (
     <div className="spelling-range-settings__block">
       <p className="spelling-range-settings__title">{scopeConfig.label}范围</p>
@@ -202,6 +201,8 @@ export default function SpellingRangeBar({
                 categoryType: entry.value,
                 categoryValue: entry.value === "difficulty"
                   ? DEFAULT_PREFS.categoryValue
+                  : entry.value === "skill"
+                    ? SPELLING_SKILL_OPTIONS[0].value
                   : entry.value === "topic"
                     ? SPELLING_TOPIC_OPTIONS[0]
                     : entry.value === "ielts_use"
@@ -221,7 +222,7 @@ export default function SpellingRangeBar({
       {categoryPrefs.categoryType === "difficulty" ? (
         <RangeSettingRow label="难度">
           <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-            {SPELLING_DIFFICULTY_OPTIONS.map((entry) => (
+            {SPELLING_DIFFICULTY_FILTER_OPTIONS.map((entry) => (
               <button
                 key={entry.value}
                 type="button"
@@ -230,7 +231,54 @@ export default function SpellingRangeBar({
                 onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
               >
                 {entry.label}
-                <span className="spelling-tab-count">{difficultyCounts.get(entry.value) || 0}</span>
+                <span className="spelling-tab-count">
+                  {entry.value === SPELLING_ALL_DIFFICULTIES_VALUE
+                    ? totalCategoryEntryCount
+                    : difficultyCounts.get(entry.value) || 0}
+                </span>
+              </button>
+            ))}
+          </div>
+        </RangeSettingRow>
+      ) : null}
+
+      {!isPhrase && categoryPrefs.categoryType === "skill" ? (
+        <RangeSettingRow label="技能">
+          <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
+            {SPELLING_SKILL_OPTIONS.map((entry) => (
+              <button
+                key={entry.value}
+                type="button"
+                className={categoryPrefs.categoryValue === entry.value ? "active" : ""}
+                onPointerDown={trainingControls.markSettingsInteraction}
+                onClick={() => patchCategoryPrefs({ categoryValue: entry.value, batchIndex: 0 })}
+              >
+                {entry.label}
+                <span className="spelling-tab-count">{skillCounts.get(entry.value) || 0}</span>
+              </button>
+            ))}
+          </div>
+        </RangeSettingRow>
+      ) : null}
+
+      {!isPhrase && ["difficulty", "skill"].includes(categoryPrefs.categoryType) ? (
+        <RangeSettingRow label={categoryPrefs.categoryType === "difficulty" ? "整体难度排序" : "排序"}>
+          <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
+            {SPELLING_CATEGORY_ORDER_OPTIONS.map((entry) => (
+              <button
+                key={entry.value}
+                type="button"
+                className={categoryPrefs.sortDirection === entry.value ? "active" : ""}
+                onPointerDown={trainingControls.markSettingsInteraction}
+                onClick={() => patchCategoryPrefs({
+                  sortDirection: entry.value,
+                  ...(categoryPrefs.categoryType === "difficulty"
+                    ? { categoryValue: SPELLING_ALL_DIFFICULTIES_VALUE }
+                    : {}),
+                  batchIndex: 0
+                })}
+              >
+                {entry.label}
               </button>
             ))}
           </div>
@@ -314,19 +362,13 @@ export default function SpellingRangeBar({
         原始 {idictationBatchSelection.rawRows || 0} 行 · 去重 {idictationBatchSelection.uniqueWords || 0} 词 · 按 Excel 章节分组练习
       </p>
       <RangeSettingRow label="章节">
-        <div className="spelling-mode-tabs spelling-mode-tabs--compact spelling-mode-tabs--wrap">
-          {idictationGroupOptions.map((entry) => (
-            <button
-              key={entry.value}
-              type="button"
-              className={idictationBatchSelection.groupKey === entry.value ? "active" : ""}
-              onPointerDown={trainingControls.markSettingsInteraction}
-              onClick={() => patchIdictationPrefs(idictationSourceKey, { groupKey: entry.value, batchIndex: 0 })}
-            >
-              {entry.label}
-            </button>
-          ))}
-        </div>
+        <BatchPicker
+          value={idictationBatchSelection.groupKey}
+          options={idictationGroupOptions}
+          ariaLabel={`${idictationSource?.label || "爱听写"}章节选择`}
+          onInteract={trainingControls.markSettingsInteraction}
+          onChange={(groupKey) => patchIdictationPrefs(idictationSourceKey, { groupKey, batchIndex: 0 })}
+        />
       </RangeSettingRow>
       {idictationBatchOptions.length > 1 ? (
         <RangeSettingRow label="组别">
@@ -372,8 +414,10 @@ export default function SpellingRangeBar({
       ) : null}
     </div>
   )}
-</div>
         </div>
+      ) : null}
+
+    </div>
 
   );
 }

@@ -6,6 +6,7 @@ import { hasLexiconContentChange } from "../lib/vocab/lexicon-content-change.mjs
 import { formalLexiconWords } from "../lib/vocab/lexicon-delete-intent.mjs";
 import { LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES } from "../lib/vocab/lexicon-guard-shared.mjs";
 import { PHRASE_FLASH_STUDY_MODE_KEY } from "../lib/vocab/phrase-flashcard-keys.mjs";
+import { createSerializedWriteQueue } from "../lib/vocab/serialized-write-queue.mjs";
 import {
   isWordCacheCurrent,
   mergeWordContentWithUserState
@@ -36,37 +37,65 @@ import { primeSpellingLexiconCache } from "../lib/spelling/load-spelling-lexicon
 
 const sanitizedRuntimeContentKeys = new Set();
 
+function sanitizeRuntimeWord(word) {
+  if (!word || typeof word !== "object") return word;
+
+  let nextWord = sanitizeAiWordCollocations(word);
+
+  if (!exampleFieldsNeedCleanup(nextWord.example || "", nextWord.exampleCn || "", { maxWords: 36 })) {
+    return nextWord;
+  }
+
+  const cleaned = cleanExampleField(nextWord.example || "", nextWord.word || "", {
+    entryType: "word",
+    meaningZh: nextWord.meaning || nextWord.definition || "",
+    synthesizeIfEmpty: false,
+    maxWords: 36
+  });
+  const exampleCn = cleanExampleCnField(nextWord.exampleCn || "");
+  if (!cleaned.repaired && exampleCn === (nextWord.exampleCn || "")) return nextWord;
+
+  return {
+    ...nextWord,
+    example: cleaned.example || nextWord.example || "",
+    exampleCn
+  };
+}
+
 /** Repair noisy examples and invalid/duplicated collocations when hydrating client cache. */
 function sanitizeRuntimeWords(words = []) {
   if (!Array.isArray(words) || !words.length) return words;
   let changed = 0;
   const next = words.map((word) => {
-    if (!word || typeof word !== "object") return word;
-
-    let nextWord = sanitizeAiWordCollocations(word);
+    const nextWord = sanitizeRuntimeWord(word);
     if (nextWord !== word) changed += 1;
-
-    if (!exampleFieldsNeedCleanup(nextWord.example || "", nextWord.exampleCn || "", { maxWords: 36 })) {
-      return nextWord;
-    }
-
-    const cleaned = cleanExampleField(nextWord.example || "", nextWord.word || "", {
-      entryType: "word",
-      meaningZh: nextWord.meaning || nextWord.definition || "",
-      synthesizeIfEmpty: false,
-      maxWords: 36
-    });
-    const exampleCn = cleanExampleCnField(nextWord.exampleCn || "");
-    if (!cleaned.repaired && exampleCn === (nextWord.exampleCn || "")) return nextWord;
-
-    if (nextWord === word) changed += 1;
-    nextWord = {
-      ...nextWord,
-      example: cleaned.example || nextWord.example || "",
-      exampleCn
-    };
     return nextWord;
   });
+  return changed ? next : words;
+}
+
+async function sanitizeRuntimeWordsCooperatively(words = [], chunkSize = 160) {
+  if (!Array.isArray(words) || !words.length) return words;
+  const next = new Array(words.length);
+  let changed = 0;
+
+  for (let start = 0; start < words.length; start += chunkSize) {
+    const end = Math.min(words.length, start + chunkSize);
+    for (let index = start; index < end; index += 1) {
+      const word = words[index];
+      const nextWord = sanitizeRuntimeWord(word);
+      next[index] = nextWord;
+      if (nextWord !== word) changed += 1;
+    }
+    if (end < words.length) {
+      if (typeof globalThis.scheduler?.yield === "function") {
+        await globalThis.scheduler.yield();
+      } else {
+        await new Promise((resolve) => globalThis.setTimeout(resolve, 0));
+      }
+    }
+  }
+
   return changed ? next : words;
 }
 
@@ -78,6 +107,18 @@ function sanitizeRuntimeWordsOnce(words = [], meta = {}) {
   if (cacheKey && sanitizedRuntimeContentKeys.has(cacheKey)) return words;
 
   const next = sanitizeRuntimeWords(words);
+  if (cacheKey && next === words) sanitizedRuntimeContentKeys.add(cacheKey);
+  return next;
+}
+
+async function sanitizeRuntimeWordsCooperativelyOnce(words = [], meta = {}) {
+  const contentKey = String(
+    meta?.contentHash || meta?.wordsHash || meta?.lexiconHash || ""
+  ).trim();
+  const cacheKey = contentKey ? `${words.length}:${contentKey}` : "";
+  if (cacheKey && sanitizedRuntimeContentKeys.has(cacheKey)) return words;
+
+  const next = await sanitizeRuntimeWordsCooperatively(words);
   if (cacheKey && next === words) sanitizedRuntimeContentKeys.add(cacheKey);
   return next;
 }
@@ -139,6 +180,10 @@ export function useHomeVocabBootstrap({ setToast }) {
   const hydratedWordsRef = useRef(null);
   const contentSnapshotRef = useRef(new WeakSet());
   const persistPromiseBySnapshotRef = useRef(new WeakMap());
+  const persistWriteQueueRef = useRef(null);
+  if (!persistWriteQueueRef.current) {
+    persistWriteQueueRef.current = createSerializedWriteQueue();
+  }
   const cacheMetaRef = useRef({
     version: LEXICON_VERSION_WITHOUT_CONFIRMED_PERSON_NAMES,
     lexiconHash: "",
@@ -150,7 +195,7 @@ export function useHomeVocabBootstrap({ setToast }) {
     const existing = persistPromiseBySnapshotRef.current.get(nextWords);
     if (existing) return existing;
 
-    const task = (async () => {
+    const task = persistWriteQueueRef.current.enqueue(async () => {
       try {
         const formalWords = formalLexiconWords(nextWords);
         const localResult = await persistWordsWithLocalStore(nextWords, {
@@ -184,6 +229,10 @@ export function useHomeVocabBootstrap({ setToast }) {
 
         cacheMetaRef.current = { ...cacheMetaRef.current, ...serverResult };
         setVocabRuntime({ status: "online", ...cacheMetaRef.current });
+        if (serverResult.rebased === true) {
+          setToast?.("已按最新正式主词库完成删除，正在同步页面…");
+          globalThis.setTimeout(() => globalThis.location?.reload(), 120);
+        }
         return {
           ok: true,
           status: "published",
@@ -202,7 +251,7 @@ export function useHomeVocabBootstrap({ setToast }) {
           error
         };
       }
-    })();
+    });
 
     persistPromiseBySnapshotRef.current.set(nextWords, task);
     task.then((result) => {
@@ -308,7 +357,8 @@ export function useHomeVocabBootstrap({ setToast }) {
               savedAt: cachedMeta?.savedAt || ""
             });
             primeSpellingLexiconCache(cachedWords, {
-              headwordVersion: cachedMeta?.version || "indexeddb-cache"
+              headwordVersion: cachedMeta?.version || "indexeddb-cache",
+              contentHash: cachedMeta?.wordsHash || cachedMeta?.lexiconHash || ""
             });
           }
         }
@@ -326,7 +376,8 @@ export function useHomeVocabBootstrap({ setToast }) {
           if (!cancelled) {
             cacheMetaRef.current = currentMeta;
             primeSpellingLexiconCache(cachedWords, {
-              headwordVersion: currentMeta.version || "indexeddb-cache"
+              headwordVersion: currentMeta.version || "indexeddb-cache",
+              contentHash: currentMeta.wordsHash || currentMeta.lexiconHash || ""
             });
             setVocabRuntime({ status: "online", ...apiMeta });
           }
@@ -357,14 +408,16 @@ export function useHomeVocabBootstrap({ setToast }) {
           includePersonalSupplements: true,
           supplementKinds: ["personal-reading"]
         });
-        const onlineWords = sanitizeRuntimeWordsOnce(mergedOnlineWords, mergedMeta);
-        const onlineNeedsRepair = onlineWords !== mergedOnlineWords;
+        // Paint the verified lexicon immediately. Runtime content sanitation is
+        // chunked below so a 10k+ lexicon cannot monopolize the main thread.
+        const onlineWords = mergedOnlineWords;
 
         cacheMetaRef.current = mergedMeta;
         if (!cancelled) {
           hydratedWordsRef.current = onlineWords;
           primeSpellingLexiconCache(onlineWords, {
-            headwordVersion: mergedMeta.version
+            headwordVersion: mergedMeta.version,
+            contentHash: mergedMeta.wordsHash || mergedMeta.lexiconHash || ""
           });
           startTransition(() => setWordsState(onlineWords));
           setVocabRuntime({ status: "online", ...mergedMeta });
@@ -373,14 +426,26 @@ export function useHomeVocabBootstrap({ setToast }) {
         runWhenBrowserIdle(async () => {
           if (cancelled) return;
 
-          const mergedWordsForCache = mergeWordContentWithUserState(payload.words, cachedWords || onlineWords, {
+          const mergedWordsForCache = mergeWordContentWithUserState(payload.words, cachedWords || [], {
             includePersonalSupplements: true,
             supplementKinds: ["personal-reading"]
           });
-          const wordsForCache = sanitizeRuntimeWordsOnce(mergedWordsForCache, mergedMeta);
+          const wordsForCache = await sanitizeRuntimeWordsCooperativelyOnce(
+            mergedWordsForCache,
+            mergedMeta
+          );
+          if (cancelled) return;
+
+          if (wordsForCache !== mergedWordsForCache) {
+            hydratedWordsRef.current = wordsForCache;
+            primeSpellingLexiconCache(wordsForCache, {
+              headwordVersion: mergedMeta.version,
+              contentHash: mergedMeta.wordsHash || mergedMeta.lexiconHash || ""
+            });
+            startTransition(() => setWordsState(wordsForCache));
+          }
           if (
             cachedNeedsRepair ||
-            onlineNeedsRepair ||
             wordsForCache !== mergedWordsForCache ||
             !isWordCacheCurrent(cachedMeta || {}, mergedMeta) ||
             !stored?.words?.length
@@ -398,7 +463,8 @@ export function useHomeVocabBootstrap({ setToast }) {
           if (cachedMeta) cacheMetaRef.current = cachedMeta;
           hydratedWordsRef.current = cachedWords;
           primeSpellingLexiconCache(cachedWords, {
-            headwordVersion: cachedMeta?.version || "indexeddb-cache"
+            headwordVersion: cachedMeta?.version || "indexeddb-cache",
+            contentHash: cachedMeta?.wordsHash || cachedMeta?.lexiconHash || ""
           });
           startTransition(() => setWordsState(cachedWords));
           if (cachedNeedsRepair) saveWordsToIndexedDB(cachedWords, cachedMeta || {}).catch(() => {});

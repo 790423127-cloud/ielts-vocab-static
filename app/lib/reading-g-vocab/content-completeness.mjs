@@ -1,3 +1,6 @@
+import { getMultiPosSenseCoverage } from "../vocab/multi-pos-sense-coverage.mjs";
+import { isMeaningDetailInformative } from "../vocab/meaning-display.mjs";
+
 const PLACEHOLDER_CONTENT_PATTERN = /(?:总词库待补|待补(?:全|充)?(?:释义|资料|内容)|暂无(?:释义|例句|音标|词性)|等待(?:ai|音标)|to be completed|waiting ai|not available)/i;
 const PLACEHOLDER_POS_PATTERN = /^(?:word|phrase|pos|词性|unknown|n\/?a|待补)$/i;
 
@@ -5,6 +8,7 @@ export const READING_G_CONTENT_ISSUE = Object.freeze({
   PHONETIC: "phonetic",
   POS: "pos",
   MEANING: "meaning",
+  MEANING_DETAIL: "meaningDetail",
   MEANING_TOO_SHORT: "meaningTooShort",
   MULTI_POS_NEEDS_SPLIT: "multiPosNeedsSplit",
   DEFINITION: "definition",
@@ -16,6 +20,7 @@ export const READING_G_CONTENT_ISSUE_LABEL = Object.freeze({
   [READING_G_CONTENT_ISSUE.PHONETIC]: "音标",
   [READING_G_CONTENT_ISSUE.POS]: "词性",
   [READING_G_CONTENT_ISSUE.MEANING]: "释义",
+  [READING_G_CONTENT_ISSUE.MEANING_DETAIL]: "主释义详解",
   [READING_G_CONTENT_ISSUE.MEANING_TOO_SHORT]: "释义过短",
   [READING_G_CONTENT_ISSUE.MULTI_POS_NEEDS_SPLIT]: "多词性义项",
   [READING_G_CONTENT_ISSUE.DEFINITION]: "释义说明",
@@ -154,8 +159,11 @@ export function needsReadingGMultiPosSplit(entry) {
   const hasUnsplittedMeaningMarkers = hasMultipleSenseMarkers(
     entry?.primaryMeaningZh || entry?.meaningZh || entry?.meaning
   ) && (senses.length < 2 || sensePos.length < 2);
+  const coverage = getMultiPosSenseCoverage(entry);
 
-  return hasUnsplittedMeaningMarkers || (hasMultipleEntryPos && (senses.length < 2 || sensePos.length < 2));
+  return hasUnsplittedMeaningMarkers
+    || (hasMultipleEntryPos && (senses.length < 2 || sensePos.length < 2))
+    || (coverage.isMultiPos && !coverage.complete);
 }
 
 function hasReviewedRelation(entry, field, reviewedField, extraCount = 0) {
@@ -168,6 +176,16 @@ function hasUsableDifficulty(value) {
     normalized &&
     !isReadingGPlaceholderContent(normalized) &&
     !/(?:待补|待完善|unknown|n\/?a)/i.test(normalized)
+  );
+}
+
+/**
+ * 阅读生词本可以保留“当前句中”的理解提示；G 类是独立词库，卡片必须
+ * 先说明该词的常见语义范围，不能把某一句的复述当成完整释义。
+ */
+export function isReadingGContextOnlyMeaningDetail(entry = {}) {
+  return /^(?:在当前例句中|当前例句中|在本句中)/u.test(
+    text(entry?.meaningDetailZh || entry?.meaningDetailedZh)
   );
 }
 
@@ -208,6 +226,12 @@ export function getReadingGContentIssues(entry) {
   const issues = checks.flatMap(([issue, values, validator = hasUsableContent]) => (
     validator(values) ? [] : [issue]
   ));
+  if (
+    !isMeaningDetailInformative(entry) ||
+    isReadingGContextOnlyMeaningDetail(entry)
+  ) {
+    issues.push(READING_G_CONTENT_ISSUE.MEANING_DETAIL);
+  }
   if (hasUsableContent(meaningValues) && isReadingGMeaningTooShort(entry)) {
     issues.push(READING_G_CONTENT_ISSUE.MEANING_TOO_SHORT);
   }
@@ -250,6 +274,7 @@ export function getReadingGCompleteness(entry, options = {}) {
   const fields = {
     [READING_G_COMPLETENESS_FIELD.MEANING]: ![
       READING_G_CONTENT_ISSUE.MEANING,
+      READING_G_CONTENT_ISSUE.MEANING_DETAIL,
       READING_G_CONTENT_ISSUE.MEANING_TOO_SHORT,
       READING_G_CONTENT_ISSUE.MULTI_POS_NEEDS_SPLIT,
       READING_G_CONTENT_ISSUE.DEFINITION

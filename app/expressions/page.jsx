@@ -14,6 +14,8 @@ import { getLearnedCount } from "../lib/expressions/storage.mjs";
 import { speakPhrase, speakExample, stopAudio } from "../lib/expressions/audio.mjs";
 import StudyRangeSummary from "../components/StudyRangeSummary.jsx";
 import StableLoadingState from "../components/StableLoadingState.jsx";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
+import { loadSessionJson } from "../lib/browser-json-cache.mjs";
 import styles from "./expressions.module.css";
 
 const DATA_URL = "/data/speaking-writing-phrases-700.json";
@@ -44,9 +46,7 @@ export default function ExpressionsPage() {
 
     async function load() {
       try {
-        const res = await fetch(DATA_URL);
-        if (!res.ok) throw new Error("Failed to load: " + res.status);
-        const data = await res.json();
+        const data = await loadSessionJson(DATA_URL, fetch, { cache: "force-cache" });
         if (cancelled) return;
         if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
           setError("Phrase bank is empty.");
@@ -69,31 +69,21 @@ export default function ExpressionsPage() {
   // Keyboard: Tab = speak phrase, Space = speak example (correct only)
   useEffect(() => {
     function handleKeyDown(e) {
-      // Only handle plain Tab / Space (no modifiers)
-      if (e.shiftKey || e.ctrlKey || e.altKey || e.metaKey) return;
-
-      const tag = document.activeElement?.tagName?.toLowerCase();
-      const isInteractive = tag === "button" || tag === "a" || tag === "input" || tag === "textarea" || tag === "select" || (document.activeElement?.isContentEditable);
-
-      if (e.key === "Tab") {
-        // Only play phrase when focus is on the training card (non-interactive area)
-        if (!isInteractive && phase === "question" && question) {
-          e.preventDefault();
-          speakPhrase(question.phrase);
-          if (typeof window !== "undefined" && window.__EXPRESSIONS_DEBUG__) {
-            console.log("[Expressions Debug]", { phraseId: question.phraseId, phrase: question.phrase, hasExample: !!question.example, playedAudioType: "phrase", audioEngine: "speech-synthesis", keyboardTrigger: "tab" });
-          }
+      const action = getStudyKeyboardAction(e);
+      if (action === "word-audio" && question && (phase === "question" || phase === "result")) {
+        e.preventDefault();
+        speakPhrase(question.phrase);
+        if (typeof window !== "undefined" && window.__EXPRESSIONS_DEBUG__) {
+          console.log("[Expressions Debug]", { phraseId: question.phraseId, phrase: question.phrase, hasExample: !!question.example, playedAudioType: "phrase", audioEngine: "speech-synthesis", keyboardTrigger: "tab" });
         }
         return;
       }
 
-      if (e.key === " ") {
-        if (!isInteractive && phase === "result" && result?.correct && question?.example) {
-          e.preventDefault();
-          speakExample(question.example);
-          if (typeof window !== "undefined" && window.__EXPRESSIONS_DEBUG__) {
-            console.log("[Expressions Debug]", { phraseId: question.phraseId, phrase: question.phrase, hasExample: true, playedAudioType: "example", audioEngine: "speech-synthesis", keyboardTrigger: "space" });
-          }
+      if (action === "example-audio" && phase === "result" && result?.correct && question?.example) {
+        e.preventDefault();
+        speakExample(question.example);
+        if (typeof window !== "undefined" && window.__EXPRESSIONS_DEBUG__) {
+          console.log("[Expressions Debug]", { phraseId: question.phraseId, phrase: question.phrase, hasExample: true, playedAudioType: "example", audioEngine: "speech-synthesis", keyboardTrigger: "space" });
         }
       }
     }
@@ -176,7 +166,7 @@ export default function ExpressionsPage() {
   // Loading
   if (phase === "loading") {
     return (
-      <main className={`${styles.page} system-loading-page`}>
+      <main className={`${styles.page} system-loading-page`} data-study-surface="quiz">
         <StableLoadingState
           mark="E"
           eyebrow="高频表达训练"
@@ -189,7 +179,7 @@ export default function ExpressionsPage() {
   // Error
   if (phase === "error") {
     return (
-      <main className={`${styles.page} system-loading-page`}>
+      <main className={`${styles.page} system-loading-page`} data-study-surface="quiz">
         <StableLoadingState
           mark="E"
           eyebrow="高频表达训练"
@@ -206,7 +196,7 @@ export default function ExpressionsPage() {
   // Ready
   if (phase === "ready") {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar learnedCount={learnedCount} total={engine.phraseBank.length} />
         <StudyRangeSummary
           mode="选择题"
@@ -227,7 +217,7 @@ export default function ExpressionsPage() {
   // Question
   if (phase === "question" && question) {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar learnedCount={learnedCount} total={engine.phraseBank.length} stats={stats} />
         <StudyRangeSummary
           mode="选择题"
@@ -247,7 +237,7 @@ export default function ExpressionsPage() {
   // Result
   if (phase === "result" && question && result) {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar learnedCount={learnedCount} total={engine.phraseBank.length} stats={stats} />
         <StudyRangeSummary
           mode="选择题"
@@ -267,7 +257,7 @@ export default function ExpressionsPage() {
   // Done
   if (phase === "done") {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar learnedCount={learnedCount} total={engine.phraseBank.length} />
         <div className={styles.centerWrap}>
           <h2 className={styles.readyTitle}>本轮完成</h2>
@@ -303,7 +293,7 @@ function QuestionCard({ question, onSelect, onSkip }) {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-effective-study-region>
       {/* Tags */}
       {tags.length > 0 && (
         <div className={styles.tagRow}>
@@ -348,7 +338,7 @@ function ResultCard({ question, selected, result, onNext }) {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-effective-study-region>
       {/* Result badge */}
       <div className={styles.resultBadge + " " + (result.correct ? styles.resultCorrect : styles.resultWrong)}>
         {result.correct ? "✓ 正确" : "✗ 错误"}

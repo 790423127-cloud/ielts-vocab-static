@@ -1,12 +1,12 @@
 import { Buffer } from "node:buffer";
 
-export const STATIC_RESPONSIVE_VERSION = "20260809_reading_keyboard_v49";
+export const STATIC_RESPONSIVE_VERSION = "20260830_system_safety_v80";
 export const STATIC_RESPONSIVE_MARKER = "D2.4 laptop-height responsive hotfix";
 export const STATIC_FONT_ZOOM_MARKER = "D2.11 font-aware static shell";
 export const STATIC_FILTER_FIX_MARKER = "D2.6 static filter switch hotfix";
 export const STATIC_SWIPE_FIX_MARKER = "D2.9 static 538 touch-first swipe";
 export const STATIC_HOME_WORKSPACE_MARKER = "D2.10 static desktop home viewport workspace";
-export const STATIC_SWIPE_ENGINE = "touch-538-v4";
+export const STATIC_SWIPE_ENGINE = "touch-pointer-v5";
 export const STATIC_SWIPE_MIN_DISTANCE = 56;
 export const STATIC_SWIPE_MAX_DURATION_MS = 900;
 export const STATIC_SWIPE_AXIS_RATIO = 1.35;
@@ -167,53 +167,11 @@ const CURATED_FILTER_FUNCTION = `function buildFilterOptions(){
 }`;
 
 const TOUCH_FIRST_SWIPE_CONTROLLER = `/* ${STATIC_SWIPE_FIX_MARKER} */
-const STATIC_SWIPE_INTERACTIVE_SELECTOR="button,a,input,textarea,select,option,label,summary,details,[contenteditable=true],[role=button]";
 const staticStudyCard=document.getElementById("staticStudyCard")||els.swipeArea;
-let staticSwipeStart=null;
-function resetStaticSwipe(){staticSwipeStart=null}
-function isStaticSwipeInteractiveTarget(target){
-  return !!(target&&typeof target.closest==="function"&&target.closest(STATIC_SWIPE_INTERACTIVE_SELECTOR));
-}
-function finishStaticSwipe(start,endX,endY,duration,event){
-  if(!start)return;
-  const dx=endX-start.x;
-  const dy=endY-start.y;
-  if(duration>${STATIC_SWIPE_MAX_DURATION_MS}||Math.abs(dx)<${STATIC_SWIPE_MIN_DISTANCE}||Math.abs(dx)<=Math.abs(dy)*${STATIC_SWIPE_AXIS_RATIO})return;
-  if(event&&event.cancelable)event.preventDefault();
-  dx<0?step(1):step(-1);
-}
-staticStudyCard.addEventListener("touchstart",function(event){
-  if(event.touches.length!==1||isStaticSwipeInteractiveTarget(event.target)){
-    resetStaticSwipe();
-    return;
-  }
-  const touch=event.touches[0];
-  staticSwipeStart={x:touch.clientX,y:touch.clientY,at:Date.now()};
-},{passive:true});
-staticStudyCard.addEventListener("touchend",function(event){
-  const start=staticSwipeStart;
-  resetStaticSwipe();
-  if(!start||event.changedTouches.length!==1)return;
-  const touch=event.changedTouches[0];
-  finishStaticSwipe(start,touch.clientX,touch.clientY,Date.now()-start.at,event);
-},{passive:false});
-staticStudyCard.addEventListener("touchcancel",resetStaticSwipe,{passive:true});
-if(!("ontouchstart" in window)&&"PointerEvent" in window){
-  let staticPointerStart=null;
-  staticStudyCard.addEventListener("pointerdown",function(event){
-    if(!event.isPrimary||event.pointerType==="mouse"||isStaticSwipeInteractiveTarget(event.target)){
-      staticPointerStart=null;
-      return;
-    }
-    staticPointerStart={id:event.pointerId,x:event.clientX,y:event.clientY,at:Date.now()};
-  },{passive:true});
-  staticStudyCard.addEventListener("pointerup",function(event){
-    const start=staticPointerStart;
-    staticPointerStart=null;
-    if(!start||start.id!==event.pointerId)return;
-    finishStaticSwipe(start,event.clientX,event.clientY,Date.now()-start.at,event);
-  },{passive:false});
-  staticStudyCard.addEventListener("pointercancel",function(){staticPointerStart=null},{passive:true});
+if(staticStudyCard&&window.StaticCardSwipe){
+  window.StaticCardSwipe.bind(staticStudyCard,function(direction){
+    direction==="next"?step(1):step(-1);
+  });
 }
 window.__STATIC_VOCAB_BUILD__={version:APP_VERSION,swipeEngine:"${STATIC_SWIPE_ENGINE}"};`;
 
@@ -297,8 +255,7 @@ export function patchStaticAppJs(js) {
 
   if (
     !next.includes(STATIC_SWIPE_FIX_MARKER) ||
-    !next.includes('staticStudyCard.addEventListener("touchstart"') ||
-    !next.includes('staticStudyCard.addEventListener("touchend"') ||
+    !next.includes("window.StaticCardSwipe.bind(staticStudyCard") ||
     !next.includes(`swipeEngine:"${STATIC_SWIPE_ENGINE}"`)
   ) {
     throw new Error("Static export swipe verification failed");
@@ -485,12 +442,29 @@ export function patchStaticExportZip(input) {
   const css = byName.get("assets/style.css") || "";
   const html = byName.get("index.html") || "";
   const sw = byName.get("sw.js") || "";
-  const fontScaleJs = byName.get("assets/static-font-scale.js") || "";
+  const staticNavigationJs = byName.get("assets/static-navigation.js") || "";
+  const staticFontScaleJs = byName.get("assets/static-font-scale.js") || "";
+  const readingGJs = byName.get("assets/reading-g.js") || "";
   const readingHtml = byName.get("reading-words.html") || "";
   const readingJs = byName.get("assets/reading-words.js") || "";
   const readingCss = byName.get("assets/reading-words.css") || "";
+  const orderingAssets = [
+    "assets/study-ordering-v64/word-study-ordering.mjs",
+    "assets/study-ordering-v64/word-internal-difficulty.mjs",
+    "assets/study-ordering-v64/word-internal-difficulty.generated.mjs",
+    "assets/study-ordering-v64/word-surface-morphology.mjs"
+  ];
   if (!appJs.includes(STATIC_SWIPE_FIX_MARKER) || !appJs.includes(STATIC_SWIPE_ENGINE)) {
     throw new Error("Final static ZIP does not contain the verified 538-style swipe controller");
+  }
+  if (
+    !staticNavigationJs.includes(`STATIC_SWIPE_VERSION = "${STATIC_SWIPE_ENGINE}"`) ||
+    !staticNavigationJs.includes("window.StaticCardSwipe") ||
+    !staticNavigationJs.includes("data-static-swipe-handle") ||
+    !staticNavigationJs.includes("suppressClickUntil") ||
+    !staticNavigationJs.includes("button,a,input,textarea,select,option,label,summary,details")
+  ) {
+    throw new Error("Final static ZIP does not contain the unified touch/pointer swipe controller");
   }
   if (!css.includes(".static-study-card{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;touch-action:pan-y")) {
     throw new Error("Final static ZIP does not contain the 538-style touch-action and preserved flex layout");
@@ -501,8 +475,17 @@ export function patchStaticExportZip(input) {
   if (!sw.includes(STATIC_RESPONSIVE_VERSION)) {
     throw new Error("Final static ZIP service worker version is stale");
   }
-  if (!fontScaleJs.includes("ielts-vocab-font-scale") || !sw.includes("assets/static-font-scale.js")) {
+  if (!staticFontScaleJs.includes("ielts-vocab-font-scale") || !sw.includes("assets/static-font-scale.js")) {
     throw new Error("Final static ZIP is missing the shared font-scale runtime or offline cache entry");
+  }
+  if (
+    !readingGJs.includes('ORDERING_MODULE_ROOT = "./study-ordering-v64/"') ||
+    !readingGJs.includes("sharedWordStudyOrdering.orderStudyWordIndices") ||
+    !appJs.includes('ORDERING_MODULE_ROOT="./study-ordering-v64/"') ||
+    !appJs.includes("sharedWordStudyOrdering.orderStudyWordIndices") ||
+    orderingAssets.some((name) => !byName.has(name) || !sw.includes(`./${name}`))
+  ) {
+    throw new Error("Final static ZIP does not contain the shared desktop/static word-order runtime");
   }
   if (!sw.includes('url.pathname.endsWith("/reading-words.html")')) {
     throw new Error("Final static ZIP does not support offline reading-words navigation");

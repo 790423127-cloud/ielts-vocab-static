@@ -1,4 +1,4 @@
-export function getStudyKeyboardAction(event = {}) {
+export function getStudyKeyboardAction(event = {}, options = {}) {
   if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return "";
 
   const target = event.target;
@@ -32,10 +32,16 @@ export function getStudyKeyboardAction(event = {}) {
 
   if (event.key === "ArrowLeft") return "previous";
   if (event.key === "ArrowRight") return "next";
+  if (options.verticalNavigation && event.key === "ArrowUp") return "previous";
+  if (options.verticalNavigation && event.key === "ArrowDown") return "next";
   if (event.code === "Digit1" || event.code === "Numpad1" || event.key === "1") return "known";
   if (event.code === "Digit2" || event.code === "Numpad2" || event.key === "2") return "blurry";
   if (event.code === "Digit3" || event.code === "Numpad3" || event.key === "3") return "unknown";
   return "";
+}
+
+export function isStudyAudioKeyboardAction(action) {
+  return action === "word-audio" || action === "example-audio";
 }
 
 export function shouldHandleStudyDeleteShortcut(event = {}) {

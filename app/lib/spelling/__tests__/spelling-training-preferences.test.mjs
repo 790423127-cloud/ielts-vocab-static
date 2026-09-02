@@ -22,11 +22,17 @@ test("spelling UX preferences preserve product defaults", () => {
 
 test("stored and category patches keep the spelling preference schema", () => {
   const base = applyStoredPrefsPatch({}, { practiceSource: "category" }, "word");
-  const patched = applyCategoryPrefsPatch(base, { categoryType: "difficulty", categoryValue: "中级核心", batchIndex: 2 }, "word");
+  const patched = applyCategoryPrefsPatch(base, {
+    categoryType: "difficulty",
+    categoryValue: "中级核心",
+    sortDirection: "hard_to_easy",
+    batchIndex: 2
+  }, "word");
 
   assert.equal(patched.practiceSource, "category");
   assert.equal(patched.category.categoryType, "difficulty");
   assert.equal(patched.category.categoryValue, "中级核心");
+  assert.equal(patched.category.sortDirection, "hard_to_easy");
   assert.equal(patched.category.batchIndex, 2);
 });
 

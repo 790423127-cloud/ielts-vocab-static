@@ -54,9 +54,7 @@ if defined PORT_PID (
 goto prepare_build
 
 :restart_existing
-echo Website files or the production build changed. Restarting the local server automatically...
-taskkill /PID %PORT_PID% /F >nul 2>nul
-powershell.exe -NoProfile -Command "Start-Sleep -Seconds 1"
+echo Website files or the production build changed. Building the new version before switching the local server...
 
 :prepare_build
 if "%NEED_BUILD%"=="1" (
@@ -72,17 +70,16 @@ if "%NEED_BUILD%"=="1" (
 )
 
 echo.
-echo Starting fast production website...
+echo Starting fast production website in the background...
 echo Open this in browser: %APP_URL%
-copy /y ".next\BUILD_ID" ".next\.running-build-id" >nul
-start "" %APP_URL%
-call npm.cmd start
-set "SERVER_EXIT_CODE=%ERRORLEVEL%"
-del /q ".next\.running-build-id" >nul 2>nul
-if not "%SERVER_EXIT_CODE%"=="0" (
+node "%~dp0scripts\local-production-server.mjs" --start
+if errorlevel 1 (
   echo.
-  echo The local website server stopped with exit code %SERVER_EXIT_CODE%.
-  echo This window will close automatically in 5 seconds.
-  timeout /t 5 >nul
+  echo The local website server could not be started.
+  echo Check outputs\ielts538-server.stderr.log for details.
+  pause
+  exit /b 1
 )
-exit /b %SERVER_EXIT_CODE%
+start "" %APP_URL%
+echo The server will keep running after this window closes.
+exit /b 0

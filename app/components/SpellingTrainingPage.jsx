@@ -34,6 +34,7 @@ import {
   recordSpellingDailyAttempt,
   recordLearningActivity
 } from "../lib/spelling/spelling-daily-stats.mjs";
+import { notifyEffectiveStudyActivity } from "../lib/study-time/effective-study-time.mjs";
 
 import {
   errorBankEntriesToSpellingCandidates,
@@ -75,12 +76,14 @@ import { syncPersonalWrongRecordsToLocalLexicon } from "../lib/spelling/personal
 import { srsReviewEntriesToSpellingCandidates } from "../lib/spelling/srs-review.mjs";
 import {
   SPELLING_CATEGORY_TYPES,
+  SPELLING_CATEGORY_ORDER_OPTIONS,
   SPELLING_DIFFICULTY_OPTIONS,
   SPELLING_PHRASE_CATEGORY_TYPES,
   SPELLING_PRACTICE_SOURCES,
   SPELLING_SRS_INTERVALS_DAYS,
   countEntriesBySpellingCategories,
   filterBySpellingCategory,
+  filterBySpellingScope,
   listSpellingBatchOptions,
   listSpellingBatchOptionsFromSelection,
   selectSpellingBatch,
@@ -97,6 +100,10 @@ import {
   getSpellingPromptView,
   isSpellingDebugMode
 } from "../lib/spelling/spelling-display.mjs";
+import {
+  createSpellingAutoSubmitAttempt,
+  isSpellingAutoSubmitAttemptCurrent
+} from "../lib/spelling/spelling-submit-attempt.mjs";
 import {
   buildCombinedExportFilename,
   buildCombinedLexiconExportPayload,
@@ -129,7 +136,7 @@ import {
 } from "../lib/spelling/spelling-training-page-helpers.mjs";
 
 const EMPTY_COUNT_MAP = new Map();
-export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
+export default function SpellingTrainingPage({ scope: scopeProp = "word", requestedPracticeSource = "" }) {
   const scopeConfig = useMemo(() => resolveSpellingScope(scopeProp), [scopeProp]);
   const scope = scopeConfig.scope;
   const isPhrase = scope === "phrase";
@@ -196,7 +203,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     patchStoredPrefs,
     patchCategoryPrefs,
     patchIdictationPrefs
-  } = useSpellingTrainingPreferences(scope);
+  } = useSpellingTrainingPreferences(scope, requestedPracticeSource);
   const [actionNotice, setActionNotice] = useState("");
   const [personalWrongInput, setPersonalWrongInput] = useState("");
   const [personalWrongRecords, setPersonalWrongRecords] = useState(() => readPersonalWrongBookRecords());
@@ -205,6 +212,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   const learningActivityRef = useRef(createLearningActivity());
   const sessionStatsRef = useRef(sessionStats);
   const spellingUndoStackRef = useRef([]);
+  const latestSpellingInputRef = useRef("");
   const personalWrongLexiconReconciledRef = useRef(false);
   const pageLoadStartedAtRef = useRef(0);
 
@@ -213,9 +221,13 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     learningActivityRef.current = result.next;
     if (result.activeMs > 0) {
       setDailyStats((stats) => recordSpellingDailyActiveTime(stats, result.activeMs));
+      notifyEffectiveStudyActivity({
+        moduleKey: scope === "phrase" ? "spelling-phrases" : "spelling-words",
+        activeMs: result.activeMs
+      });
     }
     return result;
-  }, []);
+  }, [scope]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -275,7 +287,11 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   useEffect(() => {
     let cancelled = false;
 
-    loadSpellingLexicon({ scope })
+    // Word categories are a live view of the master lexicon. Revalidate them
+    // on route entry so a word deleted in the master library cannot survive in
+    // an older in-memory spelling cache. Phrase and iDictation sources remain
+    // on their own loading paths.
+    loadSpellingLexicon({ scope, force: scope === "word" })
       .then((payload) => {
         if (cancelled) return;
         setLexicon(payload);
@@ -350,15 +366,21 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     () => ({ ...categoryPrefs, scopeKind: scope }),
     [categoryPrefs, scope]
   );
+  const categorySortLabel = !isPhrase
+    ? SPELLING_CATEGORY_ORDER_OPTIONS.find((item) => item.value === categoryPrefs.sortDirection)?.label || "简单 → 困难"
+    : "";
 
   const batchSelection = useMemo(
-    () => ({
-      ...selectSpellingBatch(lexiconEntries, batchPrefs),
-      label: spellingCategoryLabel(categoryPrefs.categoryType, categoryPrefs.categoryValue, {
+    () => {
+      const categoryLabel = spellingCategoryLabel(categoryPrefs.categoryType, categoryPrefs.categoryValue, {
         scopeKind: isPhrase ? "phrase" : ""
-      })
-    }),
-    [lexiconEntries, batchPrefs, categoryPrefs.categoryType, categoryPrefs.categoryValue, isPhrase]
+      });
+      return {
+        ...selectSpellingBatch(lexiconEntries, batchPrefs),
+        label: categorySortLabel ? `${categoryLabel} · ${categorySortLabel}` : categoryLabel
+      };
+    },
+    [lexiconEntries, batchPrefs, categoryPrefs.categoryType, categoryPrefs.categoryValue, categorySortLabel, isPhrase]
   );
 
   const errorBankSourceEntries = useMemo(
@@ -510,16 +532,22 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       needsExpandedCategoryCounts
         ? (isPhrase
             ? ["difficulty", "topic", "ielts_use", "lr_high_frequency"]
-            : ["difficulty", "topic", "lr_high_frequency"])
-        : ["difficulty"]
+            : ["difficulty", "skill"])
+        : ["difficulty"],
+      scope
     ),
-    [lexiconEntries, isPhrase, needsExpandedCategoryCounts]
+    [lexiconEntries, isPhrase, needsExpandedCategoryCounts, scope]
   );
 
   const difficultyCounts = categoryCounts.difficulty || EMPTY_COUNT_MAP;
+  const skillCounts = categoryCounts.skill || EMPTY_COUNT_MAP;
   const topicCounts = categoryCounts.topic || EMPTY_COUNT_MAP;
   const ieltsUseCounts = categoryCounts.ielts_use || EMPTY_COUNT_MAP;
   const listeningReadingCounts = categoryCounts.lr_high_frequency || EMPTY_COUNT_MAP;
+  const totalCategoryEntryCount = useMemo(
+    () => filterBySpellingScope(lexiconEntries, scope).length,
+    [lexiconEntries, scope]
+  );
 
   const activeBatchId = useMemo(() => {
     if (practiceSource === "personal_wrong_book") {
@@ -534,7 +562,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     if (isIdictationPracticeSource(practiceSource)) {
       return `${scope}:${practiceSource}:${idictationBatchSelection.groupKey}:batch:${idictationBatchSelection.batchIndex}`;
     }
-    return `${scope}:${categoryPrefs.categoryType}:${categoryPrefs.categoryValue}:${batchSelection.batchIndex}`;
+    return `${scope}:${categoryPrefs.categoryType}:${categoryPrefs.categoryValue}:${categoryPrefs.sortDirection || ""}:${batchSelection.batchIndex}`;
   }, [practiceSource, scope, categoryPrefs, batchSelection.batchIndex, personalWrongBatchSelection.batchIndex, errorBankBatchSelection.batchIndex, srsBatchSelection.batchIndex, idictationBatchSelection.groupKey, idictationBatchSelection.batchIndex]);
 
   const activeRangeLine = useMemo(() => {
@@ -614,6 +642,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     autoNextOnCorrect,
     soundEffectsEnabled
   });
+  latestSpellingInputRef.current = spelling.inputValue;
 
   const undoLastSpellingAction = useCallback(async () => {
     const entry = spellingUndoStackRef.current.pop();
@@ -1175,6 +1204,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
 
     if (categoryPrefs.categoryType === "difficulty") {
       const currentIndex = SPELLING_DIFFICULTY_OPTIONS.findIndex((item) => item.value === categoryPrefs.categoryValue);
+      if (currentIndex < 0) return null;
       const nextDifficulty = SPELLING_DIFFICULTY_OPTIONS
         .slice(currentIndex + 1)
         .find((item) => Number(difficultyCounts.get(item.value) || 0) > 0);
@@ -1254,11 +1284,18 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     speech.playWord();
   }, [speech]);
 
-  const handleSubmit = useCallback(async () => {
-    if (!current || !spelling.inputValue.trim() || spelling.uiState === "inputting") return null;
+  const handleSubmit = useCallback(async (autoSubmitAttempt = null) => {
+    const submittedInput = latestSpellingInputRef.current;
+    if (!current || !submittedInput.trim() || spelling.uiState === "inputting") return null;
+    if (
+      autoSubmitAttempt
+      && !isSpellingAutoSubmitAttemptCurrent(autoSubmitAttempt, current, submittedInput)
+    ) {
+      return null;
+    }
     const attemptedWordId = current.wordId || current.id || current.expectedAnswer || current.displayText;
     const learningResult = finishLearningActivity(learningActivityRef.current);
-    const result = await spelling.submit();
+    const result = await spelling.submit(submittedInput);
     if (result?.answerMeta) {
       learningActivityRef.current = learningResult.next;
       setSessionStats((stats) => recordAttempt(stats, {
@@ -1272,6 +1309,12 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
         skipped: result.answerMeta.skipped,
         activeMs: learningResult.activeMs
       }));
+      if (learningResult.activeMs > 0) {
+        notifyEffectiveStudyActivity({
+          moduleKey: scope === "phrase" ? "spelling-phrases" : "spelling-words",
+          activeMs: learningResult.activeMs
+        });
+      }
     }
     if (result?.answerMeta && !result.answerMeta.isCorrect) {
       void refreshErrorBank();
@@ -1280,7 +1323,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
       void refreshSrsReview();
     }
     return result;
-  }, [current, spelling, practiceSource, refreshErrorBank, refreshSrsReview]);
+  }, [current, spelling, practiceSource, refreshErrorBank, refreshSrsReview, scope]);
 
   useEffect(() => {
     if (practiceSource === "srs_review" && spelling.uiState === "done_today") {
@@ -1350,9 +1393,10 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
 
   const handleInputChange = useCallback((event) => {
     learningActivityRef.current = recordLearningActivity(learningActivityRef.current);
-    spelling.setInputValue(event.target.value);
-    if (event.target.value && errorAnalysisVisible) setErrorAnalysisVisible(false);
-  }, [spelling, errorAnalysisVisible]);
+    const nextInputValue = event.target.value;
+    latestSpellingInputRef.current = nextInputValue;
+    spelling.setInputValue(nextInputValue);
+  }, [spelling]);
 
   useEffect(() => {
     if (!autoNextOnCorrect || !spelling.ready || !current) return undefined;
@@ -1365,8 +1409,11 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
     const accepted = Array.isArray(current.acceptedAnswers) ? current.acceptedAnswers : [];
     if (!isSpellingAnswerCorrect(value, expected, accepted)) return undefined;
 
+    const autoSubmitAttempt = createSpellingAutoSubmitAttempt(current, value);
+    if (!autoSubmitAttempt) return undefined;
+
     const timer = window.setTimeout(() => {
-      handleSubmitRef.current();
+      handleSubmitRef.current(autoSubmitAttempt);
     }, AUTO_SUBMIT_DEBOUNCE_MS);
 
     return () => window.clearTimeout(timer);
@@ -1501,7 +1548,7 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
   }, [lexiconEntries, scope, categoryPrefs, batchSelection.label]);
 
   return (
-    <main className="spelling-page-shell" aria-busy={isPagePreparing}>
+    <main className="spelling-page-shell" aria-busy={isPagePreparing} data-study-surface="spelling">
       {!isPagePreparing ? (
       <header className="spelling-topbar" aria-label="拼写训练顶栏">
         <div className="spelling-topbar__nav">
@@ -1637,7 +1684,6 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
           trainingControls={trainingControls}
           handleInputChange={handleInputChange}
           submit={submit}
-          handleSkip={handleSkip}
           isPhrase={isPhrase}
           errorAnalysisVisible={errorAnalysisVisible}
           showEnginePreparing={showEnginePreparing}
@@ -1711,7 +1757,9 @@ export default function SpellingTrainingPage({ scope: scopeProp = "word" }) {
             patchCategoryPrefs,
             categoryTypes,
             scopeConfig,
+            totalCategoryEntryCount,
             difficultyCounts,
+            skillCounts,
             topicCounts,
             ieltsUseCounts,
             lrCounts: listeningReadingCounts,

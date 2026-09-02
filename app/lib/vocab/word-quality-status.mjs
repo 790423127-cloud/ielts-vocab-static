@@ -1,8 +1,10 @@
 import {
-  isDetailedOtherMeaning,
+  isDefinedOtherMeaning,
   isReliableAiCollocation,
   normalizeAiPhraseItems
 } from "./admin-ai-content-profile.mjs";
+import { isMeaningDetailInformative } from "./meaning-display.mjs";
+import { getMultiPosSenseCoverage } from "./multi-pos-sense-coverage.mjs";
 
 const MISSING_TEXT_RE = /^(?:-|—|n\/?a|none|null|undefined|unknown|not available|待补全|待完善|暂无|无释义|中文释义|英文释义|meaning here|translation here|example sentence|\?{2,})$/i;
 const FUNCTION_WORD_POS_RE = /\b(?:article|auxiliary|conjunction|determiner|interjection|modal|preposition|pronoun)\b/i;
@@ -77,12 +79,17 @@ function isReferenceEntry(word = {}) {
   return word?.studyMode === "reference" || REFERENCE_CATEGORY_RE.test(String(word?.category || ""));
 }
 
+function isExplicitProperNameEntry(word = {}) {
+  return Boolean(String(word?.properNameType || "").trim())
+    || /\bproper\s+noun\b/i.test(String(word?.pos || ""));
+}
+
 function isFunctionWord(word = {}) {
   return FUNCTION_WORD_POS_RE.test(String(word?.pos || ""));
 }
 
 export function resolveWordEnrichmentTarget(word = {}) {
-  if (isReferenceEntry(word)) {
+  if (isReferenceEntry(word) || isExplicitProperNameEntry(word)) {
     return {
       applicable: false,
       minimum: { common: 0, phrase: 0 },
@@ -164,7 +171,7 @@ function inspectOtherMeanings(value) {
   if (!Array.isArray(value)) return [-1];
   const invalidIndexes = [];
   value.forEach((sense, index) => {
-    if (!isDetailedOtherMeaning(sense)) invalidIndexes.push(index);
+    if (!isDefinedOtherMeaning(sense)) invalidIndexes.push(index);
   });
   return invalidIndexes;
 }
@@ -180,12 +187,17 @@ export function getWordQualityStatus(word = {}) {
   if (!hasUsefulHeadword(word.word)) missingContentFields.push("word");
   if (!hasUsefulQualityText(word.pos)) missingContentFields.push("pos");
   if (!hasUsefulQualityText(word.meaning)) missingContentFields.push("meaning");
+  if (!isMeaningDetailInformative(word)) missingContentFields.push("meaningDetailZh");
   if (!hasUsefulQualityText(word.definition)) missingContentFields.push("definition");
   if (!hasUsefulQualityText(word.example)) missingContentFields.push("example");
   if (!hasUsefulQualityText(word.exampleCn)) missingContentFields.push("exampleCn");
 
   const invalidOtherMeaningIndexes = inspectOtherMeanings(word?.otherMeanings);
-  const invalidContentFields = invalidOtherMeaningIndexes.length ? ["otherMeanings"] : [];
+  const multiPosCoverage = getMultiPosSenseCoverage(word);
+  const invalidContentFields = [
+    ...(invalidOtherMeaningIndexes.length ? ["otherMeanings"] : []),
+    ...(multiPosCoverage.isMultiPos && !multiPosCoverage.complete ? ["multiPosSenses"] : [])
+  ];
 
   const missingClassificationFields = [];
   if (!Array.isArray(word.ieltsUse) || !word.ieltsUse.length) {
@@ -208,6 +220,7 @@ export function getWordQualityStatus(word = {}) {
     missingContentFields,
     invalidContentFields,
     invalidOtherMeaningIndexes,
+    multiPosCoverage,
     missingClassificationFields,
     minimumLearningTarget: target.minimum,
     reliableContentCounts: { common: commonCount, phrase: phraseCount }

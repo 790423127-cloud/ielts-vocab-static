@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { requestCurrentWordDeletion } from "../lib/vocab/delete-current-word-request.mjs";
 
@@ -26,8 +27,10 @@ function resolveDeletePortalTarget() {
  * raises the shared delete request event so confirm/save stay on one path.
  */
 export default function QuickDeleteCurrentWordButton() {
+  const pathname = usePathname() || "/";
   const [portalTarget, setPortalTarget] = useState(null);
   const [disabled, setDisabled] = useState(true);
+  const canDeleteOnCurrentPage = pathname === "/" || pathname === "/reading-g" || pathname === "/reading-words";
 
   const syncButtonState = useCallback(() => {
     const topbar = resolveDeletePortalTarget();
@@ -66,7 +69,7 @@ export default function QuickDeleteCurrentWordButton() {
   // Keyboard D/Delete are owned by useWordFlashNavigation to avoid double confirm.
   // This component only mounts the visible delete control.
 
-  if (!portalTarget) return null;
+  if (!portalTarget || !canDeleteOnCurrentPage) return null;
 
   return createPortal(
     <button

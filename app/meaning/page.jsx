@@ -8,6 +8,7 @@ import StudyRangeSummary from "../components/StudyRangeSummary.jsx";
 import StableLoadingState from "../components/StableLoadingState.jsx";
 import styles from "./meaning.module.css";
 import { getPosFamilyDisplay } from "../lib/vocab/pos-display.mjs";
+import { getStudyKeyboardAction } from "../lib/vocab/study-keyboard-shortcuts.mjs";
 
 // 训练子集（6000），与主词库动态物理总数分开计数。见 PRODUCT.md。
 const WORD_BANK_URL = "/data/meaning-6000.json";
@@ -184,36 +185,26 @@ export default function MeaningPage() {
   // Keyboard handlers
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Tab: play word audio (only in question/result phase, not on interactive elements)
-      if (e.key === "Tab" && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
-        const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
-        const isInteractive = ["button", "a", "input", "textarea", "select"].includes(tag)
-          || document.activeElement.isContentEditable;
-        if (!isInteractive && question && (phase === "question" || phase === "result")) {
-          e.preventDefault();
-          speakWord(question.word);
-        }
+      const action = getStudyKeyboardAction(e);
+      if (action === "word-audio" && question && (phase === "question" || phase === "result")) {
+        e.preventDefault();
+        speakWord(question.word);
+        return;
       }
 
-      // Space: play example (only in result phase, correct answer, not on interactive elements)
-      if (e.code === "Space" && phase === "result" && result && result.correct) {
-        const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
-        const isInteractive = ["button", "a", "input", "textarea", "select"].includes(tag)
-          || document.activeElement.isContentEditable;
-        if (!isInteractive && question) {
-          const example = getExampleFromQuestion(question);
-          if (example) {
-            e.preventDefault();
-            speakExample(example);
-            if (typeof window !== "undefined" && window.__MEANING_DEBUG__) {
-              console.log("[Meaning Debug]", {
-                wordId: question.wordId,
-                playedAudioType: "example",
-                audioEngine: "speech-synthesis",
-                keyboardTrigger: "space",
-                exampleSourceField: getExampleField(question)
-              });
-            }
+      if (action === "example-audio" && phase === "result" && result?.correct && question) {
+        const example = getExampleFromQuestion(question);
+        if (example) {
+          e.preventDefault();
+          speakExample(example);
+          if (typeof window !== "undefined" && window.__MEANING_DEBUG__) {
+            console.log("[Meaning Debug]", {
+              wordId: question.wordId,
+              playedAudioType: "example",
+              audioEngine: "speech-synthesis",
+              keyboardTrigger: "space",
+              exampleSourceField: getExampleField(question)
+            });
           }
         }
       }
@@ -379,7 +370,7 @@ export default function MeaningPage() {
   // ─── RENDER: Loading ───
   if (phase === "loading" || phase === "preparing") {
     return (
-      <main className={`${styles.page} system-loading-page`}>
+      <main className={`${styles.page} system-loading-page`} data-study-surface="quiz">
         <StableLoadingState
           mark="M"
           eyebrow="看英文选中文"
@@ -393,7 +384,7 @@ export default function MeaningPage() {
   // ─── RENDER: Error ───
   if (phase === "error") {
     return (
-      <main className={`${styles.page} system-loading-page`}>
+      <main className={`${styles.page} system-loading-page`} data-study-surface="quiz">
         <StableLoadingState
           mark="M"
           eyebrow="看英文选中文"
@@ -410,7 +401,7 @@ export default function MeaningPage() {
   if (phase === "ready") {
     const prog = stats || runtime?.getCombinedProgress();
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar stats={stats} />
         <StudyRangeSummary
           mode="选择题"
@@ -442,7 +433,7 @@ export default function MeaningPage() {
   // ─── RENDER: Question ───
   if (phase === "question" && question) {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar stats={stats} />
         <StudyRangeSummary
           mode="选择题"
@@ -467,7 +458,7 @@ export default function MeaningPage() {
   if (phase === "result" && question && result) {
     const example = result.correct ? getExampleFromQuestion(question) : null;
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar stats={stats} />
         <StudyRangeSummary
           mode="选择题"
@@ -508,7 +499,7 @@ export default function MeaningPage() {
   // ─── RENDER: Done ───
   if (phase === "done") {
     return (
-      <main className={styles.page}>
+      <main className={styles.page} data-study-surface="quiz">
         <TopBar stats={stats} />
         <div className={styles.centerWrap}>
           <h2 className={styles.readyTitle}>本轮完成！</h2>
@@ -542,7 +533,7 @@ function TopBar({ stats }) {
 
 function QuestionCard({ question, onSelect, onPlayWord }) {
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-effective-study-region>
       {/* Current question source badge */}
       {question._selectedBecause && (
         <div className={styles.sourceBadge}>
@@ -591,7 +582,7 @@ function ResultCard({ question, selected, result, example, onPlayWord, onPlayExa
   const selOption = question.options ? question.options.find(o => o.meaningZh === selMeaning) : null;
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-effective-study-region>
       {/* Feedback */}
       <div className={styles.resultBadge + " " + (result.correct ? styles.resultCorrect : styles.resultWrong)}>
         {result.correct ? "✓ 正确" : "✗ 错误"}

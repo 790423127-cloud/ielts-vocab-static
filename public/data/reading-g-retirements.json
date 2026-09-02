@@ -1,7 +1,7 @@
 {
   "version": "reading-g-retirements-v1",
-  "updatedAt": "2026-08-06T06:59:48.787Z",
-  "count": 611,
+  "updatedAt": "2026-08-28T17:09:09.747Z",
+  "count": 658,
   "entries": [
     {
       "key": "word::send",
@@ -39,13 +39,6 @@
       "deletedAt": "2026-08-03T15:41:39.722Z"
     },
     {
-      "key": "word::carry",
-      "id": "rg_word_carry",
-      "word": "carry",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T15:41:41.643Z"
-    },
-    {
       "key": "word::held",
       "id": "rg_word_held",
       "word": "held",
@@ -72,13 +65,6 @@
       "word": "both",
       "entryType": "word",
       "deletedAt": "2026-08-03T15:48:10.873Z"
-    },
-    {
-      "key": "word::staff",
-      "id": "rg_word_staff",
-      "word": "staff",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T15:48:14.188Z"
     },
     {
       "key": "word::try",
@@ -1229,13 +1215,6 @@
       "deletedAt": "2026-08-03T16:49:01.933Z"
     },
     {
-      "key": "word::due",
-      "id": "rg_word_due",
-      "word": "due",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T16:49:03.678Z"
-    },
-    {
       "key": "word::look",
       "id": "rg_word_look",
       "word": "look",
@@ -1762,10 +1741,10 @@
     },
     {
       "key": "word::but",
-      "id": "rg_word_but",
+      "id": "rg_logic_582696_79014201",
       "word": "but",
       "entryType": "word",
-      "deletedAt": "2026-08-03T18:19:37.037Z"
+      "deletedAt": "2026-08-14T14:30:39.680Z"
     },
     {
       "key": "word::last",
@@ -1978,13 +1957,6 @@
       "deletedAt": "2026-08-03T18:48:30.000Z"
     },
     {
-      "key": "word::bar",
-      "id": "rg_word_bar",
-      "word": "bar",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T18:49:10.169Z"
-    },
-    {
       "key": "word::day",
       "id": "rg_word_day",
       "word": "day",
@@ -2066,7 +2038,7 @@
       "id": "rg_word_pro",
       "word": "pro",
       "entryType": "word",
-      "deletedAt": "2026-08-04T05:50:10.304Z"
+      "deletedAt": "2026-08-14T06:51:14.459Z"
     },
     {
       "key": "word::bin",
@@ -2081,13 +2053,6 @@
       "word": "lip",
       "entryType": "word",
       "deletedAt": "2026-08-03T19:02:38.193Z"
-    },
-    {
-      "key": "word::van",
-      "id": "rg_word_van",
-      "word": "van",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T19:02:41.821Z"
     },
     {
       "key": "word::art",
@@ -2328,13 +2293,6 @@
       "deletedAt": "2026-08-03T19:38:38.784Z"
     },
     {
-      "key": "word::odd",
-      "id": "rg_word_odd",
-      "word": "odd",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T19:38:41.073Z"
-    },
-    {
       "key": "word::gap",
       "id": "rg_word_gap",
       "word": "gap",
@@ -2368,20 +2326,6 @@
       "word": "leg",
       "entryType": "word",
       "deletedAt": "2026-08-03T19:39:01.842Z"
-    },
-    {
-      "key": "word::log",
-      "id": "rg_word_log",
-      "word": "log",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T19:39:03.848Z"
-    },
-    {
-      "key": "word::tag",
-      "id": "rg_word_tag",
-      "word": "tag",
-      "entryType": "word",
-      "deletedAt": "2026-08-03T19:39:06.062Z"
     },
     {
       "key": "word::dig",
@@ -2731,7 +2675,7 @@
       "id": "rg_word_year",
       "word": "year",
       "entryType": "word",
-      "deletedAt": "2026-08-04T01:05:08.020Z"
+      "deletedAt": "2026-08-16T02:16:58.465Z"
     },
     {
       "key": "word::cent",
@@ -2739,13 +2683,6 @@
       "word": "cent",
       "entryType": "word",
       "deletedAt": "2026-08-04T01:05:19.285Z"
-    },
-    {
-      "key": "word::hide",
-      "id": "rg_word_hide",
-      "word": "hide",
-      "entryType": "word",
-      "deletedAt": "2026-08-04T01:05:31.949Z"
     },
     {
       "key": "word::born",
@@ -2802,13 +2739,6 @@
       "word": "card",
       "entryType": "word",
       "deletedAt": "2026-08-04T01:06:23.636Z"
-    },
-    {
-      "key": "word::cash",
-      "id": "rg_word_cash",
-      "word": "cash",
-      "entryType": "word",
-      "deletedAt": "2026-08-04T01:06:25.238Z"
     },
     {
       "key": "word::club",
@@ -3497,20 +3427,6 @@
       "deletedAt": "2026-08-04T01:33:52.764Z"
     },
     {
-      "key": "word::fake",
-      "id": "rg_word_fake",
-      "word": "fake",
-      "entryType": "word",
-      "deletedAt": "2026-08-04T01:34:19.610Z"
-    },
-    {
-      "key": "word::rank",
-      "id": "rg_word_rank",
-      "word": "rank",
-      "entryType": "word",
-      "deletedAt": "2026-08-04T01:34:21.956Z"
-    },
-    {
       "key": "word::cafe",
       "id": "rg_word_cafe",
       "word": "cafe",
@@ -3565,13 +3481,6 @@
       "word": "frog",
       "entryType": "word",
       "deletedAt": "2026-08-04T01:35:05.888Z"
-    },
-    {
-      "key": "word::mate",
-      "id": "rg_word_mate",
-      "word": "mate",
-      "entryType": "word",
-      "deletedAt": "2026-08-04T01:35:16.365Z"
     },
     {
       "key": "word::till",
@@ -3749,13 +3658,6 @@
       "deletedAt": "2026-08-04T07:35:09.596Z"
     },
     {
-      "key": "word::plus",
-      "id": "rg_word_plus",
-      "word": "plus",
-      "entryType": "word",
-      "deletedAt": "2026-08-04T07:37:08.229Z"
-    },
-    {
       "key": "word::seat",
       "id": "rg_word_seat",
       "word": "seat",
@@ -3782,13 +3684,6 @@
       "word": "size",
       "entryType": "word",
       "deletedAt": "2026-08-04T07:38:47.229Z"
-    },
-    {
-      "key": "word::check",
-      "id": "rg_word_check",
-      "word": "check",
-      "entryType": "word",
-      "deletedAt": "2026-08-04T09:17:01.636Z"
     },
     {
       "key": "word::thing",
@@ -4279,6 +4174,440 @@
       "word": "health and safety",
       "entryType": "phrase",
       "deletedAt": "2026-08-06T06:59:48.787Z"
+    },
+    {
+      "key": "word::nile",
+      "id": "rg_word_nile",
+      "word": "nile",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T07:08:32.338Z"
+    },
+    {
+      "key": "word::they",
+      "id": "rg_word_thei",
+      "word": "they",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T07:47:48.953Z"
+    },
+    {
+      "key": "word::as",
+      "id": "rg_word_as",
+      "word": "as",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T14:25:01.872Z"
+    },
+    {
+      "key": "word::up",
+      "id": "rg_logic_582696_79014112",
+      "word": "up",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T14:30:32.235Z"
+    },
+    {
+      "key": "word::for",
+      "id": "rg_word_for",
+      "word": "for",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T14:30:34.128Z"
+    },
+    {
+      "key": "word::mug",
+      "id": "rg_word_mug",
+      "word": "mug",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T14:30:37.401Z"
+    },
+    {
+      "key": "word::all",
+      "id": "rg_logic_582696_79014172",
+      "word": "All",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T14:31:34.951Z"
+    },
+    {
+      "key": "word::half-fee",
+      "id": "rg_word_half_fee",
+      "word": "half-fee",
+      "entryType": "word",
+      "deletedAt": "2026-08-14T17:08:10.726Z"
+    },
+    {
+      "key": "phrase::working day",
+      "id": "rg_phrase_working_day",
+      "word": "working day",
+      "entryType": "phrase",
+      "deletedAt": "2026-08-15T10:27:08.378Z"
+    },
+    {
+      "key": "word::stop",
+      "id": "rg_word_stop",
+      "word": "stop",
+      "entryType": "word",
+      "deletedAt": "2026-08-15T11:31:28.820Z"
+    },
+    {
+      "key": "word::egypt",
+      "id": "rg_word_egypt",
+      "word": "egypt",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T02:19:34.101Z"
+    },
+    {
+      "key": "word::roman",
+      "id": "rg_word_roman",
+      "word": "roman",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T02:34:23.709Z"
+    },
+    {
+      "key": "word::sheep",
+      "id": "rg_word_sheep",
+      "word": "sheep",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T02:35:04.085Z"
+    },
+    {
+      "key": "word::april",
+      "id": "rg_word_april",
+      "word": "april",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T02:58:43.330Z"
+    },
+    {
+      "key": "word::august",
+      "id": "rg_word_august",
+      "word": "august",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T02:58:48.857Z"
+    },
+    {
+      "key": "word::autumn",
+      "id": "rg_word_autumn",
+      "word": "autumn",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T02:59:04.303Z"
+    },
+    {
+      "key": "word::friday",
+      "id": "rg_word_friday",
+      "word": "friday",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T03:00:29.998Z"
+    },
+    {
+      "key": "word::jazz",
+      "id": "rg_word_jazz",
+      "word": "jazz",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T03:00:56.838Z"
+    },
+    {
+      "key": "word::june",
+      "id": "rg_word_june",
+      "word": "june",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T03:00:58.856Z"
+    },
+    {
+      "key": "word::monday",
+      "id": "rg_word_monday",
+      "word": "monday",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T03:01:24.567Z"
+    },
+    {
+      "key": "word::oxford",
+      "id": "rg_word_oxford",
+      "word": "oxford",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T03:01:32.133Z"
+    },
+    {
+      "key": "word::paris",
+      "id": "rg_word_paris",
+      "word": "paris",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T03:01:33.706Z"
+    },
+    {
+      "key": "word::purple",
+      "id": "rg_word_purple",
+      "word": "purple",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T03:02:50.827Z"
+    },
+    {
+      "key": "word::thirty",
+      "id": "rg_word_thirty",
+      "word": "thirty",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T10:52:30.337Z"
+    },
+    {
+      "key": "word::monkey",
+      "id": "rg_word_monkey",
+      "word": "monkey",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T11:29:19.218Z"
+    },
+    {
+      "key": "word::tuesday",
+      "id": "rg_word_tuesday",
+      "word": "tuesday",
+      "entryType": "word",
+      "deletedAt": "2026-08-16T16:01:21.255Z"
+    },
+    {
+      "key": "word::ghana",
+      "id": "rg_word_ghana",
+      "word": "ghana",
+      "entryType": "word",
+      "deletedAt": "2026-08-17T03:51:10.702Z"
+    },
+    {
+      "key": "word::tokyo",
+      "id": "rg_word_tokyo",
+      "word": "tokyo",
+      "entryType": "word",
+      "deletedAt": "2026-08-17T09:07:52.862Z"
+    },
+    {
+      "key": "word::wales",
+      "id": "rg_word_wales",
+      "word": "wales",
+      "entryType": "word",
+      "deletedAt": "2026-08-17T09:07:56.790Z"
+    },
+    {
+      "key": "word::didnt",
+      "id": "rg_word_didnt",
+      "word": "didnt",
+      "entryType": "word",
+      "deletedAt": "2026-08-18T01:39:34.023Z"
+    },
+    {
+      "key": "word::indian",
+      "id": "rg_word_indian",
+      "word": "indian",
+      "entryType": "word",
+      "deletedAt": "2026-08-18T01:41:02.448Z"
+    },
+    {
+      "key": "word::airport",
+      "id": "rg_word_airport",
+      "word": "airport",
+      "entryType": "word",
+      "deletedAt": "2026-08-18T01:50:02.782Z"
+    },
+    {
+      "key": "word::breakfast",
+      "id": "rg_word_breakfast",
+      "word": "breakfast",
+      "entryType": "word",
+      "deletedAt": "2026-08-18T01:51:14.417Z"
+    },
+    {
+      "key": "word::october",
+      "id": "rg_word_october",
+      "word": "october",
+      "entryType": "word",
+      "deletedAt": "2026-08-18T02:08:42.139Z"
+    },
+    {
+      "key": "phrase::sixth form",
+      "id": "rg_phrase_sixth_form",
+      "word": "sixth form",
+      "entryType": "phrase",
+      "deletedAt": "2026-08-18T02:11:34.060Z"
+    },
+    {
+      "key": "phrase::on site",
+      "id": "rg_phrase_on_site",
+      "word": "on site",
+      "entryType": "phrase",
+      "deletedAt": "2026-08-18T02:11:34.060Z"
+    },
+    {
+      "key": "word::saturday",
+      "id": "rg_word_saturday",
+      "word": "saturday",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T16:55:44.945Z"
+    },
+    {
+      "key": "word::sydney",
+      "id": "rg_word_sydney",
+      "word": "sydney",
+      "entryType": "word",
+      "deletedAt": "2026-08-27T03:41:22.725Z"
+    },
+    {
+      "key": "word::scotland",
+      "id": "rg_word_scotland",
+      "word": "scotland",
+      "entryType": "word",
+      "deletedAt": "2026-08-27T18:30:07.366Z"
+    },
+    {
+      "key": "word::don'ts",
+      "id": "rg_word_don_ts",
+      "word": "don'ts",
+      "entryType": "word",
+      "deletedAt": "2026-08-27T18:38:33.280Z"
+    },
+    {
+      "key": "word::five-day",
+      "id": "rg_word_five_day",
+      "word": "five-day",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T09:24:40.538Z"
+    },
+    {
+      "key": "word::french",
+      "id": "rg_word_french",
+      "word": "french",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T11:31:23.946Z"
+    },
+    {
+      "key": "word::nineteenth",
+      "id": "rg_word_nineteenth",
+      "word": "nineteenth",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T11:41:25.044Z"
+    },
+    {
+      "key": "word::spanish",
+      "id": "rg_word_spanish",
+      "word": "spanish",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T12:01:39.579Z"
+    },
+    {
+      "key": "word::dear",
+      "id": "rg_word_dear",
+      "word": "dear",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T12:04:07.455Z"
+    },
+    {
+      "key": "word::france",
+      "id": "rg_word_france",
+      "word": "france",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T12:04:19.405Z"
+    },
+    {
+      "key": "word::glue",
+      "id": "rg_word_glue",
+      "word": "glue",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T12:04:22.677Z"
+    },
+    {
+      "key": "word::thailand",
+      "id": "rg_word_thailand",
+      "word": "thailand",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T16:05:09.713Z"
+    },
+    {
+      "key": "word::asap",
+      "id": "rg_word_asap",
+      "word": "asap",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T16:05:38.404Z"
+    },
+    {
+      "key": "word::cctv",
+      "id": "rg_word_cctv",
+      "word": "CCTV",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T16:22:17.684Z"
+    },
+    {
+      "key": "word::plc",
+      "id": "rg_word_plc",
+      "word": "PLC",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T16:22:23.298Z"
+    },
+    {
+      "key": "word::saturdays",
+      "id": "rg_word_saturdays",
+      "word": "saturdays",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T16:55:45.825Z"
+    },
+    {
+      "key": "phrase::can do",
+      "id": "rg_phrase_can_do",
+      "word": "can do",
+      "entryType": "phrase",
+      "deletedAt": "2026-08-28T16:56:50.632Z"
+    },
+    {
+      "key": "phrase::for them",
+      "id": "rg_phrase_for_them",
+      "word": "for them",
+      "entryType": "phrase",
+      "deletedAt": "2026-08-28T16:59:36.431Z"
+    },
+    {
+      "key": "word::nintroduce",
+      "id": "rg_word_nintroduce",
+      "word": "nintroduce",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::nhighlight",
+      "id": "rg_word_nhighlight",
+      "word": "nhighlight",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::noverhead",
+      "id": "rg_word_noverhead",
+      "word": "noverhead",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::nprovide",
+      "id": "rg_word_nprovide",
+      "word": "nprovide",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::nrepetitive",
+      "id": "rg_word_nrepetitive",
+      "word": "nrepetitive",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::nslippery",
+      "id": "rg_word_nslippery",
+      "word": "nslippery",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::ntransporting",
+      "id": "rg_word_ntransporting",
+      "word": "ntransporting",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
+    },
+    {
+      "key": "word::nunsuitable",
+      "id": "rg_word_nunsuitable",
+      "word": "nunsuitable",
+      "entryType": "word",
+      "deletedAt": "2026-08-28T17:05:16.311Z"
     }
   ]
 }

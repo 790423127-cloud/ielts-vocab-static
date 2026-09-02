@@ -1,7 +1,7 @@
 {
   "version": 1,
   "datasetVersion": "reading-g-core-v3",
-  "count": 647,
+  "count": 657,
   "generatedWith": "deepseek-v4-flash",
   "repairs": [
     {
@@ -9,8 +9,8 @@
       "word": "cost-effective",
       "entryType": "word",
       "meaningZh": "成本效益高的；划算的",
-      "example": "Buying in bulk is more cost-effective for the office.",
-      "exampleCn": "批量购买对办公室来说更划算。",
+      "example": "Solar panels are a cost-effective way to reduce electricity bills.",
+      "exampleCn": "太阳能电池板是降低电费的一种划算方式。",
       "source": "deepseek-editorial-v1"
     },
     {
@@ -27,8 +27,8 @@
       "word": "hoodie",
       "entryType": "word",
       "meaningZh": "连帽衫",
-      "example": "She bought a grey hoodie from the department store.",
-      "exampleCn": "她从百货商店买了一件灰色连帽衫。",
+      "example": "He wore a grey hoodie and jeans to the casual party.",
+      "exampleCn": "他穿着灰色连帽衫和牛仔裤去参加休闲派对。",
       "source": "deepseek-editorial-v1"
     },
     {
@@ -288,8 +288,8 @@
       "word": "lastly",
       "entryType": "word",
       "meaningZh": "最后一点",
-      "example": "Lastly, please remember to sign the form.",
-      "exampleCn": "最后一点，请记得在表格上签字。",
+      "example": "Lastly, I would like to thank all the volunteers for their hard work.",
+      "exampleCn": "最后，我想感谢所有志愿者的辛勤工作。",
       "source": "deepseek-editorial-v1"
     },
     {
@@ -3789,8 +3789,8 @@
       "word": "answer",
       "entryType": "word",
       "meaningZh": "回答；答案",
-      "example": "Please write your answer in the space provided.",
-      "exampleCn": "请把你的答案写在提供的空白处。",
+      "example": "The answer to the first question is quite simple.",
+      "exampleCn": "第一个问题的答案相当简单。",
       "source": "deepseek-editorial-v1"
     },
     {
@@ -4608,8 +4608,8 @@
       "word": "improbable",
       "entryType": "word",
       "meaningZh": "不太可能的",
-      "example": "It is improbable that the package will arrive today.",
-      "exampleCn": "包裹今天到达的可能性不大。",
+      "example": "It is improbable that the meeting will be cancelled.",
+      "exampleCn": "会议被取消的可能性不大。",
       "source": "deepseek-editorial-v1"
     },
     {
@@ -5103,8 +5103,8 @@
       "word": "over",
       "entryType": "word",
       "meaningZh": "在...上方；超过",
-      "example": "The bridge goes over the river.",
-      "exampleCn": "这座桥横跨河流。",
+      "example": "The plane flew over the mountains.",
+      "exampleCn": "飞机飞越了群山。",
       "source": "deepseek-editorial-v1"
     },
     {
@@ -5436,8 +5436,8 @@
       "word": "sooner",
       "entryType": "word",
       "meaningZh": "更快地",
-      "example": "Please reply sooner rather than later.",
-      "exampleCn": "请尽早回复，不要拖延。",
+      "example": "The sooner we leave, the sooner we will arrive.",
+      "exampleCn": "我们越早出发，就越早到达。",
       "source": "deepseek-editorial-v1"
     },
     {
@@ -5823,9 +5823,99 @@
       "word": "year-round",
       "entryType": "word",
       "meaningZh": "全年的；全年地",
-      "example": "The pool is heated and open year-round.",
-      "exampleCn": "游泳池是恒温的，全年开放。",
+      "example": "The resort offers year-round activities for tourists.",
+      "exampleCn": "这个度假胜地为游客提供全年活动。",
       "source": "deepseek-editorial-v1"
+    },
+    {
+      "id": "rg_phrase_cope_with",
+      "word": "cope with",
+      "entryType": "phrase",
+      "meaningZh": "应付；处理",
+      "example": "He tries to cope with stress by walking every day.",
+      "exampleCn": "他每天散步来应对压力。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_assemble",
+      "word": "assemble",
+      "entryType": "word",
+      "meaningZh": "装配；集合",
+      "example": "He will assemble the toy for his son.",
+      "exampleCn": "他会为儿子组装这个玩具。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_imperative",
+      "word": "imperative",
+      "entryType": "word",
+      "meaningZh": "必要的；紧迫的",
+      "example": "It is imperative to drink water every day.",
+      "exampleCn": "每天喝水很有必要。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_municipal",
+      "word": "municipal",
+      "entryType": "word",
+      "meaningZh": "市政的；市立的",
+      "example": "The municipal library is open every day.",
+      "exampleCn": "市立图书馆每天开放。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_oppose",
+      "word": "oppose",
+      "entryType": "word",
+      "meaningZh": "反对；抵制",
+      "example": "He opposes the new law.",
+      "exampleCn": "他反对这项新法律。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_patience",
+      "word": "patience",
+      "entryType": "word",
+      "meaningZh": "耐心；忍耐",
+      "example": "He showed patience while waiting for the bus.",
+      "exampleCn": "他等公交车时表现得很有耐心。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_practitioner",
+      "word": "practitioner",
+      "entryType": "word",
+      "meaningZh": "从业者；执业人员",
+      "example": "He is a medical practitioner who helps patients every day.",
+      "exampleCn": "他是一名每天为患者提供帮助的医务从业者。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_refine",
+      "word": "refine",
+      "entryType": "word",
+      "meaningZh": "改进；精炼",
+      "example": "He refines his writing every day.",
+      "exampleCn": "他每天打磨自己的写作。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_robot",
+      "word": "robot",
+      "entryType": "word",
+      "meaningZh": "机器人",
+      "example": "The robot cleans the floor every day.",
+      "exampleCn": "机器人每天清洁地板。",
+      "source": "manual-reading-g-integrity-v1"
+    },
+    {
+      "id": "rg_word_supersede",
+      "word": "supersede",
+      "entryType": "word",
+      "meaningZh": "取代；替代",
+      "example": "The new law will supersede the old one.",
+      "exampleCn": "新法律将取代旧法律。",
+      "source": "manual-reading-g-integrity-v1"
     }
   ]
 }

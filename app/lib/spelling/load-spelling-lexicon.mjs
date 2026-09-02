@@ -118,7 +118,8 @@ export function primeSpellingLexiconCache(headwords = [], options = {}) {
 
   const merged = mergeSpellingLexicon(words, [], {
     headwordVersion: String(options.headwordVersion || options.version || "home-runtime"),
-    phraseVersion: ""
+    phraseVersion: "",
+    contentHash: String(options.contentHash || "")
   });
   spellingLexiconCache.set("word", merged);
   return merged;

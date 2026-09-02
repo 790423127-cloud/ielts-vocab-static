@@ -448,14 +448,30 @@
 }
 
 .rgMetaTitle {
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: calc(12px * var(--font-scale, 1));
   font-weight: 800;
   color: #5f6d7c;
-  margin: 0 0 8px;
+  margin: 13px 0 7px;
+}
+
+.rgMetaTitle:first-child {
+  margin-top: 0;
+}
+
+.rgMetaTitle::before {
+  width: 3px;
+  height: calc(12px * var(--font-scale, 1));
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #6c9b8f;
+  content: "";
 }
 
 .rgMetaLine {
-  font-size: 13px;
+  font-size: calc(13px * var(--font-scale, 1));
   line-height: 1.5;
   color: #304257;
   margin: 0 0 4px;
@@ -472,49 +488,23 @@
 .rgTag {
   display: inline-flex;
   align-items: center;
-  height: 24px;
-  padding: 0 9px;
+  max-width: 100%;
+  min-height: 24px;
+  padding: 4px 9px;
   border-radius: 999px;
   background: rgba(231, 242, 238, 0.9);
   border: 1px solid rgba(47, 107, 93, 0.12);
   color: #2f6b5d;
-  font-size: 11px;
+  font-size: calc(11px * var(--font-scale, 1));
   font-weight: 750;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .rgTagNeutral {
   background: rgba(247, 248, 250, 0.95);
   border-color: #e2e8f0;
   color: #596777;
-}
-
-.rgParaItem {
-  margin: 0 0 8px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: rgba(255, 253, 249, 0.9);
-  border: 1px solid #efe7dc;
-  font-size: 12px;
-  line-height: 1.45;
-  color: #304257;
-}
-
-.rgParaActions {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.rgParaActions button {
-  height: 26px;
-  padding: 0 10px;
-  border-radius: 999px;
-  border: 1px solid #ece3d8;
-  background: #fff;
-  color: #2f6b5d;
-  font-size: 11px;
-  font-weight: 750;
-  cursor: pointer;
 }
 
 /* 移动端方案A：两行，总高度 ≤88px */
@@ -551,6 +541,15 @@
     font-size: 12px;
   }
 
+}
+
+@media (max-width: 760px) {
+  :global(.menu-panel.wide).rgLibraryPanel {
+    left: 10px;
+    right: 10px;
+    width: auto;
+    padding: 14px;
+  }
 }
 
 /* reading-g 正文仅两列搭配，避免第三格空位（需配合本地 class 使用） */

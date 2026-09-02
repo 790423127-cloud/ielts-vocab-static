@@ -7,7 +7,7 @@ import {
 } from "./progress-schema.mjs";
 import {
   buildEligibilityWordMap,
-  isInflectedReferenceWord,
+  isBrushableWord,
   resolveBrushableWord,
   resolveBrushableWordIndex
 } from "./word-study-eligibility.mjs";
@@ -255,7 +255,7 @@ export function resolveCurrentStudyItem({
 
   if (!Array.isArray(words)) return null;
   const current = words[index] || null;
-  if (!isInflectedReferenceWord(current)) return current;
+  if (isBrushableWord(current)) return current;
   return resolveBrushableWord(current, buildEligibilityWordMap(words));
 }
 

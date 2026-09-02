@@ -6,6 +6,7 @@
 import {
   READING_G_MIGRATION_KEY,
   READING_G_MIGRATION_V4_KEY,
+  READING_G_MIGRATION_V5_KEY,
   READING_G_PARAPHRASE_STATUS_KEY,
   READING_G_STATUS_KEY,
   READING_G_STATUS_KEY_V1,
@@ -16,7 +17,11 @@ import { normalizeReadingGKey } from "./normalize.mjs";
 import {
   getEntryProgressKey,
   normalizeStatusEntry,
-  serializeStatusMap
+  readRgPositions,
+  readRgSession,
+  serializeStatusMap,
+  writeRgPositions,
+  writeRgSession
 } from "./storage.mjs";
 
 function safeGet(key) {
@@ -366,16 +371,98 @@ export function migrateReadingGProgressV4(items) {
   };
 }
 
-/** Convenience: run v3 then v4 */
+/**
+ * One-shot v5 remap after reference-only G surface forms are compacted into
+ * their master headwords.  This deliberately runs even for users who already
+ * completed v4, because their old status keys may be ids of removed cards.
+ */
+export function migrateReadingGProgressV5(items) {
+  if (typeof window === "undefined") {
+    return {
+      migrated: false,
+      alreadyDone: true,
+      matchedCount: 0,
+      unmatchedCount: 0,
+      ambiguousCount: 0,
+      newEntryCount: 0
+    };
+  }
+
+  const flag = safeGet(READING_G_MIGRATION_V5_KEY);
+  if (flag && (flag.completed === true || flag === "completed")) {
+    return {
+      migrated: false,
+      alreadyDone: true,
+      matchedCount: flag.matchedCount || 0,
+      unmatchedCount: flag.unmatchedCount || 0,
+      ambiguousCount: flag.ambiguousCount || 0,
+      newEntryCount: flag.newEntryCount || 0,
+      migrationWarnings: flag.migrationWarnings || []
+    };
+  }
+
+  const raw = safeGet(READING_G_STATUS_KEY) || {};
+  const remapped = remapStatusToStableKeys(raw, items);
+  const paraphrases = raw.paraphrases || safeGet(READING_G_PARAPHRASE_STATUS_KEY) || {};
+  safeSet(READING_G_STATUS_KEY, serializeStatusMap(remapped.entries, paraphrases));
+  safeSet(READING_G_PARAPHRASE_STATUS_KEY, paraphrases);
+
+  const index = buildItemKeyIndex(items);
+  const resolveNavigationKey = (rawKey) => {
+    const key = String(rawKey || "").trim();
+    if (!key) return "";
+    const item = index.byId.get(key)
+      || index.byMerge.get(key)
+      || (() => {
+        const matches = index.byNorm.get(normalizeReadingGKey(key)) || [];
+        return matches.length === 1 ? matches[0] : null;
+      })();
+    return item ? getEntryProgressKey(item) : key;
+  };
+  const oldPositions = readRgPositions();
+  const nextPositions = {};
+  let remappedNavigationCount = 0;
+  for (const [filter, rawKey] of Object.entries(oldPositions || {})) {
+    const key = resolveNavigationKey(rawKey);
+    if (key !== rawKey) remappedNavigationCount += 1;
+    nextPositions[filter] = key;
+  }
+  writeRgPositions(nextPositions);
+  const oldSession = readRgSession();
+  if (oldSession && typeof oldSession === "object" && oldSession.wordKey) {
+    const wordKey = resolveNavigationKey(oldSession.wordKey);
+    if (wordKey !== oldSession.wordKey) remappedNavigationCount += 1;
+    writeRgSession({ ...oldSession, wordKey });
+  }
+
+  const result = {
+    completed: true,
+    at: new Date().toISOString(),
+    reason: "remapped_compacted_reference_forms",
+    progressSchemaVersion: PROGRESS_SCHEMA_VERSION,
+    matchedCount: remapped.matchedCount,
+    unmatchedCount: remapped.unmatchedCount,
+    ambiguousCount: remapped.ambiguousCount,
+    newEntryCount: remapped.newEntryCount,
+    remappedNavigationCount,
+    migrationWarnings: remapped.migrationWarnings
+  };
+  safeSet(READING_G_MIGRATION_V5_KEY, result);
+  return { migrated: true, alreadyDone: false, ...result };
+}
+
+/** Convenience: run v3, v4, then the compacted-form v5 remap. */
 export function migrateReadingGProgress(items) {
   const v3 = migrateReadingGProgressV3(items);
   const v4 = migrateReadingGProgressV4(items);
+  const v5 = migrateReadingGProgressV5(items);
   return {
     v3,
     v4,
-    matched: v4.matchedCount ?? v3.matched ?? 0,
-    skipped: v4.unmatchedCount ?? v3.skipped ?? 0,
-    migrated: Boolean(v3.migrated || v4.migrated),
-    ambiguousCount: v4.ambiguousCount || 0
+    v5,
+    matched: v5.matchedCount ?? v4.matchedCount ?? v3.matched ?? 0,
+    skipped: v5.unmatchedCount ?? v4.unmatchedCount ?? v3.skipped ?? 0,
+    migrated: Boolean(v3.migrated || v4.migrated || v5.migrated),
+    ambiguousCount: v5.ambiguousCount || v4.ambiguousCount || 0
   };
 }

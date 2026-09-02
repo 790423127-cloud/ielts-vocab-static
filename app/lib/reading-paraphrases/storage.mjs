@@ -1,8 +1,9 @@
-import { safeLocalStorageGet, safeLocalStorageSet } from "../browser-storage.mjs";
+import { safeLocalStorageGet, safeLocalStorageRemove, safeLocalStorageSet } from "../browser-storage.mjs";
 
 export const READING_PARAPHRASE_STORAGE_KEY = "ielts_reading_paraphrases_v1";
 export const READING_PARAPHRASE_ROLLBACK_KEY = "ielts_reading_paraphrases_rollback_v1";
 export const READING_PARAPHRASE_SCHEMA_VERSION = 1;
+export const READING_PARAPHRASE_ROLLBACK_VERSION = 2;
 export const READING_PARAPHRASE_DIRECTION = {
   QUESTION_TO_SOURCE: "question-to-source",
   SOURCE_TO_QUESTION: "source-to-question",
@@ -245,25 +246,45 @@ export function mergeReadingParaphraseCloudState(localInput, remoteInput) {
   };
 }
 
+export const READING_PARAPHRASE_INDEXED_DB_NAME = "ielts-reading-paraphrases-v1";
+const READING_PARAPHRASE_INDEXED_DB_VERSION = 1;
+const READING_PARAPHRASE_INDEXED_DB_STORE = "notebook";
+const READING_PARAPHRASE_INDEXED_DB_SNAPSHOT_KEY = "snapshot";
+const READING_PARAPHRASE_INDEXED_DB_ROLLBACK_KEY = "rollback";
+
+function hydrateParaphraseState(parsed) {
+  if (!parsed || typeof parsed !== "object") return createReadingParaphraseState();
+  const merged = mergeReadingParaphraseState(
+    createReadingParaphraseState(),
+    parsed.items || [],
+    parsed.updatedAt
+  ).state;
+  return {
+    ...merged,
+    direction: Object.values(READING_PARAPHRASE_DIRECTION).includes(parsed.direction)
+      ? parsed.direction
+      : merged.direction,
+    positions: parsed.positions && typeof parsed.positions === "object"
+      ? parsed.positions
+      : {},
+    updatedAt: Number(parsed.updatedAt || merged.updatedAt || 0)
+  };
+}
+
+function serializeParaphraseState(state) {
+  return {
+    ...createReadingParaphraseState(),
+    ...state,
+    schemaVersion: READING_PARAPHRASE_SCHEMA_VERSION,
+    updatedAt: Number(state?.updatedAt || Date.now())
+  };
+}
+
 export function loadReadingParaphraseState() {
   const raw = safeLocalStorageGet(READING_PARAPHRASE_STORAGE_KEY);
   if (!raw) return createReadingParaphraseState();
   try {
-    const parsed = JSON.parse(raw);
-    const merged = mergeReadingParaphraseState(
-      createReadingParaphraseState(),
-      parsed.items || [],
-      parsed.updatedAt
-    ).state;
-    return {
-      ...merged,
-      direction: Object.values(READING_PARAPHRASE_DIRECTION).includes(parsed.direction)
-        ? parsed.direction
-        : merged.direction,
-      positions: parsed.positions && typeof parsed.positions === "object"
-        ? parsed.positions
-        : {}
-    };
+    return hydrateParaphraseState(JSON.parse(raw));
   } catch {
     return createReadingParaphraseState();
   }
@@ -272,24 +293,215 @@ export function loadReadingParaphraseState() {
 export function saveReadingParaphraseState(state) {
   return safeLocalStorageSet(
     READING_PARAPHRASE_STORAGE_KEY,
-    JSON.stringify({
-      ...createReadingParaphraseState(),
-      ...state,
-      schemaVersion: READING_PARAPHRASE_SCHEMA_VERSION,
-      updatedAt: Number(state?.updatedAt || Date.now())
-    })
+    JSON.stringify(serializeParaphraseState(state))
   );
 }
 
-export function saveReadingParaphraseStateWithBackup(state, previousState) {
-  const backupSaved = safeLocalStorageSet(
-    READING_PARAPHRASE_ROLLBACK_KEY,
-    JSON.stringify({
+function paraphraseRollbackId(item = {}) {
+  return text(item.pairKey)
+    || readingParaphrasePairKey(item.questionPhrase, item.sourcePhrase)
+    || text(item.id);
+}
+
+function hasUniqueParaphraseRollbackIds(items) {
+  const ids = items.map(paraphraseRollbackId);
+  return ids.every(Boolean) && new Set(ids).size === ids.length;
+}
+
+export function buildReadingParaphraseRollback(state, previousState, now = Date.now()) {
+  const nextItems = Array.isArray(state?.items) ? state.items : [];
+  const previousItems = Array.isArray(previousState?.items) ? previousState.items : [];
+  if (
+    !hasUniqueParaphraseRollbackIds(nextItems)
+    || !hasUniqueParaphraseRollbackIds(previousItems)
+  ) {
+    return {
       ...createReadingParaphraseState(),
       ...(previousState || {}),
       schemaVersion: READING_PARAPHRASE_SCHEMA_VERSION,
-      backedUpAt: Date.now()
-    })
+      kind: "snapshot",
+      backedUpAt: now
+    };
+  }
+
+  const nextById = new Map(nextItems.map((item) => [paraphraseRollbackId(item), item]));
+  const previousEntries = previousItems.filter((item) => {
+    const nextItem = nextById.get(paraphraseRollbackId(item));
+    return !nextItem || JSON.stringify(nextItem) !== JSON.stringify(item);
+  });
+  return {
+    schemaVersion: READING_PARAPHRASE_SCHEMA_VERSION,
+    rollbackVersion: READING_PARAPHRASE_ROLLBACK_VERSION,
+    kind: "delta",
+    backedUpAt: now,
+    previousOrder: previousItems.map(paraphraseRollbackId),
+    previousEntries,
+    previousDirection: previousState?.direction || READING_PARAPHRASE_DIRECTION.QUESTION_TO_SOURCE,
+    previousPositions: previousState?.positions && typeof previousState.positions === "object"
+      ? previousState.positions
+      : {},
+    previousUpdatedAt: Number(previousState?.updatedAt || 0)
+  };
+}
+
+export function restoreReadingParaphraseRollback(currentState, rollback) {
+  if (Array.isArray(rollback?.items)) return rollback;
+  if (
+    rollback?.kind !== "delta"
+    || !Array.isArray(rollback.previousOrder)
+    || !Array.isArray(rollback.previousEntries)
+  ) {
+    return null;
+  }
+  const currentItems = Array.isArray(currentState?.items) ? currentState.items : [];
+  if (
+    !hasUniqueParaphraseRollbackIds(currentItems)
+    || !hasUniqueParaphraseRollbackIds(rollback.previousEntries)
+  ) {
+    return null;
+  }
+  const currentById = new Map(currentItems.map((item) => [paraphraseRollbackId(item), item]));
+  const previousById = new Map(
+    rollback.previousEntries.map((item) => [paraphraseRollbackId(item), item])
   );
-  return backupSaved && saveReadingParaphraseState(state);
+  const items = rollback.previousOrder.map((id) => previousById.get(id) || currentById.get(id));
+  if (!items.every(Boolean)) return null;
+  return {
+    schemaVersion: READING_PARAPHRASE_SCHEMA_VERSION,
+    items,
+    direction: rollback.previousDirection,
+    positions: rollback.previousPositions || {},
+    updatedAt: Number(rollback.previousUpdatedAt || 0)
+  };
+}
+
+function isIndexedDbAvailable() {
+  return typeof window !== "undefined" && typeof window.indexedDB?.open === "function";
+}
+
+function openParaphraseIndexedDb() {
+  if (!isIndexedDbAvailable()) {
+    return Promise.reject(new Error("当前浏览器未提供 IndexedDB"));
+  }
+  return new Promise((resolve, reject) => {
+    const request = window.indexedDB.open(
+      READING_PARAPHRASE_INDEXED_DB_NAME,
+      READING_PARAPHRASE_INDEXED_DB_VERSION
+    );
+    request.onupgradeneeded = () => {
+      const database = request.result;
+      if (!database.objectStoreNames.contains(READING_PARAPHRASE_INDEXED_DB_STORE)) {
+        database.createObjectStore(READING_PARAPHRASE_INDEXED_DB_STORE);
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("IndexedDB 打开失败"));
+    request.onblocked = () => reject(new Error("IndexedDB 被其他页面占用"));
+  });
+}
+
+function indexedDbRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("IndexedDB 请求失败"));
+  });
+}
+
+function indexedDbTransactionDone(transaction) {
+  return new Promise((resolve, reject) => {
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error || new Error("IndexedDB 写入失败"));
+    transaction.onabort = () => reject(transaction.error || new Error("IndexedDB 写入已中止"));
+  });
+}
+
+async function readParaphraseIndexedDbState() {
+  const database = await openParaphraseIndexedDb();
+  try {
+    const transaction = database.transaction(READING_PARAPHRASE_INDEXED_DB_STORE, "readonly");
+    const store = transaction.objectStore(READING_PARAPHRASE_INDEXED_DB_STORE);
+    const done = indexedDbTransactionDone(transaction);
+    const [snapshot, rollback] = await Promise.all([
+      indexedDbRequest(store.get(READING_PARAPHRASE_INDEXED_DB_SNAPSHOT_KEY)),
+      indexedDbRequest(store.get(READING_PARAPHRASE_INDEXED_DB_ROLLBACK_KEY))
+    ]);
+    await done;
+    return {
+      snapshot: snapshot ? hydrateParaphraseState(snapshot) : null,
+      rollback: rollback || null
+    };
+  } finally {
+    database.close();
+  }
+}
+
+async function writeParaphraseIndexedDb(snapshot, rollback) {
+  const database = await openParaphraseIndexedDb();
+  try {
+    const transaction = database.transaction(READING_PARAPHRASE_INDEXED_DB_STORE, "readwrite");
+    const store = transaction.objectStore(READING_PARAPHRASE_INDEXED_DB_STORE);
+    const done = indexedDbTransactionDone(transaction);
+    if (snapshot) store.put(snapshot, READING_PARAPHRASE_INDEXED_DB_SNAPSHOT_KEY);
+    if (rollback) store.put(rollback, READING_PARAPHRASE_INDEXED_DB_ROLLBACK_KEY);
+    await done;
+  } finally {
+    database.close();
+  }
+}
+
+function writeLocalParaphraseRollback(rollback) {
+  const payload = JSON.stringify(rollback);
+  safeLocalStorageRemove(READING_PARAPHRASE_ROLLBACK_KEY);
+  return safeLocalStorageSet(READING_PARAPHRASE_ROLLBACK_KEY, payload);
+}
+
+export function saveReadingParaphraseRollback(state, previousState) {
+  return writeLocalParaphraseRollback(buildReadingParaphraseRollback(state, previousState));
+}
+
+export async function persistReadingParaphraseRollback(state, previousState) {
+  const rollback = buildReadingParaphraseRollback(state, previousState);
+  const localOk = writeLocalParaphraseRollback(rollback);
+  try {
+    await writeParaphraseIndexedDb(null, rollback);
+    return true;
+  } catch {
+    return localOk;
+  }
+}
+
+export async function persistReadingParaphraseState(state, previousState = null) {
+  const snapshot = serializeParaphraseState(state);
+  const rollback = previousState
+    ? buildReadingParaphraseRollback(state, previousState)
+    : null;
+  let indexedOk = false;
+  try {
+    await writeParaphraseIndexedDb(snapshot, rollback);
+    indexedOk = true;
+  } catch {
+    indexedOk = false;
+  }
+  if (rollback) writeLocalParaphraseRollback(rollback);
+  const localOk = saveReadingParaphraseState(snapshot);
+  return indexedOk || localOk;
+}
+
+export async function loadPersistedReadingParaphraseState() {
+  const local = loadReadingParaphraseState();
+  try {
+    const indexed = await readParaphraseIndexedDbState();
+    const snapshot = indexed.snapshot;
+    if (snapshot && Number(snapshot.updatedAt || 0) >= Number(local.updatedAt || 0) && snapshot.items) {
+      return snapshot;
+    }
+  } catch {
+    // Fall back to localStorage when IndexedDB is blocked or unavailable.
+  }
+  return local;
+}
+
+export function saveReadingParaphraseStateWithBackup(state, previousState) {
+  return saveReadingParaphraseRollback(state, previousState)
+    && saveReadingParaphraseState(state);
 }

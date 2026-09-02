@@ -9,7 +9,9 @@ import {
   canGenerateFormsFromHeadword,
   isBrushableWord,
   isInflectedReferenceWord,
+  isReferenceWord,
   resolveBrushableWord,
+  findWordSearchMatches,
   resolveWordSearchTarget
 } from "../word-study-eligibility.mjs";
 import {
@@ -17,6 +19,7 @@ import {
   buildLocalExactDedupeResult,
   buildLocalOptimizeResult,
   generateInflectedForms,
+  getFormChineseType,
   getDisplayForms,
   LOCAL_LEXICON_ORGANIZATION_POLICY,
   normalizeFormList,
@@ -44,6 +47,7 @@ import {
   MASTER_LEXICON_EXPECTED_COUNT,
   MASTER_LEXICON_SHA256
 } from "../master-lexicon-baseline.mjs";
+import { classifySurfaceInflection } from "../word-surface-morphology.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 const CACHE_PATH = path.join(ROOT, ".static-export-cache", "words.json");
@@ -56,7 +60,8 @@ const meaningPayload = JSON.parse(fs.readFileSync(MEANING_PATH));
 const retirementPayload = JSON.parse(fs.readFileSync(RETIREMENTS_PATH));
 const words = payload.words;
 const wordMap = buildEligibilityWordMap(words);
-const refs = words.filter(isInflectedReferenceWord);
+const refs = words.filter(isReferenceWord);
+const inflectedRefs = words.filter(isInflectedReferenceWord);
 const brushable = words.filter(isBrushableWord);
 const normalizeWord = (value) => String(value || "").trim().toLowerCase();
 const everything = { type: "everything", value: "" };
@@ -82,9 +87,9 @@ test("physical records partition into brushable cards and audited references", (
   assert.equal(refs.length + brushable.length, words.length);
 });
 
-test("every pure inflected reference resolves to a brushable base", () => {
+test("every reference resolves to a brushable base", () => {
   for (const entry of refs) {
-    assert.equal(entry.readingPriority, false, entry.word);
+    assert.notEqual(entry.readingPriority, true, entry.word);
     assert.ok(entry.baseWord, entry.word);
     assert.ok(entry.baseWordId, entry.word);
     assert.equal(entry.redirectToWord, entry.baseWord, entry.word);
@@ -92,10 +97,26 @@ test("every pure inflected reference resolves to a brushable base", () => {
     assert.ok(base, entry.word);
     assert.equal(base.id, entry.baseWordId, entry.word);
     assert.equal(isBrushableWord(base), true, entry.word);
+    assert.equal(resolveWordSearchTarget(words, entry.word)?.target?.id, base.id, entry.word);
+  }
+});
+
+test("pure inflected references are owned by their canonical form lists", () => {
+  for (const entry of inflectedRefs.filter((candidate) => candidate.entryType === "inflected-form")) {
     const owners = words.filter((candidate) => (candidate.forms || []).some((form) => form.id === entry.id));
     assert.equal(owners.length, 1, entry.word);
-    assert.equal(owners[0].id, base.id, entry.word);
+    assert.equal(owners[0].id, entry.baseWordId, entry.word);
   }
+});
+
+test("spelling-variant references never enter study queues", () => {
+  const entry = wordMap.get("leed");
+  assert.equal(entry.relationType, "spelling variant");
+  assert.equal(isReferenceWord(entry), true);
+  assert.equal(isBrushableWord(entry), false);
+  assert.equal(resolveWordSearchTarget(words, "leed")?.target?.word, "lead");
+  assert.deepEqual(buildRgStudyList([entry, wordMap.get("lead")], everything, {}).map((row) => row.entry.word), ["lead"]);
+  assert.deepEqual(buildBasicStudyList([entry, wordMap.get("lead")], everything, {}).map((row) => row.entry.word), ["lead"]);
 });
 
 test("the invalid neff record is absent", () => {
@@ -127,6 +148,22 @@ test("searching conducted redirects to conduct", () => {
   assert.equal(result.source.word, "conducted");
   assert.equal(result.target.word, "conduct");
   assert.equal(result.redirected, true);
+});
+
+test("global search ranks exact headwords before broad matches and searches meanings", () => {
+  const searchWords = [
+    { word: "survey", meaning: "调查" },
+    { word: "surveys", meaning: "调查问卷" },
+    { word: "questionnaire", meaning: "调查表" },
+    { word: "poll", synonyms: ["survey"] }
+  ];
+
+  const exact = findWordSearchMatches(searchWords, "surveys");
+  assert.equal(exact[0].target.word, "surveys");
+  assert.equal(exact[0].matchField, "单词");
+
+  const meaning = findWordSearchMatches(searchWords, "调查表");
+  assert.deepEqual(meaning.map((result) => result.target.word), ["questionnaire"]);
 });
 
 test("legacy malformed headword aliases redirect to the surviving base card", () => {
@@ -219,6 +256,52 @@ test("runtime never invents suffix forms that were not audited into the lexicon"
   const synthetic = { word: "canvas", pos: "noun", forms: [] };
   assert.deepEqual(generateInflectedForms(synthetic, { wordMap }), []);
   assert.deepEqual(getDisplayForms(synthetic, { wordMap }), []);
+});
+
+test("local organization keeps validated display-only forms without creating duplicate cards", () => {
+  const base = {
+    id: "base-disqualify",
+    word: "disqualify",
+    forms: [
+      { word: "disqualifies", type: "third-person singular" },
+      { word: "disqualifying", type: "present participle / gerund" }
+    ],
+    wordFamily: []
+  };
+  const result = buildLocalFormFamilyResult([base]);
+  assert.deepEqual(result.words[0].forms.map((form) => form.word), ["disqualifies", "disqualifying"]);
+  assert.equal(result.stats.danglingFormsRemoved, 0);
+});
+
+test("local organization removes a display form owned by the wrong headword", () => {
+  const wrongOwner = {
+    id: "surface-disqualified",
+    word: "disqualified",
+    forms: [
+      { word: "disqualifies", type: "third-person singular" },
+      { word: "disqualifying", type: "present participle / gerund" }
+    ],
+    wordFamily: []
+  };
+  const result = buildLocalFormFamilyResult([wrongOwner]);
+  assert.deepEqual(result.words[0].forms, []);
+  assert.equal(result.stats.danglingFormsRemoved, 2);
+});
+
+test("form relation labels are consistently shown in Chinese", () => {
+  assert.equal(getFormChineseType("third-person singular"), "第三人称单数");
+  assert.equal(getFormChineseType("present participle / gerund"), "现在分词 / 动名词");
+  assert.equal(getFormChineseType("merged-form"), "相关词形");
+  assert.equal(getFormChineseType("merged-form", {
+    baseWord: "sister",
+    formWord: "sisters",
+    pos: "noun"
+  }), "复数形式");
+  assert.equal(getFormChineseType("merged-form", {
+    baseWord: "allow",
+    formWord: "allowed",
+    pos: "verb"
+  }), "过去式 / 过去分词");
 });
 
 test("local form normalization preserves audited ids, provenance, and every stored row", () => {
@@ -579,7 +662,9 @@ test("the audited stored-form graph has no self-links or dangling physical forms
     for (const form of entry.forms || []) {
       const pair = `${normalizeWord(entry.word)} -> ${normalizeWord(form.word)}`;
       assert.notEqual(normalizeWord(entry.word), normalizeWord(form.word), pair);
-      if (pair !== "earn -> earning") assert.ok(wordMap.has(normalizeWord(form.word)), pair);
+      if (!wordMap.has(normalizeWord(form.word))) {
+        assert.ok(classifySurfaceInflection(entry.word, form.word), pair);
+      }
     }
   }
 });

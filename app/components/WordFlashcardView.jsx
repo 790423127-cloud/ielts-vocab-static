@@ -13,6 +13,13 @@ import WordStudyOverview from "./WordStudyOverview";
 import WordStudyProgress from "./WordStudyProgress";
 import WordStudyWorkspace from "./WordStudyWorkspace";
 import { getWordStudyProgressLabel } from "../lib/vocab/word-study-overview.mjs";
+import { getStudyEntryDisplay } from "../lib/vocab/study-entry-display.mjs";
+import {
+  CURRENT_SYSTEM_SEARCH_REQUEST_EVENT,
+  CURRENT_SYSTEM_SEARCH_RESULTS_EVENT,
+  CURRENT_SYSTEM_SEARCH_RESULT_LIMIT,
+  CURRENT_SYSTEM_SEARCH_SELECT_EVENT
+} from "../lib/vocab/current-system-search.mjs";
 import { WORD_CARD_SWIPE_EVENT } from "../lib/vocab/word-flashcard-swipe.mjs";
 
 function getRelatedWords(item, displayFamily, activeWordPool) {
@@ -44,6 +51,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
   const [showInsight, setShowInsight] = useState(true);
   const [autoScrollActive, setAutoScrollActive] = useState(false);
   const [autoScrollSeconds, setAutoScrollSeconds] = useState(6);
+  const [currentSystemSearchRequest, setCurrentSystemSearchRequest] = useState(null);
   const libraryMenuRef = useRef(null);
   const pendingSearchRef = useRef("");
   const initialLibraryIntentHandledRef = useRef(false);
@@ -74,6 +82,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     search,
     setSearch,
     wordSearchResolution,
+    wordSearchMatches,
     jumpToWordSearchResult,
     selectLibraryWord,
     setLibraryFilter,
@@ -128,6 +137,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     wordOrderDifficultyAvailable,
     wordOrderDifficultyEnabled,
     wordOrderDifficultyProfile,
+    requestWordOrderDifficultyProfile,
     setWordOrderMode,
     setWordDifficultyMode,
     nextWord,
@@ -299,9 +309,26 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     const handleSearch = (event) => {
       const query = String(event.detail?.query || "").trim();
       if (!query) return;
+      setLibraryFilter("everything", "");
       setSearch(query);
       pendingSearchRef.current = query;
       openLibrary();
+    };
+    const handleCurrentSystemSearch = (event) => {
+      const query = String(event.detail?.query || "").trim();
+      const requestId = String(event.detail?.requestId || "").trim();
+      if (!query || !requestId) return;
+      setCurrentSystemSearchRequest({ query, requestId });
+      setSearch(query);
+    };
+    const handleCurrentSystemSelection = async (event) => {
+      if (event.detail?.provider !== "word-flash") return;
+      const targetIndex = Number(event.detail?.originalIndex);
+      if (!Number.isInteger(targetIndex)) return;
+      setCurrentSystemSearchRequest(null);
+      setSearch("");
+      await setLibraryFilter("everything", "");
+      selectLibraryWord(targetIndex);
     };
     const handleFilter = (event) => {
       const type = event.detail?.type;
@@ -311,6 +338,8 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
 
     window.addEventListener("ielts:open-library", openLibrary);
     window.addEventListener("ielts:search-word", handleSearch);
+    window.addEventListener(CURRENT_SYSTEM_SEARCH_REQUEST_EVENT, handleCurrentSystemSearch);
+    window.addEventListener(CURRENT_SYSTEM_SEARCH_SELECT_EVENT, handleCurrentSystemSelection);
     window.addEventListener("ielts:set-library-filter", handleFilter);
 
     // Query parameters are navigation intents, not persistent controlled state.
@@ -329,9 +358,32 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
     return () => {
       window.removeEventListener("ielts:open-library", openLibrary);
       window.removeEventListener("ielts:search-word", handleSearch);
+      window.removeEventListener(CURRENT_SYSTEM_SEARCH_REQUEST_EVENT, handleCurrentSystemSearch);
+      window.removeEventListener(CURRENT_SYSTEM_SEARCH_SELECT_EVENT, handleCurrentSystemSelection);
       window.removeEventListener("ielts:set-library-filter", handleFilter);
     };
-  }, [setLibraryFilter, setSearch]);
+  }, [selectLibraryWord, setLibraryFilter, setSearch]);
+
+  useEffect(() => {
+    if (!currentSystemSearchRequest) return;
+    if (search.trim().toLowerCase() !== currentSystemSearchRequest.query.toLowerCase()) return;
+    const results = wordSearchMatches.slice(0, CURRENT_SYSTEM_SEARCH_RESULT_LIMIT).map((match) => ({
+      key: `word-flash:${match.target.id || match.target.word}:${match.index}`,
+      provider: "word-flash",
+      originalIndex: match.index,
+      word: String(match.target.word || "").trim(),
+      meaning: getStudyEntryDisplay(match.target).meaning || "释义待补"
+    }));
+    window.dispatchEvent(new CustomEvent(CURRENT_SYSTEM_SEARCH_RESULTS_EVENT, {
+      detail: {
+        requestId: currentSystemSearchRequest.requestId,
+        query: currentSystemSearchRequest.query,
+        total: wordSearchMatches.length,
+        results
+      }
+    }));
+    setCurrentSystemSearchRequest(null);
+  }, [currentSystemSearchRequest, search, wordSearchMatches]);
 
   useEffect(() => {
     if (!pendingSearchRef.current || !wordSearchResolution?.target) return;
@@ -397,6 +449,10 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                   : `已找到 ${wordSearchResolution.target.word}。`}
               </span>
               <button type="button" className="chip-btn active" onClick={jumpToWordSearchResult}>跳转到 {wordSearchResolution.target.word}</button>
+            </div>
+          ) : search.trim() ? (
+            <div className="word-search-result" role="status">
+              <span>{wordSearchMatches.length ? `已在完整主词库中找到 ${wordSearchMatches.length} 条匹配，请从下方选择。` : `完整主词库中没有匹配“${search.trim()}”的词条。`}</span>
             </div>
           ) : null}
         </div>
@@ -524,6 +580,7 @@ export default function WordFlashcardView({ model, library, speech, admin, chrom
                   difficultyAvailable={wordOrderDifficultyAvailable}
                   difficultyEnabled={wordOrderDifficultyEnabled}
                   difficultyProfile={wordOrderDifficultyProfile}
+                  onDifficultyProfileRequest={requestWordOrderDifficultyProfile}
                 />
                 <div className={`auto-scroll-control${autoScrollActive ? " is-active" : ""}`}>
                   <button

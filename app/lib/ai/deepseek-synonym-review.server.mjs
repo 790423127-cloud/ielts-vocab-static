@@ -6,7 +6,8 @@ import {
 } from "./deepseek-word-profile.server.mjs";
 import {
   normalizeReadingGSynonymDetails,
-  normalizeReadingGSynonyms
+  normalizeReadingGSynonyms,
+  READING_G_SYNONYM_REVIEW_POLICY
 } from "../reading-g-vocab/synonym-relations.mjs";
 
 let cacheWriteQueue = Promise.resolve();
@@ -57,10 +58,10 @@ function timeoutStatus(error) {
 
 function reviewPrompt(items) {
   return [
-    "Return JSON only: {\\\"items\\\":[{\\\"input_id\\\":\\\"string\\\",\\\"word\\\":\\\"string\\\",\\\"synonyms\\\":[{\\\"word\\\":\\\"string\\\",\\\"pos\\\":\\\"string\\\",\\\"meaning_zh\\\":\\\"string\\\"}]}]}",
-    "For each IELTS reading word or phrase, return 0-4 common direct replacements for its supplied primary sense.",
-    "A replacement must be able to replace the input in that sense. Do not include related words, word-family forms, antonyms, the input itself, spelling/case/hyphen variants, British/American variants, or loose contextual associates. For a single-word input, return single-word replacements only. For a phrase or expression input, a direct common replacement may be a word or a phrase.",
-    "Every returned synonym must include its English part of speech and concise Chinese meaning for the current sense. Use an empty array if no safe common replacement with reliable Chinese meaning exists. Never add filler to reach four. Echo input_id and word exactly.",
+    "Return JSON only: {\\\"items\\\":[{\\\"input_id\\\":\\\"string\\\",\\\"word\\\":\\\"string\\\",\\\"synonyms\\\":[{\\\"word\\\":\\\"string\\\",\\\"pos\\\":\\\"string\\\",\\\"meaning_zh\\\":\\\"string\\\",\\\"replacement_type\\\":\\\"word|phrase\\\"}]}]}",
+    "For each IELTS reading word or phrase, return 0-5 common replacement expressions for its supplied primary sense. Prioritize direct single-word synonyms. Only after all safe single-word choices have been listed may you add short phrase rewrites that preserve the supplied sense in normal IELTS-reading context.",
+    "A replacement must be genuinely substitutable in the supplied sense. Do not include related words, word-family forms, antonyms, the input itself, spelling/case/hyphen variants, British/American variants, definitions, or loose contextual associates. A phrase rewrite may explain the word only when it can also replace it in a sentence; a bare definition is not enough. For a single-word input, word and phrase replacements are both allowed; for a phrase input, direct word or phrase replacements are allowed.",
+    "Set replacement_type to word for a single-word replacement and phrase for a multi-word rewrite. Return all word replacements before phrase replacements. Every replacement must include its English part of speech and concise Chinese meaning for the current sense. Use an empty array if no safe common replacement with reliable Chinese meaning exists. Never add filler to reach five. Echo input_id and word exactly.",
     "Items:",
     JSON.stringify(items.map((item) => ({
       input_id: item.inputId,
@@ -203,7 +204,8 @@ export async function requestDeepseekSynonymReviews(inputItems, {
     entries.set(expected.inputId, {
       word: expected.word,
       synonyms,
-      synonymDetails
+      synonymDetails,
+      reviewPolicy: READING_G_SYNONYM_REVIEW_POLICY
     });
   }
   return { entries, invalid, usage: payload?.usage || null };

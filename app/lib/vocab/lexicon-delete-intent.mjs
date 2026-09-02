@@ -119,6 +119,80 @@ export function validateLexiconDeletionIntent(currentWords = [], nextWords = [],
   };
 }
 
+/**
+ * A direct "delete current word" request contains an explicit stable-ID list.
+ * When its browser cache is stale, rebuilding the complete browser snapshot
+ * would accidentally delete every entry that the stale cache does not know.
+ * Rebase only that confirmed deletion on the authoritative current lexicon.
+ */
+export function rebaseConfirmedCurrentWordDeletion(currentWords = [], intent = null) {
+  const before = formalLexiconWords(currentWords);
+  const declaredRows = Array.isArray(intent?.removed) ? intent.removed : [];
+  const declaredIds = declaredRows
+    .map((entry) => cleanText(entry?.id))
+    .filter(Boolean);
+  const uniqueDeclaredIds = [...new Set(declaredIds)];
+
+  if (
+    intent?.confirmed !== true ||
+    cleanText(intent?.action) !== "delete-current-word" ||
+    !uniqueDeclaredIds.length ||
+    uniqueDeclaredIds.length !== declaredIds.length
+  ) {
+    return {
+      ok: false,
+      status: 409,
+      error: "正式词库删除缺少明确确认",
+      detail: "当前词删除必须携带一次确认过的、无重复的稳定 ID 清单。"
+    };
+  }
+
+  const currentById = new Map();
+  for (const entry of before) {
+    const id = stableId(entry);
+    if (!id || currentById.has(id)) {
+      return {
+        ok: false,
+        status: 409,
+        error: "正式词库稳定 ID 异常",
+        detail: "当前正式词库存在缺失或重复 ID，不能执行删除。"
+      };
+    }
+    currentById.set(id, entry);
+  }
+
+  const missingIds = uniqueDeclaredIds.filter((id) => !currentById.has(id));
+  if (missingIds.length) {
+    return {
+      ok: false,
+      status: 409,
+      error: "正式词库删除目标已变化",
+      detail: "已确认的词条已不在当前正式词库中，请刷新后再操作。"
+    };
+  }
+
+  const removedIdSet = new Set(uniqueDeclaredIds);
+  const words = before.filter((entry) => !removedIdSet.has(stableId(entry)));
+  const removed = uniqueDeclaredIds.map((id) => {
+    const entry = currentById.get(id);
+    return { id, word: cleanText(entry?.word) };
+  });
+  const expectedBeforeCount = Number(intent?.expectedBeforeCount);
+  const expectedAfterCount = Number(intent?.expectedAfterCount);
+
+  return {
+    ok: true,
+    words,
+    removed,
+    beforeCount: before.length,
+    afterCount: words.length,
+    action: cleanText(intent.action),
+    rebased:
+      expectedBeforeCount !== before.length ||
+      expectedAfterCount !== words.length
+  };
+}
+
 export function buildLexiconRetirementPayload(
   currentData = {},
   removedEntries = [],

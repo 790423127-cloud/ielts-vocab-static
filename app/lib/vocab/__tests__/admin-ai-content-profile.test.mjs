@@ -133,6 +133,16 @@ test("profiles with fewer than four translated items are rejected from the paid 
   assert.equal(isAiContentProfileComplete(entry), false);
 });
 
+test("a repetitive or form-only main detail is not accepted as completed AI content", () => {
+  const repetitive = buildChargeEntry();
+  repetitive.meaningDetailZh = "“charge”在当前词条中作verb使用，主要表示“收费；要价”。";
+  assert.equal(isAiContentProfileComplete(repetitive), false);
+
+  const formOnly = buildChargeEntry();
+  formOnly.meaningDetailZh = "“charge”的第三人称单数形式";
+  assert.equal(isAiContentProfileComplete(formOnly), false);
+});
+
 test("forms reject self links, unknown relation types, phrases, duplicates, and protected plural-like headwords", () => {
   assert.deepEqual(normalizeAiForms([
     { word: "news", type: "plural" },
@@ -150,6 +160,11 @@ test("forms reject self links, unknown relation types, phrases, duplicates, and 
     { word: "processes", type: "plural" },
     { word: "processing", type: "present participle / gerund" }
   ]);
+
+  assert.deepEqual(normalizeAiForms([
+    { word: "disqualifies", type: "third person singular" },
+    { word: "disqualifying", type: "present participle" }
+  ], "disqualified"), []);
 });
 
 test("word family keeps only direct normalized unique members", () => {
@@ -169,5 +184,16 @@ test("other meanings remove the main meaning and repeated variants", () => {
   assert.deepEqual(
     normalizeOtherMeanings(["费用", "指控", "指控", { meaningZh: "充电" }], "费用").map(({ meaningZh }) => meaningZh),
     ["指控", "充电"]
+  );
+});
+
+test("other meanings keep the same Chinese gloss when the part of speech differs", () => {
+  assert.deepEqual(
+    normalizeOtherMeanings([
+      { pos: "verb", meaningZh: "希望", definitionEn: "to want something to happen" },
+      { pos: "noun", meaningZh: "希望", definitionEn: "a feeling of expectation" },
+      { pos: "noun", meaningZh: "希望", definitionEn: "duplicate noun row" }
+    ], "希望", "verb").map(({ pos, meaningZh }) => ({ pos, meaningZh })),
+    [{ pos: "noun", meaningZh: "希望" }]
   );
 });

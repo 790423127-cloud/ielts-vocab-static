@@ -53,6 +53,12 @@ test("paid AI start remains clickable so it can explain missing confirmation", (
   assert.doesNotMatch(readingWordsSource, /disabled=\{!aiConfirmed \|\|/);
 });
 
+test("completed reading AI result clears itself instead of staying on the page", () => {
+  assert.match(readingWordsSource, /if \(aiRun\.status !== "done"\) return;/);
+  assert.match(readingWordsSource, /aiRun\.failed > 0\s*\? AI_DONE_WITH_FAILURES_VISIBLE_MS\s*:\s*AI_DONE_VISIBLE_MS/);
+  assert.match(readingWordsSource, /current\.status === "done" \? EMPTY_AI_RUN : current/);
+});
+
 test("reading synonyms exclude formatting and British/American variants of the headword", () => {
   assert.deepEqual(normalizeReadingSynonyms(["air mail", "air-mail", "airpost"], "Airmail"), ["airpost"]);
   assert.deepEqual(normalizeReadingSynonyms(["encyclopedia", "compendium"], "Encyclopaedia"), ["compendium"]);
@@ -75,6 +81,7 @@ test("reading relations stay pending until data exists or an AI review marker is
     word: "brochure",
     pos: "noun",
     meaning: "小册子",
+    meaningDetailZh: "一种提供信息或广告的小册子，通常折叠或装订成册。",
     definition: "a small book containing information",
     example: "Please pick up a travel brochure at the counter.",
     exampleCn: "请在柜台拿一份旅行小册子。"
@@ -96,6 +103,7 @@ test("any single unreviewed empty relation keeps the word in the AI queue", () =
     word: "brochure",
     pos: "noun",
     meaning: "小册子",
+    meaningDetailZh: "一种提供信息或广告的小册子，通常折叠或装订成册。",
     definition: "a small book containing information",
     example: "Please pick up a travel brochure at the counter.",
     exampleCn: "请在柜台拿一份旅行小册子。",
@@ -124,6 +132,7 @@ test("AI only marks a relation reviewed when that field is explicitly returned",
     word: "brochure",
     pos: "noun",
     meaning: "小册子",
+    meaningDetailZh: "一种提供信息或广告的小册子，通常折叠或装订成册。",
     definition: "a small book containing information",
     example: "Please pick up a travel brochure at the counter.",
     exampleCn: "请在柜台拿一份旅行小册子。"
@@ -141,6 +150,7 @@ test("successful AI review marks empty relation sections so they are not process
     word: "brochure",
     pos: "noun",
     meaning: "小册子",
+    meaningDetailZh: "一种提供信息或广告的小册子，通常折叠或装订成册。",
     definition: "a small book containing information",
     example: "Please pick up a travel brochure at the counter.",
     exampleCn: "请在柜台拿一份旅行小册子。"
@@ -176,6 +186,7 @@ test("existing relation words still require their Chinese synonym meanings", () 
     word: "brochure",
     pos: "noun",
     meaning: "小册子",
+    meaningDetailZh: "一种提供信息或广告的小册子，通常折叠或装订成册。",
     definition: "a small book containing information",
     example: "Please pick up a travel brochure at the counter.",
     exampleCn: "请在柜台拿一份旅行小册子。",
@@ -202,6 +213,7 @@ test("legacy reviewed flags survive normalization so completed reading words sta
     word: "brochure",
     pos: "noun",
     meaning: "小册子",
+    meaningDetailZh: "一种提供信息或广告的小册子，通常折叠或装订成册。",
     definition: "a small book containing information",
     example: "Please pick up a travel brochure at the counter.",
     exampleCn: "请在柜台拿一份旅行小册子。",
@@ -230,6 +242,7 @@ test("reading AI review provenance survives normalization and avoids repeat proc
     word: "brochure",
     pos: "noun",
     meaning: "小册子",
+    meaningDetailZh: "一种提供信息或广告的小册子，通常折叠或装订成册。",
     definition: "a small book containing information",
     example: "Please pick up a travel brochure at the counter.",
     exampleCn: "请在柜台拿一份旅行小册子。"

@@ -20,17 +20,21 @@ export function asPhraseList(payload) {
 }
 
 export function mergeSpellingLexicon(headwords = [], phrases = [], versions = {}) {
-  const existing = new Set(headwords.map(normalizeEntryKey));
-  const restoredPhrases = phrases.filter((phrase) => {
-    const key = normalizeEntryKey(phrase);
-    return key && !existing.has(key);
-  });
-  const allEntries = [...headwords, ...restoredPhrases];
+  let restoredPhrases = [];
+  if (phrases.length) {
+    const existing = new Set(headwords.map(normalizeEntryKey));
+    restoredPhrases = phrases.filter((phrase) => {
+      const key = normalizeEntryKey(phrase);
+      return key && !existing.has(key);
+    });
+  }
+  const allEntries = restoredPhrases.length ? [...headwords, ...restoredPhrases] : headwords;
   const fingerprint = buildLexiconFingerprint(headwords, restoredPhrases, {
     headwordVersion: versions.headwordVersion,
     phraseVersion: versions.phraseVersion,
     headwordCount: headwords.length,
-    phraseCount: restoredPhrases.length
+    phraseCount: restoredPhrases.length,
+    contentHash: versions.contentHash
   });
 
   return {

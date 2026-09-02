@@ -88,6 +88,11 @@ export function getReadingGPathStage(item) {
     if (layers.includes("phrases400") && Number(item.phraseStudyStage) === 2) {
       return { stage: "2", reason: "reading-coverage-phrase" };
     }
+    if (layers.includes("gtPart12Phrases150")) {
+      return String(item.part12PhraseTier || "").toUpperCase() === "S"
+        ? { stage: "1", reason: "gt-part12-priority-phrase" }
+        : { stage: "2", reason: "gt-part12-coverage-phrase" };
+    }
     return isArticleReinforcement(layers)
       ? { stage: "3", reason: "article-phrase" }
       : { stage: "2", reason: "reading-phrase" };

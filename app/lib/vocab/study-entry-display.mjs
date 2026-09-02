@@ -1,5 +1,23 @@
+import {
+  needsMultiPosSenseRepair,
+  normalizePartOfSpeechTokens
+} from "./multi-pos-sense-coverage.mjs";
+
+const PLACEHOLDER_SENSE_PATTERN = /(?:总词库待补|待补(?:全|充)?(?:释义|资料|内容)|暂无(?:释义|例句|音标|词性)|等待(?:ai|音标)|to be completed|waiting ai|not available)/iu;
+
 function text(value) {
   return String(value == null ? "" : value).trim();
+}
+
+function isPlaceholderSenseMeaning(value) {
+  const meaning = text(value);
+  return Boolean(meaning && PLACEHOLDER_SENSE_PATTERN.test(meaning));
+}
+
+function bilingualExamplePair(example, exampleCn) {
+  const english = text(example);
+  const chinese = text(exampleCn);
+  return english && chinese ? { example: english, exampleCn: chinese } : null;
 }
 
 function meaningKey(value) {
@@ -23,7 +41,7 @@ function normalizeSense(value, source = "sense") {
     || value.meaning
     || value.chinese
   );
-  if (!meaning) return null;
+  if (!meaning || isPlaceholderSenseMeaning(meaning)) return null;
   return {
     pos: text(value.pos || value.posFamily || value.partOfSpeech || value.part_of_speech),
     meaning,
@@ -37,44 +55,40 @@ function normalizeSense(value, source = "sense") {
 }
 
 function posTokens(value) {
-  const aliases = {
-    n: "noun",
-    v: "verb",
-    adj: "adjective",
-    adv: "adverb",
-    prep: "preposition",
-    conj: "conjunction",
-    pron: "pronoun",
-    det: "determiner"
-  };
-  return [...new Set(
-    text(value)
-      .toLowerCase()
-      .split(/\s*(?:\/|\||,|;|、|，|；)\s*/)
-      .map((token) => token.replace(/\.$/, ""))
-      .map((token) => aliases[token] || token)
-      .filter(Boolean)
-  )];
+  return normalizePartOfSpeechTokens(value);
 }
 
-function uniqueSupplementalSenses(values, primaryMeaning) {
-  const seen = new Set(
-    text(primaryMeaning)
-      .split(/[；;，,、/]+/)
-      .map(meaningKey)
-      .filter(Boolean)
+function senseIdentityKeys(pos, meaning) {
+  const positions = posTokens(pos);
+  const meanings = text(meaning)
+    .split(/[；;，,、/]+/)
+    .map(meaningKey)
+    .filter(Boolean);
+  return (positions.length ? positions : [""])
+    .flatMap((position) => meanings.map((meaningPart) => `${position}::${meaningPart}`));
+}
+
+function uniqueSupplementalSenses(values, primaryMeaning, primaryPos) {
+  const seen = new Set(senseIdentityKeys(primaryPos, primaryMeaning));
+  const primaryMeaningKeys = new Set(
+    text(primaryMeaning).split(/[；;，,、/]+/).map(meaningKey).filter(Boolean)
   );
   const result = [];
 
   for (const sense of values) {
+    const positions = posTokens(sense?.pos);
     const parts = text(sense?.meaning)
       .split(/[；;，,、/]+/)
       .map(text)
       .filter(Boolean)
       .filter((part) => {
-        const key = meaningKey(part);
-        if (!key || seen.has(key)) return false;
-        seen.add(key);
+        const normalizedMeaning = meaningKey(part);
+        if (!normalizedMeaning) return false;
+        if (!positions.length && primaryMeaningKeys.has(normalizedMeaning)) return false;
+        if (!positions.length && [...seen].some((key) => key.endsWith(`::${normalizedMeaning}`))) return false;
+        const keys = senseIdentityKeys(sense?.pos, part);
+        if (keys.length && keys.every((key) => seen.has(key))) return false;
+        keys.forEach((key) => seen.add(key));
         return true;
       });
     if (parts.length) result.push({ ...sense, meaning: parts.join("；") });
@@ -93,9 +107,18 @@ export function getStudyEntryDisplay(entry = {}) {
     .map((sense) => normalizeSense(sense, "senses"))
     .filter(Boolean);
   const preferredSenseIndex = explicitSenses.findIndex((sense) => sense.isPrimary);
+  const declaredPrimaryTokens = posTokens(entry.primaryPos);
+  const declaredPrimarySenseIndex = declaredPrimaryTokens.length === 1
+    ? explicitSenses.findIndex((sense) => {
+      const tokens = posTokens(sense.pos);
+      return tokens.length === 1 && tokens[0] === declaredPrimaryTokens[0];
+    })
+    : -1;
   const readingSenseIndex = explicitSenses.findIndex((sense) => sense.readingCommon);
   const primarySenseIndex = preferredSenseIndex >= 0
     ? preferredSenseIndex
+    : declaredPrimarySenseIndex >= 0
+      ? declaredPrimarySenseIndex
     : readingSenseIndex >= 0
       ? readingSenseIndex
       : 0;
@@ -104,6 +127,10 @@ export function getStudyEntryDisplay(entry = {}) {
   const primaryMeaning = primarySense?.meaning || fallbackMeaning;
   const primaryPos = primarySense?.pos
     || text(entry.primaryPos || entry.pos || (entry.entryType === "phrase" ? "phrase" : ""));
+  // A source sentence without its own translation must never borrow a different
+  // top-level translation. Prefer a complete bilingual pair; otherwise hide it.
+  const examplePair = bilingualExamplePair(primarySense?.example, primarySense?.exampleCn)
+    || bilingualExamplePair(entry.example, entry.exampleCn || entry.exampleZh);
 
   const otherExplicitSenses = explicitSenses.filter((_, index) => index !== primarySenseIndex);
   const supplementalSenses = uniqueSupplementalSenses([
@@ -114,18 +141,10 @@ export function getStudyEntryDisplay(entry = {}) {
     ...(Array.isArray(entry.meaningsZh) ? entry.meaningsZh : [])
       .filter((sense) => !sense?.confidence || String(sense.confidence).toLowerCase() === "high")
       .map((sense) => normalizeSense(sense, "meaningsZh"))
-      .filter(Boolean)
-  ], primaryMeaning);
+      .filter((sense) => Boolean(sense) && !(explicitSenses.length && posTokens(sense.pos).length > 1))
+  ], primaryMeaning, primaryPos);
 
-  const declaredPosTokens = posTokens(entry.primaryPos || entry.pos);
-  const coveredPosTokens = new Set(
-    [primarySense, ...supplementalSenses]
-      .map((sense) => posTokens(sense?.pos))
-      .filter((tokens) => tokens.length === 1)
-      .flat()
-  );
-  const needsSenseSplit = declaredPosTokens.length > 1
-    && declaredPosTokens.some((token) => !coveredPosTokens.has(token));
+  const needsSenseSplit = needsMultiPosSenseRepair(entry);
 
   return {
     word: text(entry.word),
@@ -133,8 +152,8 @@ export function getStudyEntryDisplay(entry = {}) {
     pos: primaryPos,
     meaning: primaryMeaning,
     definition: primarySense?.definition || text(entry.definition),
-    example: primarySense?.example || text(entry.example),
-    exampleCn: primarySense?.exampleCn || text(entry.exampleCn || entry.exampleZh),
+    example: examplePair?.example || "",
+    exampleCn: examplePair?.exampleCn || "",
     supplementalSenses,
     needsSenseSplit,
     declaredPos: text(entry.primaryPos || entry.pos)

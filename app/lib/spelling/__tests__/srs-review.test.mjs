@@ -70,7 +70,7 @@ test("stored browser preferences are restored after hydration", () => {
   const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
   const hook = fs.readFileSync(path.join(root, "app/hooks/useSpellingTrainingPreferences.js"), "utf8");
   const helpers = fs.readFileSync(path.join(root, "app/lib/spelling/spelling-training-page-helpers.mjs"), "utf8");
-  assert.match(source, /useSpellingTrainingPreferences\(scope\)/);
+  assert.match(source, /useSpellingTrainingPreferences\(scope, requestedPracticeSource\)/);
   assert.match(hook, /const \[hydratedScope, setHydratedScope\] = useState\(""\)/);
   assert.match(hook, /loadSpellingTrainingPreferences\(normalizedScope\)/);
   assert.match(hook, /writeCategoryPrefs\(normalizedScope, storedPrefs\)/);

@@ -5,6 +5,7 @@ export const FONT_SCALE_MIN = 0.8;
 export const FONT_SCALE_MAX = 1.6;
 export const FONT_SCALE_STEP = 0.05;
 export const FONT_SCALE_DEFAULT = 1;
+export const COMPACT_SHELL_MAX_WIDTH = 1180;
 
 export function resolveFontScaleLevel(scale) {
   const next = clampFontScale(scale);
@@ -17,7 +18,9 @@ export function resolveFontScaleLevel(scale) {
 export function resolveAdaptiveShell(viewportWidth, scale) {
   const width = Number(viewportWidth);
   if (!Number.isFinite(width) || width <= 900) return "native";
-  return width / clampFontScale(scale) <= 900 ? "compact" : "desktop";
+  return width <= COMPACT_SHELL_MAX_WIDTH || width / clampFontScale(scale) <= COMPACT_SHELL_MAX_WIDTH
+    ? "compact"
+    : "desktop";
 }
 
 export function clampFontScale(value) {

@@ -1,17 +1,29 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "fs";
+import { createHash } from "crypto";
 import path from "path";
 import {
   AI_CONTENT_PROFILE_VERSION,
   hasCompleteAiSynonymDetails,
   isAiCoreContentComplete,
+  isAiGMainContentComplete,
+  isDetailedOtherMeaning,
   normalizeAiGeneratedEntry,
   normalizeAiSynonyms
 } from "../vocab/admin-ai-content-profile.mjs";
 import { synonymEquivalenceKey } from "../vocab/synonym-equivalence.mjs";
 import {
+  AI_PROFILE_KIND,
+  AI_SENSE_PRIORITY,
   AI_VOCAB_SYSTEM_PROMPT,
-  buildAiWordProfilePrompt
+  buildAiWordProfilePrompt,
+  normalizeSensePriority
 } from "./vocab-profile-prompt.mjs";
+import { isMeaningDetailInformative } from "../vocab/meaning-display.mjs";
+import {
+  describeMeaningCoverageProfileIssue,
+  isMeaningCoverageProfileUsable
+} from "../vocab/meaning-coverage-audit.mjs";
+import { isAiProfileCompatibleWithDeclaredPos } from "../vocab/multi-pos-sense-coverage.mjs";
 
 let cacheWriteQueue = Promise.resolve();
 
@@ -173,7 +185,11 @@ export function isUsableReadingAiProfile(word) {
     word?.word &&
     word?.pos &&
     word?.meaning &&
+    isMeaningDetailInformative(word) &&
     word?.definition &&
+    Array.isArray(word?.otherMeanings) && word.otherMeanings.every((meaning) => (
+      meaning?.pos && isDetailedOtherMeaning(meaning)
+    )) &&
     word?.example &&
     word?.exampleCn &&
     Array.isArray(word?.forms) &&
@@ -185,6 +201,67 @@ export function isUsableReadingAiProfile(word) {
     Array.isArray(word?.topics) && word.topics.length &&
     word?.difficulty
   );
+}
+
+const CONTEXT_PROPER_NOUN_REINTERPRETATION_RE = /(?:游戏名|品牌名|人名|姓氏|地名|作品名|专有名词|video\s+game|game\s+titled|brand(?:\s+name)?|surname|given\s+name|place\s+name|work\s+title|proper\s+noun)/iu;
+
+export function isContextProperNounReinterpretation(entry = {}, expected = {}) {
+  const word = String(expected?.word || "").normalize("NFC").trim();
+  const contextSentence = String(expected?.contextSentence || "").normalize("NFC");
+  if (!word || !contextSentence || word !== word.toLowerCase()) return false;
+  const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const matches = contextSentence.match(new RegExp(`(?<![A-Za-z])${escapedWord}(?![A-Za-z])`, "giu")) || [];
+  if (!matches.some((match) => match === match.toLowerCase())) return false;
+  const profileText = [
+    entry?.pos,
+    entry?.meaning,
+    entry?.meaningDetailZh,
+    entry?.definition,
+    entry?.category
+  ].map((value) => String(value || "")).join(" ");
+  return CONTEXT_PROPER_NOUN_REINTERPRETATION_RE.test(profileText);
+}
+
+export function buildProfileCacheKey(
+  word,
+  contextSentence = "",
+  sensePriority = AI_SENSE_PRIORITY.COMMON
+) {
+  const wordKey = normalizeProfileKey(word);
+  const priority = normalizeSensePriority(sensePriority);
+  if (priority === AI_SENSE_PRIORITY.COMMON) return wordKey;
+  const context = String(contextSentence || "").normalize("NFC").trim().replace(/\s+/g, " ");
+  if (!context) return `${wordKey}::reading-context::no-context`;
+  const contextHash = createHash("sha256").update(context, "utf8").digest("hex").slice(0, 24);
+  return `${wordKey}::reading-context::${contextHash}`;
+}
+
+export function isProfileSensePriorityCompatible(profile, sensePriority = AI_SENSE_PRIORITY.COMMON) {
+  const expected = normalizeSensePriority(sensePriority);
+  const actual = String(profile?.aiSensePriority || "").trim();
+  if (actual) return actual === expected;
+  return expected === AI_SENSE_PRIORITY.COMMON
+    && !profile?.readingContextReviewed
+    && !String(profile?.readingContextSentence || "").trim();
+}
+
+/** Accept legacy rich cache entries as well as the new G-main profile. */
+export function isUsableGMainAiProfile(word) {
+  return Boolean(
+    isUsableAiProfile(word) ||
+    (
+      word?.aiProfileKind === AI_PROFILE_KIND.G_MAIN &&
+      isAiGMainContentComplete(word)
+    )
+  );
+}
+
+/** Common-sense review has no per-sense or primary example requirement. */
+export function isUsableMeaningCoverageAiProfile(word) {
+  // Use the same strict definition for cache selection and final write-back.
+  // A merely non-empty gloss must be regenerated instead of creating an
+  // endless cache-hit → validation-failed loop.
+  return isMeaningCoverageProfileUsable(word, word?.word);
 }
 
 export function describeUnusableAiProfile(word) {
@@ -264,7 +341,13 @@ function addUsage(left, right) {
   return merged;
 }
 
-async function requestProfileBatch(items, { timeoutMs, maxTokens, profileQuality = "full" }) {
+async function requestProfileBatch(items, {
+  timeoutMs,
+  maxTokens,
+  profileQuality = "full",
+  profileKind = AI_PROFILE_KIND.FULL,
+  sensePriority = AI_SENSE_PRIORITY.COMMON
+}) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const model = process.env.DEEPSEEK_MODEL || "deepseek-v4-flash";
 
@@ -289,7 +372,10 @@ async function requestProfileBatch(items, { timeoutMs, maxTokens, profileQuality
         model,
         messages: [
           { role: "system", content: AI_VOCAB_SYSTEM_PROMPT },
-          { role: "user", content: buildAiWordProfilePrompt(items) }
+          {
+            role: "user",
+            content: buildAiWordProfilePrompt(items, { profileKind, sensePriority })
+          }
         ],
         temperature: 0.1,
         max_tokens: maxTokens,
@@ -385,14 +471,42 @@ async function requestProfileBatch(items, { timeoutMs, maxTokens, profileQuality
     // Prefer AI-corrected spelling for near-miss OCR/import typos.
     const canonicalWord = nearMiss && !exactMatch ? returnedWord : expected.word;
     const entry = normalizeAiGeneratedEntry(rawItem, canonicalWord);
+    entry.aiProfileKind = profileKind;
+    entry.aiSensePriority = sensePriority;
+    const contextSentence = String(expected.contextSentence || "").trim();
+    if (contextSentence && sensePriority === AI_SENSE_PRIORITY.CONTEXT) {
+      // The reading source is authoritative for the example.  Keeping it
+      // verbatim also prevents a cached/global sense from replacing the sense
+      // the learner actually met in the passage.
+      entry.example = contextSentence;
+      entry.readingContextSentence = contextSentence;
+      entry.readingContextLabel = String(expected.contextLabel || "").trim();
+      entry.readingContextReviewed = true;
+    }
     if (nearMiss && !exactMatch) {
       entry.word = canonicalWord;
       entry.correctedFrom = expected.word;
     }
 
-    const usable = quality === "reading"
-      ? isUsableReadingAiProfile(entry)
-      : isUsableAiProfile(entry);
+    if (
+      sensePriority === AI_SENSE_PRIORITY.CONTEXT
+      && isContextProperNounReinterpretation(entry, expected)
+    ) {
+      invalid.push({
+        inputId: expected.inputId,
+        word: expected.word,
+        reason: "contextual lowercase token was incorrectly reinterpreted as a proper noun"
+      });
+      continue;
+    }
+
+    const usable = profileKind === AI_PROFILE_KIND.G_MAIN
+      ? isUsableGMainAiProfile(entry)
+      : profileKind === AI_PROFILE_KIND.MEANING_COVERAGE
+        ? isUsableMeaningCoverageAiProfile(entry)
+        : quality === "reading"
+          ? isUsableReadingAiProfile(entry)
+          : isUsableAiProfile(entry);
     const requestedSynonyms = normalizeAiSynonyms(expected.requestedSynonyms, canonicalWord);
     const returnedSynonymKeys = new Set(
       normalizeAiSynonyms(entry.synonyms, canonicalWord).map(synonymEquivalenceKey)
@@ -400,14 +514,22 @@ async function requestProfileBatch(items, { timeoutMs, maxTokens, profileQuality
     const keptRequestedSynonyms = requestedSynonyms.every(
       (word) => returnedSynonymKeys.has(synonymEquivalenceKey(word))
     ) && returnedSynonymKeys.size === requestedSynonyms.length;
-    if (!usable || (requestedSynonyms.length && !keptRequestedSynonyms)) {
-      const reasons = describeUnusableAiProfile(entry);
+    const mustKeepRequestedSynonyms = requestedSynonyms.length > 0
+      && !contextSentence
+      && sensePriority === AI_SENSE_PRIORITY.CONTEXT;
+    const coversDeclaredPos = isAiProfileCompatibleWithDeclaredPos(entry, expected.existingPos);
+    if (!usable || !coversDeclaredPos || (mustKeepRequestedSynonyms && !keptRequestedSynonyms)) {
+      const reasons = profileKind === AI_PROFILE_KIND.MEANING_COVERAGE
+        ? [describeMeaningCoverageProfileIssue(entry, canonicalWord)]
+        : describeUnusableAiProfile(entry);
       invalid.push({
         inputId: expected.inputId,
         word: expected.word,
-        reason: `incomplete or invalid profile (${requestedSynonyms.length && !keptRequestedSynonyms
-          ? "requested synonyms changed"
-          : reasons.slice(0, 4).join(", ") || "unknown"})`
+        reason: `incomplete or invalid profile (${!coversDeclaredPos
+          ? `declared POS not fully covered: ${expected.existingPos || "(empty)"}`
+          : mustKeepRequestedSynonyms && !keptRequestedSynonyms
+            ? "requested synonyms changed"
+            : reasons.slice(0, 4).join(", ") || "unknown"})`
       });
       continue;
     }
@@ -480,13 +602,34 @@ export async function requestDeepseekProfiles(inputItems, {
   timeoutMs = 75000,
   maxTokens = 14000,
   maxSplitDepth = 6,
-  profileQuality = "full"
+  profileQuality = "full",
+  profileKind = AI_PROFILE_KIND.FULL,
+  sensePriority
 } = {}) {
   const items = inputItems.map((item, index) => ({
     inputId: String(item.inputId || `item-${index + 1}`),
     word: String(item.word || "").trim(),
-    requestedSynonyms: normalizeAiSynonyms(item.requestedSynonyms, item.word)
+    requestedSynonyms: normalizeAiSynonyms(item.requestedSynonyms, item.word),
+    existingMeaning: String(item.existingMeaning || item.existing_primary_meaning || "").trim(),
+    existingPos: String(item.existingPos || item.existing_part_of_speech || "").trim(),
+    contextSentence: String(item.contextSentence || "").trim(),
+    contextLabel: String(item.contextLabel || "").trim()
   }));
 
-  return resolveProfiles(items, { timeoutMs, maxTokens, maxSplitDepth, profileQuality });
+  const kind = Object.values(AI_PROFILE_KIND).includes(profileKind)
+    ? profileKind
+    : AI_PROFILE_KIND.FULL;
+  const priority = normalizeSensePriority(
+    sensePriority || (profileQuality === "reading"
+      ? AI_SENSE_PRIORITY.CONTEXT
+      : AI_SENSE_PRIORITY.COMMON)
+  );
+  return resolveProfiles(items, {
+    timeoutMs,
+    maxTokens,
+    maxSplitDepth,
+    profileQuality,
+    profileKind: kind,
+    sensePriority: priority
+  });
 }

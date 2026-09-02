@@ -98,6 +98,44 @@ test("semantic anomaly repair replaces AI content but preserves identity, morpho
   assert.equal(result.reviewCount, 7);
 });
 
+test("multi-POS repair replaces the ambiguous primary and keeps each declared POS", () => {
+  const existing = completeWord({
+    pos: "verb / noun",
+    meaning: "希望",
+    otherMeanings: []
+  });
+  const replacement = candidate({
+    pos: "verb",
+    meaning: "希望；期望",
+    otherMeanings: [{
+      pos: "noun",
+      meaningZh: "希望；期望",
+      definitionEn: "a feeling of expectation",
+      example: "There is still hope.",
+      exampleCn: "仍然有希望。"
+    }]
+  });
+  const result = mergePreciseStructureRepair(existing, replacement);
+
+  assert.equal(result.pos, "verb");
+  assert.equal(result.meaning, "希望；期望");
+  assert.equal(result.otherMeanings[0].pos, "noun");
+  assert.deepEqual(result.forms, existing.forms);
+  assert.equal(result.status, "不熟");
+});
+
+test("multi-POS repair refuses an AI result that drops a declared POS", () => {
+  const existing = completeWord({
+    pos: "noun / verb",
+    meaning: "预测；预报",
+    otherMeanings: []
+  });
+  assert.throws(
+    () => mergePreciseStructureRepair(existing, candidate({ pos: "noun", otherMeanings: [] })),
+    /没有覆盖原词条声明的全部词性/
+  );
+});
+
 test("optional enrichment merges up to four translated collocations and changes no core fields", () => {
   const existing = completeWord();
   const result = mergeOptionalEnrichment(existing, candidate());

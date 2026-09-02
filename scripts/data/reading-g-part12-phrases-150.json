@@ -1,0 +1,1213 @@
+{
+  "version": "reading-g-part12-phrases-150-v1",
+  "sourceFile": "G类阅读4-21_Part1-2_考试导向优化版_150短语.txt",
+  "sourceSha256": "e7490c0e0d57a2303f95089d94a4b17510abbd1d132127e2081af8d89256076d",
+  "count": 150,
+  "tierCounts": {
+    "S": 75,
+    "A": 40,
+    "B": 35
+  },
+  "rows": [
+    {
+      "tier": "S",
+      "phrase": "active travel",
+      "normalizedKey": "active travel",
+      "meaningZh": "主动出行（如步行、骑自行车上学/出行）",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G11 Test 2 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "more alert",
+      "normalizedKey": "more alert",
+      "meaningZh": "更清醒、更有精神、注意力更集中",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G11 Test 2 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "qualify for",
+      "normalizedKey": "qualify for",
+      "meaningZh": "有资格获得/参加",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G21 Test 3 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "entitled to",
+      "normalizedKey": "entitled to",
+      "meaningZh": "有权获得；有资格享有",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G12 Test 2 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "eligible for",
+      "normalizedKey": "eligible for",
+      "meaningZh": "符合……资格",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G14 Test 4 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "responsible for",
+      "normalizedKey": "responsible for",
+      "meaningZh": "负责……；对……承担责任",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G20 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "subject to",
+      "normalizedKey": "subject to",
+      "meaningZh": "受……约束；须经……；可能因……而变化",
+      "examTag": "条件限制｜判断题高风险",
+      "examSource": "G7 Test B Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "based on",
+      "normalizedKey": "based on",
+      "meaningZh": "基于；根据",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G5 Test B Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "available to",
+      "normalizedKey": "available to",
+      "meaningZh": "可供某人使用/获得",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "available for",
+      "normalizedKey": "available for",
+      "meaningZh": "可用于；可供……；在某时间有空",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G10 Test B Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "suitable for",
+      "normalizedKey": "suitable for",
+      "meaningZh": "适合……",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G16 Test 4 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "likely to",
+      "normalizedKey": "likely to",
+      "meaningZh": "很可能……",
+      "examTag": "概率/目的｜句意判断",
+      "examSource": "G20 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "designed to",
+      "normalizedKey": "designed to",
+      "meaningZh": "旨在；被设计用来……",
+      "examTag": "概率/目的｜句意判断",
+      "examSource": "G7 Test B Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "required to",
+      "normalizedKey": "required to",
+      "meaningZh": "被要求必须……",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G18 Test 4 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "expected to",
+      "normalizedKey": "expected to",
+      "meaningZh": "被期望；通常应该……",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "allowed to",
+      "normalizedKey": "allowed to",
+      "meaningZh": "被允许……",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G18 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "provided that",
+      "normalizedKey": "provided that",
+      "meaningZh": "只要；前提是",
+      "examTag": "条件限制｜判断题高风险",
+      "examSource": "G19 Test 4 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "as long as",
+      "normalizedKey": "as long as",
+      "meaningZh": "只要；在……条件下",
+      "examTag": "条件限制｜判断题高风险",
+      "examSource": "G12 Test 1 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "in the event of",
+      "normalizedKey": "in the event of",
+      "meaningZh": "如果发生；在……情况下",
+      "examTag": "条件限制｜判断题高风险",
+      "examSource": "G10 Test A Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "in advance",
+      "normalizedKey": "in advance",
+      "meaningZh": "提前；预先",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G10 Test B Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "prior to",
+      "normalizedKey": "prior to",
+      "meaningZh": "在……之前",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "according to",
+      "normalizedKey": "according to",
+      "meaningZh": "根据；按照",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G20 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "in accordance with",
+      "normalizedKey": "in accordance with",
+      "meaningZh": "按照；依照",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G17 Test 2 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "in addition to",
+      "normalizedKey": "in addition to",
+      "meaningZh": "除……之外还；另外还有",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G4 Test A Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "as well as",
+      "normalizedKey": "as well as",
+      "meaningZh": "以及；除……外还",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G10 Test B Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "rather than",
+      "normalizedKey": "rather than",
+      "meaningZh": "而不是",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G20 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "due to",
+      "normalizedKey": "due to",
+      "meaningZh": "由于；因为",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G10 Test B Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "owing to",
+      "normalizedKey": "owing to",
+      "meaningZh": "由于；因为",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G6 Test B Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "as a result of",
+      "normalizedKey": "as a result of",
+      "meaningZh": "由于……；作为……的结果",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G13 Test 3 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "in order to",
+      "normalizedKey": "in order to",
+      "meaningZh": "为了……",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G10 Test A Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "on the basis of",
+      "normalizedKey": "on the basis of",
+      "meaningZh": "根据；以……为依据",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "at least",
+      "normalizedKey": "at least",
+      "meaningZh": "至少",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G15 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "up to",
+      "normalizedKey": "up to",
+      "meaningZh": "最多；高达；直到",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G10 Test A Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "at all times",
+      "normalizedKey": "at all times",
+      "meaningZh": "始终；任何时候都",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G5 Test B Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "as soon as possible",
+      "normalizedKey": "as soon as possible",
+      "meaningZh": "尽快",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "wherever possible",
+      "normalizedKey": "wherever possible",
+      "meaningZh": "在任何可行情况下；尽可能",
+      "examTag": "条件限制｜判断题高风险",
+      "examSource": "G7 Test B Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "whenever possible",
+      "normalizedKey": "whenever possible",
+      "meaningZh": "只要可能；尽可能",
+      "examTag": "条件限制｜判断题高风险",
+      "examSource": "G17 Test 2 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "free of charge",
+      "normalizedKey": "free of charge",
+      "meaningZh": "免费",
+      "examTag": "费用/规则｜细节题高频",
+      "examSource": "G18 Test 2 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "straight away",
+      "normalizedKey": "straight away",
+      "meaningZh": "立即；马上",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G18 Test 1 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "on arrival",
+      "normalizedKey": "on arrival",
+      "meaningZh": "到达时",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G17 Test 4 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "on a regular basis",
+      "normalizedKey": "on a regular basis",
+      "meaningZh": "定期地；经常性地",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G15 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "on a daily basis",
+      "normalizedKey": "on a daily basis",
+      "meaningZh": "每天；按日",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G14 Test 1 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "first-come first-served",
+      "normalizedKey": "first-come first-served",
+      "meaningZh": "先到先得",
+      "examTag": "费用/规则｜细节题高频",
+      "examSource": "G21 Test 4 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "value for money",
+      "normalizedKey": "value for money",
+      "meaningZh": "物有所值；性价比高",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 3 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "out of stock",
+      "normalizedKey": "out of stock",
+      "meaningZh": "缺货；无库存",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 3 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "past their best",
+      "normalizedKey": "past their best",
+      "meaningZh": "过了最佳状态；不够新鲜/品质下降",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 3 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "put customers off",
+      "normalizedKey": "put customers off",
+      "meaningZh": "让顾客反感/却步",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 3 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "pay the difference",
+      "normalizedKey": "pay the difference",
+      "meaningZh": "补差价",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 1 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "vice versa",
+      "normalizedKey": "vice versa",
+      "meaningZh": "反之亦然",
+      "examTag": "逻辑关系｜同义替换",
+      "examSource": "G21 Test 1 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "up until",
+      "normalizedKey": "up until",
+      "meaningZh": "一直到……为止",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G21 Test 1 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "as per",
+      "normalizedKey": "as per",
+      "meaningZh": "按照；依照",
+      "examTag": "句意/定位高价值",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "an asset",
+      "normalizedKey": "an asset",
+      "meaningZh": "一种优势；有利条件",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "a must",
+      "normalizedKey": "a must",
+      "meaningZh": "必不可少的条件；必须具备的事物",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "in a timely fashion",
+      "normalizedKey": "in a timely fashion",
+      "meaningZh": "及时地",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "on our doorstep",
+      "normalizedKey": "on our doorstep",
+      "meaningZh": "近在咫尺；就在附近",
+      "examTag": "非字面词义｜易误解",
+      "examSource": "G21 Test 1 Section 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "working day",
+      "normalizedKey": "working day",
+      "meaningZh": "工作日",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G15 Test 4 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "holiday entitlement",
+      "normalizedKey": "holiday entitlement",
+      "meaningZh": "可享有的休假天数/休假权",
+      "examTag": "规则场景｜同义替换",
+      "examSource": "G19 Test 2 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "continuous service",
+      "normalizedKey": "continuous service",
+      "meaningZh": "连续工龄；连续服务期",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G12 Test 2 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "peak times",
+      "normalizedKey": "peak times",
+      "meaningZh": "高峰时段",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G18 Test 2 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "full refund",
+      "normalizedKey": "full refund",
+      "meaningZh": "全额退款",
+      "examTag": "费用/规则｜细节题高频",
+      "examSource": "G16 Test 4 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "penalty charge",
+      "normalizedKey": "penalty charge",
+      "meaningZh": "罚款；违约附加费",
+      "examTag": "费用/规则｜细节题高频",
+      "examSource": "G14 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "entry requirements",
+      "normalizedKey": "entry requirements",
+      "meaningZh": "入学/申请/参加资格要求",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G5 Test A Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "health and safety",
+      "normalizedKey": "health and safety",
+      "meaningZh": "职业健康与安全；安全规范",
+      "examTag": "规则场景｜同义替换",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "risk assessment",
+      "normalizedKey": "risk assessment",
+      "meaningZh": "风险评估",
+      "examTag": "规则场景｜同义替换",
+      "examSource": "G18 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "ground floor",
+      "normalizedKey": "ground floor",
+      "meaningZh": "一楼/地面层（英式）",
+      "examTag": "英式语义｜位置题易错",
+      "examSource": "G10 Test B Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "first floor",
+      "normalizedKey": "first floor",
+      "meaningZh": "二楼（英式常见）",
+      "examTag": "英式语义｜位置题易错",
+      "examSource": "G4 Test A Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "reasonable care",
+      "normalizedKey": "reasonable care",
+      "meaningZh": "合理的谨慎义务；应有的注意",
+      "examTag": "规则场景｜同义替换",
+      "examSource": "G18 Test 1 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "held responsible",
+      "normalizedKey": "held responsible",
+      "meaningZh": "被认定应负责；被追究责任",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G7 Test A Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "claim compensation",
+      "normalizedKey": "claim compensation",
+      "meaningZh": "索赔；要求赔偿",
+      "examTag": "规则场景｜同义替换",
+      "examSource": "G18 Test 1 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "weather permitting",
+      "normalizedKey": "weather permitting",
+      "meaningZh": "天气允许的话",
+      "examTag": "条件限制｜判断题高风险",
+      "examSource": "G21 Test 4 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "work permit",
+      "normalizedKey": "work permit",
+      "meaningZh": "工作许可；工作许可证",
+      "examTag": "资格/规则｜定位与判断",
+      "examSource": "G21 Test 4 Section 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "time limit",
+      "normalizedKey": "time limit",
+      "meaningZh": "时间限制；限时",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G18 Test 1 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "term time",
+      "normalizedKey": "term time",
+      "meaningZh": "学期期间",
+      "examTag": "时间/数量边界｜易反转答案",
+      "examSource": "G12 Test 4 Passage 1"
+    },
+    {
+      "tier": "S",
+      "phrase": "unauthorised absence",
+      "normalizedKey": "unauthorised absence",
+      "meaningZh": "未经批准的缺席",
+      "examTag": "句意/定位高价值",
+      "examSource": "G13 Test 1 Passage 2"
+    },
+    {
+      "tier": "S",
+      "phrase": "confined spaces",
+      "normalizedKey": "confined spaces",
+      "meaningZh": "密闭/受限空间",
+      "examTag": "规则场景｜同义替换",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "set up",
+      "normalizedKey": "set up",
+      "meaningZh": "建立；设立；设置",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G4 Test A Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "find out",
+      "normalizedKey": "find out",
+      "meaningZh": "查明；弄清楚",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G10 Test B Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "get in touch",
+      "normalizedKey": "get in touch",
+      "meaningZh": "取得联系",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 1 Section 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "get involved",
+      "normalizedKey": "get involved",
+      "meaningZh": "参与；卷入",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G15 Test 4 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "get back",
+      "normalizedKey": "get back",
+      "meaningZh": "回来；取回；回复",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G7 Test B Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "come along",
+      "normalizedKey": "come along",
+      "meaningZh": "一起来；出现；进展",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G5 Test B Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "look after",
+      "normalizedKey": "look after",
+      "meaningZh": "照顾；负责照看",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G17 Test 2 Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "look into",
+      "normalizedKey": "look into",
+      "meaningZh": "调查；研究",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G5 Test B Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "work out",
+      "normalizedKey": "work out",
+      "meaningZh": "算出；想出；解决；弄明白",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G13 Test 4 Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "carry out",
+      "normalizedKey": "carry out",
+      "meaningZh": "执行；实施；开展",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "take place",
+      "normalizedKey": "take place",
+      "meaningZh": "发生；举行",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G17 Test 4 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "take part in",
+      "normalizedKey": "take part in",
+      "meaningZh": "参加；参与",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G18 Test 2 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "take up",
+      "normalizedKey": "take up",
+      "meaningZh": "占用；开始从事；接受",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G10 Test A Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "take over",
+      "normalizedKey": "take over",
+      "meaningZh": "接管；接替",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G13 Test 3 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "take into account",
+      "normalizedKey": "take into account",
+      "meaningZh": "把……考虑进去",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G11 Test 3 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "take advantage of",
+      "normalizedKey": "take advantage of",
+      "meaningZh": "利用；充分使用",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G11 Test 1 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "make use of",
+      "normalizedKey": "make use of",
+      "meaningZh": "利用；使用",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G20 Test 2 Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "make a claim",
+      "normalizedKey": "make a claim",
+      "meaningZh": "提出索赔/理赔申请；提出主张",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G12 Test 2 Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "put off",
+      "normalizedKey": "put off",
+      "meaningZh": "推迟；使人反感/打消念头",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G8 Test B Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "turn up",
+      "normalizedKey": "turn up",
+      "meaningZh": "出现；到场；调高",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G9 Test A Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "pick up",
+      "normalizedKey": "pick up",
+      "meaningZh": "接人/取物；领取；学会",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G11 Test 2 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "fill in",
+      "normalizedKey": "fill in",
+      "meaningZh": "填写；补充",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G20 Test 2 Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "fill out",
+      "normalizedKey": "fill out",
+      "meaningZh": "填写完整",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G13 Test 1 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "sign up for",
+      "normalizedKey": "sign up for",
+      "meaningZh": "报名参加；注册使用",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 3 Section 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "opt out",
+      "normalizedKey": "opt out",
+      "meaningZh": "选择退出；不参加",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G18 Test 1 Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "run out of",
+      "normalizedKey": "run out of",
+      "meaningZh": "用完；耗尽",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G16 Test 1 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "go off",
+      "normalizedKey": "go off",
+      "meaningZh": "（警报）响起；爆炸；变质等",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G10 Test A Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "catch fire",
+      "normalizedKey": "catch fire",
+      "meaningZh": "着火",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G7 Test A Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "break down",
+      "normalizedKey": "break down",
+      "meaningZh": "出故障；分解；细分",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G19 Test 2 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "come up with",
+      "normalizedKey": "come up with",
+      "meaningZh": "想出；提出（办法/主意）",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G19 Test 1 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "deal with",
+      "normalizedKey": "deal with",
+      "meaningZh": "处理；应对；涉及",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G20 Test 1 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "apply for",
+      "normalizedKey": "apply for",
+      "meaningZh": "申请",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G18 Test 3 Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "aware of",
+      "normalizedKey": "aware of",
+      "meaningZh": "知道；意识到",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "involved in",
+      "normalizedKey": "involved in",
+      "meaningZh": "参与；涉及",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G8 Test B Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "gain access to",
+      "normalizedKey": "gain access to",
+      "meaningZh": "获得进入/使用……的权限",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G19 Test 4 Passage 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "disposed of",
+      "normalizedKey": "disposed of",
+      "meaningZh": "被处理掉；被处置",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G10 Test A Passage 1"
+    },
+    {
+      "tier": "A",
+      "phrase": "liaise with",
+      "normalizedKey": "liaise with",
+      "meaningZh": "与……联络协调",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 3 Section 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "place a request",
+      "normalizedKey": "place a request",
+      "meaningZh": "提交请求/申请",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 3 Section 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "set out by",
+      "normalizedKey": "set out by",
+      "meaningZh": "由……规定/阐明",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "A",
+      "phrase": "make it a priority",
+      "normalizedKey": "make it a priority",
+      "meaningZh": "把……列为优先事项",
+      "examTag": "短语动词 / 同义替换",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "annual leave",
+      "normalizedKey": "annual leave",
+      "meaningZh": "年假",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G12 Test 1 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "bank holidays",
+      "normalizedKey": "bank holidays",
+      "meaningZh": "公共假日（英国用语）",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G11 Test 3 Passage 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "dress code",
+      "normalizedKey": "dress code",
+      "meaningZh": "着装规定",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G15 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "job openings",
+      "normalizedKey": "job openings",
+      "meaningZh": "职位空缺；招聘岗位",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "human resources",
+      "normalizedKey": "human resources",
+      "meaningZh": "人力资源；人事部门",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G10 Test B Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "performance appraisal",
+      "normalizedKey": "performance appraisal",
+      "meaningZh": "绩效评估",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G12 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "soft skills",
+      "normalizedKey": "soft skills",
+      "meaningZh": "软技能（沟通、合作等非技术能力）",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G20 Test 2 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "sixth form",
+      "normalizedKey": "sixth form",
+      "meaningZh": "英国中学 16–18 岁阶段",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G17 Test 4 Passage 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "school leavers",
+      "normalizedKey": "school leavers",
+      "meaningZh": "离校生；中学毕业后进入工作/升学的人",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G10 Test B Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "gap year",
+      "normalizedKey": "gap year",
+      "meaningZh": "间隔年；空档年",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G10 Test B Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "flexible working",
+      "normalizedKey": "flexible working",
+      "meaningZh": "灵活工作制",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G12 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "shift work",
+      "normalizedKey": "shift work",
+      "meaningZh": "轮班制",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "working holiday",
+      "normalizedKey": "working holiday",
+      "meaningZh": "工作假期；打工度假",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G14 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "business mileage",
+      "normalizedKey": "business mileage",
+      "meaningZh": "因公行驶里程",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "pool cars",
+      "normalizedKey": "pool cars",
+      "meaningZh": "单位共享公务车",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "cycle-to-work scheme",
+      "normalizedKey": "cycle-to-work scheme",
+      "meaningZh": "骑自行车上班计划/福利方案",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 3 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "school travel",
+      "normalizedKey": "school travel",
+      "meaningZh": "上学出行；学生通勤",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G11 Test 2 Passage 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "high street",
+      "normalizedKey": "high street",
+      "meaningZh": "商业主街；市中心主要购物街",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G12 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "box office",
+      "normalizedKey": "box office",
+      "meaningZh": "售票处；票房（依语境）",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G6 Test B Passage 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "baggage claim",
+      "normalizedKey": "baggage claim",
+      "meaningZh": "行李提取处",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G17 Test 1 Passage 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "country park",
+      "normalizedKey": "country park",
+      "meaningZh": "郊野公园",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G20 Test 2 Passage 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "pedestrianised area",
+      "normalizedKey": "pedestrianised area",
+      "meaningZh": "步行区；禁止普通车辆通行的区域",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 2 Section 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "local produce",
+      "normalizedKey": "local produce",
+      "meaningZh": "当地农产品/本地产物",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 3 Section 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "track record",
+      "normalizedKey": "track record",
+      "meaningZh": "过往记录；业绩记录",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 2 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "suggestive selling",
+      "normalizedKey": "suggestive selling",
+      "meaningZh": "建议性推销；通过推荐相关商品促销",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 1 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "contract rate",
+      "normalizedKey": "contract rate",
+      "meaningZh": "合同计酬标准；按工作量计价",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 4 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "bucket rate",
+      "normalizedKey": "bucket rate",
+      "meaningZh": "按桶计酬的单价",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 4 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "employee self service",
+      "normalizedKey": "employee self service",
+      "meaningZh": "员工自助系统",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 3 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "orientation programme",
+      "normalizedKey": "orientation programme",
+      "meaningZh": "迎新/入职介绍计划",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G5 Test B Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "induction programme",
+      "normalizedKey": "induction programme",
+      "meaningZh": "入职培训/入职介绍计划",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G15 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "private hire",
+      "normalizedKey": "private hire",
+      "meaningZh": "私人租用；包车服务",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G17 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "concessionary bus",
+      "normalizedKey": "concessionary bus",
+      "meaningZh": "优惠票公交/享受减免票价的公交服务",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G11 Test 3 Passage 1"
+    },
+    {
+      "tier": "B",
+      "phrase": "tripping hazard",
+      "normalizedKey": "tripping hazard",
+      "meaningZh": "绊倒风险；容易使人绊倒的隐患",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G18 Test 3 Passage 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "service desk",
+      "normalizedKey": "service desk",
+      "meaningZh": "服务台；IT 支持台",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G21 Test 3 Section 2"
+    },
+    {
+      "tier": "B",
+      "phrase": "transition care",
+      "normalizedKey": "transition care",
+      "meaningZh": "过渡护理；出院后的短期康复支持",
+      "examTag": "G类场景词 / 英式表达",
+      "examSource": "G14 Test 1 Passage 1"
+    }
+  ]
+}

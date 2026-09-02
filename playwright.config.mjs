@@ -10,7 +10,8 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: 1,
   timeout: 60_000,
-  globalTimeout: 4 * 60_000,
+  // 全部页面在 80%–160% 的每档字号都做真实浏览器验证；4 分钟会在正常执行中截断。
+  globalTimeout: 12 * 60_000,
   expect: {
     timeout: 15_000
   },

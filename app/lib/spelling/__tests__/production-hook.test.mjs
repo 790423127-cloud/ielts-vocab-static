@@ -12,6 +12,10 @@ import {
   primeSpellingLexiconCache
 } from "../load-spelling-lexicon.mjs";
 import { resolveSpellingLoadingState } from "../spelling-training-page-helpers.mjs";
+import {
+  createSpellingAutoSubmitAttempt,
+  isSpellingAutoSubmitAttemptCurrent
+} from "../spelling-submit-attempt.mjs";
 
 const {
   buildEngineDepsKey,
@@ -60,7 +64,8 @@ test("home runtime words prime the spelling cache before route entry", async () 
   ];
 
   const primed = primeSpellingLexiconCache(words, {
-    headwordVersion: "home-v1"
+    headwordVersion: "home-v1",
+    contentHash: "trusted-main-words-hash"
   });
   assert.strictEqual(getCachedSpellingLexicon({ scope: "word" }), primed);
   const loaded = await loadSpellingLexicon({ scope: "word" });
@@ -69,6 +74,7 @@ test("home runtime words prime the spelling cache before route entry", async () 
   assert.strictEqual(loaded.headwords, words);
   assert.equal(loaded.counts.headwords, 2);
   assert.equal(loaded.counts.phrases, 0);
+  assert.equal(loaded.contentHash, "trusted-main-words-hash");
 
   clearSpellingLexiconCache();
 });
@@ -106,14 +112,24 @@ test("spelling route reveals its header and footer only after one shared readine
   const preferences = fs.readFileSync(path.join(root, "app/hooks/useSpellingTrainingPreferences.js"), "utf8");
   const errorBankHook = fs.readFileSync(path.join(root, "app/hooks/useSpellingErrorBank.js"), "utf8");
   const srsReviewHook = fs.readFileSync(path.join(root, "app/hooks/useSpellingSrsReview.js"), "utf8");
+  const wordRoute = fs.readFileSync(path.join(root, "app/spelling-words/page.jsx"), "utf8");
+  const phraseRoute = fs.readFileSync(path.join(root, "app/spelling-phrases/page.jsx"), "utf8");
 
   assert.match(preferences, /preferencesHydrated: hydratedScope === normalizedScope/);
+  assert.match(preferences, /useSpellingTrainingPreferences\(scope = "word", requestedPracticeSource = ""\)/);
+  assert.match(preferences, /\}, \[normalizedScope, requestedPracticeSource\]\);/);
+  assert.match(page, /requestedPracticeSource = ""/);
+  assert.match(page, /useSpellingTrainingPreferences\(scope, requestedPracticeSource\)/);
+  assert.match(wordRoute, /const params = await searchParams;/);
+  assert.match(wordRoute, /requestedPracticeSource=\{requestedPracticeSource\}/);
+  assert.match(phraseRoute, /const params = await searchParams;/);
+  assert.match(phraseRoute, /requestedPracticeSource=\{requestedPracticeSource\}/);
   assert.match(errorBankHook, /initialized/);
   assert.match(srsReviewHook, /initialized/);
   assert.match(page, /practiceSource === "error_bank"\s*\? !errorBank\.initialized/);
   assert.match(page, /practiceSource === "srs_review"\s*\? !srsReview\.initialized/);
   assert.match(page, /const isPagePreparing = isSpellingLoading \|\| !supportingDataReady/);
-  assert.match(page, /<main className="spelling-page-shell" aria-busy=\{isPagePreparing\}>/);
+  assert.match(page, /<main className="spelling-page-shell" aria-busy=\{isPagePreparing\} data-study-surface="spelling">/);
   assert.match(page, /\{!isPagePreparing \? \(\s*<header className="spelling-topbar"/);
   assert.match(page, /isSpellingLoading=\{isPagePreparing\}/);
   assert.match(focus, /\{!isSpellingLoading \? <footer className="spelling-training-footer">/);
@@ -121,6 +137,13 @@ test("spelling route reveals its header and footer only after one shared readine
     page,
     /if \(!spelling\.ready\) return;\s*refreshErrorBank\(\);\s*refreshSrsReview\(\);/
   );
+});
+
+test("word spelling revalidates the master lexicon when the route is entered", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const page = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+
+  assert.match(page, /loadSpellingLexicon\(\{ scope, force: scope === "word" \}\)/);
 });
 
 test("category entry does not reload the full lexicon for personal-wrong reconciliation", () => {
@@ -218,13 +241,39 @@ test("production submit flow rejects duplicate in-flight attempts", () => {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
   const source = fs.readFileSync(path.join(root, "app/hooks/useSpellingEngine.js"), "utf8");
   const submitBranch = source.slice(
-    source.indexOf("async function submit()"),
+    source.indexOf("async function submit("),
     source.indexOf("async function continueAfterCorrect()")
   );
 
+  assert.match(submitBranch, /async function submit\(answerOverride = inputValue\)/);
   assert.match(submitBranch, /if \(submitInFlightRef\.current\) return null/);
   assert.match(submitBranch, /submitInFlightRef\.current = true/);
   assert.match(submitBranch, /finally \{\s*submitInFlightRef\.current = false/);
+});
+
+test("automatic submit only runs for the same question and unchanged answer", () => {
+  const entry = { wordId: "word-alpha", expectedAnswer: "Alpha" };
+  const attempt = createSpellingAutoSubmitAttempt(entry, "  ALPHA ");
+
+  assert.deepEqual(attempt, { wordId: "word-alpha", answer: "alpha" });
+  assert.equal(isSpellingAutoSubmitAttemptCurrent(attempt, entry, "alpha"), true);
+  assert.equal(isSpellingAutoSubmitAttemptCurrent(attempt, entry, "alpah"), false);
+  assert.equal(
+    isSpellingAutoSubmitAttemptCurrent(attempt, { wordId: "word-beta", expectedAnswer: "Alpha" }, "alpha"),
+    false
+  );
+});
+
+test("wrong-answer analysis remains visible while the learner starts correcting", () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
+  const source = fs.readFileSync(path.join(root, "app/components/SpellingTrainingPage.jsx"), "utf8");
+  const inputHandler = source.slice(
+    source.indexOf("const handleInputChange = useCallback"),
+    source.indexOf("useEffect(() => {\n    if (!autoNextOnCorrect")
+  );
+
+  assert.match(inputHandler, /latestSpellingInputRef\.current = nextInputValue/);
+  assert.doesNotMatch(inputHandler, /setErrorAnalysisVisible/);
 });
 
 test("resolved empty practice sources leave the loading screen", () => {

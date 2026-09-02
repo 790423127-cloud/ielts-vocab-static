@@ -214,6 +214,10 @@
   color: #a63d2d;
 }
 
+.syncWarning {
+  color: #a25820;
+}
+
 .searchBox {
   width: min(320px, 28vw);
   min-width: 180px;
@@ -550,7 +554,7 @@
   font-weight: 700;
 }
 
-/* 补全结果条：不依赖 AI 面板展开，避免结束后「像没发生过」 */
+/* 补全结果条：不依赖 AI 面板展开；完成状态由页面定时自动收起 */
 .aiResultBanner {
   width: min(1440px, 100%);
   margin: 10px auto 0;
@@ -673,11 +677,22 @@
 }
 
 .listRows {
-  max-height: 690px;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
   overflow: auto;
   padding: 7px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.listRows :global(.virtual-list__row) {
+  padding-bottom: 4px;
+}
+
+.listRows .wordRow {
+  height: 100%;
+  min-height: 0;
 }
 
 .listRows::-webkit-scrollbar {
@@ -770,6 +785,12 @@
   background: var(--study-green-soft, #eaf4f0);
 }
 
+/* 与“完整”保持相同尺寸，主词库尚未到达时不让标签跳色或位移。 */
+.wordRow .completenessPending {
+  color: var(--study-muted, #6b7c76);
+  background: var(--study-bg, #f7f9f8);
+}
+
 .emptyList,
 .cardEmpty {
   min-height: 360px;
@@ -801,6 +822,25 @@
   max-width: 330px;
   font-size: 12px;
   line-height: 1.55;
+}
+
+.emptyListActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.emptyListActions .secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.emptyListActions .secondaryButton svg {
+  width: 15px;
+  height: 15px;
 }
 
 .cardTop {
@@ -868,7 +908,7 @@
   max-width: 100%;
   margin: 0;
   overflow-wrap: anywhere;
-  font-size: clamp(40px, 5vw, 70px);
+  font-size: calc(clamp(46px, 4vw, 62px) * var(--font-scale));
   line-height: 1;
   letter-spacing: -.045em;
 }
@@ -1239,7 +1279,7 @@
   }
 
   /* 不覆盖 word-study-card / example / word-study-content：完全用 globals 主词库样式 */
-  :global(html[data-adaptive-shell="compact"]) .syncBanner:not(.syncError),
+  :global(html[data-adaptive-shell="compact"]) .syncBanner:not(.syncError):not(.syncWarning),
   :global(html[data-adaptive-shell="compact"]) .staticPublishBanner:not(.staticPublishError) {
     display: none;
   }
@@ -1375,6 +1415,6 @@
   }
 
   .wordHero h2 {
-    font-size: clamp(32px, 10vw, 44px);
+    font-size: calc(clamp(32px, 10vw, 44px) * var(--font-scale));
   }
 }

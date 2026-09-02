@@ -48,9 +48,13 @@ test("home loads the full lexicon, changes word, and switches to phrases", async
   const currentWord = page.locator(".word-flash-shell .word");
   await expect(currentWord).toBeVisible();
   await expect(currentWord).not.toHaveText(/^(正在读取词库|完成|—)$/);
-  for (const sectionName of ["变形", "词族", "常见搭配", "短语搭配"]) {
-    await expect(page.getByRole("region", { name: sectionName, exact: true })).toBeVisible();
-  }
+  const visibleRelationRegions = page.locator(
+    ".word-dictionary-grid > [aria-label]:visible"
+  );
+  await expect(visibleRelationRegions.first()).toBeVisible();
+  expect(await visibleRelationRegions.count()).toBeLessThanOrEqual(4);
+  await expect(page.getByRole("region", { name: "常见搭配", exact: true })).toHaveCount(0);
+  await expect(page.locator(".word-dictionary-panel")).not.toContainText(/当前词暂无|释义待补全/);
   await expect(page.getByRole("tablist", { name: "词典详情分类" })).toHaveCount(0);
   const firstWord = (await currentWord.textContent())?.trim();
   expect(firstWord).toBeTruthy();
@@ -151,11 +155,11 @@ for (const scenario of [
   });
 }
 
-test("legacy spelling page shows its deprecation warning", async ({ page }) => {
+test("static spelling page uses the standard production surface", async ({ page }) => {
   await page.goto("/spelling.html");
 
-  const warning = page.getByRole("status");
-  await expect(warning).toContainText("遗留静态页（已废弃主维护）");
-  await expect(warning.getByRole("link", { name: /spelling-words/ })).toBeVisible();
-  await expect(warning.getByRole("link", { name: /spelling-phrases/ })).toBeVisible();
+  await expect(page.getByRole("status")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "拼写训练", exact: true })).toBeVisible();
+  await expect(page.locator("#question")).not.toHaveText("正在准备本轮训练", { timeout: 45_000 });
+  await expect(page.locator("#answer")).toBeEnabled();
 });

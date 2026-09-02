@@ -257,9 +257,10 @@ test("删除状态、固定队列快照和后继位置由主页统一使用 flus
   );
 
   assert.match(pageSource, /import \{ flushSync \} from "react-dom"/);
-  assert.match(pageSource, /orderedQueue:\s*latest\.studyWords/);
+  assert.match(pageSource, /orderedQueue:\s*latest\.studyWordIndices/);
   assert.match(pageSource, /flushSync\(\(\) => \{/);
   assert.match(pageSource, /latest\.words = deletionResult\.words/);
+  assert.match(pageSource, /latest\.studyWordIndices = deletionResult\.queueIndices/);
   assert.match(pageSource, /createWordStudyOrderSnapshot\(/);
   assert.doesNotMatch(navigationSource, /buildAtomicDeletionNavigation/);
   assert.doesNotMatch(navigationSource, /flushSync/);

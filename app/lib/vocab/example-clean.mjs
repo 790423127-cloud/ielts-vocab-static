@@ -180,8 +180,11 @@ export function pickBestExampleSentence(example = "", target = "", options = {})
 
   best = capitalizeSentence(best);
   best = ensureTerminalPunctuation(best);
-  // never end with dangling mid-word truncation like "trai."
-  best = best.replace(/\b([A-Za-z]{1,3})\.$/, ".").replace(/\.\.$/, ".");
+  // Do not remove a short final token here. Complete examples commonly end in
+  // words such as "tea", "law", "job", "art", "day", or abbreviations such
+  // as "am"/"pm". Truncation detection must flag suspicious source text for
+  // review instead of destroying a grammatically valid sentence at runtime.
+  best = best.replace(/\.\.$/, ".");
   if (best === "." || best.length < 8) {
     best = capitalizeSentence(candidates[0] || cleaned);
     best = ensureTerminalPunctuation(best);
@@ -214,12 +217,28 @@ export function synthesizeExample(target = "", meaningZh = "", entryType = "word
 function looksTruncatedExample(text = "") {
   const t = String(text || "").trim();
   if (!t) return true;
-  // clearly incomplete clause endings common in cut corpus dumps
-  if (/\b(probably|and|or|but|to|for|with|the|a|an|means|is|are|was|were|have|has|had)$/i.test(t.replace(/[.!?]"?$/, ""))) {
+  const terminal = /[.!?]"?$/.test(t);
+  const tail = t.replace(/[.!?]"?$/, "");
+  // English may legitimately leave a preposition at the end of a relative
+  // clause: "which qualities employers look for" / "the place you are
+  // travelling to". Those are complete sentences, not clipped tails.
+  const hasLegitimateStrandedPreposition = /\b(?:which|what|who|whom|where|when|why|how)\b[\s\S]*\b(?:to|for|with|at|from|of|in|on|by|about|into|through|across|over|under)$/i.test(tail)
+    || /\b(?:place|places|person|people|thing|things|way|ways|time|times|reason|reasons|destination|destinations)\s+(?:(?:that|which|who|whom)\s+)?(?:i|you|he|she|we|they|it)\s+(?:am|are|is|was|were|will|would|can|could|should|may|might|have|has|had|do|does|did)\b[\s\S]*\b(?:to|for|with|at|from|of|in|on|by|about|into|through|across|over|under)$/i.test(tail)
+    || /\b(?:easy|hard|difficult|pleasant|nice|safe|fun|interesting|impossible|possible)\s+to\s+[a-z]+(?:\s+[a-z]+){0,5}\s+(?:to|for|with|at|from|of|in|on|by|about|into|through|across|over|under)$/i.test(tail);
+  // A question may legitimately end in a preposition ("Which channel is it
+  // on?"), so dangling-tail checks apply only to declarative sentences.
+  if (
+    !/\?"?$/.test(t)
+    && !hasLegitimateStrandedPreposition
+    && (
+      /\b(probably|and|or|but|to|for|with|the|a|an|means|every|because)$/i.test(tail)
+      || /\b(?:recover(?:ing|ed)?|suffer(?:ing|ed)?|benefit(?:ing|ed)?)\s+from$/i.test(tail)
+    )
+  ) {
     return true;
   }
   // ends with mid-word fragment like "trai" / "profes"
-  if (/\b[a-z]{2,}$/i.test(t) && !/[.!?]"?$/.test(t)) {
+  if (!terminal && /\b[a-z]{2,}$/i.test(t)) {
     const last = t.split(/\s+/).pop() || "";
     if (last.length >= 3 && last.length <= 5 && !/ly$|ed$|ing$|tion$|ness$|ment$|able$|ible$|ous$/i.test(last)) {
       // short tail without terminal punctuation → likely cut
@@ -227,16 +246,17 @@ function looksTruncatedExample(text = "") {
     }
   }
   // ends mid-word without vowels pattern: "trai."
-  if (/\b[bcdfghjklmnpqrstvwxyz]{3,}\.?$/i.test(t) && !/[aeiou][bcdfghjklmnpqrstvwxyz]*\.?$/i.test(t.split(/\s+/).pop() || "")) {
-    return true;
-  }
-  if (/\b[a-z]{1,4}\.$/i.test(t) && !/\b(a|an|the|to|of|in|on|at|is|it|as|or|if|so|no|yes|ok|us|me|my|we|he|she|they|this|that|from|with|for|and|but)\.$/i.test(t)) {
-    const last = (t.match(/\b([A-Za-z]+)\.$/) || [])[1] || "";
-    if (last.length <= 4 && !/^(a|an|the|to|of|in|on|at|is|it|as|or|if|so|us|me|my|we|he|she|this|that|from|with|for|and|but|not|all|any|one|two)$/i.test(last)) {
-      return true;
-    }
-  }
   return false;
+}
+
+/**
+ * Structural guard for import/audit scripts.  It deliberately checks only
+ * visible sentence damage (missing tail, dangling connector, mid-word cut);
+ * it does not try to infer a dictionary sense from the Chinese translation.
+ */
+export function isExampleLikelyTruncated(example = "") {
+  const normalized = stripExampleBulletsAndNoise(example);
+  return !normalized || looksTruncatedExample(normalized);
 }
 
 /**

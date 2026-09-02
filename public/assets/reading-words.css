@@ -136,3 +136,8 @@ body.static-unified-reading-page .reading-header nav a{flex:0 0 auto}
   body.static-unified-reading-page .reading-workspace{grid-template-columns:minmax(0,1fr)}
   body.static-unified-reading-page .word-list-panel{position:static}
 }
+
+#exampleText strong.example-target{
+  color:var(--green);
+  font-weight:800;
+}

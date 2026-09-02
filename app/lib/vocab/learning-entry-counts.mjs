@@ -1,9 +1,6 @@
 import { IDICTATION_FREQUENCY_META } from "../spelling/idictation-frequency.mjs";
 import { isBrushableWord } from "./word-study-eligibility.mjs";
-import {
-  isMissingAiFields,
-  isMissingClassification
-} from "./word-quality-status.mjs";
+import { getWordQualityStatus } from "./word-quality-status.mjs";
 
 function isLifeWorkWord(word) {
   const uses = Array.isArray(word?.ieltsUse) ? word.ieltsUse : [];
@@ -54,8 +51,9 @@ function tallyWordForFilters(word, tallies) {
   if (status === "不熟") tallies.status["不熟"] += 1;
   if (isFamiliar) tallies.status["熟悉"] += 1;
   if (!isFamiliar && word?.favorite) tallies.status["收藏"] += 1;
-  if (isMissingAiFields(word)) tallies.status["待补全"] += 1;
-  if (!isMissingAiFields(word) && isMissingClassification(word)) tallies.status["待归纳"] += 1;
+  const quality = getWordQualityStatus(word);
+  if (quality.contentMissing) tallies.status["待补全"] += 1;
+  if (!quality.contentMissing && quality.classificationMissing) tallies.status["待归纳"] += 1;
   if (!isFamiliar) tallies.all += 1;
 
   if (isFamiliar) return;

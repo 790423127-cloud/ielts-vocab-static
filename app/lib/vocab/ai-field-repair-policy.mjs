@@ -9,6 +9,7 @@ import {
   getWordQualityStatus,
   hasUsefulQualityText
 } from "./word-quality-status.mjs";
+import { isAiProfileCompatibleWithDeclaredPos } from "./multi-pos-sense-coverage.mjs";
 
 export const AI_WRITE_MODES = Object.freeze({
   PRECISE_STRUCTURE_REPAIR: "precise-structure-repair",
@@ -66,8 +67,8 @@ function mergeTranslatedPhrases(existingValue, candidateValue, max = AI_COLLOCAT
   return Array.from(merged.values()).slice(0, max);
 }
 
-function validOtherMeanings(value, mainMeaning) {
-  return normalizeOtherMeanings(value, mainMeaning).filter(isDetailedOtherMeaning);
+function validOtherMeanings(value, mainMeaning, mainPos) {
+  return normalizeOtherMeanings(value, mainMeaning, mainPos).filter(isDetailedOtherMeaning);
 }
 
 function cleanCandidate(candidateWord = {}) {
@@ -98,11 +99,28 @@ export function mergePreciseStructureRepair(existingWord = {}, candidateWord = {
   const candidate = cleanCandidate(candidateWord);
   const quality = getWordQualityStatus(existingWord);
   const next = { ...existingWord };
-  const semanticRepair = !quality.contentInvalid && !quality.contentMissing;
+  const multiPosRepair = quality.invalidContentFields.includes("multiPosSenses");
+  const semanticRepair = (!quality.contentInvalid && !quality.contentMissing) || multiPosRepair;
+
+  if (
+    multiPosRepair
+    && !isAiProfileCompatibleWithDeclaredPos(
+      candidate,
+      existingWord.primaryPos || existingWord.pos || existingWord.partOfSpeech
+    )
+  ) {
+    const error = new Error("AI返回的主词性和附加义项没有覆盖原词条声明的全部词性");
+    error.code = "AI_MULTI_POS_COVERAGE_INCOMPLETE";
+    throw error;
+  }
 
   if (semanticRepair) {
     for (const field of SEMANTIC_CONTENT_FIELDS) copyUsefulScalar(next, candidate, field);
-    const candidateSenses = validOtherMeanings(candidate.otherMeanings, candidate.meaning || next.meaning);
+    const candidateSenses = validOtherMeanings(
+      candidate.otherMeanings,
+      candidate.meaning || next.meaning,
+      candidate.pos || next.pos
+    );
     if (candidateSenses.length || Array.isArray(candidate.otherMeanings)) next.otherMeanings = candidateSenses;
     next.collocations = normalizeAiPhraseItems(candidate.collocations, {
       max: AI_COLLOCATION_LIMIT,
@@ -118,8 +136,16 @@ export function mergePreciseStructureRepair(existingWord = {}, candidateWord = {
     }
 
     if (quality.invalidContentFields.includes("otherMeanings")) {
-      const candidateSenses = validOtherMeanings(candidate.otherMeanings, candidate.meaning || next.meaning);
-      const recoveredExisting = validOtherMeanings(existingWord.otherMeanings, existingWord.meaning);
+      const candidateSenses = validOtherMeanings(
+        candidate.otherMeanings,
+        candidate.meaning || next.meaning,
+        candidate.pos || next.pos
+      );
+      const recoveredExisting = validOtherMeanings(
+        existingWord.otherMeanings,
+        existingWord.meaning,
+        existingWord.pos
+      );
       next.otherMeanings = candidateSenses.length ? candidateSenses : recoveredExisting;
     }
 

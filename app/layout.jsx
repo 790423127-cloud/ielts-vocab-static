@@ -3,6 +3,7 @@ import "./globals.css";
 import "./tidy-review-overrides.css";
 import FontScaleProvider from "./components/FontScaleProvider";
 import GlobalStudyHeader from "./components/GlobalStudyHeader";
+import EffectiveStudyTimeTracker from "./components/EffectiveStudyTimeTracker";
 import MobileWordCardSwipeController from "./components/MobileWordCardSwipeController";
 import QuickDeleteCurrentWordButton from "./components/QuickDeleteCurrentWordButton";
 
@@ -35,11 +36,11 @@ const browserCompatibilityBootstrapScript = `
       document.documentElement.dataset.fontScaleLevel =
         value >= 1.45 ? "xlarge" : value >= 1.25 ? "large" : value <= 0.9 ? "small" : "normal";
       document.documentElement.dataset.adaptiveShell =
-        window.innerWidth > 900 && window.innerWidth / value <= 900 ? "compact" : window.innerWidth <= 900 ? "native" : "desktop";
+        window.innerWidth <= 900 ? "native" : window.innerWidth <= 1180 || window.innerWidth / value <= 1180 ? "compact" : "desktop";
       document.documentElement.style.setProperty("--font-scale", String(value));
     } else {
       document.documentElement.dataset.fontScaleLevel = "normal";
-      document.documentElement.dataset.adaptiveShell = window.innerWidth <= 900 ? "native" : "desktop";
+      document.documentElement.dataset.adaptiveShell = window.innerWidth <= 900 ? "native" : window.innerWidth <= 1180 ? "compact" : "desktop";
     }
 
     document.documentElement.dataset.studyMeaningsHidden =
@@ -57,6 +58,7 @@ export default function RootLayout({ children }) {
       <body suppressHydrationWarning>
         <FontScaleProvider />
         <MobileWordCardSwipeController />
+        <EffectiveStudyTimeTracker />
         <Suspense fallback={null}>
           <GlobalStudyHeader />
         </Suspense>

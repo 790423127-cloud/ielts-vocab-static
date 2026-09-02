@@ -913,7 +913,7 @@ export default function PhraseFlashcardPanel() {
       />
 
       <section className="main phrase-main flash-training-main">
-          <div className="center phrase-center flash-training-card" data-word-swipe-card>
+          <div className="center phrase-center flash-training-card" data-word-swipe-card data-effective-study-region>
           <div className="phrase-type-badge">词组</div>
 
           <div className="flash-training-toolbar">
@@ -1002,7 +1002,7 @@ export default function PhraseFlashcardPanel() {
         </div>
       </section>
 
-      <footer className="bottom phrase-bottom flash-training-footer">
+      <footer className="bottom phrase-bottom flash-training-footer" data-effective-study-region>
         <div className="flash-training-nav-group phrase-nav-row">
           <button className="small-btn ghost flash-training-nav-btn" type="button" disabled={isStudyEmpty} onClick={prevPhrase}>上一个</button>
           <button className="small-btn ghost flash-training-nav-btn" type="button" disabled={isStudyEmpty} onClick={nextPhrase}>下一个</button>

@@ -8,6 +8,7 @@ import {
   buildLexiconRetirementPayload,
   buildLexiconDeletionIntent,
   formalLexiconWords,
+  rebaseConfirmedCurrentWordDeletion,
   validateLexiconDeletionIntent
 } from "../lexicon-delete-intent.mjs";
 
@@ -103,4 +104,40 @@ test("quick delete keeps the native confirmation and the server writes a persist
   assert.match(exportRoute, /deletionBackup/);
   assert.match(exportRoute, /buildLexiconRetirementPayload/);
   assert.match(exportRoute, /retirementFile/);
+});
+
+test("stale direct deletion rebases only the confirmed stable IDs on the current lexicon", () => {
+  const current = [
+    { id: "a", word: "alpha" },
+    { id: "b", word: "beta" },
+    { id: "c", word: "gamma" }
+  ];
+  const result = rebaseConfirmedCurrentWordDeletion(current, {
+    action: "delete-current-word",
+    confirmed: true,
+    expectedBeforeCount: 2,
+    expectedAfterCount: 1,
+    removed: [{ id: "b", word: "beta" }]
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.rebased, true);
+  assert.deepEqual(result.words.map((entry) => entry.id), ["a", "c"]);
+  assert.deepEqual(result.removed, [{ id: "b", word: "beta" }]);
+});
+
+test("stale direct deletion refuses an ID that is no longer in the current lexicon", () => {
+  const result = rebaseConfirmedCurrentWordDeletion(
+    [{ id: "a", word: "alpha" }],
+    {
+      action: "delete-current-word",
+      confirmed: true,
+      expectedBeforeCount: 2,
+      expectedAfterCount: 1,
+      removed: [{ id: "b", word: "beta" }]
+    }
+  );
+
+  assert.equal(result.ok, false);
+  assert.match(result.error, /目标已变化/);
 });

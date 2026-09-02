@@ -6,19 +6,10 @@ import {
   formatHeadwordForDisplay,
   formatHeadwordForSpeech
 } from "../lib/vocab/headword-format.mjs";
-import { getMeaningDisplay } from "../lib/vocab/meaning-display.mjs";
+import { getMainMeaningDetailDisplay } from "../lib/vocab/meaning-display.mjs";
 import { getStudyEntryDisplay } from "../lib/vocab/study-entry-display.mjs";
+import HighlightedExampleText from "./HighlightedExampleText.jsx";
 import InlineStudyMeaning from "./InlineStudyMeaning.jsx";
-
-function highlightTargetWords(sentence, words) {
-  if (!sentence) return sentence;
-  const targets = new Set(words.filter(Boolean).map((word) => String(word).toLowerCase()));
-
-  return sentence.split(/([A-Za-z]+(?:'[A-Za-z]+)?)/g).map((part, index) => {
-    if (!targets.has(part.toLowerCase())) return part;
-    return <strong key={`${part}-${index}`}>{part}</strong>;
-  });
-}
 
 function HeadwordText({ value }) {
   const displayValue = formatHeadwordForDisplay(value) || "—";
@@ -39,7 +30,6 @@ export default function WordStudyContent({
   speakWord
 }) {
   const display = getStudyEntryDisplay(item);
-  const highlightedWords = [item.word, ...displayForms.map((form) => form.word)];
   const displayHeadword = formatHeadwordForDisplay(item.word) || "—";
   const spokenHeadword = formatHeadwordForSpeech(item.word) || "当前单词";
   const headwordClassName = [
@@ -49,10 +39,14 @@ export default function WordStudyContent({
     displayHeadword.includes("/") ? "word--alternatives" : ""
   ].filter(Boolean).join(" ");
   const otherMeanings = display.supplementalSenses;
-  const mainMeaningDetail = getMeaningDisplay(item).detail;
+  const mainMeaningDetail = getMainMeaningDetailDisplay(item, {
+    word: display.word || item.word,
+    meaning: display.meaning,
+    posLabel: getPosDisplay(display.pos)
+  });
 
   return (
-    <div className="word-study-content">
+    <div className="word-study-content" data-effective-study-region>
       <section className="example-box study-answer-content" aria-label="例句">
         <button
           className="hero-sound-btn example-sound-btn"
@@ -76,7 +70,11 @@ export default function WordStudyContent({
           }}
         >
           <div className="example">
-            {highlightTargetWords(fallback(display.example, "等待补充雅思例句"), highlightedWords)}
+            <HighlightedExampleText
+              sentence={fallback(display.example, "等待补充雅思例句")}
+              item={item}
+              forms={displayForms}
+            />
           </div>
           <div className="example-cn">{fallback(display.exampleCn, "等待补充例句中文翻译")}</div>
         </div>
@@ -118,9 +116,7 @@ export default function WordStudyContent({
             <strong>资料提示：</strong>该词含多个词性，现有释义尚未按词性拆分。
           </div>
         ) : null}
-        {mainMeaningDetail ? (
-          <div className="meaning-detail"><strong>主释义详解：</strong>{mainMeaningDetail}</div>
-        ) : null}
+        <div className="meaning-detail"><strong>主释义详解：</strong>{mainMeaningDetail}</div>
       </div>
     </div>
   );

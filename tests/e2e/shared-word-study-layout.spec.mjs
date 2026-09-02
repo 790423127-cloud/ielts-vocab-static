@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const SATELLITE_ROUTES = [
   { route: "/basic", expectedWord: "hello", insightCount: 1 },
-  { route: "/ielts-538", expectedWord: "resemble", insightCount: 0 },
+  { route: "/ielts-538", expectedWord: "resemble", insightCount: 1 },
   { route: "/reading-g", expectedWord: "ability", insightCount: 1 }
 ];
 
@@ -24,6 +24,44 @@ for (const { route, expectedWord, insightCount } of SATELLITE_ROUTES) {
     expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
   });
 }
+
+test("basic and 538 share the same desktop workspace geometry", async ({ page }) => {
+  await page.setViewportSize({ width: 1600, height: 1000 });
+
+  async function readWorkspace(route) {
+    await page.goto(route);
+    await expect(page.locator(".word-insight-panel")).toBeVisible();
+    return page.evaluate(() => {
+      const layout = document.querySelector(".word-study-layout");
+      const column = document.querySelector(".word-study-column");
+      const card = document.querySelector(".word-study-card");
+      const insight = document.querySelector(".word-insight-panel");
+      const layoutStyle = getComputedStyle(layout);
+      const layoutBox = layout.getBoundingClientRect();
+      return {
+        layoutDisplay: layoutStyle.display,
+        layoutColumns: layoutStyle.gridTemplateColumns,
+        layoutWidth: Math.round(layoutBox.width),
+        layoutHeight: Math.round(layoutBox.height),
+        columnDisplay: getComputedStyle(column).display,
+        columnOverflow: getComputedStyle(column).overflow,
+        cardOverflowY: getComputedStyle(card).overflowY,
+        insightDisplay: getComputedStyle(insight).display
+      };
+    });
+  }
+
+  const basicWorkspace = await readWorkspace("/basic");
+  const ielts538Workspace = await readWorkspace("/ielts-538");
+
+  expect(ielts538Workspace).toEqual(basicWorkspace);
+  expect(ielts538Workspace.layoutDisplay).toBe("grid");
+  expect(ielts538Workspace.layoutColumns.split(" ")).toHaveLength(2);
+  expect(ielts538Workspace.columnDisplay).toBe("grid");
+  expect(ielts538Workspace.cardOverflowY).toBe("auto");
+  await expect(page.locator(".ielts-538-paraphrase")).toHaveCount(1);
+  await expect(page.locator(".ielts-538-related-grid")).toHaveCount(1);
+});
 
 test("538 entries render the selected reviewed contextual paraphrase", async ({ page }) => {
   await page.goto("/ielts-538");
@@ -75,7 +113,7 @@ test("538 reviewed alternatives switch the single example panel", async ({ page 
   );
   await expect(primaryChoice).toHaveAttribute("aria-pressed", "false");
 
-  await expect(page.locator(".word-insight-panel")).toHaveCount(0);
+  await expect(page.locator(".word-insight-panel")).toHaveCount(1);
   await expect(page.locator(".footer-grid:not(.ielts-538-related-grid)")).toHaveCount(0);
 });
 

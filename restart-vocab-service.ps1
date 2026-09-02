@@ -29,51 +29,6 @@ function Get-PortOwners {
     )
 }
 
-function Test-PortBindable {
-    param([int]$TargetPort)
-
-    $listener = $null
-    try {
-        $listener = [System.Net.Sockets.TcpListener]::new(
-            [System.Net.IPAddress]::Loopback,
-            $TargetPort
-        )
-        $listener.Server.ExclusiveAddressUse = $true
-        $listener.Start()
-        return $true
-    }
-    catch {
-        return $false
-    }
-    finally {
-        if ($listener) {
-            try { $listener.Stop() } catch {}
-        }
-    }
-}
-
-function Stop-ProcessTreeQuietly {
-    param([int]$TargetProcessId)
-
-    if (-not $TargetProcessId -or $TargetProcessId -eq $PID) {
-        return
-    }
-
-    $processInfo = Get-CimInstance Win32_Process `
-        -Filter "ProcessId = $TargetProcessId" `
-        -ErrorAction SilentlyContinue
-
-    if (-not $processInfo) {
-        Write-Host ("[STALE] PID {0} no longer exists." -f $TargetProcessId) -ForegroundColor DarkYellow
-        return
-    }
-
-    Write-Host ("[STOP] PID {0}: {1}" -f $TargetProcessId, $processInfo.CommandLine) -ForegroundColor Yellow
-
-    & cmd.exe /d /c "taskkill /PID $TargetProcessId /T /F >nul 2>&1" | Out-Null
-    Stop-Process -Id $TargetProcessId -Force -ErrorAction SilentlyContinue
-}
-
 function Invoke-CheckedCommand {
     param(
         [Parameter(Mandatory = $true)]
@@ -104,22 +59,13 @@ try {
         throw "npm.cmd was not found. Reinstall Node.js LTS."
     }
 
-    Write-Step "[2/6] Stopping the old service on port 3000..."
-    for ($attempt = 1; $attempt -le 20; $attempt++) {
-        foreach ($ownerPid in (Get-PortOwners -TargetPort $Port)) {
-            Stop-ProcessTreeQuietly -TargetProcessId ([int]$ownerPid)
-        }
-
-        Start-Sleep -Milliseconds 300
-
-        if (Test-PortBindable -TargetPort $Port) {
-            Write-Host "[OK] Port 3000 is free." -ForegroundColor Green
-            break
-        }
-
-        if ($attempt -eq 20) {
-            throw "Port 3000 is still occupied after 6 seconds."
-        }
+    Write-Step "[2/6] Checking the current service on port 3000..."
+    $currentOwners = @(Get-PortOwners -TargetPort $Port)
+    if ($currentOwners.Count -gt 0) {
+        Write-Host "[OK] The current service will stay online until the new build succeeds." -ForegroundColor Green
+    }
+    else {
+        Write-Host "[OK] Port 3000 is currently free." -ForegroundColor Green
     }
 
     Write-Step "[3/6] Checking dependencies..."
@@ -182,15 +128,11 @@ try {
         throw "Build completed without .next\BUILD_ID."
     }
 
-    Copy-Item -LiteralPath ".next\BUILD_ID" -Destination ".next\.running-build-id" -Force
-
     Write-Step "[6/6] Starting the new service..."
-    $serverCommand = "title IELTS Vocab Server && cd /d ""$ProjectRoot"" && npm.cmd start"
-
-    Start-Process `
-        -FilePath "cmd.exe" `
-        -ArgumentList @("/k", $serverCommand) `
-        -WorkingDirectory $ProjectRoot | Out-Null
+    Invoke-CheckedCommand `
+        -FilePath "node.exe" `
+        -Arguments @("scripts/local-production-server.mjs", "--start") `
+        -FailureMessage "The background production service could not be started"
 
     $ready = $false
     for ($attempt = 1; $attempt -le 60; $attempt++) {
@@ -216,7 +158,7 @@ try {
         throw "The server did not respond at $AppUrl within 60 seconds. Check the IELTS Vocab Server window."
     }
 
-    Write-Host "[OK] New frontend and API routes are running on port 3000." -ForegroundColor Green
+    Write-Host "[OK] New frontend and API routes are running in the background on port 3000." -ForegroundColor Green
     Write-Host "Opening $AppUrl"
     Start-Process $AppUrl
     exit 0
@@ -225,6 +167,17 @@ catch {
     Write-Host ""
     Write-Host ("[ERROR] {0}" -f $_.Exception.Message) -ForegroundColor Red
     Write-Host ""
-    Write-Host "The old service was stopped, but an incomplete new build was not started." -ForegroundColor Yellow
+    Write-Host "The previous successful build was preserved. Attempting to keep it available..." -ForegroundColor Yellow
+    if ((Test-Path -LiteralPath ".next\BUILD_ID") -and (Get-Command node.exe -ErrorAction SilentlyContinue)) {
+        try {
+            & node.exe "scripts/local-production-server.mjs" --start 2>$null | Out-Null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "[OK] The previous build is still available on port 3000." -ForegroundColor Green
+            }
+        }
+        catch {
+            Write-Host "The previous build could not be restarted automatically; see outputs\ielts538-server.stderr.log." -ForegroundColor Yellow
+        }
+    }
     exit 1
 }

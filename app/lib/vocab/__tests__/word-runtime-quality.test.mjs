@@ -50,6 +50,7 @@ test("home count formatter displays the computed brushable count without fixed t
   assert.equal(formatVocabCountLabel("online", 9917), "9,917 词");
   assert.equal(formatVocabCountLabel("online", 10000), "10,000 词");
   assert.equal(formatVocabCountLabel("online", 9800), "9,800 词");
+  assert.equal(formatVocabCountLabel("online", 0), "准备中");
   assert.equal(formatVocabCountLabel("error", null), "词库不可用");
 
   const source = fs.readFileSync(pagePath, "utf8");

@@ -1,7 +1,7 @@
 /** Storage keys for IELTS G-class Reading vocab v3 data / v4 progress. */
 
-export const READING_G_DATA_URL = "/data/reading-g-vocab.json?v=20260804-grok-excel-part1-2-missing-v1";
-export const READING_G_VOCAB_CACHE_KEY = "reading-g-vocab:normalized:20260804-grok-excel-part1-2-missing-v1";
+export const READING_G_DATA_URL = "/data/reading-g-vocab.json?v=20260824-ai-coach-logic-v70";
+export const READING_G_VOCAB_CACHE_KEY = "reading-g-vocab:normalized:20260824-ai-coach-logic-v70";
 export const READING_G_PARAPHRASES_URL = "/data/reading-g-paraphrases.json";
 export const READING_G_QUESTION_EVIDENCE_URL = "/data/reading-g-question-evidence.json";
 export const READING_G_REPORT_URL = "/data/reading-g-import-report.json";
@@ -28,6 +28,9 @@ export const READING_G_PARA_SESSION_KEY = "ielts_reading_g_paraphrase_session_v1
 /** One-shot migration flags */
 export const READING_G_MIGRATION_KEY = "ielts_reading_g_migration_v3";
 export const READING_G_MIGRATION_V4_KEY = "ielts_reading_g_migration_v4";
+// v5 remaps the old independent-form ids after they are compacted into the
+// master lexicon's real headword.  The status payload schema itself stays v4.
+export const READING_G_MIGRATION_V5_KEY = "ielts_reading_g_migration_v5";
 
 /** Legacy keys for selective migration */
 export const READING_G_STATUS_KEY_V1 = "ielts_reading_g_status_v1";

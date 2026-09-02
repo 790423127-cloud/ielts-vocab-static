@@ -1,0 +1,2733 @@
+/* IELTS_STUDY_SYSTEM_V2 -----------------------------------------------------
+ * Canonical presentation contract shared by the Next application and every
+ * standalone static study page. Page-specific styles may describe content;
+ * this file owns shell geometry, density, scaling, focus and scroll policy.
+ */
+
+:root {
+  --study-v2-header-height: 64px;
+  --study-v2-sidebar-width: 240px;
+  --study-v2-mobile-nav-height: 0px;
+  --study-v2-page-gap: clamp(8px, 1vw, 14px);
+  --study-v2-page-padding: clamp(8px, 1.15vw, 18px);
+  --study-v2-radius: 10px;
+  --study-v2-border: #dce7e2;
+  --study-v2-card: #fff;
+  --study-v2-canvas: #f7f9f8;
+  --study-v2-ink: #153c34;
+  --study-v2-muted: #6f817a;
+  --study-v2-accent: #08715e;
+  --study-v2-soft: #edf6f2;
+  --study-v2-danger: #b5442d;
+  --study-v2-control-height: calc(36px + (2px * var(--font-scale, 1)));
+  /* Existing shell components still consume the original variable names.
+   * Alias them instead of fighting their !important geometry declarations. */
+  --study-header-height: var(--study-v2-header-height);
+  --study-sidebar-width: var(--study-v2-sidebar-width);
+}
+
+html[data-study-system="v2"] {
+  min-width: 0;
+  background: var(--study-v2-canvas);
+  color-scheme: light;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+html[data-study-system="v2"],
+html[data-study-system="v2"] body {
+  max-width: 100%;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
+
+html[data-study-system="v2"] body {
+  margin: 0;
+  background: var(--study-v2-canvas);
+}
+
+/* The exporter appends this label after each page's viewport-sized main
+ * region. Keep it out of document flow so it cannot create a fake page
+ * scrollbar on otherwise one-screen static learning pages. */
+html[data-study-system="v2"] .static-build-version {
+  position: fixed;
+  right: 8px;
+  bottom: 6px;
+  z-index: 2;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  color: rgba(22, 53, 47, .55);
+  font-size: 10px;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+html[data-study-system="v2"] *,
+html[data-study-system="v2"] *::before,
+html[data-study-system="v2"] *::after {
+  box-sizing: border-box;
+}
+
+html[data-study-system="v2"] :where(button, input, select, textarea, summary, a) {
+  max-width: 100%;
+}
+
+html[data-study-system="v2"] :where(button, input, select, textarea) {
+  min-height: var(--study-v2-control-height);
+  font: inherit;
+}
+
+@media (max-width: 900px) {
+  html[data-study-system="v2"] :where(input, textarea) {
+    /* iOS zooms focused fields below 16px and does not reliably restore the viewport. */
+    font-size: max(16px, 1em);
+  }
+}
+
+html[data-study-system="v2"] :where(button, a, input, select, textarea, summary):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--study-v2-accent) 38%, transparent);
+  outline-offset: 2px;
+}
+
+html[data-study-system="v2"] :where(img, svg, video, canvas) {
+  max-width: 100%;
+}
+
+html[data-study-system="v2"] :where(.page, .app, .reading-app, .rp-page, .spell-app, .study538) {
+  min-width: 0;
+}
+
+/* The shell mode follows physical width only. Font scaling must never switch
+ * desktop/compact/native mode, which previously caused the 140% shrink jump. */
+@media (min-width: 1181px) {
+  :root {
+    --study-v2-header-height: 64px;
+    --study-v2-sidebar-width: 240px;
+    --study-v2-mobile-nav-height: 0px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  :root {
+    --study-v2-header-height: 58px;
+    --study-v2-sidebar-width: 0px;
+    --study-v2-mobile-nav-height: 60px;
+  }
+
+  html[data-study-system="v2"] .study-brand-header {
+    height: var(--study-v2-header-height) !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-rows: 1fr !important;
+    padding-inline: 10px !important;
+  }
+
+  html[data-study-system="v2"] .study-brand-mark {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    border-right: 0 !important;
+  }
+
+  html[data-study-system="v2"] :where(.study-session-context, .study-global-search, .study-shell-sidebar) {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] .study-header-tools {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    border-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  html[data-study-system="v2"] body {
+    padding-bottom: var(--study-v2-mobile-nav-height);
+  }
+
+  html[data-study-system="v2"] body > main {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --study-v2-header-height: 58px;
+    --study-v2-sidebar-width: 0px;
+    --study-v2-mobile-nav-height: 60px;
+    --study-v2-page-padding: 8px;
+    --study-v2-page-gap: 8px;
+  }
+
+  html[data-study-system="v2"] body {
+    padding-bottom: var(--study-v2-mobile-nav-height);
+  }
+}
+
+/* Next study surfaces ------------------------------------------------------ */
+html[data-study-system="v2"] body > main[data-study-surface] {
+  width: auto;
+  margin-left: var(--study-v2-sidebar-width);
+  min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+  padding: var(--study-v2-page-padding);
+  background: var(--study-v2-canvas);
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="flash"],
+html[data-study-system="v2"] body > main[data-study-surface="basic"],
+html[data-study-system="v2"] body > main[data-study-surface="ielts-538"],
+html[data-study-system="v2"] body > main[data-study-surface="reading-g"],
+html[data-study-system="v2"] body > main[data-study-surface="reading-words"] {
+  height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+  min-height: 0;
+  overflow: clip;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] :where(.topbar, .toolbar) {
+  min-width: 0;
+  border-radius: var(--study-v2-radius);
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] :where(.top-actions, .toolbar) {
+  scrollbar-width: none;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] :where(.top-actions, .toolbar)::-webkit-scrollbar {
+  display: none;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] :where(.word-study-layout, .word-study-column, .word-study-card, .word-study-content) {
+  min-width: 0;
+  min-height: 0;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] .word-study-card {
+  container: study-card / size;
+  overflow: clip !important;
+  scrollbar-width: none;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] .word-study-card::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * 全站刷词卡统一节奏（100%–160% 同一套）：
+ * - 字号 = base × --font-scale
+ * - 行距 = 固定无单位比值（不随 large/xlarge 改）
+ * - 块间距 = base × --font-scale（比例与 100% 一致，避免 110% 起“行距对不上”）
+ */
+html[data-study-system="v2"] {
+  --study-lh-word: 1;
+  --study-lh-example: 1.35;
+  --study-lh-example-cn: 1.3;
+  --study-lh-meaning: 1.3;
+  --study-stack-gap: calc(6px * var(--font-scale, 1));
+  --study-hero-gap: calc(6px * var(--font-scale, 1));
+  --study-word-size: min(calc(62px * var(--font-scale, 1)), 108px);
+  --study-word-long-size: min(calc(48px * var(--font-scale, 1)), 88px);
+  --study-example-size: calc(22px * var(--font-scale, 1));
+  --study-example-cn-size: calc(15px * var(--font-scale, 1));
+  --study-meaning-size: min(calc(26px * var(--font-scale, 1)), 42px);
+  --study-meaning-detail-size: min(calc(13px * var(--font-scale, 1)), 20px);
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] .word-study-content {
+  width: min(1100px, 100%);
+  height: auto;
+  margin-inline: auto;
+  align-content: center;
+}
+
+/* 任意档位同一竖排：不再只在 large 才切 flex，避免 110% 行距/块距突变 */
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-content {
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: var(--study-stack-gap) !important;
+  margin-block: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-content > .example-box {
+  width: 100% !important;
+  min-width: 0;
+  flex: 0 1 auto !important;
+  align-self: stretch;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  margin: 0 auto !important;
+  padding-block: calc(2px * var(--font-scale, 1)) calc(4px * var(--font-scale, 1)) !important;
+  overflow: hidden;
+  text-align: center;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-content > .word-hero {
+  flex: 0 0 auto !important;
+  flex-shrink: 0;
+  min-width: 0;
+  min-height: fit-content !important;
+  max-height: none !important;
+  align-self: center;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  margin: 0 !important;
+  padding-block: 0 !important;
+  gap: var(--study-hero-gap) !important;
+  text-align: center;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-content > .meaning-block {
+  min-width: 0;
+  flex: 0 0 auto !important;
+  align-self: center;
+  width: min(720px, 100%);
+  grid-column: auto !important;
+  grid-row: auto !important;
+  margin: 0 auto !important;
+  text-align: center;
+  overflow: hidden;
+}
+
+/*
+ * 底部词性/词组/关系卡：全系统预留最小高度，禁止被 flex 压成 0。
+ * 放大时先压例句/释义上限，再让关系区内部滚动，而不是整块消失。
+ */
+html[data-study-system="v2"] {
+  /* 关系卡最小高度不随 scale 线性暴涨，避免 160% 把释义/例句挤没 */
+  --study-relation-min-h: max(128px, 17dvh);
+  --study-relation-max-h: min(32dvh, 220px);
+  --study-example-max-h: min(14dvh, 110px);
+  --study-meaning-max-h: min(14dvh, 110px);
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-card {
+  min-height: 0;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* 上半区（例句+头词+释义）可收缩；底部关系卡不丢 */
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-card > .word-study-content {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-content > .example-box {
+  /* 至少约 1.5 行例句，避免为保住底部卡把例句压没 */
+  min-height: calc(var(--study-example-size) * var(--study-lh-example) * 1.5);
+  max-height: var(--study-example-max-h);
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-content > .meaning-block {
+  /* 至少一行释义；内容多则裁切，但不被压成 0 */
+  flex: 0 0 auto !important;
+  min-height: calc(var(--study-meaning-size) * var(--study-lh-meaning)) !important;
+  max-height: var(--study-meaning-max-h);
+}
+
+/* 内容内第 4 块：footer-grid / 538 related / G 类关系 */
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"]
+) .word-study-content > :nth-child(4) {
+  min-width: 0;
+  flex: 1 1 auto !important;
+  flex-shrink: 0 !important;
+  min-height: var(--study-relation-min-h) !important;
+  max-height: var(--study-relation-max-h);
+  align-self: stretch;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  margin: 0 !important;
+  overflow: auto !important;
+}
+
+/* 主刷词 / 阅读生词：词典面板是 content 的兄弟节点 */
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-study-card > .word-dictionary-panel {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  min-height: var(--study-relation-min-h) !important;
+  max-height: var(--study-relation-max-h) !important;
+  height: auto !important;
+  margin-top: var(--study-stack-gap) !important;
+  overflow: auto !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-grid,
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-module,
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-content {
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-content {
+  overflow: auto;
+  max-height: min(22dvh, calc(160px * var(--font-scale, 1)));
+}
+
+/* 任意字号：头词始终完整可见 */
+html[data-study-system="v2"] body > main[data-study-surface] .word-hero .word {
+  max-width: min(100%, 18ch);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  flex-shrink: 0;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] :where(.example, .example-cn, .meaning-primary, .zh, .form-note) {
+  overflow-wrap: anywhere;
+}
+
+/* The shared main card always reserves a compact footer for populated
+ * relation cards. The legacy margin/min-height values were sized for a
+ * scrollable page and pushed the footer below the fixed study canvas. */
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-panel {
+  margin-top: 6px !important;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+  .word-dictionary-panel {
+  margin-top: 2px !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-module h3 {
+  min-height: 32px;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-content {
+  min-height: 0;
+  padding: 4px 8px 6px;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-module .word-dictionary-row {
+  min-height: 32px;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+  .word-dictionary-row {
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 3px 6px;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+  .word-dictionary-row > span,
+html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+  .word-dictionary-row small {
+  font-size: calc(7px + (4px * var(--font-scale, 1)));
+  line-height: 1.3;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+  .word-dictionary-row small {
+  grid-column: 1 / -1;
+  padding-bottom: 2px;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+  .word-dictionary-row button {
+  min-height: 26px;
+  padding-block: 2px;
+  overflow: visible;
+  font-size: calc(9px + (4px * var(--font-scale, 1)));
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+/* Large text keeps growing, but the learning canvas changes density instead of
+ * pretending that the viewport became a tablet.  This is deliberately keyed
+ * by font level (not adaptive-shell), so 140% can never switch to a smaller
+ * responsive mode again. */
+@media (min-width: 1181px) {
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] {
+    --study-v2-sidebar-width: 76px;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-brand-header {
+    grid-template-columns: var(--study-v2-sidebar-width) minmax(180px, 1fr) minmax(220px, 320px) auto !important;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-brand-mark {
+    justify-content: center;
+    padding-inline: 0 !important;
+    font-size: 0 !important;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-session-context {
+    min-width: 0;
+    padding-inline: 12px !important;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-session-context strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-session-context span,
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-shell-nav-label,
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-shell-nav-item > span,
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-habit-card,
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-theme-toggle > span {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-shell-sidebar {
+    padding-inline: 8px !important;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-shell-nav-item,
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-theme-toggle {
+    justify-content: center;
+    gap: 0;
+    padding-inline: 0 !important;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] .study-global-search {
+    width: min(100%, 320px);
+    min-width: 0;
+    justify-self: end;
+  }
+
+  /*
+   * 高字号仅补高度约束（防止挤出卡片），不再改 gap / line-height。
+   * 字号与行距统一用 --study-* 变量，100% 与 160% 节奏一致。
+   */
+  html[data-study-system="v2"]:is([data-font-scale-level="large"], [data-font-scale-level="xlarge"])
+    body > main:is(
+      [data-study-surface="flash"],
+      [data-study-surface="basic"],
+      [data-study-surface="ielts-538"],
+      [data-study-surface="reading-g"],
+      [data-study-surface="reading-words"]
+    ) .word-study-content {
+    height: 100% !important;
+  }
+
+  /* large 档上限改由全局 --study-example-max-h / --study-meaning-max-h 统一控制 */
+
+  /* 头词 / 例句 / 释义：全档位同一公式 */
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) .word-hero .word:not(.word--long):not(.word--alternatives) {
+    font-size: var(--study-word-size) !important;
+    line-height: var(--study-lh-word) !important;
+    overflow-wrap: normal;
+    word-break: normal;
+    white-space: nowrap;
+    max-width: min(100%, 18ch);
+    margin-bottom: 0 !important;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) .word-hero .word:is(.word--long, .word--alternatives) {
+    font-size: var(--study-word-long-size) !important;
+    line-height: 1.05 !important;
+    overflow-wrap: break-word;
+    word-break: normal;
+    white-space: normal;
+    margin-bottom: 0 !important;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) .example-box .example,
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) .example-box .example-en {
+    font-size: var(--study-example-size) !important;
+    line-height: var(--study-lh-example) !important;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) .example-box .example-cn {
+    font-size: var(--study-example-cn-size) !important;
+    line-height: var(--study-lh-example-cn) !important;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) .meaning-block .meaning-primary {
+    font-size: var(--study-meaning-size) !important;
+    line-height: var(--study-lh-meaning) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="flash"] .meaning-detail {
+    font-size: var(--study-meaning-detail-size) !important;
+    line-height: var(--study-lh-meaning) !important;
+  }
+
+  /* 词典网格：自适应列，不再 height:100% 把模块压扁 */
+  html[data-study-system="v2"] body > main[data-study-surface="flash"] .word-dictionary-grid {
+    height: auto;
+    min-height: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    grid-template-rows: auto;
+    gap: 6px;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="flash"] .word-dictionary-module {
+    height: auto;
+    min-height: 0;
+  }
+
+  html[data-study-system="v2"]:is([data-font-scale-level="large"], [data-font-scale-level="xlarge"])
+    body > main[data-study-surface="flash"] .word-dictionary-module h3 {
+    min-height: 30px;
+    padding-inline: 8px;
+    font-size: calc(9px + (5px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"]:is([data-font-scale-level="large"], [data-font-scale-level="xlarge"])
+    body > main[data-study-surface="flash"] .word-dictionary-content {
+    min-height: 0;
+    padding: 4px 7px 5px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"]:is([data-font-scale-level="large"], [data-font-scale-level="xlarge"])
+    body > main[data-study-surface="flash"] .word-dictionary-module .word-dictionary-row {
+    min-height: 0;
+    grid-template-columns: 62px minmax(0, 1fr);
+    gap: 2px 6px;
+    padding-block: 2px;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="flash"]
+    .word-dictionary-row :where(span, small) {
+    font-size: calc(12px * var(--font-scale, 1));
+    line-height: 1.3;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="flash"]
+    .word-dictionary-row button {
+    min-height: calc(24px * var(--font-scale, 1));
+    font-size: calc(13px * var(--font-scale, 1));
+  }
+
+  html[data-study-system="v2"]:is([data-font-scale-level="large"], [data-font-scale-level="xlarge"])
+    body > main[data-study-surface="flash"] .word-dictionary-row small {
+    grid-column: 1 / -1;
+    padding-bottom: 2px;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  /* 零基础 / G 类：卡片主区填满；内容节奏走全局 --study-* 变量 */
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="basic"],
+    [data-study-surface="reading-g"]
+  ) .word-study-card > .main {
+    min-height: 0 !important;
+    flex: 1 1 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="basic"],
+    [data-study-surface="reading-g"]
+  ) .word-study-content {
+    height: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="basic"],
+    [data-study-surface="reading-g"]
+  ) .word-study-content > .word-hero > .hero-sound-btn {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 2px;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="basic"],
+    [data-study-surface="reading-g"]
+  ) .word-study-content > :nth-child(4) > .footer-grid {
+    height: 100%;
+    min-height: 0;
+    align-content: stretch;
+    margin: 0 !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .word-study-content > :nth-child(4) > .footer-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .g-reading-relation-grid .block > .list {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 3px 7px !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .g-reading-relation-grid .pair-text {
+    flex-wrap: nowrap;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .g-reading-relation-grid .zh {
+    flex: 1 1 0;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .g-reading-relation-grid .item.with-sound {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .g-reading-relation-grid .mini-sound {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    min-height: 26px;
+    font-size: 12px;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .g-reading-relation-grid :where(.relation-en, .en) {
+    font-size: calc(13px * var(--font-scale, 1)) !important;
+    line-height: 1.3 !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-g"]
+    .g-reading-relation-grid :where(.relation-zh, .zh) {
+    font-size: calc(12px * var(--font-scale, 1)) !important;
+    line-height: 1.3 !important;
+  }
+
+  /* The reading notebook owns exactly three populated relation cards.
+   * Keep them on one desktop row so the third card never becomes clipped
+   * below the fixed learning canvas. */
+  html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+    .word-dictionary-grid--reading {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="basic"],
+    [data-study-surface="reading-g"]
+  ) .word-study-content > :nth-child(4) .block {
+    min-height: 0;
+    padding: 7px 9px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="basic"],
+    [data-study-surface="reading-g"]
+  ) .word-study-content > :nth-child(4) .block-title {
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="basic"],
+    [data-study-surface="reading-g"]
+  ) .word-study-content > :nth-child(4) .item {
+    min-height: 0;
+    padding-block: 3px;
+  }
+
+  /* Relation material remains readable at 160%, while its typography grows
+   * more gently than the primary word.  Populated items are never hidden. */
+  html[data-study-system="v2"] body > main[data-study-surface]
+    :where(.footer-grid, .word-dictionary-grid) :where(.relation-en, .en) {
+    font-size: calc(9px + (6px * var(--font-scale, 1))) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface]
+    :where(.footer-grid, .word-dictionary-grid) :where(.relation-zh, .zh) {
+    font-size: calc(7px + (6px * var(--font-scale, 1))) !important;
+    line-height: 1.3 !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface]
+    :where(.footer-grid, .word-dictionary-grid) .mini-sound {
+    width: 30px;
+    height: 30px;
+    min-height: 30px;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] body > main[data-study-surface]
+    :where(.footer-grid, .word-dictionary-grid) .block > .list {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+    align-content: start;
+    gap: 4px 8px !important;
+  }
+}
+
+@container study-card (max-height: 690px) {
+  .word-study-content {
+    gap: 4px !important;
+    padding-block: 2px !important;
+  }
+
+  .word-study-content .example-box {
+    margin-block: 0 !important;
+    padding-block: 2px !important;
+  }
+
+  .word-study-content .word-hero {
+    gap: 3px !important;
+    padding-block: 1px !important;
+  }
+
+  /* 矮卡片只收间距，不改字号公式（避免 A+ 被容器查询压平） */
+  .word-study-content .word-hero .word {
+    font-size: var(--study-word-size) !important;
+    line-height: var(--study-lh-word) !important;
+  }
+
+  .word-study-content .meaning-block {
+    margin-block: 2px !important;
+  }
+
+  .word-study-content :where(.footer-grid, .word-dictionary-grid) {
+    gap: 6px !important;
+    margin-top: 4px !important;
+  }
+}
+
+@container study-card (max-height: 560px) {
+  .word-study-content .example-box :where(.example, .example-cn) {
+    line-height: var(--study-lh-example) !important;
+  }
+
+  .word-study-content .word-hero .word {
+    font-size: var(--study-word-size) !important;
+    line-height: var(--study-lh-word) !important;
+  }
+
+  .word-study-content :where(.block, .word-detail-card) {
+    padding: 5px 7px !important;
+  }
+}
+
+/* The reading-word list is the single intentional nested scroll surface. */
+html[data-study-system="v2"] .word-insight-panel--persistent {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 1180px) {
+  html[data-study-system="v2"] body > main[data-study-surface] {
+    height: auto;
+    min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+    margin-left: 0;
+    overflow: visible;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] :where(.word-study-layout, .word-study-column) {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-card {
+    container: study-card / inline-size;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-content {
+    height: auto;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface]:not([data-study-surface="reading-words"]) .word-insight-panel {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+    .word-study-progress__actions {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+    .word-study-progress__actions > .topbar {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+    .word-study-progress__actions > .topbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-words"]
+    .word-study-progress__actions > .topbar > * {
+    flex: 0 0 auto;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .flash-mode-switch {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .flash-mode-switch::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Quiz, spelling and paraphrase pages share the same readable canvas. */
+html[data-study-system="v2"] body > main[data-study-surface="quiz"],
+html[data-study-system="v2"] body > main[data-study-surface="spelling"],
+html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] {
+  display: grid;
+  align-content: start;
+  gap: var(--study-v2-page-gap);
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="quiz"] :where([class*="card"], [class*="panel"]),
+html[data-study-system="v2"] body > main[data-study-surface="spelling"] :where([class*="card"], [class*="panel"]),
+html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] :where([class*="card"], [class*="panel"]) {
+  border-radius: var(--study-v2-radius);
+}
+
+/* Standalone static surfaces ---------------------------------------------- */
+html[data-study-system="v2"] body[data-static-page] {
+  --study-header-height: var(--study-v2-header-height);
+  --study-sidebar-width: var(--study-v2-sidebar-width);
+  min-height: 100dvh;
+  background: var(--study-v2-canvas) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] > :where(.static-brand-bar, .brand-bar, .reading-header, .rp-header) {
+  height: var(--study-v2-header-height) !important;
+  min-height: var(--study-v2-header-height) !important;
+  border-bottom: 1px solid var(--study-v2-border) !important;
+  background: rgba(255, 255, 255, .97) !important;
+  box-shadow: none !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] > :where(.static-shell-sidebar, .static-spelling-sidebar) {
+  top: var(--study-v2-header-height) !important;
+  width: var(--study-v2-sidebar-width) !important;
+  height: calc(100dvh - var(--study-v2-header-height)) !important;
+  border-right: 1px solid var(--study-v2-border) !important;
+  background: #fff !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] > main {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0;
+  margin-left: var(--study-v2-sidebar-width) !important;
+  padding: var(--study-v2-page-padding) !important;
+  background: var(--study-v2-canvas) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.top, .reading-toolbar, .rp-toolbar, .spell-top, .study538-top) {
+  min-width: 0;
+  border-radius: var(--study-v2-radius);
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.top-actions, .reading-toolbar, .rp-toolbar, .spell-top, .study538-top) {
+  scrollbar-width: none;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.top-actions, .reading-toolbar, .rp-toolbar, .spell-top, .study538-top)::-webkit-scrollbar {
+  display: none;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.hero, .reading-card, .study538-card, .meaning-card, .spell-card, .rp-card) {
+  border-radius: var(--study-v2-radius) !important;
+  border-color: var(--study-v2-border) !important;
+  box-shadow: none !important;
+  background: var(--study-v2-card) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="home"] .blocks {
+  width: 100%;
+  max-width: 1180px;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 8px;
+}
+
+html[data-study-system="v2"] body[data-static-page="home"] .relation-block {
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--study-v2-border);
+  border-radius: var(--study-v2-radius);
+  background: var(--study-v2-card);
+}
+
+html[data-study-system="v2"] body[data-static-page="home"] .relation-block :where(.cards, .list) {
+  display: grid;
+  gap: 4px;
+}
+
+html[data-study-system="v2"] body[data-static-page="home"] .relation-block .form-card {
+  width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 7px;
+}
+
+html[data-study-system="v2"] body[data-static-page="home"] .relation-block :where(.form-desc, small) {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 901px) {
+  html[data-study-system="v2"] body[data-static-page="home"] .app {
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .static-study-card {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .hero {
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    padding: 3px 6px 4px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] :where(.star, .sound-main) {
+    flex: 0 0 auto;
+    margin-block: 1px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .star {
+    font-size: calc(18px + (5px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .sound-main {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .word {
+    font-size: calc(46px + (26px * var(--font-scale, 1))) !important;
+    line-height: .94 !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .basic-line {
+    margin-top: 3px;
+    font-size: calc(13px + (7px * var(--font-scale, 1))) !important;
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] :where(.load-info, .swipe-hint) {
+    margin-top: 2px;
+    font-size: calc(7px + (2px * var(--font-scale, 1)));
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .example-card {
+    width: min(820px, 100%);
+    margin: 4px auto 0;
+    padding: 5px 0 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .example-en {
+    font-size: calc(12px + (7px * var(--font-scale, 1))) !important;
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .example-cn {
+    margin-top: 2px;
+    font-size: calc(8px + (3px * var(--font-scale, 1))) !important;
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .blocks {
+    max-width: none;
+    grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+    gap: 6px;
+    margin: 0 0 4px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block {
+    padding: 5px 7px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .block-title {
+    margin-bottom: 3px;
+    font-size: calc(7px + (3px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .cards {
+    grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .form-card {
+    min-width: 0;
+    gap: 2px;
+    padding: 4px 6px;
+    font-size: calc(7px + (3px * var(--font-scale, 1)));
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .card-head {
+    gap: 4px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .form-card b {
+    font-size: calc(8px + (4px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .form-card em {
+    padding: 2px 5px;
+    font-size: calc(6px + (2px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block :where(.form-desc, small, .en) {
+    font-size: calc(7px + (3px * var(--font-scale, 1)));
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .zh {
+    margin-top: 1px;
+    font-size: calc(6px + (3px * var(--font-scale, 1)));
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .item {
+    min-height: 26px;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="home"] .relation-block .mini-sound {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] {
+    overflow-y: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .spell-app {
+    height: calc(100dvh - var(--study-v2-header-height));
+    min-height: 0;
+    padding: 8px 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .spell-card {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .workspace-heading {
+    min-height: 64px;
+    padding: 10px 18px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .spell-card h1 {
+    font-size: calc(20px + (8px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .settings-section.is-collapsed {
+    padding: 8px 18px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .practice-section {
+    min-height: 0;
+    padding: 10px 20px 12px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .question {
+    min-height: 0;
+    padding: 10px 14px;
+    font-size: calc(14px + (8px * var(--font-scale, 1)));
+    line-height: 1.22;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .question :where(.meta, .example) {
+    margin-top: 4px;
+    font-size: calc(7px + (4px * var(--font-scale, 1)));
+    line-height: 1.3;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .question .example {
+    padding-top: 4px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .question .example-cn {
+    margin-top: 3px;
+    font-size: calc(10px + (5px * var(--font-scale, 1)));
+    line-height: 1.25;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .audio-bar,
+  html[data-study-system="v2"] body[data-static-page="spelling"] .form {
+    margin-top: 7px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .form input {
+    min-height: 64px;
+    padding: 10px 14px;
+    font-size: calc(18px + (8px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .form input::placeholder {
+    font-size: calc(13px + (5px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .form button {
+    min-height: 64px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] {
+    overflow-y: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-page {
+    height: calc(100dvh - var(--study-v2-header-height));
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 14px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-title {
+    min-height: 0;
+    align-items: center;
+    margin: 0;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-title p {
+    margin-bottom: 2px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-title h1 {
+    font-size: calc(20px + (10px * var(--font-scale, 1)));
+    line-height: 1.1;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-title span {
+    margin-top: 3px;
+    line-height: 1.3;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-toolbar {
+    margin: 0;
+    padding: 7px 9px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-empty {
+    min-height: 0;
+    flex: 1 1 auto;
+    margin-top: 0;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] #studyArea:not(.hidden) {
+    min-height: 0;
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-card {
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    padding: 10px 16px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-prompt {
+    padding: 8px 8px 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-prompt h2 {
+    margin-top: 4px;
+    font-size: calc(18px + (12px * var(--font-scale, 1)));
+    line-height: 1.12;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-answer {
+    min-height: 0;
+    margin-top: 7px;
+    padding: 8px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-answer h3 {
+    margin-top: 4px;
+    font-size: calc(16px + (10px * var(--font-scale, 1)));
+    line-height: 1.15;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] :where(.rp-translation, .rp-sources) {
+    margin-top: 7px;
+    padding-block: 7px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] :where(.rp-progress, .rp-actions) {
+    margin-top: 0;
+    padding: 6px 9px;
+  }
+}
+}
+
+html[data-study-system="v2"] body[data-static-page="home"] .app,
+html[data-study-system="v2"] body[data-static-page="basic"] .app,
+html[data-study-system="v2"] body[data-static-page="reading-g"] .app,
+html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538,
+html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-app {
+  height: calc(100dvh - var(--study-v2-header-height));
+  min-height: 0;
+  overflow: visible;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.word, .study538-word h1) {
+  font-size: calc(clamp(46px, 7vw, 96px) * var(--font-scale, 1)) !important;
+  line-height: .96 !important;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.basic-line, .study538-meaning, .reading-meaning, .meaning-word) {
+  font-size: calc(clamp(17px, 2vw, 26px) * var(--font-scale, 1)) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.example-en, .study538-example-en, .reading-example-en) {
+  font-size: calc(clamp(15px, 1.7vw, 24px) * var(--font-scale, 1)) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.example-cn, .study538-example-cn, .reading-example-cn) {
+  font-size: calc(clamp(12px, 1.1vw, 16px) * var(--font-scale, 1)) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] :where(.reading-workspace, .study-card, #wordContent, .detail-grid) {
+  min-height: 0;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] .word-list {
+  min-height: 0;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools .file-button {
+  position: relative;
+}
+
+/* Reading notebook uses the same one-screen desktop canvas as the main
+ * flashcard.  The right-hand vocabulary list is intentionally the only
+ * long, independently scrollable region. */
+@media (min-width: 901px) {
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-app {
+    display: grid;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    gap: 8px;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-title {
+    min-height: 0;
+    align-items: center;
+    margin: 0;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-title p {
+    display: none;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-title h1 {
+    font-size: calc(15px + (5px * var(--font-scale, 1)));
+    line-height: 1.1;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-title > div > span {
+    margin-top: 2px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-title dl {
+    gap: 12px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-title dt {
+    font-size: calc(12px + (5px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools {
+    min-width: 0;
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools > * {
+    flex: 0 0 auto;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools .search {
+    min-width: min(240px, 30vw);
+    flex: 1 1 240px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools :where(button, .file-button) {
+    min-height: 34px;
+    padding: 5px 9px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-progress {
+    min-height: 0;
+    margin: 0;
+    padding: 7px 10px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-workspace {
+    min-height: 0;
+    height: 100%;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+    align-items: stretch;
+    gap: 8px;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .study-card {
+    min-height: 0;
+    height: 100%;
+    padding: 10px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] #wordContent {
+    min-height: 0;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto auto auto auto minmax(0, 1fr) auto;
+    align-content: start;
+    gap: 3px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .empty-state {
+    min-height: 0;
+    height: 100%;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .card-meta button {
+    min-height: 26px;
+    padding-block: 2px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .example {
+    margin-top: 2px;
+    padding-bottom: 5px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .example p {
+    font-size: calc(12px + (8px * var(--font-scale, 1)));
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .example span {
+    margin-top: 2px;
+    font-size: calc(8px + (4px * var(--font-scale, 1)));
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .word {
+    margin: 2px auto 0;
+    font-size: calc(38px + (24px * var(--font-scale, 1))) !important;
+    line-height: .94 !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .study-card h2 {
+    margin: 2px 0 4px;
+    font-size: calc(12px + (7px * var(--font-scale, 1)));
+    line-height: 1.15;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .detail-grid {
+    min-height: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .detail-grid section {
+    min-height: 0;
+    padding: 7px 8px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .detail-grid h3 {
+    margin-bottom: 4px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .detail-grid p,
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .synonym-row {
+    min-height: 26px;
+    margin-block: 3px;
+    padding: 4px 6px;
+    font-size: calc(8px + (4px * var(--font-scale, 1)));
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .study-actions {
+    min-height: 0;
+    gap: 5px;
+    margin: 0;
+    padding-top: 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .study-actions button {
+    min-height: 32px;
+    padding: 4px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .word-list-panel {
+    position: static;
+    top: auto;
+    min-height: 0;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    padding: 8px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .word-list {
+    height: auto;
+    max-height: none;
+    margin-top: 6px;
+  }
+}
+
+html[data-study-system="v2"] body[data-static-page] .static-version-note {
+  display: none !important;
+}
+
+/* Dynamic pages can collapse their sidebar to icons. Static pages currently
+ * have text-only links, so a 76px xlarge sidebar would stack every Chinese
+ * character vertically. Keep the shared top navigation and return that width
+ * to the study canvas instead. */
+@media (min-width: 1181px) {
+  html[data-study-system="v2"][data-font-scale-level="xlarge"] body[data-static-page] {
+    --study-v2-sidebar-width: 0px;
+  }
+
+  html[data-study-system="v2"][data-font-scale-level="xlarge"]
+    body[data-static-page] > :where(.static-shell-sidebar, .static-spelling-sidebar) {
+    display: none !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  html[data-study-system="v2"] body[data-static-page] > :where(.static-shell-sidebar, .static-spelling-sidebar) {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] > main {
+    height: auto !important;
+    min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+    margin-left: 0 !important;
+    overflow: visible !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] :where(.static-session-context, .static-brand-nav, .brand-nav, .reading-header nav, .rp-header nav) {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] :where(.top-actions, .reading-toolbar, .rp-toolbar, .spell-top, .study538-top) {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+  }
+}
+
+@media (max-width: 900px) {
+  html[data-study-system="v2"] body[data-static-page] > :where(.static-shell-sidebar, .static-spelling-sidebar) {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] .static-build-version {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] > main {
+    height: auto !important;
+    min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+    margin-left: 0 !important;
+    overflow: visible !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] :where(.static-session-context, .static-brand-nav, .brand-nav, .reading-header nav, .rp-header nav) {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] :where(.top-actions, .reading-toolbar, .rp-toolbar, .spell-top, .study538-top) {
+    width: 100%;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] :where(.word, .study538-word h1) {
+    font-size: calc(clamp(42px, 15vw, 72px) * var(--font-scale, 1)) !important;
+  }
+
+  /* The legacy phone styles fixed these headings and prompts in pixels.
+   * Keep the compact base size, but let every shared 80%-160% step apply. */
+  html[data-study-system="v2"] body[data-static-page="reading-paraphrases"] .rp-title h1 {
+    font-size: calc(20px + (10px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-title h1 {
+    font-size: calc(15px + (5px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="spelling"] .question {
+    font-size: calc(14px + (8px * var(--font-scale, 1)));
+  }
+
+  /* The legacy reading notebook changed its tool row into a two-column grid
+   * on phones, consuming almost half the viewport before the word card. Keep
+   * the standard single-row toolbar and let that row scroll horizontally. */
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools {
+    width: 100%;
+    display: flex !important;
+    grid-template-columns: none !important;
+    flex-wrap: nowrap !important;
+    gap: 6px;
+    padding: 6px;
+    overflow-x: auto !important;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools > * {
+    flex: 0 0 auto;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools .search {
+    width: min(230px, 72vw);
+    min-width: min(230px, 72vw);
+    grid-column: auto;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-tools :where(button, .file-button) {
+    min-height: 36px;
+    padding: 5px 9px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 901px) {
+  html[data-study-system="v2"] body[data-static-page] > main,
+  html[data-study-system="v2"] body > main[data-study-surface] {
+    --study-v2-page-padding: 6px;
+    --study-v2-page-gap: 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page] :where(.word, .study538-word h1) {
+    font-size: calc(clamp(40px, 6vw, 76px) * var(--font-scale, 1)) !important;
+  }
+}
+
+/* Static 538 uses the same one-screen study canvas as its Next counterpart.
+ * The legacy page stacked every section at intrinsic height, so the card grew
+ * to 800px+ and reintroduced a document scrollbar at every font setting. */
+@media (min-width: 901px) {
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] {
+    overflow-y: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538 {
+    height: calc(100dvh - var(--study-v2-header-height)) !important;
+    min-height: 0 !important;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 6px;
+    padding: 6px 10px 62px !important;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-top {
+    margin: 0 !important;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-progress {
+    margin: 0 !important;
+    padding-block: 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-card {
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr);
+    grid-template-rows: auto minmax(0, .9fr) auto minmax(0, 1.1fr);
+    gap: 4px 14px;
+    margin: 0 !important;
+    padding: 7px 10px 8px;
+    overflow: hidden;
+    align-items: center;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-meta {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-example {
+    width: 100%;
+    min-width: 0;
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+    padding: 2px 6px 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-word {
+    min-width: 0;
+    grid-column: 2;
+    grid-row: 2;
+    padding-top: 0;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-word h1 {
+    font-size: calc(46px + (30px * var(--font-scale, 1))) !important;
+    line-height: .94 !important;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-example-en {
+    font-size: calc(12px + (10px * var(--font-scale, 1))) !important;
+    line-height: 1.22;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-example-cn {
+    font-size: calc(9px + (4px * var(--font-scale, 1))) !important;
+    line-height: 1.25;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-meaning {
+    font-size: calc(13px + (8px * var(--font-scale, 1))) !important;
+    line-height: 1.2;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-para {
+    width: 100%;
+    min-width: 0;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    gap: 3px;
+    margin: 0;
+    padding: 5px 8px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-related {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    grid-column: 1 / -1;
+    grid-row: 4;
+    margin: 0;
+    padding: 3px 7px 5px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-related-title {
+    min-height: 20px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-related-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+    gap: 6px;
+    align-content: start;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-synonym {
+    min-height: 0;
+    padding: 6px 32px 6px 8px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-synonym-word {
+    font-size: calc(13px + (6px * var(--font-scale, 1)));
+  }
+
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-bottom {
+    left: calc(var(--study-v2-sidebar-width) + 10px);
+    right: 10px;
+    bottom: 6px;
+    min-height: 48px;
+    padding: 5px 9px;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538 {
+    height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+  }
+}
+
+/* Static G-reading keeps every populated relation item, but arranges those
+ * items across the available row instead of growing the document beneath the
+ * fixed viewport. */
+@media (min-width: 901px) {
+  html[data-study-system="v2"] body[data-static-page="reading-g"] {
+    overflow-y: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .app {
+    height: calc(100dvh - var(--study-v2-header-height)) !important;
+    min-height: 0 !important;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 6px;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .reading-g-topbar,
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .hero,
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .blocks,
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .bottom {
+    width: 100%;
+    min-width: 0;
+    margin: 0 !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .reading-g-topbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .hero {
+    height: 100%;
+    min-height: 0;
+    padding: 4px 8px;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .word {
+    font-size: calc(44px + (28px * var(--font-scale, 1))) !important;
+    line-height: .94 !important;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .basic-line {
+    margin-top: 6px;
+    font-size: calc(14px + (6px * var(--font-scale, 1))) !important;
+    line-height: 1.25;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .example-card {
+    width: min(900px, 92%);
+    margin-top: 7px;
+    padding: 7px 11px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .example-en {
+    font-size: calc(12px + (8px * var(--font-scale, 1))) !important;
+    line-height: 1.22;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .example-cn {
+    margin-top: 3px;
+    padding-left: 38px;
+    font-size: calc(8px + (4px * var(--font-scale, 1))) !important;
+    line-height: 1.25;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .blocks {
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .block {
+    min-width: 0;
+    padding: 6px 8px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .block-title {
+    margin-bottom: 3px;
+    padding-bottom: 2px;
+    font-size: calc(8px + (3px * var(--font-scale, 1))) !important;
+    line-height: 1.2 !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .block .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+    gap: 3px 6px;
+    align-content: start;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .block .item {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 6px;
+    min-height: 0;
+    padding: 2px 0 !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .block .mini-sound {
+    width: 26px;
+    height: 26px;
+    min-height: 26px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .block .en {
+    font-size: calc(9px + (4px * var(--font-scale, 1))) !important;
+    line-height: 1.2 !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .block .zh {
+    font-size: calc(7px + (3.5px * var(--font-scale, 1))) !important;
+    line-height: 1.2 !important;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .bottom {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 4px;
+    padding: 4px 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .bottom .actions {
+    gap: 6px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .bottom .actions > button {
+    min-height: 36px;
+    padding-block: 5px;
+  }
+
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .bottom .progress-row {
+    min-height: 28px;
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1180px) {
+  html[data-study-system="v2"] body[data-static-page="reading-g"] .app {
+    height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+  }
+}
+
+
+/* ==========================================================================
+ * UNIVERSAL FONT-SCALE STABILITY + PHONE/TABLET LAYOUTS (v59)
+ * Goal 2: every study surface stays one-screen usable at any A+ step.
+ * Goal 3: dedicated native (phone) and compact (tablet) shells.
+ * ========================================================================== */
+
+/* --- Goal 2: quiz / spelling / paraphrase join the same type contract ----- */
+html[data-study-system="v2"] body > main[data-study-surface="quiz"],
+html[data-study-system="v2"] body > main[data-study-surface="spelling"],
+html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] {
+  min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="quiz"] :where(h1, h2, .prompt, [class*="title"], [class*="Title"]),
+html[data-study-system="v2"] body > main[data-study-surface="spelling"] :where(h1, h2, .question, [class*="Title"], [class*="title"]),
+html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] :where(h1, h2, [class*="prompt"], [class*="Prompt"]) {
+  line-height: 1.2 !important;
+  overflow-wrap: anywhere;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="quiz"] :where(p, li, label, span, button, [class*="option"], [class*="Option"]),
+html[data-study-system="v2"] body > main[data-study-surface="spelling"] :where(p, li, label, input, button, [class*="feedback"], [class*="Feedback"]),
+html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] :where(p, li, label, button, [class*="answer"], [class*="Answer"]) {
+  line-height: 1.35 !important;
+  overflow-wrap: anywhere;
+}
+
+/* Spelling focus card: keep prompt scalable, reserve bottom actions */
+html[data-study-system="v2"] body > main[data-study-surface="spelling"] .spelling-page-shell,
+html[data-study-system="v2"] body > main[data-study-surface="spelling"] {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="spelling"] :where([class*="spellingContent"], [class*="ContentColumn"]) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Paraphrase notebook: one-screen column, card scrolls inside */
+html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] {
+  display: flex !important;
+  flex-direction: column !important;
+  height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+  min-height: 0;
+  overflow: hidden;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] :where([class*="card"], [class*="Card"], .word-study-card) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Quiz pages: flex column so options stay on screen */
+html[data-study-system="v2"] body > main[data-study-surface="quiz"] {
+  display: flex !important;
+  flex-direction: column !important;
+  height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height));
+  min-height: 0;
+  overflow: hidden;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface="quiz"] :where([class*="center"], [class*="Center"], [class*="main"], [class*="Main"]) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* All surfaces: toolbar chips never wrap into multi-line height bombs */
+html[data-study-system="v2"] body > main[data-study-surface] :where(.topbar, .top-actions, [class*="toolbar"], [class*="Toolbar"]) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] :where(.top-actions, [class*="toolbar"], [class*="Toolbar"]) {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  gap: calc(6px * var(--font-scale, 1));
+}
+
+html[data-study-system="v2"] body > main[data-study-surface] :where(.top-actions, [class*="toolbar"], [class*="Toolbar"])::-webkit-scrollbar {
+  display: none;
+}
+
+/* --- Goal 3: TABLET (compact) 901�C1180px ---------------------------------- */
+@media (min-width: 901px) and (max-width: 1180px) {
+  html[data-study-system="v2"] {
+    --study-v2-header-height: 58px;
+    --study-v2-sidebar-width: 0px;
+    --study-v2-mobile-nav-height: 60px;
+    --study-word-size: min(calc(54px * var(--font-scale, 1)), 92px);
+    --study-word-long-size: min(calc(42px * var(--font-scale, 1)), 72px);
+    --study-example-size: calc(20px * var(--font-scale, 1));
+    --study-example-cn-size: calc(14px * var(--font-scale, 1));
+    --study-meaning-size: min(calc(24px * var(--font-scale, 1)), 36px);
+    --study-relation-min-h: max(112px, 15dvh);
+    --study-relation-max-h: min(28dvh, 200px);
+    --study-example-max-h: min(12dvh, 96px);
+    --study-meaning-max-h: min(12dvh, 96px);
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 8px 10px 12px !important;
+  }
+
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) {
+    height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+    gap: 8px !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-insight-panel {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-column {
+    height: 100% !important;
+    min-height: 0 !important;
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) auto !important;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-card {
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-dictionary-grid,
+  html[data-study-system="v2"] body > main[data-study-surface] .footer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr)) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-words"] .word-study-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 260px) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="quiz"],
+  html[data-study-system="v2"] body > main[data-study-surface="spelling"],
+  html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] {
+    height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+    overflow: hidden !important;
+  }
+}
+
+/* --- Goal 3: PHONE (native) ��900px --------------------------------------- */
+@media (max-width: 900px) {
+  html[data-study-system="v2"] {
+    --study-v2-header-height: 56px;
+    --study-v2-sidebar-width: 0px;
+    --study-v2-mobile-nav-height: 60px;
+    --study-v2-page-padding: 6px;
+    --study-v2-page-gap: 6px;
+    --study-stack-gap: calc(4px * var(--font-scale, 1));
+    --study-hero-gap: calc(4px * var(--font-scale, 1));
+    --study-word-size: min(calc(48px * var(--font-scale, 1)), 78px);
+    --study-word-long-size: min(calc(36px * var(--font-scale, 1)), 60px);
+    --study-example-size: calc(17px * var(--font-scale, 1));
+    --study-example-cn-size: calc(13px * var(--font-scale, 1));
+    --study-meaning-size: min(calc(20px * var(--font-scale, 1)), 30px);
+    --study-meaning-detail-size: min(calc(12px * var(--font-scale, 1)), 16px);
+    --study-relation-min-h: max(96px, 14dvh);
+    --study-relation-max-h: min(26dvh, 180px);
+    --study-example-max-h: min(12dvh, 88px);
+    --study-meaning-max-h: min(11dvh, 80px);
+  }
+
+  html[data-study-system="v2"] body {
+    padding-bottom: var(--study-v2-mobile-nav-height);
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 6px 8px 10px !important;
+  }
+
+  /* Phone: prefer scrollable one-column study rather than clip-to-zero */
+  html[data-study-system="v2"] body > main:is(
+    [data-study-surface="flash"],
+    [data-study-surface="basic"],
+    [data-study-surface="ielts-538"],
+    [data-study-surface="reading-g"],
+    [data-study-surface="reading-words"]
+  ) {
+    height: auto !important;
+    min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+    overflow: visible !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 6px !important;
+    gap: 8px !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-insight-panel {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="reading-words"] .word-insight-panel--persistent {
+    display: flex !important;
+    order: 2;
+    max-height: 38dvh;
+    overflow: hidden;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-column {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 0 !important;
+    gap: 8px !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-card {
+    height: auto !important;
+    min-height: min(72dvh, 560px);
+    overflow: hidden !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-progress {
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+    min-height: 44px;
+    gap: 6px !important;
+    padding: 6px 8px !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-progress__actions {
+    grid-column: 1 / -1;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .topbar,
+  html[data-study-system="v2"] body > main[data-study-surface] .top-actions {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+  }
+
+  /* Phone: relation cards single column for readability */
+  html[data-study-system="v2"] body > main[data-study-surface] .word-dictionary-grid,
+  html[data-study-system="v2"] body > main[data-study-surface] .footer-grid,
+  html[data-study-system="v2"] body > main[data-study-surface] .g-reading-relation-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] .word-dictionary-panel,
+  html[data-study-system="v2"] body > main[data-study-surface] .word-study-content > :nth-child(4) {
+    min-height: var(--study-relation-min-h) !important;
+    max-height: var(--study-relation-max-h) !important;
+  }
+
+  /* Quiz / spelling / paraphrase on phone */
+  html[data-study-system="v2"] body > main[data-study-surface="quiz"],
+  html[data-study-system="v2"] body > main[data-study-surface="spelling"],
+  html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] {
+    height: auto !important;
+    min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+    overflow: visible !important;
+    padding-bottom: 12px !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="quiz"] :where(button, [class*="option"], [class*="Option"]) {
+    min-height: 44px !important;
+    font-size: calc(15px * var(--font-scale, 1)) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="spelling"] :where(input[type="text"], input:not([type])) {
+    min-height: 48px !important;
+    font-size: max(16px, calc(18px * var(--font-scale, 1))) !important;
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface="paraphrase"] :where(h2, [class*="prompt"] h2) {
+    font-size: min(calc(28px * var(--font-scale, 1)), 40px) !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Bottom action bar: sticky and thumb-friendly */
+  html[data-study-system="v2"] body > main[data-study-surface] :where(.bottom, .bottombar, [class*="WordStudyActions"], [class*="actions"]) {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: color-mix(in srgb, var(--study-v2-canvas) 92%, #fff);
+  }
+
+  html[data-study-system="v2"] body > main[data-study-surface] :where(.status, .study-step-button, [class*="Action"] button) {
+    min-height: 44px !important;
+  }
+}
+
+/* STUDY_CARD_NATURAL_FLOW_V60 ---------------------------------------------
+ * Relationship cards are learning material, not a footer. The former V2
+ * one-screen canvas made the word card fill the remaining viewport, then
+ * used flex: 1 and a reserved relation height. That placed word families and
+ * synonyms at the visual bottom and clipped text at large font sizes.
+ *
+ * Keep controls compact, but let the word, meaning and relationship cards
+ * follow their real document order. This is deliberately the final layer so
+ * it overrides the older one-screen rules above for both Next and static
+ * pages without changing data or study state.
+ * ------------------------------------------------------------------------ */
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) {
+  height: auto !important;
+  min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) :where(.word-flash-shell, .word-study-layout, .word-study-column) {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-flash-shell {
+  display: block !important;
+  flex: 0 0 auto !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-layout {
+  align-items: start !important;
+  grid-template-rows: auto !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-column {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-card {
+  container: study-card / inline-size !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-card > .word-study-content {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+}
+
+/* Basic / 538 / G-reading keep their content inside a legacy .main wrapper.
+ * It used to be the flex-fill viewport pane, so it must join the natural
+ * flow as well; otherwise the card itself collapses while its children paint
+ * outside of it. */
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"]
+) .word-study-card > .main {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"]
+) .word-study-card > .main > .word-study-content {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"],
+  [data-study-surface="reading-words"]
+) .word-study-content > :where(.example-box, .meaning-block) {
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="basic"],
+  [data-study-surface="ielts-538"],
+  [data-study-surface="reading-g"]
+) .word-study-content > :nth-child(4),
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-study-card > .word-dictionary-panel {
+  flex: 0 0 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  height: auto !important;
+  margin-top: var(--study-stack-gap) !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body > main:is(
+  [data-study-surface="flash"],
+  [data-study-surface="reading-words"]
+) .word-dictionary-content {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Static pages use the same visual order. Their old flex/grid templates
+ * gave the hero all remaining height and left relation cards at the bottom. */
+html[data-study-system="v2"] body[data-static-page] {
+  overflow-y: auto !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.app, .study538, .reading-app) {
+  height: auto !important;
+  min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] > main:is(.app, .study538, .reading-app) {
+  height: auto !important;
+  min-height: calc(100dvh - var(--study-v2-header-height) - var(--study-v2-mobile-nav-height)) !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.hero, .static-study-card) {
+  height: auto !important;
+  min-height: 0 !important;
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body[data-static-page] :where(.word, .study538-word h1) {
+  line-height: 1.06 !important;
+  padding-block: .04em;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-g"] .app {
+  display: block !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-g"] :where(.hero, .blocks) {
+  width: min(1100px, 100%) !important;
+  margin-inline: auto !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-g"] .blocks {
+  margin-top: var(--study-stack-gap) !important;
+  margin-bottom: var(--study-stack-gap) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538 {
+  display: block !important;
+  padding-bottom: 72px !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin-top: var(--study-stack-gap) !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="ielts-538"] :where(
+  .study538-meta,
+  .study538-example,
+  .study538-word,
+  .study538-para,
+  .study538-related
+) {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  width: min(960px, 100%) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: var(--study-stack-gap) auto 0 !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-related-grid {
+  height: auto !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-app {
+  display: block !important;
+  padding-bottom: 12px !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] .reading-workspace {
+  height: auto !important;
+  min-height: 0 !important;
+  align-items: start !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] :where(.study-card, #wordContent) {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] #wordContent {
+  display: block !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] .detail-grid {
+  margin-top: var(--study-stack-gap) !important;
+}
+
+html[data-study-system="v2"] body[data-static-page="reading-words"] .word-list-panel {
+  height: auto !important;
+  max-height: min(60dvh, 680px);
+  overflow: auto !important;
+}
+
+/* A scaled desktop becomes a compact reading surface. The breakpoint itself
+ * remains physical so phone controls are not forced onto a desktop window. */
+@media (min-width: 901px) {
+  html[data-study-system="v2"][data-adaptive-shell="compact"] {
+    --study-v2-header-height: 58px;
+    --study-v2-sidebar-width: 0px;
+    --study-v2-mobile-nav-height: 60px;
+  }
+
+  html[data-study-system="v2"][data-adaptive-shell="compact"] :where(
+    .study-session-context,
+    .study-global-search,
+    .study-shell-sidebar,
+    .static-shell-sidebar,
+    .static-spelling-sidebar
+  ) {
+    display: none !important;
+  }
+
+  html[data-study-system="v2"][data-adaptive-shell="compact"] .study-brand-header {
+    height: 58px !important;
+    min-height: 58px !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-rows: 58px !important;
+    padding-inline: 10px !important;
+  }
+
+  html[data-study-system="v2"][data-adaptive-shell="compact"] .study-brand-mark {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    justify-content: flex-start !important;
+    padding-inline: 4px !important;
+    font-size: 16px !important;
+  }
+
+  html[data-study-system="v2"][data-adaptive-shell="compact"] .study-header-tools {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    min-width: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  html[data-study-system="v2"][data-adaptive-shell="compact"] .study-header-tools :where(
+    .font-scale-control,
+    .font-scale-control__btn,
+    .font-scale-control__value
+  ) {
+    font-size: 14px !important;
+  }
+
+  html[data-study-system="v2"][data-adaptive-shell="compact"] body > main[data-study-surface],
+  html[data-study-system="v2"][data-adaptive-shell="compact"] body[data-static-page] > main {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  html[data-study-system="v2"][data-adaptive-shell="compact"] body > main[data-study-surface] .word-insight-panel:not(.word-insight-panel--persistent) {
+    display: none !important;
+  }
+}
+
+html[data-study-system="v2"] body[data-static-page="ielts-538"] .study538-bottom {
+  position: sticky !important;
+  inset: auto 0 0 !important;
+  width: min(1120px, calc(100% - 20px)) !important;
+  margin: var(--study-stack-gap) auto 0 !important;
+}

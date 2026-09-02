@@ -206,6 +206,7 @@ AI 返回必须经过结构、字段范围和业务规则校验；请求返回�
 
 - 本地生产模式统一通过 `start-windows.bat` 启动；脚本检测到 `app`、`public` 或配置文件比当前构建更新时，必须自动停止旧的 3000 进程、重新构建并启动，不再要求用户手动选择重启。
 - 开发调试可以使用 `npm run dev`，由 Next.js 自动重载。
+- 本项目的交互式浏览器验证统一通过 `npm run browser:cli -- <参数>`；该入口会固定 CLI 版本并自动复用项目 Playwright 的 Chromium。不要直接运行临时最新版 `npx --package @playwright/cli playwright-cli`，以免再次出现浏览器编号不一致。
 - 新增或修改学习入口时，必须同时核对 Next 页面、`public` 静态页面、`app/api/export-static/route.js` 打包清单和 Service Worker 缓存清单。
 - 静态版部署前必须验证最终 ZIP 中真实包含新页面与资源；不能只检查源码。
 

@@ -8,6 +8,7 @@ import {
 import {
   IELTS_538_STATUS,
   buildIelts538StudyList,
+  isIelts538AiCoachParaphrase,
   patchIelts538WordStatus
 } from "../storage.mjs";
 
@@ -40,16 +41,19 @@ test("538 lexicon contains all 376 unique stable entries and expected groups", a
   );
 });
 
-test("loader preserves count, groups and source synonyms", async () => {
+test("loader preserves the 376-word base and appends the isolated AI-coach practice entry", async () => {
   const data = JSON.parse(await readFile(DATA_PATH, "utf8"));
   const loaded = await loadIelts538Words(async () => ({
     ok: true,
     json: async () => data
   }));
-  assert.equal(loaded.words.length, 376);
+  assert.equal(loaded.count, 376);
+  assert.equal(loaded.practiceCount, 1257);
+  assert.equal(loaded.words.length, 1633);
   assert.equal(loaded.words[0].word, "resemble");
   assert.deepEqual(loaded.words[0].synonyms, ["like", "look like", "be similar to"]);
-  assert.equal(loaded.words.at(-1).word, "well-being");
+  assert.equal(loaded.words[375].word, "well-being");
+  assert.ok(isIelts538AiCoachParaphrase(loaded.words.at(-1)));
 });
 
 test("all 376 entries include reviewed reading-context paraphrases", async () => {
@@ -111,11 +115,66 @@ test("all 376 entries include reviewed reading-context paraphrases", async () =>
     ok: true,
     json: async () => data
   }));
-  assert.equal(loaded.words.length, 376);
+  assert.equal(loaded.words.length, 1633);
   assert.equal(
-    loaded.words.reduce((count, word) => count + word.paraphraseExamples.length, 0),
+    loaded.words
+      .filter((word) => !isIelts538AiCoachParaphrase(word))
+      .reduce((count, word) => count + word.paraphraseExamples.length, 0),
     454
   );
+});
+
+test("AI-coach audit keeps 1258 usable pairs but omits the one already reviewed in 538", async () => {
+  const data = JSON.parse(await readFile(DATA_PATH, "utf8"));
+  const audit = data.aiCoachQuestionParaphrases;
+  const cards = data.questionParaphrases;
+
+  assert.equal(audit.officialTestCount, 58);
+  assert.equal(audit.officialQuestionCount, 2320);
+  assert.equal(audit.curatedCandidateCount, 2699);
+  assert.equal(audit.strictAcceptedOccurrenceCount, 1273);
+  assert.equal(audit.identityOccurrenceExcludedCount, 12);
+  assert.equal(audit.usableContextOccurrenceCount, 1261);
+  assert.equal(audit.usableContextUniquePairCount, 1258);
+  assert.equal(audit.internalDuplicateExcessCount, 3);
+  assert.equal(audit.internallyRepeatedUniquePairCount, 1);
+  assert.equal(audit.newExactDirectedOverlapWithReviewedCount, 1);
+  assert.equal(audit.alreadyAvailableIn538ReviewedCount, 1);
+  assert.equal(audit.practiceEntryCount, 1257);
+  assert.equal(audit.totalAvailableAcross538Count, 1258);
+  assert.equal(audit.existingReviewedRelationOccurrenceCount, 454);
+  assert.equal(audit.existingReviewedReverseDuplicateCount, 1);
+  assert.equal(cards.length, 1257);
+  assert.equal(new Set(cards.map((card) => card.id)).size, 1257);
+  assert.ok(cards.every((card) =>
+    card.id === card.wordId &&
+    card.practiceKind === "aiCoachQuestionParaphrase" &&
+    card.sourceExpression &&
+    card.questionExpression &&
+    card.example &&
+    card.paraphraseExamples?.[0]?.relationType === "ai-coach-question-evidence" &&
+    card.sources?.length === card.occurrenceCount
+  ));
+
+  assert.equal(buildIelts538StudyList(cards, { type: "aiCoachParaphrase", value: "" }, {}).length, 1257);
+  assert.equal(buildIelts538StudyList(cards, { type: "everything", value: "" }, {}).length, 0);
+  const firstStatus = patchIelts538WordStatus({}, cards[0], { status: IELTS_538_STATUS.FAMILIAR });
+  assert.equal(
+    buildIelts538StudyList(cards, { type: "aiCoachParaphrase", value: "" }, firstStatus).length,
+    1256
+  );
+});
+
+test("Next and static 538 surfaces expose the same AI-coach practice entry", async () => {
+  const [pageSource, staticHtml, staticJs] = await Promise.all([
+    readFile(new URL("../../../basic/page.jsx", import.meta.url), "utf8"),
+    readFile(new URL("../../../../public/ielts-538.html", import.meta.url), "utf8"),
+    readFile(new URL("../../../../public/assets/ielts-538.js", import.meta.url), "utf8")
+  ]);
+  assert.match(pageSource, /AI教练真题替换/);
+  assert.match(staticHtml, /value="aiCoachParaphrase">AI教练真题替换（1257组）/);
+  assert.match(staticJs, /filter === "aiCoachParaphrase"/);
+  assert.match(staticJs, /baseWords\.concat\(practiceWords\)/);
 });
 
 test("reviewed alternatives exclude misleading source candidates", async () => {
@@ -256,4 +315,19 @@ test("progress uses stable wordId and group filters keep all source rows", async
   assert.equal(buildIelts538StudyList(data.words, { type: "all", value: "" }, statusMap).length, 375);
   assert.equal(buildIelts538StudyList(data.words, { type: "everything", value: "" }, statusMap).length, 376);
   assert.equal(buildIelts538StudyList(data.words, { type: "group", value: "3:5" }, statusMap).length, 56);
+  assert.equal(data.part3HighFrequency.part12ArticleCount, 224);
+  assert.equal(data.part3HighFrequency.part3ArticleCount, 56);
+  assert.equal(data.part3HighFrequency.articleCount, 280);
+  assert.equal(data.part3HighFrequency.minimumDistinctArticles, 3);
+  assert.equal(data.part3HighFrequency.usedReplacementCount, 274);
+  assert.equal(data.part3HighFrequency.usedPhraseReplacementCount, 40);
+  assert.equal(data.words.filter((word) => word.part3HighFrequency === true).length, 294);
+  assert.equal(
+    data.words.filter(
+      (word) => word.part3HighFrequency !== true && (word.part3HighFrequencyReplacements || []).length > 0
+    ).length,
+    0
+  );
+  assert.ok(data.words.some((word) => (word.part3HighFrequencyReplacements || []).includes("look like")));
+  assert.equal(buildIelts538StudyList(data.words, { type: "part3HighFrequency", value: "" }, {}).length, 294);
 });

@@ -3,28 +3,43 @@ export const runtime = "nodejs";
 import { requireLocalAdmin } from "../../lib/api/local-admin-guard.mjs";
 import {
   AiProfileError,
+  buildProfileCacheKey,
+  isProfileSensePriorityCompatible,
   isUsableAiProfile,
   mergeProfileCache,
-  normalizeProfileKey,
   readProfileCache,
   requestDeepseekProfiles
 } from "../../lib/ai/deepseek-word-profile.server.mjs";
 import { withAiClientCollocationPayload } from "../../lib/vocab/admin-ai-content-profile.mjs";
+import { isAiProfileCompatibleWithDeclaredPos } from "../../lib/vocab/multi-pos-sense-coverage.mjs";
 
 export async function POST(req) {
   const guard = requireLocalAdmin(req, { allowLocalhostAlways: true });
   if (guard) return guard;
 
   try {
-    const { word, force = false, inputId = "item-1" } = await req.json();
+    const {
+      word,
+      force = false,
+      inputId = "item-1",
+      existingMeaning = "",
+      existingPos = "",
+      contextSentence = "",
+      contextLabel = ""
+    } = await req.json();
     const cleanWord = String(word || "").trim();
     const cleanInputId = String(inputId || "").trim();
     if (!cleanWord) return Response.json({ error: "word is required" }, { status: 400 });
     if (!cleanInputId) return Response.json({ error: "inputId is required" }, { status: 400 });
 
-    const key = normalizeProfileKey(cleanWord);
+    const key = buildProfileCacheKey(cleanWord, contextSentence, "common");
     const cache = readProfileCache();
-    if (!force && isUsableAiProfile(cache[key])) {
+    if (
+      !force
+      && isUsableAiProfile(cache[key])
+      && isProfileSensePriorityCompatible(cache[key], "common")
+      && isAiProfileCompatibleWithDeclaredPos(cache[key], existingPos)
+    ) {
       return Response.json({
         ...withAiClientCollocationPayload({ ...cache[key], word: cleanWord }),
         inputId: cleanInputId,
@@ -34,9 +49,17 @@ export async function POST(req) {
       });
     }
 
-    const result = await requestDeepseekProfiles([{ inputId: cleanInputId, word: cleanWord }], {
+    const result = await requestDeepseekProfiles([{
+      inputId: cleanInputId,
+      word: cleanWord,
+      existingMeaning,
+      existingPos,
+      contextSentence,
+      contextLabel
+    }], {
       timeoutMs: 60000,
-      maxTokens: 4800
+      maxTokens: 4800,
+      sensePriority: "common"
     });
     const entry = result.entries.get(cleanInputId);
     if (!entry) {

@@ -69,7 +69,16 @@ if defined PORT_PID (
   echo.
   choice /C OR /M "Open existing site (O) or restart port 3000 (R)?"
   if errorlevel 2 (
-    taskkill /PID %PORT_PID% /F
+    if exist "%~dp0scripts\local-production-server.mjs" (
+      node "%~dp0scripts\local-production-server.mjs" --stop
+      if errorlevel 1 (
+        echo Could not stop the existing local service safely.
+        pause
+        exit /b 1
+      )
+    ) else (
+      taskkill /PID %PORT_PID% /F
+    )
     timeout /t 2 >nul
   ) else (
     start "" "%APP_URL%"

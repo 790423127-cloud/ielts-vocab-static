@@ -3,8 +3,8 @@
   "generatedAt": "2026-08-06T02:30:00.000Z",
   "count": 6000,
   "sourceLexiconVersion": "v24-13374-content-unification-20260806",
-  "sourceLexiconCount": 13374,
-  "sourceLexiconSha256": "70cd1cb71f01b33f93de8e917e2c2f547ecd007448d5bb882ba54088d19e1365",
+  "sourceLexiconCount": 14559,
+  "sourceLexiconSha256": "01c7a965f47ec0cd8bc8b6f8ec6a26d238ddd73d3197345d4e0697562ee9c5b2",
   "selectionPolicy": "ielts-gt-quality-frequency-v4",
   "items": [
     {
@@ -160931,7 +160931,7 @@
       "word": "virtual",
       "quizMeaningZh": "虚拟的",
       "meaningZh": "虚拟的",
-      "meaningDetailedZh": "“virtual”常见含义为：虚拟的，实际的。",
+      "meaningDetailedZh": "首先指由计算机或网络模拟、并非以实体形式存在的事物，如 virtual meeting“线上会议”。也可表示虽非名义上如此、但在效果或程度上几乎等同于某事，如 a virtual certainty“几乎确定的事”。这里的“实质上的”不等于 practical“实用的”。",
       "meaningSource": "master-lexicon",
       "posFamily": "adjective",
       "difficulty": "中级核心",
@@ -201905,9 +201905,9 @@
     {
       "wordId": "word_b2e870f26089",
       "word": "regard",
-      "quizMeaningZh": "问候",
-      "meaningZh": "问候",
-      "meaningDetailedZh": "“regard”常见含义为：问候；致意。",
+      "quizMeaningZh": "尊重",
+      "meaningZh": "尊重",
+      "meaningDetailedZh": "作动词时常用 regard A as B，表示“把 A 看作或认为是 B”；作名词时可指尊重、关注或某个方面，如 with regard to 表示“关于”。复数 regards 才常用于书信或口语中的“问候、致意”。",
       "meaningSource": "master-lexicon",
       "posFamily": "noun",
       "difficulty": "基础高频",

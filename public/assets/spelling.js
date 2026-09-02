@@ -17,20 +17,40 @@
 
   const CATEGORY_TYPES = [
     { value: "difficulty", label: "难度分类" },
-    { value: "lr_high_frequency", label: "训练重点" },
-    { value: "topic", label: "主题分类" },
-    { value: "all", label: "全部单词" }
+    { value: "skill", label: "听说读写" }
   ];
 
-  const DIFFICULTY_OPTIONS = ["基础高频", "中级核心", "高级加分", "阅读扩展", "低频认识即可"];
+  const DIFFICULTY_OPTIONS = [
+    { value: "基础高频", label: "基础词库" },
+    { value: "中级核心", label: "中级词汇" },
+    { value: "高级加分", label: "高级词汇" },
+    { value: "低频认识即可", label: "低频词汇" }
+  ];
+  const ALL_DIFFICULTIES_VALUE = "all_difficulties";
+  const DIFFICULTY_FILTER_OPTIONS = [
+    { value: ALL_DIFFICULTIES_VALUE, label: "全部难度" },
+    ...DIFFICULTY_OPTIONS
+  ];
+  const CATEGORY_ORDER_OPTIONS = [
+    { value: "easy_to_hard", label: "简单 → 困难" },
+    { value: "hard_to_easy", label: "困难 → 简单" }
+  ];
+  const SKILL_OPTIONS = [
+    { value: "listening", label: "听力" },
+    { value: "speaking", label: "口语" },
+    { value: "reading", label: "阅读" },
+    { value: "writing", label: "写作" }
+  ];
+  const DIFFICULTY_RANKS = new Map([
+    ["基础高频", 0],
+    ["中级核心", 1],
+    ["高级加分", 2],
+    ["阅读扩展", 3],
+    ["低频认识即可", 4]
+  ]);
   const CATEGORY_QUICK_PICKS = [
-    { label: "全部", categoryType: "all", categoryValue: "" },
-    { label: "基础", categoryType: "difficulty", categoryValue: "基础高频" },
-    { label: "中级", categoryType: "difficulty", categoryValue: "中级核心" },
-    { label: "高级", categoryType: "difficulty", categoryValue: "高级加分" },
-    { label: "阅读扩展", categoryType: "difficulty", categoryValue: "阅读扩展" },
-    { label: "听力重点", categoryType: "lr_high_frequency", categoryValue: "listening" },
-    { label: "阅读重点", categoryType: "lr_high_frequency", categoryValue: "reading" }
+    ...DIFFICULTY_FILTER_OPTIONS.map((item) => ({ label: item.label, categoryType: "difficulty", categoryValue: item.value })),
+    ...SKILL_OPTIONS.map((item) => ({ label: item.label, categoryType: "skill", categoryValue: item.value }))
   ];
   const TOPIC_OPTIONS = ["教育", "工作", "住房", "交通", "健康", "环境", "科技", "政府", "社会", "消费", "旅行", "社区", "法律", "家庭", "公共服务"];
   const LR_OPTIONS = [
@@ -74,8 +94,9 @@
   const $ = (id) => document.getElementById(id);
   let mode = "all";
   let practiceSource = "category";
-  let categoryType = "all";
-  let categoryValue = "";
+  let categoryType = "difficulty";
+  let categoryValue = ALL_DIFFICULTIES_VALUE;
+  let categorySortDirection = "easy_to_hard";
   let batchIndex = 0;
   let allLexiconEntries = [];
   let wordPayload;
@@ -152,7 +173,7 @@
       const prefs = idictationPrefs[sourceKey] || {};
       return `${scope}:${practiceSource}:${prefs.groupKey || ""}:batch:${Number(prefs.batchIndex || 0)}`;
     }
-    return `${scope}:${categoryType}:${categoryValue}:batch:${Number(batchIndex || 0)}`;
+    return `${scope}:${categoryType}:${categoryValue}:${categorySortDirection}:batch:${Number(batchIndex || 0)}`;
   }
 
   function readSpellingPosition(activeBatchId) {
@@ -430,13 +451,59 @@
     return entry?.[field] ?? entry?.sourceWord?.[field];
   }
 
+  function entryOrderKey(entry) {
+    return String(entry?.wordId || entry?.id || entry?.word || entry?.expectedAnswer || "").toLowerCase();
+  }
+
+  function hashSeed(value) {
+    let hash = 2166136261;
+    for (const char of String(value || "")) {
+      hash ^= char.charCodeAt(0);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  function resolveSkillCategory(entry) {
+    const uses = new Set((readEntryField(entry, "ieltsUse") || []).map((item) => String(item || "").trim().toLowerCase()));
+    const has = (...values) => values.some((value) => uses.has(String(value).toLowerCase()));
+
+    if (readEntryField(entry, "writingPriority") === true || has("writing", "写作", "task 2", "task2", "writing task 1", "writing task 2", "g类书信", "写作g类书信")) return "writing";
+    if (has("speaking", "口语", "speaking part 1", "speaking part 2", "speaking part 3")) return "speaking";
+    if (readEntryField(entry, "listeningPriority") === true || has("listening", "听力")) return "listening";
+    if (has("reading", "阅读", "general reading", "reading passage")) return "reading";
+
+    return SKILL_OPTIONS[hashSeed(`spelling-skill:${entryOrderKey(entry)}`) % SKILL_OPTIONS.length]?.value || "reading";
+  }
+
+  function difficultyRank(entry) {
+    return DIFFICULTY_RANKS.get(String(readEntryField(entry, "difficulty") || "").trim());
+  }
+
+  function orderByDifficulty(list, direction) {
+    const reverse = direction === "hard_to_easy";
+    return [...list].sort((left, right) => {
+      const leftRank = difficultyRank(left);
+      const rightRank = difficultyRank(right);
+      const leftKnown = Number.isInteger(leftRank);
+      const rightKnown = Number.isInteger(rightRank);
+      if (leftKnown !== rightKnown) return leftKnown ? -1 : 1;
+      if (leftKnown && leftRank !== rightRank) return reverse ? rightRank - leftRank : leftRank - rightRank;
+      return entryOrderKey(left).localeCompare(entryOrderKey(right));
+    });
+  }
+
   function matchSpellingCategory(entry, type, value) {
     const category = String(type || "all").trim();
     const selected = String(value || "").trim();
     if (category === "all") return true;
 
     if (category === "difficulty") {
-      return !selected || readEntryField(entry, "difficulty") === selected;
+      return !selected || selected === ALL_DIFFICULTIES_VALUE || readEntryField(entry, "difficulty") === selected;
+    }
+
+    if (category === "skill") {
+      return SKILL_OPTIONS.some((option) => option.value === selected) && resolveSkillCategory(entry) === selected;
     }
 
     if (category === "topic") {
@@ -474,7 +541,9 @@
   }
 
   function filterByCategory(list) {
-    return list.filter((entry) => matchSpellingCategory(entry, categoryType, categoryValue));
+    const filtered = list.filter((entry) => matchSpellingCategory(entry, categoryType, categoryValue));
+    if (["difficulty", "skill"].includes(categoryType)) return orderByDifficulty(filtered, categorySortDirection);
+    return filtered;
   }
 
   function isIdictationPracticeSource(value = "") {
@@ -850,11 +919,10 @@
   }
 
   function isQuickPickAvailable(pick) {
-    if (pick.categoryType === "all") return true;
     if (pick.categoryType === "difficulty") {
-      return allLexiconEntries.some((entry) => readEntryField(entry, "difficulty") === pick.categoryValue);
+      return allLexiconEntries.some((entry) => matchSpellingCategory(entry, pick.categoryType, pick.categoryValue));
     }
-    if (pick.categoryType === "lr_high_frequency") {
+    if (pick.categoryType === "skill") {
       return allLexiconEntries.some((entry) => matchSpellingCategory(entry, pick.categoryType, pick.categoryValue));
     }
     return false;
@@ -885,8 +953,9 @@
 
     let options = [];
     if (categoryType === "difficulty") {
-      const present = new Set(allLexiconEntries.map((entry) => readEntryField(entry, "difficulty")).filter(Boolean));
-      options = DIFFICULTY_OPTIONS.filter((value) => present.has(value)).map((value) => ({ value, label: value }));
+      options = DIFFICULTY_FILTER_OPTIONS;
+    } else if (categoryType === "skill") {
+      options = SKILL_OPTIONS;
     } else if (categoryType === "topic") {
       const present = new Set();
       allLexiconEntries.forEach((entry) => (readEntryField(entry, "topics") || []).forEach((topic) => present.add(topic)));
@@ -903,6 +972,16 @@
     select.value = categoryValue;
     renderCategoryQuickPicks();
     renderCategoryValueQuickPicks(options);
+  }
+
+  function populateCategorySortOptions() {
+    const select = $("categorySortDirection");
+    if (!select) return;
+    select.innerHTML = CATEGORY_ORDER_OPTIONS.map((item) => `<option value="${item.value}">${item.label}</option>`).join("");
+    if (!CATEGORY_ORDER_OPTIONS.some((item) => item.value === categorySortDirection)) {
+      categorySortDirection = CATEGORY_ORDER_OPTIONS[0].value;
+    }
+    select.value = categorySortDirection;
   }
 
   function populateBatchOptions(batchCount, selectedIndex) {
@@ -1108,7 +1187,8 @@
     if (practiceSource === "category") {
       const typeLabel = (CATEGORY_TYPES.find((item) => item.value === categoryType) || {}).label || "分类";
       const valueLabel = $("categoryValue")?.selectedOptions?.[0]?.textContent || "全部";
-      return `${typeLabel} · ${valueLabel}`;
+      const sortLabel = (CATEGORY_ORDER_OPTIONS.find((item) => item.value === categorySortDirection) || {}).label || "简单 → 困难";
+      return `${typeLabel} · ${valueLabel} · ${sortLabel}`;
     }
     if (practiceSource === "error_bank") return `共 ${entries.length} 个错词`;
     if (practiceSource === "personal_wrong_book") return `共 ${personalWrongRecords.length} 条`;
@@ -1126,7 +1206,7 @@
     if (!summary) return;
     const source = SOURCE_LABELS[practiceSource] || practiceSource;
     const detail = practiceSource === "category"
-      ? `${$("categoryValue")?.selectedOptions?.[0]?.textContent || "全部"} · 第 ${Number(batchIndex || 0) + 1} 批`
+      ? `${$("categoryValue")?.selectedOptions?.[0]?.textContent || "全部"} · ${(CATEGORY_ORDER_OPTIONS.find((item) => item.value === categorySortDirection) || {}).label || "简单 → 困难"} · 第 ${Number(batchIndex || 0) + 1} 批`
       : sourceDetailLabel();
     summary.textContent = `${modeLabel(mode)} · ${source}${detail ? ` · ${detail}` : ""}`;
   }
@@ -1300,8 +1380,18 @@
     practiceSource = VALID_PRACTICE_SOURCES.has(requestedSource)
       ? requestedSource
       : (prefs.practiceSource || "category");
-    categoryType = prefs.categoryType || "all";
-    categoryValue = prefs.categoryValue || "";
+    const savedCategoryType = String(prefs.categoryType || "");
+    categoryType = CATEGORY_TYPES.some((item) => item.value === savedCategoryType) ? savedCategoryType : "difficulty";
+    categoryValue = String(prefs.categoryValue || "");
+    if (categoryType === "difficulty" && !DIFFICULTY_FILTER_OPTIONS.some((item) => item.value === categoryValue)) {
+      categoryValue = ALL_DIFFICULTIES_VALUE;
+    }
+    if (categoryType === "skill" && !SKILL_OPTIONS.some((item) => item.value === categoryValue)) {
+      categoryValue = SKILL_OPTIONS[0].value;
+    }
+    categorySortDirection = CATEGORY_ORDER_OPTIONS.some((item) => item.value === prefs.categorySortDirection)
+      ? prefs.categorySortDirection
+      : CATEGORY_ORDER_OPTIONS[0].value;
     batchIndex = Number(prefs.batchIndex || 0) || 0;
     mode = VALID_ENTRY_MODES.has(requestedMode) ? requestedMode : (prefs.mode || "all");
     idictationPrefs = {
@@ -1311,7 +1401,7 @@
   }
 
   function persistPrefs() {
-    writePrefs({ practiceSource, categoryType, categoryValue, batchIndex, mode, idictation: idictationPrefs });
+    writePrefs({ practiceSource, categoryType, categoryValue, categorySortDirection, batchIndex, mode, idictation: idictationPrefs });
   }
 
   function syncPracticeSourceUrl() {
@@ -1328,7 +1418,7 @@
     window.history.replaceState(null, "", url);
   }
 
-  const STATIC_DATA_VERSION = "20260809_reading_keyboard_v49";
+  const STATIC_DATA_VERSION = "20260830_system_safety_v80";
 
   function versionedDataPath(requestPath) {
     return requestPath + (requestPath.includes("?") ? "&" : "?") + "v=" + STATIC_DATA_VERSION;
@@ -1435,6 +1525,7 @@
       restorePrefs();
       updatePanels();
       populateCategoryTypeOptions();
+      populateCategorySortOptions();
       document.querySelectorAll("[data-source]").forEach((btn) => btn.classList.toggle("active", btn.dataset.source === practiceSource));
       document.querySelectorAll("[data-mode]").forEach((btn) => btn.classList.toggle("active", btn.dataset.mode === mode));
       await loadCurrentSelection({ progressive: true });
@@ -1571,7 +1662,7 @@
   });
 
   $("categoryType")?.addEventListener("change", () => {
-    categoryType = $("categoryType").value || "all";
+    categoryType = $("categoryType").value || "difficulty";
     populateCategoryValueOptions();
     batchIndex = 0;
     persistPrefs();
@@ -1581,7 +1672,7 @@
   $("categoryQuickPicks")?.addEventListener("click", (event) => {
     const button = event.target?.closest?.("button[data-category-type]");
     if (!button) return;
-    categoryType = button.dataset.categoryType || "all";
+    categoryType = button.dataset.categoryType || "difficulty";
     categoryValue = button.dataset.categoryValue || "";
     batchIndex = 0;
     populateCategoryTypeOptions();
@@ -1602,6 +1693,14 @@
 
   $("categoryValue")?.addEventListener("change", () => {
     categoryValue = $("categoryValue").value || "";
+    batchIndex = 0;
+    persistPrefs();
+    render();
+  });
+
+  $("categorySortDirection")?.addEventListener("change", () => {
+    categorySortDirection = $("categorySortDirection").value || CATEGORY_ORDER_OPTIONS[0].value;
+    if (categoryType === "difficulty") categoryValue = ALL_DIFFICULTIES_VALUE;
     batchIndex = 0;
     persistPrefs();
     render();
@@ -1827,7 +1926,23 @@
   $("answer").addEventListener("input", () => {
     window.clearTimeout(autoSubmitTimer);
     if (!current || norm($("answer").value) !== norm(expectedAnswer(current))) return;
-    autoSubmitTimer = window.setTimeout(() => $("form").requestSubmit(), 350);
+
+    const autoSubmitAttempt = {
+      sequence,
+      wordId: id(current),
+      answer: norm($("answer").value)
+    };
+    autoSubmitTimer = window.setTimeout(() => {
+      if (
+        !current
+        || sequence !== autoSubmitAttempt.sequence
+        || id(current) !== autoSubmitAttempt.wordId
+        || norm($("answer").value) !== autoSubmitAttempt.answer
+      ) {
+        return;
+      }
+      $("form").requestSubmit();
+    }, 350);
   });
 
   document.addEventListener("keydown", (event) => {

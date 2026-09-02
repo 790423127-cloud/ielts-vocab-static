@@ -100,14 +100,15 @@ function normalizeStringArray(value) {
 export function normalizeCachedRecoveryEntry(entry = {}, fallbackWord = "") {
   const word = String(entry.word || fallbackWord || "").trim();
   const meaning = String(entry.chinese_meaning || entry.meaning || "").trim();
+  const pos = String(entry.part_of_speech || entry.pos || "").trim();
   return {
     word,
     phonetic: String(entry.phonetic || "").trim(),
-    pos: String(entry.part_of_speech || entry.pos || "").trim(),
+    pos,
     meaning,
     meaningDetailZh: String(entry.main_meaning_detail_zh || entry.meaningDetailZh || entry.meaning_detail_zh || "").trim(),
     definition: String(entry.english_definition || entry.definition || "").trim(),
-    otherMeanings: normalizeOtherMeanings(entry.other_meanings || entry.otherMeanings, meaning),
+    otherMeanings: normalizeOtherMeanings(entry.other_meanings || entry.otherMeanings, meaning, pos),
     example: String(entry.ielts_example || entry.example || "").trim(),
     exampleCn: String(entry.example_chinese || entry.exampleCn || "").trim(),
     forms: normalizeAiForms(entry.forms, word),

@@ -49,6 +49,9 @@ export function parseReadingCoachSyncPackage(input) {
 
 function incomingReadingWord(item, now, idFactory) {
   const externalId = text(item.id);
+  const readingMeaning = text(item.meaning);
+  const readingSources = Array.isArray(item.sources) ? item.sources : [];
+  const hasReadingContext = readingSources.some((source) => text(source?.sentence || source?.text || source?.quote));
   return normalizeReadingWord({
     id: `reading-coach-word-${externalId}`,
     word: text(item.word),
@@ -57,10 +60,14 @@ function incomingReadingWord(item, now, idFactory) {
     externalSource: READING_COACH_SOURCE,
     externalId,
     externalFingerprint: text(item.fingerprint),
-    readingMeaning: text(item.meaning),
+    readingMeaning,
+    readingContextPending: hasReadingContext && !readingMeaning,
+    readingContextReviewed: hasReadingContext && Boolean(readingMeaning),
+    readingContextReviewSource: hasReadingContext && readingMeaning ? READING_COACH_SOURCE : "",
+    readingContextReviewedAt: hasReadingContext && readingMeaning ? now : "",
     readingNote: text(item.note),
     readingStatus: text(item.status),
-    readingSources: Array.isArray(item.sources) ? item.sources : [],
+    readingSources,
     createdAt: text(item.createdAt) || now,
     updatedAt: text(item.updatedAt) || now
   }, { idFactory, now });
@@ -114,6 +121,10 @@ export function mergeReadingCoachWords(currentInput, incomingInput, options = {}
       externalId: incoming.externalId,
       externalFingerprint: incoming.externalFingerprint,
       readingMeaning: incoming.readingMeaning,
+      readingContextPending: incoming.readingContextPending,
+      readingContextReviewed: incoming.readingContextReviewed,
+      readingContextReviewSource: incoming.readingContextReviewSource,
+      readingContextReviewedAt: incoming.readingContextReviewedAt,
       readingNote: incoming.readingNote,
       readingStatus: incoming.readingStatus,
       readingSources: incoming.readingSources,

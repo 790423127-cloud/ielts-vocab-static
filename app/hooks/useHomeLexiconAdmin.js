@@ -19,6 +19,7 @@ const AI_OP_NAMES = [
   "aiSlowCompleteMissing10x1",
   "aiStableRepairWrongWords10x2",
   "generateHundredByFiveBatch",
+  "startContinuousAiStructureRepair",
   "startContinuousAiCompletion",
   "stopContinuousAiCompletion",
   "completeMeaningAndAudio",

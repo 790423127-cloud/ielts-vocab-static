@@ -1,0 +1,82 @@
+name: Full Audit Repair
+
+on:
+  push:
+    branches:
+      - audit/full-repair-20260902
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: full repository audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency audit production
+        run: npm run audit:dependencies
+
+      - name: Dependency audit including dev
+        run: npm run audit:dependencies:all
+
+      - name: ESLint errors
+        run: npm run lint:errors
+
+      - name: ESLint warning budget
+        run: npm run lint:budget
+
+      - name: Formal vocabulary quality gates
+        run: npm run quality:all
+
+      - name: Generate current core vocabulary audit
+        run: npm run audit:core
+
+      - name: Generate master lexicon deep audit
+        shell: bash
+        run: |
+          mkdir -p reports
+          node scripts/audit-master-lexicon-quality.mjs --full | tee reports/master-lexicon-quality-full.json
+
+      - name: Generate manual vocabulary review queue
+        run: npm run audit:vocab-manual-queue
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Wide tests
+        run: npm run test:wide
+
+      - name: Production build
+        run: npm run build
+        env:
+          DEEPSEEK_API_KEY: ""
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Production E2E and performance tests
+        run: npm run test:e2e
+        env:
+          DEEPSEEK_API_KEY: ""
+
+      - name: Upload audit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-audit-reports-${{ github.run_id }}
+          path: |
+            reports
+          if-no-files-found: warn
+          retention-days: 7

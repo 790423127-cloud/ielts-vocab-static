@@ -1,0 +1,75 @@
+name: Temporary Core Vocab Audit Repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-core-vocab-audit-repair.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Diagnose current gate failures
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { CONFIRMED_PERSON_NAME_WORDS, normalizeHeadword } from './app/lib/vocab/lexicon-guard-shared.mjs';
+
+          const payload = JSON.parse(fs.readFileSync('.static-export-cache/words.json', 'utf8'));
+          const words = Array.isArray(payload) ? payload : payload.words || [];
+          const valid = new Set(['基础高频', '中级核心', '高级加分', '阅读扩展', '低频认识即可']);
+          const isPhraseEntry = (entry) => {
+            const word = normalizeHeadword(entry?.word);
+            const reviewedCompound = entry?.entryType === 'headword' && entry?.lexicalizedCompound === true;
+            return Boolean(entry?.isPhrase || entry?.entryType === 'phrase' || entry?.pos === 'phrase' || (word.includes(' ') && !reviewedCompound));
+          };
+
+          const invalid = words.filter((entry) => !valid.has(entry?.difficulty));
+          const difficultyCounts = {};
+          for (const entry of invalid) {
+            const key = String(entry?.difficulty ?? '<missing>');
+            difficultyCounts[key] = (difficultyCounts[key] || 0) + 1;
+          }
+          const phrases = words.filter(isPhraseEntry).map((entry) => ({
+            id: entry?.id || entry?.wordId || '',
+            word: entry?.word || '',
+            difficulty: entry?.difficulty ?? '',
+            entryType: entry?.entryType ?? '',
+            pos: entry?.pos ?? '',
+            isPhrase: entry?.isPhrase === true,
+            category: entry?.category ?? '',
+            source: entry?.source ?? ''
+          }));
+          const names = words.filter((entry) => CONFIRMED_PERSON_NAME_WORDS.has(normalizeHeadword(entry?.word))).map((entry) => ({
+            id: entry?.id || entry?.wordId || '',
+            word: entry?.word || '',
+            source: entry?.source ?? '',
+            addedFromReadingG: entry?.addedFromReadingG === true,
+            sourceReadingGId: entry?.sourceReadingGId ?? ''
+          }));
+          const empty = words.filter((entry) => !normalizeHeadword(entry?.word) || !String(entry?.meaning || '').trim() || !String(entry?.example || '').trim()).map((entry) => ({ id: entry?.id || entry?.wordId || '', word: entry?.word || '' }));
+
+          console.log('AUDIT_BREAKDOWN=' + JSON.stringify({
+            totalWords: words.length,
+            invalidDifficultyCount: invalid.length,
+            difficultyCounts,
+            phraseCount: phrases.length,
+            phrases,
+            confirmedNameCount: names.length,
+            names,
+            requiredFieldMissingCount: empty.length,
+            requiredFieldMissingPreview: empty.slice(0, 50),
+            metadata: {
+              count: payload?.count,
+              version: payload?.version,
+              savedAt: payload?.savedAt,
+              lexiconHash: payload?.lexiconHash
+            }
+          }));
+          NODE
